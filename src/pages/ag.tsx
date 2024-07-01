@@ -4780,7 +4780,7 @@ export default function AGPage(): JSX.Element {
                 id="sectConfirmCheck"
               >
                 <blockquote className="declr" id="declrEnd">
-                  <span>"DECLARO SEREM VERDADEIRAS AS INFORMAÇÕES ACIMA"</span>
+                  <span>&#34;DECLARO SEREM VERDADEIRAS AS INFORMAÇÕES ACIMA&#34;</span>
                   <label
                     htmlFor="confirmId"
                     className="labConfirm noInvert"

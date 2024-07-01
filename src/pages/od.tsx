@@ -105,8 +105,7 @@ export default function OdPage(): JSX.Element {
                       <p className="dicas" id="dicaKb">
                         <strong>1.1.</strong>
                         <em>
-                          {" "}
-                          Apertar Alt + Y para "Sim" ou Alt + N para "Não" no
+                          Apertar Alt + Y para &#34;Sim&#34; ou Alt + N para &#34;Não&#34; no
                           próximo campo após iniciar o foco com Tab para
                           preencher automaticamente
                         </em>
@@ -2958,7 +2957,8 @@ export default function OdPage(): JSX.Element {
               >
                 <blockquote className="declr" id="declrEnd">
                   <span>
-                    "DECLARO QUE CONCORDO COM OS TRATAMENTOS PROPOSTOS ACIMA"
+                    &#34;DECLARO QUE CONCORDO COM OS TRATAMENTOS PROPOSTOS
+                    ACIMA&#34;
                   </span>
                   <label
                     htmlFor="confirmId"
@@ -3014,7 +3014,6 @@ export default function OdPage(): JSX.Element {
                       className="labConfirm labDivConfirm2 pdT2pc900Q htFull900Q flexNoWC htHalf900Q bolded"
                       id="labConfirmDate"
                     >
-                      {" "}
                       <span>Data:</span>
                       <div
                         className="widFull flexQ900NoW htFull900Q"

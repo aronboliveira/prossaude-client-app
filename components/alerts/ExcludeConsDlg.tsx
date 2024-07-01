@@ -1,10 +1,5 @@
 import { nullishBtn, nullishDlg } from "@/lib/global/declarations/types";
-import {
-  applyDarkMode,
-  checkDarkMode,
-  isClickOutside,
-  setupDarkMode,
-} from "@/lib/global/gStyleScript";
+import { isClickOutside } from "@/lib/global/gStyleScript";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { ExcludeConsDlgProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
@@ -35,32 +30,6 @@ export default function ExcludeConsDlg({
       excludeDlgRef.current instanceof HTMLDialogElement
     )
       excludeDlgRef.current.showModal();
-    btn instanceof HTMLButtonElement &&
-      (excludeDlgRef.current!.id = `excludeDlg_${btn.id}`);
-    console.log("passed reference");
-    console.log(btn);
-    const shouldApplyDarkMode = checkDarkMode();
-    const toggleDarkMode = document.getElementById("toggleDarkMode");
-    if (
-      shouldApplyDarkMode ||
-      (toggleDarkMode instanceof HTMLInputElement &&
-        (toggleDarkMode.type === "checkbox" ||
-          toggleDarkMode.type === "radio") &&
-        toggleDarkMode.checked === true)
-    ) {
-      const [arrColors, els, validation] = setupDarkMode([
-        ...Array.from(excludeDlgRef.current!.querySelectorAll("*")).filter(
-          element => element instanceof HTMLElement
-        ),
-        excludeDlgRef.current!,
-      ]);
-      applyDarkMode(
-        arrColors,
-        els as HTMLElement[],
-        validation,
-        (toggleDarkMode as HTMLInputElement).checked
-      );
-    }
     syncAriaStates([
       ...excludeDlgRef.current!.querySelectorAll("*"),
       excludeDlgRef.current!,

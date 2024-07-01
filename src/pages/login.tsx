@@ -77,6 +77,7 @@ export default function LoginPage(): JSX.Element {
                   className="fade-in-element"
                   id="logo"
                   src="./img/PROS_Saude_Modelo1-Final.png"
+                  alt="logo"
                 />
               </section>
               <section id="headerCont">

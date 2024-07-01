@@ -62,6 +62,7 @@ export default function UserProfilePanel({
           title="Informações de Usuário"
           data-placement="bottom"
           onClick={toggleUserDropdown}
+          alt="User img"
         />
       </span>
       {shouldShowDropdown && (
