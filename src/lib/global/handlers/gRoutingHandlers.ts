@@ -15,39 +15,6 @@ export function handleLinkChanges(
     const heads = document.querySelectorAll("head");
     if (heads.length > 1)
       for (let i = 0; i < heads.length; i++) i > 0 && heads[i].remove();
-    [
-      ...document.querySelectorAll("style"),
-      ...document.querySelectorAll('link[rel="stylesheet"]'),
-    ].forEach((stylesheet, i) => {
-      try {
-        if (
-          !(
-            stylesheet instanceof HTMLStyleElement ||
-            stylesheet instanceof HTMLLinkElement
-          )
-        )
-          throw elementNotFound(
-            stylesheet,
-            `validation of styleSheet instance`,
-            extLine(new Error())
-          );
-        if (
-          !(
-            stylesheet.innerText.includes("Bootstrap") ||
-            stylesheet.outerHTML.includes("bootstrap@")
-          ) &&
-          !/Global Styles/gi.test(stylesheet.innerText) &&
-          !new RegExp(styleFlag, "gi").test(stylesheet.innerText)
-        )
-          stylesheet.remove();
-      } catch (e) {
-        console.error(
-          `Error executing iteration ${i} for reading stylesheets props:\n${
-            (e as Error).message
-          }`
-        );
-      }
-    });
     document.querySelectorAll("meta").forEach(meta => {
       meta instanceof HTMLMetaElement &&
         meta.name !== "viewport" &&
@@ -232,17 +199,6 @@ export function handleLinkChanges(
                 `
               );
             document.body.className = "agBody";
-            for (const stylesheet of head.querySelectorAll("style")) {
-              if (
-                !/global style/gi.test(stylesheet.innerText) &&
-                !/ag page/gi.test(stylesheet.innerText)
-              ) {
-                stylesheet.parentElement!.append(
-                  document.createComment(stylesheet.outerHTML)
-                );
-                stylesheet.remove();
-              }
-            }
             break;
           }
           case "edfis": {
@@ -265,18 +221,6 @@ export function handleLinkChanges(
                 `
               );
             document.body.className = "edfisNutBody";
-            for (const stylesheet of head.querySelectorAll("style")) {
-              if (
-                !/global style/gi.test(stylesheet.innerText) &&
-                (!/en page/gi.test(stylesheet.innerText) ||
-                  /edfisnut page/gi.test(stylesheet.innerText))
-              ) {
-                stylesheet.parentElement!.append(
-                  document.createComment(stylesheet.outerHTML)
-                );
-                stylesheet.remove();
-              }
-            }
             break;
           }
           case "od": {
@@ -299,18 +243,6 @@ export function handleLinkChanges(
               `
               );
             document.body.className = "odBody";
-            for (const stylesheet of head.querySelectorAll("style")) {
-              if (
-                !/global style/gi.test(stylesheet.innerText) &&
-                (!/od page/gi.test(stylesheet.innerText) ||
-                  /odont page/gi.test(stylesheet.innerText))
-              ) {
-                stylesheet.parentElement!.append(
-                  document.createComment(stylesheet.outerHTML)
-                );
-                stylesheet.remove();
-              }
-            }
             break;
           }
           case "panel": {
@@ -333,17 +265,6 @@ export function handleLinkChanges(
                 `
               );
             document.body.className = "panelBody";
-            for (const stylesheet of head.querySelectorAll("style")) {
-              if (
-                !/global style/gi.test(stylesheet.innerText) &&
-                !/panel page/gi.test(stylesheet.innerText)
-              ) {
-                stylesheet.parentElement!.append(
-                  document.createComment(stylesheet.outerHTML)
-                );
-                stylesheet.remove();
-              }
-            }
             break;
           }
           default:

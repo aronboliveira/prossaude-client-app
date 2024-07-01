@@ -8,130 +8,134 @@
   }
 }
 
-div {
-  &:nth-child(2) {
-    &:is([disabled]) {
-      &:hover {
-        cursor: url(../../../public/img/exclamation.svg), auto !important;
-      }
-    }
-  }
-}
-
 body {
-  background-size: cover;
-}
-
-input {
-  &.form-control {
-    &.noMargin {
-      min-width: 20ch;
-    }
+  &.panelBody {
+    background-size: cover;
   }
 }
 
-td {
-  font-weight: initial;
-}
-
-.bi {
-  &:not(.btn-close) {
-    width: unset;
-    height: unset;
-  }
-  &.btn-success {
-    font-weight: bold;
-  }
-  &.btn-warning {
-    font-weight: 200;
-  }
-  &:is([class*="exclamation"]) {
-    min-width: 0;
-    min-height: 0;
-  }
-}
-
-.btnAffectRegst {
-  &:hover {
-    &:not(.tipBtn) {
-      &:is(.btn-danger) {
-        animation: giveOpacity 2s ease-in-out;
-      }
-    }
-  }
-  &.btn {
-    display: block;
-    height: fit-content;
-    font-size: 0.875em;
-  }
-}
-
-.reduced-btn-close {
-  max-width: 0.1em;
-  max-height: 0.1em;
-}
-
-.table {
-  .thead-dark {
-    th {
-      color: #ffffff;
-      background-color: #212529;
-      border-color: #959799;
-    }
-  }
-  > :not(caption) {
-    > * {
-      > * {
-        &:is(.alocCel) {
-          padding-left: 1vw;
+.panelBody {
+  div {
+    &:nth-child(2) {
+      &:is([disabled]) {
+        &:hover {
+          cursor: url(../../../public/img/exclamation.svg), auto !important;
         }
       }
     }
   }
-  &.table-hover {
-    &:hover {
-      border-width: 0 var(--bs-border-width);
+
+  input {
+    &.form-control {
+      &.noMargin {
+        min-width: 20ch;
+      }
     }
   }
-}
 
-.transfArea {
-  margin-right: 5vw;
-  max-width: 80vw;
-  align-self: center;
-}
-
-[class*="form-"] {
-  margin-bottom: 2vh;
-  &.redMg {
-    margin-bottom: 0.9vh;
-    margin-top: 0.5vh;
+  td {
+    font-weight: initial;
   }
-}
 
-[class*="outputAv"] {
-  text-align: center;
-}
-
-#btnSubmitNewStud,
-#btnSubmitNewProf {
-  + #btnExport {
-    width: 100%;
-    margin-right: 0;
+  .bi {
+    &:not(.btn-close) {
+      width: unset;
+      height: unset;
+    }
+    &.btn-success {
+      font-weight: bold;
+    }
+    &.btn-warning {
+      font-weight: 200;
+    }
+    &:is([class*="exclamation"]) {
+      min-width: 0;
+      min-height: 0;
+    }
   }
-}
 
-#formBodySchedSect,
-#sectPacsTab,
-#sectProfsTab,
-#sectStudsTab {
-  width: unset !important;
-  min-width: unset !important;
-  .btn-close {
-    width: 0 !important;
+  .btnAffectRegst {
+    &:hover {
+      &:not(.tipBtn) {
+        &:is(.btn-danger) {
+          animation: giveOpacity 2s ease-in-out;
+        }
+      }
+    }
+    &.btn {
+      display: block;
+      height: fit-content;
+      font-size: 0.875em;
+    }
   }
-}
 
-#profileIconImg {
-  margin-left: 0.2rem;
+  .reduced-btn-close {
+    max-width: 0.1em;
+    max-height: 0.1em;
+  }
+
+  .table {
+    .thead-dark {
+      th {
+        color: #ffffff;
+        background-color: #212529;
+        border-color: #959799;
+      }
+    }
+    > :not(caption) {
+      > * {
+        > * {
+          &:is(.alocCel) {
+            padding-left: 1vw;
+          }
+        }
+      }
+    }
+    &.table-hover {
+      &:hover {
+        border-width: 0 var(--bs-border-width);
+      }
+    }
+  }
+
+  .transfArea {
+    margin-right: 5vw;
+    max-width: 80vw;
+    align-self: center;
+  }
+
+  [class*="form-"] {
+    margin-bottom: 2vh;
+    &.redMg {
+      margin-bottom: 0.9vh;
+      margin-top: 0.5vh;
+    }
+  }
+
+  [class*="outputAv"] {
+    text-align: center;
+  }
+
+  #btnSubmitNewStud,
+  #btnSubmitNewProf {
+    + #btnExport {
+      width: 100%;
+      margin-right: 0;
+    }
+  }
+
+  #formBodySchedSect,
+  #sectPacsTab,
+  #sectProfsTab,
+  #sectStudsTab {
+    width: unset !important;
+    min-width: unset !important;
+    .btn-close {
+      width: 0 !important;
+    }
+  }
+
+  #profileIconImg {
+    margin-left: 0.2rem;
+  }
 }
