@@ -1,0 +1,21 @@
+{
+  "presets": [
+    [
+      "next/babel",
+      "@babel/preset-env",
+      {
+        "targets": {
+          "browsers": ["> 0.25%", "not dead"]
+        }
+      }
+    ]
+  ],
+  "plugins": [
+    [
+      "@babel/plugin-transform-runtime",
+      {
+        "regenerator": true
+      }
+    ]
+  ]
+}

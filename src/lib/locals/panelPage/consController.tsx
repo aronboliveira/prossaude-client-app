@@ -2,7 +2,7 @@ import { User } from "../../global/declarations/classes";
 
 export const fillScheduleState = { acc: 0 };
 export const formData: { [key: string]: string } = {};
-export const user = await (async () => {
+export const user = (async () => {
   let userName = "Anônimo",
     userArea = "odontologia",
     userClass = "estudante",
