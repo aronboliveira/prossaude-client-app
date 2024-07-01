@@ -6,19 +6,11 @@ node_modules
 **/node_modules
 /.pnp
 .pnp.js
-.babelrc
-/.babelrc
-.eslintrc.cjs
-/.eslintrc.cjs
-.prettierrc
-/.prettierrc
 snippets.json
 /snippets.json
 setupTest.js
 **/setupTest.js
-style.scss
 .vscode/
-package-lock.json
 
 # testing
 /coverage
@@ -29,26 +21,6 @@ __tests__/
 
 # production
 /build
-**/dist/global-scripts/
-**/dist/global-scripts/src/
-ag-page/dist/ag-page/
-ag-page/dist/ag-page/src/
-base/dist/base/
-base/dist/base/src/
-edfis-page/dist/edfis-page/
-edfis-page/dist/edfis-page/src/
-global-scripts/dist/
-global-scripts/dist/src/
-login-page/dist/login-page/
-login-page/dist/login-page/src/
-od-page/dist/od-page/
-od-page/dist/od-page/src/
-signin-page/dist/signin-page/
-signin-page/dist/signin-page/src/
-**/src/style.scss
-/package.json
-/package-lock.json
-**/package-lock.json
 /snippets.json
 
 # misc
