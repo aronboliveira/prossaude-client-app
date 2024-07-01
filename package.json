@@ -20,6 +20,7 @@
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "babel-plugin-transform-async-to-generator": "^6.24.1",
+    "core-js": "^3.37.1",
     "eslint": "^8.57.0",
     "eslint-config-next": "^14.2.4",
     "next": "14.2.4",
@@ -27,6 +28,7 @@
     "react": "^18",
     "react-dom": "^18",
     "react-error-boundary": "^4.0.13",
+    "regenerator-runtime": "^0.14.1",
     "typescript": "^5.5.3",
     "xlsx": "^0.18.5",
     "xlsx-js-style": "^1.2.0"
