@@ -1,0 +1,68 @@
+import { DlgProps } from "@/lib/global/declarations/interfaces";
+import { nullishDlg } from "@/lib/global/declarations/types";
+import { isClickOutside } from "@/lib/global/gStyleScript";
+import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
+import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
+import { useEffect, useRef } from "react";
+import { ErrorBoundary } from "react-error-boundary";
+import GenericErrorComponent from "../../error/GenericErrorComponent";
+
+export default function ENDeclaration({
+  state,
+  dispatch,
+}: DlgProps): JSX.Element {
+  const mainRef = useRef<nullishDlg>(null);
+  const handleKp = (kp: KeyboardEvent) => {
+    if (kp.key === "ESCAPE") {
+      dispatch(!state);
+      !state && mainRef.current?.close();
+    }
+  };
+  useEffect(() => {
+    try {
+      if (!(mainRef.current instanceof HTMLElement))
+        throw elementNotFound(
+          mainRef.current,
+          `Main Reference for ${ENDeclaration.prototype.constructor.name}`,
+          extLine(new Error())
+        );
+      syncAriaStates([
+        mainRef.current,
+        ...mainRef.current.querySelectorAll("*"),
+      ]);
+
+      mainRef.current instanceof HTMLDialogElement &&
+        mainRef.current.showModal();
+      addEventListener("keypress", handleKp);
+      return () => removeEventListener("keypress", handleKp);
+    } catch (e) {
+      console.error(`Error executing useEffect:\n${(e as Error).message}`);
+    }
+  }, [mainRef]);
+  return !state ? (
+    <></>
+  ) : (
+    <ErrorBoundary
+      FallbackComponent={() => (
+        <GenericErrorComponent message="Erro carregando modal de declaração" />
+      )}
+    >
+      <dialog
+        id="conformDlg"
+        className="modal-content-stk2 defDp"
+        ref={mainRef}
+        onClick={ev => {
+          if (
+            isClickOutside(ev, ev.currentTarget).some(coord => coord == true)
+          ) {
+            dispatch(!state);
+            !state && ev.currentTarget.close();
+          }
+        }}
+      >
+        <h3>TERMOS DE CONCORDÂNCIA</h3>
+        <p>Texto</p>
+      </dialog>
+    </ErrorBoundary>
+  );
+}

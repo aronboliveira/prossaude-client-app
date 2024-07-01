@@ -1,0 +1,463 @@
+import {
+  nullishBtn,
+  nullishForm,
+  nullishInp,
+} from "@/lib/global/declarations/types";
+import { addListenerExportBtn } from "@/lib/global/gController";
+import {
+  addEmailExtension,
+  autoCapitalizeInputs,
+  formatCPF,
+  formatTel,
+} from "@/lib/global/gModel";
+import { clearPhDates, normalizeSizeSb } from "@/lib/global/gStyleScript";
+import {
+  elementNotFound,
+  elementNotPopulated,
+  extLine,
+  inputNotFound,
+} from "@/lib/global/handlers/errorHandler";
+import { subForm, syncAriaStates } from "@/lib/global/handlers/gHandlers";
+import { DataProvider } from "@/lib/locals/panelPage/declarations/classesCons";
+import { GlobalFormProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
+import { useEffect, useRef, useState, useCallback } from "react";
+import { handleClientPermissions } from "@/lib/locals/panelPage/handlers/consHandlerUsers";
+import { panelFormsVariables } from "../panelFormsData";
+import { ErrorBoundary } from "react-error-boundary";
+import GenericErrorComponent from "../../error/GenericErrorComponent";
+import ReseterBtn from "../defs/ReseterBtn";
+import { globalDataProvider } from "@/pages/panel";
+
+export default function ProfForm({
+  mainRoot,
+  userClass = "estudante",
+}: GlobalFormProps): JSX.Element {
+  const [showForm] = useState(true);
+  const formRef = useRef<nullishForm>(null);
+  const CPFProfRef = useRef<nullishInp>(null);
+  const telProfRef = useRef<nullishInp>(null);
+  const btnExportProfForm = useRef<nullishBtn>(null);
+  const callbackNormalizeSizeSb = useCallback(() => {
+    normalizeSizeSb([
+      ...document.querySelectorAll(".form-padded"),
+      ...document.querySelectorAll(".ovFlAut"),
+      ...document.querySelectorAll("[scrollbar-width=none]"),
+    ]);
+  }, []);
+  useEffect(() => {
+    if (formRef?.current instanceof HTMLFormElement) {
+      const profDataProvider = new DataProvider(
+        DataProvider.persistSessionEntries(formRef.current)
+      );
+      globalDataProvider &&
+        globalDataProvider.initPersist(
+          formRef.current,
+          profDataProvider,
+          globalDataProvider
+        );
+      const emailInput = formRef.current.querySelector("#inpEmailProf");
+      const nameInput = formRef.current.querySelector("#inpNameProf");
+      const dateInputs = Array.from(
+        formRef.current.querySelectorAll('input[type="date"]')
+      );
+      const toggleAutocorrect = document.getElementById(
+        "deactAutocorrectBtnProf"
+      );
+      const toggleAutoFill = document.getElementById("deactAutofilltBtnProf");
+      //adição de listeners para autocorreção
+      if (toggleAutoFill instanceof HTMLInputElement) {
+        toggleAutoFill.checked = true;
+        panelFormsVariables.isAutofillProfOn = true;
+        toggleAutoFill.addEventListener("change", () => {
+          panelFormsVariables.isAutofillProfOn =
+            !panelFormsVariables.isAutofillProfOn;
+          emailInput instanceof HTMLInputElement &&
+            addEmailExtension(emailInput);
+          CPFProfRef.current instanceof HTMLInputElement &&
+            formatCPF(CPFProfRef.current);
+          telProfRef.current instanceof HTMLInputElement &&
+            formatTel(telProfRef.current);
+        });
+      } else
+        inputNotFound(
+          toggleAutoFill,
+          "Element for toggling autofill in new Student form",
+          extLine(new Error())
+        );
+      if (
+        toggleAutocorrect instanceof HTMLInputElement &&
+        (toggleAutocorrect.type === "checkbox" ||
+          toggleAutocorrect.type === "radio")
+      ) {
+        toggleAutocorrect.checked = true;
+        panelFormsVariables.isAutocorrectProfOn = true;
+        toggleAutocorrect.addEventListener("change", () => {
+          panelFormsVariables.isAutocorrectProfOn =
+            !panelFormsVariables.isAutocorrectProfOn;
+          nameInput instanceof HTMLInputElement &&
+            autoCapitalizeInputs(nameInput);
+        });
+      } else
+        elementNotFound(
+          toggleAutocorrect,
+          `toggleAutocorrect in ProfForm`,
+          extLine(new Error())
+        );
+      nameInput instanceof HTMLInputElement
+        ? nameInput.addEventListener("input", () => {
+            toggleAutocorrect instanceof HTMLInputElement &&
+            toggleAutocorrect.checked === true
+              ? (panelFormsVariables.isAutocorrectProfOn = true)
+              : (panelFormsVariables.isAutocorrectProfOn = false);
+            autoCapitalizeInputs(
+              nameInput,
+              panelFormsVariables.isAutocorrectProfOn
+            );
+          })
+        : inputNotFound(
+            nameInput,
+            "nameInput in form for new Prof register",
+            extLine(new Error())
+          );
+      if (emailInput instanceof HTMLInputElement) {
+        emailInput.addEventListener("input", () => {
+          (panelFormsVariables.isAutofillProfOn ||
+            (toggleAutoFill instanceof HTMLInputElement &&
+              toggleAutoFill.checked)) &&
+            addEmailExtension(emailInput);
+        });
+        emailInput.addEventListener("click", () => {
+          (panelFormsVariables.isAutofillProfOn ||
+            (toggleAutoFill instanceof HTMLInputElement &&
+              toggleAutoFill.checked)) &&
+            addEmailExtension(emailInput);
+        });
+      } else
+        inputNotFound(
+          emailInput,
+          "emailInput in form for new Profents",
+          extLine(new Error())
+        );
+      //estilização
+      if (
+        dateInputs.length > 0 &&
+        dateInputs.every(
+          inp => inp instanceof HTMLInputElement && inp.type === "date"
+        )
+      ) {
+        clearPhDates(dateInputs);
+        for (const dateInp of dateInputs) {
+          (dateInp as HTMLInputElement).value = `${new Date().getFullYear()}-${(
+            new Date().getMonth() + 1
+          )
+            .toString()
+            .padStart(2, "0")}-${new Date()
+            .getDate()
+            .toString()
+            .padStart(2, "0")}`;
+          (dateInp as HTMLInputElement).style.color = "initial";
+        }
+      } else
+        elementNotPopulated(
+          dateInputs,
+          "dateInputs in form for new Profents",
+          extLine(new Error())
+        );
+      //adição de listener para exportação de excel
+      const exportBtn =
+        btnExportProfForm.current || document.querySelector("#btnExport");
+      exportBtn instanceof HTMLButtonElement
+        ? addListenerExportBtn(
+            "novoProfissional",
+            formRef.current,
+            nameInput as HTMLElement | null
+          )
+        : elementNotFound(
+            exportBtn,
+            "exportBtn in New Professional form",
+            extLine(new Error())
+          );
+      //adição de listeners para submissão
+      const btnSubmitProf = document.getElementById("btnSubmitNewProf");
+      if (btnSubmitProf instanceof HTMLButtonElement) {
+        userClass === "coordenador" &&
+          btnSubmitProf.addEventListener("click", click => {
+            const validation = subForm(btnSubmitProf, formRef.current!);
+            if (!validation) click.preventDefault();
+          });
+        userClass === "coordenador" &&
+          formRef.current!.addEventListener("submit", submit => {
+            const validation = subForm(btnSubmitProf, formRef.current!);
+            if (!validation) submit.preventDefault();
+          });
+      } else
+        elementNotFound(
+          btnSubmitProf,
+          "Button for submiting new Profent form",
+          extLine(new Error())
+        );
+      //estilização e aria
+      callbackNormalizeSizeSb();
+      syncAriaStates([
+        ...formRef.current!.querySelectorAll("*"),
+        formRef.current,
+      ]);
+    } else
+      elementNotFound(
+        formRef.current,
+        "formRef.current in useEffect()",
+        extLine(new Error())
+      );
+  }, [formRef]);
+  useEffect(() => {
+    if (
+      CPFProfRef?.current instanceof HTMLInputElement &&
+      CPFProfRef.current.id.match(/cpf/gi)
+    ) {
+      CPFProfRef.current.addEventListener("input", () => {
+        panelFormsVariables.isAutofillProfOn && formatCPF(CPFProfRef.current);
+      });
+    } else
+      inputNotFound(
+        CPFProfRef.current,
+        "CPFProfRef.current in useEffect()",
+        extLine(new Error())
+      );
+  }, [CPFProfRef]);
+  useEffect(() => {
+    if (
+      telProfRef?.current instanceof HTMLInputElement &&
+      telProfRef.current.id.match(/tel/gi)
+    ) {
+      telProfRef.current.addEventListener("input", () => {
+        panelFormsVariables.isAutofillProfOn &&
+          formatTel(telProfRef.current, true);
+      });
+    } else
+      inputNotFound(
+        telProfRef.current,
+        "telProfRef.current in useEffect()",
+        extLine(new Error())
+      );
+  }, [telProfRef]);
+  useEffect(() => {
+    handleClientPermissions(
+      userClass,
+      ["coordenador"],
+      ...document.getElementsByTagName("input"),
+      ...document.getElementsByTagName("button"),
+      ...document.querySelector("form")!.getElementsByTagName("select")
+    );
+  }, [formRef]);
+  return (
+    <ErrorBoundary
+      FallbackComponent={() => (
+        <GenericErrorComponent message="Erro carregando formulário para profissionais" />
+      )}
+    >
+      {showForm && (
+        <form
+          id="formAddProf"
+          name="formProfName"
+          action="#"
+          method="post"
+          target="_top"
+          ref={formRef}
+        >
+          <div role="group" id="formAddProfHDiv" className="mg-3b">
+            <h1 id="titleAddProfHBlock" className="bolded">
+              <strong id="titleAddProfH">Cadastro de Profissional</strong>
+            </h1>
+            <small role="textbox" id="detailsAddProfHBlock">
+              <em>Detalhe aqui os dados para o Profissional</em>
+            </small>
+          </div>
+          <div role="group" className="flexNoWR flexQ460NoWC">
+            <span
+              role="group"
+              className="form-switch spanRight"
+              id="autocorrectDivprof"
+            >
+              <input
+                type="checkbox"
+                className="deActBtn form-check-input"
+                role="switch"
+                id="deactAutocorrectBtnProf"
+                title="Correção automática de Nomes"
+                data-title="Autocorreção(Profissional)"
+              />{" "}
+              <strong>Autocorreção</strong>
+            </span>
+            <span
+              role="group"
+              className="form-switch spanRight"
+              id="autofillDivprof"
+            >
+              <input
+                type="checkbox"
+                className="deActBtn form-check-input"
+                role="switch"
+                id="deactAutofilltBtnProf"
+                title="Correção automática de CPF, Telefone e E-mail"
+                data-title="Autopreenchimento(Profissional)"
+              />{" "}
+              <strong>Autopreenchimento</strong>
+            </span>
+          </div>
+          <hr className="rdc05rHr460Q" />
+          <fieldset className="flexColumn" id="formAddProfBodyFs">
+            <label htmlFor="inpNameProf">
+              <strong id="titleNameProf">Nome:</strong>
+              <input
+                type="text"
+                id="inpNameProf"
+                className="form-control autocorrectAll ssPersist"
+                maxLength={999}
+                placeholder="Preencha com o nome completo"
+                autoFocus
+                autoComplete="given-name"
+                autoCapitalize="true"
+                data-title="Nome Completo: Profissional"
+                required
+              />
+            </label>
+            <label htmlFor="inpCPFProf">
+              <strong id="titleCPFProf">CPF:</strong>
+              <input
+                type="text"
+                id="inpCPFProf"
+                maxLength={15}
+                pattern="^(\d{3}\.?\d{3}\.?\d{3}-?\d{2})$"
+                className="form-control ssPersist"
+                placeholder="Preencha com o CPF"
+                autoComplete="username"
+                data-title="CPF Profissional"
+                ref={CPFProfRef}
+              />
+            </label>
+            <label htmlFor="inpTel">
+              <strong id="titleTelProf">Telefone (com DDD):</strong>
+              <input
+                type="tel"
+                list="listProfRegstTel"
+                id="inpTel"
+                className="form-control ssPersist"
+                maxLength={20}
+                placeholder="Preencha com o Telefone para contato"
+                autoComplete="tel"
+                data-title="Telefone Profissional"
+                required
+                ref={telProfRef}
+              />
+              <datalist id="listProfRegstTel"></datalist>
+            </label>
+            <label htmlFor="inpEmailProf">
+              <strong id="titleEmailProf">E-mail:</strong>
+              <input
+                type="email"
+                list="listProfRegstEmail"
+                id="inpEmailProf"
+                className="form-control ssPersist"
+                maxLength={20}
+                placeholder="Preencha com o E-mail para contato"
+                autoComplete="email"
+                data-title="E-mail Profissional"
+              />
+              <datalist id="listProfRegstEmail"></datalist>
+            </label>
+            <label htmlFor="inpCourseProf">
+              <strong id="titleOrigProf">Curso de Origem:</strong>
+              <input
+                type="text"
+                list="listCoursesProf"
+                id="inpCourseProf"
+                maxLength={99}
+                className="form-control ssPersist"
+                placeholder="Preencha com o Curso do Membro Profissional"
+                autoCapitalize="true"
+                data-title="Curso de Origem do Membro Profissional"
+                required
+              />
+              <datalist id="listCoursesProf">
+                <option value="Educação Física"></option>
+                <option value="Medicina"></option>
+                <option value="Nutrição"></option>
+                <option value="Odontologia"></option>
+                <option value="Psicologia"></option>
+              </datalist>
+            </label>
+            <label htmlFor="inpAtuacao">
+              <strong id="titleActProf">Área de atuação:</strong>
+              <select
+                id="inpAtuacao"
+                className="form-select ssPersist"
+                data-title="Área de Atuação do Profissional"
+              >
+                <option value="educacaofisicanut">
+                  Educação Física & Nutrição
+                </option>
+                <option value="odontologia">Odontologia</option>
+                <option value="psiq">Psiquiatria & Psicologia</option>
+              </select>
+            </label>
+            <label htmlFor="inpEntr">
+              <strong>Período de Entrada no Projeto:</strong>
+              <input
+                type="text"
+                id="inpEntr"
+                maxLength={7}
+                className="form-control ssPersist"
+                placeholder="Preencha com o Período (do Calendário) na entrada"
+                data-title="Período de Entrada do Profissional"
+                required
+              />
+            </label>
+            <label htmlFor="inpDayEntrProf" className="forceInvert">
+              <strong>Dia de Entrada no Projeto:</strong>
+              <input
+                type="date"
+                id="inpDayEntrProf"
+                min={1}
+                max={31}
+                maxLength={3}
+                className="form-control ssPersist"
+                placeholder="Preencha com o Dia de Entrada do Profissional no projeto"
+                data-title="Dia de Entrada do Profissional"
+                required
+              />
+            </label>
+            <div
+              role="group"
+              className="flexNoW flexJSe cGap2v flexAlItCt flexQ900NoWC rGapQ9002v"
+            >
+              <button
+                type="submit"
+                id="btnSubmitNewProf"
+                className="btn btn-success flexAlItCt flexJC flexBasis50 widFull noInvert"
+                formAction="#"
+              >
+                <strong>Finalizar Cadastro</strong>
+              </button>
+              <button
+                type="button"
+                id="btnExport"
+                name="btnExportProfsForm"
+                className="btn btn-primary flexAlItCt flexJC flexBasis50 widFull bolded noInvert"
+                ref={btnExportProfForm}
+                title="Gere um .xlsx com os dados preenchidos"
+              >
+                Gerar Planilha
+              </button>
+              <ReseterBtn
+                root={mainRoot}
+                renderForm={
+                  <ProfForm mainRoot={mainRoot} userClass={userClass} />
+                }
+              />
+            </div>
+          </fieldset>
+        </form>
+      )}
+    </ErrorBoundary>
+  );
+}

@@ -1,0 +1,568 @@
+/* AG Page Styles */
+
+@mixin formCheckOpaque {
+  opacity: 0.3;
+  margin-right: 0.4rem;
+  &:checked {
+    opacity: 1;
+    accent-color: green;
+    &.form-check-input {
+      background-color: green;
+      border-color: green;
+    }
+  }
+}
+
+@supports (scrollbar-width: none) {
+  * {
+    scrollbar-width: thin;
+  }
+}
+
+div {
+  &.switchDiv {
+    padding: 2.5vh 0 0.75vh 0;
+  }
+}
+
+[type="checkbox"] {
+  accent-color: rgba(0, 128, 0, 0.836);
+}
+
+.antMedBlock,
+.antMedContainer,
+.antMedDiv,
+.antMedLabel,
+.antMedText,
+.divAntMedSpan,
+.divAntMedSubSpan {
+  display: flex;
+}
+
+.antMedBlock,
+.antMedContainer,
+.spanSubAntMedText {
+  flex-direction: row;
+}
+
+.antMedBlock,
+.antMedDiv,
+.antMedLabel,
+.divAntMedSubSpan,
+#antMedBtnsDiv {
+  align-items: center;
+}
+
+.antMedText,
+.pbAlmSpan {
+  vertical-align: middle;
+}
+
+.countAntMed,
+#addAntMedId {
+  font-weight: bold;
+}
+
+.divAdd {
+  border-radius: 0.5rem;
+  min-width: 20vw;
+  &.divAntFam {
+    padding: 1% 1% 1% 2%;
+  }
+  &:not(.divAntFam) {
+    margin-block: 2vh;
+    padding: 2% 5% 2% 4%;
+  }
+  &:not(textarea) {
+    border: groove grey 0.125rem;
+  }
+  &.gridTwoCol {
+    column-gap: 5%;
+  }
+}
+
+.numNullId {
+  &.form-check-input {
+    margin: 0;
+    padding-left: 1vw;
+    transform: translate(-3px, -1px);
+  }
+  &:hover {
+    cursor: url(../../../public/img/exclamation.svg) 4 12, auto;
+  }
+}
+
+.spanSubAntMedText,
+#divFreqOdont,
+#fsAnamGRadSectId {
+  justify-content: space-between;
+}
+
+#autoCompCepBtn {
+  &:enabled {
+    background-color: blue;
+    &:hover {
+      animation: highlightBtn 2s infinite;
+    }
+  }
+  &[disabled] {
+    cursor: not-allowed;
+    opacity: 0.3;
+
+    &:hover {
+      background-color: orangered;
+    }
+  }
+}
+
+#fsAnamGSpan13,
+#fsAnamGSpan14 {
+  grid-column: 2 / span 1;
+}
+
+.antMedDateDiv {
+  align-items: center;
+  justify-content: space-evenly;
+  column-gap: 0.7rem;
+}
+
+.antMedDiv {
+  width: 80%;
+}
+
+.antMedText {
+  margin-left: 5%;
+}
+
+.antMedDate,
+.atualTratBtn {
+  margin-right: 2%;
+  margin-left: 2%;
+}
+
+.inpDate.inpAntMed.antMedDate[id*="End"] {
+  border-bottom-right-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.atualTratBtn {
+  border-bottom-left-radius: 0;
+  border-top-left-radius: 0;
+  margin-left: 0;
+  transform: translateX(-1.8rem) translateY(0.027rem) scale(1.07);
+}
+
+.btn {
+  &.biBtn {
+    &.countAntMed {
+      width: 1.25rem;
+      height: 1.5rem;
+      margin-bottom: 0.25rem;
+      margin-right: 0;
+      transform: scale(1);
+    }
+  }
+}
+
+.divAdd {
+  &.divAntFamCheck {
+    column-gap: 6%;
+  }
+}
+
+.divAntMedSpan {
+  flex-flow: column;
+  height: 20%;
+  width: 50%;
+}
+
+.divAntMedSubSpan {
+  padding: 3%;
+}
+
+.fsAnamGSpan {
+  &.locSpan {
+    padding-top: 1vh;
+    column-gap: 0;
+    align-items: start;
+    :first-child {
+      &:not([class*="form-"]) {
+        margin-left: 1vw;
+      }
+      &:is(.form-check-input) {
+        margin-left: 0.5vw;
+      }
+    }
+  }
+}
+
+.fsAGRadDiv,
+.sectFreqSubSpan {
+  &:has(input[type="radio"]) {
+    row-gap: 0.5vh;
+    margin-bottom: 0.5rem;
+    .radNo,
+    #pbAlmNo {
+      margin-inline: 0.8rem;
+      transform: scale(1.3) translateY(0.05rem);
+      opacity: 0.4;
+      &:not(#pbAlmNo) {
+        margin-top: 0.3rem;
+      }
+      &:checked {
+        opacity: 1;
+      }
+    }
+  }
+}
+
+.halfSpanCheck {
+  &.halfR {
+    height: calc(2.3rem + 0.2vh);
+    margin-top: 0.1vh;
+  }
+}
+
+.inpLocNum {
+  min-width: 8rem;
+  width: calc(0.05rem + 17.25vw);
+  padding-right: 10%;
+}
+
+.labelIdentif {
+  min-width: 90%;
+}
+
+.labDlist {
+  margin-bottom: 0.7vh;
+}
+
+.radFumo,
+.opFumSubs {
+  @include formCheckOpaque;
+}
+
+#divAddGrv {
+  input {
+    @include formCheckOpaque;
+    transform: translateY(0.04rem);
+    &:not(:first-of-type) {
+      margin-left: 0.6rem;
+    }
+  }
+}
+
+.spanAntMedDate {
+  width: 100%;
+}
+
+#antMedBtnsDiv {
+  padding-bottom: 1vh;
+  padding-left: 0.5vw;
+  column-gap: 0;
+}
+
+#compNumId {
+  padding-bottom: 0.4rem;
+}
+
+#confirmId {
+  margin: 0.25rem 0 0 0.7rem;
+}
+
+#dateBdayId {
+  min-width: 23.4vw;
+}
+
+#divFreqOdont {
+  grid-template-columns: 1fr 1fr;
+  width: 60%;
+  column-gap: 5%;
+}
+
+#divIdentif_2 span {
+  min-width: 19.62rem;
+}
+
+#fsAnamGDiv2 {
+  width: 63.5%;
+}
+
+#fsAnamGDiv3 {
+  width: 65%;
+}
+
+#fsAnamGDiv4 {
+  width: 33%;
+}
+
+#fsAnamGSpan8 {
+  grid-row: 3 / 5;
+}
+
+#fsAnamGSpan11 {
+  grid-column: 2;
+  grid-row: 2;
+  margin-right: 5.5vw;
+  width: 100%;
+}
+
+#fsAnamGSpan13 {
+  grid-row: 4;
+}
+
+#fsAnamGSpan14 {
+  grid-row: 5;
+}
+
+#fsAnamGRadSectId {
+  padding-left: 0.5%;
+}
+
+#fsAnamGSect {
+  hr {
+    margin-top: 2rem;
+    &:not(:first-of-type) {
+      margin-top: 1.5rem;
+    }
+  }
+  + hr {
+    margin-top: 2rem;
+  }
+}
+
+#fsSdGeralSect,
+#fsAntFamSect {
+  hr:last-of-type,
+  + hr {
+    margin-top: 2rem;
+  }
+}
+
+#genDiv {
+  column-gap: 10.2%;
+}
+
+#hivCargId {
+  height: 2.5rem;
+  + label {
+    margin-top: 0.5rem;
+  }
+}
+
+.sectionConfirm,
+#fsAntMedId {
+  overflow: auto;
+  max-width: 100vw;
+  margin-bottom: 2vh;
+}
+
+#spanFsAnamG16 {
+  padding-left: 0;
+}
+
+#textAddOtherDId {
+  width: 100%;
+}
+
+@media screen and (min-width: 901px) {
+  .addAntMed {
+    margin-right: 0.5rem;
+  }
+}
+
+@media screen and (max-width: 1350px) {
+  // .antMedDiv {
+  //   flex-direction: column;
+  // }
+}
+
+$base900InpWidth: 38.7rem;
+
+@media screen and (max-width: 900px) {
+  .antMedBlock,
+  .antMedBlock.spanMain,
+  .antMedContainer,
+  .antMedBtnsDiv {
+    display: flex;
+  }
+
+  .antMedContainer {
+    align-content: top;
+    align-items: start;
+  }
+
+  .antMedDiv {
+    width: 100%;
+    box-sizing: unset;
+    text-align: center;
+  }
+
+  .antMedBtnsDiv,
+  .antMedDiv,
+  .spanSubAntMedDate {
+    flex-wrap: nowrap;
+  }
+
+  .antMedBtnsDiv {
+    flex-direction: column;
+  }
+
+  .antMedBlock {
+    padding: 0 0 1% 0;
+    overflow: auto;
+    column-gap: 1vw;
+    scrollbar-width: none;
+  }
+
+  .atualTratBtn {
+    transform: translateX(-1.1rem) scale(1.057);
+  }
+
+  .gridThreeCol {
+    &#divOtherD {
+      max-width: 68.75rem;
+    }
+  }
+
+  .numNullId {
+    &.form-check-input {
+      transform: translate(-2px, 0);
+    }
+  }
+
+  .spanAntMedText {
+    .antMedLabel,
+    .antMedLabel.antMedText {
+      height: 100%;
+    }
+  }
+
+  .spanAntMedDate {
+    width: 50%;
+    .spanSubAntMedDate {
+      flex-direction: row;
+      padding: 0;
+      &.antMedBtnsDiv {
+        justify-content: space-between;
+        justify-self: right;
+        width: 15%;
+        padding-top: 5%;
+        &.removeAntMed {
+          margin-top: 67%;
+          margin-bottom: 67%;
+        }
+      }
+    }
+
+    input[type="date"]:not([data-title*="data_ini"]),
+    .datBtn {
+      margin-right: 0;
+      margin-bottom: 1%;
+      margin-top: 1%;
+    }
+    input[type="date"],
+    .datBtn {
+      width: 90%;
+    }
+  }
+
+  .spanAntMedDate,
+  .spanSubAntMedDate {
+    justify-content: start;
+  }
+
+  .spanAntMedDate,
+  #fsAnamGRadODSectId,
+  #divOtherD {
+    display: flex;
+    flex-wrap: nowrap;
+  }
+
+  .spanAntMedDate,
+  #fsAnamGDiv1,
+  #fsAnamGRadODSectId,
+  #fsAntMedLeg,
+  #divOtherD {
+    flex-direction: column;
+  }
+
+  .switchDiv {
+    margin-left: -1.2vw;
+    margin-bottom: 0.5rem;
+  }
+
+  #antMedBtnsDiv {
+    display: flex;
+    padding: 0.3rem 0 0 0;
+    transform: translateX(-0.4rem);
+  }
+
+  #confirmAstDigtBtn {
+    margin-right: 0;
+  }
+
+  #dateAgeId {
+    width: $base900InpWidth;
+  }
+
+  #dateBdayId {
+    min-width: $base900InpWidth;
+  }
+
+  #fsAnamGSpan6,
+  #fsAnamGSpan16 {
+    order: 1;
+  }
+
+  #fsAnamGSpan7,
+  #fsAnamGSpan17 {
+    order: 2;
+  }
+
+  #fsAnamGSpan8,
+  #fsAnamGSpan18 {
+    order: 3;
+  }
+
+  #fsAnamGSpan9,
+  #fsAnamGSpan19 {
+    order: 4;
+  }
+
+  #fsAnamGSpan10,
+  #fsAnamGSpan20 {
+    order: 5;
+  }
+
+  #fsAnamGSpan11,
+  #fsAnamGSpan21 {
+    order: 6;
+  }
+
+  #fsAnamGSpan12,
+  #fsAnamGSpan22 {
+    order: 7;
+  }
+
+  #fsAnamGSpan13,
+  #fsAnamGSpan23 {
+    order: 8;
+  }
+
+  #fsAnamGSpan14 {
+    order: 9;
+  }
+
+  #fsAnamGSpan13,
+  #fsAnamGSpan14 {
+    width: 85%;
+    padding: 0;
+    margin-left: 1%;
+  }
+
+  #divFreqOdont {
+    width: 90%;
+    grid-template-columns: 1fr;
+  }
+}
