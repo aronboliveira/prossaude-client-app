@@ -940,7 +940,8 @@ export function normalizeSizeSb(
                   (formPadded as HTMLElement).style.overflow = "unset";
                 });
             }
-            el = el.firstElementChild;
+            if (el.firstElementChild instanceof HTMLElement)
+              el = el.firstElementChild;
             ++safeAcc;
           } while (
             safeAcc <= includeChilds[1] &&
