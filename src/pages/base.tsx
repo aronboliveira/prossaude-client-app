@@ -19,7 +19,7 @@ export default function BasePage(): JSX.Element {
   const nextRouter = useRouter();
   useEffect(() => {
     handleLinkChanges("base", "Base Page Style");
-    const user = new User("Coordenador", "odontologia", "João Almeida");
+    const user = new User("Coordenador", "psicologia", "João Almeida");
     baseRootUser = document.getElementById("rootUserInfo");
     baseRootUser instanceof HTMLElement && !context.roots.baseRootedUser
       ? (context.roots.baseRootedUser = createRoot(baseRootUser))
