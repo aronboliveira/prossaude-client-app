@@ -25,6 +25,13 @@ export function handleLinkChanges(
         !/http-?equiv/gi.test(meta.outerHTML) &&
         meta.remove();
     });
+    const noscript = document.querySelector("noscript");
+    if (
+      noscript instanceof HTMLElement &&
+      noscript.tagName === "NOSCRIPT" &&
+      noscript.innerText === ""
+    )
+      noscript.innerText = "You need JavaScript to run this application.";
     try {
       const head = document.querySelector("head");
       if (!(head instanceof HTMLHeadElement))
@@ -119,6 +126,26 @@ export function handleLinkChanges(
                 `beforebegin`,
                 `
                 <link rel="icon" href="/favicon_g.ico" id="faviconpross" />
+                <link rel="canonical" href="https://prossaude-client.netlify.app/" />
+                <link
+                rel="apple-touch-icon"
+                href="img/apple-touch-icon-iphone-60x60-precomposed.png"
+              />
+              <link
+                rel="apple-touch-icon"
+                sizes="60x60"
+                href="img/apple-touch-icon-ipad-76x76-precomposed.png"
+              />
+              <link
+                rel="apple-touch-icon"
+                sizes="114x114"
+                href="img/apple-touch-icon-iphone-retina-120x120-precomposed.png"
+              />
+              <link
+                rel="apple-touch-icon"
+                sizes="144x144"
+                href="img/apple-touch-icon-ipad-retina-152x152-precomposed.png"
+              />
                 <title>Login — PROSSaúde</title>
                 <meta name="description" content="Este é uma página para login no sistema do projeto PROSSaúde — UFRJ" />
                 <meta property="og:type" content="website" />
@@ -153,6 +180,26 @@ export function handleLinkChanges(
                 `beforebegin`,
                 `
                 <link rel="icon" href="/favicon_g.ico" id="faviconpross" />
+                <link rel="canonical" href="https://prossaude-client.netlify.app/" />
+                <link
+                rel="apple-touch-icon"
+                href="img/apple-touch-icon-iphone-60x60-precomposed.png"
+              />
+              <link
+                rel="apple-touch-icon"
+                sizes="60x60"
+                href="img/apple-touch-icon-ipad-76x76-precomposed.png"
+              />
+              <link
+                rel="apple-touch-icon"
+                sizes="114x114"
+                href="img/apple-touch-icon-iphone-retina-120x120-precomposed.png"
+              />
+              <link
+                rel="apple-touch-icon"
+                sizes="144x144"
+                href="img/apple-touch-icon-ipad-retina-152x152-precomposed.png"
+              />
                 <title>Base de Navegação — Pró-Saúde</title>
                 <meta name="description" content="Este é uma página para navegação entre as subpáginas do sistema do projeto PROSSaúde — UFRJ" />
                 <meta property="og:type" content="website" />
@@ -186,6 +233,26 @@ export function handleLinkChanges(
                 `beforebegin`,
                 `
                 <link rel="icon" href="/favicon_g.ico" id="faviconpross" />
+                <link rel="canonical" href="https://prossaude-client.netlify.app/" />
+                <link
+                rel="apple-touch-icon"
+                href="img/apple-touch-icon-iphone-60x60-precomposed.png"
+              />
+              <link
+                rel="apple-touch-icon"
+                sizes="60x60"
+                href="img/apple-touch-icon-ipad-76x76-precomposed.png"
+              />
+              <link
+                rel="apple-touch-icon"
+                sizes="114x114"
+                href="img/apple-touch-icon-iphone-retina-120x120-precomposed.png"
+              />
+              <link
+                rel="apple-touch-icon"
+                sizes="144x144"
+                href="img/apple-touch-icon-ipad-retina-152x152-precomposed.png"
+              />
                 <title>Anamnese Geral &#8211 PROSSaúde, UFRJ</title>
                 <meta name="description" content="Este é um formulário para a Anamnese Geral do projeto PROSSaúde — UFRJ" />
                 <meta property="og:type" content="website" />
@@ -208,6 +275,26 @@ export function handleLinkChanges(
                 `beforebegin`,
                 `
                 <link rel="icon" href="/favicon_nut.ico" id="faviconpross" />
+                <link rel="canonical" href="https://prossaude-client.netlify.app/" />
+                <link
+                rel="apple-touch-icon"
+                href="img/apple-touch-icon-iphone-60x60-precomposed.png"
+              />
+              <link
+                rel="apple-touch-icon"
+                sizes="60x60"
+                href="img/apple-touch-icon-ipad-76x76-precomposed.png"
+              />
+              <link
+                rel="apple-touch-icon"
+                sizes="114x114"
+                href="img/apple-touch-icon-iphone-retina-120x120-precomposed.png"
+              />
+              <link
+                rel="apple-touch-icon"
+                sizes="144x144"
+                href="img/apple-touch-icon-ipad-retina-152x152-precomposed.png"
+              />
                 <title>Exame Clínico — Educação Física & Nutrição</title>
                 <meta name="description" content="Este é um formulário para o Exame Clínico de Educação Física do projeto PROSSaúde — UFRJ" />
                 <meta property="og:type" content="website" />
@@ -230,7 +317,27 @@ export function handleLinkChanges(
                 `beforebegin`,
                 `
                 <title>Exame Clínico — Odontologia</title>
+                <link rel="canonical" href="https://prossaude-client.netlify.app/" />
                 <link rel="icon" href="/favicon_od.ico" id="faviconpross" />
+                <link
+                rel="apple-touch-icon"
+                href="img/apple-touch-icon-iphone-60x60-precomposed.png"
+              />
+              <link
+                rel="apple-touch-icon"
+                sizes="60x60"
+                href="img/apple-touch-icon-ipad-76x76-precomposed.png"
+              />
+              <link
+                rel="apple-touch-icon"
+                sizes="114x114"
+                href="img/apple-touch-icon-iphone-retina-120x120-precomposed.png"
+              />
+              <link
+                rel="apple-touch-icon"
+                sizes="144x144"
+                href="img/apple-touch-icon-ipad-retina-152x152-precomposed.png"
+              />
                 <meta name="description" content="Este é um formulário para o Exame Clínico de Odontologia do projeto PROSSaúde — UFRJ" />
                 <meta property="og:type" content="website" />
                 <meta property="og:website:published_time" content="2024-07-02" />
@@ -252,7 +359,27 @@ export function handleLinkChanges(
                 `beforebegin`,
                 `
                 <title>Painel de Trabalho &#8211 PROSSaúde, UFRJ</title>
+                <link rel="canonical" href="https://prossaude-client.netlify.app/" />
                 <link rel="icon" href="/favicon_g.ico" id="faviconpross" />
+                <link
+                rel="apple-touch-icon"
+                href="img/apple-touch-icon-iphone-60x60-precomposed.png"
+              />
+              <link
+                rel="apple-touch-icon"
+                sizes="60x60"
+                href="img/apple-touch-icon-ipad-76x76-precomposed.png"
+              />
+              <link
+                rel="apple-touch-icon"
+                sizes="114x114"
+                href="img/apple-touch-icon-iphone-retina-120x120-precomposed.png"
+              />
+              <link
+                rel="apple-touch-icon"
+                sizes="144x144"
+                href="img/apple-touch-icon-ipad-retina-152x152-precomposed.png"
+              />
                 <meta name="description" content="Este é o painel de trabalho principal para o projeto PROSSaúde — UFRJ" />
                 <meta property="og:type" content="website" />
                 <meta property="og:website:published_time" content="2024-07-02" />
