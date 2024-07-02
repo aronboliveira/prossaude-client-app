@@ -251,6 +251,19 @@ $swhite: rgba(255, 255, 255, 0.8);
     }
   }
 
+  .inpTrat {
+    .inpDate {
+      .tratDate {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+      }
+    }
+    .inpAst {
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+  }
+
   .inspList {
     font-weight: bold;
     padding-bottom: 5%;
