@@ -633,12 +633,19 @@ export function subForm(
 export function syncAriaStates(
   els: Array<Element> | NodeListOf<Element>
 ): void {
+  if (els instanceof NodeList) els = Array.from(els);
+  els = els.filter(el => el instanceof Element);
   if (
-    (Array.isArray(els) || els instanceof NodeList) &&
+    Array.isArray(els) &&
     els.length > 0 &&
     Array.from(els).every(el => el instanceof Element)
   ) {
     els.forEach(el => {
+      if (
+        el instanceof HTMLHtmlElement ||
+        (el.parentElement && el.parentElement instanceof HTMLHeadElement)
+      )
+        return;
       if (el instanceof HTMLElement) {
         el.hidden && !el.focus
           ? (el.ariaHidden = "true")
@@ -682,19 +689,19 @@ export function syncAriaStates(
           ) {
             if (el.placeholder && el.placeholder !== "")
               el.ariaPlaceholder = el.placeholder;
-            el.required
-              ? (el.ariaRequired = "true")
-              : (el.ariaRequired = "false");
-            !el.checkValidity()
-              ? (el.ariaInvalid = "true")
-              : (el.ariaInvalid = "false");
-            el.closest("form")?.addEventListener("submit", () => {
-              if (!el.checkValidity()) {
-                el.ariaInvalid = "true";
-              } else {
-                el.ariaInvalid = "false";
-              }
-            });
+            if (el.type !== "radio") {
+              el.required
+                ? (el.ariaRequired = "true")
+                : (el.ariaRequired = "false");
+              !el.checkValidity()
+                ? (el.ariaInvalid = "true")
+                : (el.ariaInvalid = "false");
+              el.closest("form")?.addEventListener("submit", () => {
+                !el.checkValidity()
+                  ? (el.ariaInvalid = "true")
+                  : (el.ariaInvalid = "false");
+              });
+            }
             if (
               el instanceof HTMLTextAreaElement ||
               (el instanceof HTMLInputElement &&
