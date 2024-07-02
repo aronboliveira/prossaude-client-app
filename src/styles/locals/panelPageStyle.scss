@@ -139,3 +139,12 @@ body {
     margin-left: 0.2rem;
   }
 }
+
+@media screen and (max-width: 460px) {
+  .panelBody {
+    .transfArea {
+      align-self: auto;
+      max-width: 82vw;
+    }
+  }
+}
