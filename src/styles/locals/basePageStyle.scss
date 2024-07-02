@@ -139,21 +139,23 @@
     margin-left: 0.25rem;
   }
   .card {
-    &:has(#agAnchoredBtn) {
-      margin-left: 0.2rem;
-      min-width: 16.7rem;
-      a {
-        padding-bottom: 0.85rem;
+    .card-hborder {
+      &:has(#agAnchoredBtn) {
+        margin-left: 0.2rem;
+        min-width: 16.7rem;
+        a {
+          padding-bottom: 0.85rem;
+        }
       }
-    }
-    &:has(#odAnchoredBtn) {
-      a {
-        padding-bottom: 0.65rem;
+      &:has(#odAnchoredBtn) {
+        a {
+          padding-bottom: 0.65rem;
+        }
       }
-    }
-    &:has(#efAnchoredBtn) {
-      a {
-        padding-bottom: 0.6rem;
+      &:has(#efAnchoredBtn) {
+        a {
+          padding-bottom: 0.6rem;
+        }
       }
     }
   }

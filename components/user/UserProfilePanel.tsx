@@ -30,8 +30,9 @@ export default function UserProfilePanel({
   const toggleUserDropdown = (): void => {
     setDropdown(!shouldShowDropdown);
   };
+  const area = /psi/gi.test(user.userArea) ? "psi" : user.userArea;
   let imageSrc = "../img/PROS_icon.png";
-  switch (user.userArea) {
+  switch (area) {
     case "odontologia":
       imageSrc = "../img/pros-od-icon.png";
       break;
@@ -40,6 +41,9 @@ export default function UserProfilePanel({
       break;
     case "nutrição":
       imageSrc = "../img/pros_nut_icon.png";
+      break;
+    case "psi":
+      imageSrc = "../img/icon-psy.png";
       break;
     default:
       imageSrc = "../img/PROS_icon.png";

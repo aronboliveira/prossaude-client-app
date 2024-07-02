@@ -91,7 +91,7 @@ export default function BasePage(): JSX.Element {
                   >
                     <img
                       className="card-img-top"
-                      src="../img/PROS_icon.png"
+                      src="../img/icon-psy.png"
                       alt="imagem-card-geral"
                     />
                   </a>
@@ -104,10 +104,10 @@ export default function BasePage(): JSX.Element {
                     href="/ag"
                     onClick={() => nextRouter.push("/ag")}
                   >
-                    Anamnese Geral
+                    Anamnese Geral & Saúde Mental
                   </a>
                   <small className="mg-1bv460Q fd3el">
-                    Acesse aqui o formulário para Anamnese Geral
+                    Acesse aqui o formulário para Anamnese Geral & Saúde Mental
                   </small>
                 </div>
               </div>
