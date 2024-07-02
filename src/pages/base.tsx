@@ -104,10 +104,11 @@ export default function BasePage(): JSX.Element {
                     href="/ag"
                     onClick={() => nextRouter.push("/ag")}
                   >
-                    Anamnese Geral & Saúde Mental
+                    Anamnese Geral, Medicina & Saúde Mental
                   </a>
                   <small className="mg-1bv460Q fd3el">
-                    Acesse aqui o formulário para Anamnese Geral & Saúde Mental
+                    Acesse aqui o formulário para Anamnese Geral, Medicina &
+                    Saúde Mental
                   </small>
                 </div>
               </div>
