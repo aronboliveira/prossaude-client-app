@@ -121,15 +121,16 @@ export function handleLinkChanges(
                 <link rel="icon" href="/favicon_g.ico" id="faviconpross" />
                 <title>Login — PROSSaúde</title>
                 <meta name="description" content="Este é uma página para login no sistema do projeto PROSSaúde — UFRJ" />
-                <meta property="og:type" content="website" aria-hidden="false" />
-                <meta property="og:website:published_time" content="#" aria-hidden="false" />
-                <meta property="og:site_name" content="Login — PROSSaúde" aria-hidden="false" />
-                <meta property="og:url" content="# aria-hidden="false" />
-                <meta property="og:title" content="PROSSaúde — UFRJ — Login" aria-hidden="false" />
-                <meta property="og:description" content="Acesse o link para fazer o login no sistema online do Projeto PROSSaúde, UFRJ" aria-hidden="false" />
-                <meta property="og:image" content="./img/PROS_Saude_Modelo1-Final.jpg" aria-hidden="false" />
-                <meta property="og:image:width" content="1200" aria-hidden="false" />
-                <meta property="og:image:height" content="400" aria-hidden="false" />
+                <meta property="og:type" content="website" />
+                <meta property="og:website:published_time" content="2024-07-02" />
+                <meta property="og:site_name" content="Login — PROSSaúde" />
+                <meta property="og:url" content="https://prossaude-client.netlify.app/" />
+                <meta property="og:title" content="PROSSaúde — UFRJ — Login" />
+                <meta property="og:description" content="Acesse o link para fazer o login no sistema online do Projeto PROSSaúde, UFRJ" />
+                <meta property="og:image" content="https://prossaude-client.netlify.app/img/PROS_Saude_Modelo1-Final.png" />
+                <meta property="og:image:width" content="1200" />
+                <meta property="og:image:height" content="400" />
+                <meta property="og:image:alt" content="logo" />
                 `
               );
             document.body.className = "loginBody";
@@ -154,15 +155,15 @@ export function handleLinkChanges(
                 <link rel="icon" href="/favicon_g.ico" id="faviconpross" />
                 <title>Base de Navegação — Pró-Saúde</title>
                 <meta name="description" content="Este é uma página para navegação entre as subpáginas do sistema do projeto PROSSaúde — UFRJ" />
-                <meta property="og:type" content="website" aria-hidden="false" />
-                <meta property="og:website:published_time" content="#" aria-hidden="false" />
-                <meta property="og:site_name" content="PROSSaúde — Tela Base de Navegação" aria-hidden="false" />
-                <meta property="og:url" content="# aria-hidden="false" />
-                <meta property="og:title" content="PROSSaúde — UFRJ — Tela Base de Navegação — Formulário de Anamnese Geral" aria-hidden="false" />
-                <meta property="og:description" content="Acesse o link para acessar a tela para navegação entre as páginas de preenchimento e trabalho do Projeto PROSSaúde, UFRJ" aria-hidden="false" />
-                <meta property="og:image" content="./img/PROS_Saude_Modelo1-Final.jpg" aria-hidden="false" />
-                <meta property="og:image:width" content="1200" aria-hidden="false" />
-                <meta property="og:image:height" content="400" aria-hidden="false" />
+                <meta property="og:type" content="website" />
+                <meta property="og:website:published_time" content="2024-07-02" />
+                <meta property="og:site_name" content="PROSSaúde — Tela Base de Navegação" />
+                <meta property="og:url" content="https://prossaude-client.netlify.app/base/" />
+                <meta property="og:title" content="PROSSaúde — UFRJ — Tela Base de Navegação — Formulário de Anamnese Geral" />
+                <meta property="og:description" content="Acesse o link para acessar a tela para navegação entre as páginas de preenchimento e trabalho do Projeto PROSSaúde, UFRJ" />
+                <meta property="og:image" content="https://prossaude-client.netlify.app/img/PROS_Saude_Modelo1-Final.png" />
+                <meta property="og:image:width" content="1200" />
+                <meta property="og:image:height" content="400" />
               `
               );
             document.body.className = "baseBody";
@@ -187,15 +188,15 @@ export function handleLinkChanges(
                 <link rel="icon" href="/favicon_g.ico" id="faviconpross" />
                 <title>Anamnese Geral &#8211 PROSSaúde, UFRJ</title>
                 <meta name="description" content="Este é um formulário para a Anamnese Geral do projeto PROSSaúde — UFRJ" />
-                <meta property="og:type" content="website" aria-hidden="false" />
-                <meta property="og:website:published_time" content="#" aria-hidden="false" />
-                <meta property="og:site_name" content="PROSSaúde — Anamnese Geral" aria-hidden="false" />
-                <meta property="og:url" content="# aria-hidden="false" />
-                <meta property="og:title" content="PROSSaúde — UFRJ — Exame Clínico — Formulário de Anamnese Geral" aria-hidden="false" />
-                <meta property="og:description" content="Acesse o link para preencher o formulário dos dados para a Anamnese Geral do Projeto PROSSaúde, UFRJ" aria-hidden="false" />
-                <meta property="og:image" content="./img/PROS_Saude_Modelo1-Final.jpg" aria-hidden="false" />
-                <meta property="og:image:width" content="1200" aria-hidden="false" />
-                <meta property="og:image:height" content="400" aria-hidden="false" />
+                <meta property="og:type" content="website" />
+                <meta property="og:website:published_time" content="2024-07-02" />
+                <meta property="og:site_name" content="PROSSaúde — Anamnese Geral" />
+                <meta property="og:url" content="https://prossaude-client.netlify.app/ag/" />
+                <meta property="og:title" content="PROSSaúde — UFRJ — Exame Clínico — Formulário de Anamnese Geral" />
+                <meta property="og:description" content="Acesse o link para preencher o formulário dos dados para a Anamnese Geral do Projeto PROSSaúde, UFRJ" />
+                <meta property="og:image" content="https://prossaude-client.netlify.app/img/PROS_Saude_Modelo1-Final.png" />
+                <meta property="og:image:width" content="1200" />
+                <meta property="og:image:height" content="400" />
                 `
               );
             document.body.className = "agBody";
@@ -209,15 +210,15 @@ export function handleLinkChanges(
                 <link rel="icon" href="/favicon_nut.ico" id="faviconpross" />
                 <title>Exame Clínico — Educação Física & Nutrição</title>
                 <meta name="description" content="Este é um formulário para o Exame Clínico de Educação Física do projeto PROSSaúde — UFRJ" />
-                <meta property="og:type" content="website" aria-hidden="false" />
-                <meta property="og:website:published_time" content="#" aria-hidden="false" />
-                <meta property="og:site_name" content="PROSSaúde — Educação Física &amp; Nutrição" aria-hidden="false" />
-                <meta property="og:url" content="#" aria-hidden="false" />
-                <meta property="og:title" content="PROSSaúde — UFRJ — Exame Clínico — Formulário de Educação Física &amp; Nutrição" aria-hidden="false" />
-                <meta property="og:description" content="Acesse o link para preencher o formulário dos dados para o exame clínico de Educação Física &amp; Nutrição do Projeto PROSSaúde, UFRJ" aria-hidden="false" />
-                <meta property="og:image" content="./img/PROS_Saude_Modelo1-Final.jpg" aria-hidden="false" />
-                <meta property="og:image:width" content="1200" aria-hidden="false" />
-                <meta property="og:image:height" content="400" aria-hidden="false" />
+                <meta property="og:type" content="website" />
+                <meta property="og:website:published_time" content="2024-07-02" />
+                <meta property="og:site_name" content="PROSSaúde — Educação Física &amp; Nutrição" />
+                <meta property="og:url" content="https://prossaude-client.netlify.app/edfis/" />
+                <meta property="og:title" content="PROSSaúde — UFRJ — Exame Clínico — Formulário de Educação Física &amp; Nutrição" />
+                <meta property="og:description" content="Acesse o link para preencher o formulário dos dados para o exame clínico de Educação Física &amp; Nutrição do Projeto PROSSaúde, UFRJ" />
+                <meta property="og:image" content="https://prossaude-client.netlify.app/img/PROS_edfis_icon.png" />
+                <meta property="og:image:width" content="1200" />
+                <meta property="og:image:height" content="400" />
                 `
               );
             document.body.className = "edfisNutBody";
@@ -228,18 +229,18 @@ export function handleLinkChanges(
               head.firstElementChild!.insertAdjacentHTML(
                 `beforebegin`,
                 `
-                <title aria-hidden="false">Exame Clínico — Odontologia</title>
-                <link rel="icon" href="/favicon_od.ico" id="faviconpross" aria-hidden="false">
-                <meta name="description" content="Este é um formulário para o Exame Clínico de Odontologia do projeto PROSSaúde — UFRJ" aria-hidden="false" />
-                <meta property="og:type" content="website" aria-hidden="false" />
-                <meta property="og:website:published_time" content="#" aria-hidden="false" />
-                <meta property="og:site_name" content="PROSSaúde — Odontologia" aria-hidden="false" />
-                <meta property="og:url" content="#" aria-hidden="false" />
-                <meta property="og:title" content="PROSSaúde — UFRJ — Exame Clínico — Formulário de Odontologia" aria-hidden="false" />
-                <meta property="og:description" content="Acesse o link para preencher o formulário dos dados para o exame clínico de Odontologia do Projeto PROSSaúde, UFRJ" aria-hidden="false" />
-                <meta property="og:image" content="./PROS_Saude_Modelo1-Final.jpg" aria-hidden="false" />
-                <meta property="og:image:width" content="1200" aria-hidden="false" />
-                <meta property="og:image:height" content="400" aria-hidden="false" />
+                <title>Exame Clínico — Odontologia</title>
+                <link rel="icon" href="/favicon_od.ico" id="faviconpross" />
+                <meta name="description" content="Este é um formulário para o Exame Clínico de Odontologia do projeto PROSSaúde — UFRJ" />
+                <meta property="og:type" content="website" />
+                <meta property="og:website:published_time" content="2024-07-02" />
+                <meta property="og:site_name" content="PROSSaúde — Odontologia" />
+                <meta property="og:url" content="https://prossaude-client.netlify.app/od/" />
+                <meta property="og:title" content="PROSSaúde — UFRJ — Exame Clínico — Formulário de Odontologia" />
+                <meta property="og:description" content="Acesse o link para preencher o formulário dos dados para o exame clínico de Odontologia do Projeto PROSSaúde, UFRJ" />
+                <meta property="og:image" content="https://prossaude-client.netlify.app/img/pros-od-icon.png" />
+                <meta property="og:image:width" content="1200" />
+                <meta property="og:image:height" content="400" />
               `
               );
             document.body.className = "odBody";
@@ -253,15 +254,15 @@ export function handleLinkChanges(
                 <title>Painel de Trabalho &#8211 PROSSaúde, UFRJ</title>
                 <link rel="icon" href="/favicon_g.ico" id="faviconpross" />
                 <meta name="description" content="Este é o painel de trabalho principal para o projeto PROSSaúde — UFRJ" />
-                <meta property="og:type" content="website" aria-hidden="false" />
-                <meta property="og:website:published_time" content="#" aria-hidden="false" />
-                <meta property="og:site_name" content="PROSSaúde — Painel de Trabalho" aria-hidden="false" />
-                <meta property="og:url" content="# aria-hidden="false" />
-                <meta property="og:title" content="PROSSaúde — UFRJ — Exame Clínico — Formulário de Anamnese Geral" aria-hidden="false" />
-                <meta property="og:description" content="Acesse o link para preencher acessar o painel de trabalho online do Projeto PROSSaúde, UFRJ" aria-hidden="false" />
-                <meta property="og:image" content="./img/PROS_Saude_Modelo1-Final.jpg" aria-hidden="false" />
-                <meta property="og:image:width" content="1200" aria-hidden="false" />
-                <meta property="og:image:height" content="400" aria-hidden="false" />
+                <meta property="og:type" content="website" />
+                <meta property="og:website:published_time" content="2024-07-02" />
+                <meta property="og:site_name" content="PROSSaúde — Painel de Trabalho" />
+                <meta property="og:url" content="https://prossaude-client.netlify.app/panel/" />
+                <meta property="og:title" content="PROSSaúde — UFRJ — Exame Clínico — Formulário de Anamnese Geral" />
+                <meta property="og:description" content="Acesse o link para preencher acessar o painel de trabalho online do Projeto PROSSaúde, UFRJ" />
+                <meta property="og:image" content="https://prossaude-client.netlify.app/img/PROS_Saude_Modelo1-Final.png" />
+                <meta property="og:image:width" content="1200" />
+                <meta property="og:image:height" content="400" />
                 `
               );
             document.body.className = "panelBody";
