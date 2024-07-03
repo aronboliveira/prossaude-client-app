@@ -232,10 +232,10 @@ export function addEmailExtension(emailInp: targEl): string {
   ) {
     if (emailInp.value === "") {
       emailInp.value = "@.";
-      emailInp.setSelectionRange(0, 0);
+      emailInp.type !== "email" && emailInp.setSelectionRange(0, 0);
     } else if (emailInp.value === "@") {
       emailInp.value += "@.";
-      emailInp.setSelectionRange(0, 0);
+      emailInp.type !== "email" && emailInp.setSelectionRange(0, 0);
     }
     emailValue = emailInp.value;
   } else
