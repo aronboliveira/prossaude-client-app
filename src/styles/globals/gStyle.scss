@@ -1962,6 +1962,7 @@ td,
 [class*="modal-content"] {
   &.wid50v {
     width: 50vw;
+    min-width: 20rem;
   }
   &.defDp {
     display: revert;
