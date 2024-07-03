@@ -165,10 +165,11 @@ export function dragStart(
             odInitialX = touch.clientX - odOffsetX;
             odInitialY = touch.clientY - odOffsetY;
             (validSrcEl as HTMLElement).style.position = "absolute";
-            (validSrcEl as HTMLElement).style.zIndex = "1000";
+            (validSrcEl as HTMLElement).style.zIndex = "100";
           }
           const handleTouchDrag = (ev: TouchEvent) => {
             if (!odIsDragging) return;
+            ev.preventDefault();
             const touch = ev.targetTouches[0];
             odOffsetX = touch.clientX - odInitialX;
             odOffsetY = touch.clientY - odInitialY;
@@ -177,7 +178,10 @@ export function dragStart(
             ).style.transform = `translate(${odOffsetX}px, ${odOffsetY}px)`;
             document.removeEventListener("touchmove", handleTouchDrag);
           };
-          document.addEventListener("touchmove", handleTouchDrag);
+          document.addEventListener("touchmove", handleTouchDrag, {
+            passive: false,
+            once: true,
+          });
           const handleTouchEnd = (end: TouchEvent) => {
             console.log(end);
             if (odIsDragging) {
@@ -206,6 +210,8 @@ export function dragStart(
                   validSrcEl.style.setProperty("grid-row", targCStRow);
                   validTargEl.style.setProperty("grid-column", srcCStCol);
                   validTargEl.style.setProperty("grid-row", srcCStRow);
+                  (validSrcEl as HTMLElement).style.position = "static";
+                  (validSrcEl as HTMLElement).style.zIndex = "10";
                 } else
                   multipleElementsNotFound(
                     extLine(new Error()),
@@ -222,7 +228,7 @@ export function dragStart(
             }
             document.removeEventListener("touchend", handleTouchEnd);
           };
-          document.addEventListener("touchend", handleTouchEnd);
+          document.addEventListener("touchend", handleTouchEnd, { once: true });
         });
       }
     } else

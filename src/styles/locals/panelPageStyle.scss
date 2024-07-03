@@ -77,6 +77,10 @@ body {
     }
   }
 
+  .appointmentBtn {
+    touch-action: none;
+  }
+
   .reduced-btn-close {
     max-width: 0.1em;
     max-height: 0.1em;

@@ -690,49 +690,71 @@ export function handleDragAptBtn(
       );
     });
     newAppointmentBtn.addEventListener("dragend", end => {
-      for (let c = 0; c < slotsCoords.length; c++) {
-        let isSlotMatch = false;
-        end.clientX >= slotsCoords[c].upperLeftVert[0] &&
-        end.clientX <= slotsCoords[c].upperRightVert[0] &&
-        end.clientY >= slotsCoords[c].upperLeftVert[1] &&
-        end.clientY <= slotsCoords[c].lowerLeftVert[1]
-          ? (isSlotMatch = true)
-          : (isSlotMatch = false);
-        const [matchedSlot] = document
-          .elementsFromPoint(end.clientX, end.clientY)
-          .filter(el => el.classList.contains("consSlot"));
-        matchedSlot instanceof HTMLElement
-          ? (isSlotMatch = true)
-          : (isSlotMatch = false);
-        if (isSlotMatch) {
-          replaceRegstSlot(matchedSlot, newAppointmentBtn, slots, userClass);
-          try {
-            const monthSelector = document.getElementById("monthSelector");
+      try {
+        for (let c = 0; c < slotsCoords.length; c++) {
+          let isSlotMatch = false;
+          end.clientX >= slotsCoords[c].upperLeftVert[0] &&
+          end.clientX <= slotsCoords[c].upperRightVert[0] &&
+          end.clientY >= slotsCoords[c].upperLeftVert[1] &&
+          end.clientY <= slotsCoords[c].lowerLeftVert[1]
+            ? (isSlotMatch = true)
+            : (isSlotMatch = false);
+          const [matchedSlot] = document
+            .elementsFromPoint(end.clientX, end.clientY)
+            .filter(el => el.classList.contains("consSlot"));
+          matchedSlot instanceof HTMLElement
+            ? (isSlotMatch = true)
+            : (isSlotMatch = false);
+          if (isSlotMatch) {
             if (
-              !(
-                monthSelector instanceof HTMLSelectElement ||
-                monthSelector instanceof HTMLInputElement
-              )
+              !(newAppointmentBtn instanceof HTMLButtonElement) &&
+              ((newAppointmentBtn as any).tagName === "STRONG" ||
+                (newAppointmentBtn as any).tagName === "EM" ||
+                (newAppointmentBtn as any).tagName === "SPAN") &&
+              (newAppointmentBtn as any).closest("button")
             )
-              throw inputNotFound(
-                monthSelector,
-                `monthSelector for updating session schedule state after dragend`,
-                extLine(new Error())
-              );
-            const tbody = document.getElementById("tbSchedule");
-            if (!(tbody instanceof HTMLElement))
+              newAppointmentBtn = (newAppointmentBtn as HTMLElement).closest(
+                "button"
+              ) as HTMLButtonElement;
+            if (!(newAppointmentBtn instanceof HTMLButtonElement))
               throw elementNotFound(
-                tbody,
-                `tbody for updating session schedule state after dragend`,
+                newAppointmentBtn,
+                `New Appointment Button in touchstart callback`,
                 extLine(new Error())
               );
-            sessionScheduleState[monthSelector.value] = tbody.innerHTML;
-          } catch (e) {
-            console.error(`Error updation session schedule state after dragend:
-            ${(e as Error).message}`);
-          }
-          break;
-        } else console.warn(`No slot match found for dragend.`);
+            replaceRegstSlot(matchedSlot, newAppointmentBtn, slots, userClass);
+            try {
+              const monthSelector = document.getElementById("monthSelector");
+              if (
+                !(
+                  monthSelector instanceof HTMLSelectElement ||
+                  monthSelector instanceof HTMLInputElement
+                )
+              )
+                throw inputNotFound(
+                  monthSelector,
+                  `monthSelector for updating session schedule state after dragend`,
+                  extLine(new Error())
+                );
+              const tbody = document.getElementById("tbSchedule");
+              if (!(tbody instanceof HTMLElement))
+                throw elementNotFound(
+                  tbody,
+                  `tbody for updating session schedule state after dragend`,
+                  extLine(new Error())
+                );
+              sessionScheduleState[monthSelector.value] = tbody.innerHTML;
+            } catch (e) {
+              console.error(`Error updation session schedule state after dragend:
+              ${(e as Error).message}`);
+            }
+            break;
+          } else console.warn(`No slot match found for dragend.`);
+        }
+      } catch (e) {
+        console.error(
+          `Error executing dragEnd callback:${(e as Error).message}`
+        );
       }
     });
     newAppointmentBtn.addEventListener("touchstart", ev => {
@@ -742,23 +764,45 @@ export function handleDragAptBtn(
           touch.target instanceof HTMLElement &&
           touch.target.classList.contains("appointmentBtn")
       ) as any;
+      if (
+        !(newAppointmentBtn instanceof HTMLButtonElement) &&
+        ((newAppointmentBtn as any).tagName === "STRONG" ||
+          (newAppointmentBtn as any).tagName === "EM" ||
+          (newAppointmentBtn as any).tagName === "SPAN") &&
+        (newAppointmentBtn as any).closest("button")
+      )
+        newAppointmentBtn = (newAppointmentBtn as HTMLElement).closest(
+          "button"
+        ) as HTMLButtonElement;
+      if (!(newAppointmentBtn instanceof HTMLButtonElement))
+        throw elementNotFound(
+          newAppointmentBtn,
+          `New Appointment Button in touchstart callback`,
+          extLine(new Error())
+        );
       if (!(fbTouch instanceof Touch)) fbTouch = ev.touches[0];
       if (fbTouch) {
         const touch = fbTouch;
         initialX = touch.clientX - offsetX;
         initialY = touch.clientY - offsetY;
-        newAppointmentBtn.style.position = "absolute";
-        newAppointmentBtn.style.zIndex = "1000";
+        (newAppointmentBtn as HTMLButtonElement).style.position = "absolute";
+        (newAppointmentBtn as HTMLButtonElement).style.zIndex = "50";
       }
       const handleTouchDrag = (ev: TouchEvent) => {
         if (!isDragging) return;
+        ev.preventDefault();
         const touch = ev.targetTouches[0];
         offsetX = touch.clientX - initialX;
         offsetY = touch.clientY - initialY;
-        newAppointmentBtn.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+        (
+          newAppointmentBtn as HTMLButtonElement
+        ).style.transform = `translate(${offsetX}px, ${offsetY}px)`;
         document.removeEventListener("touchmove", handleTouchDrag);
       };
-      document.addEventListener("touchmove", handleTouchDrag);
+      document.addEventListener("touchmove", handleTouchDrag, {
+        passive: false,
+        once: true,
+      });
       const handleTouchEnd = (end: TouchEvent) => {
         console.log(end);
         if (isDragging) {
@@ -780,10 +824,23 @@ export function handleDragAptBtn(
               matchedSlot instanceof HTMLElement
                 ? (isSlotMatch = true)
                 : (isSlotMatch = false);
+              if (
+                !(newAppointmentBtn instanceof HTMLButtonElement) &&
+                ((newAppointmentBtn as any).tagName === "STRONG" ||
+                  (newAppointmentBtn as any).tagName === "EM" ||
+                  (newAppointmentBtn as any).tagName === "SPAN") &&
+                (newAppointmentBtn as any).closest("button")
+              )
+                newAppointmentBtn = (newAppointmentBtn as HTMLElement).closest(
+                  "button"
+                ) as HTMLButtonElement;
               if (isSlotMatch) {
+                (newAppointmentBtn as HTMLButtonElement).style.position =
+                  "static";
+                (newAppointmentBtn as HTMLButtonElement).style.zIndex = "10";
                 replaceRegstSlot(
                   matchedSlot,
-                  newAppointmentBtn,
+                  newAppointmentBtn as HTMLButtonElement,
                   slots,
                   userClass
                 );
@@ -817,13 +874,15 @@ export function handleDragAptBtn(
               } else console.warn(`No slot match found for dragend.`);
             }
           } catch (e) {
-            console.error(`Error:${(e as Error).message}`);
+            console.error(
+              `Error executing handleToucEnd:\n${(e as Error).message}`
+            );
           }
           isDragging = false;
         }
         document.removeEventListener("touchend", handleTouchEnd);
       };
-      document.addEventListener("touchend", handleTouchEnd);
+      document.addEventListener("touchend", handleTouchEnd, { once: true });
     });
   } else
     elementNotFound(
@@ -839,175 +898,210 @@ export function replaceRegstSlot(
   slots: Array<Element>,
   userClass: string = "estudante"
 ): void {
-  if (matchedSlot instanceof HTMLElement) {
-    newAppointmentBtn.style.width = "100%";
-    matchedSlot.replaceChild(
-      newAppointmentBtn,
-      matchedSlot.querySelector(".slotableDay") ??
-        matchedSlot.children[0] ??
-        matchedSlot.parentElement!.children[0]
-    );
-    const transfArea = document.getElementById("transfArea");
-    if (transfArea instanceof HTMLElement) {
+  try {
+    if (!(matchedSlot instanceof HTMLElement))
+      throw elementNotFound(matchedSlot, `Matched Slot`, extLine(new Error()));
+    if (
+      !(newAppointmentBtn instanceof HTMLButtonElement) &&
+      ((newAppointmentBtn as any).tagName === "STRONG" ||
+        (newAppointmentBtn as any).tagName === "EM" ||
+        (newAppointmentBtn as any).tagName === "SPAN") &&
+      (newAppointmentBtn as any).closest("button")
+    )
+      newAppointmentBtn = (newAppointmentBtn as HTMLElement).closest(
+        "button"
+      ) as HTMLButtonElement;
+    if (!(newAppointmentBtn instanceof HTMLButtonElement))
+      throw elementNotFound(
+        newAppointmentBtn,
+        `New Appointment Button`,
+        extLine(new Error())
+      );
+    slots = slots.filter(slot => slot instanceof Element);
+    if (slots.length === 0) throw new Error(`Failed to populate slots list`);
+    if (typeof userClass !== "string")
+      throw typeError(
+        `User class in replaceRegstSlot`,
+        userClass,
+        "string",
+        extLine(new Error())
+      );
+    if (matchedSlot instanceof HTMLElement) {
+      newAppointmentBtn.style.width = "100%";
+      matchedSlot.replaceChild(
+        newAppointmentBtn,
+        matchedSlot.querySelector(".slotableDay") ??
+          matchedSlot.children[0] ??
+          matchedSlot.parentElement!.children[0]
+      );
+      const transfArea = document.getElementById("transfArea");
+      if (transfArea instanceof HTMLElement) {
+        if (
+          !transfArea.hasChildNodes() ||
+          transfArea.innerHTML === `` ||
+          transfArea.childElementCount === 1 ||
+          !transfArea.querySelector("slot")
+        ) {
+          transfArea.querySelector("btn-close")
+            ? transfArea.insertBefore(
+                Object.assign(document.createElement("slot"), {
+                  id: "replaceSlot",
+                  textContent: "Área de transferência",
+                  className: "opaqueEl",
+                  color: "#0981714d",
+                }),
+                transfArea.querySelector("button")!
+              )
+            : transfArea.appendChild(
+                Object.assign(document.createElement("slot"), {
+                  id: "replaceSlot",
+                  textContent: "Área de transferência",
+                  className: "opaqueEl",
+                })
+              );
+        }
+      } else
+        elementNotFound(
+          transfArea,
+          "Element for appointment transference slot in handleDragAptBtn()",
+          extLine(new Error())
+        );
+      const regstBtn = document.getElementById("regstDayBtn");
+      if (regstBtn instanceof HTMLButtonElement) regstBtn.disabled = true;
+      else
+        elementNotFound(
+          regstBtn,
+          `Button for registering appointment in dragend`,
+          extLine(new Error())
+        );
+      const confirmBtn = document.getElementById("confirmDayInp");
       if (
-        !transfArea.hasChildNodes() ||
-        transfArea.innerHTML === `` ||
-        transfArea.childElementCount === 1 ||
-        !transfArea.querySelector("slot")
-      ) {
-        transfArea.querySelector("btn-close")
-          ? transfArea.insertBefore(
-              Object.assign(document.createElement("slot"), {
-                id: "replaceSlot",
-                textContent: "Área de transferência",
-                className: "opaqueEl",
-                color: "#0981714d",
-              }),
-              transfArea.querySelector("button")!
-            )
-          : transfArea.appendChild(
-              Object.assign(document.createElement("slot"), {
-                id: "replaceSlot",
-                textContent: "Área de transferência",
-                className: "opaqueEl",
-              })
+        regstBtn instanceof HTMLInputElement &&
+        (regstBtn.type === "checkbox" || regstBtn.type === "radio")
+      )
+        regstBtn.checked = false;
+      else
+        inputNotFound(
+          confirmBtn,
+          "Button for confirming appointment in dragend",
+          extLine(new Error())
+        );
+      elementNotFound(
+        regstBtn,
+        "Button for registering appointment in handleDragAptBtn()",
+        extLine(new Error())
+      );
+      slots[0]
+        .closest("table")!
+        .querySelectorAll("tr")!
+        .forEach((tr, i) => {
+          tr.dataset.row = `${i}`;
+          const trCels = [
+            ...tr.querySelectorAll("td"),
+            ...tr.querySelectorAll("th"),
+          ];
+          trCels.forEach((cel, j) => {
+            cel.dataset.row = `${i}`;
+            cel.dataset.column = `${j}`;
+          });
+        });
+      matchedSlot.dataset.row = (
+        matchedSlot.closest("td") || matchedSlot.closest("th")
+      )?.dataset.row;
+      matchedSlot.dataset.column = (
+        matchedSlot.closest("td") || matchedSlot.closest("th")
+      )?.dataset.column;
+      const noMatchSlots = slots.filter(slot => !slot.isEqualNode(matchedSlot));
+      for (let s = 0; s < noMatchSlots.length; s++) {
+        const relTr = matchedSlot.closest("tr")!;
+        const trCels = [
+          ...relTr.querySelectorAll("th"),
+          ...relTr.querySelectorAll("td"),
+        ].filter(cel => cel instanceof HTMLElement);
+        const slotNum = Array.from(
+          relTr.querySelectorAll(".consSlot")
+        ).findIndex(slot => slot.isSameNode(noMatchSlots[s]));
+        if (
+          !noMatchSlots[s].hasChildNodes() ||
+          (!noMatchSlots[s].querySelector(".slotableDay") &&
+            !noMatchSlots[s].querySelector('[id*="appointmentBtn"]'))
+        ) {
+          noMatchSlots[s].innerHTML = `
+            <input
+              class="transparent-el slotableDay opaque-bluish wid100 form-control"
+              placeholder="Horário Livre"
+              id = ${trCels[0].innerText}_${
+            (noMatchSlots[s].closest("td") || noMatchSlots[s].closest("th"))
+              ?.dataset.column || slotNum
+          }
+            />
+            <div role="group" class="flexNoWC flexAlItCt">
+              <input
+                type="checkbox"
+                class="form-check-input apptCheck redMg checkGreen"
+              />
+              <button
+                type="button"
+                class="btn btn-close reduced-btn-close eraseAptBtn"
+              ></button>
+            </div>
+            `;
+          addEraseEvent(
+            noMatchSlots[s].querySelector(".eraseAptBtn")!,
+            userClass
+          );
+          try {
+            if (userClass === "coordenador" || userClass === "supervisor") {
+              const aptBtn = noMatchSlots[s].querySelector(".apptCheck");
+              if (
+                !(
+                  aptBtn instanceof HTMLInputElement ||
+                  aptBtn instanceof HTMLButtonElement
+                )
+              )
+                throw elementNotFound(
+                  aptBtn,
+                  `New Appointment Button`,
+                  extLine(new Error())
+                );
+              aptBtn instanceof HTMLInputElement &&
+                aptBtn.addEventListener("change", () =>
+                  checkConfirmApt(aptBtn)
+                );
+              setInterval((interv: any) => {
+                if (
+                  !(
+                    aptBtn instanceof HTMLButtonElement ||
+                    aptBtn instanceof HTMLInputElement
+                  ) ||
+                  !(userClass === "coordenador" || userClass === "supervisor")
+                ) {
+                  clearInterval(interv);
+                  return;
+                }
+                if (
+                  aptBtn.closest(".consSlot")?.querySelector(".appointmentBtn")
+                )
+                  aptBtn.disabled = false;
+                else aptBtn.disabled = true;
+              }, 200);
+            }
+          } catch (e) {
+            console.error(
+              `Error adding interval to new aptBtn:\n${(e as Error).message}`
             );
+          }
+        }
       }
     } else
       elementNotFound(
-        transfArea,
-        "Element for appointment transference slot in handleDragAptBtn()",
+        matchedSlot,
+        "Undefined Slot por dragend",
         extLine(new Error())
       );
-    const regstBtn = document.getElementById("regstDayBtn");
-    if (regstBtn instanceof HTMLButtonElement) regstBtn.disabled = true;
-    else
-      elementNotFound(
-        regstBtn,
-        `Button for registering appointment in dragend`,
-        extLine(new Error())
-      );
-    const confirmBtn = document.getElementById("confirmDayInp");
-    if (
-      regstBtn instanceof HTMLInputElement &&
-      (regstBtn.type === "checkbox" || regstBtn.type === "radio")
-    )
-      regstBtn.checked = false;
-    else
-      inputNotFound(
-        confirmBtn,
-        "Button for confirming appointment in dragend",
-        extLine(new Error())
-      );
-    elementNotFound(
-      regstBtn,
-      "Button for registering appointment in handleDragAptBtn()",
-      extLine(new Error())
-    );
-    slots[0]
-      .closest("table")!
-      .querySelectorAll("tr")!
-      .forEach((tr, i) => {
-        tr.dataset.row = `${i}`;
-        const trCels = [
-          ...tr.querySelectorAll("td"),
-          ...tr.querySelectorAll("th"),
-        ];
-        trCels.forEach((cel, j) => {
-          cel.dataset.row = `${i}`;
-          cel.dataset.column = `${j}`;
-        });
-      });
-    matchedSlot.dataset.row = (
-      matchedSlot.closest("td") || matchedSlot.closest("th")
-    )?.dataset.row;
-    matchedSlot.dataset.column = (
-      matchedSlot.closest("td") || matchedSlot.closest("th")
-    )?.dataset.column;
-    const noMatchSlots = slots.filter(slot => !slot.isEqualNode(matchedSlot));
-    for (let s = 0; s < noMatchSlots.length; s++) {
-      const relTr = matchedSlot.closest("tr")!;
-      const trCels = [
-        ...relTr.querySelectorAll("th"),
-        ...relTr.querySelectorAll("td"),
-      ].filter(cel => cel instanceof HTMLElement);
-      const slotNum = Array.from(relTr.querySelectorAll(".consSlot")).findIndex(
-        slot => slot.isSameNode(noMatchSlots[s])
-      );
-      if (
-        !noMatchSlots[s].hasChildNodes() ||
-        (!noMatchSlots[s].querySelector(".slotableDay") &&
-          !noMatchSlots[s].querySelector('[id*="appointmentBtn"]'))
-      ) {
-        noMatchSlots[s].innerHTML = `
-        <input
-          class="transparent-el slotableDay opaque-bluish wid100 form-control"
-          placeholder="Horário Livre"
-          id = ${trCels[0].innerText}_${
-          (noMatchSlots[s].closest("td") || noMatchSlots[s].closest("th"))
-            ?.dataset.column || slotNum
-        }
-        />
-        <div role="group" class="flexNoWC flexAlItCt">
-          <input
-            type="checkbox"
-            class="form-check-input apptCheck redMg checkGreen"
-          />
-          <button
-            type="button"
-            class="btn btn-close reduced-btn-close eraseAptBtn"
-          ></button>
-        </div>
-        `;
-        addEraseEvent(
-          noMatchSlots[s].querySelector(".eraseAptBtn")!,
-          userClass
-        );
-        try {
-          if (userClass === "coordenador" || userClass === "supervisor") {
-            const aptBtn = noMatchSlots[s].querySelector(".apptCheck");
-            if (
-              !(
-                aptBtn instanceof HTMLInputElement ||
-                aptBtn instanceof HTMLButtonElement
-              )
-            )
-              throw elementNotFound(
-                aptBtn,
-                `New Appointment Button`,
-                extLine(new Error())
-              );
-            aptBtn instanceof HTMLInputElement &&
-              aptBtn.addEventListener("change", () => checkConfirmApt(aptBtn));
-            setInterval((interv: any) => {
-              if (
-                !(
-                  aptBtn instanceof HTMLButtonElement ||
-                  aptBtn instanceof HTMLInputElement
-                ) ||
-                !(userClass === "coordenador" || userClass === "supervisor")
-              ) {
-                clearInterval(interv);
-                return;
-              }
-              if (aptBtn.closest(".consSlot")?.querySelector(".appointmentBtn"))
-                aptBtn.disabled = false;
-              else aptBtn.disabled = true;
-            }, 200);
-          }
-        } catch (e) {
-          console.error(
-            `Error adding interval to new aptBtn:\n${(e as Error).message}`
-          );
-        }
-      }
-    }
-  } else
-    elementNotFound(
-      matchedSlot,
-      "Undefined Slot por dragend",
-      extLine(new Error())
-    );
+  } catch (e) {
+    console.error(`Error:${(e as Error).message}`);
+  }
 }
 
 export function checkRegstBtn(

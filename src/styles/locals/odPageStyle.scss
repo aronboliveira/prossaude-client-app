@@ -299,6 +299,7 @@ $swhite: rgba(255, 255, 255, 0.8);
   }
 
   .quadrAvDent {
+    touch-action: none;
     &.contInQuadrs {
       border-top-left-radius: 0;
       border-top-right-radius: 0;
