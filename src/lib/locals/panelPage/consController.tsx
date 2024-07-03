@@ -25,8 +25,15 @@ export const user = (async () => {
       )
     );
   } catch (err) {
-    console.error(`FETCH ERROR:
+    setTimeout(() => {
+      if (
+        document.getElementById("nameLogin")?.innerText === "" ||
+        (document.getElementById("nameLogin") &&
+          /anônimo/gi.test(document.getElementById("nameLogin")!.innerText))
+      )
+        console.error(`FETCH ERROR:
     ${(err as Error).message}`);
+    }, 1000);
     return Object.freeze(
       new User(userClass, userArea, userName, userEmail, userTel)
     );
