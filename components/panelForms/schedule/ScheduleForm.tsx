@@ -234,12 +234,8 @@ export default function ScheduleForm({
       true,
       [document.getElementById("formBodySchedSect")]
     );
-    window.addEventListener("resize", () => {
-      if (
-        window.innerWidth === 900 ||
-        window.innerWidth === 600 ||
-        window.innerWidth === 460
-      ) {
+    addEventListener("resize", () => {
+      if (innerWidth === 900 || innerWidth === 600 || innerWidth === 460) {
         normalizeSizeSb(
           [
             ...document.querySelectorAll(".form-padded"),
@@ -437,6 +433,52 @@ export default function ScheduleForm({
       );
     }
   }, [formRef, userClass]);
+  useEffect(() => {
+    setInterval(interv => {
+      const confCons = document.getElementById("confirmDayInp");
+      if (!(confCons instanceof HTMLInputElement)) {
+        clearInterval(interv);
+        return;
+      }
+      if (
+        document.getElementById("transfArea")?.querySelector(".appointmentBtn")
+      )
+        confCons.disabled = false;
+      else confCons.disabled = true;
+    }, 200);
+    setInterval(interv => {
+      const regstDay = document.getElementById("regstDayBtn");
+      if (!(regstDay instanceof HTMLButtonElement)) {
+        clearInterval(interv);
+        return;
+      }
+      if (
+        document.getElementById("transfArea")?.querySelector(".appointmentBtn")
+      )
+        regstDay.disabled = false;
+      else regstDay.disabled = true;
+    }, 200);
+    [
+      ...document.querySelectorAll(".apptCheck"),
+      ...document.querySelectorAll(".eraseAptBtn"),
+    ].forEach(aptBtn => {
+      setInterval((interv: any) => {
+        if (
+          !(
+            aptBtn instanceof HTMLButtonElement ||
+            aptBtn instanceof HTMLInputElement
+          ) ||
+          !(userClass === "coordenador" || userClass === "supervisor")
+        ) {
+          clearInterval(interv);
+          return;
+        }
+        if (aptBtn.closest(".consSlot")?.querySelector(".appointmentBtn"))
+          aptBtn.disabled = false;
+        else aptBtn.disabled = true;
+      }, 200);
+    });
+  }, []);
   return (
     <>
       {showForm && (
@@ -527,7 +569,7 @@ export default function ScheduleForm({
                       >
                         <label
                           className="boldLabel"
-                          id="labConfirmDay noInvert"
+                          id="labConfirmDay"
                           htmlFor="confirmDayInp"
                         >
                           Consulta Confirmada:

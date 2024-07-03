@@ -926,12 +926,44 @@ export function replaceRegstSlot(
           noMatchSlots[s].querySelector(".eraseAptBtn")!,
           userClass
         );
-        (userClass === "coordenador" || userClass === "supervisor") &&
-          noMatchSlots[s]
-            .querySelector(".apptCheck")!
-            .addEventListener("change", () => {
+        try {
+          if (userClass === "coordenador" || userClass === "supervisor") {
+            const aptBtn = noMatchSlots[s].querySelector(".apptCheck");
+            if (
+              !(
+                aptBtn instanceof HTMLInputElement ||
+                aptBtn instanceof HTMLButtonElement
+              )
+            )
+              throw elementNotFound(
+                aptBtn,
+                `New Appointment Button`,
+                extLine(new Error())
+              );
+            aptBtn.addEventListener("change", () => {
               checkConfirmApt(noMatchSlots[s].querySelector(".apptCheck")!);
             });
+            setInterval((interv: any) => {
+              if (
+                !(
+                  aptBtn instanceof HTMLButtonElement ||
+                  aptBtn instanceof HTMLInputElement
+                ) ||
+                !(userClass === "coordenador" || userClass === "supervisor")
+              ) {
+                clearInterval(interv);
+                return;
+              }
+              if (aptBtn.closest(".consSlot")?.querySelector(".appointmentBtn"))
+                aptBtn.disabled = false;
+              else aptBtn.disabled = true;
+            }, 200);
+          }
+        } catch (e) {
+          console.error(
+            `Error adding interval to new aptBtn:\n${(e as Error).message}`
+          );
+        }
       }
     }
   } else
@@ -1058,7 +1090,7 @@ export function addEraseEvent(
   eraser: HTMLButtonElement,
   userClass: string = "estudante"
 ): void {
-  (userClass === "coordenador" || userClass === "supervisor") &&
+  if (userClass === "coordenador" || userClass === "supervisor") {
     eraser.addEventListener("click", () => {
       const relCel = eraser.closest("slot");
       if (relCel instanceof HTMLElement) {
@@ -1071,6 +1103,23 @@ export function addEraseEvent(
           extLine(new Error())
         );
     });
+    setInterval((interv: any) => {
+      if (
+        !(
+          eraser instanceof HTMLButtonElement ||
+          //@ts-ignore
+          eraser instanceof HTMLInputElement
+        ) ||
+        !(userClass === "coordenador" || userClass === "supervisor")
+      ) {
+        clearInterval(interv);
+        return;
+      }
+      if (eraser.closest(".consSlot")?.querySelector(".appointmentBtn"))
+        eraser.disabled = false;
+      else eraser.disabled = true;
+    }, 200);
+  }
 }
 
 export function replaceBtnSlot(
