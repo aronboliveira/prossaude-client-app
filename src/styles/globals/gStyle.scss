@@ -2031,6 +2031,11 @@ td,
   }
 }
 
+#autoCompCepBtn {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
 #bgDiv {
   margin: 0.5%;
   border: none;
@@ -2042,6 +2047,11 @@ td,
 
 #btnConform {
   margin: 2vh 0;
+}
+
+#cepId {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
 }
 
 #confirmAstId {
@@ -2448,11 +2458,11 @@ $base900InpWidth: 38.7rem;
   }
   
   #genBirthRelId {
-    min-width: $base900InpWidth;
+    min-width: 19rem;
   }
 
   #genId {
-    width: $base900InpWidth;
+    width: 19rem;
   }
 
   #spanHFlex {
