@@ -44,6 +44,7 @@ import AvProfListDlg from "../lists/AvProfListDlg";
 import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
 import AvPacListDlg from "../lists/AvPacListDlg";
 import { globalDataProvider } from "@/pages/panel";
+import { createRoot } from "react-dom/client";
 
 let accFormData = 0;
 export default function FormDlg({
@@ -442,10 +443,15 @@ export default function FormDlg({
           "allEntryEls in generateSchedBtn()",
           extLine(new Error())
         );
+      if (!consVariablesData.rootDlg)
+        consVariablesData.rootDlg = createRoot(
+          document.getElementById("rootDlgList") ??
+            document.getElementById("transfArea")!
+        );
       const newBtn = createAptBtn(
         formData,
         providerFormData[accFormData],
-        consVariablesData.rootDlg,
+        consVariablesData.rootDlg, //TODO ERRO
         userClass
       );
       handleDragAptBtn(newBtn, userClass);
@@ -453,31 +459,6 @@ export default function FormDlg({
     [dialogRef, submitRef]
   );
   //adição de listener para submissão e criação de botão posterior
-  useEffect(() => {
-    if (submitRef?.current instanceof HTMLButtonElement) {
-      submitRef.current.addEventListener(
-        "click",
-        () => {
-          if (subForm(submitRef.current, dialogRef.current ?? document)) {
-            providerFormData[accFormData] = generateSchedPacData(
-              dialogRef.current!
-            );
-            generateSchedBtn(dialogRef.current!);
-            accFormData++;
-          }
-        },
-        { once: false }
-      );
-      return submitRef.current.removeEventListener("click", () => {
-        generateSchedBtn(dialogRef.current!);
-      });
-    } else
-      elementNotFound(
-        submitRef.current,
-        "submitRef in useEffect() for submission",
-        extLine(new Error())
-      );
-  }, [submitRef]);
   useEffect(() => {
     handleClientPermissions(
       userClass,
@@ -993,10 +974,25 @@ export default function FormDlg({
                   id="submitPacBtn"
                   className="btn btn-success widFull"
                   ref={submitRef}
-                  onClick={() => {
+                  onClick={ev => {
                     if (
-                      subForm(submitRef.current, dialogRef.current ?? document)
-                    )
+                      subForm(
+                        ev.currentTarget,
+                        dialogRef.current ??
+                          ev.currentTarget.closest("dialog") ??
+                          document
+                      )
+                    ) {
+                      providerFormData[accFormData] = generateSchedPacData(
+                        dialogRef.current ?? ev.currentTarget.closest("dialog")
+                      );
+                      generateSchedBtn(
+                        dialogRef.current ?? ev.currentTarget.closest("dialog")
+                      );
+                      accFormData =
+                        document.querySelectorAll(".appointmentBtn").length;
+                    }
+                    subForm(submitRef.current, dialogRef.current ?? document) &&
                       onClose();
                   }}
                 >
