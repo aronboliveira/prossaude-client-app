@@ -663,7 +663,12 @@ export function createAptBtn(
     );
 }
 
-let isDragging = false;
+let isDragging = false,
+  fbTouch: Touch,
+  initialX = 0,
+  initialY = 0,
+  offsetX = 0,
+  offsetY = 0;
 export function handleDragAptBtn(
   newAppointmentBtn: targEl,
   userClass: string = "estudante"
@@ -730,63 +735,95 @@ export function handleDragAptBtn(
         } else console.warn(`No slot match found for dragend.`);
       }
     });
-    newAppointmentBtn.addEventListener("touchstart", () => {
+    newAppointmentBtn.addEventListener("touchstart", ev => {
       isDragging = true;
-    });
-    newAppointmentBtn.addEventListener("touchend", end => {
-      if (isDragging) {
-        const targ =
-          Array.from(end.touches).find(
-            touch =>
-              touch.target instanceof HTMLElement &&
-              touch.target.classList.contains("appointmentBtn")
-          ) ?? end.touches[0];
-        for (let c = 0; c < slotsCoords.length; c++) {
-          let isSlotMatch = false;
-          targ.clientX >= slotsCoords[c].upperLeftVert[0] &&
-          targ.clientX <= slotsCoords[c].upperRightVert[0] &&
-          targ.clientY >= slotsCoords[c].upperLeftVert[1] &&
-          targ.clientY <= slotsCoords[c].lowerLeftVert[1]
-            ? (isSlotMatch = true)
-            : (isSlotMatch = false);
-          const [matchedSlot] = document
-            .elementsFromPoint(targ.clientX, targ.clientY)
-            .filter(el => el.classList.contains("consSlot"));
-          matchedSlot instanceof HTMLElement
-            ? (isSlotMatch = true)
-            : (isSlotMatch = false);
-          if (isSlotMatch) {
-            replaceRegstSlot(matchedSlot, newAppointmentBtn, slots, userClass);
-            try {
-              const monthSelector = document.getElementById("monthSelector");
-              if (
-                !(
-                  monthSelector instanceof HTMLSelectElement ||
-                  monthSelector instanceof HTMLInputElement
-                )
-              )
-                throw inputNotFound(
-                  monthSelector,
-                  `monthSelector for updating session schedule state after dragend`,
-                  extLine(new Error())
-                );
-              const tbody = document.getElementById("tbSchedule");
-              if (!(tbody instanceof HTMLElement))
-                throw elementNotFound(
-                  tbody,
-                  `tbody for updating session schedule state after dragend`,
-                  extLine(new Error())
-                );
-              sessionScheduleState[monthSelector.value] = tbody.innerHTML;
-            } catch (e) {
-              console.error(`Error updation session schedule state after dragend:
-              ${(e as Error).message}`);
-            }
-            break;
-          } else console.warn(`No slot match found for dragend.`);
-        }
-        isDragging = false;
+      fbTouch = Array.from(ev.touches).find(
+        touch =>
+          touch.target instanceof HTMLElement &&
+          touch.target.classList.contains("appointmentBtn")
+      ) as any;
+      if (!(fbTouch instanceof Touch)) fbTouch = ev.touches[0];
+      if (fbTouch) {
+        const touch = fbTouch;
+        initialX = touch.clientX - offsetX;
+        initialY = touch.clientY - offsetY;
+        newAppointmentBtn.style.position = "absolute";
+        newAppointmentBtn.style.zIndex = "1000";
       }
+      const handleTouchDrag = (ev: TouchEvent) => {
+        if (!isDragging) return;
+        const touch = ev.targetTouches[0];
+        offsetX = touch.clientX - initialX;
+        offsetY = touch.clientY - initialY;
+        newAppointmentBtn.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+        document.removeEventListener("touchmove", handleTouchDrag);
+      };
+      document.addEventListener("touchmove", handleTouchDrag);
+      const handleTouchEnd = (end: TouchEvent) => {
+        console.log(end);
+        if (isDragging) {
+          try {
+            const targ = fbTouch;
+            if (!(targ instanceof Touch))
+              throw new Error(`Failed to fetch touch target`);
+            for (let c = 0; c < slotsCoords.length; c++) {
+              let isSlotMatch = false;
+              targ.clientX >= slotsCoords[c].upperLeftVert[0] &&
+              targ.clientX <= slotsCoords[c].upperRightVert[0] &&
+              targ.clientY >= slotsCoords[c].upperLeftVert[1] &&
+              targ.clientY <= slotsCoords[c].lowerLeftVert[1]
+                ? (isSlotMatch = true)
+                : (isSlotMatch = false);
+              const [matchedSlot] = document
+                .elementsFromPoint(targ.clientX, targ.clientY)
+                .filter(el => el.classList.contains("consSlot"));
+              matchedSlot instanceof HTMLElement
+                ? (isSlotMatch = true)
+                : (isSlotMatch = false);
+              if (isSlotMatch) {
+                replaceRegstSlot(
+                  matchedSlot,
+                  newAppointmentBtn,
+                  slots,
+                  userClass
+                );
+                try {
+                  const monthSelector =
+                    document.getElementById("monthSelector");
+                  if (
+                    !(
+                      monthSelector instanceof HTMLSelectElement ||
+                      monthSelector instanceof HTMLInputElement
+                    )
+                  )
+                    throw inputNotFound(
+                      monthSelector,
+                      `monthSelector for updating session schedule state after dragend`,
+                      extLine(new Error())
+                    );
+                  const tbody = document.getElementById("tbSchedule");
+                  if (!(tbody instanceof HTMLElement))
+                    throw elementNotFound(
+                      tbody,
+                      `tbody for updating session schedule state after dragend`,
+                      extLine(new Error())
+                    );
+                  sessionScheduleState[monthSelector.value] = tbody.innerHTML;
+                } catch (e) {
+                  console.error(`Error updation session schedule state after dragend:
+                ${(e as Error).message}`);
+                }
+                break;
+              } else console.warn(`No slot match found for dragend.`);
+            }
+          } catch (e) {
+            console.error(`Error:${(e as Error).message}`);
+          }
+          isDragging = false;
+        }
+        document.removeEventListener("touchend", handleTouchEnd);
+      };
+      document.addEventListener("touchend", handleTouchEnd);
     });
   } else
     elementNotFound(
@@ -940,9 +977,8 @@ export function replaceRegstSlot(
                 `New Appointment Button`,
                 extLine(new Error())
               );
-            aptBtn.addEventListener("change", () => {
-              checkConfirmApt(noMatchSlots[s].querySelector(".apptCheck")!);
-            });
+            aptBtn instanceof HTMLInputElement &&
+              aptBtn.addEventListener("change", () => checkConfirmApt(aptBtn));
             setInterval((interv: any) => {
               if (
                 !(

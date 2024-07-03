@@ -115,39 +115,125 @@ export function dragHover(quadrTo: targEl): void {
   } else elementNotFound(quadrTo, "quadrTo in dragHover", extLine(new Error()));
 }
 
+let odIsDragging = false,
+  odFbTouch: Touch,
+  odInitialX = 0,
+  odInitialY = 0,
+  odOffsetX = 0,
+  odOffsetY = 0;
+
 export function dragStart(
   move: DragEvent | TouchEvent,
   quadrsTe: Element[]
-): Element {
-  let validSrcEl =
-    move instanceof TouchEvent
-      ? Array.from(move.touches).find(
-          touch =>
-            touch instanceof HTMLElement &&
-            touch.classList.contains("quadrMainDiv")
-        )
-      : move.currentTarget;
-  if (validSrcEl instanceof HTMLElement) {
-    const contInQuadrs = document.querySelectorAll(".contInQuadrs");
-    move instanceof DragEvent && move.dataTransfer?.setData("text/plain", ""); //define a data inicial no container mobilizado
-    dragStartChilds(contInQuadrs);
-    const dropHandler = (drop: Event) => {
-      const quadrsTe = Array.from(
-        document.getElementsByClassName("quadrMainDiv")
+): void {
+  try {
+    let validSrcEl =
+      move instanceof TouchEvent
+        ? Array.from(move.touches).find(touch => {
+            if (
+              touch.target instanceof HTMLElement &&
+              touch.target.classList.contains("quadrMainDiv")
+            )
+              return touch.target;
+          })
+        : move.currentTarget;
+    if (validSrcEl instanceof HTMLElement) {
+      const contInQuadrs = document.querySelectorAll(".contInQuadrs");
+      if (move instanceof DragEvent) {
+        move.dataTransfer?.setData("text/plain", ""); //define a data inicial no container mobilizado
+        dragStartChilds(contInQuadrs);
+        const dropHandler = (drop: Event) => {
+          const quadrsTe = Array.from(
+            document.getElementsByClassName("quadrMainDiv")
+          );
+          dragDrop(drop, validSrcEl as Element, quadrsTe, dropHandler);
+        };
+        quadrsTe.forEach(quadrTo =>
+          quadrTo.addEventListener("drop", dropHandler)
+        );
+      } else if (move instanceof TouchEvent) {
+        validSrcEl.addEventListener("touchstart", ev => {
+          odIsDragging = true;
+          odFbTouch = Array.from(ev.touches).find(
+            touch =>
+              touch.target instanceof HTMLElement &&
+              touch.target.classList.contains("appointmentBtn")
+          ) as any;
+          if (!(odFbTouch instanceof Touch)) odFbTouch = ev.touches[0];
+          if (odFbTouch) {
+            const touch = odFbTouch;
+            odInitialX = touch.clientX - odOffsetX;
+            odInitialY = touch.clientY - odOffsetY;
+            (validSrcEl as HTMLElement).style.position = "absolute";
+            (validSrcEl as HTMLElement).style.zIndex = "1000";
+          }
+          const handleTouchDrag = (ev: TouchEvent) => {
+            if (!odIsDragging) return;
+            const touch = ev.targetTouches[0];
+            odOffsetX = touch.clientX - odInitialX;
+            odOffsetY = touch.clientY - odInitialY;
+            (
+              validSrcEl as HTMLElement
+            ).style.transform = `translate(${odOffsetX}px, ${odOffsetY}px)`;
+            document.removeEventListener("touchmove", handleTouchDrag);
+          };
+          document.addEventListener("touchmove", handleTouchDrag);
+          const handleTouchEnd = (end: TouchEvent) => {
+            console.log(end);
+            if (odIsDragging) {
+              try {
+                const targ = odFbTouch;
+                if (!(targ instanceof Touch))
+                  throw new Error(`Failed to fetch touch target`);
+                const validTargEl = Array.from(end.targetTouches).find(
+                  touch =>
+                    touch instanceof HTMLElement &&
+                    touch.classList.contains("quadrAvDent")
+                );
+                if (
+                  validSrcEl instanceof HTMLElement &&
+                  validTargEl instanceof HTMLElement &&
+                  validTargEl.classList.contains("quadrAvDent")
+                ) {
+                  const targCSt = window.getComputedStyle(validTargEl); //captura estilos do target na área de drop
+                  const targCStCol = targCSt.getPropertyValue("grid-column");
+                  const targCStRow = targCSt.getPropertyValue("grid-row");
+                  const srcCSt = window.getComputedStyle(validSrcEl); //captura estilos da source
+                  const srcCStCol = srcCSt.getPropertyValue("grid-column");
+                  const srcCStRow = srcCSt.getPropertyValue("grid-row");
+                  //faz a inversão
+                  validSrcEl.style.setProperty("grid-column", targCStCol);
+                  validSrcEl.style.setProperty("grid-row", targCStRow);
+                  validTargEl.style.setProperty("grid-column", srcCStCol);
+                  validTargEl.style.setProperty("grid-row", srcCStRow);
+                } else
+                  multipleElementsNotFound(
+                    extLine(new Error()),
+                    "arguments for dragDrop",
+                    end.touches[0].identifier,
+                    (validSrcEl as any)?.tagName
+                  );
+              } catch (e) {
+                console.error(
+                  `Error executing handleTouchEnd:\n${(e as Error).message}`
+                );
+              }
+              odIsDragging = false;
+            }
+            document.removeEventListener("touchend", handleTouchEnd);
+          };
+          document.addEventListener("touchend", handleTouchEnd);
+        });
+      }
+    } else
+      elementNotFound(
+        validSrcEl as any,
+        "validSrcEl in dragStart()",
+        extLine(new Error())
       );
-      dragDrop(drop, validSrcEl as Element, quadrsTe, dropHandler);
-    };
-    move instanceof DragEvent &&
-      quadrsTe.forEach(quadrTo =>
-        quadrTo.addEventListener("drop", dropHandler)
-      );
-  } else
-    elementNotFound(
-      validSrcEl as any,
-      "validSrcEl in dragStart()",
-      extLine(new Error())
-    );
-  return validSrcEl as Element;
+  } catch (e) {
+    console.error(`Error executing dragStart:\n${(e as Error).message}`);
+  }
 }
 
 export function dragEnter(move: DragEvent): void {
@@ -187,14 +273,7 @@ export function dragDrop(
   dropHandler: (drop: DragEvent) => void
 ): void {
   let validSrcEl = srcEl || (drop.target as HTMLElement);
-  let validTargEl =
-    drop instanceof TouchEvent
-      ? Array.from(drop.touches).find(
-          touch =>
-            touch instanceof HTMLElement &&
-            touch.classList.contains("quadrMainDiv")
-        )
-      : drop.currentTarget;
+  let validTargEl = drop.currentTarget;
   while (
     validTargEl instanceof HTMLElement &&
     !validTargEl.classList.contains("quadrAvDent")
