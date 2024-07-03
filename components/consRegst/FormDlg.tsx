@@ -503,7 +503,11 @@ export default function FormDlg({
           className="flexRNoWBetCt cGap2v widQ600_75v rGapQ4601v"
           id="headRegstPac"
         >
-          <div role="group" className="flexNoW flexQ750NoWC cGap1v rGapQ4601v">
+          <div
+            role="group"
+            className="flexNoW flexQ750NoWC cGap1v rGapQ4601v"
+            style={{ marginLeft: "0.5rem", marginTop: "1rem" }}
+          >
             <h2 className="mg-1b noInvert">
               <strong className="noInvert">Registro de Consulta</strong>
             </h2>

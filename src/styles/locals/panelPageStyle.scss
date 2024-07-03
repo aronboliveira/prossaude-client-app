@@ -148,6 +148,43 @@ body {
   }
 }
 
+@media screen and (max-width: 750px) {
+  .panelBody {
+    #regstPacDlg {
+      .form-switch {
+        padding-left: 2.7rem;
+        &:first-of-type {
+          margin-top: 0.75rem;
+          margin-bottom: 0.05rem;
+        }
+      }
+      .btn {
+        &.btn-close {
+          align-self: flex-start;
+          margin: 0.5rem 0.5rem 0 0;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .panelBody {
+    #regstPacDlg {
+      > div {
+        width: 83vw;
+        max-width: unset;
+      }
+      .btn {
+        &.btn-close {
+          align-self: flex-start;
+          margin: 0.5rem 0.5rem 0 0;
+        }
+      }
+    }
+  }
+}
+
 @media screen and (max-width: 460px) {
   .panelBody {
     .transfArea {

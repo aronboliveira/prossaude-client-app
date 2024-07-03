@@ -132,7 +132,7 @@ export function correlateAptMonthDays(
             (cont as HTMLElement).style.display === "none" ||
             (cont as HTMLElement).hidden === true
         )
-      ) 
+      )
         listDays.pop();
       if (listDays.length !== dayRefs.length)
         console.warn(`Error producing length of list for day references in correlateAptMonthDays().
@@ -622,38 +622,38 @@ export function createAptBtn(
               "Button for registering appointment in createAptBtn()",
               extLine(new Error())
             );
-        newAppointmentBtn.addEventListener(
-          "click",
-          () => {
-            rootedDlg.render(
-              <ProviderAptDatList
-                data={
-                  _providerFormData ||
-                  Array.from(providerFormData.values()).find(
-                    formData =>
-                      (formData as any).time ===
-                      newAppointmentBtn.id.replace("appointmentBtn-", "")
-                  )
-                }
-                btnId={btnId}
-                userClass={userClass}
-              />
-            );
-          }
-        );
+        newAppointmentBtn.addEventListener("click", () => {
+          rootedDlg.render(
+            <ProviderAptDatList
+              data={
+                _providerFormData ||
+                Array.from(providerFormData.values()).find(
+                  formData =>
+                    (formData as any).time ===
+                    newAppointmentBtn.id.replace("appointmentBtn-", "")
+                )
+              }
+              btnId={btnId}
+              userClass={userClass}
+            />
+          );
+        });
       } else
         elementNotFound(
           `${JSON.stringify(rootedDlg)}`,
           "Dialog root for placing tabled list about registered appointment",
           extLine(new Error())
         );
-    } else
-      multipleElementsNotFound(
-        extLine(new Error()),
-        "Elements for placing appointment in transfer area in createAptBtn()",
-        transfArea,
-        replaceSlot
-      );
+    } else {
+      transfArea && transfArea.querySelector(".appointmentBtn")
+        ? console.warn(`Appointment Button already placed.`)
+        : multipleElementsNotFound(
+            extLine(new Error()),
+            "Elements for placing appointment in transfer area in createAptBtn()",
+            transfArea,
+            replaceSlot
+          );
+    }
     return newAppointmentBtn;
   } else
     elementNotFound(
