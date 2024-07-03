@@ -67,6 +67,7 @@
       min-height: 13rem;
       max-width: 14.75rem;
       max-height: 14.75rem;
+      transform: translateY(-0.5rem);
     }
   }
 
@@ -289,6 +290,7 @@
         min-height: 0;
         max-width: 13rem;
         padding-top: 3vw;
+        transform: translateY(-0.75rem);
       }
     }
 
@@ -304,6 +306,14 @@
   }
 }
 
+@media screen and (max-width: 590px) {
+  .baseBody {
+    #bgDiv {
+      height: 125rem;
+    }
+  }
+}
+
 @media (max-width: 520px) {
   .baseBody {
     .card {
@@ -314,9 +324,6 @@
       }
     }
     .main-article {
-      height: 120rem;
-    }
-    #bgDiv {
       height: 120rem;
     }
     #cardsSect {
