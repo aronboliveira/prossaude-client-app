@@ -158,7 +158,7 @@ export default function FormDlg({
     if (dialogRef.current instanceof HTMLElement) {
       //garante que tela irá centralizar modal
       setTimeout(() => {
-        dialogRef.current!.scrollIntoView({
+        dialogRef.current?.scrollIntoView({
           behavior: "smooth",
           block: "center",
           inline: "center",
