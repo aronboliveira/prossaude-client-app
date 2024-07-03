@@ -33,6 +33,14 @@ body {
     }
   }
 
+  section {
+    &:has(#nameLogin) {
+      &.form-control {
+        margin-bottom: 0.15rem;
+      }
+    }
+  }
+
   td {
     font-weight: initial;
   }
