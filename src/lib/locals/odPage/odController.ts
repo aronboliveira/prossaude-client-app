@@ -92,10 +92,14 @@ export function addListenerQuadrsTe(): Element[] {
         quadrTo.addEventListener("dragstart", dragstart =>
           OdHandler.dragStart(dragstart, quadrsTe)
         );
+        quadrTo.addEventListener("touchstart", touchstart =>
+          OdHandler.dragStart(touchstart, quadrsTe)
+        );
         quadrTo.addEventListener("dragenter", OdHandler.dragEnter);
         quadrTo.addEventListener("dragover", OdHandler.dragOver);
         quadrTo.addEventListener("dragleave", OdHandler.dragLeave);
         quadrTo.addEventListener("dragend", () => OdHandler.dragEnd(quadrTo));
+        quadrTo.addEventListener("touchend", () => OdHandler.dragEnd(quadrTo));
       } else
         elementNotFound(
           quadrTo,

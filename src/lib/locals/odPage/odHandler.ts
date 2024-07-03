@@ -115,24 +115,35 @@ export function dragHover(quadrTo: targEl): void {
   } else elementNotFound(quadrTo, "quadrTo in dragHover", extLine(new Error()));
 }
 
-export function dragStart(move: DragEvent, quadrsTe: Element[]): Element {
-  let validSrcEl = move.currentTarget;
+export function dragStart(
+  move: DragEvent | TouchEvent,
+  quadrsTe: Element[]
+): Element {
+  let validSrcEl =
+    move instanceof TouchEvent
+      ? Array.from(move.touches).find(
+          touch =>
+            touch instanceof HTMLElement &&
+            touch.classList.contains("quadrMainDiv")
+        )
+      : move.currentTarget;
   if (validSrcEl instanceof HTMLElement) {
     const contInQuadrs = document.querySelectorAll(".contInQuadrs");
-    move.dataTransfer?.setData("text/plain", ""); //define a data inicial no container mobilizado
+    move instanceof DragEvent && move.dataTransfer?.setData("text/plain", ""); //define a data inicial no container mobilizado
     dragStartChilds(contInQuadrs);
     const dropHandler = (drop: Event) => {
       const quadrsTe = Array.from(
         document.getElementsByClassName("quadrMainDiv")
       );
-      dragDrop(drop as DragEvent, validSrcEl as Element, quadrsTe, dropHandler);
+      dragDrop(drop, validSrcEl as Element, quadrsTe, dropHandler);
     };
-    quadrsTe.forEach(quadrTo => {
-      quadrTo.addEventListener("drop", dropHandler);
-    });
+    move instanceof DragEvent &&
+      quadrsTe.forEach(quadrTo =>
+        quadrTo.addEventListener("drop", dropHandler)
+      );
   } else
     elementNotFound(
-      validSrcEl,
+      validSrcEl as any,
       "validSrcEl in dragStart()",
       extLine(new Error())
     );
@@ -170,13 +181,20 @@ export function dragLeave(move: DragEvent): void {
 }
 
 export function dragDrop(
-  drop: DragEvent,
+  drop: Event,
   srcEl: targEl,
   quadrsTe: Element[],
-  dropHandler: (drop: Event) => void
+  dropHandler: (drop: DragEvent) => void
 ): void {
   let validSrcEl = srcEl || (drop.target as HTMLElement);
-  let validTargEl = drop.currentTarget;
+  let validTargEl =
+    drop instanceof TouchEvent
+      ? Array.from(drop.touches).find(
+          touch =>
+            touch instanceof HTMLElement &&
+            touch.classList.contains("quadrMainDiv")
+        )
+      : drop.currentTarget;
   while (
     validTargEl instanceof HTMLElement &&
     !validTargEl.classList.contains("quadrAvDent")
@@ -211,10 +229,12 @@ export function dragDrop(
       drop?.target,
       validSrcEl
     );
-
-  quadrsTe.forEach(quadrTo => {
-    quadrTo.removeEventListener("drop", dropHandler);
-  });
+  quadrsTe.forEach(
+    quadrTo =>
+      drop instanceof DragEvent &&
+      //@ts-ignore
+      quadrTo.removeEventListener("drop", dropHandler)
+  );
   dragEnd(validSrcEl);
 }
 
