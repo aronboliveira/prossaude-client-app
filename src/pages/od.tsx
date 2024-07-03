@@ -105,9 +105,9 @@ export default function OdPage(): JSX.Element {
                       <p className="dicas" id="dicaKb">
                         <strong>1.1.</strong>
                         <em>
-                          Apertar Alt + Y para &#34;Sim&#34; ou Alt + N para &#34;Não&#34; no
-                          próximo campo após iniciar o foco com Tab para
-                          preencher automaticamente
+                          Apertar Alt + Y para &#34;Sim&#34; ou Alt + N para
+                          &#34;Não&#34; no próximo campo após iniciar o foco com
+                          Tab para preencher automaticamente
                         </em>
                       </p>
                       <p className="dicas" id="dicaUppercase">
@@ -1613,10 +1613,7 @@ export default function OdPage(): JSX.Element {
                   itemProp="dentQuadr"
                   draggable="true"
                 >
-                  <div
-                    role="group"
-                    className="flexDiv headQuadr tabCelTop flexQ460NoW"
-                  >
+                  <div role="group" className="flexDiv headQuadr tabCelTop">
                     <p className="pQuadr">SUPERIOR DIREITO</p>
                     <button
                       type="button"
