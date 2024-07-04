@@ -404,6 +404,10 @@ $swhite: rgba(255, 255, 255, 0.8);
     }
   }
 
+  #headerDatBtn {
+    white-space: pre;
+  }
+
   #tratContainer {
     border-collapse: separate;
     overflow-x: auto;
@@ -462,6 +466,7 @@ $swhite: rgba(255, 255, 255, 0.8);
 
     .tratButSpan {
       padding-left: 1vw;
+      transform: translate(-117px, 4px);
     }
 
     #confirmAstDigtBtn {
@@ -472,10 +477,9 @@ $swhite: rgba(255, 255, 255, 0.8);
       min-width: calc(10.7ch + 9vw);
       width: calc(10.7ch + 9vw);
     }
-
     #headerDatBtn {
-      min-width: calc(10ch + 9vw);
-      width: calc(10ch + 9vw);
+      min-width: calc(10.1ch + 9vw);
+      width: calc(10.1ch + 9vw);
     }
 
     #divMainSupDir {
@@ -500,12 +504,19 @@ $swhite: rgba(255, 255, 255, 0.8);
 
     #sectAvDentId {
       grid-template-rows: 1fr 1fr 1fr 1fr;
+      max-width: 88vw;
+      padding-left: 2vw;
     }
   }
 }
 
 @media screen and (max-width: 460px) {
   .odBody {
+    #headerDatBtn {
+      min-width: calc(11.176ch + 9vw);
+      width: calc(11.176ch + 9vw);
+      font-size: 0.9rem;
+    }
     #sectAvDentId {
       transform: translateX(-0.375rem);
     }
