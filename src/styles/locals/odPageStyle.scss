@@ -466,7 +466,6 @@ $swhite: rgba(255, 255, 255, 0.8);
 
     .tratButSpan {
       padding-left: 1vw;
-      transform: translate(-117px, 4px);
     }
 
     #confirmAstDigtBtn {
@@ -513,8 +512,8 @@ $swhite: rgba(255, 255, 255, 0.8);
 @media screen and (max-width: 460px) {
   .odBody {
     #headerDatBtn {
-      min-width: calc(11.176ch + 9vw);
-      width: calc(11.176ch + 9vw);
+      min-width: calc(12ch + 9vw);
+      width: calc(12ch + 9vw);
       font-size: 0.9rem;
     }
     #sectAvDentId {
