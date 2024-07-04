@@ -1679,14 +1679,14 @@ td,
   border-radius: 0.3rem;
 }
 
-.po.lowPo {
-  top: 150%;
-  left: -7%;
-  /* TODO MUDAR LEFT E WIDTH EM FUNÇÃO COM QUERY NO ELEMENTO PAI */
-}
-
-.po.userPo {
-  width: 11rem;
+.po {
+  &.lowPo {
+    top: 150%;
+    left: -17%;
+  }
+  &.userPo {
+    width: 11rem;
+  }
 }
 
 .hPo {
