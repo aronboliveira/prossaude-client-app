@@ -15,6 +15,7 @@
   line-height: 1.4286;
   font-family: roboto, "Noto Sans Myanmar UI", arial, sans-serif;
   font-size: 0.875rem;
+
   #bgDiv {
     border: none;
     background-color: rgba(255, 255, 255, 0.97);
@@ -232,6 +233,10 @@
 
 @media screen and (max-width: 460px) {
   .loginBody {
+    .customValidityWarn {
+      margin-left: 6.5%;
+    }
+
     .loginInputCont1 {
       padding-inline: 1.4rem 3rem;
       &:has(svg) {
