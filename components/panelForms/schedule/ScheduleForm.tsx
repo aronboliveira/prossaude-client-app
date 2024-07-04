@@ -28,6 +28,7 @@ import {
   checkConfirmApt,
   fillSchedStateValues,
   handleScheduleChange,
+  rootDlgContext,
 } from "../../../src/lib/locals/panelPage/handlers/consHandlerCmn";
 import { syncAriaStates } from "../../../src/lib/global/handlers/gHandlers";
 import { DataProvider } from "../../../src/lib/locals/panelPage/declarations/classesCons";
@@ -847,6 +848,8 @@ export default function ScheduleForm({
                               throw new Error(
                                 `Error validating sessionScheduleState using the monthSelector value reference`
                               );
+                            rootDlgContext.addedAptListeners = false;
+                            rootDlgContext.addedDayListeners = false;
                             handleScheduleChange(
                               monthRef.current,
                               document.getElementById("tbSchedule"),

@@ -19,7 +19,6 @@ import {
   consVariablesData,
 } from "../../../../../components/consRegst/consVariables";
 import { sessionScheduleState } from "../../../../../components/panelForms/panelFormsData";
-import AptDataList from "../../../../../components/lists/AptDataList";
 import ProviderAptDatList from "../../../../../components/lists/ProviderAptDatList";
 
 //nesse arquivo estão as funções para handling de casos comuns entre os components
@@ -556,7 +555,218 @@ export function generateSchedPacData(scope: targEl): { [k: string]: string } {
   return pacData;
 }
 
-let renderCounts = 0;
+export const rootDlgContext: {
+  renderCounts: number;
+  aptBtnsRoots: { [k: string]: Root | undefined };
+  aptBtnsIdx: { [k: string]: number };
+  addedAptListeners: boolean;
+  addedDayListeners: boolean;
+} = {
+  renderCounts: 0,
+  aptBtnsRoots: {},
+  aptBtnsIdx: {},
+  addedAptListeners: false,
+  addedDayListeners: false,
+};
+
+export function handleRenderRefLost(
+  id: string,
+  prevRef: HTMLElement,
+  userClass: string,
+  timer: number = 100
+): void {
+  try {
+    if (typeof id !== "string")
+      throw typeError(
+        `validation of id argument in handleRenderRefLost`,
+        id,
+        "string",
+        extLine(new Error())
+      );
+    if (typeof userClass !== "string")
+      throw typeError(
+        "validation of userClass in handleRenderRefLos",
+        userClass,
+        "string",
+        extLine(new Error())
+      );
+    if (!(prevRef instanceof HTMLElement))
+      throw elementNotFound(
+        prevRef,
+        `Previous reference for ${id}`,
+        extLine(new Error())
+      );
+    if (typeof timer !== "number")
+      throw typeError(
+        `validation of timer argument in handleRenderRefLost`,
+        timer,
+        "number",
+        extLine(new Error())
+      );
+    setTimeout(() => {
+      if (!document.querySelector("dialog")) {
+        rootDlgContext.aptBtnsRoots[id]?.unmount();
+        rootDlgContext.aptBtnsRoots[id] = undefined;
+        const replaceRoot = document.createElement("div");
+        replaceRoot.id = id;
+        replaceRoot.role = "group";
+        document
+          .getElementById("bgDiv")
+          ?.insertAdjacentElement("afterend", replaceRoot);
+        rootDlgContext.aptBtnsRoots[id] = createRoot(replaceRoot);
+        rootDlgContext.aptBtnsRoots[id]?.render(
+          <ProviderAptDatList
+            data={
+              providerFormData[rootDlgContext.aptBtnsIdx[`${prevRef.id}`]] ||
+              Array.from(providerFormData.values()).find(
+                formData =>
+                  (formData as any).time ===
+                  prevRef.id.replace("appointmentBtn-", "")
+              )
+            }
+            btnId={prevRef.id}
+            userClass={userClass}
+          />
+        );
+      }
+    }, timer);
+  } catch (e) {
+    console.error(
+      `Error executing handleRenderRefLost:\n${(e as Error).message}`
+    );
+  }
+}
+
+export function handleAptBtnClick(ev: MouseEvent, userClass: string): void {
+  try {
+    console.log("Click listened");
+    if (
+      !(ev.currentTarget instanceof HTMLElement && ev.currentTarget.id !== "")
+    )
+      throw new Error(
+        `Error locating Target New Appointment Button: Instance found -> ${
+          (ev.currentTarget instanceof HTMLElement &&
+            ev.currentTarget.constructor.name) ||
+          ev.currentTarget ||
+          "undefined"
+        }\n Id Found -> ${
+          (ev.currentTarget instanceof HTMLElement && ev.currentTarget.id) ||
+          ev.currentTarget ||
+          "undefined"
+        }`
+      );
+    if (!consVariablesData.rootDlg) {
+      const rootDlg = document.getElementById("rootDlgList");
+      if (!rootDlg) throw new Error(`Failed to fetch Main Dialog Root`);
+      consVariablesData.rootDlg = createRoot(rootDlg);
+    }
+    if (!rootDlgContext.aptBtnsRoots[`rootDlgList`]) {
+      rootDlgContext.aptBtnsRoots[`rootDlgList`] = consVariablesData.rootDlg;
+      const rootDlg = document.getElementById("rootDlgList");
+      if (!rootDlg) throw new Error(`Failed to fetch Main Dialog Root`);
+      rootDlg.classList.add("rootDlg");
+    }
+    console.log(rootDlgContext.aptBtnsIdx[ev.currentTarget.id]);
+    if (rootDlgContext.aptBtnsIdx[ev.currentTarget.id] === 1) {
+      console.log(`Attempting to render in rootDlgList`);
+      console.log(rootDlgContext.aptBtnsRoots[`rootDlgList`]);
+      rootDlgContext.aptBtnsRoots[`rootDlgList`].render(
+        <ProviderAptDatList
+          data={
+            providerFormData[
+              rootDlgContext.aptBtnsIdx[`${ev.currentTarget.id}`]
+            ] ||
+            Array.from(providerFormData.values()).find(
+              formData =>
+                (formData as any).time ===
+                (ev.currentTarget as HTMLElement).id.replace(
+                  "appointmentBtn-",
+                  ""
+                )
+            )
+          }
+          btnId={ev.currentTarget.id}
+          userClass={userClass}
+        />
+      );
+      handleRenderRefLost("rootDlgList", ev.currentTarget, userClass);
+    } else {
+      if (
+        !document.getElementById(
+          `rootDlgList-${
+            rootDlgContext.aptBtnsRoots[`${ev.currentTarget.id}`] ?? "null"
+          }-${ev.currentTarget.id}`
+        )
+      ) {
+        const newRoot = document.createElement("div");
+        newRoot.classList.add(`rootDlg`);
+        newRoot.id = `rootDlgList-${
+          rootDlgContext.aptBtnsRoots[`${ev.currentTarget.id}`] ?? "null"
+        }-${ev.currentTarget.id}`;
+        newRoot.role = "group";
+        const lastDlgRoot = Array.from(
+          document.querySelectorAll(".rootDlg")
+        ).at(-1);
+        if (!lastDlgRoot)
+          throw new Error(`Error locating Last Dialog Root Element`);
+        lastDlgRoot.insertAdjacentElement("beforebegin", newRoot);
+        if (!rootDlgContext.aptBtnsRoots[`${ev.currentTarget.id}`])
+          rootDlgContext.aptBtnsRoots[`${ev.currentTarget.id}`] =
+            createRoot(newRoot);
+      }
+      if (!rootDlgContext.aptBtnsRoots[`${ev.currentTarget.id}`]) {
+        const targRoot = document.getElementById(
+          `rootDlgList-${
+            rootDlgContext.aptBtnsRoots[`${ev.currentTarget.id}`] ?? "null"
+          }-${ev.currentTarget.id}`
+        );
+        if (!(targRoot instanceof HTMLElement))
+          throw elementNotFound(
+            targRoot,
+            `Target Dialog Root for ${
+              ev.currentTarget.id || ev.currentTarget.tagName
+            }`,
+            extLine(new Error())
+          );
+        rootDlgContext.aptBtnsRoots[`${ev.currentTarget.id}`] =
+          createRoot(targRoot);
+      }
+      console.log(
+        `Attempt to render in ${`rootDlgList-${
+          rootDlgContext.aptBtnsRoots[`${ev.currentTarget.id}`] ?? "null"
+        }-${ev.currentTarget.id}`}`
+      );
+      rootDlgContext.aptBtnsRoots[`${ev.currentTarget.id}`]!.render(
+        <ProviderAptDatList
+          data={
+            providerFormData[
+              rootDlgContext.aptBtnsIdx[`${ev.currentTarget.id}`]
+            ] ||
+            Array.from(providerFormData.values()).find(
+              formData =>
+                (formData as any).time ===
+                (ev.currentTarget as HTMLElement).id.replace(
+                  "appointmentBtn-",
+                  ""
+                )
+            )
+          }
+          btnId={ev.currentTarget.id}
+          userClass={userClass}
+        />
+      );
+      handleRenderRefLost("rootDlgList", ev.currentTarget, userClass);
+    }
+  } catch (e) {
+    console.error(
+      `Error executing callback for ${
+        (ev.currentTarget instanceof HTMLElement && ev.currentTarget.tagName) ||
+        "unidentified Node"
+      } type ${ev.type}:\n${(e as Error).message}`
+    );
+  }
+}
+
 export function createAptBtn(
   formData: { [key: string]: string },
   _providerFormData: { [key: string]: string },
@@ -614,6 +824,13 @@ export function createAptBtn(
       replaceSlot instanceof HTMLElement
     ) {
       transfArea.replaceChild(newAppointmentBtn, replaceSlot);
+      if (document.getElementById(newAppointmentBtn.id))
+        rootDlgContext.aptBtnsIdx[`${newAppointmentBtn.id}`] =
+          document.querySelectorAll(".appointmentBtn").length;
+      else
+        console.warn(
+          `Error locating New Appointment Button in the DOM. Reference index not updated.`
+        );
       if (rootedDlg && typeof rootedDlg === "object") {
         const regstBtn = document.getElementById("regstDayBtn");
         regstBtn instanceof HTMLButtonElement
@@ -623,50 +840,9 @@ export function createAptBtn(
               "Button for registering appointment in createAptBtn()",
               extLine(new Error())
             );
-        newAppointmentBtn.addEventListener("click", () => {
-          console.log("trying to render...");
-          console.log(rootedDlg);
-          if (document.querySelectorAll(".appointmentBtn").length <= 1) {
-            rootedDlg.render(
-              <ProviderAptDatList
-                data={
-                  _providerFormData ||
-                  Array.from(providerFormData.values()).find(
-                    formData =>
-                      (formData as any).time ===
-                      newAppointmentBtn.id.replace("appointmentBtn-", "")
-                  )
-                }
-                btnId={btnId}
-                userClass={userClass}
-              />
-            );
-          } else {
-            const newRoot = document.createElement("div");
-            newRoot.id = `rootAdd${
-              document.querySelectorAll(".appointmentBtn").length
-            }DlgList`;
-            newRoot.role = "group";
-            document
-              .getElementById("chreference")!
-              .insertAdjacentElement("beforebegin", newRoot);
-            createRoot(newRoot).render(
-              <ProviderAptDatList
-                data={
-                  _providerFormData ||
-                  Array.from(providerFormData.values()).find(
-                    formData =>
-                      (formData as any).time ===
-                      newAppointmentBtn.id.replace("appointmentBtn-", "")
-                  )
-                }
-                btnId={btnId}
-                userClass={userClass}
-              />
-            );
-          }
-          renderCounts = renderCounts++;
-        });
+        newAppointmentBtn.addEventListener("click", ev =>
+          handleAptBtnClick(ev, userClass)
+        );
       } else
         elementNotFound(
           `${JSON.stringify(rootedDlg)}`,
@@ -1005,23 +1181,17 @@ export function replaceRegstSlot(
           `Button for registering appointment in dragend`,
           extLine(new Error())
         );
-      const confirmBtn = document.getElementById("confirmDayInp");
       if (
         regstBtn instanceof HTMLInputElement &&
         (regstBtn.type === "checkbox" || regstBtn.type === "radio")
       )
         regstBtn.checked = false;
-      else
-        inputNotFound(
-          confirmBtn,
-          "Button for confirming appointment in dragend",
+      else if (!(regstBtn instanceof HTMLButtonElement))
+        elementNotFound(
+          regstBtn,
+          "Button for registering appointment in handleDragAptBtn()",
           extLine(new Error())
         );
-      elementNotFound(
-        regstBtn,
-        "Button for registering appointment in handleDragAptBtn()",
-        extLine(new Error())
-      );
       slots[0]
         .closest("table")!
         .querySelectorAll("tr")!
@@ -1463,15 +1633,7 @@ export function handleScheduleChange(
         const arrEntry = stateScheduleValues.find(
           entry => entry[0] === entries[e].id
         );
-        if (!Array.isArray(arrEntry)) {
-          typeError(
-            "checking type of property in relMonthArrEntries index",
-            arrEntry,
-            "Array",
-            extLine(new Error())
-          );
-          continue;
-        }
+        if (!Array.isArray(arrEntry)) continue;
         if (
           entries[e] instanceof HTMLInputElement &&
           (entries[e].type === "checkbox" || entries[e].type === "radio")
@@ -1522,141 +1684,178 @@ export function addListenersForSchedTab(
       throw new Error(
         `Error validating type of isAutofillMonthOn when applying listeners after month state change`
       );
-    try {
-      const appointmentBtns = document.querySelectorAll(
-        '[id*="appointmentBtn"]'
-      );
-      if (
-        !(
-          appointmentBtns.length > 0 &&
-          Array.from(appointmentBtns).every(
-            aptbtn => aptbtn instanceof HTMLButtonElement
+    console.log("Trying to add listeners to Appointment buttons...");
+    const aptInterv = setInterval(interv => {
+      try {
+        const appointmentBtns = Array.from(
+          document.querySelectorAll(".appointmentBtn")
+        ).filter(aptBtn => aptBtn instanceof HTMLButtonElement);
+        if (
+          !(
+            appointmentBtns.length > 0 &&
+            Array.from(appointmentBtns).every(
+              aptbtn => aptbtn instanceof HTMLButtonElement
+            )
+          )
+        ) {
+          console.warn(
+            `Failed to fetch appointment buttons. Retrying in 0.2 seconds...`
+          );
+          return;
+        }
+        if (!rootDlgContext.addedAptListeners) {
+          for (const aptBtn of appointmentBtns)
+            aptBtn.addEventListener("click", ev =>
+              handleAptBtnClick(ev as MouseEvent, userClass)
+            );
+          //adição de listeners para autoajuste de opções e validação de datas
+          handleClientPermissions(
+            userClass,
+            ["supervisor", "coordenador"],
+            ...document.getElementsByClassName("apptCheck"),
+            ...document.getElementsByClassName("eraseAptBtn")
+          );
+          handleClientPermissions(
+            userClass,
+            ["coordenador"],
+            ...document.getElementsByClassName("dayTabRef")
+          );
+        }
+        rootDlgContext.addedAptListeners = true;
+        clearInterval(interv);
+      } catch (e) {
+        console.warn(`Error trying to reapply listeners to appointment buttons:
+        ${(e as Error).message}`);
+      }
+    }, 200);
+    setTimeout(() => {
+      clearInterval(aptInterv);
+      console.log("Cleared Appointment Interval");
+      try {
+        const appointmentBtns = Array.from(
+          document.querySelectorAll(".appointmentBtn")
+        ).filter(aptBtn => aptBtn instanceof HTMLButtonElement);
+        if (
+          !(
+            appointmentBtns.length > 0 &&
+            Array.from(appointmentBtns).every(
+              aptbtn => aptbtn instanceof HTMLButtonElement
+            )
           )
         )
-      )
-        throw elementNotPopulated(
-          appointmentBtns,
-          "Appointment Buttons",
-          extLine(new Error())
-        );
-      for (let a = 0; a < appointmentBtns.length; a++) {
-        appointmentBtns[a].addEventListener(
-          "click",
-          function (this: HTMLButtonElement) {
-            try {
-              const aptData = Array.from(providerFormData.values()).find(
-                formData =>
-                  (formData as any).time ===
-                  appointmentBtns[a].id.replace("appointmentBtn-", "")
-              );
-              if (!aptData)
-                throw new Error(`Appointment data not found in global object`);
-              try {
-                if (
-                  !consVariablesData.rootDlg ||
-                  !("_internalRoot" in consVariablesData.rootDlg)
-                )
-                  throw new Error(`Rooted for Dialog not validated.`);
-                let shouldDisplayAptList = true;
-                const dispatch = (shouldDisplayAptList: boolean = false) => {
-                  shouldDisplayAptList = !shouldDisplayAptList;
-                };
-                consVariablesData.rootDlg.render(
-                  <AptDataList
-                    setDisplayAptList={
-                      dispatch as Dispatch<SetStateAction<boolean>>
-                    }
-                    data={aptData}
-                    btnId={this.id}
-                    shouldDisplayAptList={shouldDisplayAptList}
-                    userClass={userClass}
-                    isDirectRender={true}
-                  />
-                );
-              } catch (e) {
-                console.warn(
-                  `Error on first attempt of rendering ProviderAptDataList for button id ${
-                    appointmentBtns[a]
-                  }:
-                ${(e as Error).message};
-                Initiating attempt to recover root.`
-                );
-                const fallbackRootDlg = document.getElementById("rootDlgList");
-                if (!(fallbackRootDlg instanceof HTMLElement))
-                  throw elementNotFound(
-                    fallbackRootDlg,
-                    `attemp to recreate rootDlg`,
-                    extLine(new Error())
-                  );
-                const fallbackRootedDlg = createRoot(fallbackRootDlg);
-                let fallbackShouldDisplayAptList = true;
-                const fallbackDispatch = (
-                  shouldDisplayAptList: boolean = false
-                ) => {
-                  shouldDisplayAptList = !shouldDisplayAptList;
-                };
-                fallbackRootedDlg.render(
-                  <AptDataList
-                    setDisplayAptList={
-                      fallbackDispatch as Dispatch<SetStateAction<boolean>>
-                    }
-                    data={aptData}
-                    btnId={this.id}
-                    shouldDisplayAptList={fallbackShouldDisplayAptList}
-                    userClass={userClass}
-                    isDirectRender={true}
-                  />
-                );
-              }
-            } catch (e) {
-              console.error(
-                `Error rendering ProviderAptDataList for button id ${
-                  appointmentBtns[a]
-                }:
-              ${(e as Error).message};
-              Trying to salvage root failed.`
-              );
-            }
-          }
+          throw elementNotPopulated(
+            appointmentBtns,
+            "Appointment Buttons",
+            extLine(new Error())
+          );
+      } catch (e) {
+        console.error(
+          `Error executing procedure for adding listeners to Appointment Buttons:${
+            (e as Error).message
+          }`
         );
       }
-    } catch (e) {
-      console.warn(`Error trying to reapply listeners to appointment buttons:
-      ${(e as Error).message}`);
-    }
-    const dayChecks = scope.querySelectorAll('input[class*="apptCheck"]');
-    if (dayChecks.length > 0) {
-      dayChecks.forEach(dayCheck => {
-        (userClass === "coordenador" || userClass === "supervisor") &&
-          dayCheck.addEventListener("change", () => {
-            dayCheck instanceof HTMLInputElement &&
-            (dayCheck.type === "checkbox" || dayCheck.type === "radio")
-              ? checkConfirmApt(dayCheck)
-              : inputNotFound(
-                  dayCheck,
-                  `dayCheck id ${dayCheck?.id || "UNIDENTIFIED"}`,
-                  extLine(new Error())
+    }, 10000);
+    const checkInterv = setInterval(interv => {
+      try {
+        const dayChecks = scope.querySelectorAll('input[class*="apptCheck"]');
+        if (dayChecks.length < 0) {
+          console.warn(
+            `Failed to fetch day checks list. Retrying in 0.2 seconds...`
+          );
+          return;
+        }
+        if (!rootDlgContext.addedDayListeners) {
+          dayChecks.forEach(dayCheck => {
+            if (
+              dayCheck instanceof HTMLInputElement &&
+              (dayCheck.type === "checkbox" || dayCheck.type === "radio") &&
+              dayCheck.checked
+            ) {
+              try {
+                const relSlot = dayCheck.closest("slot");
+                if (!(relSlot instanceof HTMLElement))
+                  throw elementNotFound(
+                    relSlot,
+                    `Slot related to Day Check id ${
+                      dayCheck.id || dayCheck.tagName
+                    }`,
+                    extLine(new Error())
+                  );
+                const relBtn =
+                  relSlot.querySelector(".appointmentBtn") ??
+                  relSlot.querySelector('button[id^="appointmentBtn"]');
+                if (!(relBtn instanceof HTMLButtonElement))
+                  throw elementNotFound(
+                    relBtn,
+                    `Appointment Button related to ${
+                      dayCheck.id || dayCheck.tagName
+                    }`,
+                    extLine(new Error())
+                  );
+                if (relBtn.classList.contains("btn-info"))
+                  relBtn.classList.remove("btn-info");
+                relBtn.classList.add("btn-success");
+              } catch (e) {
+                console.error(
+                  `Error executing procedure for painting Appointment Button:\n${
+                    (e as Error).message
+                  }`
                 );
+              }
+            }
+            (userClass === "coordenador" || userClass === "supervisor") &&
+              dayCheck.addEventListener("change", () => {
+                dayCheck instanceof HTMLInputElement &&
+                (dayCheck.type === "checkbox" || dayCheck.type === "radio")
+                  ? checkConfirmApt(dayCheck)
+                  : inputNotFound(
+                      dayCheck,
+                      `dayCheck id ${dayCheck?.id || "UNIDENTIFIED"}`,
+                      extLine(new Error())
+                    );
+              });
           });
-      });
-    } else
-      elementNotPopulated(
-        dayChecks,
-        "Checkboxes for day checks",
-        extLine(new Error())
-      );
-    //adição de listeners para autoajuste de opções e validação de datas
-    handleClientPermissions(
-      userClass,
-      ["supervisor", "coordenador"],
-      ...document.getElementsByClassName("apptCheck"),
-      ...document.getElementsByClassName("eraseAptBtn")
-    );
-    handleClientPermissions(
-      userClass,
-      ["coordenador"],
-      ...document.getElementsByClassName("dayTabRef")
-    );
+          handleClientPermissions(
+            userClass,
+            ["supervisor", "coordenador"],
+            ...document.getElementsByClassName("apptCheck"),
+            ...document.getElementsByClassName("eraseAptBtn")
+          );
+          handleClientPermissions(
+            userClass,
+            ["coordenador"],
+            ...document.getElementsByClassName("dayTabRef")
+          );
+        }
+        rootDlgContext.addedDayListeners = true;
+        clearInterval(interv);
+      } catch (e) {
+        console.error(
+          `Error executing interval for applying listeners to Day Checks:\n${
+            (e as Error).message
+          }`
+        );
+      }
+    }, 200);
+    setTimeout(() => {
+      try {
+        const dayChecks = scope.querySelectorAll('input[class*="apptCheck"]');
+        if (dayChecks.length < 0)
+          throw elementNotPopulated(
+            dayChecks,
+            "Checkboxes for day checks",
+            extLine(new Error())
+          );
+      } catch (e) {
+        console.error(
+          `Error executing procedure for readding listeners to Day Checks:\n${
+            (e as Error).message
+          }`
+        );
+      }
+      clearInterval(checkInterv);
+    }, 5000);
   } catch (err) {
     console.error(`Error executing addListenersForSchedTab():
     ${(err as Error).message}`);

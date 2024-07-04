@@ -983,14 +983,16 @@ export default function FormDlg({
                           document
                       )
                     ) {
+                      //acumulador é alinhado com o de contexto dos diálogos de consulta no handler comum
+                      accFormData =
+                        document.querySelectorAll(".appointmentBtn").length + 1;
+                      console.log("Given index: " + accFormData);
                       providerFormData[accFormData] = generateSchedPacData(
                         dialogRef.current ?? ev.currentTarget.closest("dialog")
                       );
                       generateSchedBtn(
                         dialogRef.current ?? ev.currentTarget.closest("dialog")
                       );
-                      accFormData =
-                        document.querySelectorAll(".appointmentBtn").length;
                     }
                     subForm(submitRef.current, dialogRef.current ?? document) &&
                       onClose();

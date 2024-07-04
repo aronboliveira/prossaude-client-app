@@ -17,15 +17,6 @@ export function updateSimpleProperty(el: targEl): primitiveType {
     if (el.type === "radio" || el.type === "checkbox")
       return (el as HTMLInputElement).checked.toString();
     else if (el.type === "number" || el.type === "text") {
-      // console.log(
-      //   `Sucessfuly updated property number for ${
-      //     el.id || el.tagName
-      //   }. Returned Value: ${
-      //     !Number.isFinite(parseFloat(el.value?.replaceAll(/[^0-9.,+-]/g, "")))
-      //       ? 0
-      //       : parseFloat(el.value?.replaceAll(/[^0-9.,+-]/g, "")) ?? 0
-      //   }`
-      // );
       return !Number.isFinite(
         parseFloat(el.value?.replaceAll(/[^0-9.,+-]/g, ""))
       )
@@ -608,8 +599,6 @@ export function subForm(
           isValid = false;
           displayInvalidity();
         }
-        if (entry.classList.contains("minText"))
-          console.log("length " + parseInt(entry.dataset.reqlength ?? "nulo"));
         if (
           entry.classList.contains("minText") &&
           entry.value.length < parseNotNaN(entry.dataset.reqlength || "3")
@@ -626,7 +615,6 @@ export function subForm(
       `Button for submiting form id ${subButton?.id ?? "UNIDENTIFIED"}`,
       extLine(new Error())
     );
-  console.log(arrValidity);
   return arrValidity.some(validity => validity === false) ? false : true;
 }
 
