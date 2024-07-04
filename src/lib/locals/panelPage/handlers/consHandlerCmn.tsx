@@ -797,12 +797,7 @@ export function handleDragAptBtn(
         (
           newAppointmentBtn as HTMLButtonElement
         ).style.transform = `translate(${offsetX}px, ${offsetY}px)`;
-        document.removeEventListener("touchmove", handleTouchDrag);
       };
-      document.addEventListener("touchmove", handleTouchDrag, {
-        passive: false,
-        once: true,
-      });
       const handleTouchEnd = (end: TouchEvent) => {
         console.log(end);
         if (isDragging) {
@@ -844,6 +839,9 @@ export function handleDragAptBtn(
                   slots,
                   userClass
                 );
+                (
+                  newAppointmentBtn as HTMLButtonElement
+                ).style.transform = `translate(0, 0)`;
                 try {
                   const monthSelector =
                     document.getElementById("monthSelector");
@@ -880,8 +878,12 @@ export function handleDragAptBtn(
           }
           isDragging = false;
         }
+        document.removeEventListener("touchmove", handleTouchDrag);
         document.removeEventListener("touchend", handleTouchEnd);
       };
+      document.addEventListener("touchmove", handleTouchDrag, {
+        passive: false,
+      });
       document.addEventListener("touchend", handleTouchEnd, { once: true });
     });
   } else

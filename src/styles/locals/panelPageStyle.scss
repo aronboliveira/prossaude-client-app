@@ -79,6 +79,11 @@ body {
 
   .appointmentBtn {
     touch-action: none;
+    @if (box-sizing: "border-box") {
+      max-width: 16.505875rem;
+    } @else {
+      max-width: 20rem;
+    }
   }
 
   .reduced-btn-close {
@@ -158,8 +163,11 @@ body {
       .form-switch {
         padding-left: 2.7rem;
         &:first-of-type {
-          margin-top: 0.75rem;
+          margin-top: 0.5rem;
           margin-bottom: 0.05rem;
+        }
+        &:last-of-type {
+          margin-block: 0;
         }
       }
       .btn {
@@ -185,12 +193,30 @@ body {
           margin: 0.5rem 0.5rem 0 0;
         }
       }
+      #alocStudDiv,
+      #cpfBodyDiv,
+      #firstNamePacBody {
+        margin-bottom: 0.75rem;
+      }
+      #respTitledInpDiv {
+        margin-bottom: 0.5rem;
+      }
     }
   }
 }
 
 @media screen and (max-width: 460px) {
   .panelBody {
+    header {
+      div {
+        &:has(#tipsBtn) {
+          flex-flow: row wrap;
+          #tipsBtn {
+            transform: translate(4px, 9px);
+          }
+        }
+      }
+    }
     .transfArea {
       align-self: auto;
       max-width: 82vw;

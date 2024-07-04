@@ -44,6 +44,7 @@ import RegstConsBtn from "./RegstConsBtn";
 import EraseAptBtn from "./EraseAptBtn";
 import ReseterBtn from "../defs/ReseterBtn";
 import { globalDataProvider } from "@/pages/panel";
+import { ErrorBoundary } from "react-error-boundary";
 
 export default function ScheduleForm({
   mainRoot,
@@ -434,7 +435,7 @@ export default function ScheduleForm({
     }
   }, [formRef, userClass]);
   useEffect(() => {
-    setInterval(interv => {
+    const confInterv = setInterval(interv => {
       const confCons = document.getElementById("confirmDayInp");
       if (!(confCons instanceof HTMLInputElement)) {
         clearInterval(interv);
@@ -446,7 +447,7 @@ export default function ScheduleForm({
         confCons.disabled = false;
       else confCons.disabled = true;
     }, 200);
-    setInterval(interv => {
+    const regstInterv = setInterval(interv => {
       const regstDay = document.getElementById("regstDayBtn");
       if (!(regstDay instanceof HTMLButtonElement)) {
         clearInterval(interv);
@@ -458,11 +459,14 @@ export default function ScheduleForm({
         regstDay.disabled = false;
       else regstDay.disabled = true;
     }, 200);
+    let aptIntervs: any[] = [],
+      slotsIntervs: any[] = [],
+      transfInterv: any;
     [
       ...document.querySelectorAll(".apptCheck"),
       ...document.querySelectorAll(".eraseAptBtn"),
     ].forEach(aptBtn => {
-      setInterval((interv: any) => {
+      const aptInterv = setInterval((interv: any) => {
         if (
           !(
             aptBtn instanceof HTMLButtonElement ||
@@ -477,10 +481,85 @@ export default function ScheduleForm({
           aptBtn.disabled = false;
         else aptBtn.disabled = true;
       }, 200);
+      aptIntervs.push(aptInterv);
     });
+    document.querySelectorAll(".consSlot").forEach(slot => {
+      const slotInterv = setInterval(() => {
+        if (
+          !slot.querySelector(".appointmentBtn") &&
+          !slot.querySelector(".slotableDay")
+        ) {
+          const replaceInp = document.createElement("input");
+          replaceInp.classList.add(
+            "transparent-el",
+            "slotableDay",
+            "opaque-bluish",
+            "wid100",
+            "form-control"
+          );
+          replaceInp.id = slot.id.replace("slot", "");
+          replaceInp.placeholder = `Horário Livre`;
+          replaceInp.ariaPlaceholder = "Horário Livre";
+          replaceInp.style.minWidth = "21ch";
+          replaceInp.ariaHidden = "false";
+          replaceInp.ariaRequired = "false";
+          replaceInp.ariaInvalid = "false";
+          slot.prepend(replaceInp);
+        }
+      }, 200);
+      slotsIntervs.push(slotInterv);
+    });
+    try {
+      const transfArea = document.getElementById("transfArea");
+      if (!(transfArea instanceof HTMLElement))
+        throw elementNotFound(
+          transfArea,
+          `Transference Element`,
+          extLine(new Error())
+        );
+      transfInterv = setInterval(() => {
+        const slot = transfArea.querySelector("slot");
+        if (!slot) {
+          const replaceSlot = document.createElement("slot");
+          replaceSlot.classList.add("opaqueEl", "ssPersist");
+          replaceSlot.id = "replaceSlot";
+          replaceSlot.title =
+            "Aqui é incluído o botão de uma consulta recém-criada";
+          replaceSlot.ariaHidden = "false";
+          replaceSlot.innerText = "Área de transferência";
+          transfArea.prepend(replaceSlot);
+        } else if (slot.innerText === "")
+          slot.innerText = "Área de transferência";
+      }, 200);
+    } catch (e) {
+      console.error(
+        `Error executing procedure for adding interval to Transference Area:\n${
+          (e as Error).message
+        }`
+      );
+    }
+    return () => {
+      try {
+        clearInterval(confInterv);
+        clearInterval(regstInterv);
+        for (const aptInterv of aptIntervs) clearInterval(aptInterv);
+        for (const slotInterv of slotsIntervs) clearInterval(slotInterv);
+        document.getElementById("transfArea") &&
+          transfInterv &&
+          clearInterval(transfInterv);
+      } catch (e) {
+        console.error(
+          `Error clearing intervals for Schedule:\n${(e as Error).message}`
+        );
+      }
+    };
   }, []);
   return (
-    <>
+    <ErrorBoundary
+      FallbackComponent={() => (
+        <GenericErrorComponent message="Erro carregando agenda!" />
+      )}
+    >
       {showForm && (
         <div role="group" className="form-padded--vis wid101">
           <form
@@ -772,6 +851,93 @@ export default function ScheduleForm({
                               userClass,
                               panelFormsVariables.isAutoFillMonthOn
                             );
+                            try {
+                              const lastConsDayCont =
+                                document.querySelector(".lastConsDayCont");
+                              if (!(lastConsDayCont instanceof HTMLElement))
+                                throw elementNotFound(
+                                  lastConsDayCont,
+                                  `Last Table Head Cel`,
+                                  extLine(new Error())
+                                );
+                              if (
+                                getComputedStyle(lastConsDayCont).display ===
+                                  "none" ||
+                                lastConsDayCont.hidden === true
+                              ) {
+                                const tbSchedule =
+                                  document.getElementById("tbSchedule");
+                                if (!(tbSchedule instanceof HTMLElement))
+                                  throw elementNotFound(
+                                    tbSchedule,
+                                    `Table Body`,
+                                    extLine(new Error())
+                                  );
+                                tbSchedule
+                                  .querySelectorAll("tr")
+                                  .forEach((row, j) => {
+                                    try {
+                                      const lastCel = Array.from(
+                                        row.querySelectorAll("td")
+                                      )
+                                        .map(td => td)
+                                        .at(-1);
+                                      if (!(lastCel instanceof HTMLElement))
+                                        throw elementNotFound(
+                                          lastCel,
+                                          `Last Row Cel`,
+                                          extLine(new Error())
+                                        );
+                                      lastCel.style.display = "none";
+                                    } catch (e) {
+                                      console.error(
+                                        `Error executing iteration ${j} of cicles for checking Last Row Cells:${
+                                          (e as Error).message
+                                        }`
+                                      );
+                                    }
+                                  });
+                              } else {
+                                const tbSchedule =
+                                  document.getElementById("tbSchedule");
+                                if (!(tbSchedule instanceof HTMLElement))
+                                  throw elementNotFound(
+                                    tbSchedule,
+                                    `Table Body`,
+                                    extLine(new Error())
+                                  );
+                                tbSchedule
+                                  .querySelectorAll("tr")
+                                  .forEach((row, j) => {
+                                    try {
+                                      const lastCel = Array.from(
+                                        row.querySelectorAll("td")
+                                      )
+                                        .map(td => td)
+                                        .at(-1);
+                                      if (!(lastCel instanceof HTMLElement))
+                                        throw elementNotFound(
+                                          lastCel,
+                                          `Last Row Cel`,
+                                          extLine(new Error())
+                                        );
+                                      lastCel.style.display = "table-cell";
+                                    } catch (e) {
+                                      console.error(
+                                        `Error executing iteration ${j} of cicles for checking Last Row Cells:${
+                                          (e as Error).message
+                                        }`
+                                      );
+                                    }
+                                  });
+                              }
+                            } catch (e) {
+                              console.error(
+                                `Error executing procedure for checking Last Schedule Column display:\n${
+                                  (e as Error).message
+                                }`
+                              );
+                            }
                           } catch (err) {
                             console.error(`Error handling change on Month Selector:
                             ${(err as Error).message}`);
@@ -1985,6 +2151,6 @@ export default function ScheduleForm({
           <footer className="d-no" id="scheduleFooter"></footer>
         </div>
       )}
-    </>
+    </ErrorBoundary>
   );
 }

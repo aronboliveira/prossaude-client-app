@@ -152,6 +152,16 @@ export function dragStart(
           quadrTo.addEventListener("drop", dropHandler)
         );
       } else if (move instanceof TouchEvent) {
+        const handleTouchDrag = (ev: TouchEvent) => {
+          if (!odIsDragging) return;
+          ev.preventDefault();
+          const touch = ev.targetTouches[0];
+          odOffsetX = touch.clientX - odInitialX;
+          odOffsetY = touch.clientY - odInitialY;
+          (
+            validSrcEl as HTMLElement
+          ).style.transform = `translate(${odOffsetX}px, ${odOffsetY}px)`;
+        };
         validSrcEl.addEventListener("touchstart", ev => {
           odIsDragging = true;
           odFbTouch = Array.from(ev.touches).find(
@@ -167,21 +177,6 @@ export function dragStart(
             (validSrcEl as HTMLElement).style.position = "absolute";
             (validSrcEl as HTMLElement).style.zIndex = "100";
           }
-          const handleTouchDrag = (ev: TouchEvent) => {
-            if (!odIsDragging) return;
-            ev.preventDefault();
-            const touch = ev.targetTouches[0];
-            odOffsetX = touch.clientX - odInitialX;
-            odOffsetY = touch.clientY - odInitialY;
-            (
-              validSrcEl as HTMLElement
-            ).style.transform = `translate(${odOffsetX}px, ${odOffsetY}px)`;
-            document.removeEventListener("touchmove", handleTouchDrag);
-          };
-          document.addEventListener("touchmove", handleTouchDrag, {
-            passive: false,
-            once: true,
-          });
           const handleTouchEnd = (end: TouchEvent) => {
             console.log(end);
             if (odIsDragging) {
@@ -212,6 +207,9 @@ export function dragStart(
                   validTargEl.style.setProperty("grid-row", srcCStRow);
                   (validSrcEl as HTMLElement).style.position = "static";
                   (validSrcEl as HTMLElement).style.zIndex = "10";
+                  (
+                    validSrcEl as HTMLElement
+                  ).style.transform = `translate(0, 0)`;
                 } else
                   multipleElementsNotFound(
                     extLine(new Error()),
@@ -226,9 +224,13 @@ export function dragStart(
               }
               odIsDragging = false;
             }
+            document.removeEventListener("touchmove", handleTouchDrag);
             document.removeEventListener("touchend", handleTouchEnd);
           };
           document.addEventListener("touchend", handleTouchEnd, { once: true });
+        });
+        document.addEventListener("touchmove", handleTouchDrag, {
+          passive: false,
         });
       }
     } else
