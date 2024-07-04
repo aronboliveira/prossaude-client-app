@@ -19,11 +19,11 @@ import PanelTips from "../../components/interactive/panel/PanelTips";
 export const fillScheduleState = { acc: 0 };
 export const formData: { [key: string]: string } = {};
 export const user = await (async () => {
-  let userName = "Anônimo",
-    userArea = "odontologia",
-    userClass = "estudante",
-    userEmail = "Não fornecido",
-    userTel = "Não fornecido";
+  let userName = "João Almeida",
+    userArea = "psicologia",
+    userClass = "coordenador",
+    userEmail = "almeida.joao@gmail.com",
+    userTel = "+55 21 99988-7766";
   try {
     const res = await fetch("/user.json", {
       method: "GET",

@@ -1,15 +1,22 @@
+import { user } from "@/pages/panel";
 import {
   elementNotFound,
   extLine,
   inputNotFound,
   stringError,
 } from "../../../global/handlers/errorHandler";
+import {
+  checkConfirmApt,
+  handleAptBtnClick,
+  replaceBtnSlot,
+  verifyAptCheck,
+} from "../handlers/consHandlerCmn";
 
 export class DataProvider {
   #sessionDataState: { [key: string]: any };
   constructor(_dataSessionState: { [key: string]: any }) {
     this.#sessionDataState = _dataSessionState;
-    window.addEventListener("beforeunload", () => {
+    addEventListener("beforeunload", () => {
       this.#sessionDataState = {};
       [
         "formSched",
@@ -54,9 +61,6 @@ export class DataProvider {
           extLine(new Error())
         );
       let isTargPanelRendered = true;
-      panelSelect.addEventListener("change", () =>
-        handleSessionPanelChange(element.id)
-      );
       const handleSessionPanelChange = (elementId: string): void => {
         try {
           const scope = document.getElementById(elementId);
@@ -94,6 +98,9 @@ export class DataProvider {
             );
           })();
       };
+      panelSelect.addEventListener("change", () =>
+        handleSessionPanelChange(element.id)
+      );
     } catch (err) {
       console.error(`Error on initiation of Panel Change Listening:
           ${(err as Error).message}`);
@@ -148,10 +155,10 @@ export class DataProvider {
     }
     return sessionData;
   }
-  async parseSessionStorage(
+  parseSessionStorage(
     scope: HTMLElement | Document = document,
     scopeRef: string
-  ): Promise<void> {
+  ): void {
     const persisters =
       sessionStorage.getItem(scopeRef) ||
       JSON.stringify(this.#sessionDataState);
@@ -180,16 +187,15 @@ export class DataProvider {
           entry[1] === "true" || entry[1] === true
             ? (fetchedEl.checked = true)
             : (fetchedEl.checked = false);
-        } else if (fetchedEl instanceof HTMLElement) {
+        } else if (fetchedEl instanceof HTMLElement)
           fetchedEl.innerHTML = entry[1] as string;
-        }
       });
     }
   }
   static initStorageParsing(
     scope: HTMLElement | Document = document,
     scopeRef: string
-  ) {
+  ): void {
     const persisters = sessionStorage.getItem(scopeRef);
     if (persisters) {
       Object.entries(JSON.parse(persisters)).forEach(entry => {
@@ -218,6 +224,50 @@ export class DataProvider {
             : (fetchedEl.checked = false);
         } else if (fetchedEl instanceof HTMLElement) {
           fetchedEl.innerHTML = entry[1] as string;
+          if (fetchedEl.classList.contains("consSlot")) {
+            const aptBtn = fetchedEl.querySelector(".appointmentBtn");
+            if (aptBtn) {
+              aptBtn.addEventListener("click", ev =>
+                handleAptBtnClick(ev as MouseEvent, user.userClass)
+              );
+            }
+            if (
+              user.userClass === "coordenador" ||
+              user.userClass === "supervisor"
+            ) {
+              const eraser = fetchedEl.querySelector(".btn-close");
+              if (eraser) {
+                eraser.addEventListener("click", () => {
+                  const relCel = eraser.closest("slot");
+                  relCel instanceof HTMLElement && eraser instanceof HTMLElement
+                    ? replaceBtnSlot(
+                        relCel.querySelector("[id*=appointmentBtn]"),
+                        relCel,
+                        eraser
+                      )
+                    : elementNotFound(
+                        relCel,
+                        `Table cell related to button for erasing day/hour appointment id ${eraser.id}`,
+                        extLine(new Error())
+                      );
+                });
+              }
+              const dayCheck = fetchedEl.querySelector(".apptCheck");
+              if (dayCheck) {
+                dayCheck.addEventListener("change", () => {
+                  dayCheck instanceof HTMLInputElement &&
+                  (dayCheck.type === "checkbox" || dayCheck.type === "radio")
+                    ? checkConfirmApt(dayCheck)
+                    : inputNotFound(
+                        dayCheck,
+                        `dayCheck id ${dayCheck?.id || "UNIDENTIFIED"}`,
+                        extLine(new Error())
+                      );
+                });
+                verifyAptCheck(dayCheck);
+              }
+            }
+          }
         }
       });
     }

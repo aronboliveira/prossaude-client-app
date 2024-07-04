@@ -1424,15 +1424,17 @@ export function addEraseEvent(
   if (userClass === "coordenador" || userClass === "supervisor") {
     eraser.addEventListener("click", () => {
       const relCel = eraser.closest("slot");
-      if (relCel instanceof HTMLElement) {
-        const aptBtn = relCel.querySelector("[id*=appointmentBtn]");
-        replaceBtnSlot(aptBtn, relCel, eraser);
-      } else
-        elementNotFound(
-          relCel,
-          `Table cell related to button for erasing day/hour appointment id ${eraser.id}`,
-          extLine(new Error())
-        );
+      relCel instanceof HTMLElement
+        ? replaceBtnSlot(
+            relCel.querySelector("[id*=appointmentBtn]"),
+            relCel,
+            eraser
+          )
+        : elementNotFound(
+            relCel,
+            `Table cell related to button for erasing day/hour appointment id ${eraser.id}`,
+            extLine(new Error())
+          );
     });
     setInterval((interv: any) => {
       if (
@@ -1655,6 +1657,46 @@ export function handleScheduleChange(
   }
 }
 
+export function verifyAptCheck(dayCheck: targEl) {
+  try {
+    if (
+      dayCheck instanceof HTMLInputElement &&
+      (dayCheck.type === "checkbox" || dayCheck.type === "radio") &&
+      dayCheck.checked
+    ) {
+      try {
+        const relSlot = dayCheck.closest("slot");
+        if (!(relSlot instanceof HTMLElement))
+          throw elementNotFound(
+            relSlot,
+            `Slot related to Day Check id ${dayCheck.id || dayCheck.tagName}`,
+            extLine(new Error())
+          );
+        const relBtn =
+          relSlot.querySelector(".appointmentBtn") ??
+          relSlot.querySelector('button[id^="appointmentBtn"]');
+        if (!(relBtn instanceof HTMLButtonElement))
+          throw elementNotFound(
+            relBtn,
+            `Appointment Button related to ${dayCheck.id || dayCheck.tagName}`,
+            extLine(new Error())
+          );
+        if (relBtn.classList.contains("btn-info"))
+          relBtn.classList.remove("btn-info");
+        relBtn.classList.add("btn-success");
+      } catch (e) {
+        console.error(
+          `Error executing procedure for painting Appointment Button:\n${
+            (e as Error).message
+          }`
+        );
+      }
+    }
+  } catch (e) {
+    console.error(`Error executing verifyAptCheck:\n${(e as Error).message}`);
+  }
+}
+
 export function addListenersForSchedTab(
   scope: HTMLElement | Document = document,
   userClass: string,
@@ -1767,43 +1809,7 @@ export function addListenersForSchedTab(
         }
         if (!rootDlgContext.addedDayListeners) {
           dayChecks.forEach(dayCheck => {
-            if (
-              dayCheck instanceof HTMLInputElement &&
-              (dayCheck.type === "checkbox" || dayCheck.type === "radio") &&
-              dayCheck.checked
-            ) {
-              try {
-                const relSlot = dayCheck.closest("slot");
-                if (!(relSlot instanceof HTMLElement))
-                  throw elementNotFound(
-                    relSlot,
-                    `Slot related to Day Check id ${
-                      dayCheck.id || dayCheck.tagName
-                    }`,
-                    extLine(new Error())
-                  );
-                const relBtn =
-                  relSlot.querySelector(".appointmentBtn") ??
-                  relSlot.querySelector('button[id^="appointmentBtn"]');
-                if (!(relBtn instanceof HTMLButtonElement))
-                  throw elementNotFound(
-                    relBtn,
-                    `Appointment Button related to ${
-                      dayCheck.id || dayCheck.tagName
-                    }`,
-                    extLine(new Error())
-                  );
-                if (relBtn.classList.contains("btn-info"))
-                  relBtn.classList.remove("btn-info");
-                relBtn.classList.add("btn-success");
-              } catch (e) {
-                console.error(
-                  `Error executing procedure for painting Appointment Button:\n${
-                    (e as Error).message
-                  }`
-                );
-              }
-            }
+            verifyAptCheck(dayCheck);
             (userClass === "coordenador" || userClass === "supervisor") &&
               dayCheck.addEventListener("change", () => {
                 dayCheck instanceof HTMLInputElement &&
