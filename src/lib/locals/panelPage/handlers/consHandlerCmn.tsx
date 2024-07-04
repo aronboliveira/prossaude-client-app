@@ -11,7 +11,7 @@ import {
   typeError,
 } from "../../../global/handlers/errorHandler";
 import { entryEl, targEl, voidVal } from "../../../global/declarations/types";
-import { parseNotNaN } from "../../../global/gModel";
+import { parseNotNaN, textTransformPascal } from "../../../global/gModel";
 import { clearPhDates } from "../../../global/gStyleScript";
 import { handleClientPermissions } from "./consHandlerUsers";
 import {
@@ -556,6 +556,7 @@ export function generateSchedPacData(scope: targEl): { [k: string]: string } {
   return pacData;
 }
 
+let renderCounts = 0;
 export function createAptBtn(
   formData: { [key: string]: string },
   _providerFormData: { [key: string]: string },
@@ -601,7 +602,7 @@ export function createAptBtn(
           formData.cons.slice(1) || "onsulta"
         } </strong>
     </span>
-      <em> : ${formData.name || "noName"}</em>
+      <em> : ${textTransformPascal(formData.name) || "noName"}</em>
     `);
     newAppointmentBtn.classList.add(
       ...["btn", "btn-info", "appointmentBtn", "forceInvert"]
@@ -623,20 +624,48 @@ export function createAptBtn(
               extLine(new Error())
             );
         newAppointmentBtn.addEventListener("click", () => {
-          rootedDlg.render(
-            <ProviderAptDatList
-              data={
-                _providerFormData ||
-                Array.from(providerFormData.values()).find(
-                  formData =>
-                    (formData as any).time ===
-                    newAppointmentBtn.id.replace("appointmentBtn-", "")
-                )
-              }
-              btnId={btnId}
-              userClass={userClass}
-            />
-          );
+          console.log("trying to render...");
+          console.log(rootedDlg);
+          if (document.querySelectorAll(".appointmentBtn").length <= 1) {
+            rootedDlg.render(
+              <ProviderAptDatList
+                data={
+                  _providerFormData ||
+                  Array.from(providerFormData.values()).find(
+                    formData =>
+                      (formData as any).time ===
+                      newAppointmentBtn.id.replace("appointmentBtn-", "")
+                  )
+                }
+                btnId={btnId}
+                userClass={userClass}
+              />
+            );
+          } else {
+            const newRoot = document.createElement("div");
+            newRoot.id = `rootAdd${
+              document.querySelectorAll(".appointmentBtn").length
+            }DlgList`;
+            newRoot.role = "group";
+            document
+              .getElementById("chreference")!
+              .insertAdjacentElement("beforebegin", newRoot);
+            createRoot(newRoot).render(
+              <ProviderAptDatList
+                data={
+                  _providerFormData ||
+                  Array.from(providerFormData.values()).find(
+                    formData =>
+                      (formData as any).time ===
+                      newAppointmentBtn.id.replace("appointmentBtn-", "")
+                  )
+                }
+                btnId={btnId}
+                userClass={userClass}
+              />
+            );
+          }
+          renderCounts = renderCounts++;
         });
       } else
         elementNotFound(

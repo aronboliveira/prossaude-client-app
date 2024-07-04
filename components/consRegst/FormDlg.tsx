@@ -451,7 +451,7 @@ export default function FormDlg({
       const newBtn = createAptBtn(
         formData,
         providerFormData[accFormData],
-        consVariablesData.rootDlg, //TODO ERRO
+        consVariablesData.rootDlg,
         userClass
       );
       handleDragAptBtn(newBtn, userClass);

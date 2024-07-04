@@ -221,13 +221,16 @@ body {
       align-self: auto;
       max-width: 82vw;
     }
-    #tipsDlg {
-      left: 0%;
-      border: ridge 0.3rem;
-    }
     #autofillDivCons {
       padding-top: 0;
       margin-top: 0;
+    }
+    #headRegstPac {
+      width: 73vw;
+    }
+    #tipsDlg {
+      left: 0%;
+      border: ridge 0.3rem;
     }
   }
 }

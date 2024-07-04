@@ -1246,3 +1246,41 @@ export function autoCapitalizeInputs(
     );
   return "";
 }
+
+export function capitalizeFirstLetter(text: string): string {
+  try {
+    if (!(typeof text === "string"))
+      throw typeError(
+        `type of argument for capitalizeFirstLetter`,
+        text,
+        "string",
+        extLine(new Error())
+      );
+    text = `${text.slice(0, 1).toUpperCase()}${text.slice(1)}`;
+    return text;
+  } catch (e) {
+    console.error(
+      `Error executing capitalizeFirstLetter:\n${(e as Error).message}`
+    );
+    return text.toString();
+  }
+}
+
+export function textTransformPascal(text: string): string {
+  try {
+    if (!(typeof text === "string"))
+      throw typeError(
+        `type of argument for capitalizeFirstLetter`,
+        text,
+        "string",
+        extLine(new Error())
+      );
+    text = `${text.slice(0, 1).toUpperCase()}${text.slice(1).toLowerCase()}`;
+    return text;
+  } catch (e) {
+    console.error(
+      `Error executing capitalizeFirstLetter:\n${(e as Error).message}`
+    );
+    return text.toString();
+  }
+}

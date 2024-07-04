@@ -477,9 +477,9 @@ export default function ScheduleForm({
           clearInterval(interv);
           return;
         }
-        if (aptBtn.closest(".consSlot")?.querySelector(".appointmentBtn"))
-          aptBtn.disabled = false;
-        else aptBtn.disabled = true;
+        if (!aptBtn.closest(".consSlot")?.querySelector(".appointmentBtn"))
+          aptBtn.disabled = true;
+        else aptBtn.disabled = false;
       }, 200);
       aptIntervs.push(aptInterv);
     });
@@ -518,18 +518,20 @@ export default function ScheduleForm({
           extLine(new Error())
         );
       transfInterv = setInterval(() => {
-        const slot = transfArea.querySelector("slot");
-        if (!slot) {
-          const replaceSlot = document.createElement("slot");
-          replaceSlot.classList.add("opaqueEl", "ssPersist");
-          replaceSlot.id = "replaceSlot";
-          replaceSlot.title =
-            "Aqui é incluído o botão de uma consulta recém-criada";
-          replaceSlot.ariaHidden = "false";
-          replaceSlot.innerText = "Área de transferência";
-          transfArea.prepend(replaceSlot);
-        } else if (slot.innerText === "")
-          slot.innerText = "Área de transferência";
+        if (!transfArea.querySelector(".appointmentBtn")) {
+          const slot = transfArea.querySelector("slot");
+          if (!slot) {
+            const replaceSlot = document.createElement("slot");
+            replaceSlot.classList.add("opaqueEl", "ssPersist");
+            replaceSlot.id = "replaceSlot";
+            replaceSlot.title =
+              "Aqui é incluído o botão de uma consulta recém-criada";
+            replaceSlot.ariaHidden = "false";
+            replaceSlot.innerText = "Área de transferência";
+            transfArea.prepend(replaceSlot);
+          } else if (slot.innerText === "")
+            slot.innerText = "Área de transferência";
+        }
       }, 200);
     } catch (e) {
       console.error(

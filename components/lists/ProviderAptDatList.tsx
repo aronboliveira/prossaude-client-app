@@ -8,7 +8,9 @@ export default function ProviderAptDatList({
   userClass,
 }: ProviderAptDataListProps): JSX.Element {
   const [shouldDisplayAptList, setDisplayAptList] = useState(true);
-  return (
+  return !shouldDisplayAptList ? (
+    <></>
+  ) : (
     <div role="group" className="providerAptDiv">
       {shouldDisplayAptList && (
         <AptDataList

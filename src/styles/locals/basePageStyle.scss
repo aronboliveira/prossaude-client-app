@@ -309,13 +309,18 @@
 @media screen and (max-width: 590px) {
   .baseBody {
     #bgDiv {
-      height: 125rem;
+      height: 130rem;
     }
   }
 }
 
 @media (max-width: 520px) {
   .baseBody {
+    header {
+      > div {
+        margin-left: 30%;
+      }
+    }
     .card {
       &.card23v {
         max-width: 90vw;
@@ -331,6 +336,7 @@
       flex-flow: column wrap;
       align-items: center;
       justify-content: center;
+      margin-left: 0.75rem;
     }
   }
 }

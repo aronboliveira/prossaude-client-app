@@ -114,10 +114,24 @@ export default function AptDataList({
       };
     }
   }, [aptDlgRef]);
-  return (
+  return !shouldDisplayAptList ? (
+    <></>
+  ) : (
     <div role="group" className="aptDiv">
       {shouldDisplayAptList && (
-        <dialog className="modal-content-stk2" ref={aptDlgRef}>
+        <dialog
+          className="modal-content-stk2"
+          id={`dlg-${btnId}`}
+          ref={aptDlgRef}
+          onClick={ev => {
+            if (
+              isClickOutside(ev, ev.currentTarget).some(
+                coords => coords === true
+              )
+            )
+              setDisplayAptList(!shouldDisplayAptList);
+          }}
+        >
           <ErrorBoundary
             FallbackComponent={() => (
               <ErrorFallbackDlg
