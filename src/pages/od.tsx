@@ -21,6 +21,8 @@ import {
 } from "@/lib/locals/odPage/odController";
 import {
   changeToAstDigit,
+  handleCondtReq,
+  subForm,
   syncAriaStates,
 } from "@/lib/global/handlers/gHandlers";
 import TratFs from "../../components/interactive/od/TratFs";
@@ -221,9 +223,15 @@ export default function OdPage(): JSX.Element {
                           type="text"
                           name="firstNameName"
                           id="firstNameId"
-                          className="form-control noInvert autocorrect inpIdentif"
+                          className="form-control noInvert autocorrect inpIdentif minText maxText patternText"
                           autoComplete="given-name"
                           data-title="Primeiro nome"
+                          data-reqlength="3"
+                          data-maxlength="99"
+                          data-pattern="[^0-9]"
+                          data-flags="gi"
+                          minLength={3}
+                          maxLength={99}
                           required
                         />
                       </label>
@@ -246,6 +254,13 @@ export default function OdPage(): JSX.Element {
                           className="form-control noInvert autocorrect inpIdentif"
                           data-title="Nome do meio"
                           autoComplete="additional-name"
+                          onInput={ev =>
+                            handleCondtReq(ev.currentTarget, {
+                              min: 3,
+                              max: 99,
+                              pattern: ["[^0-9]", "gi"],
+                            })
+                          }
                         />
                       </label>
                       <br role="presentation" />
@@ -262,10 +277,16 @@ export default function OdPage(): JSX.Element {
                           type="text"
                           name="familyNameName"
                           id="familyNameId"
-                          className="form-control noInvert autocorrect inpIdentif"
-                          data-title="Último nome"
+                          className="form-control noInvert autocorrect inpIdentif minText maxText patternText"
                           autoComplete="family-name"
                           required
+                          data-title="Último nome"
+                          data-reqlength="3"
+                          data-maxlength="99"
+                          data-pattern="[^0-9]"
+                          data-flags="gi"
+                          minLength={3}
+                          maxLength={99}
                         />
                       </label>
                       <br role="presentation" />
@@ -286,6 +307,13 @@ export default function OdPage(): JSX.Element {
                         className="form-control noInvert autocorrect inpIdentif"
                         data-title="Nome social"
                         autoComplete="given-name"
+                        onInput={ev =>
+                          handleCondtReq(ev.currentTarget, {
+                            min: 3,
+                            max: 99,
+                            pattern: ["[^0-9]", "gi"],
+                          })
+                        }
                       />
                     </label>
                   </span>
@@ -293,7 +321,6 @@ export default function OdPage(): JSX.Element {
               </section>
               <hr />
             </fieldset>
-
             <fieldset
               name="fsInspBocFacName"
               id="fsInspBocFacId"
@@ -1644,9 +1671,12 @@ export default function OdPage(): JSX.Element {
                         list="avElemDentD18"
                         defaultValue="Hígido"
                         id="inpD18"
-                        className="inpAvDent form-control noInvert"
-                        data-title="Estado do Dente 18"
+                        className="inpAvDent form-control noInvert minText patternText"
                         required
+                        data-title="Estado do Dente 18"
+                        data-reqlength="6"
+                        data-pattern="amálgama|careado|hígido|trincado|ausente"
+                        data-flags="gi"
                       />
                       <datalist id="avElemDentD18" className="dlAvDent">
                         <option defaultValue="Amálgama" className="elemOp">
@@ -1682,9 +1712,12 @@ export default function OdPage(): JSX.Element {
                         list="avElemDentD17"
                         defaultValue="Hígido"
                         id="inpD17"
-                        className="inpAvDent form-control noInvert"
+                        className="inpAvDent form-control noInvert minText patternText"
                         data-title="Estado do Dente 17"
                         required
+                        data-reqlength="6"
+                        data-pattern="amálgama|careado|hígido|trincado|ausente"
+                        data-flags="gi"
                       />
                       <datalist id="avElemDentD17" className="dlAvDent">
                         <option defaultValue="Amálgama" className="elemOp">
@@ -1720,9 +1753,12 @@ export default function OdPage(): JSX.Element {
                         list="avElemDentD16"
                         defaultValue="Hígido"
                         id="inpD16"
-                        className="inpAvDent form-control noInvert"
+                        className="inpAvDent form-control noInvert minText patternText"
                         data-title="Estado do Dente 16"
                         required
+                        data-reqlength="6"
+                        data-pattern="amálgama|careado|hígido|trincado|ausente"
+                        data-flags="gi"
                       />
                       <datalist id="avElemDentD16" className="dlAvDent">
                         <option defaultValue="Amálgama" className="elemOp">
@@ -1758,9 +1794,12 @@ export default function OdPage(): JSX.Element {
                         list="avElemDentD15"
                         defaultValue="Hígido"
                         id="inpD15"
-                        className="inpAvDent form-control noInvert"
+                        className="inpAvDent form-control noInvert minText patternText"
                         data-title="Estado do Dente 15"
                         required
+                        data-reqlength="6"
+                        data-pattern="amálgama|careado|hígido|trincado|ausente"
+                        data-flags="gi"
                       />
                       <datalist id="avElemDentD15" className="dlAvDent">
                         <option defaultValue="Amálgama" className="elemOp">
@@ -1796,9 +1835,12 @@ export default function OdPage(): JSX.Element {
                         list="avElemDentD14"
                         defaultValue="Hígido"
                         id="inpD14"
-                        className="inpAvDent form-control noInvert"
+                        className="inpAvDent form-control noInvert minText patternText"
                         data-title="Estado do Dente 14"
                         required
+                        data-reqlength="6"
+                        data-pattern="amálgama|careado|hígido|trincado|ausente"
+                        data-flags="gi"
                       />
                       <datalist id="avElemDentD14" className="dlAvDent">
                         <option defaultValue="Amálgama" className="elemOp">
@@ -1834,9 +1876,12 @@ export default function OdPage(): JSX.Element {
                         list="avElemDentD13"
                         defaultValue="Hígido"
                         id="inpD13"
-                        className="inpAvDent form-control noInvert"
+                        className="inpAvDent form-control noInvert minText patternText"
                         data-title="Estado do Dente 13"
                         required
+                        data-reqlength="6"
+                        data-pattern="amálgama|careado|hígido|trincado|ausente"
+                        data-flags="gi"
                       />
                       <datalist id="avElemDentD13" className="dlAvDent">
                         <option defaultValue="Amálgama" className="elemOp">
@@ -1872,9 +1917,12 @@ export default function OdPage(): JSX.Element {
                         list="avElemDentD12"
                         defaultValue="Hígido"
                         id="inpD12"
-                        className="inpAvDent form-control noInvert"
+                        className="inpAvDent form-control noInvert minText patternText"
                         data-title="Estado do Dente 12"
                         required
+                        data-reqlength="6"
+                        data-pattern="amálgama|careado|hígido|trincado|ausente"
+                        data-flags="gi"
                       />
                       <datalist id="avElemDentD12" className="dlAvDent">
                         <option defaultValue="Amálgama" className="elemOp">
@@ -1910,9 +1958,12 @@ export default function OdPage(): JSX.Element {
                         list="avElemD11"
                         defaultValue="Hígido"
                         id="inpD11"
-                        className="inpAvDent form-control noInvert"
+                        className="inpAvDent form-control noInvert minText patternText"
                         data-title="Estado do Dente 11"
                         required
+                        data-reqlength="6"
+                        data-pattern="amálgama|careado|hígido|trincado|ausente"
+                        data-flags="gi"
                       />
                       <datalist id="avElemD11" className="dlAvDent">
                         <option defaultValue="Amálgama" className="elemOp">
@@ -1973,9 +2024,12 @@ export default function OdPage(): JSX.Element {
                         list="avElemD31"
                         defaultValue="Hígido"
                         id="inpD31"
-                        className="inpAvDent form-control noInvert"
+                        className="inpAvDent form-control noInvert minText patternText"
                         data-title="Estado do Dente 31"
                         required
+                        data-reqlength="6"
+                        data-pattern="amálgama|careado|hígido|trincado|ausente"
+                        data-flags="gi"
                       />
                       <datalist id="avElemD31" className="dlAvDent">
                         <option defaultValue="Amálgama" className="elemOp">
@@ -2011,9 +2065,12 @@ export default function OdPage(): JSX.Element {
                         list="avElemD32"
                         defaultValue="Hígido"
                         id="inpD32"
-                        className="inpAvDent form-control noInvert"
+                        className="inpAvDent form-control noInvert minText patternText"
                         data-title="Estado do Dente 32"
                         required
+                        data-reqlength="6"
+                        data-pattern="amálgama|careado|hígido|trincado|ausente"
+                        data-flags="gi"
                       />
                       <datalist id="avElemD32" className="dlAvDent">
                         <option defaultValue="Amálgama" className="elemOp">
@@ -2049,9 +2106,12 @@ export default function OdPage(): JSX.Element {
                         list="avElemD33"
                         defaultValue="Hígido"
                         id="inpD33"
-                        className="inpAvDent form-control noInvert"
+                        className="inpAvDent form-control noInvert minText patternText"
                         data-title="Estado do Dente 33"
                         required
+                        data-reqlength="6"
+                        data-pattern="amálgama|careado|hígido|trincado|ausente"
+                        data-flags="gi"
                       />
                       <datalist id="avElemD33" className="dlAvDent">
                         <option defaultValue="Amálgama" className="elemOp">
@@ -2087,9 +2147,12 @@ export default function OdPage(): JSX.Element {
                         list="avElemD34"
                         defaultValue="Hígido"
                         id="inpD34"
-                        className="inpAvDent form-control noInvert"
+                        className="inpAvDent form-control noInvert minText patternText"
                         data-title="Estado do Dente 34"
                         required
+                        data-reqlength="6"
+                        data-pattern="amálgama|careado|hígido|trincado|ausente"
+                        data-flags="gi"
                       />
                       <datalist id="avElemD34" className="dlAvDent">
                         <option defaultValue="Amálgama" className="elemOp">
@@ -2125,9 +2188,12 @@ export default function OdPage(): JSX.Element {
                         list="avElemD35"
                         defaultValue="Hígido"
                         id="inpD35"
-                        className="inpAvDent form-control noInvert"
+                        className="inpAvDent form-control noInvert minText patternText"
                         data-title="Estado do Dente 35"
                         required
+                        data-reqlength="6"
+                        data-pattern="amálgama|careado|hígido|trincado|ausente"
+                        data-flags="gi"
                       />
                       <datalist id="avElemD35" className="dlAvDent">
                         <option defaultValue="Amálgama" className="elemOp">
@@ -2163,9 +2229,12 @@ export default function OdPage(): JSX.Element {
                         list="avElemD36"
                         defaultValue="Hígido"
                         id="inpD36"
-                        className="inpAvDent form-control noInvert"
+                        className="inpAvDent form-control noInvert minText patternText"
                         data-title="Estado do Dente 36"
                         required
+                        data-reqlength="6"
+                        data-pattern="amálgama|careado|hígido|trincado|ausente"
+                        data-flags="gi"
                       />
                       <datalist id="avElemD36" className="dlAvDent">
                         <option defaultValue="Amálgama" className="elemOp">
@@ -2201,9 +2270,12 @@ export default function OdPage(): JSX.Element {
                         list="avElemD37"
                         defaultValue="Hígido"
                         id="inpD37"
-                        className="inpAvDent form-control noInvert"
+                        className="inpAvDent form-control noInvert minText patternText"
                         data-title="Estado do Dente 37"
                         required
+                        data-reqlength="6"
+                        data-pattern="amálgama|careado|hígido|trincado|ausente"
+                        data-flags="gi"
                       />
                       <datalist id="avElemD37" className="dlAvDent">
                         <option defaultValue="Amálgama" className="elemOp">
@@ -2239,9 +2311,12 @@ export default function OdPage(): JSX.Element {
                         list="avElemD38"
                         defaultValue="Hígido"
                         id="inpD38"
-                        className="inpAvDent form-control noInvert"
+                        className="inpAvDent form-control noInvert minText patternText"
                         data-title="Estado do Dente 38"
                         required
+                        data-reqlength="6"
+                        data-pattern="amálgama|careado|hígido|trincado|ausente"
+                        data-flags="gi"
                       />
                       <datalist id="avElemD38" className="dlAvDent">
                         <option defaultValue="Amálgama" className="elemOp">
@@ -2302,9 +2377,12 @@ export default function OdPage(): JSX.Element {
                         list="avElemD21"
                         defaultValue="Hígido"
                         id="inpD21"
-                        className="inpAvDent form-control noInvert"
+                        className="inpAvDent form-control noInvert minText patternText"
                         data-title="Estado do Dente 21"
                         required
+                        data-reqlength="6"
+                        data-pattern="amálgama|careado|hígido|trincado|ausente"
+                        data-flags="gi"
                       />
                       <datalist id="avElemD21" className="dlAvDent">
                         <option defaultValue="Amálgama" className="elemOp">
@@ -2340,9 +2418,12 @@ export default function OdPage(): JSX.Element {
                         list="avElemD22"
                         defaultValue="Hígido"
                         id="inpD22"
-                        className="inpAvDent form-control noInvert"
+                        className="inpAvDent form-control noInvert minText patternText"
                         data-title="Estado do Dente 22"
                         required
+                        data-reqlength="6"
+                        data-pattern="amálgama|careado|hígido|trincado|ausente"
+                        data-flags="gi"
                       />
                       <datalist id="avElemD22" className="dlAvDent">
                         <option defaultValue="Amálgama" className="elemOp">
@@ -2378,9 +2459,12 @@ export default function OdPage(): JSX.Element {
                         list="avElemD23"
                         defaultValue="Hígido"
                         id="inpD23"
-                        className="inpAvDent form-control noInvert"
+                        className="inpAvDent form-control noInvert minText patternText"
                         data-title="Estado do Dente 23"
                         required
+                        data-reqlength="6"
+                        data-pattern="amálgama|careado|hígido|trincado|ausente"
+                        data-flags="gi"
                       />
                       <datalist id="avElemD23" className="dlAvDent">
                         <option defaultValue="Amálgama" className="elemOp">
@@ -2416,9 +2500,12 @@ export default function OdPage(): JSX.Element {
                         list="avElemD24"
                         defaultValue="Hígido"
                         id="inpD24"
-                        className="inpAvDent form-control noInvert"
+                        className="inpAvDent form-control noInvert minText patternText"
                         data-title="Estado do Dente 24"
                         required
+                        data-reqlength="6"
+                        data-pattern="amálgama|careado|hígido|trincado|ausente"
+                        data-flags="gi"
                       />
                       <datalist id="avElemD24" className="dlAvDent">
                         <option defaultValue="Amálgama" className="elemOp">
@@ -2454,9 +2541,12 @@ export default function OdPage(): JSX.Element {
                         list="avElemD25"
                         defaultValue="Hígido"
                         id="inpD25"
-                        className="inpAvDent form-control noInvert"
+                        className="inpAvDent form-control noInvert minText patternText"
                         data-title="Estado do Dente 25"
                         required
+                        data-reqlength="6"
+                        data-pattern="amálgama|careado|hígido|trincado|ausente"
+                        data-flags="gi"
                       />
                       <datalist id="avElemD25" className="dlAvDent">
                         <option defaultValue="Amálgama" className="elemOp">
@@ -2492,9 +2582,12 @@ export default function OdPage(): JSX.Element {
                         list="avElemD26"
                         defaultValue="Hígido"
                         id="inpD26"
-                        className="inpAvDent form-control noInvert"
+                        className="inpAvDent form-control noInvert minText patternText"
                         data-title="Estado do Dente 26"
                         required
+                        data-reqlength="6"
+                        data-pattern="amálgama|careado|hígido|trincado|ausente"
+                        data-flags="gi"
                       />
                       <datalist id="avElemD26" className="dlAvDent">
                         <option defaultValue="Amálgama" className="elemOp">
@@ -2530,9 +2623,12 @@ export default function OdPage(): JSX.Element {
                         list="avElemD27"
                         defaultValue="Hígido"
                         id="inpD27"
-                        className="inpAvDent form-control noInvert"
+                        className="inpAvDent form-control noInvert minText patternText"
                         data-title="Estado do Dente 27"
                         required
+                        data-reqlength="6"
+                        data-pattern="amálgama|careado|hígido|trincado|ausente"
+                        data-flags="gi"
                       />
                       <datalist id="avElemD27" className="dlAvDent">
                         <option defaultValue="Amálgama" className="elemOp">
@@ -2568,9 +2664,12 @@ export default function OdPage(): JSX.Element {
                         list="avElemD28"
                         defaultValue="Hígido"
                         id="inpD28"
-                        className="inpAvDent form-control noInvert"
+                        className="inpAvDent form-control noInvert minText patternText"
                         data-title="Estado do Dente 28"
                         required
+                        data-reqlength="6"
+                        data-pattern="amálgama|careado|hígido|trincado|ausente"
+                        data-flags="gi"
                       />
                       <datalist id="avElemD28" className="dlAvDent">
                         <option defaultValue="Amálgama" className="elemOp">
@@ -2631,9 +2730,12 @@ export default function OdPage(): JSX.Element {
                         list="avElemD41"
                         defaultValue="Hígido"
                         id="inpD41"
-                        className="inpAvDent form-control noInvert"
+                        className="inpAvDent form-control noInvert minText patternText"
                         data-title="Estado do Dente 41"
                         required
+                        data-reqlength="6"
+                        data-pattern="amálgama|careado|hígido|trincado|ausente"
+                        data-flags="gi"
                       />
                       <datalist id="avElemD41" className="dlAvDent">
                         <option defaultValue="Amálgama" className="elemOp">
@@ -2669,9 +2771,12 @@ export default function OdPage(): JSX.Element {
                         list="avElemD42"
                         defaultValue="Hígido"
                         id="inpD42"
-                        className="inpAvDent form-control noInvert"
+                        className="inpAvDent form-control noInvert minText patternText"
                         data-title="Estado do Dente 42"
                         required
+                        data-reqlength="6"
+                        data-pattern="amálgama|careado|hígido|trincado|ausente"
+                        data-flags="gi"
                       />
                       <datalist id="avElemD42" className="dlAvDent">
                         <option defaultValue="Amálgama" className="elemOp">
@@ -2707,9 +2812,12 @@ export default function OdPage(): JSX.Element {
                         list="avElemD43"
                         defaultValue="Hígido"
                         id="inpD43"
-                        className="inpAvDent form-control noInvert"
+                        className="inpAvDent form-control noInvert minText patternText"
                         data-title="Estado do Dente 43"
                         required
+                        data-reqlength="6"
+                        data-pattern="amálgama|careado|hígido|trincado|ausente"
+                        data-flags="gi"
                       />
                       <datalist id="avElemD43" className="dlAvDent">
                         <option defaultValue="Amálgama" className="elemOp">
@@ -2745,9 +2853,12 @@ export default function OdPage(): JSX.Element {
                         list="avElemD44"
                         defaultValue="Hígido"
                         id="inpD44"
-                        className="inpAvDent form-control noInvert"
+                        className="inpAvDent form-control noInvert minText patternText"
                         data-title="Estado do Dente 44"
                         required
+                        data-reqlength="6"
+                        data-pattern="amálgama|careado|hígido|trincado|ausente"
+                        data-flags="gi"
                       />
                       <datalist id="avElemD44" className="dlAvDent">
                         <option defaultValue="Amálgama" className="elemOp">
@@ -2783,9 +2894,12 @@ export default function OdPage(): JSX.Element {
                         list="avElemD45"
                         defaultValue="Hígido"
                         id="inpD45"
-                        className="inpAvDent form-control noInvert"
+                        className="inpAvDent form-control noInvert minText patternText"
                         data-title="Estado do Dente 45"
                         required
+                        data-reqlength="6"
+                        data-pattern="amálgama|careado|hígido|trincado|ausente"
+                        data-flags="gi"
                       />
                       <datalist id="avElemD45" className="dlAvDent">
                         <option defaultValue="Amálgama" className="elemOp">
@@ -2821,9 +2935,12 @@ export default function OdPage(): JSX.Element {
                         list="avElemD46"
                         defaultValue="Hígido"
                         id="inpD46"
-                        className="inpAvDent form-control noInvert"
+                        className="inpAvDent form-control noInvert minText patternText"
                         data-title="Estado do Dente 46"
                         required
+                        data-reqlength="6"
+                        data-pattern="amálgama|careado|hígido|trincado|ausente"
+                        data-flags="gi"
                       />
                       <datalist id="avElemD46" className="dlAvDent">
                         <option defaultValue="Amálgama" className="elemOp">
@@ -2859,9 +2976,12 @@ export default function OdPage(): JSX.Element {
                         list="avElemD47"
                         defaultValue="Hígido"
                         id="inpD47"
-                        className="inpAvDent form-control noInvert"
+                        className="inpAvDent form-control noInvert minText patternText"
                         data-title="Estado do Dente 47"
                         required
+                        data-reqlength="6"
+                        data-pattern="amálgama|careado|hígido|trincado|ausente"
+                        data-flags="gi"
                       />
                       <datalist id="avElemD47" className="dlAvDent">
                         <option defaultValue="Amálgama" className="elemOp">
@@ -2897,9 +3017,12 @@ export default function OdPage(): JSX.Element {
                         list="avElemD48"
                         defaultValue="Hígido"
                         id="inpD48"
-                        className="inpAvDent form-control noInvert"
+                        className="inpAvDent form-control noInvert minText patternText"
                         data-title="Estado do Dente 48"
                         required
+                        data-reqlength="6"
+                        data-pattern="amálgama|careado|hígido|trincado|ausente"
+                        data-flags="gi"
                       />
                       <datalist id="avElemD48" className="dlAvDent">
                         <option defaultValue="Amálgama" className="elemOp">
@@ -3083,8 +3206,8 @@ export default function OdPage(): JSX.Element {
                   className="confirmBut btn btn-success"
                   formAction="_self"
                   formMethod="POST"
-                  // enterKeyHint="send"
                   accessKey="enter"
+                  onClick={ev => subForm(ev.currentTarget)}
                 >
                   Submeter
                 </button>

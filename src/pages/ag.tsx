@@ -20,7 +20,9 @@ import {
 } from "@/lib/locals/aGPage/aGController";
 import {
   deactTextInput,
+  handleCondtReq,
   opRadioHandler,
+  subForm,
   syncAriaStates,
   toggleConformDlg,
 } from "@/lib/global/handlers/gHandlers";
@@ -170,7 +172,6 @@ export default function AGPage(): JSX.Element {
               <legend id="fsAnamGLeg" className="legMain form-padded">
                 Identificação
               </legend>
-
               <section className="sectionMain" id="fsAnamGSect">
                 <div className="flexQ900NoWC" id="div1_div2flex" role="group">
                   <div
@@ -189,15 +190,20 @@ export default function AGPage(): JSX.Element {
                           type="text"
                           name="firstNameName"
                           id="firstNameId"
-                          className="form-control autocorrect inpIdentif noInvert"
+                          className="form-control autocorrect inpIdentif noInvert minText maxText patternText"
                           autoComplete="given-name"
                           data-title="primeiro_nome"
+                          data-reqlength="3"
+                          data-maxlength="99"
+                          data-pattern="[^0-9]"
+                          data-flags="gi"
+                          minLength={3}
+                          maxLength={99}
                           required
                         />
                       </label>
                       <br role="presentation" />
                     </span>
-
                     <span
                       role="group"
                       className="fsAnamGSpan flexAlItCt col"
@@ -215,11 +221,17 @@ export default function AGPage(): JSX.Element {
                           className="form-control autocorrect inpIdentif noInvert"
                           data-title="nome_do_meio"
                           autoComplete="additional-name"
+                          onInput={ev =>
+                            handleCondtReq(ev.currentTarget, {
+                              min: 3,
+                              max: 99,
+                              pattern: ["[^0-9]", "gi"],
+                            })
+                          }
                         />
                       </label>
                       <br role="presentation" />
                     </span>
-
                     <span
                       role="group"
                       className="fsAnamGSpan flexAlItCt col"
@@ -231,16 +243,21 @@ export default function AGPage(): JSX.Element {
                           type="text"
                           name="familyNameName"
                           id="familyNameId"
-                          className="form-control autocorrect inpIdentif noInvert"
-                          data-title="ultimo_nome"
+                          className="form-control autocorrect inpIdentif noInvert minText maxText patternText"
                           autoComplete="family-name"
                           required
+                          data-title="ultimo_nome"
+                          data-reqlength="3"
+                          data-maxlength="99"
+                          data-pattern="[^0-9]"
+                          data-flags="gi"
+                          minLength={3}
+                          maxLength={99}
                         />
                       </label>
                       <br role="presentation" />
                     </span>
                   </div>
-
                   <div
                     className="fsAnamGDiv alItSt900Q flexQ900NoWC flexAlItE noAdj flexNoWR flexTwin-width"
                     role="group"
@@ -260,10 +277,16 @@ export default function AGPage(): JSX.Element {
                           className="form-control autocorrect inpIdentif noInvert"
                           data-title="nome_social"
                           autoComplete="given-name"
+                          onInput={ev =>
+                            handleCondtReq(ev.currentTarget, {
+                              min: 3,
+                              max: 99,
+                              pattern: ["[^0-9]", "gi"],
+                            })
+                          }
                         />
                       </label>
                     </span>
-
                     <span
                       role="group"
                       className="fsAnamGSpan flexAlItCt col"
@@ -274,16 +297,22 @@ export default function AGPage(): JSX.Element {
                         <input
                           type="text"
                           id="inpCPF"
-                          maxLength={15}
+                          maxLength={16}
                           pattern="/^(\d{3}\.){2}\d{3}-\d{2}$/"
                           className="form-control noInvert"
                           placeholder="Preencha com o CPF"
                           autoComplete="username"
                           data-title="CPF"
+                          onInput={ev =>
+                            handleCondtReq(ev.currentTarget, {
+                              min: 1,
+                              max: 15,
+                              pattern: ["^(d{3}.){2}d{3}-d{2}$", ""],
+                            })
+                          }
                         />
                       </label>
                     </span>
-
                     <span role="group" className="fsAnamGSpan flexAlItCt col">
                       <label className="labelIdentif">
                         Status:
@@ -324,9 +353,7 @@ export default function AGPage(): JSX.Element {
                       </label>
                     </span>
                   </div>
-
                   <hr />
-
                   <div
                     className="divMain fsAnamGDiv alItSt900Q flexQ900NoWC gridAlItE gridTwoCol noGapDiv noEqualize"
                     id="fsAnamGDiv2"
@@ -343,17 +370,22 @@ export default function AGPage(): JSX.Element {
                           type="number"
                           name="telAreaCodeName"
                           id="telAreaCodeId"
-                          className="form-control inpIdentif noInvert inpDDD"
+                          className="form-control inpIdentif noInvert inpDDD minText maxText patternText minNum maxNum"
                           min="11"
                           max="99"
                           autoComplete="tel-area-code"
                           data-title="ddd_prim"
+                          data-reqlength="2"
+                          data-maxlength="4"
+                          data-pattern="[0-9]{2,}"
+                          data-flags="g"
+                          minLength={2}
+                          maxLength={4}
                           required
                         />
                       </label>
                       <br role="presentation" />
                     </span>
-
                     <span
                       role="group"
                       className="spanMain fsAnamGSpan"
@@ -370,11 +402,19 @@ export default function AGPage(): JSX.Element {
                           max="99"
                           autoComplete="tel-area-code"
                           data-title="ddd_sec"
+                          onInput={ev =>
+                            handleCondtReq(ev.currentTarget, {
+                              min: 2,
+                              max: 4,
+                              minNum: 11,
+                              maxNum: 11,
+                              pattern: ["[0-9]{2,}", "g"],
+                            })
+                          }
                         />
                       </label>
                       <br role="presentation" />
                     </span>
-
                     <span
                       role="group"
                       className="spanMain fsAnamGSpan"
@@ -386,13 +426,17 @@ export default function AGPage(): JSX.Element {
                           type="text"
                           name="telName"
                           id="telId"
-                          className="form-control inpIdentif noInvert inpTel"
+                          className="form-control inpIdentif noInvert inpTel minText maxText patternText"
                           minLength={8}
-                          maxLength={9}
+                          maxLength={10}
                           inputMode="tel"
                           data-title="tel_prim"
-                          onInput={ev => formatTel(ev.currentTarget, false)}
+                          data-reqlength="8"
+                          data-maxlength="10"
+                          data-pattern="9?\d{4}-\d{4}"
+                          data-flags="g"
                           required
+                          onInput={ev => formatTel(ev.currentTarget, false)}
                         />
                       </label>
                       <br role="presentation" />
@@ -410,16 +454,20 @@ export default function AGPage(): JSX.Element {
                           name="tel2Name"
                           id="tel2Id"
                           className="form-control inpIdentif noInvert inpTel"
-                          minLength={8}
-                          maxLength={9}
                           inputMode="tel"
                           data-title="tel_sec"
-                          onInput={ev => formatTel(ev.currentTarget, false)}
+                          onInput={ev => {
+                            formatTel(ev.currentTarget, false);
+                            handleCondtReq(ev.currentTarget, {
+                              min: 3,
+                              max: 10,
+                              pattern: ["9?d{4}-d{4}", "g"],
+                            });
+                          }}
                         />
                       </label>
                       <br role="presentation" />
                     </span>
-
                     <span
                       role="group"
                       className="spanMain fsAnamGSpan"
@@ -439,11 +487,18 @@ export default function AGPage(): JSX.Element {
                           max="999"
                           autoComplete="tel-country-code"
                           data-title="cod_pais_prim"
+                          onInput={ev =>
+                            handleCondtReq(ev.currentTarget, {
+                              min: 1,
+                              max: 6,
+                              minNum: 1,
+                              maxNum: 999,
+                            })
+                          }
                         />
                       </label>
                       <br role="presentation" />
                     </span>
-
                     <span
                       role="group"
                       className="spanMain fsAnamGSpan"
@@ -463,11 +518,18 @@ export default function AGPage(): JSX.Element {
                           max="999"
                           autoComplete="tel-country-code"
                           data-title="cod_pais_sec"
+                          onInput={ev =>
+                            handleCondtReq(ev.currentTarget, {
+                              min: 1,
+                              max: 6,
+                              minNum: 1,
+                              maxNum: 999,
+                            })
+                          }
                         />
                       </label>
                       <br role="presentation" />
                     </span>
-
                     <span
                       role="group"
                       className="spanMain fsAnamGSpan"
@@ -482,11 +544,16 @@ export default function AGPage(): JSX.Element {
                           className="form-control inpIdentif noInvert inpEmail"
                           autoComplete="email"
                           data-title="email_prim"
+                          onInput={ev =>
+                            handleCondtReq(ev.currentTarget, {
+                              min: 6,
+                              pattern: ["@", "g"],
+                            })
+                          }
                         />
                       </label>
                       <br role="presentation" />
                     </span>
-
                     <span
                       role="group"
                       className="spanMain fsAnamGSpan"
@@ -504,13 +571,18 @@ export default function AGPage(): JSX.Element {
                           className="form-control inpIdentif noInvert inpEmail"
                           autoComplete="email"
                           data-title="email_sec"
+                          onInput={ev =>
+                            handleCondtReq(ev.currentTarget, {
+                              min: 6,
+                              pattern: ["@", "g"],
+                            })
+                          }
                         />
                       </label>
                     </span>
                   </div>
                   <hr />
                 </div>
-
                 <div
                   className="divMain fsAnamGDiv alItSt900Q flexQ900NoWC gridAlItE gridTwoCol widFull900Q noEqualize"
                   id="fsAnamGDiv3"
@@ -526,9 +598,13 @@ export default function AGPage(): JSX.Element {
                         type="text"
                         name="countryName"
                         id="countryId"
-                        className="form-control autocorrect inpIdentif noInvert"
+                        className="form-control autocorrect inpIdentif noInvert minText patternText"
                         autoComplete="country"
                         data-title="nacionalidade"
+                        minLength={3}
+                        data-reqlength="3"
+                        data-pattern="[^0-9]"
+                        data-flags="g"
                         required
                       />
                     </label>
@@ -542,14 +618,15 @@ export default function AGPage(): JSX.Element {
                         type="text"
                         name="cityName"
                         id="cityId"
-                        className="form-control autocorrect inpIdentif noInvert"
+                        className="form-control autocorrect inpIdentif noInvert minText"
                         data-title="cidade"
+                        minLength={3}
+                        data-reqlength="3"
                         required
                       />
                     </label>
                     <br role="presentation" />
                   </span>
-
                   <span role="group" className="fsAnamGSpan" id="fsAnamGSpan7">
                     <label
                       htmlFor="munId"
@@ -561,15 +638,16 @@ export default function AGPage(): JSX.Element {
                         type="text"
                         name="munName"
                         id="munId"
-                        className="form-control autocorrect inpIdentif noInvert"
+                        className="form-control autocorrect inpIdentif noInvert minText"
                         autoComplete="address-level2"
                         data-title="naturalidade"
+                        minLength={3}
+                        data-reqlength="3"
                         required
                       />
                     </label>
                     <br role="presentation" />
                   </span>
-
                   <span role="group" className="fsAnamGSpan" id="fsAnamGSpan12">
                     <label htmlFor="streetId" className="labelIdentif noInvert">
                       Endereço | Logradouro | Rua:
@@ -577,15 +655,16 @@ export default function AGPage(): JSX.Element {
                         type="text"
                         name="streetName"
                         id="streetId"
-                        className="form-control autocorrect inpIdentif noInvert"
+                        className="form-control autocorrect inpIdentif noInvert minText"
                         autoComplete="address-level3"
                         data-title="endereco"
+                        minLength={3}
+                        data-reqlength="3"
                         required
                       />
                     </label>
                     <br role="presentation" />
                   </span>
-
                   <span role="group" className="fsAnamGSpan" id="fsAnamGSpan8">
                     <label
                       htmlFor="streetId"
@@ -596,9 +675,13 @@ export default function AGPage(): JSX.Element {
                         type="text"
                         name="cepName"
                         id="cepId"
-                        className="form-control inpIdentif noInvert"
-                        maxLength={9}
+                        className="form-control inpIdentif noInvert minText maxText patternText"
+                        minLength={3}
+                        maxLength={11}
                         data-title="cep"
+                        data-reqlength="3"
+                        data-maxlength="11"
+                        data-pattern="^\d{2}[\s.-]?\d{3}[\s.-]?\d{2,3}$"
                         required
                       />
                       <button
@@ -632,14 +715,15 @@ export default function AGPage(): JSX.Element {
                         type="text"
                         name="neighbourhoodName"
                         id="neighbourhoodId"
-                        className="form-control autocorrect inpIdentif noInvert"
+                        className="form-control autocorrect inpIdentif noInvert minText"
+                        minLength={3}
                         data-title="bairro"
+                        data-reqlength="3"
                         required
                       />
                     </label>
                     <br role="presentation" />
                   </span>
-
                   <span role="group" className="fsAnamGSpan" id="fsAnamGSpan9">
                     <label htmlFor="UFId" className="labelIdentif forceInvert">
                       Unidade Federativa (Residência Atual):
@@ -744,7 +828,6 @@ export default function AGPage(): JSX.Element {
                     </label>
                     <br role="presentation" />
                   </span>
-
                   <span
                     role="group"
                     className="fsAnamGSpan locSpan form-switch flexColumn noInvert"
@@ -763,6 +846,12 @@ export default function AGPage(): JSX.Element {
                         min="1"
                         autoComplete="address-level4"
                         data-title="num_rua"
+                        onInput={ev =>
+                          handleCondtReq(ev.currentTarget, {
+                            min: 1,
+                            minNum: 0,
+                          })
+                        }
                       />
                       <span
                         role="group"
@@ -798,6 +887,12 @@ export default function AGPage(): JSX.Element {
                         min="1"
                         autoComplete="address-level4"
                         data-title="comp_casa"
+                        onInput={ev =>
+                          handleCondtReq(ev.currentTarget, {
+                            min: 1,
+                            minNum: 0,
+                          })
+                        }
                       />
                       <span
                         role="group"
@@ -834,12 +929,11 @@ export default function AGPage(): JSX.Element {
                         id="dateBdayId"
                         className="form-control inpIdentif noInvert"
                         autoComplete="bday"
-                        data-title="nascimento"
+                        data-title="Nascimento"
                         required
                       />
                     </label>
                   </span>
-
                   <span role="group" className="fsAnamGSpan" id="fsAnamGSpan12">
                     <label htmlFor="dateAgeId" className="labelIdentif">
                       Idade:
@@ -847,17 +941,23 @@ export default function AGPage(): JSX.Element {
                         type="number"
                         name="dateAgeName"
                         id="dateAgeId"
-                        className="form-control inpIdentif noInvert"
+                        className="form-control inpIdentif noInvert minText maxText minNum maxNum patternText"
                         min="0"
                         max="255"
-                        data-title="idade"
+                        minLength={1}
+                        maxLength={4}
                         defaultValue="30"
                         required
+                        data-title="Idade"
+                        data-reqlength="1"
+                        data-maxlength="4"
+                        data-minnum="0"
+                        data-maxnum="255"
+                        data-pattern="^[\d,.]+$"
                       />
                     </label>
                   </span>
                 </div>
-
                 <div className="gridTwoCol noInvert" id="genDiv" role="group">
                   <span
                     role="group"
@@ -4780,7 +4880,9 @@ export default function AGPage(): JSX.Element {
                 id="sectConfirmCheck"
               >
                 <blockquote className="declr" id="declrEnd">
-                  <span>&#34;DECLARO SEREM VERDADEIRAS AS INFORMAÇÕES ACIMA&#34;</span>
+                  <span>
+                    &#34;DECLARO SEREM VERDADEIRAS AS INFORMAÇÕES ACIMA&#34;
+                  </span>
                   <label
                     htmlFor="confirmId"
                     className="labConfirm noInvert"
@@ -4904,8 +5006,8 @@ export default function AGPage(): JSX.Element {
                   className="confirmBut btn btn-success forceInvert"
                   formAction="_self"
                   formMethod="POST"
-                  // enterKeyHint="send"
                   accessKey="enter"
+                  onClick={ev => subForm(ev.currentTarget)}
                 >
                   Submeter
                 </button>

@@ -32,7 +32,6 @@ export function getGlobalEls(
     document.querySelectorAll('button[id$="AstDigtBtn')
   );
   const resetFormBtn = document.getElementById("resetFormBtn");
-  const subButton = document.getElementById("submitFormButId");
   textConts?.length > 0
     ? addListenerTexts(textConts, isAutocorrectOn)
     : elementNotPopulated(textConts, "textConts", extLine(new Error()));
@@ -45,11 +44,6 @@ export function getGlobalEls(
   astDigtBtns?.length > 0
     ? addListenerAstDigitBtns(astDigtBtns)
     : elementNotPopulated(astDigtBtns, "astDigtBtns", extLine(new Error()));
-  subButton instanceof HTMLButtonElement
-    ? subButton.addEventListener("click", () =>
-        GlobalHandler.subForm(subButton)
-      )
-    : elementNotFound(subButton, "subButton", extLine(new Error()));
   resetFormBtn instanceof HTMLButtonElement
     ? resetFormBtn.addEventListener("click", (click): void =>
         GlobalHandler.resetarFormulario(click, astDigtBtns, resetFormBtn)

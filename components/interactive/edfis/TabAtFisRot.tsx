@@ -187,12 +187,11 @@ export default function TabAtFirsRot(): JSX.Element {
             >
               <input
                 type="text"
-                min="0"
-                max="65535"
-                className="tabInpAtFisRot tabInpRowAtFisRot2 form-control noInvert"
+                className="tabInpAtFisRot tabInpRowAtFisRot2 form-control noInvert minText"
                 id="tabInpRowAtFisRot2_1"
                 itemProp="inpAtFisRot"
                 data-title="Atividade_Fisica_Rotineira_Nome_1"
+                data-reqlength="3"
                 required
               />
             </td>
@@ -203,12 +202,18 @@ export default function TabAtFirsRot(): JSX.Element {
             >
               <input
                 type="number"
+                minLength={1}
+                maxLength={5}
                 min="0"
-                max="65535"
-                className="inpAtivFis tabInpAtFisRot tabInpRowAtFisRot2 form-control noInvert"
+                max="255"
+                className="inpAtivFis tabInpAtFisRot tabInpRowAtFisRot2 form-control noInvert minText maxText minNum maxNum patternText"
                 id="tabInpRowAtFisRot2_2"
                 itemProp="inpAtFisRot"
                 data-title="Atividade_Fisica_Rotineira_NSemana_1"
+                data-reqlength="1"
+                data-maxlength="3"
+                data-minnum="0"
+                data-maxnum="255"
                 required
               />
             </td>
@@ -219,12 +224,18 @@ export default function TabAtFirsRot(): JSX.Element {
             >
               <input
                 type="number"
+                minLength={1}
+                maxLength={7}
                 min="0"
                 max="65535"
-                className="tabInpAtFisRot tabInpRowAtFisRot2 form-control noInvert"
+                className="tabInpAtFisRot tabInpRowAtFisRot2 form-control noInvert minText maxText minNum maxNum patternText"
                 id="tabInpRowAtFisRot2_3 sevenCharLongNum"
                 itemProp="inpAtFisRot"
                 data-title="Atividade_Fisica_Rotineira_SessãoMin_1"
+                data-reqlength="1"
+                data-maxlength="3"
+                data-minnum="0"
+                data-maxnum="65535"
                 required
               />
             </td>
@@ -235,12 +246,18 @@ export default function TabAtFirsRot(): JSX.Element {
             >
               <input
                 type="number"
+                minLength={1}
+                maxLength={7}
                 min="0"
                 max="65535"
-                className="tabInpAtFisRot tabInpRowAtFisRot2 form-control noInvert"
+                className="tabInpAtFisRot tabInpRowAtFisRot2 form-control noInvert minText maxText minNum maxNum patternText"
                 id="tabInpRowAtFisRot2_4 sevenCharLongNum"
                 itemProp="inpAtFisRot"
                 data-title="Atividade_Fisica_Rotineira_Meses_1"
+                data-reqlength="1"
+                data-maxlength="3"
+                data-minnum="0"
+                data-maxnum="65535"
                 required
               />
             </td>

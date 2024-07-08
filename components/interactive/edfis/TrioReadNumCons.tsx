@@ -45,12 +45,17 @@ export default function TrioReadNumCons(): JSX.Element {
       Número inicial da Consulta em Leitura:
       <input
         type="number"
-        className="form-control noInvert consInp"
+        className="form-control noInvert consInp minText maxText minNum maxNum patternText"
         id="trioReadNumCons"
         min="1"
         max="255"
         defaultValue="1"
         data-title="Numero_Inicial_Consulta"
+        data-reqlength="1"
+        data-maxlength="5"
+        data-minnum="1"
+        data-maxnum="255"
+        data-pattern="^\d+$"
         onInput={ev => {
           try {
             ev.currentTarget.value !== "" &&

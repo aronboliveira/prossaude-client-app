@@ -17,7 +17,11 @@ import {
   extLine,
   inputNotFound,
 } from "@/lib/global/handlers/errorHandler";
-import { subForm, syncAriaStates } from "@/lib/global/handlers/gHandlers";
+import {
+  handleCondtReq,
+  subForm,
+  syncAriaStates,
+} from "@/lib/global/handlers/gHandlers";
 import { DataProvider } from "@/lib/locals/panelPage/declarations/classesCons";
 import { GlobalFormProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import { useEffect, useRef, useState, useCallback } from "react";
@@ -307,17 +311,22 @@ export default function ProfForm({
           <hr className="rdc05rHr460Q" />
           <fieldset className="flexColumn" id="formAddProfBodyFs">
             <label htmlFor="inpNameProf">
-              <strong id="titleNameProf">Nome:</strong>
+              <strong id="titleNameProf">Nome Completo:</strong>
               <input
                 type="text"
                 id="inpNameProf"
-                className="form-control autocorrectAll ssPersist"
-                maxLength={999}
+                className="form-control autocorrectAll ssPersist minText maxText patternText"
                 placeholder="Preencha com o nome completo"
                 autoFocus
                 autoComplete="given-name"
                 autoCapitalize="true"
                 data-title="Nome Completo: Profissional"
+                data-reqlength="3"
+                data-maxlength="99"
+                data-pattern="[^0-9]"
+                data-flags="gi"
+                minLength={3}
+                maxLength={99}
                 required
               />
             </label>
@@ -326,12 +335,16 @@ export default function ProfForm({
               <input
                 type="text"
                 id="inpCPFProf"
-                maxLength={15}
+                minLength={15}
+                maxLength={16}
                 pattern="^(\d{3}\.?\d{3}\.?\d{3}-?\d{2})$"
-                className="form-control ssPersist"
+                className="form-control ssPersist minText maxText patternText"
                 placeholder="Preencha com o CPF"
                 autoComplete="username"
                 data-title="CPF Profissional"
+                data-reqlength="15"
+                data-max-length="16"
+                data-pattern="^(d{3}.){2}d{3}-d{2}$"
                 ref={CPFProfRef}
               />
             </label>
@@ -341,11 +354,15 @@ export default function ProfForm({
                 type="tel"
                 list="listProfRegstTel"
                 id="inpTel"
-                className="form-control ssPersist"
+                className="form-control ssPersist minText maxText patternText"
+                minLength={8}
                 maxLength={20}
                 placeholder="Preencha com o Telefone para contato"
                 autoComplete="tel"
                 data-title="Telefone Profissional"
+                data-reqlength="8"
+                data-maxlength="20"
+                data-pattern="^(\+\d{2}\s?)?(\(\d{2}\)\s?)?\d{3,5}[-\s]?\d{4}$"
                 required
                 ref={telProfRef}
               />
@@ -362,6 +379,12 @@ export default function ProfForm({
                 placeholder="Preencha com o E-mail para contato"
                 autoComplete="email"
                 data-title="E-mail Profissional"
+                onInput={ev =>
+                  handleCondtReq(ev.currentTarget, {
+                    min: 6,
+                    pattern: ["@", "g"],
+                  })
+                }
               />
               <datalist id="listProfRegstEmail"></datalist>
             </label>
@@ -371,11 +394,15 @@ export default function ProfForm({
                 type="text"
                 list="listCoursesProf"
                 id="inpCourseProf"
+                minLength={3}
                 maxLength={99}
-                className="form-control ssPersist"
+                className="form-control ssPersist minText maxText patternText"
                 placeholder="Preencha com o Curso do Membro Profissional"
                 autoCapitalize="true"
                 data-title="Curso de Origem do Membro Profissional"
+                data-reqlength="3"
+                data-maxlength="99"
+                data-pattern="educação\sfísica|medicina|nutrição|odontologia|psicologia"
                 required
               />
               <datalist id="listCoursesProf">
@@ -417,9 +444,6 @@ export default function ProfForm({
               <input
                 type="date"
                 id="inpDayEntrProf"
-                min={1}
-                max={31}
-                maxLength={3}
                 className="form-control ssPersist"
                 placeholder="Preencha com o Dia de Entrada do Profissional no projeto"
                 data-title="Dia de Entrada do Profissional"

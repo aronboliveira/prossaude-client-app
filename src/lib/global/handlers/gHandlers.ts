@@ -546,78 +546,6 @@ export function enableCPFBtn(cpfBtn: targEl, cpfLength: string = ""): boolean {
   return true;
 }
 
-export function subForm(
-  subButton: targEl,
-  scope: HTMLElement | Document = document
-): boolean {
-  window.alert(
-    "Sistema ainda não pronto\n...mas você teria enviado clicando aqui! :)"
-  );
-  const arrValidity: boolean[] = [];
-  if (
-    subButton instanceof HTMLButtonElement &&
-    (scope instanceof HTMLElement || scope instanceof Document)
-  ) {
-    let accInvalid = 0;
-    [
-      ...scope.querySelectorAll("input"),
-      ...scope.querySelectorAll("textarea"),
-      ...scope.querySelectorAll("select"),
-    ].forEach(entry => {
-      if (entry instanceof HTMLSelectElement) {
-        entry.value !== "" ? arrValidity.push(true) : arrValidity.push(false);
-      }
-      if (
-        entry instanceof HTMLInputElement ||
-        entry instanceof HTMLTextAreaElement
-      ) {
-        const displayInvalidity = () => {
-          ++accInvalid;
-          highlightChange(entry);
-          if (accInvalid === 1) entry.scrollIntoView({ behavior: "smooth" });
-          if (
-            entry instanceof HTMLInputElement &&
-            (!(
-              entry.type === "checkbox" ||
-              entry.type === "radio" ||
-              entry.type === "file" ||
-              entry.type === "submit" ||
-              entry.type === "button" ||
-              entry.type === "reset"
-            ) ||
-              entry instanceof HTMLTextAreaElement)
-          ) {
-            const prevPlaceholder = entry.placeholder;
-            entry.placeholder = `Entrada inválida`;
-            setTimeout(() => {
-              entry.placeholder = prevPlaceholder;
-            }, 2000);
-          }
-        };
-        let isValid = true;
-        if (!entry.checkValidity()) {
-          isValid = false;
-          displayInvalidity();
-        }
-        if (
-          entry.classList.contains("minText") &&
-          entry.value.length < parseNotNaN(entry.dataset.reqlength || "3")
-        ) {
-          isValid = false;
-          displayInvalidity();
-        }
-        arrValidity.push(isValid);
-      }
-    });
-  } else
-    elementNotFound(
-      subButton,
-      `Button for submiting form id ${subButton?.id ?? "UNIDENTIFIED"}`,
-      extLine(new Error())
-    );
-  return arrValidity.some(validity => validity === false) ? false : true;
-}
-
 export function syncAriaStates(
   els: Array<Element> | NodeListOf<Element>
 ): void {
@@ -862,4 +790,196 @@ export function toggleConformDlg(): void {
       conformDlg,
       btnConform
     );
+}
+
+export function subForm(
+  subButton: targEl,
+  scope: HTMLElement | Document = document
+): boolean {
+  window.alert(
+    "Sistema ainda não pronto\n...mas você teria enviado clicando aqui! :)"
+  );
+  const arrValidity: boolean[] = [];
+  if (
+    subButton instanceof HTMLButtonElement &&
+    (scope instanceof HTMLElement || scope instanceof Document)
+  ) {
+    let accInvalid = 0;
+    [
+      ...scope.querySelectorAll("input"),
+      ...scope.querySelectorAll("textarea"),
+      ...scope.querySelectorAll("select"),
+    ].forEach(entry => {
+      if (entry instanceof HTMLSelectElement) {
+        entry.value !== "" ? arrValidity.push(true) : arrValidity.push(false);
+      }
+      if (
+        entry instanceof HTMLInputElement ||
+        entry instanceof HTMLTextAreaElement
+      ) {
+        const displayInvalidity = () => {
+          ++accInvalid;
+          highlightChange(entry);
+          if (accInvalid === 1) entry.scrollIntoView({ behavior: "smooth" });
+          if (
+            entry instanceof HTMLInputElement &&
+            (!(
+              entry.type === "checkbox" ||
+              entry.type === "radio" ||
+              entry.type === "file" ||
+              entry.type === "submit" ||
+              entry.type === "button" ||
+              entry.type === "reset"
+            ) ||
+              entry instanceof HTMLTextAreaElement)
+          ) {
+            const prevPlaceholder = entry.placeholder;
+            entry.placeholder = `Entrada inválida`;
+            setTimeout(() => {
+              entry.placeholder = prevPlaceholder;
+            }, 2000);
+          }
+        };
+        let isValid = true;
+        if (!entry.checkValidity()) {
+          isValid = false;
+          displayInvalidity();
+        }
+        if (
+          entry.classList.contains("minText") &&
+          entry.value.length < parseNotNaN(entry.dataset.reqlength || "3")
+        ) {
+          isValid = false;
+          displayInvalidity();
+        }
+        if (
+          entry.classList.contains("maxText") &&
+          entry.value.length > parseNotNaN(entry.dataset.maxlength || "3")
+        ) {
+          isValid = false;
+          displayInvalidity();
+        }
+        if (
+          entry.classList.contains("minNum") &&
+          parseNotNaN(entry.value) < parseNotNaN(entry.dataset.minnum || "3")
+        ) {
+          isValid = false;
+          displayInvalidity();
+        }
+        if (
+          entry.classList.contains("maxNum") &&
+          parseNotNaN(entry.value) > parseNotNaN(entry.dataset.maxnum || "3")
+        ) {
+          isValid = false;
+          displayInvalidity();
+        }
+        if (entry.classList.contains("patternText") && entry.dataset.pattern) {
+          if (
+            !new RegExp(entry.dataset.pattern, entry.dataset.flags || "").test(
+              entry.value
+            )
+          )
+            isValid = false;
+          displayInvalidity();
+        }
+        arrValidity.push(isValid);
+      }
+    });
+  } else
+    elementNotFound(
+      subButton,
+      `Button for submiting form id ${subButton?.id ?? "UNIDENTIFIED"}`,
+      extLine(new Error())
+    );
+  return arrValidity.some(validity => validity === false) ? false : true;
+}
+
+export function handleCondtReq(
+  el: targEl,
+  options: {
+    pattern?: [string, string] | RegExp;
+    min?: number;
+    max?: number;
+    minNum?: number;
+    maxNum?: number;
+  }
+): void {
+  try {
+    if (
+      !(
+        el instanceof HTMLInputElement &&
+        (el.type === "text" ||
+          el.type === "number" ||
+          el.type === "email" ||
+          el.type === "password" ||
+          el.type === "tel")
+      )
+    )
+      throw inputNotFound(
+        el,
+        `${el?.id || el?.className || el?.tagName}`,
+        extLine(new Error())
+      );
+    if (options.pattern || options.min || options.max)
+      throw new Error(`No pattern was given to handleCondtReq`);
+    if (
+      options.pattern &&
+      ((options.pattern as any) instanceof RegExp ||
+        ((options.pattern as any) instanceof Array &&
+          (options.pattern as Array<any>).every(
+            idx => typeof idx === "string"
+          )))
+    )
+      throw new Error(`Invalid instance given to options.pattern`);
+    if (options.min && typeof options.min !== "number")
+      throw new Error(`Wrong type given to options.min`);
+    if (options.max && typeof options.max !== "number")
+      throw new Error(`Wrong type given to options.max`);
+    if (el.value.length > 0) {
+      if (options.min) {
+        el.dataset["reqlength"] = `${options.min}`;
+        el.minLength = options.min;
+        if (!el.classList.contains("minText")) el.classList.add("minText");
+      }
+      if (options.max) {
+        el.dataset["maxlength"] = `${options.max}`;
+        el.maxLength = options.max;
+        if (!el.classList.contains("maxText")) el.classList.add("maxText");
+      }
+      if (options.minNum) {
+        el.dataset["minnum"] = `${options.minNum}`;
+        el.min = `${options.minNum}`;
+        if (!el.classList.contains("minNum")) el.classList.add("minNum");
+      }
+      if (options.maxNum) {
+        el.dataset["maxnum"] = `${options.maxNum}`;
+        el.max = `${options.maxNum}`;
+        if (!el.classList.contains("maxNum")) el.classList.add("maxNum");
+      }
+      if (options.pattern) {
+        if (Array.isArray(options.pattern)) {
+          el.dataset["pattern"] = `${options.pattern[0]}`;
+          el.dataset["flags"] = `${options.pattern[1]}`;
+        } else {
+          el.dataset["pattern"] = `${(options.pattern as RegExp).source}`;
+          el.dataset["flags"] = `${(options.pattern as RegExp).flags || ""}`;
+        }
+        if (!el.classList.contains("patternText"))
+          el.classList.add("patternText");
+      }
+    } else {
+      el.dataset["reqlength"] = undefined;
+      el.dataset["maxlength"] = undefined;
+      el.dataset["pattern"] = undefined;
+      el.dataset["flags"] = undefined;
+      el.dataset["minnum"] = undefined;
+      el.dataset["maxnum"] = undefined;
+      el.min = "";
+      el.max = "";
+      el.maxLength = 9999;
+      el.minLength = 0;
+    }
+  } catch (e) {
+    console.error(`Error executing handleCondtReq:\n${(e as Error).message}`);
+  }
 }

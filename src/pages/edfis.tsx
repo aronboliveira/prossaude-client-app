@@ -35,6 +35,8 @@ import { dinamicGridAdjust } from "@/lib/global/gStyleScript";
 import { Person } from "@/lib/global/declarations/classes";
 import {
   changeToAstDigit,
+  handleCondtReq,
+  subForm,
   syncAriaStates,
 } from "@/lib/global/handlers/gHandlers";
 import {
@@ -132,6 +134,55 @@ export default function EdFisNutPage(): JSX.Element {
       const consTablesFs = document.getElementById("fsProgConsId");
       const genElement = document.getElementById("genId");
       const atvLvlElement = document.getElementById("selectLvlAtFis");
+      document.querySelectorAll(".tabInpProg").forEach((inp, i) => {
+        try {
+          if (
+            !(
+              inp instanceof HTMLInputElement &&
+              (inp.type === "number" || inp.type === "text")
+            )
+          )
+            throw inputNotFound(
+              inp,
+              `Validation of Input instance and type`,
+              extLine(new Error())
+            );
+          if (inp.required) {
+            inp.minLength = 1;
+            inp.maxLength = 99;
+            inp.pattern = "^[d,.]+$";
+            inp.classList.add("minText", "maxText", "pattern");
+            if (inp.type === "number") {
+              inp.min = "0.05";
+              inp.max = "999999";
+              inp.classList.add("minNum", "maxNum");
+            }
+          }
+          inp.type === "number"
+            ? inp.addEventListener("input", ev =>
+                handleCondtReq(ev.currentTarget as HTMLInputElement, {
+                  minNum: 0.05,
+                  maxNum: 999999,
+                  min: 1,
+                  max: 99,
+                  pattern: ["^[d,.]+$", ""],
+                })
+              )
+            : inp.addEventListener("input", ev =>
+                handleCondtReq(ev.currentTarget as HTMLInputElement, {
+                  min: 1,
+                  max: 99,
+                  pattern: ["^[d,.]+$", ""],
+                })
+              );
+        } catch (e) {
+          console.error(
+            `Error executing iteration ${i} for Tab Inp Prog application of requirements:\n${
+              (e as Error).message
+            }`
+          );
+        }
+      });
       tabProps.IMC =
         parseFloat(
           parseFloat((tabProps.targInpIMC as entryEl)?.value || "0").toFixed(4)
@@ -395,7 +446,6 @@ export default function EdFisNutPage(): JSX.Element {
               <legend className="legMain form-padded" id="fsAnamGLeg">
                 Identificação
               </legend>
-
               <section className="sectionMain" id="fsAnamGSect">
                 <div
                   role="group"
@@ -413,9 +463,15 @@ export default function EdFisNutPage(): JSX.Element {
                         type="text"
                         name="firstNameName"
                         id="firstNameId"
-                        className="form-control noInvert autocorrect inpIdentif"
+                        className="form-control noInvert autocorrect inpIdentif minText maxText patternText"
                         autoComplete="given-name"
                         data-title="Primeiro nome"
+                        data-reqlength="3"
+                        data-maxlength="99"
+                        data-pattern="[^0-9]"
+                        data-flags="gi"
+                        minLength={3}
+                        maxLength={99}
                         required
                       />
                     </label>
@@ -435,11 +491,17 @@ export default function EdFisNutPage(): JSX.Element {
                         className="form-control noInvert autocorrect inpIdentif"
                         data-title="Nome do meio"
                         autoComplete="additional-name"
+                        onInput={ev =>
+                          handleCondtReq(ev.currentTarget, {
+                            min: 3,
+                            max: 99,
+                            pattern: ["[^0-9]", "gi"],
+                          })
+                        }
                       />
                     </label>
                     <br role="presentation" />
                   </span>
-
                   <span
                     role="group"
                     className="fsAnamGSpan flexAlItCt col"
@@ -451,16 +513,21 @@ export default function EdFisNutPage(): JSX.Element {
                         type="text"
                         name="familyNameName"
                         id="familyNameId"
-                        className="form-control noInvert autocorrect inpIdentif"
-                        data-title="Último nome"
+                        className="form-control noInvert autocorrect inpIdentif minText maxText patternText"
                         autoComplete="family-name"
                         required
+                        data-title="Último nome"
+                        data-reqlength="3"
+                        data-maxlength="99"
+                        data-pattern="[^0-9]"
+                        data-flags="gi"
+                        minLength={3}
+                        maxLength={99}
                       />
                     </label>
                     <br role="presentation" />
                   </span>
                 </div>
-
                 <span
                   role="group"
                   className="fsAnamGSpan flexAlItCt col"
@@ -475,10 +542,16 @@ export default function EdFisNutPage(): JSX.Element {
                       className="form-control noInvert autocorrect inpIdentif"
                       data-title="Nome social"
                       autoComplete="given-name"
+                      onInput={ev =>
+                        handleCondtReq(ev.currentTarget, {
+                          min: 3,
+                          max: 99,
+                          pattern: ["[^0-9]", "gi"],
+                        })
+                      }
                     />
                   </label>
                 </span>
-
                 <span role="group" className="fsAnamGSpan" id="fsAnamGSpan12">
                   <label htmlFor="dateAgeId" className="labelIdentif">
                     Idade:
@@ -486,12 +559,17 @@ export default function EdFisNutPage(): JSX.Element {
                       type="number"
                       name="dateAgeName"
                       id="dateAgeId"
-                      className="form-control noInvert inpIdentif"
+                      className="form-control noInvert inpIdentif minText maxText minNum maxNum patternText"
                       min="0"
                       max="255"
-                      data-title="Idade"
                       defaultValue="30"
                       required
+                      data-title="Idade"
+                      data-reqlength="1"
+                      data-maxlength="4"
+                      data-minnum="0"
+                      data-maxnum="255"
+                      data-pattern="^[\d,.]+$"
                       onInput={ev => {
                         if (
                           person instanceof Person &&
@@ -1037,12 +1115,19 @@ export default function EdFisNutPage(): JSX.Element {
                     Faz quantas refeições por dia, no mínimo?
                     <input
                       type="number"
+                      minLength={1}
+                      maxLength={4}
                       min="0"
-                      max="65535"
-                      className="form-control noInvert inpAlimRot inpRef inpRefDia"
+                      max="99"
+                      className="form-control noInvert inpAlimRot inpRef inpRefDia minText maxText minNum maxNum patternText"
                       id="inpRefDiaMin"
-                      data-title="Refeicoes_diarias_minimo"
                       required
+                      data-title="Refeicoes_diarias_minimo"
+                      data-reqlength="1"
+                      data-maxlength="4"
+                      data-minnum="0"
+                      data-maxnum="99"
+                      data-pattern="^[\d,.]+$"
                     />
                   </label>
 
@@ -1053,12 +1138,19 @@ export default function EdFisNutPage(): JSX.Element {
                     Faz quantas refeições por dia, no máximo?
                     <input
                       type="number"
+                      minLength={1}
+                      maxLength={4}
                       min="1"
-                      max="65535"
-                      className="form-control noInvert inpAlimRot inpRef inpRefDia"
+                      max="99"
+                      className="form-control noInvert inpAlimRot inpRef inpRefDia minText maxText minNum maxNum patternText"
                       id="inpRefDiaMax"
-                      data-title="Refeicoes_diarias_maximo"
                       required
+                      data-title="Refeicoes_diarias_maximo"
+                      data-reqlength="1"
+                      data-maxlength="4"
+                      data-minnum="1"
+                      data-maxnum="99"
+                      data-pattern="^[\d,.]+$"
                     />
                   </label>
                 </div>
@@ -1071,12 +1163,19 @@ export default function EdFisNutPage(): JSX.Element {
                     Quantas das refeições diárias são completas, no mínimo?
                     <input
                       type="number"
+                      minLength={1}
+                      maxLength={4}
                       min="0"
-                      max="65535"
-                      className="form-control noInvert inpAlimRot inpRef inpRefCompDia"
+                      max="99"
+                      className="form-control noInvert inpAlimRot inpRef inpRefCompDia minText maxText minNum maxNum patternText"
                       id="inpRefCompDiaMin"
-                      data-title="Refeicoes_completas_diarias_minimo"
                       required
+                      data-title="Refeicoes_completas_diarias_minimo"
+                      data-reqlength="1"
+                      data-maxlength="4"
+                      data-minnum="0"
+                      data-maxnum="99"
+                      data-pattern="^[\d,.]+$"
                     />
                   </label>
 
@@ -1087,18 +1186,24 @@ export default function EdFisNutPage(): JSX.Element {
                     Quantas das refeições diárias são completas, no máximo?
                     <input
                       type="number"
+                      minLength={1}
+                      maxLength={4}
                       min="1"
-                      max="65535"
-                      className="form-control noInvert inpAlimRot inpRef inpRefCompDia"
+                      max="9"
+                      className="form-control noInvert inpAlimRot inpRef inpRefCompDia minText maxText minNum maxNum patternText"
                       id="inpRefCompDiaMax"
-                      data-title="Refeicoes_completas_diarias_maximo"
                       required
+                      data-title="Refeicoes_completas_diarias_maximo"
+                      data-reqlength="1"
+                      data-maxlength="4"
+                      data-minnum="1"
+                      data-maxnum="99"
+                      data-pattern="^[\d,.]+$"
                     />
                   </label>
                   <br role="presentation" />
                 </div>
                 <hr />
-
                 <h2 className="hRot legMain noInvert">
                   Hábitos Rotineiros — Hidratação
                 </h2>
@@ -1110,12 +1215,19 @@ export default function EdFisNutPage(): JSX.Element {
                     Ingere quantos litros de água por dia, no mínimo?
                     <input
                       type="number"
+                      minLength={1}
+                      maxLength={4}
                       min="0"
-                      max="65535"
-                      className="form-control noInvert inpAlimRot inpAgua float sevenCharLongNum"
+                      max="99"
+                      className="form-control noInvert inpAlimRot inpAgua float sevenCharLongNum minText maxText minNum maxNum patternText"
                       id="inpAguaDiaMin"
-                      data-title="L_agua_diario_minimo"
                       required
+                      data-title="L_agua_diario_minimo"
+                      data-reqlength="1"
+                      data-maxlength="4"
+                      data-minnum="0"
+                      data-maxnum="99"
+                      data-pattern="^[\d,.]+$"
                     />
                   </label>
 
@@ -1126,17 +1238,23 @@ export default function EdFisNutPage(): JSX.Element {
                     Ingere quantos litros de água por dia, no máximo?
                     <input
                       type="number"
+                      minLength={1}
+                      maxLength={4}
                       min="1"
-                      max="65535"
-                      className="form-control noInvert inpAlimRot inpAgua float sevenCharLongNum"
+                      max="99"
+                      className="form-control noInvert inpAlimRot inpAgua float sevenCharLongNum minText maxText minNum maxNum patternText"
                       id="inpAguaDiaMax"
-                      data-title="L_agua_diario_maximo"
                       required
+                      data-title="L_agua_diario_maximo"
+                      data-reqlength="1"
+                      data-maxlength="4"
+                      data-minnum="0"
+                      data-maxnum="99"
+                      data-pattern="^[\d,.]+$"
                     />
                   </label>
                 </div>
                 <hr />
-
                 <h2 className="hRot legMain noInvert">
                   Hábitos Rotineiros — Excreção
                 </h2>
@@ -1148,12 +1266,19 @@ export default function EdFisNutPage(): JSX.Element {
                     Quantas micções por dia, no mínimo?
                     <input
                       type="number"
+                      minLength={1}
+                      maxLength={4}
                       min="0"
-                      max="65535"
-                      className="form-control noInvert inpAlimRot inpUr inpUrDia"
+                      max="99"
+                      className="form-control noInvert inpAlimRot inpUr inpUrDia minText maxText minNum maxNum patternText"
                       id="inpElimUrDiaMin"
-                      data-title="Miccoes_diarias_minimo"
                       required
+                      data-title="Miccoes_diarias_minimo"
+                      data-reqlength="1"
+                      data-maxlength="4"
+                      data-minnum="0"
+                      data-maxnum="99"
+                      data-pattern="^[\d,.]+$"
                     />
                   </label>
 
@@ -1164,12 +1289,19 @@ export default function EdFisNutPage(): JSX.Element {
                     Quantas micções por dia, no máximo?
                     <input
                       type="number"
+                      minLength={1}
+                      maxLength={4}
                       min="1"
-                      max="65535"
-                      className="form-control noInvert inpAlimRot inpUr inpUrDia"
+                      max="99"
+                      className="form-control noInvert inpAlimRot inpUr inpUrDia minText maxText minNum maxNum patternText"
                       id="inpElimUrDiaMax"
-                      data-title="Miccoes_diarias_maximo"
                       required
+                      data-title="Miccoes_diarias_maximo"
+                      data-reqlength="1"
+                      data-maxlength="4"
+                      data-minnum="0"
+                      data-maxnum="99"
+                      data-pattern="^[\d,.]+$"
                     />
                   </label>
                 </div>
@@ -1184,12 +1316,19 @@ export default function EdFisNutPage(): JSX.Element {
                     </span>
                     <input
                       type="number"
+                      minLength={1}
+                      maxLength={4}
                       min="0"
-                      max="65535"
-                      className="form-control noInvert inpAlimRot inpUr inpUrInterval float sevenCharLongNum"
+                      max="96"
+                      className="form-control noInvert inpAlimRot inpUr inpUrInterval float sevenCharLongNum minText maxText minNum maxNum patternText"
                       id="inpElimUrIntervaloMin"
-                      data-title="Miccoes_intervalo_minimo"
                       required
+                      data-title="Miccoes_intervalo_minimo"
+                      data-reqlength="1"
+                      data-maxlength="4"
+                      data-minnum="1"
+                      data-maxnum="96"
+                      data-pattern="^[\d,.]+$"
                     />
                   </label>
 
@@ -1202,12 +1341,19 @@ export default function EdFisNutPage(): JSX.Element {
                     </span>
                     <input
                       type="number"
+                      minLength={1}
+                      maxLength={4}
                       min="0"
-                      max="65535"
-                      className="form-control noInvert inpAlimRot inpUr inpUrInterval float sevenCharLongNum"
+                      max="96"
+                      className="form-control noInvert inpAlimRot inpUr inpUrInterval float sevenCharLongNum minText maxText minNum maxNum patternText"
                       id="inpElimUrIntervaloMax"
-                      data-title="Miccoes_intervalo_maximo"
                       required
+                      data-title="Miccoes_intervalo_maximo"
+                      data-reqlength="1"
+                      data-maxlength="4"
+                      data-minnum="1"
+                      data-maxnum="96"
+                      data-pattern="^[\d,.]+$"
                     />
                   </label>
                 </div>
@@ -1220,11 +1366,17 @@ export default function EdFisNutPage(): JSX.Element {
                     Qual é a coloração da urina?
                     <input
                       type="text"
+                      minLength={4}
+                      maxLength={15}
                       list="corUr"
                       className="form-control noInvert inpAlimRot inpUr"
                       id="inpElimUrCor"
-                      data-title="Urina_coloracao"
                       required
+                      data-title="Urina_coloracao"
+                      data-pattern="transparente|verde-claro|verde-escuro|amarelo-claro|amarelo-escuro|âmbar|laranja|rosa|avermelhada|marrom|azul|arroxeada|preta"
+                      data-flags="gi"
+                      data-reqlength="4"
+                      data-maxlength="15"
                     />
                     <datalist id="corUr">
                       <option className="opCorUr" value="Transparente"></option>
@@ -1264,11 +1416,18 @@ export default function EdFisNutPage(): JSX.Element {
                     >
                       <input
                         type="number"
-                        min="0"
-                        max="9999"
                         className="form-control noInvert inpAlimRot inpUr float"
                         id="inpDiur"
                         data-title="Diurese"
+                        onInput={ev =>
+                          handleCondtReq(ev.currentTarget, {
+                            minNum: 0,
+                            maxNum: 9999,
+                            min: 1,
+                            max: 6,
+                            pattern: ["^d+$", ""],
+                          })
+                        }
                       />
                       <p className="msrProgCons noInvert">ml/dia</p>
                     </label>
@@ -1359,13 +1518,21 @@ export default function EdFisNutPage(): JSX.Element {
                           id="protUrLvl"
                           className="form-control noInvert opProtUr"
                           data-title="Proteinuria_mg/dL"
+                          onInput={ev =>
+                            handleCondtReq(ev.currentTarget, {
+                              minNum: 0,
+                              maxNum: 9999,
+                              min: 1,
+                              max: 6,
+                              pattern: ["^d+$", ""],
+                            })
+                          }
                         />
                         <p className="msrProgCons noInvert">mg/dL</p>
                       </label>
                     </div>
                   </div>
                 </div>
-
                 <div role="group" className="flexDiv divRot widMax900q80vw">
                   <label
                     htmlFor="inpElimEvDiaMin"
@@ -1374,15 +1541,21 @@ export default function EdFisNutPage(): JSX.Element {
                     Evacua quantas vezes por dia, no mínimo?
                     <input
                       type="number"
+                      minLength={1}
+                      maxLength={4}
                       min="0"
-                      max="65535"
-                      className="form-control noInvert inpAlimRot inpEv inpEvDia"
+                      max="99"
+                      className="form-control noInvert inpAlimRot inpEv inpEvDia minText maxText minNum maxNum patternText"
                       id="inpElimEvDiaMin"
-                      data-title="Evacuacao_diaria_minimo"
                       required
+                      data-title="Evacuacao_diaria_minimo"
+                      data-reqlength="1"
+                      data-maxlength="4"
+                      data-minnum="0"
+                      data-maxnum="99"
+                      data-pattern="^[\d,.]+$"
                     />
                   </label>
-
                   <label
                     htmlFor="inpElimEvDiaMax"
                     className="labAlimRot fitSpaced labEv labEvDia"
@@ -1390,12 +1563,19 @@ export default function EdFisNutPage(): JSX.Element {
                     Evacua quantas vezes por dia, no máximo?
                     <input
                       type="number"
+                      minLength={1}
+                      maxLength={4}
                       min="1"
-                      max="65535"
-                      className="form-control noInvert inpAlimRot inpEv inpEvDia"
+                      max="99"
+                      className="form-control noInvert inpAlimRot inpEv inpEvDia minText maxText minNum maxNum patternText"
                       id="inpElimEvDiaMax"
-                      data-title="Evacuacao_diaria_maximo"
                       required
+                      data-title="Evacuacao_diaria_maximo"
+                      data-reqlength="1"
+                      data-maxlength="4"
+                      data-minnum="1"
+                      data-maxnum="99"
+                      data-pattern="^[\d,.]+$"
                     />
                   </label>
                 </div>
@@ -1408,12 +1588,19 @@ export default function EdFisNutPage(): JSX.Element {
                     Qual é o intervalo mínimo (em horas) entre evacuações?
                     <input
                       type="number"
+                      minLength={1}
+                      maxLength={4}
                       min="0"
-                      max="65535"
-                      className="form-control noInvert inpAlimRot inpEv inpEvIntervalo float sevenCharLongNum Evacuacao_intervalo_minimo"
+                      max="96"
+                      className="form-control noInvert inpAlimRot inpEv inpEvIntervalo float sevenCharLongNum Evacuacao_intervalo_minimo minText maxText minNum maxNum patternText"
                       id="inpElimEvIntervaloMin"
-                      data-title="Intervalo Mínimo de Evacuação"
                       required
+                      data-title="Intervalo Mínimo de Evacuação"
+                      data-reqlength="1"
+                      data-maxlength="4"
+                      data-minnum="0"
+                      data-maxnum="96"
+                      data-pattern="^[\d,.]+$"
                     />
                   </label>
 
@@ -1424,16 +1611,22 @@ export default function EdFisNutPage(): JSX.Element {
                     Qual é o intervalo máximo (em horas) entre evacuações?
                     <input
                       type="number"
+                      minLength={1}
+                      maxLength={4}
                       min="0"
-                      max="65535"
-                      className="form-control noInvert inpAlimRot inpEv inpEvIntervalo float sevenCharLongNum Evacuacao_intervalo_maximo"
+                      max="96"
+                      className="form-control noInvert inpAlimRot inpEv inpEvIntervalo float sevenCharLongNum Evacuacao_intervalo_maximo minText maxText minNum maxNum patternText"
                       id="inpElimEvIntervaloMax"
                       data-title="Intervalo Mínimo de Evacuação"
                       required
+                      data-reqlength="1"
+                      data-maxlength="4"
+                      data-minnum="1"
+                      data-maxnum="96"
+                      data-pattern="^[\d,.]+$"
                     />
                   </label>
                 </div>
-
                 <hr />
               </section>
               <div role="group" id="divAtFisRot">
@@ -1531,6 +1724,49 @@ export default function EdFisNutPage(): JSX.Element {
                             numCons,
                             areNumConsOpsValid
                           );
+                          document
+                            .querySelectorAll(".tabInpProg")
+                            .forEach((inp, i) => {
+                              try {
+                                if (
+                                  !(
+                                    inp instanceof HTMLInputElement &&
+                                    (inp.type === "number" ||
+                                      inp.type === "text")
+                                  )
+                                )
+                                  throw inputNotFound(
+                                    inp,
+                                    `Validation of Input instance and type`,
+                                    extLine(new Error())
+                                  );
+                                if (inp.required) {
+                                  inp.minLength = 1;
+                                  inp.maxLength = 99;
+                                  inp.pattern = "^[d,.]+$";
+                                  !inp.classList.contains("minText") &&
+                                    inp.classList.add("minText");
+                                  !inp.classList.contains("maxText") &&
+                                    inp.classList.add("maxText");
+                                  !inp.classList.contains("patternText") &&
+                                    inp.classList.add("patternText");
+                                  if (inp.type === "number") {
+                                    inp.min = "0.05";
+                                    inp.max = "999999";
+                                    !inp.classList.contains("minNum") &&
+                                      inp.classList.add("minNum");
+                                    !inp.classList.contains("maxNum") &&
+                                      inp.classList.add("maxNum");
+                                  }
+                                }
+                              } catch (e) {
+                                console.error(
+                                  `Error executing iteration ${i} for Tab Inp Prog application of requirements:\n${
+                                    (e as Error).message
+                                  }`
+                                );
+                              }
+                            });
                         } else
                           multipleElementsNotFound(
                             extLine(new Error()),
@@ -2063,8 +2299,8 @@ export default function EdFisNutPage(): JSX.Element {
                   className="confirmBut btn btn-success forceInvert"
                   formAction="_self"
                   formMethod="POST"
-                  // enterkeyhint="send"
                   accessKey="enter"
+                  onClick={ev => subForm(ev.currentTarget)}
                 >
                   Submeter
                 </button>

@@ -187,12 +187,11 @@ export default function TabAtFirsProp(): JSX.Element {
             >
               <input
                 type="text"
-                min="0"
-                max="65535"
                 className="tabInpAtFisProp tabInpRowAtFisProp2 form-control noInvert"
                 id="tabInpRowAtFisProp2_1"
                 itemProp="inpAtFisProp"
                 data-title="Atividade_Fisica_Proposta_Nome_1"
+                data-reqlength="3"
                 required
               />
             </td>
@@ -203,12 +202,18 @@ export default function TabAtFirsProp(): JSX.Element {
             >
               <input
                 type="number"
+                minLength={1}
+                maxLength={5}
                 min="0"
-                max="65535"
+                max="255"
                 className="inpAtivFis tabInpAtFisProp tabInpRowAtFisProp2 form-control noInvert"
                 id="tabInpRowAtFisProp2_2"
                 itemProp="inpAtFisProp"
                 data-title="Atividade_Fisica_Proposta_NSemana_1"
+                data-reqlength="1"
+                data-maxlength="3"
+                data-minnum="0"
+                data-maxnum="255"
                 required
               />
             </td>
@@ -219,12 +224,18 @@ export default function TabAtFirsProp(): JSX.Element {
             >
               <input
                 type="number"
+                minLength={1}
+                maxLength={7}
                 min="0"
                 max="65535"
                 className="tabInpAtFisProp tabInpRowAtFisProp2 form-control noInvert"
                 id="tabInpRowAtFisProp2_3 sevenCharLongNum"
                 itemProp="inpAtFisProp"
                 data-title="Atividade_Fisica_Proposta_SessãoMin_1"
+                data-reqlength="1"
+                data-maxlength="3"
+                data-minnum="0"
+                data-maxnum="65535"
                 required
               />
             </td>
@@ -235,12 +246,18 @@ export default function TabAtFirsProp(): JSX.Element {
             >
               <input
                 type="number"
+                minLength={1}
+                maxLength={7}
                 min="0"
                 max="65535"
                 className="tabInpAtFisProp tabInpRowAtFisProp2 form-control noInvert"
                 id="tabInpRowAtFisProp2_4 sevenCharLongNum"
                 itemProp="inpAtFisProp"
                 data-title="Atividade_Fisica_Proposta_Meses_1"
+                data-reqlength="1"
+                data-maxlength="3"
+                data-minnum="0"
+                data-maxnum="65535"
                 required
               />
             </td>

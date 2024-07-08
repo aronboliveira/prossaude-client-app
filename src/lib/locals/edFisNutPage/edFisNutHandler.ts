@@ -220,14 +220,14 @@ export function validateEvResultNum(
         property = 0;
     }
     return property as number;
-  } else 
+  } else
     multipleElementsNotFound(
       extLine(new Error()),
       "arguments for validateEvResultNum",
       evEl,
       property
     );
-    property = 0;
+  property = 0;
   return property || 0;
 }
 
@@ -1008,15 +1008,15 @@ export function addRowAtivFis(
       count - 1
     }&#41</td>
     <td class="tabCelAtFis tabCelAtFis${context} tabCelLeft" id="tabCelRowAtFis${context}${count}_2" itemprop="celAtFis${context}">
-      <input type="text" min="0" max="255" class="tabInpAtFis${context} tabInpRowAtFis${context}2 form-control" id="tabInpRowAtFis${context}${count}_1" itemprop="inpAtFis${context}" data-title="Atividade_Fisica_${title}_Nome_1" required />
+      <input type="text" class="tabInpAtFis${context} tabInpRowAtFis${context}2 form-control minText" id="tabInpRowAtFis${context}${count}_1" itemprop="inpAtFis${context}" data-title="Atividade_Fisica_${title}_Nome_1" data-reqlength="3" required />
     <td class="tabCelAtFis tabCelAtFis${context} tabCelLeft" id="tabCelRowAtFis${context}${count}_3" itemprop="celAtFis${context}">
-      <input type="number" min="0" max="255" class="inpAtivFis tabInpAtFis${context} tabInpRowAtFis${context}2 form-control" id="tabInpRowAtFis${context}${count}_2" itemprop="inpAtFis${context}" data-title="Atividade_Fisica_${title}_NSemana_1" required />
+      <input type="number" min-length="1" max-length"5" min="0" max="255" class="inpAtivFis tabInpAtFis${context} tabInpRowAtFis${context}2 form-control minText maxText minNum maxNum patternText" id="tabInpRowAtFis${context}${count}_2" itemprop="inpAtFis${context}" data-title="Atividade_Fisica_${title}_NSemana_1" data-reqlength="1" data-maxlength='3' data-minnum="0" data-maxnum="255" required />
     </td>
     <td class="tabCelAtFis tabCelAtFis${context}" id="tabCelRowAtFis${context}${count}_4" itemprop="celAtFis${context}">
-      <input type="number" min="0" max="255" class="tabInpAtFis${context} tabInpRowAtFis${context}2 form-control" id="tabInpRowAtFis${context}${count}_3" itemprop="inpAtFis${context}" data-title="Atividade_Fisica_${title}_SessãoMin_1" required />
+      <input type="number" min-length="1" max-length="7" min="0" max="255" class="tabInpAtFis${context} tabInpRowAtFis${context}2 form-control minText maxText minNum maxNum patternText" id="tabInpRowAtFis${context}${count}_3" itemprop="inpAtFis${context}" data-title="Atividade_Fisica_${title}_SessãoMin_1" data-reqlength="1" data-maxlength="3" data-minnum="0" data-maxnum="65535"required />
     </td>
     <td class="tabCelAtFis tabCelAtFis${context} tabCelRight" id="tabCelRowAtFis${context}${count}_5" itemprop="celAtFis${context}">
-      <input type="number" min="0" max="255" class="tabInpAtFis${context} tabInpRowAtFis${context}2 form-control" id="tabInpRowAtFis${context}${count}_4" itemprop="inpAtFis${context}" data-title="Atividade_Fisica_${title}_Meses_1" required />
+      <input type="number" min-length="1" max-length="7" min="0" max="255" class="tabInpAtFis${context} tabInpRowAtFis${context}2 form-control minText maxText minNum maxNum patternText" id="tabInpRowAtFis${context}${count}_4" itemprop="inpAtFis${context}" data-title="Atividade_Fisica_${title}_Meses_1" data-reqlength="1" data-maxlength="3" data-minnum="0" data-maxnum="65535" required />
     </td>
       `;
     tBodyContainer.appendChild(newRow);

@@ -21,10 +21,16 @@ import {
   inputNotFound,
 } from "@/lib/global/handlers/errorHandler";
 import { clearPhDates, normalizeSizeSb } from "@/lib/global/gStyleScript";
-import { subForm, syncAriaStates } from "@/lib/global/handlers/gHandlers";
+import {
+  handleCondtReq,
+  subForm,
+  syncAriaStates,
+} from "@/lib/global/handlers/gHandlers";
 import { handleClientPermissions } from "@/lib/locals/panelPage/handlers/consHandlerUsers";
 import { addListenerExportBtn } from "@/lib/global/gController";
 import { globalDataProvider } from "@/pages/panel";
+import { ErrorBoundary } from "react-error-boundary";
+import GenericErrorComponent from "../../error/GenericErrorComponent";
 
 export default function StudentForm({
   mainRoot,
@@ -245,7 +251,11 @@ export default function StudentForm({
       );
   }, [formRef]);
   return (
-    <>
+    <ErrorBoundary
+      FallbackComponent={() => (
+        <GenericErrorComponent message="Erro carregando formulário para profissionais" />
+      )}
+    >
       {showForm && (
         <form
           id="formAddStud"
@@ -303,13 +313,18 @@ export default function StudentForm({
                 type="text"
                 list="listStudRegstName"
                 id="inpNameStud"
-                className="form-control autocorrectAll ssPersist"
-                maxLength={999}
+                className="form-control autocorrectAll ssPersist minText maxText patternText"
                 placeholder="Preencha com o nome completo"
                 autoFocus
                 autoComplete="given-name"
                 autoCapitalize="true"
                 data-title="Nome Completo: Aluno"
+                data-reqlength="3"
+                data-maxlength="99"
+                data-pattern="[^0-9]"
+                data-flags="gi"
+                minLength={3}
+                maxLength={99}
                 required
               />
               <datalist id="listStudRegstName"></datalist>
@@ -320,12 +335,16 @@ export default function StudentForm({
                 type="text"
                 list="listStudRegstCPF"
                 id="inpCPFStud"
-                className="form-control ssPersist"
+                className="form-control ssPersist minText maxText patternText"
+                minLength={15}
                 maxLength={16}
                 placeholder="Preencha com o CPF"
                 autoComplete="username"
                 pattern="^(\d{3}\.?\d{3}\.?\d{3}-?\d{2})$"
-                data-title="CPF"
+                data-title="CPF Estudante"
+                data-reqlength="15"
+                data-max-length="16"
+                data-pattern="^(d{3}.){2}d{3}-d{2}$"
                 required
                 ref={CPFStudRef}
               />
@@ -336,13 +355,17 @@ export default function StudentForm({
               <input
                 type="number"
                 id="inpDRE"
-                className="form-control ssPersist"
+                className="form-control ssPersist minText maxText patternText"
                 list="listStudRegstDRE"
+                minLength={1}
                 maxLength={12}
                 pattern="/^\d{9,}$/"
                 placeholder="Preencha com o DRE"
                 autoComplete="username"
                 data-title="DRE"
+                data-reqlength="1"
+                data-maxlength="12"
+                data-pattern="^\d{9,}$"
                 required
               />
               <datalist id="listStudRegstDRE"></datalist>
@@ -354,11 +377,15 @@ export default function StudentForm({
                 list="listStudRegstTel"
                 id="inpTel"
                 pattern="/^(\+\d{2}\s?)?(\(\d{2}\)\s?)?\d{3,5}[-\s]?\d{4}$/"
-                className="form-control ssPersist"
+                className="form-control ssPersist minText maxText patternText"
+                minLength={8}
                 maxLength={20}
                 placeholder="Preencha com o Telefone para contato"
                 autoComplete="tel"
-                data-title="Telefone"
+                data-title="Telefone Estudante"
+                data-reqlength="8"
+                data-maxlength="20"
+                data-pattern="^(\+\d{2}\s?)?(\(\d{2}\)\s?)?\d{3,5}[-\s]?\d{4}$"
                 required
                 ref={telStudRef}
               />
@@ -373,10 +400,15 @@ export default function StudentForm({
                 list="listStudRegstEmail"
                 id="inpEmailStud"
                 className="form-control ssPersist"
-                maxLength={20}
                 placeholder="Preencha com o E-mail para contato"
                 autoComplete="email"
                 data-title="E-mail"
+                onInput={ev =>
+                  handleCondtReq(ev.currentTarget, {
+                    min: 6,
+                    pattern: ["@", "g"],
+                  })
+                }
               />
               <datalist id="listStudRegstEmail"></datalist>
             </label>
@@ -386,11 +418,15 @@ export default function StudentForm({
                 type="text"
                 list="listCoursesStud"
                 id="inpCourseStud"
-                className="form-control ssPersist"
+                className="form-control ssPersist minText maxText patternText"
+                minLength={3}
                 maxLength={99}
                 placeholder="Preencha com o Curso do Estudante"
                 autoCapitalize="true"
                 data-title="Curso de Origem do Estudante"
+                data-reqlength="3"
+                data-maxlength="99"
+                data-pattern="educação\sfísica|medicina|nutrição|odontologia|psicologia"
                 required
               />
               <datalist id="listCoursesStud">
@@ -425,10 +461,16 @@ export default function StudentForm({
                 id="inpPeriodo"
                 min={1}
                 max={20}
+                minLength={1}
                 maxLength={2}
-                className="form-control ssPersist"
+                className="form-control ssPersist minText maxText minNum maxNum patternText"
                 placeholder="Preencha com o Período Atual do aluno (em número simples)"
                 data-title="Período Atual Estudante"
+                data-reqlength="1"
+                data-maxlength="2"
+                data-minnum="1"
+                data-maxnum="20"
+                data-pattern="^\d+$"
                 required
               />
               <datalist id="listPeriodos">
@@ -454,12 +496,18 @@ export default function StudentForm({
               <input
                 type="text"
                 id="inpEntr"
-                min={1}
-                max={20}
-                maxLength={2}
                 className="form-control ssPersist"
                 placeholder="Preencha com o Período do Aluno (ano.semestre, em número) na sua entrada"
                 data-title="Período de Entrada do aluno"
+                onInput={ev =>
+                  handleCondtReq(ev.currentTarget, {
+                    min: 1,
+                    max: 2,
+                    minNum: 1,
+                    maxNum: 20,
+                    pattern: ["^d+$", ""],
+                  })
+                }
               />
             </label>
             <label htmlFor="inpDayEntr" className="forceInvert">
@@ -469,9 +517,6 @@ export default function StudentForm({
               <input
                 type="date"
                 id="inpDayEntr"
-                min={1}
-                max={31}
-                maxLength={3}
                 className="form-control forceInvert ssPersist"
                 placeholder="Preencha com o Dia de Entrada do Aluno no projeto"
                 data-title="Dia de Entrada do aluno"
@@ -552,6 +597,6 @@ export default function StudentForm({
           </fieldset>
         </form>
       )}
-    </>
+    </ErrorBoundary>
   );
 }

@@ -600,7 +600,6 @@ $swhite: rgba(255, 255, 255, 0.9);
         transform: translateX(-5px);
       }
     }
-
     div {
       &.switchDiv {
         padding-top: 0.75rem;
@@ -647,11 +646,18 @@ $swhite: rgba(255, 255, 255, 0.9);
           padding-right: 0.45rem;
         }
       }
+      .tabBtnInd {
+        transform: scale(1.04) translateY(0.7px);
+      }
     }
 
     .tdInpComorb {
       grid-row: span 1;
       grid-column: span 2;
+    }
+
+    [id^="sumDCBtn"] {
+      transform: translateY(1.3px);
     }
 
     #confirmAstDigtBtn {
@@ -669,7 +675,7 @@ $swhite: rgba(255, 255, 255, 0.9);
 
     #inpDiur {
       margin-left: 0;
-      min-width: calc($inpGenWidFix - 5rem);
+      min-width: calc($inpGenWidFix - 16.1vw + 5rem);
     }
 
     $inpProgWidFix: 14.7rem;
