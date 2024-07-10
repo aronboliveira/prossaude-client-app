@@ -4,7 +4,10 @@ import {
   extLine,
   typeError,
 } from "@/lib/global/handlers/errorHandler";
-import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
+import {
+  handleEventReq,
+  syncAriaStates,
+} from "@/lib/global/handlers/gHandlers";
 import { useRef, useState, useEffect } from "react";
 import {
   handleCallbackWHS,
@@ -372,6 +375,7 @@ export default function TabDCut(): JSX.Element {
                   defaultValue="18"
                   data-title="Dobras Cutâneas_Coxa_1_Consulta"
                   required
+                  onInput={ev => handleEventReq(ev.currentTarget)}
                 />
                 <p className="msrProgCons">mm</p>
               </label>
@@ -595,6 +599,7 @@ export default function TabDCut(): JSX.Element {
                   defaultValue="18"
                   data-title="Dobras Cutâneas_Peitoral_1_Consulta"
                   required
+                  onInput={ev => handleEventReq(ev.currentTarget)}
                 />
                 <p className="msrProgCons">mm</p>
               </label>
@@ -672,6 +677,7 @@ export default function TabDCut(): JSX.Element {
                   defaultValue="18"
                   data-title="Dobras Cutâneas_Abdominal_1_Consulta"
                   required
+                  onInput={ev => handleEventReq(ev.currentTarget)}
                 />
                 <p className="msrProgCons">mm</p>
               </label>
@@ -750,7 +756,7 @@ export default function TabDCut(): JSX.Element {
                   defaultValue="60"
                   data-title="Dobras Cutâneas_Soma_1_Consulta"
                   required
-                  onInput={ev =>
+                  onInput={ev => {
                     handleCallbackWHS(
                       [
                         [
@@ -783,8 +789,9 @@ export default function TabDCut(): JSX.Element {
                       ],
                       ev.currentTarget,
                       isAutoFillActive
-                    )
-                  }
+                    );
+                    handleEventReq(ev.currentTarget);
+                  }}
                 />
                 <p className="msrProgCons sumMsr">mm</p>
                 <button

@@ -126,6 +126,10 @@
     min-height: 98vh;
     margin: 0;
   }
+
+  #cardSect {
+    max-width: 98vw;
+  }
 }
 
 @media screen and (min-width: 1025px) {
@@ -145,7 +149,7 @@
   .card {
     &:has(#agAnchoredBtn) {
       margin-left: 0.2rem;
-      min-width: 16.7rem;
+      min-width: 13.7rem;
       max-width: 25vw !important;
     }
     .card-hborder {

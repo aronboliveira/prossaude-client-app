@@ -432,7 +432,7 @@ export function addSubDivTrat(
             <textarea name="taTratName${blockCount}" id="taTratId${blockCount}" class="inlinebTa taTrat" data-title="Tratamento ${blockCount}" required></textarea>
           </td>
           <td class="spanMain tratMainSpan tratDateSpan" id="tratDateSpan${blockCount}">
-              <input type="date" name="tratDateInpName${blockCount}" id="tratDateInpId${blockCount}" class="inpDate inpTrat tratDate" data-title="Data do Tratamento ${blockCount}" required />
+              <input type="date" name="tratDateInpName${blockCount}" id="tratDateInpId${blockCount}" class="inpDate inpTrat tratDate maxCurrDate" data-title="Data do Tratamento ${blockCount}" required />
               <button type="button" class="tratBtn datBtn btn btn-secondary forceInvert" id="trat2DatBtn">Usar data atual</button>
           </td>
           <td class="spanMain tratMainSpan tratFileSpan" id="tratFileSpan${blockCount}">

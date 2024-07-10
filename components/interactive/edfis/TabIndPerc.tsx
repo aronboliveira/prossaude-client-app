@@ -10,7 +10,10 @@ import {
   stringError,
   typeError,
 } from "@/lib/global/handlers/errorHandler";
-import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
+import {
+  handleEventReq,
+  syncAriaStates,
+} from "@/lib/global/handlers/gHandlers";
 import { checkReturnIndex } from "@/lib/locals/edFisNutPage/edFisNutController";
 import {
   defineTargInps,
@@ -449,7 +452,10 @@ export default function TabIndPerc(): JSX.Element {
                     min="0"
                     data-title="IMC_1_Consulta"
                     required
-                    onInput={ev => handleIndEv(ev, "IMC")}
+                    onInput={ev => {
+                      handleIndEv(ev, "IMC");
+                      handleEventReq(ev.currentTarget);
+                    }}
                   />
                   <p className="msrProgCons indMsr">kg/m²</p>
                 </label>
@@ -703,7 +709,10 @@ export default function TabIndPerc(): JSX.Element {
                     max="100"
                     data-title="MLG_1_Consulta"
                     required
-                    onInput={ev => handleIndEv(ev, "MLG")}
+                    onInput={ev => {
+                      handleIndEv(ev, "MLG");
+                      handleEventReq(ev.currentTarget);
+                    }}
                   />
                   <p className="msrProgCons indMsr">%</p>
                 </label>
@@ -960,7 +969,10 @@ export default function TabIndPerc(): JSX.Element {
                     max="100"
                     data-title="PGC_1_Consulta"
                     required
-                    onInput={ev => handleIndEv(ev, "PGC")}
+                    onInput={ev => {
+                      handleIndEv(ev, "PGC");
+                      handleEventReq(ev.currentTarget);
+                    }}
                   />
                   <p className="msrProgCons indMsr">%</p>
                 </label>
@@ -1252,7 +1264,10 @@ export default function TabIndPerc(): JSX.Element {
                     min="0"
                     data-title="TMB_1_Consulta"
                     required
-                    onInput={ev => handleIndEv(ev, "TMB")}
+                    onInput={ev => {
+                      handleIndEv(ev, "TMB");
+                      handleEventReq(ev.currentTarget);
+                    }}
                   />
                   <p className="msrProgCons indMsr">kcal</p>
                 </label>

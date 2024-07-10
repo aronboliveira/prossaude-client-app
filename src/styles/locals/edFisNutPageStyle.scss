@@ -320,6 +320,7 @@ $swhite: rgba(255, 255, 255, 0.9);
       &#labDiur {
         box-shadow: 0 0 0 0 transparent;
         width: 1rem;
+        background-color: transparent;
       }
     }
   }
@@ -540,6 +541,26 @@ $swhite: rgba(255, 255, 255, 0.9);
   }
 }
 
+@media screen and (min-width: 1000px) {
+  .edfisNutBody {
+    #protUrDiv {
+      transform: translateX(5rem);
+    }
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .edfisNutBody {
+    #inpElimUrCor {
+      min-width: 33vw;
+      max-width: 33vw;
+    }
+    #protUrDiv {
+      transform: translateX(5rem);
+    }
+  }
+}
+
 @media screen and (min-width: 901px) {
   $firstColProgMargR: 0.5rem;
   .edfisNutBody {
@@ -561,7 +582,6 @@ $swhite: rgba(255, 255, 255, 0.9);
 
     #inpElimUrDiaMin,
     #inpElimUrIntervaloMin,
-    #inpElimUrCor,
     #inpElimEvDiaMin,
     #inpElimEvIntervaloMin {
       width: 26.5rem;
@@ -630,10 +650,25 @@ $swhite: rgba(255, 255, 255, 0.9);
       column-gap: 2.5vw;
     }
 
+    .form-control {
+      &#labDiur {
+        width: 70vw;
+        min-width: 70vw;
+      }
+    }
+
     .form-control.tabInpProg,
     .form-control.tabLabProgCons,
     #bgDiv {
       width: 100%;
+    }
+
+    .inpUrInterval {
+      max-width: unset;
+    }
+
+    .labAlimRot {
+      min-width: 79.2vw;
     }
 
     .legMain {
@@ -665,6 +700,11 @@ $swhite: rgba(255, 255, 255, 0.9);
     }
 
     $inpGenWidFix: calc(0.4rem + 76.5vw);
+    $inpProgWidFix: 14.7rem;
+
+    #formCalcTMBType {
+      width: calc($inpProgWidFix + 1.5rem);
+    }
 
     #genId,
     #genBirthRelId,
@@ -675,17 +715,20 @@ $swhite: rgba(255, 255, 255, 0.9);
 
     #inpDiur {
       margin-left: 0;
-      min-width: calc($inpGenWidFix - 16.1vw + 5rem);
+      min-width: calc($inpGenWidFix - 18.87vw + 5rem);
     }
 
-    $inpProgWidFix: 14.7rem;
+    #inpElimUrCor {
+      min-width: unset;
+      max-width: unset;
+    }
 
     #nafType {
       width: $inpProgWidFix;
     }
 
-    #formCalcTMBType {
-      width: calc($inpProgWidFix + 1.5rem);
+    #protUrDiv {
+      transform: translateX(0);
     }
 
     #selectNumCons {

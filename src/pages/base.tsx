@@ -43,10 +43,7 @@ export default function BasePage(): JSX.Element {
         );
     equalizeParagraphs(Array.from(document.querySelectorAll("small")));
     syncAriaStates(document.querySelectorAll("*"));
-    expandContent(
-      document.getElementById("rootUserInfo")!,
-      (document.getElementById("nameLogin")?.innerText.length || 12) * 10.5
-    );
+    expandContent(document.getElementById("rootUserInfo"));
   }, []);
   return (
     <ErrorBoundary FallbackComponent={() => <div>Erro!</div>}>

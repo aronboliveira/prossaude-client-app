@@ -1,7 +1,10 @@
 import { PayloadCounterAction } from "@/lib/global/declarations/interfaces";
 import { nullishDiv } from "@/lib/global/declarations/types";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
-import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
+import {
+  handleEventReq,
+  syncAriaStates,
+} from "@/lib/global/handlers/gHandlers";
 import {
   addRowAtivFis,
   removeRowAtivFis,
@@ -193,6 +196,7 @@ export default function TabAtFirsRot(): JSX.Element {
                 data-title="Atividade_Fisica_Rotineira_Nome_1"
                 data-reqlength="3"
                 required
+                onInput={ev => handleEventReq(ev.currentTarget)}
               />
             </td>
             <td
@@ -215,6 +219,7 @@ export default function TabAtFirsRot(): JSX.Element {
                 data-minnum="0"
                 data-maxnum="255"
                 required
+                onInput={ev => handleEventReq(ev.currentTarget)}
               />
             </td>
             <td
@@ -237,6 +242,7 @@ export default function TabAtFirsRot(): JSX.Element {
                 data-minnum="0"
                 data-maxnum="65535"
                 required
+                onInput={ev => handleEventReq(ev.currentTarget)}
               />
             </td>
             <td

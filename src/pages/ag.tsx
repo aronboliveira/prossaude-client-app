@@ -21,6 +21,7 @@ import {
 import {
   deactTextInput,
   handleCondtReq,
+  handleEventReq,
   opRadioHandler,
   subForm,
   syncAriaStates,
@@ -144,7 +145,7 @@ export default function AGPage(): JSX.Element {
             >
               <input
                 type="date"
-                className="form-control d-ibl"
+                className="form-control d-ibl minCurrDate"
                 id="dateHeader"
                 placeholder="Date"
                 data-title="data_cabecalho"
@@ -200,6 +201,7 @@ export default function AGPage(): JSX.Element {
                           minLength={3}
                           maxLength={99}
                           required
+                          onInput={ev => handleEventReq(ev.currentTarget)}
                         />
                       </label>
                       <br role="presentation" />
@@ -253,6 +255,7 @@ export default function AGPage(): JSX.Element {
                           data-flags="gi"
                           minLength={3}
                           maxLength={99}
+                          onInput={ev => handleEventReq(ev.currentTarget)}
                         />
                       </label>
                       <br role="presentation" />
@@ -306,7 +309,7 @@ export default function AGPage(): JSX.Element {
                           onInput={ev =>
                             handleCondtReq(ev.currentTarget, {
                               min: 1,
-                              max: 15,
+                              max: 16,
                               pattern: ["^(d{3}.){2}d{3}-d{2}$", ""],
                             })
                           }
@@ -382,6 +385,7 @@ export default function AGPage(): JSX.Element {
                           minLength={2}
                           maxLength={4}
                           required
+                          onInput={ev => handleEventReq(ev.currentTarget)}
                         />
                       </label>
                       <br role="presentation" />
@@ -436,7 +440,10 @@ export default function AGPage(): JSX.Element {
                           data-pattern="9?\d{4}-\d{4}"
                           data-flags="g"
                           required
-                          onInput={ev => formatTel(ev.currentTarget, false)}
+                          onInput={ev => {
+                            formatTel(ev.currentTarget, false);
+                            handleEventReq(ev.currentTarget);
+                          }}
                         />
                       </label>
                       <br role="presentation" />
@@ -606,6 +613,7 @@ export default function AGPage(): JSX.Element {
                         data-pattern="[^0-9]"
                         data-flags="g"
                         required
+                        onInput={ev => handleEventReq(ev.currentTarget)}
                       />
                     </label>
                     <br role="presentation" />
@@ -623,6 +631,7 @@ export default function AGPage(): JSX.Element {
                         minLength={3}
                         data-reqlength="3"
                         required
+                        onInput={ev => handleEventReq(ev.currentTarget)}
                       />
                     </label>
                     <br role="presentation" />
@@ -644,6 +653,7 @@ export default function AGPage(): JSX.Element {
                         minLength={3}
                         data-reqlength="3"
                         required
+                        onInput={ev => handleEventReq(ev.currentTarget)}
                       />
                     </label>
                     <br role="presentation" />
@@ -661,6 +671,7 @@ export default function AGPage(): JSX.Element {
                         minLength={3}
                         data-reqlength="3"
                         required
+                        onInput={ev => handleEventReq(ev.currentTarget)}
                       />
                     </label>
                     <br role="presentation" />
@@ -683,6 +694,7 @@ export default function AGPage(): JSX.Element {
                         data-maxlength="11"
                         data-pattern="^\d{2}[\s.-]?\d{3}[\s.-]?\d{2,3}$"
                         required
+                        onInput={ev => handleEventReq(ev.currentTarget)}
                       />
                       <button
                         type="button"
@@ -720,6 +732,7 @@ export default function AGPage(): JSX.Element {
                         data-title="bairro"
                         data-reqlength="3"
                         required
+                        onInput={ev => handleEventReq(ev.currentTarget)}
                       />
                     </label>
                     <br role="presentation" />
@@ -927,7 +940,7 @@ export default function AGPage(): JSX.Element {
                         type="date"
                         name="dateBdayName"
                         id="dateBdayId"
-                        className="form-control inpIdentif noInvert"
+                        className="form-control inpIdentif noInvert maxCurrDate"
                         autoComplete="bday"
                         data-title="Nascimento"
                         required
@@ -954,6 +967,7 @@ export default function AGPage(): JSX.Element {
                         data-minnum="0"
                         data-maxnum="255"
                         data-pattern="^[\d,.]+$"
+                        onInput={ev => handleEventReq(ev.currentTarget)}
                       />
                     </label>
                   </span>
@@ -1652,7 +1666,7 @@ export default function AGPage(): JSX.Element {
                         type="date"
                         name="hivDateDiagName"
                         id="hivDateDiagId"
-                        className="form-control cpbOp indivOp opHiv"
+                        className="form-control cpbOp indivOp opHiv maxCurrDate"
                         data-title="hiv_diagnostico"
                       />
                     </div>
@@ -1668,7 +1682,7 @@ export default function AGPage(): JSX.Element {
                         type="date"
                         name="hivDateExamName"
                         id="hivDateExamId"
-                        className="form-control cpbOp indivOp opHiv"
+                        className="form-control cpbOp indivOp opHiv maxCurrDate"
                         data-title="hiv_ultimo_exame"
                       />
                     </div>
@@ -4929,6 +4943,7 @@ export default function AGPage(): JSX.Element {
                         defaultValue="Rio de Janeiro, Rio de Janeiro"
                         data-title="assinatura_local"
                         required
+                        onInput={ev => handleEventReq(ev.currentTarget)}
                       />
                     </label>
 
@@ -4948,7 +4963,7 @@ export default function AGPage(): JSX.Element {
                           type="date"
                           name="confirmDatName"
                           id="confirmDatId"
-                          className="inpConfirm inpDate form-control noInvert"
+                          className="inpConfirm inpDate form-control noInvert minCurrDate"
                           data-title="assinatura_data"
                           required
                         />

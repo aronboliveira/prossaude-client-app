@@ -9,6 +9,7 @@ import {
 } from "../../global/handlers/errorHandler";
 import { Person } from "../../global/declarations/classes";
 import { entryEl, targEl } from "../../global/declarations/types";
+import { handleEventReq } from "@/lib/global/handlers/gHandlers";
 
 export function checkInnerColGroups(
   parentEl: targEl,
@@ -129,11 +130,9 @@ export function changeTabDCutLayout(
       for (let iOp = 0; iOp < filteredOpsProtocolo.length - 1; iOp++) {
         const arrayTabIds = checkTabRowsIds(tabDC);
         const genderedIds = filterIdsByGender(arrayTabIds, bodyType.value);
-
         /*após checagem de ids e filtragem por gênero da pessoa, 
         valida se de fato as rows sem informação (visuais) não estão sendo capturadas,
         e se a filtragem por gênero ocorreu corretamente*/
-
         if (
           arrayTabIds?.length ===
             Array.from(tabDC.rows).filter(row =>
@@ -234,17 +233,16 @@ export function defineHiddenRows(
           );
       }
     }
-
     /*percorrimento de row para resetar todos as rows para hidden e unrequired*/
     Array.from(tabDC.querySelectorAll("tr.tabRowDCutMed")).forEach(medTr => {
       medTr.setAttribute("hidden", "");
       const innerInp = medTr.querySelector("input");
       if (innerInp) {
+        innerInp.removeEventListener("input", handleEventReq);
         if (innerInp.required) innerInp.removeAttribute("required");
         if (medTr?.id?.slice(-4) !== "Coxa") innerInp.value = "";
       }
     });
-
     /*percorrimento de row para remover hidden de elementos validados
     no percorrimento anteriro da matriz */
     matchedIds.forEach(matchedId => {
@@ -253,6 +251,7 @@ export function defineHiddenRows(
         matchedTr.removeAttribute("hidden");
         const innerInp = matchedTr.querySelector("input");
         if (innerInp) {
+          innerInp.addEventListener("input", handleEventReq);
           switch (context) {
             case "bin":
               innerInp.setAttribute("required", "");

@@ -1,7 +1,7 @@
 //nesse file estão presentes principalmente as funções de manipulação dinâmica de texto e layout
 import { parseNotNaN, removeFirstClick } from "../gModel";
 import { fadeElement, highlightChange, isClickOutside } from "../gStyleScript";
-import type { targEl, primitiveType } from "../declarations/types";
+import type { targEl, primitiveType, textEl } from "../declarations/types";
 import {
   extLine,
   elementNotFound,
@@ -796,10 +796,8 @@ export function subForm(
   subButton: targEl,
   scope: HTMLElement | Document = document
 ): boolean {
-  window.alert(
-    "Sistema ainda não pronto\n...mas você teria enviado clicando aqui! :)"
-  );
   const arrValidity: boolean[] = [];
+  const invalidEntries: string[] = [];
   if (
     subButton instanceof HTMLButtonElement &&
     (scope instanceof HTMLElement || scope instanceof Document)
@@ -810,9 +808,9 @@ export function subForm(
       ...scope.querySelectorAll("textarea"),
       ...scope.querySelectorAll("select"),
     ].forEach(entry => {
-      if (entry instanceof HTMLSelectElement) {
+      if (entry instanceof HTMLSelectElement)
         entry.value !== "" ? arrValidity.push(true) : arrValidity.push(false);
-      }
+
       if (
         entry instanceof HTMLInputElement ||
         entry instanceof HTMLTextAreaElement
@@ -843,44 +841,158 @@ export function subForm(
         let isValid = true;
         if (!entry.checkValidity()) {
           isValid = false;
+          invalidEntries.push(
+            entry.dataset.title || entry.id || entry.name || entry.tagName
+          );
           displayInvalidity();
         }
-        if (
-          entry.classList.contains("minText") &&
-          entry.value.length < parseNotNaN(entry.dataset.reqlength || "3")
-        ) {
-          isValid = false;
-          displayInvalidity();
-        }
-        if (
-          entry.classList.contains("maxText") &&
-          entry.value.length > parseNotNaN(entry.dataset.maxlength || "3")
-        ) {
-          isValid = false;
-          displayInvalidity();
-        }
-        if (
-          entry.classList.contains("minNum") &&
-          parseNotNaN(entry.value) < parseNotNaN(entry.dataset.minnum || "3")
-        ) {
-          isValid = false;
-          displayInvalidity();
-        }
-        if (
-          entry.classList.contains("maxNum") &&
-          parseNotNaN(entry.value) > parseNotNaN(entry.dataset.maxnum || "3")
-        ) {
-          isValid = false;
-          displayInvalidity();
-        }
-        if (entry.classList.contains("patternText") && entry.dataset.pattern) {
+        if (entry.type === "date") {
+          if (entry.classList.contains("minCurrDate")) {
+            const currDate = new Date()
+              .toISOString()
+              .split("T")[0]
+              .replaceAll("-", "")
+              .trim();
+            if (currDate.length < 8) {
+              console.warn(
+                `Failed to form Current Date string. Aborting check.`
+              );
+              return;
+            }
+            const currNumDate = Math.abs(parseNotNaN(currDate));
+            if (
+              !Number.isFinite(currNumDate) ||
+              currNumDate
+                .toString()
+                .slice(0, currNumDate.toString().indexOf(".")).length < 8
+            ) {
+              console.warn(
+                `Failed to get Current Date as a Number. Aborting check.`
+              );
+              return;
+            }
+            const entryNumDateValue = parseNotNaN(
+              entry.value.replaceAll("-", "")
+            );
+            if (
+              !Number.isFinite(entryNumDateValue) ||
+              entryNumDateValue
+                .toString()
+                .slice(0, entryNumDateValue.toString().indexOf(".")).length < 8
+            ) {
+              console.warn(
+                `Failed to get Current Date as a Number. Aborting check.`
+              );
+              return;
+            }
+            if (entryNumDateValue < currNumDate) {
+              isValid = false;
+              invalidEntries.push(
+                entry.dataset.title || entry.id || entry.name || entry.tagName
+              );
+              displayInvalidity();
+            }
+          }
+          if (entry.classList.contains("maxCurrDate")) {
+            const currDate = new Date()
+              .toISOString()
+              .split("T")[0]
+              .replaceAll("-", "")
+              .trim();
+            if (currDate.length < 8) {
+              console.warn(
+                `Failed to form Current Date string. Aborting check.`
+              );
+              return;
+            }
+            const currNumDate = Math.abs(parseNotNaN(currDate));
+            if (
+              !Number.isFinite(currNumDate) ||
+              currNumDate
+                .toString()
+                .slice(0, currNumDate.toString().indexOf(".")).length < 8
+            ) {
+              console.warn(
+                `Failed to get Current Date as a Number. Aborting check.`
+              );
+              return;
+            }
+            const entryNumDateValue = parseNotNaN(
+              entry.value.replaceAll("-", "")
+            );
+            if (
+              !Number.isFinite(entryNumDateValue) ||
+              entryNumDateValue
+                .toString()
+                .slice(0, entryNumDateValue.toString().indexOf(".")).length < 8
+            ) {
+              console.warn(
+                `Failed to get Current Date as a Number. Aborting check.`
+              );
+              return;
+            }
+            if (entryNumDateValue > currNumDate) {
+              isValid = false;
+              invalidEntries.push(
+                entry.dataset.title || entry.id || entry.name || entry.tagName
+              );
+              displayInvalidity();
+            }
+          }
+        } else {
           if (
+            entry.classList.contains("minText") &&
+            entry.value.length < parseNotNaN(entry.dataset.reqlength || "3")
+          ) {
+            isValid = false;
+            invalidEntries.push(
+              entry.dataset.title || entry.id || entry.name || entry.tagName
+            );
+            displayInvalidity();
+          }
+          if (
+            entry.classList.contains("maxText") &&
+            entry.value.length > parseNotNaN(entry.dataset.maxlength || "3")
+          ) {
+            isValid = false;
+            invalidEntries.push(
+              entry.dataset.title || entry.id || entry.name || entry.tagName
+            );
+            displayInvalidity();
+          }
+          if (
+            entry.classList.contains("minNum") &&
+            parseNotNaN(entry.value) < parseNotNaN(entry.dataset.minnum || "3")
+          ) {
+            isValid = false;
+            invalidEntries.push(
+              entry.dataset.title || entry.id || entry.name || entry.tagName
+            );
+            displayInvalidity();
+          }
+          if (
+            entry.classList.contains("maxNum") &&
+            parseNotNaN(entry.value) > parseNotNaN(entry.dataset.maxnum || "3")
+          ) {
+            isValid = false;
+            invalidEntries.push(
+              entry.dataset.title || entry.id || entry.name || entry.tagName
+            );
+            displayInvalidity();
+          }
+          if (
+            entry.classList.contains("patternText") &&
+            entry.dataset.pattern &&
             !new RegExp(entry.dataset.pattern, entry.dataset.flags || "").test(
               entry.value
             )
-          )
+          ) {
             isValid = false;
-          displayInvalidity();
+            invalidEntries.push(
+              entry.dataset.title || entry.id || entry.name || entry.tagName
+            );
+            displayInvalidity();
+          }
         }
         arrValidity.push(isValid);
       }
@@ -891,6 +1003,11 @@ export function subForm(
       `Button for submiting form id ${subButton?.id ?? "UNIDENTIFIED"}`,
       extLine(new Error())
     );
+  window.alert(
+    `Sistema ainda não pronto...mas você teria enviado clicando aqui!
+    Entradas invalidadas:
+    ${invalidEntries.map(invalidIdf => `${invalidIdf} \n`)}`
+  );
   return arrValidity.some(validity => validity === false) ? false : true;
 }
 
@@ -912,7 +1029,8 @@ export function handleCondtReq(
           el.type === "number" ||
           el.type === "email" ||
           el.type === "password" ||
-          el.type === "tel")
+          el.type === "tel" ||
+          el.type === "date")
       )
     )
       throw inputNotFound(
@@ -967,6 +1085,7 @@ export function handleCondtReq(
         if (!el.classList.contains("patternText"))
           el.classList.add("patternText");
       }
+      handleEventReq(el);
     } else {
       el.dataset["reqlength"] = undefined;
       el.dataset["maxlength"] = undefined;
@@ -982,4 +1101,157 @@ export function handleCondtReq(
   } catch (e) {
     console.error(`Error executing handleCondtReq:\n${(e as Error).message}`);
   }
+}
+
+export const iniFontColors: { [k: string]: string } = {};
+
+export function handleEventReq(
+  entry: textEl | Event,
+  alertColor: string = "#e52626"
+): void {
+  let isValid = true;
+  if (entry instanceof Event) {
+    if (
+      !(
+        entry.currentTarget instanceof HTMLInputElement ||
+        entry.currentTarget instanceof HTMLTextAreaElement
+      )
+    )
+      return;
+    entry = entry.currentTarget;
+  }
+  if (
+    !(entry instanceof HTMLInputElement || entry instanceof HTMLTextAreaElement)
+  )
+    throw inputNotFound(
+      entry,
+      `validation of entry argument for handleEventReq`,
+      extLine(new Error())
+    );
+  if (
+    entry instanceof HTMLInputElement &&
+    !(
+      entry.type === "text" ||
+      entry.type === "number" ||
+      entry.type === "password" ||
+      entry.type === "tel" ||
+      entry.type === "email" ||
+      entry.type === "date"
+    )
+  )
+    return;
+  if (!iniFontColors[entry.id || entry.name])
+    iniFontColors[entry.id || entry.name] = getComputedStyle(entry).color;
+  if ((iniFontColors[entry.id || entry.name] = alertColor))
+    iniFontColors[entry.id || entry.name] = "rgb(33, 37, 41)";
+  if (!entry.checkValidity()) isValid = false;
+  if (entry.type === "date") {
+    if (entry.classList.contains("minCurrDate")) {
+      const currDate = new Date()
+        .toISOString()
+        .split("T")[0]
+        .replaceAll("-", "")
+        .trim();
+      if (currDate.length < 8) {
+        console.warn(`Failed to form Current Date string. Aborting check.`);
+        return;
+      }
+      const currNumDate = Math.abs(parseNotNaN(currDate));
+      if (
+        !Number.isFinite(currNumDate) ||
+        currNumDate.toString().slice(0, currNumDate.toString().indexOf("."))
+          .length < 8
+      ) {
+        console.warn(`Failed to get Current Date as a Number. Aborting check.`);
+        return;
+      }
+      const entryNumDateValue = parseNotNaN(entry.value.replaceAll("-", ""));
+      if (
+        !Number.isFinite(entryNumDateValue) ||
+        entryNumDateValue
+          .toString()
+          .slice(0, entryNumDateValue.toString().indexOf(".")).length < 8
+      ) {
+        console.warn(`Failed to get Current Date as a Number. Aborting check.`);
+        return;
+      }
+      if (entryNumDateValue < currNumDate) isValid = false;
+    }
+    if (entry.classList.contains("maxCurrDate")) {
+      const currDate = new Date()
+        .toISOString()
+        .split("T")[0]
+        .replaceAll("-", "")
+        .trim();
+      if (currDate.length < 8) {
+        console.warn(`Failed to form Current Date string. Aborting check.`);
+        return;
+      }
+      const currNumDate = Math.abs(parseNotNaN(currDate));
+      if (
+        !Number.isFinite(currNumDate) ||
+        currNumDate.toString().slice(0, currNumDate.toString().indexOf("."))
+          .length < 8
+      ) {
+        console.warn(`Failed to get Current Date as a Number. Aborting check.`);
+        return;
+      }
+      const entryNumDateValue = parseNotNaN(entry.value.replaceAll("-", ""));
+      if (
+        !Number.isFinite(entryNumDateValue) ||
+        entryNumDateValue
+          .toString()
+          .slice(0, entryNumDateValue.toString().indexOf(".")).length < 8
+      ) {
+        console.warn(`Failed to get Current Date as a Number. Aborting check.`);
+        return;
+      }
+      if (entryNumDateValue > currNumDate) isValid = false;
+    }
+  } else {
+    if (
+      entry.classList.contains("minText") &&
+      entry.value.length < parseNotNaN(entry.dataset.reqlength || "3")
+    )
+      isValid = false;
+    if (
+      entry.classList.contains("maxText") &&
+      entry.value.length > parseNotNaN(entry.dataset.maxlength || "3")
+    )
+      isValid = false;
+    if (
+      entry.classList.contains("minNum") &&
+      parseNotNaN(entry.value) < parseNotNaN(entry.dataset.minnum || "3")
+    )
+      isValid = false;
+    if (
+      entry.classList.contains("maxNum") &&
+      parseNotNaN(entry.value) > parseNotNaN(entry.dataset.maxnum || "3")
+    )
+      isValid = false;
+    if (
+      entry.classList.contains("patternText") &&
+      entry.dataset.pattern &&
+      !new RegExp(entry.dataset.pattern, entry.dataset.flags || "").test(
+        entry.value
+      )
+    )
+      isValid = false;
+  }
+  if (!isValid) entry.style.color = alertColor;
+  if (getComputedStyle(entry).color === alertColor)
+    setTimeout(() => {
+      if (entry instanceof Event) {
+        if (
+          !(
+            entry.currentTarget instanceof HTMLInputElement ||
+            entry.currentTarget instanceof HTMLTextAreaElement
+          )
+        )
+          return;
+        entry = entry.currentTarget;
+      }
+      entry.style.color =
+        iniFontColors[entry.id || entry.name] || "rgb(33, 37, 41)";
+    }, 2000);
 }

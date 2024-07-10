@@ -2,7 +2,10 @@ import { useEffect, useRef, useState } from "react";
 import { nullishBtn } from "@/lib/global/declarations/types";
 import { addListenerAvMembers } from "@/lib/locals/panelPage/handlers/consHandlerList";
 import { DataProvider } from "@/lib/locals/panelPage/declarations/classesCons";
-import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
+import {
+  handleCondtReq,
+  syncAriaStates,
+} from "@/lib/global/handlers/gHandlers";
 import AvStudListDlg from "../lists/AvStudListDlg";
 import { FillerProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import { globalDataProvider } from "@/pages/panel";
@@ -74,9 +77,16 @@ export default function DREFiller({
             id="inpCPFStudFiller"
             list="listCPFStudsCons"
             data-title="CPF de Estudante Alocado"
-            maxLength={15}
+            maxLength={16}
             placeholder="Preencha com o CPF do Estudante Alocado"
-          ></input>
+            onInput={ev =>
+              handleCondtReq(ev.currentTarget, {
+                min: 1,
+                max: 16,
+                pattern: ["^(d{3}.){2}d{3}-d{2}$", ""],
+              })
+            }
+          />
           <datalist id="listCPFStudsCons">
             <optgroup label="Odontologia">
               <option value="123.456.789-12 — Odontologia">
@@ -114,7 +124,14 @@ export default function DREFiller({
             data-title="DRE de Estudante Alocado"
             maxLength={12}
             placeholder="Preencha com o DRE do Estudante Alocado"
-          ></input>
+            onInput={ev => {
+              handleCondtReq(ev.currentTarget, {
+                min: 1,
+                max: 12,
+                pattern: ["^d{9,}$", ""],
+              });
+            }}
+          />
           <datalist id="listDREStudsCons">
             <optgroup label="Odontologia">
               <option value="123456789 — Odontologia">

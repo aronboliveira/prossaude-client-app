@@ -6,6 +6,7 @@ import {
   checkAutoCorrect,
 } from "../../global/gModel";
 import {
+  handleEventReq,
   syncAriaStates,
   updateSimpleProperty,
 } from "../../global/handlers/gHandlers";
@@ -1021,19 +1022,21 @@ export function addRowAtivFis(
       `;
     tBodyContainer.appendChild(newRow);
     newRow.querySelectorAll('input[type="number"]').forEach(numInp => {
-      numInp.addEventListener("input", () =>
-        numberLimit(numInp as HTMLInputElement)
-      );
+      numInp.addEventListener("input", () => {
+        numberLimit(numInp as HTMLInputElement);
+        handleEventReq(numInp as textEl);
+      });
     });
     newRow.querySelectorAll('input[type="text"]').forEach(textEl => {
-      textEl.addEventListener("input", () =>
+      textEl.addEventListener("input", () => {
         autoCapitalizeInputs(
           textEl as entryEl,
           checkAutoCorrect(
             document.querySelector('button[id^="deactAutocorrectBtn"]')
           )
-        )
-      );
+        );
+        handleEventReq(textEl as textEl);
+      });
     });
     if (document.querySelector(`tabRowAtFis${context}Id${count}`)) {
       syncAriaStates([
@@ -1115,7 +1118,7 @@ export function switchRowComorb(
       <input type="text" class="tabInpComorb tabInpRowComorb${rowCountComorb} form-control noInvert" id="tablInpRowComorb${rowCountComorb}_2" data-title="Comorbidade_Nome_${rowCountComorb}" required />
     </td>
     <td class="tabCelComorb tabCelRight tabCelRowComorb${rowCountComorb}" id="tabCelRowComorb${rowCountComorb}_3">
-      <input type="date" class="tabInpComorb tabInpRowComorb${rowCountComorb} form-control noInvert" id="tablInpRowComorb${rowCountComorb}_3" data-title="Comorbidade_Data_${rowCountComorb}" required />
+      <input type="date" class="tabInpComorb tabInpRowComorb${rowCountComorb} form-control noInvert maxCurrDate" id="tablInpRowComorb${rowCountComorb}_3" data-title="Comorbidade_Data_${rowCountComorb}" required />
     </td>
     `;
     parentTab.appendChild(newComorbRow);

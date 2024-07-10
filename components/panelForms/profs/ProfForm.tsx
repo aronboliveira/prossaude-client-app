@@ -19,6 +19,7 @@ import {
 } from "@/lib/global/handlers/errorHandler";
 import {
   handleCondtReq,
+  handleEventReq,
   subForm,
   syncAriaStates,
 } from "@/lib/global/handlers/gHandlers";
@@ -328,6 +329,7 @@ export default function ProfForm({
                 minLength={3}
                 maxLength={99}
                 required
+                onInput={ev => handleEventReq(ev.currentTarget)}
               />
             </label>
             <label htmlFor="inpCPFProf">
@@ -346,6 +348,7 @@ export default function ProfForm({
                 data-max-length="16"
                 data-pattern="^(d{3}.){2}d{3}-d{2}$"
                 ref={CPFProfRef}
+                required
               />
             </label>
             <label htmlFor="inpTel">
@@ -365,6 +368,7 @@ export default function ProfForm({
                 data-pattern="^(\+\d{2}\s?)?(\(\d{2}\)\s?)?\d{3,5}[-\s]?\d{4}$"
                 required
                 ref={telProfRef}
+                onInput={ev => handleEventReq(ev.currentTarget)}
               />
               <datalist id="listProfRegstTel"></datalist>
             </label>
@@ -404,6 +408,7 @@ export default function ProfForm({
                 data-maxlength="99"
                 data-pattern="educação\sfísica|medicina|nutrição|odontologia|psicologia"
                 required
+                onInput={ev => handleEventReq(ev.currentTarget)}
               />
               <datalist id="listCoursesProf">
                 <option value="Educação Física"></option>
@@ -437,6 +442,7 @@ export default function ProfForm({
                 placeholder="Preencha com o Período (do Calendário) na entrada"
                 data-title="Período de Entrada do Profissional"
                 required
+                onInput={ev => handleEventReq(ev.currentTarget)}
               />
             </label>
             <label htmlFor="inpDayEntrProf" className="forceInvert">
@@ -444,7 +450,7 @@ export default function ProfForm({
               <input
                 type="date"
                 id="inpDayEntrProf"
-                className="form-control ssPersist"
+                className="form-control ssPersist maxCurrDate"
                 placeholder="Preencha com o Dia de Entrada do Profissional no projeto"
                 data-title="Dia de Entrada do Profissional"
                 required

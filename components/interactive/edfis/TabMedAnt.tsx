@@ -1,6 +1,9 @@
 import { nullishDiv } from "@/lib/global/declarations/types";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
-import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
+import {
+  handleEventReq,
+  syncAriaStates,
+} from "@/lib/global/handlers/gHandlers";
 import { handleCallbackWHS, isAutoFillActive, tabProps } from "@/pages/edfis";
 import { useRef, useState, useEffect } from "react";
 
@@ -143,7 +146,7 @@ export default function TabMedAnt(): JSX.Element {
                   defaultValue="70"
                   data-title="Peso_1_Consulta"
                   required
-                  onInput={ev =>
+                  onInput={ev => {
                     handleCallbackWHS(
                       [
                         [
@@ -176,8 +179,9 @@ export default function TabMedAnt(): JSX.Element {
                       ],
                       ev.currentTarget,
                       isAutoFillActive
-                    )
-                  }
+                    );
+                    handleEventReq(ev.currentTarget);
+                  }}
                 />
                 <p className="msrProgCons">kg</p>
               </label>
@@ -329,7 +333,7 @@ export default function TabMedAnt(): JSX.Element {
                   defaultValue="2"
                   data-title="Altura_1_Consulta"
                   required
-                  onInput={ev =>
+                  onInput={ev => {
                     handleCallbackWHS(
                       [
                         [
@@ -362,8 +366,9 @@ export default function TabMedAnt(): JSX.Element {
                       ],
                       ev.currentTarget,
                       isAutoFillActive
-                    )
-                  }
+                    );
+                    handleEventReq(ev.currentTarget);
+                  }}
                 />
                 <p className="msrProgCons">m</p>
               </label>
@@ -514,6 +519,7 @@ export default function TabMedAnt(): JSX.Element {
                   max="65535"
                   data-title="Torax_1_Consulta"
                   required
+                  onInput={ev => handleEventReq(ev.currentTarget)}
                 />
                 <p className="msrProgCons">cm</p>
               </label>
@@ -592,6 +598,7 @@ export default function TabMedAnt(): JSX.Element {
                   max="65535"
                   data-title="Cintura_1_Consulta"
                   required
+                  onInput={ev => handleEventReq(ev.currentTarget)}
                 />
                 <p className="msrProgCons">cm</p>
               </label>
@@ -670,6 +677,7 @@ export default function TabMedAnt(): JSX.Element {
                   max="65535"
                   data-title="Quadril_1_Consulta"
                   required
+                  onInput={ev => handleEventReq(ev.currentTarget)}
                 />
                 <p className="msrProgCons">cm</p>
               </label>
@@ -748,6 +756,7 @@ export default function TabMedAnt(): JSX.Element {
                   max="65535"
                   data-title="Cintura_×_Quadril_1_Consulta"
                   required
+                  onInput={ev => handleEventReq(ev.currentTarget)}
                 />
                 <p className="msrProgCons">cm</p>
               </label>
@@ -826,6 +835,7 @@ export default function TabMedAnt(): JSX.Element {
                   max="65535"
                   data-title="Antebraço_1_Consulta"
                   required
+                  onInput={ev => handleEventReq(ev.currentTarget)}
                 />
                 <p className="msrProgCons">cm</p>
               </label>
@@ -904,6 +914,7 @@ export default function TabMedAnt(): JSX.Element {
                   max="65535"
                   data-title="Braço_1_Consulta"
                   required
+                  onInput={ev => handleEventReq(ev.currentTarget)}
                 />
                 <p className="msrProgCons">cm</p>
               </label>
@@ -982,6 +993,7 @@ export default function TabMedAnt(): JSX.Element {
                   max="65535"
                   data-title="Coxa_1_Consulta"
                   required
+                  onInput={ev => handleEventReq(ev.currentTarget)}
                 />
                 <p className="msrProgCons">cm</p>
               </label>
@@ -1060,6 +1072,7 @@ export default function TabMedAnt(): JSX.Element {
                   max="65535"
                   data-title="Panturrilha_1_Consulta"
                   required
+                  onInput={ev => handleEventReq(ev.currentTarget)}
                 />
                 <p className="msrProgCons">cm</p>
               </label>

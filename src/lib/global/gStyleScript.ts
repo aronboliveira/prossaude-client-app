@@ -960,58 +960,6 @@ export function normalizeSizeSb(
     );
 }
 
-export function checkDarkMode(): boolean {
-  if (window.matchMedia) {
-    if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-      return true;
-    }
-  } else console.warn(`No matchMedia compatibility found.`);
-  return false;
-}
-
-export function setupDarkMode(
-  els: Array<Element>
-): [Array<[string, Map<string, string>]>, Element[], boolean[]] {
-  const arrColors: Array<[string, Map<string, string>]> = [];
-  for (let i = 0; i < els.length; i++) {
-    if (els[i] instanceof HTMLElement) {
-      arrColors.push([
-        `${els[i].id}` || `${i}`,
-        new Map([
-          ["backgroundColor", getComputedStyle(els[i]).backgroundColor],
-          ["color", getComputedStyle(els[i]).color],
-          ["borderColor", getComputedStyle(els[i]).borderColor],
-          [
-            "boxShadowColor",
-            getComputedStyle(els[i])
-              .boxShadow.slice(
-                getComputedStyle(els[i]).boxShadow.lastIndexOf(" ") + 1,
-                getComputedStyle(els[i]).boxShadow.length
-              )
-              .trim(),
-          ],
-          [
-            "textShadowColor",
-            getComputedStyle(els[i])
-              .textShadow.slice(
-                getComputedStyle(els[i]).textShadow.lastIndexOf(" ") + 1,
-                getComputedStyle(els[i]).textShadow.length
-              )
-              .trim(),
-          ],
-          ["opacity", getComputedStyle(els[i]).opacity],
-        ]),
-      ]);
-    }
-  }
-  const [wasConversionOk, hexArrColors] = convertToHex(arrColors);
-  if (wasConversionOk.some(conversion => conversion === false))
-    console.warn(
-      `Some conversions to hexcode failed. Dark mode might fail to render.`
-    );
-  return [hexArrColors, els, wasConversionOk];
-}
-
 export function convertToHex(
   arrColors: Array<[string, Map<string, string>]>
 ): [Array<boolean>, Array<[string, Map<string, string>]>] {
@@ -1131,7 +1079,7 @@ export function convertToHex(
   return [hexValidations, arrColors];
 }
 
-export function expandContent(el: HTMLElement, maxWidth: number) {
+export function expandContent(el: targEl) {
   if (el instanceof HTMLElement) {
     el.style.opacity = "0";
     el.parentElement!.style.opacity = "0";
@@ -1155,7 +1103,13 @@ export function expandContent(el: HTMLElement, maxWidth: number) {
         let opcAcc = 0,
           widthAcc = 0;
         const interval = setInterval(() => {
-          if (!maxWidth) return;
+          let maxWidth =
+            (document.getElementById("nameLogin")?.innerText.length || 12) *
+            10.6;
+          if (!maxWidth || maxWidth < 0 || !Number.isFinite(maxWidth)) return;
+          console.log("MAX");
+          console.log(maxWidth);
+          console.log(document.getElementById("nameLogin")?.innerText.length);
           if (
             parseInt(getComputedStyle(el).opacity) < 1 ||
             parseInt(getComputedStyle(el.parentElement!).opacity) < 1 ||
@@ -1166,50 +1120,62 @@ export function expandContent(el: HTMLElement, maxWidth: number) {
             ) < 1
           ) {
             opcAcc += 0.003;
-            if (parseInt(getComputedStyle(el).opacity) < 1) {
+            if (parseInt(getComputedStyle(el).opacity) < 1)
               el.style.opacity = opcAcc.toString();
-            }
-            if (parseInt(getComputedStyle(el.parentElement!).opacity) < 1) {
+            if (parseInt(getComputedStyle(el.parentElement!).opacity) < 1)
               el.parentElement!.style.opacity = opcAcc.toString();
-            }
             if (
               parseInt(
                 (el.parentElement!.querySelector(".profileIcon") as HTMLElement)
                   .style.opacity
               ) < 1
-            ) {
+            )
               (
                 el.parentElement!.querySelector(".profileIcon") as HTMLElement
               ).style.opacity = ((opcAcc * 2) / 3).toString();
-            }
             Array.from(el.children).forEach(child => {
               if (child instanceof HTMLElement)
                 child.style.opacity = opcAcc.toString();
             });
-            if (parseFloat(getComputedStyle(el).width) < maxWidth) {
-              widthAcc = widthAcc + 1.6;
+            if (
+              parseFloat(getComputedStyle(el).width.replace("px", "").trim()) <
+              maxWidth
+            ) {
+              widthAcc += 1;
               el.style.width = `${widthAcc}px`;
             }
-            if (parseFloat(getComputedStyle(el).width) >= maxWidth) {
-              el.style.transition = "width 2s ease-in-out";
+            if (
+              parseFloat(getComputedStyle(el).width.replace("px", "").trim()) >=
+              maxWidth
+            )
               el.style.width = `${maxWidth}px`;
-            }
             safeAcc++;
             for (const output of outputs) {
-              if (parseFloat(getComputedStyle(output).width) < 120) {
-                widthAcc = widthAcc + 1;
+              if (
+                parseFloat(
+                  getComputedStyle(output).width.replace("px", "").trim()
+                ) < 120
+              )
                 output.style.width = `${widthAcc}px`;
-              }
-              if (parseFloat(getComputedStyle(output).width) >= 120) {
-                el.style.transition = "width 2s ease-in-out";
+              if (
+                parseFloat(
+                  getComputedStyle(output).width.replace("px", "").trim()
+                ) >= 120
+              )
                 output.style.width = "100%";
-              }
             }
           }
         }, 5);
         setTimeout(() => {
+          let maxWidth =
+            (document.getElementById("nameLogin")?.innerText.length || 12) *
+            10.6;
+          if (!maxWidth || maxWidth < 0 || !Number.isFinite(maxWidth))
+            maxWidth = 120;
+          el.style.width = `${parseNotNaN(`${maxWidth}px`)}`;
+          el.style.maxWidth = `100%`;
           clearInterval(interval);
-        }, 4000);
+        }, 6000);
       }, 100);
     }, 100);
   } else

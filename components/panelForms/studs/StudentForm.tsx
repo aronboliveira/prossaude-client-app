@@ -23,6 +23,7 @@ import {
 import { clearPhDates, normalizeSizeSb } from "@/lib/global/gStyleScript";
 import {
   handleCondtReq,
+  handleEventReq,
   subForm,
   syncAriaStates,
 } from "@/lib/global/handlers/gHandlers";
@@ -326,6 +327,7 @@ export default function StudentForm({
                 minLength={3}
                 maxLength={99}
                 required
+                onInput={ev => handleEventReq(ev.currentTarget)}
               />
               <datalist id="listStudRegstName"></datalist>
             </label>
@@ -347,6 +349,7 @@ export default function StudentForm({
                 data-pattern="^(d{3}.){2}d{3}-d{2}$"
                 required
                 ref={CPFStudRef}
+                onInput={ev => handleEventReq(ev.currentTarget)}
               />
               <datalist id="listStudRegstCPF"></datalist>
             </label>
@@ -367,6 +370,7 @@ export default function StudentForm({
                 data-maxlength="12"
                 data-pattern="^\d{9,}$"
                 required
+                onInput={ev => handleEventReq(ev.currentTarget)}
               />
               <datalist id="listStudRegstDRE"></datalist>
             </label>
@@ -388,6 +392,7 @@ export default function StudentForm({
                 data-pattern="^(\+\d{2}\s?)?(\(\d{2}\)\s?)?\d{3,5}[-\s]?\d{4}$"
                 required
                 ref={telStudRef}
+                onInput={ev => handleEventReq(ev.currentTarget)}
               />
               <datalist id="listStudRegstTel"></datalist>
             </label>
@@ -428,6 +433,7 @@ export default function StudentForm({
                 data-maxlength="99"
                 data-pattern="educação\sfísica|medicina|nutrição|odontologia|psicologia"
                 required
+                onInput={ev => handleEventReq(ev.currentTarget)}
               />
               <datalist id="listCoursesStud">
                 <option value="Educação Física"></option>
@@ -472,6 +478,7 @@ export default function StudentForm({
                 data-maxnum="20"
                 data-pattern="^\d+$"
                 required
+                onInput={ev => handleEventReq(ev.currentTarget)}
               />
               <datalist id="listPeriodos">
                 <option value="1"></option>
@@ -517,7 +524,7 @@ export default function StudentForm({
               <input
                 type="date"
                 id="inpDayEntr"
-                className="form-control forceInvert ssPersist"
+                className="form-control forceInvert ssPersist maxCurrDate"
                 placeholder="Preencha com o Dia de Entrada do Aluno no projeto"
                 data-title="Dia de Entrada do aluno"
                 required

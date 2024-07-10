@@ -22,6 +22,7 @@ import {
 import {
   changeToAstDigit,
   handleCondtReq,
+  handleEventReq,
   subForm,
   syncAriaStates,
 } from "@/lib/global/handlers/gHandlers";
@@ -158,7 +159,7 @@ export default function OdPage(): JSX.Element {
             >
               <input
                 type="date"
-                className="form-control d-ibl"
+                className="form-control d-ibl minCurrDate"
                 id="dateHeader"
                 placeholder="Date"
                 data-title="Data no cabeçalho"
@@ -233,6 +234,7 @@ export default function OdPage(): JSX.Element {
                           minLength={3}
                           maxLength={99}
                           required
+                          onInput={ev => handleEventReq(ev.currentTarget)}
                         />
                       </label>
                       <br role="presentation" />
@@ -287,6 +289,7 @@ export default function OdPage(): JSX.Element {
                           data-flags="gi"
                           minLength={3}
                           maxLength={99}
+                          onInput={ev => handleEventReq(ev.currentTarget)}
                         />
                       </label>
                       <br role="presentation" />
@@ -1672,6 +1675,7 @@ export default function OdPage(): JSX.Element {
                         defaultValue="Hígido"
                         id="inpD18"
                         className="inpAvDent form-control noInvert minText patternText"
+                        onInput={ev => handleEventReq(ev.currentTarget)}
                         required
                         data-title="Estado do Dente 18"
                         data-reqlength="6"
@@ -1713,6 +1717,7 @@ export default function OdPage(): JSX.Element {
                         defaultValue="Hígido"
                         id="inpD17"
                         className="inpAvDent form-control noInvert minText patternText"
+                        onInput={ev => handleEventReq(ev.currentTarget)}
                         data-title="Estado do Dente 17"
                         required
                         data-reqlength="6"
@@ -1754,6 +1759,7 @@ export default function OdPage(): JSX.Element {
                         defaultValue="Hígido"
                         id="inpD16"
                         className="inpAvDent form-control noInvert minText patternText"
+                        onInput={ev => handleEventReq(ev.currentTarget)}
                         data-title="Estado do Dente 16"
                         required
                         data-reqlength="6"
@@ -1795,6 +1801,7 @@ export default function OdPage(): JSX.Element {
                         defaultValue="Hígido"
                         id="inpD15"
                         className="inpAvDent form-control noInvert minText patternText"
+                        onInput={ev => handleEventReq(ev.currentTarget)}
                         data-title="Estado do Dente 15"
                         required
                         data-reqlength="6"
@@ -1836,6 +1843,7 @@ export default function OdPage(): JSX.Element {
                         defaultValue="Hígido"
                         id="inpD14"
                         className="inpAvDent form-control noInvert minText patternText"
+                        onInput={ev => handleEventReq(ev.currentTarget)}
                         data-title="Estado do Dente 14"
                         required
                         data-reqlength="6"
@@ -1877,6 +1885,7 @@ export default function OdPage(): JSX.Element {
                         defaultValue="Hígido"
                         id="inpD13"
                         className="inpAvDent form-control noInvert minText patternText"
+                        onInput={ev => handleEventReq(ev.currentTarget)}
                         data-title="Estado do Dente 13"
                         required
                         data-reqlength="6"
@@ -1918,6 +1927,7 @@ export default function OdPage(): JSX.Element {
                         defaultValue="Hígido"
                         id="inpD12"
                         className="inpAvDent form-control noInvert minText patternText"
+                        onInput={ev => handleEventReq(ev.currentTarget)}
                         data-title="Estado do Dente 12"
                         required
                         data-reqlength="6"
@@ -1959,6 +1969,7 @@ export default function OdPage(): JSX.Element {
                         defaultValue="Hígido"
                         id="inpD11"
                         className="inpAvDent form-control noInvert minText patternText"
+                        onInput={ev => handleEventReq(ev.currentTarget)}
                         data-title="Estado do Dente 11"
                         required
                         data-reqlength="6"
@@ -2025,6 +2036,7 @@ export default function OdPage(): JSX.Element {
                         defaultValue="Hígido"
                         id="inpD31"
                         className="inpAvDent form-control noInvert minText patternText"
+                        onInput={ev => handleEventReq(ev.currentTarget)}
                         data-title="Estado do Dente 31"
                         required
                         data-reqlength="6"
@@ -2066,6 +2078,7 @@ export default function OdPage(): JSX.Element {
                         defaultValue="Hígido"
                         id="inpD32"
                         className="inpAvDent form-control noInvert minText patternText"
+                        onInput={ev => handleEventReq(ev.currentTarget)}
                         data-title="Estado do Dente 32"
                         required
                         data-reqlength="6"
@@ -2107,6 +2120,7 @@ export default function OdPage(): JSX.Element {
                         defaultValue="Hígido"
                         id="inpD33"
                         className="inpAvDent form-control noInvert minText patternText"
+                        onInput={ev => handleEventReq(ev.currentTarget)}
                         data-title="Estado do Dente 33"
                         required
                         data-reqlength="6"
@@ -2148,6 +2162,7 @@ export default function OdPage(): JSX.Element {
                         defaultValue="Hígido"
                         id="inpD34"
                         className="inpAvDent form-control noInvert minText patternText"
+                        onInput={ev => handleEventReq(ev.currentTarget)}
                         data-title="Estado do Dente 34"
                         required
                         data-reqlength="6"
@@ -2189,6 +2204,7 @@ export default function OdPage(): JSX.Element {
                         defaultValue="Hígido"
                         id="inpD35"
                         className="inpAvDent form-control noInvert minText patternText"
+                        onInput={ev => handleEventReq(ev.currentTarget)}
                         data-title="Estado do Dente 35"
                         required
                         data-reqlength="6"
@@ -2230,6 +2246,7 @@ export default function OdPage(): JSX.Element {
                         defaultValue="Hígido"
                         id="inpD36"
                         className="inpAvDent form-control noInvert minText patternText"
+                        onInput={ev => handleEventReq(ev.currentTarget)}
                         data-title="Estado do Dente 36"
                         required
                         data-reqlength="6"
@@ -2271,6 +2288,7 @@ export default function OdPage(): JSX.Element {
                         defaultValue="Hígido"
                         id="inpD37"
                         className="inpAvDent form-control noInvert minText patternText"
+                        onInput={ev => handleEventReq(ev.currentTarget)}
                         data-title="Estado do Dente 37"
                         required
                         data-reqlength="6"
@@ -2312,6 +2330,7 @@ export default function OdPage(): JSX.Element {
                         defaultValue="Hígido"
                         id="inpD38"
                         className="inpAvDent form-control noInvert minText patternText"
+                        onInput={ev => handleEventReq(ev.currentTarget)}
                         data-title="Estado do Dente 38"
                         required
                         data-reqlength="6"
@@ -2378,6 +2397,7 @@ export default function OdPage(): JSX.Element {
                         defaultValue="Hígido"
                         id="inpD21"
                         className="inpAvDent form-control noInvert minText patternText"
+                        onInput={ev => handleEventReq(ev.currentTarget)}
                         data-title="Estado do Dente 21"
                         required
                         data-reqlength="6"
@@ -2419,6 +2439,7 @@ export default function OdPage(): JSX.Element {
                         defaultValue="Hígido"
                         id="inpD22"
                         className="inpAvDent form-control noInvert minText patternText"
+                        onInput={ev => handleEventReq(ev.currentTarget)}
                         data-title="Estado do Dente 22"
                         required
                         data-reqlength="6"
@@ -2460,6 +2481,7 @@ export default function OdPage(): JSX.Element {
                         defaultValue="Hígido"
                         id="inpD23"
                         className="inpAvDent form-control noInvert minText patternText"
+                        onInput={ev => handleEventReq(ev.currentTarget)}
                         data-title="Estado do Dente 23"
                         required
                         data-reqlength="6"
@@ -2501,6 +2523,7 @@ export default function OdPage(): JSX.Element {
                         defaultValue="Hígido"
                         id="inpD24"
                         className="inpAvDent form-control noInvert minText patternText"
+                        onInput={ev => handleEventReq(ev.currentTarget)}
                         data-title="Estado do Dente 24"
                         required
                         data-reqlength="6"
@@ -2542,6 +2565,7 @@ export default function OdPage(): JSX.Element {
                         defaultValue="Hígido"
                         id="inpD25"
                         className="inpAvDent form-control noInvert minText patternText"
+                        onInput={ev => handleEventReq(ev.currentTarget)}
                         data-title="Estado do Dente 25"
                         required
                         data-reqlength="6"
@@ -2583,6 +2607,7 @@ export default function OdPage(): JSX.Element {
                         defaultValue="Hígido"
                         id="inpD26"
                         className="inpAvDent form-control noInvert minText patternText"
+                        onInput={ev => handleEventReq(ev.currentTarget)}
                         data-title="Estado do Dente 26"
                         required
                         data-reqlength="6"
@@ -2624,6 +2649,7 @@ export default function OdPage(): JSX.Element {
                         defaultValue="Hígido"
                         id="inpD27"
                         className="inpAvDent form-control noInvert minText patternText"
+                        onInput={ev => handleEventReq(ev.currentTarget)}
                         data-title="Estado do Dente 27"
                         required
                         data-reqlength="6"
@@ -2665,6 +2691,7 @@ export default function OdPage(): JSX.Element {
                         defaultValue="Hígido"
                         id="inpD28"
                         className="inpAvDent form-control noInvert minText patternText"
+                        onInput={ev => handleEventReq(ev.currentTarget)}
                         data-title="Estado do Dente 28"
                         required
                         data-reqlength="6"
@@ -2731,6 +2758,7 @@ export default function OdPage(): JSX.Element {
                         defaultValue="Hígido"
                         id="inpD41"
                         className="inpAvDent form-control noInvert minText patternText"
+                        onInput={ev => handleEventReq(ev.currentTarget)}
                         data-title="Estado do Dente 41"
                         required
                         data-reqlength="6"
@@ -2772,6 +2800,7 @@ export default function OdPage(): JSX.Element {
                         defaultValue="Hígido"
                         id="inpD42"
                         className="inpAvDent form-control noInvert minText patternText"
+                        onInput={ev => handleEventReq(ev.currentTarget)}
                         data-title="Estado do Dente 42"
                         required
                         data-reqlength="6"
@@ -2813,6 +2842,7 @@ export default function OdPage(): JSX.Element {
                         defaultValue="Hígido"
                         id="inpD43"
                         className="inpAvDent form-control noInvert minText patternText"
+                        onInput={ev => handleEventReq(ev.currentTarget)}
                         data-title="Estado do Dente 43"
                         required
                         data-reqlength="6"
@@ -2854,6 +2884,7 @@ export default function OdPage(): JSX.Element {
                         defaultValue="Hígido"
                         id="inpD44"
                         className="inpAvDent form-control noInvert minText patternText"
+                        onInput={ev => handleEventReq(ev.currentTarget)}
                         data-title="Estado do Dente 44"
                         required
                         data-reqlength="6"
@@ -2895,6 +2926,7 @@ export default function OdPage(): JSX.Element {
                         defaultValue="Hígido"
                         id="inpD45"
                         className="inpAvDent form-control noInvert minText patternText"
+                        onInput={ev => handleEventReq(ev.currentTarget)}
                         data-title="Estado do Dente 45"
                         required
                         data-reqlength="6"
@@ -2936,6 +2968,7 @@ export default function OdPage(): JSX.Element {
                         defaultValue="Hígido"
                         id="inpD46"
                         className="inpAvDent form-control noInvert minText patternText"
+                        onInput={ev => handleEventReq(ev.currentTarget)}
                         data-title="Estado do Dente 46"
                         required
                         data-reqlength="6"
@@ -2977,6 +3010,7 @@ export default function OdPage(): JSX.Element {
                         defaultValue="Hígido"
                         id="inpD47"
                         className="inpAvDent form-control noInvert minText patternText"
+                        onInput={ev => handleEventReq(ev.currentTarget)}
                         data-title="Estado do Dente 47"
                         required
                         data-reqlength="6"
@@ -3018,6 +3052,7 @@ export default function OdPage(): JSX.Element {
                         defaultValue="Hígido"
                         id="inpD48"
                         className="inpAvDent form-control noInvert minText patternText"
+                        onInput={ev => handleEventReq(ev.currentTarget)}
                         data-title="Estado do Dente 48"
                         required
                         data-reqlength="6"
@@ -3126,9 +3161,9 @@ export default function OdPage(): JSX.Element {
                         defaultValue="Rio de Janeiro, Rio de Janeiro"
                         data-title="assinatura_local"
                         required
+                        onInput={ev => handleEventReq(ev.currentTarget)}
                       />
                     </label>
-
                     <label
                       htmlFor="confirmDatId"
                       className="labConfirm labDivConfirm2 pdT2pc900Q htFull900Q flexNoWC htHalf900Q bolded"
@@ -3144,7 +3179,7 @@ export default function OdPage(): JSX.Element {
                           type="date"
                           name="confirmDatName"
                           id="confirmDatId"
-                          className="inpConfirm inpDate form-control noInvert"
+                          className="inpConfirm inpDate form-control noInvert minCurrDate"
                           data-title="assinatura_data"
                           required
                         />

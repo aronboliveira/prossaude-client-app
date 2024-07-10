@@ -36,6 +36,7 @@ import { Person } from "@/lib/global/declarations/classes";
 import {
   changeToAstDigit,
   handleCondtReq,
+  handleEventReq,
   subForm,
   syncAriaStates,
 } from "@/lib/global/handlers/gHandlers";
@@ -378,7 +379,7 @@ export default function EdFisNutPage(): JSX.Element {
               >
                 <input
                   type="date"
-                  className="form-control d-ibl"
+                  className="form-control d-ibl minCurrDate"
                   id="dateHeader"
                   placeholder="Date"
                   data-title="Data no cabeçalho"
@@ -473,6 +474,7 @@ export default function EdFisNutPage(): JSX.Element {
                         minLength={3}
                         maxLength={99}
                         required
+                        onInput={ev => handleEventReq(ev.currentTarget)}
                       />
                     </label>
                     <br role="presentation" />
@@ -523,6 +525,7 @@ export default function EdFisNutPage(): JSX.Element {
                         data-flags="gi"
                         minLength={3}
                         maxLength={99}
+                        onInput={ev => handleEventReq(ev.currentTarget)}
                       />
                     </label>
                     <br role="presentation" />
@@ -618,6 +621,7 @@ export default function EdFisNutPage(): JSX.Element {
                             ].toString()}`,
                             isAutoFillActive
                           );
+                        handleEventReq(ev.currentTarget);
                       }}
                     />
                   </label>
@@ -1128,6 +1132,7 @@ export default function EdFisNutPage(): JSX.Element {
                       data-minnum="0"
                       data-maxnum="99"
                       data-pattern="^[\d,.]+$"
+                      onInput={ev => handleEventReq(ev.currentTarget)}
                     />
                   </label>
 
@@ -1151,6 +1156,7 @@ export default function EdFisNutPage(): JSX.Element {
                       data-minnum="1"
                       data-maxnum="99"
                       data-pattern="^[\d,.]+$"
+                      onInput={ev => handleEventReq(ev.currentTarget)}
                     />
                   </label>
                 </div>
@@ -1176,6 +1182,7 @@ export default function EdFisNutPage(): JSX.Element {
                       data-minnum="0"
                       data-maxnum="99"
                       data-pattern="^[\d,.]+$"
+                      onInput={ev => handleEventReq(ev.currentTarget)}
                     />
                   </label>
 
@@ -1199,6 +1206,7 @@ export default function EdFisNutPage(): JSX.Element {
                       data-minnum="1"
                       data-maxnum="99"
                       data-pattern="^[\d,.]+$"
+                      onInput={ev => handleEventReq(ev.currentTarget)}
                     />
                   </label>
                   <br role="presentation" />
@@ -1228,6 +1236,7 @@ export default function EdFisNutPage(): JSX.Element {
                       data-minnum="0"
                       data-maxnum="99"
                       data-pattern="^[\d,.]+$"
+                      onInput={ev => handleEventReq(ev.currentTarget)}
                     />
                   </label>
 
@@ -1251,6 +1260,7 @@ export default function EdFisNutPage(): JSX.Element {
                       data-minnum="0"
                       data-maxnum="99"
                       data-pattern="^[\d,.]+$"
+                      onInput={ev => handleEventReq(ev.currentTarget)}
                     />
                   </label>
                 </div>
@@ -1279,6 +1289,7 @@ export default function EdFisNutPage(): JSX.Element {
                       data-minnum="0"
                       data-maxnum="99"
                       data-pattern="^[\d,.]+$"
+                      onInput={ev => handleEventReq(ev.currentTarget)}
                     />
                   </label>
 
@@ -1302,6 +1313,7 @@ export default function EdFisNutPage(): JSX.Element {
                       data-minnum="0"
                       data-maxnum="99"
                       data-pattern="^[\d,.]+$"
+                      onInput={ev => handleEventReq(ev.currentTarget)}
                     />
                   </label>
                 </div>
@@ -1329,6 +1341,7 @@ export default function EdFisNutPage(): JSX.Element {
                       data-minnum="1"
                       data-maxnum="96"
                       data-pattern="^[\d,.]+$"
+                      onInput={ev => handleEventReq(ev.currentTarget)}
                     />
                   </label>
 
@@ -1354,6 +1367,7 @@ export default function EdFisNutPage(): JSX.Element {
                       data-minnum="1"
                       data-maxnum="96"
                       data-pattern="^[\d,.]+$"
+                      onInput={ev => handleEventReq(ev.currentTarget)}
                     />
                   </label>
                 </div>
@@ -1377,6 +1391,7 @@ export default function EdFisNutPage(): JSX.Element {
                       data-flags="gi"
                       data-reqlength="4"
                       data-maxlength="15"
+                      onInput={ev => handleEventReq(ev.currentTarget)}
                     />
                     <datalist id="corUr">
                       <option className="opCorUr" value="Transparente"></option>
@@ -1554,6 +1569,7 @@ export default function EdFisNutPage(): JSX.Element {
                       data-minnum="0"
                       data-maxnum="99"
                       data-pattern="^[\d,.]+$"
+                      onInput={ev => handleEventReq(ev.currentTarget)}
                     />
                   </label>
                   <label
@@ -1576,6 +1592,7 @@ export default function EdFisNutPage(): JSX.Element {
                       data-minnum="1"
                       data-maxnum="99"
                       data-pattern="^[\d,.]+$"
+                      onInput={ev => handleEventReq(ev.currentTarget)}
                     />
                   </label>
                 </div>
@@ -1601,9 +1618,9 @@ export default function EdFisNutPage(): JSX.Element {
                       data-minnum="0"
                       data-maxnum="96"
                       data-pattern="^[\d,.]+$"
+                      onInput={ev => handleEventReq(ev.currentTarget)}
                     />
                   </label>
-
                   <label
                     htmlFor="inpElimEvDiaMax"
                     className="labAlimRot fitSpaced labEv labEvIntervalo"
@@ -1624,6 +1641,7 @@ export default function EdFisNutPage(): JSX.Element {
                       data-minnum="1"
                       data-maxnum="96"
                       data-pattern="^[\d,.]+$"
+                      onInput={ev => handleEventReq(ev.currentTarget)}
                     />
                   </label>
                 </div>
@@ -1709,7 +1727,7 @@ export default function EdFisNutPage(): JSX.Element {
                       id="selectNumCons"
                       className="form-select noInvert consInp"
                       data-title="Consulta_lida"
-                      defaultValue={"1"}
+                      defaultValue="1"
                       onChange={ev => {
                         const contextEls = [
                           document.getElementById("selectNumCons"),
@@ -1744,6 +1762,9 @@ export default function EdFisNutPage(): JSX.Element {
                                   inp.minLength = 1;
                                   inp.maxLength = 99;
                                   inp.pattern = "^[d,.]+$";
+                                  inp.dataset.reqlength = "1";
+                                  inp.dataset.maxlength = "99";
+                                  inp.dataset.pattern = "^[d,.]+$";
                                   !inp.classList.contains("minText") &&
                                     inp.classList.add("minText");
                                   !inp.classList.contains("maxText") &&
@@ -1758,6 +1779,32 @@ export default function EdFisNutPage(): JSX.Element {
                                     !inp.classList.contains("maxNum") &&
                                       inp.classList.add("maxNum");
                                   }
+                                  inp.addEventListener("input", handleEventReq);
+                                } else {
+                                  inp.minLength = 0;
+                                  inp.maxLength = 99;
+                                  inp.pattern = "";
+                                  inp.dataset.reqlength = "0";
+                                  inp.dataset.maxlength = "99";
+                                  inp.dataset.pattern = undefined;
+                                  inp.classList.contains("minText") &&
+                                  inp.classList.remove("minText");
+                                inp.classList.contains("maxText") &&
+                                  inp.classList.remove("maxText");
+                                inp.classList.contains("patternText") &&
+                                  inp.classList.remove("patternText");
+                                  if (inp.type === "number") {
+                                    inp.min = "";
+                                    inp.max = "999999";
+                                    inp.classList.contains("minNum") &&
+                                    inp.classList.remove("minNum");
+                                  inp.classList.contains("maxNum") &&
+                                    inp.classList.remove("maxNum");
+                                  }
+                                  inp.removeEventListener(
+                                    "input",
+                                    handleEventReq
+                                  );
                                 }
                               } catch (e) {
                                 console.error(
@@ -2218,9 +2265,9 @@ export default function EdFisNutPage(): JSX.Element {
                         defaultValue="Rio de Janeiro, Rio de Janeiro"
                         data-title="assinatura_local"
                         required
+                        onInput={ev => handleEventReq(ev.currentTarget)}
                       />
                     </label>
-
                     <label
                       htmlFor="confirmDatId"
                       className="labConfirm labDivConfirm2 pdT2pc900Q htFull900Q flexNoWC htHalf900Q bolded"
@@ -2237,7 +2284,7 @@ export default function EdFisNutPage(): JSX.Element {
                           type="date"
                           name="confirmDatName"
                           id="confirmDatId"
-                          className="inpConfirm inpDate form-control noInvert"
+                          className="inpConfirm inpDate form-control noInvert minCurrDate"
                           data-title="assinatura_data"
                           required
                         />

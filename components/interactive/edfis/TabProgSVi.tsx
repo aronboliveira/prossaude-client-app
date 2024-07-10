@@ -1,6 +1,9 @@
 import { nullishDiv } from "@/lib/global/declarations/types";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
-import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
+import {
+  handleEventReq,
+  syncAriaStates,
+} from "@/lib/global/handlers/gHandlers";
 import { useRef, useState, useEffect } from "react";
 
 export default function TabProgSVi(): JSX.Element {
@@ -135,6 +138,7 @@ export default function TabProgSVi(): JSX.Element {
                   itemProp="celValueSvi"
                   data-title="PA_1_Consulta"
                   required
+                  onInput={ev => handleEventReq(ev.currentTarget)}
                 />
                 <p className="msrProgCons">mmHg</p>
               </label>
@@ -218,6 +222,7 @@ export default function TabProgSVi(): JSX.Element {
                   itemProp="celValueSvi"
                   data-title="FC_1_Consulta"
                   required
+                  onInput={ev => handleEventReq(ev.currentTarget)}
                 />
                 <p className="msrProgCons">bpm</p>
               </label>

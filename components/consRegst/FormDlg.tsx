@@ -31,6 +31,7 @@ import { addListenerAvMembers } from "@/lib/locals/panelPage/handlers/consHandle
 import { isClickOutside } from "@/lib/global/gStyleScript";
 import {
   enableCPFBtn,
+  handleCondtReq,
   subForm,
   syncAriaStates,
 } from "@/lib/global/handlers/gHandlers";
@@ -555,15 +556,21 @@ export default function FormDlg({
                       id="inpCPFPac"
                       name="CPFPac-in"
                       list="listCPFPacCons"
-                      maxLength={15}
+                      maxLength={16}
                       pattern="^(\d{3}\.?\d{3}\.?\d{3}-?\d{2})$"
-                      className="form-control d-ibl noInvert minText ssPersist"
+                      className="form-control d-ibl noInvert ssPersist"
                       placeholder="Preencha com o CPF"
                       autoComplete="username"
                       data-title="CPF Paciente"
                       data-aloc="cpf-pac"
-                      data-reqlength="14"
                       ref={CPFPacInpRef}
+                      onInput={ev => {
+                        handleCondtReq(ev.currentTarget, {
+                          min: 14,
+                          max: 16,
+                          pattern: ["^(d{3}.){2}d{3}-d{2}$", ""],
+                        });
+                      }}
                     />
                     <datalist id="listCPFPacCons">
                       <option value="123.456.789-10">José</option>
@@ -609,14 +616,167 @@ export default function FormDlg({
                       list="listFirstNameCons"
                       maxLength={99}
                       placeholder="Preencha com o Primeiro Nome do Paciente"
-                      className="form-control minText ssPersist"
+                      className="form-control ssPersist"
                       id="firstNamePac"
                       name="NamePac-in"
                       autoComplete="given-name"
                       autoCapitalize="true"
                       data-title="Primeiro Nome Paciente"
-                      data-reqlength="3"
                       data-aloc="firstname-pac"
+                      onInput={ev => {
+                        handleCondtReq(ev.currentTarget, {
+                          min: 3,
+                          max: 99,
+                          pattern: ["[^0-9]", "gi"],
+                        });
+                        if (ev.currentTarget.value.length > 2) {
+                          try {
+                            const familyNamePac =
+                              document.getElementById("familyNamePac");
+                            if (!(familyNamePac instanceof HTMLInputElement))
+                              throw inputNotFound(
+                                familyNamePac,
+                                `Validation of familyNamePac`,
+                                extLine(new Error())
+                              );
+                            if (!familyNamePac.required) {
+                              familyNamePac.minLength = 3;
+                              familyNamePac.dataset.min = "3";
+                              familyNamePac.dataset.max = "99";
+                              familyNamePac.dataset.pattern = "[^0-9]";
+                              familyNamePac.dataset.flags = "gi";
+                              familyNamePac.required = true;
+                            }
+                          } catch (e) {
+                            console.error(
+                              `Error executing procedure for familyNamePac:\n${
+                                (e as Error).message
+                              }`
+                            );
+                          }
+                          try {
+                            const inpTelPac =
+                              document.getElementById("inpTelPac");
+                            if (!(inpTelPac instanceof HTMLInputElement))
+                              throw inputNotFound(
+                                inpTelPac,
+                                `Validation of inpTelPac`,
+                                extLine(new Error())
+                              );
+                            if (!inpTelPac.required) {
+                              inpTelPac.minLength = 8;
+                              inpTelPac.dataset.min = "8";
+                              inpTelPac.dataset.max = "10";
+                              inpTelPac.dataset.pattern = "9?d{4}-d{4}";
+                              inpTelPac.dataset.flags = "g";
+                              inpTelPac.required = true;
+                            }
+                          } catch (e) {
+                            console.error(
+                              `Error executing procedure for inpTelPac:\n${
+                                (e as Error).message
+                              }`
+                            );
+                          }
+                          try {
+                            const relProfName =
+                              document.getElementById("relProfName");
+                            if (!(relProfName instanceof HTMLInputElement))
+                              throw inputNotFound(
+                                relProfName,
+                                `Validation of relProfName`,
+                                extLine(new Error())
+                              );
+                            if (!relProfName.required) {
+                              relProfName.minLength = 3;
+                              relProfName.dataset.min = "3";
+                              relProfName.dataset.max = "99";
+                              relProfName.dataset.pattern = "[^0-9]";
+                              relProfName.dataset.flags = "gi";
+                              relProfName.required = true;
+                            }
+                          } catch (e) {
+                            console.error(
+                              `Error executing procedure for relProfName:\n${
+                                (e as Error).message
+                              }`
+                            );
+                          }
+                        } else {
+                          try {
+                            const familyNamePac =
+                              document.getElementById("familyNamePac");
+                            if (!(familyNamePac instanceof HTMLInputElement))
+                              throw inputNotFound(
+                                familyNamePac,
+                                `Validation of familyNamePac`,
+                                extLine(new Error())
+                              );
+                            if (familyNamePac.required) {
+                              familyNamePac.minLength = 0;
+                              familyNamePac.dataset.min = undefined;
+                              familyNamePac.dataset.max = undefined;
+                              familyNamePac.dataset.pattern = undefined;
+                              familyNamePac.dataset.flags = undefined;
+                              familyNamePac.required = false;
+                            }
+                          } catch (e) {
+                            console.error(
+                              `Error executing procedure for familyNamePac:\n${
+                                (e as Error).message
+                              }`
+                            );
+                          }
+                          try {
+                            const inpTelPac =
+                              document.getElementById("inpTelPac");
+                            if (!(inpTelPac instanceof HTMLInputElement))
+                              throw inputNotFound(
+                                inpTelPac,
+                                `Validation of inpTelPac`,
+                                extLine(new Error())
+                              );
+                            if (inpTelPac.required) {
+                              inpTelPac.minLength = 0;
+                              inpTelPac.dataset.min = undefined;
+                              inpTelPac.dataset.max = undefined;
+                              inpTelPac.dataset.pattern = undefined;
+                              inpTelPac.dataset.flags = undefined;
+                              inpTelPac.required = false;
+                            }
+                          } catch (e) {
+                            console.error(
+                              `Error executing procedure for inpTelPac:\n${
+                                (e as Error).message
+                              }`
+                            );
+                          }
+                          try {
+                            const relProfName =
+                              document.getElementById("relProfName");
+                            if (!(relProfName instanceof HTMLInputElement))
+                              throw inputNotFound(
+                                relProfName,
+                                `Validation of relProfName`,
+                                extLine(new Error())
+                              );
+                            if (relProfName.required) {
+                              relProfName.minLength = 0;
+                              relProfName.dataset.min = undefined;
+                              relProfName.dataset.max = undefined;
+                              relProfName.dataset.pattern = undefined;
+                              relProfName.dataset.flags = undefined;
+                              relProfName.required = false;
+                            }
+                          } catch (e) {
+                            console.error(
+                              `Error executing procedure for relProfName:\n${
+                                (e as Error).message
+                              }`
+                            );
+                          }
+                        }
+                      }}
                     />
                     <datalist id="listFirstNameCons">
                       <option value="José"></option>
@@ -666,6 +826,13 @@ export default function FormDlg({
                   autoCapitalize="true"
                   data-title="Sobrenome Paciente"
                   data-aloc="familyname-pac"
+                  onInput={ev => {
+                    handleCondtReq(ev.currentTarget, {
+                      min: 3,
+                      max: 99,
+                      pattern: ["[^0-9]", "gi"],
+                    });
+                  }}
                 />
               </div>
               <div role="group" className="flexWR cGap5" id="telPacDiv">
@@ -688,7 +855,14 @@ export default function FormDlg({
                       autoComplete="tel-national"
                       data-title="Código Nacional Paciente"
                       data-aloc="nac-pac"
-                    ></input>
+                      onInput={ev => {
+                        handleCondtReq(ev.currentTarget, {
+                          min: 2,
+                          max: 4,
+                          pattern: ["^+?d{2}$", ""],
+                        });
+                      }}
+                    />
                     <input
                       type="number"
                       id="DDDPac"
@@ -699,20 +873,33 @@ export default function FormDlg({
                       autoComplete="tel-area-code"
                       data-title="DDD Paciente"
                       data-aloc="ddd-pac"
-                    ></input>
+                      onInput={ev => {
+                        handleCondtReq(ev.currentTarget, {
+                          min: 2,
+                          max: 5,
+                          pattern: ["^(?d{2})?$", ""],
+                        });
+                      }}
+                    />
                     <input
                       type="tel"
                       id="inpTelPac"
                       list="listTelPacCons"
-                      maxLength={20}
+                      maxLength={10}
                       pattern="^\d{4,5}-?\d{4}$"
-                      className="form-control d-ibl noInvert minText ssPersist"
+                      className="form-control d-ibl noInvert ssPersist"
                       placeholder="Preencha com o Telefone (sem código nacional e DDD) de Contato"
                       autoComplete="tel-local"
                       data-title="Tel Paciente"
-                      ref={telPacInpRef}
-                      data-reqlength="8"
                       data-aloc="tel-pac"
+                      ref={telPacInpRef}
+                      onInput={ev => {
+                        handleCondtReq(ev.currentTarget, {
+                          min: 8,
+                          max: 10,
+                          pattern: ["9?d{4}-d{4}", "g"],
+                        });
+                      }}
                     />
                   </div>
                 </div>
@@ -731,6 +918,13 @@ export default function FormDlg({
                   autoComplete="email"
                   data-title="Email Paciente"
                   data-aloc="email-pac"
+                  onInput={ev => {
+                    handleCondtReq(ev.currentTarget, {
+                      min: 6,
+                      max: 99,
+                      pattern: ["@", "g"],
+                    });
+                  }}
                 />
               </div>
               <div role="group" className="flexWR" id="statusPacDiv">
@@ -776,7 +970,7 @@ export default function FormDlg({
                   name="typeCons-in"
                   className="form-select ssPersist"
                   data-title="Tipo da Consulta"
-                  // required
+                  required
                 >
                   <optgroup label="Geral">
                     <option value="anamnese">Anamnese e Exame Clínico</option>
@@ -827,6 +1021,13 @@ export default function FormDlg({
                       placeholder="Preencha com o Nome do Estudante alocado"
                       autoComplete="given-name"
                       data-title="Nome do Estudante Alocado"
+                      onInput={ev => {
+                        handleCondtReq(ev.currentTarget, {
+                          min: 3,
+                          max: 99,
+                          pattern: ["[^0-9]", "gi"],
+                        });
+                      }}
                     />
                     <datalist id="avStuds">
                       REGISTO DE ESTUDANTES
@@ -878,12 +1079,18 @@ export default function FormDlg({
                       id="relProfName"
                       name="relProf-in"
                       list="avProfsResps"
-                      className="form-control noInvert minText ssPersist"
+                      className="form-control noInvert ssPersist"
                       maxLength={99}
                       placeholder="Preencha com o Nome do Profissional Responsável alocado"
                       autoComplete="given-name"
                       data-title="Nome do Profissional Responsável Alocado"
-                      data-reqlength="3"
+                      onInput={ev => {
+                        handleCondtReq(ev.currentTarget, {
+                          min: 3,
+                          max: 99,
+                          pattern: ["[^0-9]", "gi"],
+                        });
+                      }}
                     />
                     <datalist id="avProfs">
                       REGISTO DE PROFISSIONAIS:
