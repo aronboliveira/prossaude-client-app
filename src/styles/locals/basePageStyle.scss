@@ -44,6 +44,7 @@
   }
 
   footer {
+    display: none;
     height: 1vh;
     width: 100vw;
     border-block: 6px ridge #87878773;
@@ -185,14 +186,13 @@
     margin: 0;
   }
 
-  #cardSect {
+  #cardsSect {
     max-width: 98vw;
   }
 
   #panelBtn {
     box-shadow: 0.2vh 0.2vh 0.2vh rgba(133, 128, 128, 0.671);
     transform: scale(1.2);
-    padding-bottom: 2.1rem;
   }
 }
 
@@ -210,7 +210,7 @@
     #cardsSect {
       grid-template-columns: repeat(4, 24.4%);
       gap: 0.5rem;
-      max-width: 99%;
+      max-width: 98%;
       padding-inline: 1.3vw 0.5vw;
     }
     .header-main-container {
@@ -293,6 +293,23 @@
   }
 }
 
+@media screen and (min-width: 851px) and (max-width: 1024px) {
+  .baseBody {
+    .main-container {
+      min-height: 150vh;
+      height: 150vh;
+    }
+    .main-article {
+      min-height: 161.5vh;
+      height: 161.5vh;
+    }
+    #bgDiv {
+      min-height: 161.5vh;
+      height: 161.5vh;
+    }
+  }
+}
+
 @media only screen and (min-width: 721px) and (max-width: 1024px) and (orientation: portrait) {
   $ht721: 100vh;
   .baseBody {
@@ -344,12 +361,12 @@
 @media screen and (max-width: 850px) {
   .baseBody {
     .main-container {
-      min-height: 130vh;
-      height: 130vh;
+      min-height: 153vh;
+      height: 153vh;
     }
     #bgDiv {
-      min-height: 141vh;
-      height: 141vh;
+      min-height: 165vh;
+      height: 165vh;
     }
   }
 }
@@ -359,20 +376,24 @@
     .main-article {
       height: 100vh;
     }
+    .main-container {
+      min-height: 157vh;
+      height: 157vh;
+    }
+    #bgDiv {
+      min-height: 170vh;
+      height: 170vh;
+    }
     #cardsSect {
       height: 100vh;
     }
     #panelBtn {
       transform: scale(1.1) translate(-1vw, 0);
     }
-    #panelSect {
-      padding-top: 8vh;
-      padding-bottom: 4vh;
-    }
   }
 }
 
-@media (max-width: 720px) {
+@media (max-width: 721px) {
   .baseBody {
     div {
       &:has(#agAnchoredBtn):not(#bgDiv) {
@@ -408,18 +429,33 @@
       height: 20%;
     }
 
+    .main-article {
+      min-height: 71.5rem;
+      height: 71.5rem;
+    }
+
     .main-container {
       &.gridAuto750Q {
         grid-template-rows: auto;
       }
     }
+
+    #cardsSect {
+      min-height: 132vh;
+      height: 132vh;
+    }
   }
 }
 
-@media screen and (max-width: 590px) {
+@media screen and (max-width: 591px) {
   .baseBody {
     #bgDiv {
-      height: 130rem;
+      min-height: 177vh;
+      height: 177vh;
+    }
+    #cardsSect {
+      min-height: 143vh;
+      height: 143vh;
     }
   }
 }
@@ -442,15 +478,21 @@
       height: 130rem;
     }
     .main-container {
-      height: 230vh;
+      min-height: 273vh;
+      height: 273vh;
+    }
+    #bgDiv {
+      min-height: 124rem;
+      height: 124rem;
     }
     #cardsSect {
-      height: 210vh;
+      min-height: 252vh;
+      height: 252vh;
       display: flex;
       flex-flow: column nowrap;
       align-items: center;
       justify-content: center;
-      margin-left: 0.75rem;
+      margin-left: 0.25rem;
     }
     #panelBtn {
       transform: scale(1.1) translate(-2.15vw, 0);
@@ -458,6 +500,7 @@
     #panelSect {
       padding-top: 0;
       padding-bottom: 6vh;
+      margin-left: 0.45rem;
     }
   }
 }
