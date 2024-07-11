@@ -43,6 +43,17 @@
     }
   }
 
+  footer {
+    height: 1vh;
+    width: 100vw;
+    border-block: 6px ridge #87878773;
+    background: linear-gradient(
+      to right,
+      rgba(104, 146, 131, 0.446),
+      rgba(61, 134, 104, 0.429)
+    );
+  }
+
   .anchoredBtn {
     background-repeat: no-repeat;
     background-position: center center;
@@ -55,6 +66,7 @@
 
   .card-body {
     min-width: 14.3rem;
+    border: 0.1rem ridge #6a7f7a73;
   }
 
   .card-hborder {
@@ -62,6 +74,7 @@
     min-width: 0;
     border-top-left-radius: 2rem;
     border-top-right-radius: 2rem;
+    border: 0.1rem ridge #6a7f7a73;
     img {
       min-width: 13rem;
       min-height: 13rem;
@@ -98,12 +111,19 @@
   }
 
   .header-main-container {
-    background-color: #ffff;
-    border-bottom: none;
+    background: linear-gradient(
+      to right,
+      rgba(104, 146, 131, 0.446),
+      rgba(65, 185, 135, 0.429)
+    );
+    border-block: 0.1rem ridge #87878773;
+    border-bottom: 0.2rem ridge #87878754;
   }
 
   .header-main-text {
     font-size: 1.5rem;
+    font-weight: bolder;
+    margin-left: 1rem;
     + * {
       max-width: 12rem;
     }
@@ -111,19 +131,28 @@
 
   .main-article {
     margin: auto;
+    height: 100vh;
   }
 
   .main-container {
     grid-template-rows: 88% 5%;
     height: 100%;
-    background-color: #ffffff4d;
+    background: linear-gradient(
+      to right,
+      rgba(132, 150, 144, 0.446),
+      rgba(68, 167, 125, 0.429)
+    );
   }
 
   #bgDiv {
-    background-color: #98c3a7e7;
-    border: none;
+    background: linear-gradient(
+      to right,
+      rgb(78 95 84 / 64%),
+      rgb(78 99 86 / 100%)
+    );
+    border-block: 1px ridge #87878773;
     min-width: 100vw;
-    min-height: 98vh;
+    min-height: 100vh;
     margin: 0;
   }
 
@@ -135,7 +164,7 @@
 @media screen and (min-width: 1025px) {
   .baseBody {
     #cardsSect {
-      padding-right: 0.5vw;
+      padding-inline: 0.5vw;
     }
     .header-main-container {
       padding-left: 0.75rem;
@@ -185,6 +214,9 @@
           flex-flow: row wrap;
         }
       }
+    }
+    footer {
+      display: none;
     }
     #bgDiv {
       height: 85.5rem;
@@ -246,22 +278,35 @@
   $ht721: 100vh;
   .baseBody {
     .main-article {
-      min-height: calc($ht721 + 31vh);
-      height: calc($ht721 + 60vh);
+      min-height: calc($ht721 + 32vh);
+      height: calc($ht721 + 32vh);
     }
     .main-container {
-      min-height: calc($ht721 + 31vh);
-      height: calc($ht721 + 60vh);
+      min-height: calc($ht721 + 20vh);
+      height: calc($ht721 + 24vh);
     }
     #bgDiv {
-      min-height: calc($ht721 + 31vh);
-      height: calc($ht721 + 60vh);
+      min-height: calc($ht721 + 32vh);
+      height: calc($ht721 + 32vh);
     }
     #panelSect {
       padding-bottom: 1rem;
     }
     #profileIconImg {
       margin-left: 0.1rem;
+    }
+  }
+}
+
+@media screen and (max-width: 850px) {
+  .baseBody {
+    .main-container {
+      min-height: 130vh;
+      height: 130vh;
+    }
+    #bgDiv {
+      min-height: 141vh;
+      height: 141vh;
     }
   }
 }

@@ -143,7 +143,6 @@ export default function TabMedAnt(): JSX.Element {
                   id="tabInpRowMedAnt2_2"
                   min="0"
                   max="65535"
-                  defaultValue="70"
                   data-title="Peso_1_Consulta"
                   required
                   onInput={ev => {
@@ -202,7 +201,6 @@ export default function TabMedAnt(): JSX.Element {
                   id="tabInpRowMedAnt2_3"
                   min="0"
                   max="65535"
-                  defaultValue="30"
                   data-title="Peso_2_Consulta"
                   onInput={ev =>
                     handleCallbackWHS(
@@ -259,7 +257,6 @@ export default function TabMedAnt(): JSX.Element {
                   id="tabInpRowMedAnt2_4"
                   min="0"
                   max="65535"
-                  defaultValue="200"
                   data-title="Peso_3_Consulta"
                   onInput={ev =>
                     handleCallbackWHS(
@@ -330,7 +327,6 @@ export default function TabMedAnt(): JSX.Element {
                   id="tabInpRowMedAnt3_2"
                   min="0"
                   max="65535"
-                  defaultValue="2"
                   data-title="Altura_1_Consulta"
                   required
                   onInput={ev => {
@@ -389,7 +385,6 @@ export default function TabMedAnt(): JSX.Element {
                   id="tabInpRowMedAnt3_3"
                   min="0"
                   max="65535"
-                  defaultValue="1"
                   data-title="Altura_2_Consulta"
                   onInput={ev =>
                     handleCallbackWHS(
@@ -446,7 +441,6 @@ export default function TabMedAnt(): JSX.Element {
                   id="tabInpRowMedAnt3_4"
                   min="0"
                   max="65535"
-                  defaultValue="1.8"
                   data-title="Altura_3_Consulta"
                   onInput={ev =>
                     handleCallbackWHS(

@@ -372,7 +372,6 @@ export default function TabDCut(): JSX.Element {
                   id="tabInpRowDCut4_2"
                   min="0"
                   max="65535"
-                  defaultValue="18"
                   data-title="Dobras Cutâneas_Coxa_1_Consulta"
                   required
                   onInput={ev => handleEventReq(ev.currentTarget)}
@@ -396,7 +395,6 @@ export default function TabDCut(): JSX.Element {
                   id="tabInpRowDCut4_3"
                   min="0"
                   max="65535"
-                  defaultValue="10"
                   data-title="Dobras Cutâneas_Coxa_2_Consulta"
                 />
                 <p className="msrProgCons">mm</p>
@@ -418,7 +416,6 @@ export default function TabDCut(): JSX.Element {
                   id="tabInpRowDCut4_4"
                   min="0"
                   max="65535"
-                  defaultValue="40"
                   data-title="Dobras Cutâneas_Coxa_3_Consulta"
                 />
                 <p className="msrProgCons">mm</p>
@@ -596,7 +593,6 @@ export default function TabDCut(): JSX.Element {
                   id="tabInpRowDCut7_2"
                   min="0"
                   max="65535"
-                  defaultValue="18"
                   data-title="Dobras Cutâneas_Peitoral_1_Consulta"
                   required
                   onInput={ev => handleEventReq(ev.currentTarget)}
@@ -620,7 +616,6 @@ export default function TabDCut(): JSX.Element {
                   id="tabInpRowDCut7_3"
                   min="0"
                   max="65535"
-                  defaultValue="10"
                   data-title="Dobras Cutâneas_Peitoral_2_Consulta"
                 />
                 <p className="msrProgCons">mm</p>
@@ -642,7 +637,6 @@ export default function TabDCut(): JSX.Element {
                   id="tabInpRowDCut7_4"
                   min="0"
                   max="65535"
-                  defaultValue="40"
                   data-title="Dobras Cutâneas_Peitoral_3_Consulta"
                 />
                 <p className="msrProgCons">mm</p>
@@ -674,7 +668,6 @@ export default function TabDCut(): JSX.Element {
                   id="tabInpRowDCut8_2"
                   min="0"
                   max="65535"
-                  defaultValue="18"
                   data-title="Dobras Cutâneas_Abdominal_1_Consulta"
                   required
                   onInput={ev => handleEventReq(ev.currentTarget)}
@@ -698,7 +691,6 @@ export default function TabDCut(): JSX.Element {
                   id="tabInpRowDCut8_3"
                   min="0"
                   max="65535"
-                  defaultValue="10"
                   data-title="Dobras Cutâneas_Abdominal_2_Consulta"
                 />
                 <p className="msrProgCons">mm</p>
@@ -720,7 +712,6 @@ export default function TabDCut(): JSX.Element {
                   id="tabInpRowDCut8_4"
                   min="0"
                   max="65535"
-                  defaultValue="40"
                   data-title="Dobras Cutâneas_Abdominal_3_Consulta"
                 />
                 <p className="msrProgCons">mm</p>
@@ -753,7 +744,6 @@ export default function TabDCut(): JSX.Element {
                   id="tabInpRowDCut9_2"
                   min="0"
                   max="65535"
-                  defaultValue="60"
                   data-title="Dobras Cutâneas_Soma_1_Consulta"
                   required
                   onInput={ev => {
@@ -821,7 +811,6 @@ export default function TabDCut(): JSX.Element {
                   id="tabInpRowDCut9_3"
                   min="0"
                   max="65535"
-                  defaultValue="40"
                   data-title="Dobras Cutâneas_Soma_2_Consulta"
                   onInput={ev =>
                     handleCallbackWHS(
@@ -887,7 +876,6 @@ export default function TabDCut(): JSX.Element {
                   id="tabInpRowDCut9_4"
                   min="0"
                   max="65535"
-                  defaultValue="150"
                   data-title="Dobras Cutâneas_Soma_3_Consulta"
                   onInput={ev =>
                     handleCallbackWHS(

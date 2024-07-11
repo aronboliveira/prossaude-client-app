@@ -1,5 +1,5 @@
 import { ErrorBoundary } from "react-error-boundary";
-import { useEffect, useCallback, useState } from "react";
+import { useEffect, useCallback, useState, memo } from "react";
 import { handleLinkChanges } from "@/lib/global/handlers/gRoutingHandlers";
 import { entryEl } from "@/lib/global/declarations/types";
 import {
@@ -32,10 +32,14 @@ import AntMedFs from "../../components/interactive/ag/AntMedFs";
 import AGTips from "../../components/interactive/ag/AGTips";
 import { formatTel } from "@/lib/global/gModel";
 import AGDeclaration from "../../components/interactive/ag/AGDeclaration";
+import ConfirmLocId from "../../components/interactive/def/ConfirmLocId";
+import AgeElement from "../../components/interactive/edfis/defaulted/AgeElement";
 
 let agGenElement = undefined,
   agGenValue = "masculino",
   agIsAutoCorrectOn = true;
+const MemoAge = memo(AgeElement);
+const MemoLoc = memo(ConfirmLocId);
 
 export default function AGPage(): JSX.Element {
   const [shouldShowTips, setTips] = useState<boolean>(false);
@@ -81,6 +85,8 @@ export default function AGPage(): JSX.Element {
     addEventListener("resize", handleResize);
     syncAriaStates(document.querySelectorAll("*"));
     watchLabels();
+    const UFid = document.getElementById("UFid");
+    if (UFid instanceof HTMLInputElement) UFid.value = "RJ";
     return () => {
       removeEventListener("resize", handleResize);
     };
@@ -745,7 +751,6 @@ export default function AGPage(): JSX.Element {
                         autoComplete="address-level1"
                         className="form-select"
                         data-title="uf"
-                        defaultValue="RJ"
                         required
                       >
                         <optgroup label="Centro-Oeste">
@@ -950,25 +955,7 @@ export default function AGPage(): JSX.Element {
                   <span role="group" className="fsAnamGSpan" id="fsAnamGSpan12">
                     <label htmlFor="dateAgeId" className="labelIdentif">
                       Idade:
-                      <input
-                        type="number"
-                        name="dateAgeName"
-                        id="dateAgeId"
-                        className="form-control inpIdentif noInvert minText maxText minNum maxNum patternText"
-                        min="0"
-                        max="255"
-                        minLength={1}
-                        maxLength={4}
-                        defaultValue="30"
-                        required
-                        data-title="Idade"
-                        data-reqlength="1"
-                        data-maxlength="4"
-                        data-minnum="0"
-                        data-maxnum="255"
-                        data-pattern="^[\d,.]+$"
-                        onInput={ev => handleEventReq(ev.currentTarget)}
-                      />
+                      <MemoAge />
                     </label>
                   </span>
                 </div>
@@ -985,7 +972,6 @@ export default function AGPage(): JSX.Element {
                         id="genId"
                         className="form-select inpIdentif noInvert"
                         data-title="genero"
-                        defaultValue="masculino"
                         required
                       >
                         <option className="optIdentif optGen" value="masculino">
@@ -1023,7 +1009,6 @@ export default function AGPage(): JSX.Element {
                         id="genBirthRelId"
                         className="form-select inpIdentif noInvert"
                         data-title="identidade_genero_nascenca"
-                        defaultValue="cis"
                         required
                       >
                         <option
@@ -1054,13 +1039,11 @@ export default function AGPage(): JSX.Element {
                     </label>
                     <br role="presentation" />
                   </span>
-
                   <span
                     role="group"
                     className="fsAnamGSpan flexAlItCt genSpan"
                     id="spanFsAnamG15"
                     hidden
-                    defaultValue="avancado"
                   >
                     <label htmlFor="genTransId" className="labelIdentif">
                       Estágio da Transição Hormonal:
@@ -1069,8 +1052,13 @@ export default function AGPage(): JSX.Element {
                         id="genTransId"
                         className="form-select inpIdentif noInvert"
                         data-title="stg_transicao_hormonal"
-                        defaultValue={`avancado`}
                       >
+                        <option
+                          className="optIdentif optgenTrans"
+                          value="avancado"
+                        >
+                          Avançado
+                        </option>
                         <option
                           className="optIdentif optgenTrans"
                           value="undefined"
@@ -1091,12 +1079,6 @@ export default function AGPage(): JSX.Element {
                           value="intermediario"
                         >
                           Intermediário
-                        </option>
-                        <option
-                          className="optIdentif optgenTrans"
-                          value="avancado"
-                        >
-                          Avançado
                         </option>
                       </select>
                     </label>
@@ -4935,18 +4917,8 @@ export default function AGPage(): JSX.Element {
                       id="labConfirmLoc"
                     >
                       Local:
-                      <input
-                        type="text"
-                        name="confirmLocName"
-                        id="confirmLocId"
-                        className="inpConfirm form-control noInvert"
-                        defaultValue="Rio de Janeiro, Rio de Janeiro"
-                        data-title="assinatura_local"
-                        required
-                        onInput={ev => handleEventReq(ev.currentTarget)}
-                      />
+                      <MemoLoc />
                     </label>
-
                     <label
                       htmlFor="confirmDatId"
                       className="labConfirm labDivConfirm2 pdT2pc900Q htFull900Q flexNoWC htHalf900Q bolded"

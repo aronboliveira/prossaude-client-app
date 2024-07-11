@@ -512,7 +512,7 @@ export default function StudentForm({
                     max: 2,
                     minNum: 1,
                     maxNum: 20,
-                    pattern: ["^d+$", ""],
+                    pattern: ["^\\d+$", ""],
                   })
                 }
               />

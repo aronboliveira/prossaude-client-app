@@ -1038,15 +1038,23 @@ export function handleCondtReq(
         `${el?.id || el?.className || el?.tagName}`,
         extLine(new Error())
       );
-    if (options.pattern || options.min || options.max)
+    if (
+      !(
+        options.pattern &&
+        options.min &&
+        options.max &&
+        options.maxNum &&
+        options.minNum
+      )
+    )
       throw new Error(`No pattern was given to handleCondtReq`);
     if (
       options.pattern &&
-      ((options.pattern as any) instanceof RegExp ||
+      !(
+        (options.pattern as any) instanceof RegExp ||
         ((options.pattern as any) instanceof Array &&
-          (options.pattern as Array<any>).every(
-            idx => typeof idx === "string"
-          )))
+          (options.pattern as Array<any>).every(idx => typeof idx === "string"))
+      )
     )
       throw new Error(`Invalid instance given to options.pattern`);
     if (options.min && typeof options.min !== "number")
@@ -1087,12 +1095,12 @@ export function handleCondtReq(
       }
       handleEventReq(el);
     } else {
-      el.dataset["reqlength"] = undefined;
-      el.dataset["maxlength"] = undefined;
-      el.dataset["pattern"] = undefined;
-      el.dataset["flags"] = undefined;
-      el.dataset["minnum"] = undefined;
-      el.dataset["maxnum"] = undefined;
+      delete el.dataset["reqlength"];
+      delete el.dataset["maxlength"];
+      delete el.dataset["pattern"];
+      delete el.dataset["flags"];
+      delete el.dataset["minnum"];
+      delete el.dataset["maxnum"];
       el.min = "";
       el.max = "";
       el.maxLength = 9999;
@@ -1144,7 +1152,47 @@ export function handleEventReq(
     iniFontColors[entry.id || entry.name] = getComputedStyle(entry).color;
   if ((iniFontColors[entry.id || entry.name] = alertColor))
     iniFontColors[entry.id || entry.name] = "rgb(33, 37, 41)";
-  if (!entry.checkValidity()) isValid = false;
+  [
+    ...document.querySelectorAll('input[type="number"]'),
+    ...document.querySelectorAll('input[type="date"]'),
+    ...document.querySelectorAll('input[type="time"]'),
+  ].forEach(numInp => {
+    if (
+      numInp instanceof HTMLInputElement &&
+      (numInp.type === "number" ||
+        numInp.type === "date" ||
+        numInp.type === "time")
+    ) {
+      if (numInp.step === "") numInp.step = "any";
+      numInp.step !== "any" &&
+        !/[^0-9]/g.test(numInp.step) &&
+        numInp.step.replaceAll(/[^0-9]/g, "");
+    }
+  });
+  if (!entry.checkValidity()) {
+    console.log("Failed check validity");
+    isValid = false;
+    console.log(`
+    -- List for failure causes:
+    Bad Input: ${entry.validity.badInput}
+    Custom Error: ${entry.validity.customError}
+    Pattern Mismatch: ${entry.validity.patternMismatch}
+    Range Overflow: ${entry.validity.rangeOverflow}
+    Range Underflow: ${entry.validity.rangeUnderflow}
+    Step Mismatch: ${entry.validity.stepMismatch}
+    Too Long: ${entry.validity.tooLong}
+    Too Short: ${entry.validity.tooShort}
+    Type Mismatch: ${entry.validity.typeMismatch}
+    Value Missing: ${entry.validity.valueMissing}
+    `);
+    entry.validity.stepMismatch &&
+      entry instanceof HTMLInputElement &&
+      console.log(`Step is: ${entry.step || "step not defined"}`);
+    entry.validity.rangeOverflow &&
+      entry instanceof HTMLInputElement &&
+      console.log(`Max should be: ${entry.max || "max not defined"}`);
+    console.log("Obtained value: " + entry.value);
+  }
   if (entry.type === "date") {
     if (entry.classList.contains("minCurrDate")) {
       const currDate = new Date()
@@ -1212,46 +1260,54 @@ export function handleEventReq(
     if (
       entry.classList.contains("minText") &&
       entry.value.length < parseNotNaN(entry.dataset.reqlength || "3")
-    )
+    ) {
+      console.log("Failed minText");
       isValid = false;
+    }
     if (
       entry.classList.contains("maxText") &&
       entry.value.length > parseNotNaN(entry.dataset.maxlength || "3")
-    )
+    ) {
+      console.log("Failed maxText");
       isValid = false;
+    }
     if (
       entry.classList.contains("minNum") &&
       parseNotNaN(entry.value) < parseNotNaN(entry.dataset.minnum || "3")
-    )
+    ) {
+      console.log("Failed minNum");
       isValid = false;
+    }
     if (
       entry.classList.contains("maxNum") &&
       parseNotNaN(entry.value) > parseNotNaN(entry.dataset.maxnum || "3")
-    )
+    ) {
+      console.log("Failed maxNum");
       isValid = false;
+    }
     if (
       entry.classList.contains("patternText") &&
       entry.dataset.pattern &&
       !new RegExp(entry.dataset.pattern, entry.dataset.flags || "").test(
         entry.value
       )
-    )
+    ) {
+      console.log("Failed patternText");
       isValid = false;
+    }
   }
   if (!isValid) entry.style.color = alertColor;
-  if (getComputedStyle(entry).color === alertColor)
-    setTimeout(() => {
-      if (entry instanceof Event) {
-        if (
-          !(
-            entry.currentTarget instanceof HTMLInputElement ||
-            entry.currentTarget instanceof HTMLTextAreaElement
-          )
+  setTimeout(() => {
+    if (entry instanceof Event) {
+      if (
+        !(
+          entry.currentTarget instanceof HTMLInputElement ||
+          entry.currentTarget instanceof HTMLTextAreaElement
         )
-          return;
-        entry = entry.currentTarget;
-      }
-      entry.style.color =
-        iniFontColors[entry.id || entry.name] || "rgb(33, 37, 41)";
-    }, 2000);
+      )
+        return;
+      entry = entry.currentTarget;
+    }
+    entry.style.color = "rgb(33, 37, 41)";
+  }, 2000);
 }

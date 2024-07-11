@@ -234,6 +234,7 @@ export default function BasePage(): JSX.Element {
             </section>
           </main>
         </nav>
+        <footer></footer>
       </div>
     </ErrorBoundary>
   );

@@ -1,5 +1,5 @@
 import { ErrorBoundary } from "react-error-boundary";
-import { useEffect, useState } from "react";
+import { useEffect, useState, memo } from "react";
 import { handleLinkChanges } from "@/lib/global/handlers/gRoutingHandlers";
 import {
   elementNotFound,
@@ -66,6 +66,8 @@ import TabMedAnt from "../../components/interactive/edfis/TabMedAnt";
 import ENTips from "../../components/interactive/edfis/ENTips";
 import ENDeclaration from "../../components/interactive/edfis/ENDeclaration";
 import { changeTabDCutLayout } from "@/lib/locals/edFisNutPage/edFisNutModel";
+import AgeElement from "../../components/interactive/edfis/defaulted/AgeElement";
+import ConfirmLocId from "../../components/interactive/def/ConfirmLocId";
 
 export const tabProps: ENTabsProps = {
   numCol: 1,
@@ -87,6 +89,10 @@ export const tabProps: ENTabsProps = {
   targInpSumDCut: undefined,
 };
 export const person = new Person("masculino", 0, 0, 0, 0, "leve");
+// setInterval(() => {
+//   console.log(person);
+//   console.log(tabProps);
+// }, 2000);
 export let edIsAutoCorrectOn = true,
   isAutoFillActive = true,
   areColGroupsSimilar = false,
@@ -94,6 +100,8 @@ export let edIsAutoCorrectOn = true,
   numColsCons = 1,
   numCons = 1,
   numConsLastOp = 1;
+const MemoAge = memo(AgeElement);
+const MemoLoc = memo(ConfirmLocId);
 
 export default function EdFisNutPage(): JSX.Element {
   const [shouldShowTips, setTips] = useState<boolean>(false);
@@ -151,7 +159,7 @@ export default function EdFisNutPage(): JSX.Element {
           if (inp.required) {
             inp.minLength = 1;
             inp.maxLength = 99;
-            inp.pattern = "^[d,.]+$";
+            inp.pattern = "^[\\d,.]+$";
             inp.classList.add("minText", "maxText", "pattern");
             if (inp.type === "number") {
               inp.min = "0.05";
@@ -166,14 +174,14 @@ export default function EdFisNutPage(): JSX.Element {
                   maxNum: 999999,
                   min: 1,
                   max: 99,
-                  pattern: ["^[d,.]+$", ""],
+                  pattern: ["^[\\d,.]+$", ""],
                 })
               )
             : inp.addEventListener("input", ev =>
                 handleCondtReq(ev.currentTarget as HTMLInputElement, {
                   min: 1,
                   max: 99,
-                  pattern: ["^[d,.]+$", ""],
+                  pattern: ["^[\\d,.]+$", ""],
                 })
               );
         } catch (e) {
@@ -330,6 +338,36 @@ export default function EdFisNutPage(): JSX.Element {
       addResetAstListener();
       syncAriaStates(document.querySelectorAll("*"));
       watchLabels();
+      const inp2_2 = document.getElementById("tabInpRowMedAnt2_2");
+      if (inp2_2 instanceof HTMLInputElement) inp2_2.value = "70";
+      const inp2_3 = document.getElementById("tabInpRowMedAnt2_3");
+      if (inp2_3 instanceof HTMLInputElement) inp2_3.value = "30";
+      const inp2_4 = document.getElementById("tabInpRowMedAnt2_4");
+      if (inp2_4 instanceof HTMLInputElement) inp2_4.value = "200";
+      const inp3_2 = document.getElementById("tabInpRowMedAnt3_2");
+      if (inp3_2 instanceof HTMLInputElement) inp3_2.value = "2";
+      const inp3_3 = document.getElementById("tabInpRowMedAnt3_3");
+      if (inp3_3 instanceof HTMLInputElement) inp3_3.value = "1";
+      const inp3_4 = document.getElementById("tabInpRowMedAnt3_4");
+      if (inp3_4 instanceof HTMLInputElement) inp3_4.value = "1.8";
+      const inp4_2 = document.getElementById("tabInpRowDCut4_2");
+      if (inp4_2 instanceof HTMLInputElement) inp4_2.value = "18";
+      const inp7_2 = document.getElementById("tabInpRowDCut7_2");
+      if (inp7_2 instanceof HTMLInputElement) inp7_2.value = "18";
+      const inp8_2 = document.getElementById("tabInpRowDCut8_2");
+      if (inp8_2 instanceof HTMLInputElement) inp8_2.value = "18";
+      const inp4_3 = document.getElementById("tabInpRowDCut4_3");
+      if (inp4_3 instanceof HTMLInputElement) inp4_3.value = "10";
+      const inp7_3 = document.getElementById("tabInpRowDCut7_3");
+      if (inp7_3 instanceof HTMLInputElement) inp7_3.value = "10";
+      const inp8_3 = document.getElementById("tabInpRowDCut8_3");
+      if (inp8_3 instanceof HTMLInputElement) inp8_3.value = "10";
+      const inp4_4 = document.getElementById("tabInpRowDCut4_4");
+      if (inp4_4 instanceof HTMLInputElement) inp4_4.value = "40";
+      const inp7_4 = document.getElementById("tabInpRowDCut7_4");
+      if (inp7_4 instanceof HTMLInputElement) inp7_4.value = "40";
+      const inp8_4 = document.getElementById("tabInpRowDCut8_4");
+      if (inp8_4 instanceof HTMLInputElement) inp8_4.value = "40";
     }
   }, [mounted]);
   return (
@@ -558,75 +596,9 @@ export default function EdFisNutPage(): JSX.Element {
                 <span role="group" className="fsAnamGSpan" id="fsAnamGSpan12">
                   <label htmlFor="dateAgeId" className="labelIdentif">
                     Idade:
-                    <input
-                      type="number"
-                      name="dateAgeName"
-                      id="dateAgeId"
-                      className="form-control noInvert inpIdentif minText maxText minNum maxNum patternText"
-                      min="0"
-                      max="255"
-                      defaultValue="30"
-                      required
-                      data-title="Idade"
-                      data-reqlength="1"
-                      data-maxlength="4"
-                      data-minnum="0"
-                      data-maxnum="255"
-                      data-pattern="^[\d,.]+$"
-                      onInput={ev => {
-                        if (
-                          person instanceof Person &&
-                          "age" in person &&
-                          typeof person.age === "number" &&
-                          typeof isAutoFillActive === "boolean"
-                        ) {
-                          person.age = validateEvResultNum(
-                            ev.currentTarget,
-                            person.age
-                          );
-                          //sem autofill, dá update somente em person.age
-                          isAutoFillActive &&
-                            exeAutoFill(
-                              ev.currentTarget,
-                              isAutoFillActive,
-                              "cons"
-                            );
-                        } else
-                          multipleElementsNotFound(
-                            extLine(new Error()),
-                            "argumentas for callbackAgeElement()",
-                            `${JSON.stringify(person)}`,
-                            person?.age,
-                            ev.currentTarget,
-                            `${[
-                              numCons || 1,
-                              [person.weight, person.height, person.sumDCut],
-                              [
-                                tabProps.IMC,
-                                tabProps.MLG,
-                                tabProps.TMB,
-                                tabProps.GET,
-                                tabProps.PGC,
-                              ],
-                              [
-                                tabProps.targInpWeigth,
-                                tabProps.targInpHeigth,
-                                tabProps.targInpIMC,
-                                tabProps.targInpMLG,
-                                tabProps.targInpTMB,
-                                tabProps.targInpGET,
-                                tabProps.targInpSumDCut,
-                                tabProps.targInpPGC,
-                              ],
-                            ].toString()}`,
-                            isAutoFillActive
-                          );
-                        handleEventReq(ev.currentTarget);
-                      }}
-                    />
+                    <MemoAge />
                   </label>
                 </span>
-
                 <div role="group" id="genDiv" className="gridTwoCol noInvert">
                   <span
                     role="group"
@@ -640,7 +612,6 @@ export default function EdFisNutPage(): JSX.Element {
                         id="genId"
                         className="form-select noInvert inpIdentif inpGen widMin75Q900"
                         data-title="Gênero"
-                        defaultValue={"masculino"}
                         required
                         onChange={ev => {
                           const genBirthRel =
@@ -754,7 +725,6 @@ export default function EdFisNutPage(): JSX.Element {
                         id="genBirthRelId"
                         className="form-select noInvert inpIdentif inpGen widMin75Q900"
                         data-title="Identidade de gênero (nascença)"
-                        defaultValue={"cis"}
                         required
                         onChange={ev => {
                           const genElement = document.getElementById("genId");
@@ -874,7 +844,6 @@ export default function EdFisNutPage(): JSX.Element {
                         id="genTransId"
                         className="form-select noInvert inpIdentif inpGen widMin75Q900"
                         data-title="Estágio de transicao hormonal"
-                        defaultValue={"avancado"}
                         onChange={ev => {
                           const genElement = document.getElementById("genId");
                           const genBirthRel =
@@ -953,6 +922,12 @@ export default function EdFisNutPage(): JSX.Element {
                       >
                         <option
                           className="optIdentif optgenTrans"
+                          value="avancado"
+                        >
+                          Avançado
+                        </option>
+                        <option
+                          className="optIdentif optgenTrans"
                           value="undefined"
                         >
                           Indefinido
@@ -971,12 +946,6 @@ export default function EdFisNutPage(): JSX.Element {
                           value="intermediario"
                         >
                           Intermediário
-                        </option>
-                        <option
-                          className="optIdentif optgenTrans"
-                          value="avancado"
-                        >
-                          Avançado
                         </option>
                       </select>
                     </label>
@@ -1001,7 +970,6 @@ export default function EdFisNutPage(): JSX.Element {
                         id="genFisAlinId"
                         className="form-select noInvert inpIdentif inpGen widMin75Q900"
                         data-title="Alinhamento Físico"
-                        defaultValue={"masculinizado"}
                         onChange={ev => {
                           const genElement = document.getElementById("genId");
                           const genBirthRel =
@@ -1659,7 +1627,6 @@ export default function EdFisNutPage(): JSX.Element {
                     id="selectLvlAtFis"
                     data-title="Nivel_atividade_fisica"
                     required
-                    defaultValue={"leve"}
                     onChange={ev => {
                       [person.atvLvl, tabProps.factorAtvLvl] =
                         callbackAtvLvlElementNaf(
@@ -1676,9 +1643,6 @@ export default function EdFisNutPage(): JSX.Element {
                         );
                     }}
                   >
-                    <option value="sedentario" className="opLvlAtFis">
-                      Sedentário
-                    </option>
                     <option value="leve" className="opLvlAtFis">
                       Leve
                     </option>
@@ -1690,6 +1654,9 @@ export default function EdFisNutPage(): JSX.Element {
                     </option>
                     <option value="muitoIntenso" className="opLvlAtFis">
                       Muito intenso
+                    </option>
+                    <option value="sedentario" className="opLvlAtFis">
+                      Sedentário
                     </option>
                   </select>
                 </span>
@@ -1727,7 +1694,6 @@ export default function EdFisNutPage(): JSX.Element {
                       id="selectNumCons"
                       className="form-select noInvert consInp"
                       data-title="Consulta_lida"
-                      defaultValue="1"
                       onChange={ev => {
                         const contextEls = [
                           document.getElementById("selectNumCons"),
@@ -1761,10 +1727,10 @@ export default function EdFisNutPage(): JSX.Element {
                                 if (inp.required) {
                                   inp.minLength = 1;
                                   inp.maxLength = 99;
-                                  inp.pattern = "^[d,.]+$";
+                                  inp.pattern = "^[\\d,.]+$";
                                   inp.dataset.reqlength = "1";
                                   inp.dataset.maxlength = "99";
-                                  inp.dataset.pattern = "^[d,.]+$";
+                                  inp.dataset.pattern = "^[\\d,.]+$";
                                   !inp.classList.contains("minText") &&
                                     inp.classList.add("minText");
                                   !inp.classList.contains("maxText") &&
@@ -1784,22 +1750,22 @@ export default function EdFisNutPage(): JSX.Element {
                                   inp.minLength = 0;
                                   inp.maxLength = 99;
                                   inp.pattern = "";
-                                  inp.dataset.reqlength = "0";
-                                  inp.dataset.maxlength = "99";
-                                  inp.dataset.pattern = undefined;
+                                  delete inp.dataset.reqlength;
+                                  delete inp.dataset.maxlength;
+                                  delete inp.dataset.pattern;
                                   inp.classList.contains("minText") &&
-                                  inp.classList.remove("minText");
-                                inp.classList.contains("maxText") &&
-                                  inp.classList.remove("maxText");
-                                inp.classList.contains("patternText") &&
-                                  inp.classList.remove("patternText");
+                                    inp.classList.remove("minText");
+                                  inp.classList.contains("maxText") &&
+                                    inp.classList.remove("maxText");
+                                  inp.classList.contains("patternText") &&
+                                    inp.classList.remove("patternText");
                                   if (inp.type === "number") {
                                     inp.min = "";
                                     inp.max = "999999";
                                     inp.classList.contains("minNum") &&
-                                    inp.classList.remove("minNum");
-                                  inp.classList.contains("maxNum") &&
-                                    inp.classList.remove("maxNum");
+                                      inp.classList.remove("minNum");
+                                    inp.classList.contains("maxNum") &&
+                                      inp.classList.remove("maxNum");
                                   }
                                   inp.removeEventListener(
                                     "input",
@@ -1848,7 +1814,6 @@ export default function EdFisNutPage(): JSX.Element {
                       id="textBodytype"
                       className="form-select noInvert consInp"
                       data-title="Tipo_corporal_genero"
-                      defaultValue={"masculino"}
                       onChange={() => {
                         const genElement = document.getElementById("genId");
                         try {
@@ -1905,7 +1870,6 @@ export default function EdFisNutPage(): JSX.Element {
                         id="gordCorpLvl"
                         className="form-select noInvert lockSelect"
                         data-title="Nivel_Gordura_Corporal"
-                        defaultValue={"abaixo"}
                         onChange={ev => {
                           [person.atvLvl, tabProps.factorAtvLvl] =
                             callbackAtvLvlElementNaf(
@@ -1987,7 +1951,6 @@ export default function EdFisNutPage(): JSX.Element {
                       id="nafType"
                       className="form-select noInvert consInp"
                       data-title="Fator_Nivel_Atividade"
-                      defaultValue={"leve"}
                       onChange={ev => {
                         [person.atvLvl, tabProps.factorAtvLvl] =
                           callbackAtvLvlElementNaf(
@@ -2004,11 +1967,11 @@ export default function EdFisNutPage(): JSX.Element {
                           );
                       }}
                     >
-                      <option value="sedentario">1.2</option>
                       <option value="leve">1.4</option>
                       <option value="moderado">1.6</option>
                       <option value="intenso">1.9</option>
                       <option value="muitoIntenso">2.2</option>
+                      <option value="sedentario">1.2</option>
                     </select>
                   </div>
                   <div role="group" className="divLab spanForm">
@@ -2178,7 +2141,6 @@ export default function EdFisNutPage(): JSX.Element {
                     name="tabSelectDCutName"
                     data-title="Protocolo_DCut"
                     required
-                    defaultValue={"pollock3"}
                     onChange={ev =>
                       (ev.currentTarget.value = changeTabDCutLayout(
                         ev.currentTarget,
@@ -2257,16 +2219,7 @@ export default function EdFisNutPage(): JSX.Element {
                       id="labConfirmLoc"
                     >
                       Local:
-                      <input
-                        type="text"
-                        name="confirmLocName"
-                        id="confirmLocId"
-                        className="inpConfirm form-control noInvert"
-                        defaultValue="Rio de Janeiro, Rio de Janeiro"
-                        data-title="assinatura_local"
-                        required
-                        onInput={ev => handleEventReq(ev.currentTarget)}
-                      />
+                      <MemoLoc />
                     </label>
                     <label
                       htmlFor="confirmDatId"
@@ -2472,12 +2425,11 @@ export function exeAutoFill(
             targ instanceof HTMLTextAreaElement
         )
       ) {
-        const formatter = new Intl.NumberFormat("pt-BR");
-        (tabProps.targInpIMC as entryEl).value = formatter.format(tabProps.IMC);
-        (tabProps.targInpMLG as entryEl).value = formatter.format(tabProps.MLG);
-        (tabProps.targInpTMB as entryEl).value = formatter.format(tabProps.TMB);
-        (tabProps.targInpGET as entryEl).value = formatter.format(tabProps.GET);
-        (tabProps.targInpPGC as entryEl).value = formatter.format(tabProps.PGC);
+        (tabProps.targInpIMC as entryEl).value = tabProps.IMC.toString();
+        (tabProps.targInpMLG as entryEl).value = tabProps.MLG.toString();
+        (tabProps.targInpTMB as entryEl).value = tabProps.TMB.toString();
+        (tabProps.targInpGET as entryEl).value = tabProps.GET.toString();
+        (tabProps.targInpPGC as entryEl).value = tabProps.PGC.toString();
       } else
         console.error(
           `Error validating instances of arrtargInps in exeAutoFill(). Values for respective <input> Elements not updated.`

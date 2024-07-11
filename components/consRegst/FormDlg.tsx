@@ -714,10 +714,10 @@ export default function FormDlg({
                               );
                             if (familyNamePac.required) {
                               familyNamePac.minLength = 0;
-                              familyNamePac.dataset.min = undefined;
-                              familyNamePac.dataset.max = undefined;
-                              familyNamePac.dataset.pattern = undefined;
-                              familyNamePac.dataset.flags = undefined;
+                              delete familyNamePac.dataset.min;
+                              delete familyNamePac.dataset.max;
+                              delete familyNamePac.dataset.pattern;
+                              delete familyNamePac.dataset.flags;
                               familyNamePac.required = false;
                             }
                           } catch (e) {
@@ -738,10 +738,10 @@ export default function FormDlg({
                               );
                             if (inpTelPac.required) {
                               inpTelPac.minLength = 0;
-                              inpTelPac.dataset.min = undefined;
-                              inpTelPac.dataset.max = undefined;
-                              inpTelPac.dataset.pattern = undefined;
-                              inpTelPac.dataset.flags = undefined;
+                              delete inpTelPac.dataset.min;
+                              delete inpTelPac.dataset.max;
+                              delete inpTelPac.dataset.pattern;
+                              delete inpTelPac.dataset.flags;
                               inpTelPac.required = false;
                             }
                           } catch (e) {
@@ -762,10 +762,10 @@ export default function FormDlg({
                               );
                             if (relProfName.required) {
                               relProfName.minLength = 0;
-                              relProfName.dataset.min = undefined;
-                              relProfName.dataset.max = undefined;
-                              relProfName.dataset.pattern = undefined;
-                              relProfName.dataset.flags = undefined;
+                              delete relProfName.dataset.min;
+                              delete relProfName.dataset.max;
+                              delete relProfName.dataset.pattern;
+                              delete relProfName.dataset.flags;
                               relProfName.required = false;
                             }
                           } catch (e) {

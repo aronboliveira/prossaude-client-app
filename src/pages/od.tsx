@@ -1,5 +1,5 @@
 import { ErrorBoundary } from "react-error-boundary";
-import { useEffect, useState } from "react";
+import { useEffect, useState, memo } from "react";
 import { handleLinkChanges } from "@/lib/global/handlers/gRoutingHandlers";
 import {
   addCanvasListeners,
@@ -29,10 +29,13 @@ import {
 import TratFs from "../../components/interactive/od/TratFs";
 import OdTips from "../../components/interactive/od/OdTips";
 import OdDeclaration from "../../components/interactive/od/OdDeclaration";
+import ConfirmLocId from "../../components/interactive/def/ConfirmLocId";
+import { extLine, inputNotFound } from "@/lib/global/handlers/errorHandler";
 
 let odIsAutoCorrectOn = true,
   odIsDialogCalled = false,
   odIsValuePreDef = false;
+const MemoLoc = memo(ConfirmLocId);
 
 export default function OdPage(): JSX.Element {
   const [shouldShowTips, setTips] = useState<boolean>(false);
@@ -54,6 +57,23 @@ export default function OdPage(): JSX.Element {
     addResetAstListener();
     syncAriaStates(document.querySelectorAll("*"));
     watchLabels();
+    document.querySelectorAll(".inpAvDent").forEach((inpAvDent, i) => {
+      try {
+        if (!(inpAvDent instanceof HTMLInputElement))
+          throw inputNotFound(
+            inpAvDent,
+            `Validation of Input instance`,
+            extLine(new Error())
+          );
+        inpAvDent.value = "Hígido";
+      } catch (e) {
+        console.error(
+          `Error executing iteration ${i} for defaulting values to inpAvDents:\n${
+            (e as Error).message
+          }`
+        );
+      }
+    });
   }, []);
   return (
     <ErrorBoundary FallbackComponent={() => <div>Erro!</div>}>
@@ -1672,7 +1692,6 @@ export default function OdPage(): JSX.Element {
                       <input
                         type="text"
                         list="avElemDentD18"
-                        defaultValue="Hígido"
                         id="inpD18"
                         className="inpAvDent form-control noInvert minText patternText"
                         onInput={ev => handleEventReq(ev.currentTarget)}
@@ -1683,19 +1702,19 @@ export default function OdPage(): JSX.Element {
                         data-flags="gi"
                       />
                       <datalist id="avElemDentD18" className="dlAvDent">
-                        <option defaultValue="Amálgama" className="elemOp">
+                        <option value="Amálgama" className="elemOp">
                           Amálgama
                         </option>
-                        <option defaultValue="Careado" className="elemOp">
+                        <option value="Careado" className="elemOp">
                           Careado
                         </option>
-                        <option defaultValue="Hígido" className="elemOp">
+                        <option value="Hígido" className="elemOp">
                           Hígido
                         </option>
-                        <option defaultValue="Trincado" className="elemOp">
+                        <option value="Trincado" className="elemOp">
                           Trincado
                         </option>
-                        <option defaultValue="Ausente" className="elemOp">
+                        <option value="Ausente" className="elemOp">
                           Ausente
                         </option>
                       </datalist>
@@ -1714,7 +1733,6 @@ export default function OdPage(): JSX.Element {
                       <input
                         type="text"
                         list="avElemDentD17"
-                        defaultValue="Hígido"
                         id="inpD17"
                         className="inpAvDent form-control noInvert minText patternText"
                         onInput={ev => handleEventReq(ev.currentTarget)}
@@ -1725,19 +1743,19 @@ export default function OdPage(): JSX.Element {
                         data-flags="gi"
                       />
                       <datalist id="avElemDentD17" className="dlAvDent">
-                        <option defaultValue="Amálgama" className="elemOp">
+                        <option value="Amálgama" className="elemOp">
                           Amálgama
                         </option>
-                        <option defaultValue="Careado" className="elemOp">
+                        <option value="Careado" className="elemOp">
                           Careado
                         </option>
-                        <option defaultValue="Hígido" className="elemOp">
+                        <option value="Hígido" className="elemOp">
                           Hígido
                         </option>
-                        <option defaultValue="Trincado" className="elemOp">
+                        <option value="Trincado" className="elemOp">
                           Trincado
                         </option>
-                        <option defaultValue="Ausente" className="elemOp">
+                        <option value="Ausente" className="elemOp">
                           Ausente
                         </option>
                       </datalist>
@@ -1756,7 +1774,6 @@ export default function OdPage(): JSX.Element {
                       <input
                         type="text"
                         list="avElemDentD16"
-                        defaultValue="Hígido"
                         id="inpD16"
                         className="inpAvDent form-control noInvert minText patternText"
                         onInput={ev => handleEventReq(ev.currentTarget)}
@@ -1767,19 +1784,19 @@ export default function OdPage(): JSX.Element {
                         data-flags="gi"
                       />
                       <datalist id="avElemDentD16" className="dlAvDent">
-                        <option defaultValue="Amálgama" className="elemOp">
+                        <option value="Amálgama" className="elemOp">
                           Amálgama
                         </option>
-                        <option defaultValue="Careado" className="elemOp">
+                        <option value="Careado" className="elemOp">
                           Careado
                         </option>
-                        <option defaultValue="Hígido" className="elemOp">
+                        <option value="Hígido" className="elemOp">
                           Hígido
                         </option>
-                        <option defaultValue="Trincado" className="elemOp">
+                        <option value="Trincado" className="elemOp">
                           Trincado
                         </option>
-                        <option defaultValue="Ausente" className="elemOp">
+                        <option value="Ausente" className="elemOp">
                           Ausente
                         </option>
                       </datalist>
@@ -1798,7 +1815,6 @@ export default function OdPage(): JSX.Element {
                       <input
                         type="text"
                         list="avElemDentD15"
-                        defaultValue="Hígido"
                         id="inpD15"
                         className="inpAvDent form-control noInvert minText patternText"
                         onInput={ev => handleEventReq(ev.currentTarget)}
@@ -1809,19 +1825,19 @@ export default function OdPage(): JSX.Element {
                         data-flags="gi"
                       />
                       <datalist id="avElemDentD15" className="dlAvDent">
-                        <option defaultValue="Amálgama" className="elemOp">
+                        <option value="Amálgama" className="elemOp">
                           Amálgama
                         </option>
-                        <option defaultValue="Careado" className="elemOp">
+                        <option value="Careado" className="elemOp">
                           Careado
                         </option>
-                        <option defaultValue="Hígido" className="elemOp">
+                        <option value="Hígido" className="elemOp">
                           Hígido
                         </option>
-                        <option defaultValue="Trincado" className="elemOp">
+                        <option value="Trincado" className="elemOp">
                           Trincado
                         </option>
-                        <option defaultValue="Ausente" className="elemOp">
+                        <option value="Ausente" className="elemOp">
                           Ausente
                         </option>
                       </datalist>
@@ -1840,7 +1856,6 @@ export default function OdPage(): JSX.Element {
                       <input
                         type="text"
                         list="avElemDentD14"
-                        defaultValue="Hígido"
                         id="inpD14"
                         className="inpAvDent form-control noInvert minText patternText"
                         onInput={ev => handleEventReq(ev.currentTarget)}
@@ -1851,19 +1866,19 @@ export default function OdPage(): JSX.Element {
                         data-flags="gi"
                       />
                       <datalist id="avElemDentD14" className="dlAvDent">
-                        <option defaultValue="Amálgama" className="elemOp">
+                        <option value="Amálgama" className="elemOp">
                           Amálgama
                         </option>
-                        <option defaultValue="Careado" className="elemOp">
+                        <option value="Careado" className="elemOp">
                           Careado
                         </option>
-                        <option defaultValue="Hígido" className="elemOp">
+                        <option value="Hígido" className="elemOp">
                           Hígido
                         </option>
-                        <option defaultValue="Trincado" className="elemOp">
+                        <option value="Trincado" className="elemOp">
                           Trincado
                         </option>
-                        <option defaultValue="Ausente" className="elemOp">
+                        <option value="Ausente" className="elemOp">
                           Ausente
                         </option>
                       </datalist>
@@ -1882,7 +1897,6 @@ export default function OdPage(): JSX.Element {
                       <input
                         type="text"
                         list="avElemDentD13"
-                        defaultValue="Hígido"
                         id="inpD13"
                         className="inpAvDent form-control noInvert minText patternText"
                         onInput={ev => handleEventReq(ev.currentTarget)}
@@ -1893,19 +1907,19 @@ export default function OdPage(): JSX.Element {
                         data-flags="gi"
                       />
                       <datalist id="avElemDentD13" className="dlAvDent">
-                        <option defaultValue="Amálgama" className="elemOp">
+                        <option value="Amálgama" className="elemOp">
                           Amálgama
                         </option>
-                        <option defaultValue="Careado" className="elemOp">
+                        <option value="Careado" className="elemOp">
                           Careado
                         </option>
-                        <option defaultValue="Hígido" className="elemOp">
+                        <option value="Hígido" className="elemOp">
                           Hígido
                         </option>
-                        <option defaultValue="Trincado" className="elemOp">
+                        <option value="Trincado" className="elemOp">
                           Trincado
                         </option>
-                        <option defaultValue="Ausente" className="elemOp">
+                        <option value="Ausente" className="elemOp">
                           Ausente
                         </option>
                       </datalist>
@@ -1924,7 +1938,6 @@ export default function OdPage(): JSX.Element {
                       <input
                         type="text"
                         list="avElemDentD12"
-                        defaultValue="Hígido"
                         id="inpD12"
                         className="inpAvDent form-control noInvert minText patternText"
                         onInput={ev => handleEventReq(ev.currentTarget)}
@@ -1935,19 +1948,19 @@ export default function OdPage(): JSX.Element {
                         data-flags="gi"
                       />
                       <datalist id="avElemDentD12" className="dlAvDent">
-                        <option defaultValue="Amálgama" className="elemOp">
+                        <option value="Amálgama" className="elemOp">
                           Amálgama
                         </option>
-                        <option defaultValue="Careado" className="elemOp">
+                        <option value="Careado" className="elemOp">
                           Careado
                         </option>
-                        <option defaultValue="Hígido" className="elemOp">
+                        <option value="Hígido" className="elemOp">
                           Hígido
                         </option>
-                        <option defaultValue="Trincado" className="elemOp">
+                        <option value="Trincado" className="elemOp">
                           Trincado
                         </option>
-                        <option defaultValue="Ausente" className="elemOp">
+                        <option value="Ausente" className="elemOp">
                           Ausente
                         </option>
                       </datalist>
@@ -1966,7 +1979,6 @@ export default function OdPage(): JSX.Element {
                       <input
                         type="text"
                         list="avElemD11"
-                        defaultValue="Hígido"
                         id="inpD11"
                         className="inpAvDent form-control noInvert minText patternText"
                         onInput={ev => handleEventReq(ev.currentTarget)}
@@ -1977,19 +1989,19 @@ export default function OdPage(): JSX.Element {
                         data-flags="gi"
                       />
                       <datalist id="avElemD11" className="dlAvDent">
-                        <option defaultValue="Amálgama" className="elemOp">
+                        <option value="Amálgama" className="elemOp">
                           Amálgama
                         </option>
-                        <option defaultValue="Careado" className="elemOp">
+                        <option value="Careado" className="elemOp">
                           Careado
                         </option>
-                        <option defaultValue="Hígido" className="elemOp">
+                        <option value="Hígido" className="elemOp">
                           Hígido
                         </option>
-                        <option defaultValue="Trincado" className="elemOp">
+                        <option value="Trincado" className="elemOp">
                           Trincado
                         </option>
-                        <option defaultValue="Ausente" className="elemOp">
+                        <option value="Ausente" className="elemOp">
                           Ausente
                         </option>
                       </datalist>
@@ -2033,7 +2045,6 @@ export default function OdPage(): JSX.Element {
                       <input
                         type="text"
                         list="avElemD31"
-                        defaultValue="Hígido"
                         id="inpD31"
                         className="inpAvDent form-control noInvert minText patternText"
                         onInput={ev => handleEventReq(ev.currentTarget)}
@@ -2044,19 +2055,19 @@ export default function OdPage(): JSX.Element {
                         data-flags="gi"
                       />
                       <datalist id="avElemD31" className="dlAvDent">
-                        <option defaultValue="Amálgama" className="elemOp">
+                        <option value="Amálgama" className="elemOp">
                           Amálgama
                         </option>
-                        <option defaultValue="Careado" className="elemOp">
+                        <option value="Careado" className="elemOp">
                           Careado
                         </option>
-                        <option defaultValue="Hígido" className="elemOp">
+                        <option value="Hígido" className="elemOp">
                           Hígido
                         </option>
-                        <option defaultValue="Trincado" className="elemOp">
+                        <option value="Trincado" className="elemOp">
                           Trincado
                         </option>
-                        <option defaultValue="Ausente" className="elemOp">
+                        <option value="Ausente" className="elemOp">
                           Ausente
                         </option>
                       </datalist>
@@ -2075,7 +2086,6 @@ export default function OdPage(): JSX.Element {
                       <input
                         type="text"
                         list="avElemD32"
-                        defaultValue="Hígido"
                         id="inpD32"
                         className="inpAvDent form-control noInvert minText patternText"
                         onInput={ev => handleEventReq(ev.currentTarget)}
@@ -2086,19 +2096,19 @@ export default function OdPage(): JSX.Element {
                         data-flags="gi"
                       />
                       <datalist id="avElemD32" className="dlAvDent">
-                        <option defaultValue="Amálgama" className="elemOp">
+                        <option value="Amálgama" className="elemOp">
                           Amálgama
                         </option>
-                        <option defaultValue="Careado" className="elemOp">
+                        <option value="Careado" className="elemOp">
                           Careado
                         </option>
-                        <option defaultValue="Hígido" className="elemOp">
+                        <option value="Hígido" className="elemOp">
                           Hígido
                         </option>
-                        <option defaultValue="Trincado" className="elemOp">
+                        <option value="Trincado" className="elemOp">
                           Trincado
                         </option>
-                        <option defaultValue="Ausente" className="elemOp">
+                        <option value="Ausente" className="elemOp">
                           Ausente
                         </option>
                       </datalist>
@@ -2117,7 +2127,6 @@ export default function OdPage(): JSX.Element {
                       <input
                         type="text"
                         list="avElemD33"
-                        defaultValue="Hígido"
                         id="inpD33"
                         className="inpAvDent form-control noInvert minText patternText"
                         onInput={ev => handleEventReq(ev.currentTarget)}
@@ -2128,19 +2137,19 @@ export default function OdPage(): JSX.Element {
                         data-flags="gi"
                       />
                       <datalist id="avElemD33" className="dlAvDent">
-                        <option defaultValue="Amálgama" className="elemOp">
+                        <option value="Amálgama" className="elemOp">
                           Amálgama
                         </option>
-                        <option defaultValue="Careado" className="elemOp">
+                        <option value="Careado" className="elemOp">
                           Careado
                         </option>
-                        <option defaultValue="Hígido" className="elemOp">
+                        <option value="Hígido" className="elemOp">
                           Hígido
                         </option>
-                        <option defaultValue="Trincado" className="elemOp">
+                        <option value="Trincado" className="elemOp">
                           Trincado
                         </option>
-                        <option defaultValue="Ausente" className="elemOp">
+                        <option value="Ausente" className="elemOp">
                           Ausente
                         </option>
                       </datalist>
@@ -2159,7 +2168,6 @@ export default function OdPage(): JSX.Element {
                       <input
                         type="text"
                         list="avElemD34"
-                        defaultValue="Hígido"
                         id="inpD34"
                         className="inpAvDent form-control noInvert minText patternText"
                         onInput={ev => handleEventReq(ev.currentTarget)}
@@ -2170,19 +2178,19 @@ export default function OdPage(): JSX.Element {
                         data-flags="gi"
                       />
                       <datalist id="avElemD34" className="dlAvDent">
-                        <option defaultValue="Amálgama" className="elemOp">
+                        <option value="Amálgama" className="elemOp">
                           Amálgama
                         </option>
-                        <option defaultValue="Careado" className="elemOp">
+                        <option value="Careado" className="elemOp">
                           Careado
                         </option>
-                        <option defaultValue="Hígido" className="elemOp">
+                        <option value="Hígido" className="elemOp">
                           Hígido
                         </option>
-                        <option defaultValue="Trincado" className="elemOp">
+                        <option value="Trincado" className="elemOp">
                           Trincado
                         </option>
-                        <option defaultValue="Ausente" className="elemOp">
+                        <option value="Ausente" className="elemOp">
                           Ausente
                         </option>
                       </datalist>
@@ -2201,7 +2209,6 @@ export default function OdPage(): JSX.Element {
                       <input
                         type="text"
                         list="avElemD35"
-                        defaultValue="Hígido"
                         id="inpD35"
                         className="inpAvDent form-control noInvert minText patternText"
                         onInput={ev => handleEventReq(ev.currentTarget)}
@@ -2212,19 +2219,19 @@ export default function OdPage(): JSX.Element {
                         data-flags="gi"
                       />
                       <datalist id="avElemD35" className="dlAvDent">
-                        <option defaultValue="Amálgama" className="elemOp">
+                        <option value="Amálgama" className="elemOp">
                           Amálgama
                         </option>
-                        <option defaultValue="Careado" className="elemOp">
+                        <option value="Careado" className="elemOp">
                           Careado
                         </option>
-                        <option defaultValue="Hígido" className="elemOp">
+                        <option value="Hígido" className="elemOp">
                           Hígido
                         </option>
-                        <option defaultValue="Trincado" className="elemOp">
+                        <option value="Trincado" className="elemOp">
                           Trincado
                         </option>
-                        <option defaultValue="Ausente" className="elemOp">
+                        <option value="Ausente" className="elemOp">
                           Ausente
                         </option>
                       </datalist>
@@ -2243,7 +2250,6 @@ export default function OdPage(): JSX.Element {
                       <input
                         type="text"
                         list="avElemD36"
-                        defaultValue="Hígido"
                         id="inpD36"
                         className="inpAvDent form-control noInvert minText patternText"
                         onInput={ev => handleEventReq(ev.currentTarget)}
@@ -2254,19 +2260,19 @@ export default function OdPage(): JSX.Element {
                         data-flags="gi"
                       />
                       <datalist id="avElemD36" className="dlAvDent">
-                        <option defaultValue="Amálgama" className="elemOp">
+                        <option value="Amálgama" className="elemOp">
                           Amálgama
                         </option>
-                        <option defaultValue="Careado" className="elemOp">
+                        <option value="Careado" className="elemOp">
                           Careado
                         </option>
-                        <option defaultValue="Hígido" className="elemOp">
+                        <option value="Hígido" className="elemOp">
                           Hígido
                         </option>
-                        <option defaultValue="Trincado" className="elemOp">
+                        <option value="Trincado" className="elemOp">
                           Trincado
                         </option>
-                        <option defaultValue="Ausente" className="elemOp">
+                        <option value="Ausente" className="elemOp">
                           Ausente
                         </option>
                       </datalist>
@@ -2285,7 +2291,6 @@ export default function OdPage(): JSX.Element {
                       <input
                         type="text"
                         list="avElemD37"
-                        defaultValue="Hígido"
                         id="inpD37"
                         className="inpAvDent form-control noInvert minText patternText"
                         onInput={ev => handleEventReq(ev.currentTarget)}
@@ -2296,19 +2301,19 @@ export default function OdPage(): JSX.Element {
                         data-flags="gi"
                       />
                       <datalist id="avElemD37" className="dlAvDent">
-                        <option defaultValue="Amálgama" className="elemOp">
+                        <option value="Amálgama" className="elemOp">
                           Amálgama
                         </option>
-                        <option defaultValue="Careado" className="elemOp">
+                        <option value="Careado" className="elemOp">
                           Careado
                         </option>
-                        <option defaultValue="Hígido" className="elemOp">
+                        <option value="Hígido" className="elemOp">
                           Hígido
                         </option>
-                        <option defaultValue="Trincado" className="elemOp">
+                        <option value="Trincado" className="elemOp">
                           Trincado
                         </option>
-                        <option defaultValue="Ausente" className="elemOp">
+                        <option value="Ausente" className="elemOp">
                           Ausente
                         </option>
                       </datalist>
@@ -2327,7 +2332,6 @@ export default function OdPage(): JSX.Element {
                       <input
                         type="text"
                         list="avElemD38"
-                        defaultValue="Hígido"
                         id="inpD38"
                         className="inpAvDent form-control noInvert minText patternText"
                         onInput={ev => handleEventReq(ev.currentTarget)}
@@ -2338,19 +2342,19 @@ export default function OdPage(): JSX.Element {
                         data-flags="gi"
                       />
                       <datalist id="avElemD38" className="dlAvDent">
-                        <option defaultValue="Amálgama" className="elemOp">
+                        <option value="Amálgama" className="elemOp">
                           Amálgama
                         </option>
-                        <option defaultValue="Careado" className="elemOp">
+                        <option value="Careado" className="elemOp">
                           Careado
                         </option>
-                        <option defaultValue="Hígido" className="elemOp">
+                        <option value="Hígido" className="elemOp">
                           Hígido
                         </option>
-                        <option defaultValue="Trincado" className="elemOp">
+                        <option value="Trincado" className="elemOp">
                           Trincado
                         </option>
-                        <option defaultValue="Ausente" className="elemOp">
+                        <option value="Ausente" className="elemOp">
                           Ausente
                         </option>
                       </datalist>
@@ -2394,7 +2398,6 @@ export default function OdPage(): JSX.Element {
                       <input
                         type="text"
                         list="avElemD21"
-                        defaultValue="Hígido"
                         id="inpD21"
                         className="inpAvDent form-control noInvert minText patternText"
                         onInput={ev => handleEventReq(ev.currentTarget)}
@@ -2405,19 +2408,19 @@ export default function OdPage(): JSX.Element {
                         data-flags="gi"
                       />
                       <datalist id="avElemD21" className="dlAvDent">
-                        <option defaultValue="Amálgama" className="elemOp">
+                        <option value="Amálgama" className="elemOp">
                           Amálgama
                         </option>
-                        <option defaultValue="Careado" className="elemOp">
+                        <option value="Careado" className="elemOp">
                           Careado
                         </option>
-                        <option defaultValue="Hígido" className="elemOp">
+                        <option value="Hígido" className="elemOp">
                           Hígido
                         </option>
-                        <option defaultValue="Trincado" className="elemOp">
+                        <option value="Trincado" className="elemOp">
                           Trincado
                         </option>
-                        <option defaultValue="Ausente" className="elemOp">
+                        <option value="Ausente" className="elemOp">
                           Ausente
                         </option>
                       </datalist>
@@ -2436,7 +2439,6 @@ export default function OdPage(): JSX.Element {
                       <input
                         type="text"
                         list="avElemD22"
-                        defaultValue="Hígido"
                         id="inpD22"
                         className="inpAvDent form-control noInvert minText patternText"
                         onInput={ev => handleEventReq(ev.currentTarget)}
@@ -2447,19 +2449,19 @@ export default function OdPage(): JSX.Element {
                         data-flags="gi"
                       />
                       <datalist id="avElemD22" className="dlAvDent">
-                        <option defaultValue="Amálgama" className="elemOp">
+                        <option value="Amálgama" className="elemOp">
                           Amálgama
                         </option>
-                        <option defaultValue="Careado" className="elemOp">
+                        <option value="Careado" className="elemOp">
                           Careado
                         </option>
-                        <option defaultValue="Hígido" className="elemOp">
+                        <option value="Hígido" className="elemOp">
                           Hígido
                         </option>
-                        <option defaultValue="Trincado" className="elemOp">
+                        <option value="Trincado" className="elemOp">
                           Trincado
                         </option>
-                        <option defaultValue="Ausente" className="elemOp">
+                        <option value="Ausente" className="elemOp">
                           Ausente
                         </option>
                       </datalist>
@@ -2478,7 +2480,6 @@ export default function OdPage(): JSX.Element {
                       <input
                         type="text"
                         list="avElemD23"
-                        defaultValue="Hígido"
                         id="inpD23"
                         className="inpAvDent form-control noInvert minText patternText"
                         onInput={ev => handleEventReq(ev.currentTarget)}
@@ -2489,19 +2490,19 @@ export default function OdPage(): JSX.Element {
                         data-flags="gi"
                       />
                       <datalist id="avElemD23" className="dlAvDent">
-                        <option defaultValue="Amálgama" className="elemOp">
+                        <option value="Amálgama" className="elemOp">
                           Amálgama
                         </option>
-                        <option defaultValue="Careado" className="elemOp">
+                        <option value="Careado" className="elemOp">
                           Careado
                         </option>
-                        <option defaultValue="Hígido" className="elemOp">
+                        <option value="Hígido" className="elemOp">
                           Hígido
                         </option>
-                        <option defaultValue="Trincado" className="elemOp">
+                        <option value="Trincado" className="elemOp">
                           Trincado
                         </option>
-                        <option defaultValue="Ausente" className="elemOp">
+                        <option value="Ausente" className="elemOp">
                           Ausente
                         </option>
                       </datalist>
@@ -2520,7 +2521,6 @@ export default function OdPage(): JSX.Element {
                       <input
                         type="text"
                         list="avElemD24"
-                        defaultValue="Hígido"
                         id="inpD24"
                         className="inpAvDent form-control noInvert minText patternText"
                         onInput={ev => handleEventReq(ev.currentTarget)}
@@ -2531,19 +2531,19 @@ export default function OdPage(): JSX.Element {
                         data-flags="gi"
                       />
                       <datalist id="avElemD24" className="dlAvDent">
-                        <option defaultValue="Amálgama" className="elemOp">
+                        <option value="Amálgama" className="elemOp">
                           Amálgama
                         </option>
-                        <option defaultValue="Careado" className="elemOp">
+                        <option value="Careado" className="elemOp">
                           Careado
                         </option>
-                        <option defaultValue="Hígido" className="elemOp">
+                        <option value="Hígido" className="elemOp">
                           Hígido
                         </option>
-                        <option defaultValue="Trincado" className="elemOp">
+                        <option value="Trincado" className="elemOp">
                           Trincado
                         </option>
-                        <option defaultValue="Ausente" className="elemOp">
+                        <option value="Ausente" className="elemOp">
                           Ausente
                         </option>
                       </datalist>
@@ -2562,7 +2562,6 @@ export default function OdPage(): JSX.Element {
                       <input
                         type="text"
                         list="avElemD25"
-                        defaultValue="Hígido"
                         id="inpD25"
                         className="inpAvDent form-control noInvert minText patternText"
                         onInput={ev => handleEventReq(ev.currentTarget)}
@@ -2573,19 +2572,19 @@ export default function OdPage(): JSX.Element {
                         data-flags="gi"
                       />
                       <datalist id="avElemD25" className="dlAvDent">
-                        <option defaultValue="Amálgama" className="elemOp">
+                        <option value="Amálgama" className="elemOp">
                           Amálgama
                         </option>
-                        <option defaultValue="Careado" className="elemOp">
+                        <option value="Careado" className="elemOp">
                           Careado
                         </option>
-                        <option defaultValue="Hígido" className="elemOp">
+                        <option value="Hígido" className="elemOp">
                           Hígido
                         </option>
-                        <option defaultValue="Trincado" className="elemOp">
+                        <option value="Trincado" className="elemOp">
                           Trincado
                         </option>
-                        <option defaultValue="Ausente" className="elemOp">
+                        <option value="Ausente" className="elemOp">
                           Ausente
                         </option>
                       </datalist>
@@ -2604,7 +2603,6 @@ export default function OdPage(): JSX.Element {
                       <input
                         type="text"
                         list="avElemD26"
-                        defaultValue="Hígido"
                         id="inpD26"
                         className="inpAvDent form-control noInvert minText patternText"
                         onInput={ev => handleEventReq(ev.currentTarget)}
@@ -2615,19 +2613,19 @@ export default function OdPage(): JSX.Element {
                         data-flags="gi"
                       />
                       <datalist id="avElemD26" className="dlAvDent">
-                        <option defaultValue="Amálgama" className="elemOp">
+                        <option value="Amálgama" className="elemOp">
                           Amálgama
                         </option>
-                        <option defaultValue="Careado" className="elemOp">
+                        <option value="Careado" className="elemOp">
                           Careado
                         </option>
-                        <option defaultValue="Hígido" className="elemOp">
+                        <option value="Hígido" className="elemOp">
                           Hígido
                         </option>
-                        <option defaultValue="Trincado" className="elemOp">
+                        <option value="Trincado" className="elemOp">
                           Trincado
                         </option>
-                        <option defaultValue="Ausente" className="elemOp">
+                        <option value="Ausente" className="elemOp">
                           Ausente
                         </option>
                       </datalist>
@@ -2646,7 +2644,6 @@ export default function OdPage(): JSX.Element {
                       <input
                         type="text"
                         list="avElemD27"
-                        defaultValue="Hígido"
                         id="inpD27"
                         className="inpAvDent form-control noInvert minText patternText"
                         onInput={ev => handleEventReq(ev.currentTarget)}
@@ -2657,19 +2654,19 @@ export default function OdPage(): JSX.Element {
                         data-flags="gi"
                       />
                       <datalist id="avElemD27" className="dlAvDent">
-                        <option defaultValue="Amálgama" className="elemOp">
+                        <option value="Amálgama" className="elemOp">
                           Amálgama
                         </option>
-                        <option defaultValue="Careado" className="elemOp">
+                        <option value="Careado" className="elemOp">
                           Careado
                         </option>
-                        <option defaultValue="Hígido" className="elemOp">
+                        <option value="Hígido" className="elemOp">
                           Hígido
                         </option>
-                        <option defaultValue="Trincado" className="elemOp">
+                        <option value="Trincado" className="elemOp">
                           Trincado
                         </option>
-                        <option defaultValue="Ausente" className="elemOp">
+                        <option value="Ausente" className="elemOp">
                           Ausente
                         </option>
                       </datalist>
@@ -2688,7 +2685,6 @@ export default function OdPage(): JSX.Element {
                       <input
                         type="text"
                         list="avElemD28"
-                        defaultValue="Hígido"
                         id="inpD28"
                         className="inpAvDent form-control noInvert minText patternText"
                         onInput={ev => handleEventReq(ev.currentTarget)}
@@ -2699,19 +2695,19 @@ export default function OdPage(): JSX.Element {
                         data-flags="gi"
                       />
                       <datalist id="avElemD28" className="dlAvDent">
-                        <option defaultValue="Amálgama" className="elemOp">
+                        <option value="Amálgama" className="elemOp">
                           Amálgama
                         </option>
-                        <option defaultValue="Careado" className="elemOp">
+                        <option value="Careado" className="elemOp">
                           Careado
                         </option>
-                        <option defaultValue="Hígido" className="elemOp">
+                        <option value="Hígido" className="elemOp">
                           Hígido
                         </option>
-                        <option defaultValue="Trincado" className="elemOp">
+                        <option value="Trincado" className="elemOp">
                           Trincado
                         </option>
-                        <option defaultValue="Ausente" className="elemOp">
+                        <option value="Ausente" className="elemOp">
                           Ausente
                         </option>
                       </datalist>
@@ -2755,7 +2751,6 @@ export default function OdPage(): JSX.Element {
                       <input
                         type="text"
                         list="avElemD41"
-                        defaultValue="Hígido"
                         id="inpD41"
                         className="inpAvDent form-control noInvert minText patternText"
                         onInput={ev => handleEventReq(ev.currentTarget)}
@@ -2766,19 +2761,19 @@ export default function OdPage(): JSX.Element {
                         data-flags="gi"
                       />
                       <datalist id="avElemD41" className="dlAvDent">
-                        <option defaultValue="Amálgama" className="elemOp">
+                        <option value="Amálgama" className="elemOp">
                           Amálgama
                         </option>
-                        <option defaultValue="Careado" className="elemOp">
+                        <option value="Careado" className="elemOp">
                           Careado
                         </option>
-                        <option defaultValue="Hígido" className="elemOp">
+                        <option value="Hígido" className="elemOp">
                           Hígido
                         </option>
-                        <option defaultValue="Trincado" className="elemOp">
+                        <option value="Trincado" className="elemOp">
                           Trincado
                         </option>
-                        <option defaultValue="Ausente" className="elemOp">
+                        <option value="Ausente" className="elemOp">
                           Ausente
                         </option>
                       </datalist>
@@ -2797,7 +2792,6 @@ export default function OdPage(): JSX.Element {
                       <input
                         type="text"
                         list="avElemD42"
-                        defaultValue="Hígido"
                         id="inpD42"
                         className="inpAvDent form-control noInvert minText patternText"
                         onInput={ev => handleEventReq(ev.currentTarget)}
@@ -2808,19 +2802,19 @@ export default function OdPage(): JSX.Element {
                         data-flags="gi"
                       />
                       <datalist id="avElemD42" className="dlAvDent">
-                        <option defaultValue="Amálgama" className="elemOp">
+                        <option value="Amálgama" className="elemOp">
                           Amálgama
                         </option>
-                        <option defaultValue="Careado" className="elemOp">
+                        <option value="Careado" className="elemOp">
                           Careado
                         </option>
-                        <option defaultValue="Hígido" className="elemOp">
+                        <option value="Hígido" className="elemOp">
                           Hígido
                         </option>
-                        <option defaultValue="Trincado" className="elemOp">
+                        <option value="Trincado" className="elemOp">
                           Trincado
                         </option>
-                        <option defaultValue="Ausente" className="elemOp">
+                        <option value="Ausente" className="elemOp">
                           Ausente
                         </option>
                       </datalist>
@@ -2839,7 +2833,6 @@ export default function OdPage(): JSX.Element {
                       <input
                         type="text"
                         list="avElemD43"
-                        defaultValue="Hígido"
                         id="inpD43"
                         className="inpAvDent form-control noInvert minText patternText"
                         onInput={ev => handleEventReq(ev.currentTarget)}
@@ -2850,19 +2843,19 @@ export default function OdPage(): JSX.Element {
                         data-flags="gi"
                       />
                       <datalist id="avElemD43" className="dlAvDent">
-                        <option defaultValue="Amálgama" className="elemOp">
+                        <option value="Amálgama" className="elemOp">
                           Amálgama
                         </option>
-                        <option defaultValue="Careado" className="elemOp">
+                        <option value="Careado" className="elemOp">
                           Careado
                         </option>
-                        <option defaultValue="Hígido" className="elemOp">
+                        <option value="Hígido" className="elemOp">
                           Hígido
                         </option>
-                        <option defaultValue="Trincado" className="elemOp">
+                        <option value="Trincado" className="elemOp">
                           Trincado
                         </option>
-                        <option defaultValue="Ausente" className="elemOp">
+                        <option value="Ausente" className="elemOp">
                           Ausente
                         </option>
                       </datalist>
@@ -2881,7 +2874,6 @@ export default function OdPage(): JSX.Element {
                       <input
                         type="text"
                         list="avElemD44"
-                        defaultValue="Hígido"
                         id="inpD44"
                         className="inpAvDent form-control noInvert minText patternText"
                         onInput={ev => handleEventReq(ev.currentTarget)}
@@ -2892,19 +2884,19 @@ export default function OdPage(): JSX.Element {
                         data-flags="gi"
                       />
                       <datalist id="avElemD44" className="dlAvDent">
-                        <option defaultValue="Amálgama" className="elemOp">
+                        <option value="Amálgama" className="elemOp">
                           Amálgama
                         </option>
-                        <option defaultValue="Careado" className="elemOp">
+                        <option value="Careado" className="elemOp">
                           Careado
                         </option>
-                        <option defaultValue="Hígido" className="elemOp">
+                        <option value="Hígido" className="elemOp">
                           Hígido
                         </option>
-                        <option defaultValue="Trincado" className="elemOp">
+                        <option value="Trincado" className="elemOp">
                           Trincado
                         </option>
-                        <option defaultValue="Ausente" className="elemOp">
+                        <option value="Ausente" className="elemOp">
                           Ausente
                         </option>
                       </datalist>
@@ -2923,7 +2915,6 @@ export default function OdPage(): JSX.Element {
                       <input
                         type="text"
                         list="avElemD45"
-                        defaultValue="Hígido"
                         id="inpD45"
                         className="inpAvDent form-control noInvert minText patternText"
                         onInput={ev => handleEventReq(ev.currentTarget)}
@@ -2934,19 +2925,19 @@ export default function OdPage(): JSX.Element {
                         data-flags="gi"
                       />
                       <datalist id="avElemD45" className="dlAvDent">
-                        <option defaultValue="Amálgama" className="elemOp">
+                        <option value="Amálgama" className="elemOp">
                           Amálgama
                         </option>
-                        <option defaultValue="Careado" className="elemOp">
+                        <option value="Careado" className="elemOp">
                           Careado
                         </option>
-                        <option defaultValue="Hígido" className="elemOp">
+                        <option value="Hígido" className="elemOp">
                           Hígido
                         </option>
-                        <option defaultValue="Trincado" className="elemOp">
+                        <option value="Trincado" className="elemOp">
                           Trincado
                         </option>
-                        <option defaultValue="Ausente" className="elemOp">
+                        <option value="Ausente" className="elemOp">
                           Ausente
                         </option>
                       </datalist>
@@ -2965,7 +2956,6 @@ export default function OdPage(): JSX.Element {
                       <input
                         type="text"
                         list="avElemD46"
-                        defaultValue="Hígido"
                         id="inpD46"
                         className="inpAvDent form-control noInvert minText patternText"
                         onInput={ev => handleEventReq(ev.currentTarget)}
@@ -2976,19 +2966,19 @@ export default function OdPage(): JSX.Element {
                         data-flags="gi"
                       />
                       <datalist id="avElemD46" className="dlAvDent">
-                        <option defaultValue="Amálgama" className="elemOp">
+                        <option value="Amálgama" className="elemOp">
                           Amálgama
                         </option>
-                        <option defaultValue="Careado" className="elemOp">
+                        <option value="Careado" className="elemOp">
                           Careado
                         </option>
-                        <option defaultValue="Hígido" className="elemOp">
+                        <option value="Hígido" className="elemOp">
                           Hígido
                         </option>
-                        <option defaultValue="Trincado" className="elemOp">
+                        <option value="Trincado" className="elemOp">
                           Trincado
                         </option>
-                        <option defaultValue="Ausente" className="elemOp">
+                        <option value="Ausente" className="elemOp">
                           Ausente
                         </option>
                       </datalist>
@@ -3007,7 +2997,6 @@ export default function OdPage(): JSX.Element {
                       <input
                         type="text"
                         list="avElemD47"
-                        defaultValue="Hígido"
                         id="inpD47"
                         className="inpAvDent form-control noInvert minText patternText"
                         onInput={ev => handleEventReq(ev.currentTarget)}
@@ -3018,19 +3007,19 @@ export default function OdPage(): JSX.Element {
                         data-flags="gi"
                       />
                       <datalist id="avElemD47" className="dlAvDent">
-                        <option defaultValue="Amálgama" className="elemOp">
+                        <option value="Amálgama" className="elemOp">
                           Amálgama
                         </option>
-                        <option defaultValue="Careado" className="elemOp">
+                        <option value="Careado" className="elemOp">
                           Careado
                         </option>
-                        <option defaultValue="Hígido" className="elemOp">
+                        <option value="Hígido" className="elemOp">
                           Hígido
                         </option>
-                        <option defaultValue="Trincado" className="elemOp">
+                        <option value="Trincado" className="elemOp">
                           Trincado
                         </option>
-                        <option defaultValue="Ausente" className="elemOp">
+                        <option value="Ausente" className="elemOp">
                           Ausente
                         </option>
                       </datalist>
@@ -3049,7 +3038,6 @@ export default function OdPage(): JSX.Element {
                       <input
                         type="text"
                         list="avElemD48"
-                        defaultValue="Hígido"
                         id="inpD48"
                         className="inpAvDent form-control noInvert minText patternText"
                         onInput={ev => handleEventReq(ev.currentTarget)}
@@ -3060,19 +3048,19 @@ export default function OdPage(): JSX.Element {
                         data-flags="gi"
                       />
                       <datalist id="avElemD48" className="dlAvDent">
-                        <option defaultValue="Amálgama" className="elemOp">
+                        <option value="Amálgama" className="elemOp">
                           Amálgama
                         </option>
-                        <option defaultValue="Careado" className="elemOp">
+                        <option value="Careado" className="elemOp">
                           Careado
                         </option>
-                        <option defaultValue="Hígido" className="elemOp">
+                        <option value="Hígido" className="elemOp">
                           Hígido
                         </option>
-                        <option defaultValue="Trincado" className="elemOp">
+                        <option value="Trincado" className="elemOp">
                           Trincado
                         </option>
-                        <option defaultValue="Ausente" className="elemOp">
+                        <option value="Ausente" className="elemOp">
                           Ausente
                         </option>
                       </datalist>
@@ -3153,16 +3141,7 @@ export default function OdPage(): JSX.Element {
                       id="labConfirmLoc"
                     >
                       Local:
-                      <input
-                        type="text"
-                        name="confirmLocName"
-                        id="confirmLocId"
-                        className="inpConfirm form-control noInvert"
-                        defaultValue="Rio de Janeiro, Rio de Janeiro"
-                        data-title="assinatura_local"
-                        required
-                        onInput={ev => handleEventReq(ev.currentTarget)}
-                      />
+                      <MemoLoc />
                     </label>
                     <label
                       htmlFor="confirmDatId"
