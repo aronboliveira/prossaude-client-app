@@ -54,26 +54,56 @@
     );
   }
 
+  section {
+    &:has(> #rootUserInfo) {
+      background-color: #529b85c6;
+      border-color: #9cb6a6c6;
+    }
+    #nameLogin {
+      color: #ece8e8;
+    }
+  }
+
   .anchoredBtn {
     background-repeat: no-repeat;
     background-position: center center;
     background-size: 60%;
   }
 
+  .btn {
+    &.btn-rounded {
+      border-radius: 1rem;
+    }
+  }
+
   .card {
     @include carded;
+    border-radius: 1rem;
   }
 
   .card-body {
     min-width: 14.3rem;
     border: 0.1rem ridge #6a7f7a73;
+    background: linear-gradient(to right, #d6e9ddc6, #b5dcc5db);
+    border-color: #b5dcc5db;
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+    small,
+    span {
+      font-weight: 600;
+      font-size: 0.77rem;
+      max-width: 90%;
+      align-self: center;
+    }
   }
 
   .card-hborder {
     @include carded;
     min-width: 0;
-    border-top-left-radius: 2rem;
-    border-top-right-radius: 2rem;
+    background: linear-gradient(to right, #e8eeeab9, #c6e6d1d9);
+    border-color: #bac6c0c6;
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
     border: 0.1rem ridge #6a7f7a73;
     img {
       min-width: 13rem;
@@ -91,9 +121,6 @@
     img {
       vertical-align: super;
     }
-  }
-
-  .card-header {
     &:hover {
       img {
         animation: highlightButton 2s linear infinite;
@@ -113,19 +140,21 @@
   .header-main-container {
     background: linear-gradient(
       to right,
-      rgba(104, 146, 131, 0.446),
-      rgba(65, 185, 135, 0.429)
+      rgba(193, 214, 207, 0.446),
+      rgba(125, 220, 180, 0.429)
     );
     border-block: 0.1rem ridge #87878773;
     border-bottom: 0.2rem ridge #87878754;
   }
 
   .header-main-text {
+    color: #ece8e8e4;
     font-size: 1.5rem;
     font-weight: bolder;
     margin-left: 1rem;
     + * {
       max-width: 12rem;
+      margin-right: 0.2rem;
     }
   }
 
@@ -139,8 +168,8 @@
     height: 100%;
     background: linear-gradient(
       to right,
-      rgba(132, 150, 144, 0.446),
-      rgba(68, 167, 125, 0.429)
+      rgba(214, 230, 225, 0.719),
+      rgba(95, 209, 194, 0.429)
     );
   }
 
@@ -159,42 +188,55 @@
   #cardSect {
     max-width: 98vw;
   }
+
+  #panelBtn {
+    box-shadow: 0.2vh 0.2vh 0.2vh rgba(133, 128, 128, 0.671);
+    transform: scale(1.2);
+    padding-bottom: 2.1rem;
+  }
+}
+
+@media screen and (max-width: 1420px) {
+  #ag_but_sec {
+    transform: translateY(-0.3rem);
+    + * {
+      transform: translateY(-0.3rem);
+    }
+  }
 }
 
 @media screen and (min-width: 1025px) {
   .baseBody {
     #cardsSect {
-      padding-inline: 0.5vw;
+      grid-template-columns: repeat(4, 24.4%);
+      gap: 0.5rem;
+      max-width: 99%;
+      padding-inline: 1.3vw 0.5vw;
     }
     .header-main-container {
       padding-left: 0.75rem;
     }
-  }
-  #cardsSect {
-    grid-template-columns: repeat(4, 24.4%);
-    gap: 0.5rem;
-    margin-left: 0.5rem;
-  }
-  .card {
-    &:has(#agAnchoredBtn) {
-      margin-left: 0.2rem;
-      min-width: 13.7rem;
-      max-width: 25vw !important;
-    }
-    .card-hborder {
-      &#agAnchoredBtn {
-        a {
-          padding-bottom: 0.35rem;
-        }
+    .card {
+      &:has(#agAnchoredBtn) {
+        margin-left: 0.2rem;
+        min-width: 13.7rem;
+        max-width: 25vw !important;
       }
-      &:has(#odAnchoredBtn) {
-        a {
-          padding-bottom: 0.65rem;
+      .card-hborder {
+        &#agAnchoredBtn {
+          a {
+            padding-bottom: 0.35rem;
+          }
         }
-      }
-      &:has(#efAnchoredBtn) {
-        a {
-          padding-bottom: 0.6rem;
+        &:has(#odAnchoredBtn) {
+          a {
+            padding-bottom: 0.65rem;
+          }
+        }
+        &:has(#efAnchoredBtn) {
+          a {
+            padding-bottom: 0.6rem;
+          }
         }
       }
     }
@@ -246,6 +288,7 @@
       grid-template-columns: repeat(2, 1fr);
       row-gap: 1rem;
       justify-content: center;
+      max-width: 98.5%;
     }
   }
 }
@@ -307,6 +350,24 @@
     #bgDiv {
       min-height: 141vh;
       height: 141vh;
+    }
+  }
+}
+
+@media screen and (max-width: 750px) {
+  .baseBody {
+    .main-article {
+      height: 100vh;
+    }
+    #cardsSect {
+      height: 100vh;
+    }
+    #panelBtn {
+      transform: scale(1.1) translate(-1vw, 0);
+    }
+    #panelSect {
+      padding-top: 8vh;
+      padding-bottom: 4vh;
     }
   }
 }
@@ -378,14 +439,25 @@
       }
     }
     .main-article {
-      height: 120rem;
+      height: 130rem;
+    }
+    .main-container {
+      height: 230vh;
     }
     #cardsSect {
+      height: 210vh;
       display: flex;
-      flex-flow: column wrap;
+      flex-flow: column nowrap;
       align-items: center;
       justify-content: center;
       margin-left: 0.75rem;
+    }
+    #panelBtn {
+      transform: scale(1.1) translate(-2.15vw, 0);
+    }
+    #panelSect {
+      padding-top: 0;
+      padding-bottom: 6vh;
     }
   }
 }

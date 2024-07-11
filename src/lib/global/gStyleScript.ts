@@ -1107,9 +1107,6 @@ export function expandContent(el: targEl) {
             (document.getElementById("nameLogin")?.innerText.length || 12) *
             10.6;
           if (!maxWidth || maxWidth < 0 || !Number.isFinite(maxWidth)) return;
-          console.log("MAX");
-          console.log(maxWidth);
-          console.log(document.getElementById("nameLogin")?.innerText.length);
           if (
             parseInt(getComputedStyle(el).opacity) < 1 ||
             parseInt(getComputedStyle(el.parentElement!).opacity) < 1 ||
