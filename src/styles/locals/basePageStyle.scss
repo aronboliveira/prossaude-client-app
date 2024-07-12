@@ -301,16 +301,16 @@
 @media screen and (min-width: 851px) and (max-width: 1024px) {
   .baseBody {
     .main-container {
-      min-height: 155vh;
-      height: 155vh;
+      min-height: 66rem;
+      height: 66rem;
     }
     .main-article {
-      min-height: 155vh;
-      height: 155vh;
+      min-height: 66rem;
+      height: 66rem;
     }
     #bgDiv {
-      min-height: 166.7vh;
-      height: 166.7vh;
+      min-height: 71rem;
+      height: 71rem;
     }
   }
 }
@@ -346,6 +346,7 @@
   $ht721: 100vh;
   .baseBody {
     #panelSect {
+      padding-top: 4rem;
       padding-bottom: 1rem;
     }
     #profileIconImg {
@@ -357,12 +358,12 @@
 @media screen and (max-width: 850px) {
   .baseBody {
     .main-container {
-      min-height: 153vh;
-      height: 153vh;
+      min-height: 69rem;
+      height: 69rem;
     }
     #bgDiv {
-      min-height: 165vh;
-      height: 165vh;
+      min-height: 74rem;
+      height: 74rem;
     }
   }
 }
@@ -374,12 +375,12 @@
       height: 73rem;
     }
     .main-container {
-      min-height: 73rem;
-      height: 73rem;
+      min-height: 66.8rem;
+      height: 66.8rem;
     }
     #bgDiv {
-      min-height: 79.28rem;
-      height: 79.28rem;
+      min-height: 75rem;
+      height: 75rem;
     }
     #cardsSect {
       min-height: 63rem;
@@ -387,6 +388,24 @@
     }
     #panelBtn {
       transform: scale(1.1) translate(-1vw, 0);
+    }
+  }
+}
+
+@media screen and (max-width: 750px) and (min-width: 721) {
+  .baseBody {
+    #panelSect {
+      transform: translateY(-4rem) scale(1.1);
+      padding-bottom: 0;
+    }
+  }
+}
+
+@media screen and (max-width: 750px) and (min-width: 621) {
+  .baseBody {
+    #bgDiv {
+      min-height: 72.3rem;
+      height: 72.3rem;
     }
   }
 }
@@ -448,20 +467,20 @@
 @media screen and (max-width: 591px) {
   .baseBody {
     .main-article {
-      min-height: 73rem;
-      height: 73rem;
+      min-height: 74rem;
+      height: 74rem;
     }
     .main-container {
-      min-height: 73rem;
-      height: 73rem;
+      min-height: 74rem;
+      height: 74rem;
     }
     #bgDiv {
       min-height: 82rem;
       height: 82rem;
     }
     #cardsSect {
-      min-height: 65rem;
-      height: 65rem;
+      min-height: 55rem;
+      height: 55rem;
     }
   }
 }
@@ -469,6 +488,7 @@
 @media screen and (min-width: 520px) and (max-width: 850px) {
   .baseBody {
     #panelSect {
+      padding-top: 0;
       padding-bottom: 6vh;
     }
   }
@@ -500,20 +520,20 @@
       }
     }
     .main-article {
-      min-height: 125rem;
-      height: 125rem;
+      min-height: 116rem;
+      height: 116rem;
     }
     .main-container {
-      min-height: 125rem;
-      height: 125rem;
+      min-height: 116rem;
+      height: 116rem;
     }
     #bgDiv {
-      min-height: 134rem;
-      height: 134rem;
+      min-height: 124rem;
+      height: 124rem;
     }
     #cardsSect {
-      min-height: 113rem;
-      height: 113rem;
+      min-height: 109rem;
+      height: 109rem;
       display: flex;
       flex-flow: column nowrap;
       align-items: center;
@@ -527,6 +547,14 @@
       padding-top: 0;
       padding-bottom: 6vh;
       margin-left: 0.45rem;
+    }
+  }
+}
+
+@media (max-width: 460px) {
+  .baseBody {
+    .header-main-text {
+      margin-left: 0;
     }
   }
 }
