@@ -245,6 +245,16 @@
 
 @media screen and (max-width: 1024px) {
   .baseBody {
+    div {
+      &:has(#agAnchoredBtn) {
+        &:not(#bgDiv) {
+          max-width: 75vw !important;
+        }
+      }
+    }
+    footer {
+      display: none;
+    }
     header {
       &.header-main-container {
         padding-block: 1rem;
@@ -257,20 +267,6 @@
         }
       }
     }
-    footer {
-      display: none;
-    }
-    #bgDiv {
-      height: 85.5rem;
-      min-width: 100vw;
-    }
-    .main-article {
-      height: 85.5rem;
-    }
-    .main-container {
-      width: 100vw;
-      grid-template-rows: 1fr 6rem;
-    }
     .card.card23v {
       max-width: 50vw;
       width: 43vw;
@@ -281,8 +277,17 @@
         grid-row: 2;
       }
     }
-    div:has(#agAnchoredBtn):not(#bgDiv) {
-      max-width: 75vw !important;
+    .main-article {
+      min-height: 70rem;
+      height: 70rem;
+    }
+    .main-container {
+      min-height: 70rem;
+      height: 70rem;
+    }
+    #bgDiv {
+      height: 75.5rem;
+      min-width: 75.5rem;
     }
     #cardsSect {
       grid-template-columns: repeat(2, 1fr);
@@ -311,19 +316,22 @@
 }
 
 @media only screen and (min-width: 721px) and (max-width: 1024px) and (orientation: portrait) {
-  $ht721: 100vh;
   .baseBody {
     .main-article {
-      min-height: calc($ht721 - 15vh);
-      height: calc($ht721 - 15vh);
+      min-height: 71rem;
+      height: 71rem;
     }
     .main-container {
-      min-height: calc($ht721 - 10vh);
-      height: calc($ht721 - 15vh);
+      min-height: 71rem;
+      height: 71rem;
+    }
+    #cardsSect {
+      min-height: 70rem;
+      height: 70rem;
     }
     #bgDiv {
-      min-height: $ht721;
-      height: $ht721;
+      min-height: 77rem;
+      height: 77rem;
     }
     #panelSect {
       padding-bottom: 5rem;
@@ -362,18 +370,20 @@
 @media screen and (max-width: 750px) {
   .baseBody {
     .main-article {
-      height: 100vh;
+      min-height: 73rem;
+      height: 73rem;
     }
     .main-container {
-      min-height: 158vh;
-      height: 158vh;
+      min-height: 73rem;
+      height: 73rem;
     }
     #bgDiv {
-      min-height: 170vh;
-      height: 170vh;
+      min-height: 79.28rem;
+      height: 79.28rem;
     }
     #cardsSect {
-      height: 100vh;
+      min-height: 63rem;
+      height: 63rem;
     }
     #panelBtn {
       transform: scale(1.1) translate(-1vw, 0);
@@ -437,13 +447,21 @@
 
 @media screen and (max-width: 591px) {
   .baseBody {
+    .main-article {
+      min-height: 73rem;
+      height: 73rem;
+    }
+    .main-container {
+      min-height: 73rem;
+      height: 73rem;
+    }
     #bgDiv {
-      min-height: 177vh;
-      height: 177vh;
+      min-height: 82rem;
+      height: 82rem;
     }
     #cardsSect {
-      min-height: 143vh;
-      height: 143vh;
+      min-height: 65rem;
+      height: 65rem;
     }
   }
 }
@@ -482,20 +500,20 @@
       }
     }
     .main-article {
-      min-height: 124rem;
-      height: 124rem;
+      min-height: 125rem;
+      height: 125rem;
     }
     .main-container {
-      min-height: 273vh;
-      height: 273vh;
+      min-height: 125rem;
+      height: 125rem;
     }
     #bgDiv {
-      min-height: 124rem;
-      height: 124rem;
+      min-height: 134rem;
+      height: 134rem;
     }
     #cardsSect {
-      min-height: 252vh;
-      height: 252vh;
+      min-height: 113rem;
+      height: 113rem;
       display: flex;
       flex-flow: column nowrap;
       align-items: center;
