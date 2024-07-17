@@ -1,6 +1,6 @@
 //nesse file estão presentes principalmente as funções de manipulação dinâmica de texto e layout
 import { parseNotNaN, removeFirstClick } from "../gModel";
-import { fadeElement, highlightChange, isClickOutside } from "../gStyleScript";
+import { fadeElement, isClickOutside } from "../gStyleScript";
 import type { targEl, primitiveType, textEl } from "../declarations/types";
 import {
   extLine,
@@ -792,44 +792,67 @@ export function toggleConformDlg(): void {
     );
 }
 
-export function validateForm(
+const borderColors: { [k: string]: string } = {};
+export async function validateForm(
   subButton: targEl,
   scope: HTMLElement | Document = document
-): boolean {
+): Promise<[boolean, string[], Array<[string, string | File]>]> {
   const arrValidity: boolean[] = [];
   const invalidEntries: string[] = [];
+  const validEntries: Array<[string, string | File]> = [];
   if (
     subButton instanceof HTMLButtonElement &&
     (scope instanceof HTMLElement || scope instanceof Document)
   ) {
-    let accInvalid = 0;
     [
       ...scope.querySelectorAll("input"),
       ...scope.querySelectorAll("textarea"),
       ...scope.querySelectorAll("select"),
+      ...scope.querySelectorAll("canvas"),
     ].forEach(entry => {
-      if (entry instanceof HTMLSelectElement)
-        entry.value !== "" ? arrValidity.push(true) : arrValidity.push(false);
-
-      if (
-        entry instanceof HTMLInputElement ||
-        entry instanceof HTMLTextAreaElement
-      ) {
-        const displayInvalidity = () => {
-          ++accInvalid;
-          highlightChange(entry);
-          if (accInvalid === 1) entry.scrollIntoView({ behavior: "smooth" });
+      const displayInvalidity = (valid: boolean = true) => {
+        if (!valid && !(entry instanceof HTMLCanvasElement)) {
+          entry.scrollIntoView({ behavior: "smooth" });
+          if (!/border-color/g.test(getComputedStyle(entry).transition))
+            entry.style.transition =
+              (getComputedStyle(entry).transition || "") +
+              "border-color ease-in-out 1s";
           if (
-            entry instanceof HTMLInputElement &&
-            (!(
-              entry.type === "checkbox" ||
-              entry.type === "radio" ||
-              entry.type === "file" ||
-              entry.type === "submit" ||
-              entry.type === "button" ||
-              entry.type === "reset"
-            ) ||
-              entry instanceof HTMLTextAreaElement)
+            !borderColors[
+              entry.id ||
+                entry.name ||
+                entry.classList.toString().replaceAll(" ", "_")
+            ]
+          )
+            borderColors[
+              entry.id ||
+                entry.name ||
+                entry.classList.toString().replaceAll(" ", "_")
+            ] =
+              getComputedStyle(entry).borderColor ||
+              getComputedStyle(entry).borderBottomColor;
+          entry.style.borderColor = "red";
+          setTimeout(
+            () =>
+              (entry.style.borderColor =
+                borderColors[
+                  entry.id ||
+                    entry.name ||
+                    entry.classList.toString().replaceAll(" ", "_")
+                ] || "rgb(222, 226, 230)"),
+            1000
+          );
+          if (
+            (entry instanceof HTMLInputElement &&
+              !(
+                entry.type === "checkbox" ||
+                entry.type === "radio" ||
+                entry.type === "file" ||
+                entry.type === "submit" ||
+                entry.type === "button" ||
+                entry.type === "reset"
+              )) ||
+            entry instanceof HTMLTextAreaElement
           ) {
             const prevPlaceholder = entry.placeholder;
             entry.placeholder = `Entrada inválida`;
@@ -837,16 +860,29 @@ export function validateForm(
               entry.placeholder = prevPlaceholder;
             }, 2000);
           }
-        };
-        let isValid = true;
+        }
+      };
+      let isValid = true;
+      if (entry instanceof HTMLSelectElement) {
+        if (entry.value === "") {
+          isValid = false;
+          invalidEntries.push(
+            entry.name || entry.id || entry.dataset.title || entry.tagName
+          );
+          displayInvalidity(isValid);
+        }
+      } else if (
+        entry instanceof HTMLInputElement ||
+        entry instanceof HTMLTextAreaElement
+      ) {
         if (!entry.checkValidity()) {
           isValid = false;
           invalidEntries.push(
-            entry.dataset.title || entry.id || entry.name || entry.tagName
+            entry.id || entry.name || entry.dataset.title || entry.tagName
           );
-          displayInvalidity();
+          displayInvalidity(isValid);
         }
-        if (entry.type === "date") {
+        if (entry instanceof HTMLInputElement && entry.type === "date") {
           if (entry.classList.contains("minCurrDate")) {
             const currDate = new Date()
               .toISOString()
@@ -888,9 +924,9 @@ export function validateForm(
             if (entryNumDateValue < currNumDate) {
               isValid = false;
               invalidEntries.push(
-                entry.dataset.title || entry.id || entry.name || entry.tagName
+                entry.id || entry.name || entry.dataset.title || entry.tagName
               );
-              displayInvalidity();
+              displayInvalidity(isValid);
             }
           }
           if (entry.classList.contains("maxCurrDate")) {
@@ -934,10 +970,58 @@ export function validateForm(
             if (entryNumDateValue > currNumDate) {
               isValid = false;
               invalidEntries.push(
-                entry.dataset.title || entry.id || entry.name || entry.tagName
+                entry.id || entry.name || entry.dataset.title || entry.tagName
               );
-              displayInvalidity();
+              displayInvalidity(isValid);
             }
+          }
+        } else if (
+          entry instanceof HTMLInputElement &&
+          entry.type === "radio"
+        ) {
+          try {
+            const parent = entry.parentElement;
+            if (!(parent instanceof Element))
+              throw elementNotFound(
+                parent,
+                `Validation of parent instance`,
+                "Element"
+              );
+            const radioGroupList = parent.querySelectorAll(
+              'input[type="radio"]'
+            );
+            if (radioGroupList.length === 0)
+              throw new Error(`Error populating list of radios from parent`);
+            if (
+              !Array.from(radioGroupList)
+                .filter(
+                  radio =>
+                    radio instanceof HTMLInputElement && radio.type === "radio"
+                )
+                .some(
+                  radio =>
+                    radio instanceof HTMLInputElement &&
+                    radio.type === "radio" &&
+                    radio.checked
+                )
+            ) {
+              isValid = false;
+              displayInvalidity(isValid);
+            }
+          } catch (e) {
+            console.error(
+              `Error executing procedure for validating radio:\n${
+                (e as Error).message
+              }`
+            );
+          }
+        } else if (entry instanceof HTMLInputElement && entry.type === "file") {
+          if (!(entry.files && entry.files[0])) {
+            isValid = false;
+            invalidEntries.push(
+              entry.name || entry.id || entry.dataset.title || entry.tagName
+            );
+            displayInvalidity(isValid);
           }
         } else {
           if (
@@ -946,9 +1030,9 @@ export function validateForm(
           ) {
             isValid = false;
             invalidEntries.push(
-              entry.dataset.title || entry.id || entry.name || entry.tagName
+              entry.id || entry.name || entry.dataset.title || entry.tagName
             );
-            displayInvalidity();
+            displayInvalidity(isValid);
           }
           if (
             entry.classList.contains("maxText") &&
@@ -956,9 +1040,9 @@ export function validateForm(
           ) {
             isValid = false;
             invalidEntries.push(
-              entry.dataset.title || entry.id || entry.name || entry.tagName
+              entry.id || entry.name || entry.dataset.title || entry.tagName
             );
-            displayInvalidity();
+            displayInvalidity(isValid);
           }
           if (
             entry.classList.contains("minNum") &&
@@ -966,9 +1050,9 @@ export function validateForm(
           ) {
             isValid = false;
             invalidEntries.push(
-              entry.dataset.title || entry.id || entry.name || entry.tagName
+              entry.id || entry.name || entry.dataset.title || entry.tagName
             );
-            displayInvalidity();
+            displayInvalidity(isValid);
           }
           if (
             entry.classList.contains("maxNum") &&
@@ -976,9 +1060,9 @@ export function validateForm(
           ) {
             isValid = false;
             invalidEntries.push(
-              entry.dataset.title || entry.id || entry.name || entry.tagName
+              entry.id || entry.name || entry.dataset.title || entry.tagName
             );
-            displayInvalidity();
+            displayInvalidity(isValid);
           }
           if (
             entry.classList.contains("patternText") &&
@@ -989,12 +1073,117 @@ export function validateForm(
           ) {
             isValid = false;
             invalidEntries.push(
-              entry.dataset.title || entry.id || entry.name || entry.tagName
+              entry.id || entry.name || entry.dataset.title || entry.tagName
             );
-            displayInvalidity();
+            displayInvalidity(isValid);
           }
         }
         arrValidity.push(isValid);
+        if (isValid) {
+          if (entry instanceof HTMLInputElement && entry.type === "checkbox")
+            validEntries.push([
+              entry.name || entry.id || entry.dataset.title || entry.tagName,
+              `${entry.checked}`,
+            ]);
+          else if (
+            entry instanceof HTMLInputElement &&
+            entry.type === "radio"
+          ) {
+            try {
+              const parent = entry.parentElement;
+              if (!(parent instanceof Element))
+                throw elementNotFound(
+                  parent,
+                  `Validation of parent instance`,
+                  "Element"
+                );
+              const radioGroupList = parent.querySelectorAll(
+                'input[type="radio"]'
+              );
+              if (radioGroupList.length === 0)
+                throw new Error(`Error populating list of radios from parent`);
+              const opChecked = Array.from(radioGroupList).filter(
+                radio =>
+                  radio instanceof HTMLInputElement &&
+                  radio.type === "radio" &&
+                  radio.checked
+              )[0];
+              if (
+                !(
+                  opChecked instanceof HTMLInputElement &&
+                  opChecked.type === "radio"
+                )
+              ) {
+                validEntries.push([opChecked.id || opChecked.tagName, `false`]);
+                throw new Error(`Failed to find checked radio in group`);
+              }
+              if (
+                opChecked.id.endsWith("No") ||
+                opChecked.id.endsWith("-no") ||
+                opChecked.id.endsWith("-No") ||
+                opChecked.classList.contains("radNo")
+              )
+                validEntries.push([
+                  opChecked.name ||
+                    opChecked.id ||
+                    opChecked.dataset.title ||
+                    opChecked.tagName,
+                  `false`,
+                ]);
+              else
+                validEntries.push([
+                  opChecked.name ||
+                    opChecked.id ||
+                    opChecked.dataset.title ||
+                    opChecked.tagName,
+                  `true`,
+                ]);
+            } catch (e) {
+              console.error(
+                `Error executing procedure for pushing radio check:\n${
+                  (e as Error).message
+                }`
+              );
+            }
+          } else if (
+            entry instanceof HTMLInputElement &&
+            entry.type === "file" &&
+            entry.files
+          ) {
+            validEntries.push([
+              entry.name || entry.id || entry.dataset.title || entry.tagName,
+              entry.files[0],
+            ]);
+          } else if (entry instanceof HTMLCanvasElement) {
+            (async (): Promise<File> => {
+              return new Promise((res, rej) => {
+                entry.toBlob(blob => {
+                  if (blob) {
+                    res(
+                      new File(
+                        [blob],
+                        entry.name ||
+                          entry.id ||
+                          entry.dataset.title ||
+                          entry.tagName,
+                        { type: blob.type }
+                      )
+                    );
+                  } else rej(new Error(`Failed to extract file.`));
+                });
+              });
+            })().then(file =>
+              validEntries.push([
+                entry.name || entry.id || entry.dataset.title || entry.tagName,
+                file,
+              ])
+            );
+          } else
+            validEntries.push([
+              entry.name || entry.id || entry.dataset.title || entry.tagName,
+              entry.value,
+            ]);
+        }
       }
     });
   } else
@@ -1003,12 +1192,11 @@ export function validateForm(
       `Button for submiting form id ${subButton?.id ?? "UNIDENTIFIED"}`,
       extLine(new Error())
     );
-  window.alert(
-    `Sistema ainda não pronto...mas você teria enviado clicando aqui!
-    Entradas invalidadas:
-    ${invalidEntries.map(invalidIdf => `${invalidIdf} \n`)}`
-  );
-  return arrValidity.some(validity => validity === false) ? false : true;
+  return [
+    arrValidity.some(validity => validity === false) ? false : true,
+    invalidEntries.map(invalidIdf => `${invalidIdf} \n`),
+    validEntries,
+  ];
 }
 
 export function handleCondtReq(
