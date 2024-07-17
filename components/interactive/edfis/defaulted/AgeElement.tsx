@@ -26,7 +26,7 @@ export default function AgeElement() {
   return (
     <input
       type="number"
-      name="dateAgeName"
+      name="age"
       id="dateAgeId"
       className="form-control noInvert inpIdentif minText maxText minNum maxNum patternText"
       min="0"

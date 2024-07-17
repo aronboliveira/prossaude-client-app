@@ -227,7 +227,7 @@ export default function AGPage(): JSX.Element {
                         DDD:
                         <input
                           type="number"
-                          name="telAreaCodeName"
+                          name="ddd"
                           id="telAreaCodeId"
                           className="form-control inpIdentif noInvert inpDDD minText maxText patternText minNum maxNum"
                           min="11"
@@ -255,7 +255,7 @@ export default function AGPage(): JSX.Element {
                         DDD do Telefone Secundário:
                         <input
                           type="number"
-                          name="tel2AreaCodeName"
+                          name="ddd_sec"
                           id="tel2AreaCodeId"
                           className="form-control inpIdentif noInvert inpDDD"
                           min="11"
@@ -284,7 +284,7 @@ export default function AGPage(): JSX.Element {
                         Telefone:
                         <input
                           type="text"
-                          name="telName"
+                          name="tel"
                           id="telId"
                           className="form-control inpIdentif noInvert inpTel minText maxText patternText"
                           minLength={8}
@@ -313,7 +313,7 @@ export default function AGPage(): JSX.Element {
                         Telefone Secundário:
                         <input
                           type="text"
-                          name="tel2Name"
+                          name="tel_sec"
                           id="tel2Id"
                           className="form-control inpIdentif noInvert inpTel"
                           inputMode="tel"
@@ -342,7 +342,7 @@ export default function AGPage(): JSX.Element {
                         Se estrangeiro, informe o código do País:
                         <input
                           type="number"
-                          name="telCountryCodeName"
+                          name="country_code"
                           id="telCountryCodeId"
                           className="form-control inpIdentif noInvert"
                           min="1"
@@ -373,7 +373,7 @@ export default function AGPage(): JSX.Element {
                         Se estrangeiro, informe o código do País:
                         <input
                           type="number"
-                          name="tel2CountryCodeName"
+                          name="country_code_sec"
                           id="tel2CountryCodeId"
                           className="form-control inpIdentif noInvert"
                           min="1"
@@ -401,7 +401,7 @@ export default function AGPage(): JSX.Element {
                         E-mail:
                         <input
                           type="text"
-                          name="email1Name"
+                          name="email"
                           id="email1Id"
                           className="form-control inpIdentif noInvert inpEmail"
                           autoComplete="email"
@@ -428,7 +428,7 @@ export default function AGPage(): JSX.Element {
                         E-mail Secundário:
                         <input
                           type="text"
-                          name="email2Name"
+                          name="email_sec"
                           id="email2Id"
                           className="form-control inpIdentif noInvert inpEmail"
                           autoComplete="email"
@@ -458,7 +458,7 @@ export default function AGPage(): JSX.Element {
                       Nacionalidade:
                       <input
                         type="text"
-                        name="countryName"
+                        name="country"
                         id="countryId"
                         className="form-control autocorrect inpIdentif noInvert minText patternText"
                         autoComplete="country"
@@ -479,7 +479,7 @@ export default function AGPage(): JSX.Element {
                       Cidade:
                       <input
                         type="text"
-                        name="cityName"
+                        name="city"
                         id="cityId"
                         className="form-control autocorrect inpIdentif noInvert minText"
                         data-title="cidade"
@@ -500,7 +500,7 @@ export default function AGPage(): JSX.Element {
                       Naturalidade:
                       <input
                         type="text"
-                        name="munName"
+                        name="naturality"
                         id="munId"
                         className="form-control autocorrect inpIdentif noInvert minText"
                         autoComplete="address-level2"
@@ -518,7 +518,7 @@ export default function AGPage(): JSX.Element {
                       Endereço | Logradouro | Rua:
                       <input
                         type="text"
-                        name="streetName"
+                        name="street"
                         id="streetId"
                         className="form-control autocorrect inpIdentif noInvert minText"
                         autoComplete="address-level3"
@@ -539,7 +539,7 @@ export default function AGPage(): JSX.Element {
                       CEP:
                       <input
                         type="text"
-                        name="cepName"
+                        name="cep"
                         id="cepId"
                         className="form-control inpIdentif noInvert minText maxText patternText"
                         minLength={3}
@@ -574,13 +574,12 @@ export default function AGPage(): JSX.Element {
                     </label>
                     <br role="presentation" />
                   </span>
-
                   <span role="group" className="fsAnamGSpan" id="fsAnamGSpan11">
                     <label htmlFor="streetId" className="labelIdentif noInvert">
                       Bairro:
                       <input
                         type="text"
-                        name="neighbourhoodName"
+                        name="neighbourhood"
                         id="neighbourhoodId"
                         className="form-control autocorrect inpIdentif noInvert minText"
                         minLength={3}
@@ -707,7 +706,7 @@ export default function AGPage(): JSX.Element {
                     >
                       <input
                         type="number"
-                        name="streetNumName"
+                        name="street_num"
                         id="streetNumId"
                         className="form-control inpIdentif noInvert inpLocNum halfL"
                         min="1"
@@ -735,7 +734,6 @@ export default function AGPage(): JSX.Element {
                       </span>
                     </span>
                   </span>
-
                   <span
                     role="group"
                     className="fsAnamGSpan locSpan form-switch flexColumn noInvert"
@@ -748,7 +746,7 @@ export default function AGPage(): JSX.Element {
                     >
                       <input
                         type="number"
-                        name="compNumName"
+                        name="loc_complement"
                         id="compNumId"
                         className="form-control inpIdentif noInvert inpLocNum halfL"
                         min="1"
@@ -792,7 +790,7 @@ export default function AGPage(): JSX.Element {
                       Data de Nascimento:
                       <input
                         type="date"
-                        name="dateBdayName"
+                        name="birth"
                         id="dateBdayId"
                         className="form-control inpIdentif noInvert maxCurrDate"
                         autoComplete="bday"
@@ -812,7 +810,6 @@ export default function AGPage(): JSX.Element {
               </section>
               <hr />
             </fieldset>
-
             <fieldset
               name="fsSdGeralName"
               id="fsSdGeralId"
@@ -821,7 +818,6 @@ export default function AGPage(): JSX.Element {
               <legend id="fsSdGeralLeg" className="legMain">
                 Dados de Saúde Geral
               </legend>
-
               <section className="sectionMain" id="fsSdGeralSect">
                 <span
                   role="group"
@@ -833,6 +829,7 @@ export default function AGPage(): JSX.Element {
                   </label>
                   <textarea
                     className="form-control taSdGeral"
+                    name="issue"
                     id="qxPrinc"
                     maxLength={1000}
                     placeholder="Escreva aqui a(s) queixa(s)"
@@ -842,7 +839,6 @@ export default function AGPage(): JSX.Element {
                   ></textarea>
                   <br role="presentation" />
                 </span>
-
                 <span
                   role="group"
                   className="fsSdGeralSPan"
@@ -854,6 +850,7 @@ export default function AGPage(): JSX.Element {
                   <textarea
                     className="form-control autocorrect autocorrectFirst ttaSdGeral"
                     id="histDc"
+                    name="history"
                     maxLength={1000}
                     placeholder="Escreva aqui a história"
                     data-title="historia_doencas"
@@ -862,7 +859,6 @@ export default function AGPage(): JSX.Element {
                 <hr />
               </section>
             </fieldset>
-
             <fieldset
               name="fsAnamGRadName"
               id="fsAnamGRadId"
@@ -4560,7 +4556,7 @@ export default function AGPage(): JSX.Element {
                 className="sectionMain sectionConfirm"
                 id="sectConfirmCheck"
               >
-              <Declaration text='"&#34;DECLARO SEREM VERDADEIRAS AS INFORMAÇÕES ACIMA&#34;"' />
+                <Declaration text="&#34;DECLARO SEREM VERDADEIRAS AS INFORMAÇÕES ACIMA&#34;" />
                 <div className="divMain" id="divConfirm" role="group">
                   <BtnConform
                     dispatch={setDeclaration}
