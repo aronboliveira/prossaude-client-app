@@ -22,7 +22,7 @@ import {
   updateIndexesContexts,
   updatePGC,
 } from "@/lib/locals/edFisNutPage/edFisNutHandler";
-import { isAutoFillActive, person, tabProps } from "@/pages/edfis";
+import { person, tabProps } from "@/pages/edfis";
 import { useRef, useState, useEffect } from "react";
 
 export default function TabIndPerc(): JSX.Element {
@@ -80,7 +80,10 @@ export default function TabIndPerc(): JSX.Element {
           `Cons Table Fieldset`,
           extLine(new Error())
         );
-      if (isAutoFillActive && typeof isAutoFillActive === "boolean") {
+      if (
+        tabProps.isAutoFillActive &&
+        typeof tabProps.isAutoFillActive === "boolean"
+      ) {
         [
           tabProps.targInpWeigth,
           tabProps.targInpHeigth,
@@ -111,8 +114,8 @@ export default function TabIndPerc(): JSX.Element {
           if (targ instanceof HTMLElement) targ.dataset[`active`] = "true";
           else targ?.setAttribute("data-active", "true");
         });
-      } else if (typeof isAutoFillActive !== "boolean")
-        console.warn(`Error validating typeof isAutoFillActive`);
+      } else if (typeof tabProps.isAutoFillActive !== "boolean")
+        console.warn(`Error validating typeof tabProps.isAutoFillActive`);
       if (
         context !== "BTN" &&
         context !== "IMC" &&
@@ -188,7 +191,7 @@ export default function TabIndPerc(): JSX.Element {
           `Instance of Form TMB Type Element`,
           extLine(new Error())
         );
-      if (context === "BTN" || isAutoFillActive === true) {
+      if (context === "BTN" || tabProps.isAutoFillActive === true) {
         [person.weight, person.height] = matchPersonPropertiesWH(
           person,
           tabProps.targInpWeigth,
@@ -245,7 +248,7 @@ export default function TabIndPerc(): JSX.Element {
           tabProps.targInpPGC,
         ] || [],
       ] || [[0, 0], [0, 0, 0, 0, 0], []];
-      if (context === "BTN" || isAutoFillActive === true) {
+      if (context === "BTN" || tabProps.isAutoFillActive === true) {
         [
           [person.weight, person.height],
           [

@@ -4,7 +4,7 @@ import {
   handleEventReq,
   syncAriaStates,
 } from "@/lib/global/handlers/gHandlers";
-import { handleCallbackWHS, isAutoFillActive, tabProps } from "@/pages/edfis";
+import { handleCallbackWHS, tabProps } from "@/pages/edfis";
 import { useRef, useState, useEffect } from "react";
 
 export default function TabMedAnt(): JSX.Element {
@@ -177,7 +177,7 @@ export default function TabMedAnt(): JSX.Element {
                         ],
                       ],
                       ev.currentTarget,
-                      isAutoFillActive
+                      tabProps.isAutoFillActive
                     );
                     handleEventReq(ev.currentTarget);
                   }}
@@ -234,7 +234,7 @@ export default function TabMedAnt(): JSX.Element {
                         ],
                       ],
                       ev.currentTarget,
-                      isAutoFillActive
+                      tabProps.isAutoFillActive
                     )
                   }
                 />
@@ -290,7 +290,7 @@ export default function TabMedAnt(): JSX.Element {
                         ],
                       ],
                       ev.currentTarget,
-                      isAutoFillActive
+                      tabProps.isAutoFillActive
                     )
                   }
                 />
@@ -361,7 +361,7 @@ export default function TabMedAnt(): JSX.Element {
                         ],
                       ],
                       ev.currentTarget,
-                      isAutoFillActive
+                      tabProps.isAutoFillActive
                     );
                     handleEventReq(ev.currentTarget);
                   }}
@@ -418,7 +418,7 @@ export default function TabMedAnt(): JSX.Element {
                         ],
                       ],
                       ev.currentTarget,
-                      isAutoFillActive
+                      tabProps.isAutoFillActive
                     )
                   }
                 />
@@ -474,7 +474,7 @@ export default function TabMedAnt(): JSX.Element {
                         ],
                       ],
                       ev.currentTarget,
-                      isAutoFillActive
+                      tabProps.isAutoFillActive
                     )
                   }
                 />

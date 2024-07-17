@@ -9,12 +9,7 @@ import {
   syncAriaStates,
 } from "@/lib/global/handlers/gHandlers";
 import { useRef, useState, useEffect } from "react";
-import {
-  handleCallbackWHS,
-  isAutoFillActive,
-  person,
-  tabProps,
-} from "@/pages/edfis";
+import { handleCallbackWHS, person, tabProps } from "@/pages/edfis";
 import {
   createArraysRels,
   getNumCol,
@@ -82,7 +77,7 @@ export default function TabDCut(): JSX.Element {
       );
       if (Number.isFinite(person.sumDCut) || person.sumDCut <= 0)
         person.sumDCut = 0;
-      if (isAutoFillActive === true) {
+      if (tabProps.isAutoFillActive === true) {
         if (
           person instanceof Person &&
           tabProps.targInpPGC instanceof HTMLInputElement &&
@@ -778,7 +773,7 @@ export default function TabDCut(): JSX.Element {
                         ],
                       ],
                       ev.currentTarget,
-                      isAutoFillActive
+                      tabProps.isAutoFillActive
                     );
                     handleEventReq(ev.currentTarget);
                   }}
@@ -844,7 +839,7 @@ export default function TabDCut(): JSX.Element {
                         ],
                       ],
                       ev.currentTarget,
-                      isAutoFillActive
+                      tabProps.isAutoFillActive
                     )
                   }
                 />
@@ -909,7 +904,7 @@ export default function TabDCut(): JSX.Element {
                         ],
                       ],
                       ev.currentTarget,
-                      isAutoFillActive
+                      tabProps.isAutoFillActive
                     )
                   }
                 />
