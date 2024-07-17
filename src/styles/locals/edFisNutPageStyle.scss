@@ -640,6 +640,20 @@ $swhite: rgba(255, 255, 255, 0.9);
       max-width: 90vw;
     }
 
+    .btn {
+      &.btn-secondary {
+        &:not(:has(svg)):not(.datBtn) {
+          margin-bottom: 0.05rem;
+          &.tabBtnSum {
+            height: 2.4rem;
+          }
+          &.tabBtnInd {
+            height: 2.43rem;
+          }
+        }
+      }
+    }
+
     .flexDiv {
       &.divRot {
         flex-direction: column;

@@ -41,6 +41,8 @@ import HeaderDate from "../../components/interactive/def/HeaderDate";
 import ConfirmDate from "../../components/interactive/def/ConfirmDate";
 import SectConfirmBtns from "../../components/interactive/def/SectConfirmBtns";
 import SwitchDiv from "../../components/interactive/def/SwitchDiv";
+import TipsBtn from "../../components/interactive/def/TipsBtn";
+import BtnConform from "../../components/interactive/def/BtnConform";
 
 let agGenElement = undefined,
   agGenValue = "masculino",
@@ -94,9 +96,7 @@ export default function AGPage(): JSX.Element {
     watchLabels();
     const UFid = document.getElementById("UFid");
     if (UFid instanceof HTMLInputElement) UFid.value = "RJ";
-    return () => {
-      removeEventListener("resize", handleResize);
-    };
+    return () => removeEventListener("resize", handleResize);
   }, []);
   return (
     <ErrorBoundary FallbackComponent={() => <div>Erro!</div>}>
@@ -113,22 +113,7 @@ export default function AGPage(): JSX.Element {
                   Anamnese Geral
                 </h1>
                 <h2 className="bolded">PROSSaúde, UFRJ</h2>
-                <button
-                  className="transparent-el-bg"
-                  id="tipsBtn"
-                  onClick={() => setTips(!shouldShowTips)}
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    fill="currentColor"
-                    className="bi bi-question-circle-fill widMax-3r htMax1-5r"
-                    viewBox="0 0 16 16"
-                  >
-                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.496 6.033h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286a.237.237 0 0 0 .241.247m2.325 6.443c.61 0 1.029-.394 1.029-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94 0 .533.425.927 1.01.927z" />
-                  </svg>
-                </button>
+                <TipsBtn dispatch={setTips} state={shouldShowTips} />
                 {shouldShowTips && (
                   <AGTips dispatch={setTips} state={shouldShowTips} />
                 )}
@@ -225,7 +210,6 @@ export default function AGPage(): JSX.Element {
                         </select>
                       </label>
                     </span>
-                    n
                   </div>
                   <hr />
                   <div
@@ -319,7 +303,6 @@ export default function AGPage(): JSX.Element {
                       </label>
                       <br role="presentation" />
                     </span>
-
                     <span
                       role="group"
                       className="spanMain fsAnamGSpan"
@@ -4394,11 +4377,9 @@ export default function AGPage(): JSX.Element {
                   </section>
                   <hr />
                 </fieldset>
-
                 <AntMedFs phCb={clearPhCb} />
               </section>
               <hr />
-
               <fieldset
                 className="sectionMain sectionConfirm noInvert"
                 id="fsAnamGFreqSectId"
@@ -4596,14 +4577,10 @@ export default function AGPage(): JSX.Element {
                   />
                 </blockquote>
                 <div className="divMain" id="divConfirm" role="group">
-                  <button
-                    type="button"
-                    className="btn btn-info bolded mg-1t widThird widHalf900Q widFull600Q"
-                    id="btnConform"
-                    onClick={() => setDeclaration(!shouldShowDeclaration)}
-                  >
-                    Abrir Declaração de Concordância
-                  </button>
+                  <BtnConform
+                    dispatch={setDeclaration}
+                    state={shouldShowDeclaration}
+                  />
                   {shouldShowDeclaration && (
                     <AGDeclaration
                       state={shouldShowDeclaration}

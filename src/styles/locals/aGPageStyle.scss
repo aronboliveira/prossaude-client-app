@@ -219,8 +219,11 @@
 
   .halfSpanCheck {
     &.halfR {
-      height: calc(2.3rem + 0.2vh);
+      height: 2.4rem;
       margin-top: 0.1vh;
+      &:has(#streetNumNullId) {
+        height: 2.377rem;
+      }
     }
   }
 
@@ -255,6 +258,10 @@
 
   .spanAntMedDate {
     width: 100%;
+  }
+
+  #autoCompCepBtn {
+    margin-left: 0.07rem;
   }
 
   #antMedBtnsDiv {
