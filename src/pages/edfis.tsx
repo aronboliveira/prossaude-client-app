@@ -75,6 +75,7 @@ import ConfirmDate from "../../components/interactive/def/ConfirmDate";
 import SectConfirmBtns from "../../components/interactive/def/SectConfirmBtns";
 import TipsBtn from "../../components/interactive/def/TipsBtn";
 import BtnConform from "../../components/interactive/def/BtnConform";
+import Declaration from "../../components/interactive/def/Declaration";
 
 export const tabProps: ENTabsProps = {
   isAutoFillActive: true,
@@ -1579,17 +1580,7 @@ export default function EdFisNutPage(): JSX.Element {
                 className="sectionMain sectionConfirm"
                 id="sectConfirmCheck"
               >
-                <blockquote className="declr" id="declrEnd">
-                  "DECLARO QUE CONCORDO COM AS AVALIAÇÕES DESCRITAS ACIMA"
-                  <label htmlFor="confirmId" className="labConfirm"></label>
-                  <input
-                    type="checkbox"
-                    name="confirm"
-                    id="confirmId"
-                    data-title="Concordancia"
-                    required
-                  />
-                </blockquote>
+                <Declaration text='"DECLARO QUE CONCORDO COM AS AVALIAÇÕES DESCRITAS ACIMA"' />
                 <div className="divMain" id="divConfirm" role="group">
                   <BtnConform
                     dispatch={setDeclaration}

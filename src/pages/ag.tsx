@@ -43,6 +43,7 @@ import SectConfirmBtns from "../../components/interactive/def/SectConfirmBtns";
 import SwitchDiv from "../../components/interactive/def/SwitchDiv";
 import TipsBtn from "../../components/interactive/def/TipsBtn";
 import BtnConform from "../../components/interactive/def/BtnConform";
+import Declaration from "../../components/interactive/def/Declaration";
 
 let agGenElement = undefined,
   agGenValue = "masculino",
@@ -4559,23 +4560,7 @@ export default function AGPage(): JSX.Element {
                 className="sectionMain sectionConfirm"
                 id="sectConfirmCheck"
               >
-                <blockquote className="declr" id="declrEnd">
-                  <span>
-                    &#34;DECLARO SEREM VERDADEIRAS AS INFORMAÇÕES ACIMA&#34;
-                  </span>
-                  <label
-                    htmlFor="confirmId"
-                    className="labConfirm noInvert"
-                  ></label>
-                  <input
-                    type="checkbox"
-                    name="confirm"
-                    className="form-check-input confirmName"
-                    id="confirmId"
-                    data-title="concordancia"
-                    required
-                  />
-                </blockquote>
+              <Declaration text='"&#34;DECLARO SEREM VERDADEIRAS AS INFORMAÇÕES ACIMA&#34;"' />
                 <div className="divMain" id="divConfirm" role="group">
                   <BtnConform
                     dispatch={setDeclaration}

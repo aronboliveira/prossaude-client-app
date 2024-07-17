@@ -37,6 +37,7 @@ import SectConfirmBtns from "../../components/interactive/def/SectConfirmBtns";
 import SwitchDiv from "../../components/interactive/def/SwitchDiv";
 import TipsBtn from "../../components/interactive/def/TipsBtn";
 import BtnConform from "../../components/interactive/def/BtnConform";
+import Declaration from "../../components/interactive/def/Declaration";
 
 let odIsAutoCorrectOn = true,
   odIsDialogCalled = false,
@@ -2942,23 +2943,7 @@ export default function OdPage(): JSX.Element {
                 className="sectionMain sectionConfirm"
                 id="sectConfirmCheck"
               >
-                <blockquote className="declr" id="declrEnd">
-                  <span>
-                    &#34;DECLARO QUE CONCORDO COM OS TRATAMENTOS PROPOSTOS
-                    ACIMA&#34;
-                  </span>
-                  <label
-                    htmlFor="confirmId"
-                    className="labConfirm noInvert"
-                  ></label>
-                  <input
-                    type="checkbox"
-                    name="confirm"
-                    id="confirmId"
-                    data-title="Concordância"
-                    required
-                  />
-                </blockquote>
+                <Declaration text='"&#34;DECLARO QUE CONCORDO COM OS TRATAMENTOS PROPOSTOS ACIMA&#34;"' />
                 <div className="divMain" id="divConfirm" role="group">
                   <BtnConform
                     dispatch={setDeclaration}
