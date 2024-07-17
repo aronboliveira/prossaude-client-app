@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { person, isAutoFillActive, tabProps, numCons } from "@/pages/edfis";
+import { person, tabProps, numCons } from "@/pages/edfis";
 import { Person } from "@/lib/global/declarations/classes";
 import { validateEvResultNum } from "@/lib/locals/edFisNutPage/edFisNutHandler";
 import { exeAutoFill } from "@/pages/edfis";
@@ -45,14 +45,14 @@ export default function AgeElement() {
           person instanceof Person &&
           "age" in person &&
           typeof person.age === "number" &&
-          typeof isAutoFillActive === "boolean"
+          typeof tabProps.isAutoFillActive === "boolean"
         ) {
           setValue(newValue);
           setPreValue(newValue);
           person.age = validateEvResultNum(ev.currentTarget, person.age);
           //sem autofill, dá update somente em person.age
-          isAutoFillActive &&
-            exeAutoFill(ev.currentTarget, isAutoFillActive, "cons");
+          tabProps.isAutoFillActive &&
+            exeAutoFill(ev.currentTarget, tabProps.isAutoFillActive, "cons");
           console.log([newValue, ev.currentTarget.value, person.age]);
         } else {
           setValue(prevValue);
@@ -83,7 +83,7 @@ export default function AgeElement() {
                 tabProps.targInpPGC,
               ],
             ].toString()}`,
-            isAutoFillActive
+            tabProps.isAutoFillActive
           );
         }
         handleEventReq(ev.currentTarget);
