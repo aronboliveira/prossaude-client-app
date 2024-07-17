@@ -143,25 +143,6 @@ export default function StudentForm({
           "emailInput in form for new students",
           extLine(new Error())
         );
-      //adição de listener para submissão
-      const btnSubmitStud = document.getElementById("btnSubmitNewStud");
-      if (btnSubmitStud instanceof HTMLButtonElement) {
-        (userClass === "coordenador" || userClass === "supervisor") &&
-          btnSubmitStud.addEventListener("click", click => {
-            const validation = validateForm(btnSubmitStud, formRef.current!);
-            if (!validation) click.preventDefault();
-          });
-        (userClass === "coordenador" || userClass === "supervisor") &&
-          formRef.current!.addEventListener("submit", submit => {
-            const validation = validateForm(btnSubmitStud, formRef.current!);
-            if (!validation) submit.preventDefault();
-          });
-      } else
-        elementNotFound(
-          btnSubmitStud,
-          "Button for submiting new student form",
-          extLine(new Error())
-        );
       //adição de listener para exportar excel
       const exportBtn =
         btnExportStudsRef.current || document.querySelector("#btnExport");
@@ -265,6 +246,13 @@ export default function StudentForm({
           method="post"
           target="_top"
           ref={formRef}
+          onSubmit={ev =>
+            (userClass === "coordenador" || userClass === "supervisor") &&
+            validateForm(
+              document.getElementById("btnSubmitNewProf"),
+              ev.currentTarget
+            ).then(validation => !validation[0] && ev.preventDefault())
+          }
         >
           <div role="group" id="formAddStudHDiv" className="mg-3b">
             <h1 id="titleAddStudHBlock" className="bolded">
@@ -582,6 +570,13 @@ export default function StudentForm({
                 id="btnSubmitNewStud"
                 className="btn btn-success flexAlItCt flexJC flexBasis50 widFull noInvert"
                 formAction="#"
+                onClick={ev =>
+                  (userClass === "coordenador" || userClass === "supervisor") &&
+                  validateForm(
+                    ev.currentTarget,
+                    ev.currentTarget.closest("form") ?? document
+                  ).then(validation => !validation[0] && ev.preventDefault())
+                }
               >
                 <strong>Finalizar Cadastro</strong>
               </button>

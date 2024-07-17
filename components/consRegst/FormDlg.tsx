@@ -1182,29 +1182,23 @@ export default function FormDlg({
                   className="btn btn-success widFull"
                   ref={submitRef}
                   onClick={ev => {
-                    if (
-                      validateForm(
-                        ev.currentTarget,
-                        dialogRef.current ??
-                          ev.currentTarget.closest("dialog") ??
-                          document
-                      )
-                    ) {
-                      //acumulador é alinhado com o de contexto dos diálogos de consulta no handler comum
-                      accFormData =
-                        document.querySelectorAll(".appointmentBtn").length + 1;
-                      console.log("Given index: " + accFormData);
-                      providerFormData[accFormData] = generateSchedPacData(
-                        dialogRef.current ?? ev.currentTarget.closest("dialog")
-                      );
-                      generateSchedBtn(
-                        dialogRef.current ?? ev.currentTarget.closest("dialog")
-                      );
-                    }
-                    validateForm(
-                      submitRef.current,
-                      dialogRef.current ?? document
-                    ) && onClose();
+                    validateForm(ev.currentTarget).then(validation => {
+                      if (validation[0]) {
+                        //acumulador é alinhado com o de contexto dos diálogos de consulta no handler comum
+                        accFormData =
+                          document.querySelectorAll(".appointmentBtn").length +
+                          1;
+                        providerFormData[accFormData] = generateSchedPacData(
+                          dialogRef.current ??
+                            ev.currentTarget.closest("dialog")
+                        );
+                        generateSchedBtn(
+                          dialogRef.current ??
+                            ev.currentTarget.closest("dialog")
+                        );
+                        onClose();
+                      } else ev.preventDefault();
+                    });
                   }}
                 >
                   <small role="textbox">

@@ -1078,112 +1078,106 @@ export async function validateForm(
             displayInvalidity(isValid);
           }
         }
-        arrValidity.push(isValid);
-        if (isValid) {
-          if (entry instanceof HTMLInputElement && entry.type === "checkbox")
-            validEntries.push([
-              entry.name || entry.id || entry.dataset.title || entry.tagName,
-              `${entry.checked}`,
-            ]);
-          else if (
-            entry instanceof HTMLInputElement &&
-            entry.type === "radio"
-          ) {
-            try {
-              const parent = entry.parentElement;
-              if (!(parent instanceof Element))
-                throw elementNotFound(
-                  parent,
-                  `Validation of parent instance`,
-                  "Element"
-                );
-              const radioGroupList = parent.querySelectorAll(
-                'input[type="radio"]'
+      }
+      arrValidity.push(isValid);
+      if (isValid) {
+        if (entry instanceof HTMLInputElement && entry.type === "checkbox")
+          validEntries.push([
+            entry.name || entry.id || entry.dataset.title || entry.tagName,
+            `${entry.checked}`,
+          ]);
+        else if (entry instanceof HTMLInputElement && entry.type === "radio") {
+          try {
+            const parent = entry.parentElement;
+            if (!(parent instanceof Element))
+              throw elementNotFound(
+                parent,
+                `Validation of parent instance`,
+                "Element"
               );
-              if (radioGroupList.length === 0)
-                throw new Error(`Error populating list of radios from parent`);
-              const opChecked = Array.from(radioGroupList).filter(
-                radio =>
-                  radio instanceof HTMLInputElement &&
-                  radio.type === "radio" &&
-                  radio.checked
-              )[0];
-              if (
-                !(
-                  opChecked instanceof HTMLInputElement &&
-                  opChecked.type === "radio"
-                )
-              ) {
-                validEntries.push([opChecked.id || opChecked.tagName, `false`]);
-                throw new Error(`Failed to find checked radio in group`);
-              }
-              if (
-                opChecked.id.endsWith("No") ||
-                opChecked.id.endsWith("-no") ||
-                opChecked.id.endsWith("-No") ||
-                opChecked.classList.contains("radNo")
-              )
-                validEntries.push([
-                  opChecked.name ||
-                    opChecked.id ||
-                    opChecked.dataset.title ||
-                    opChecked.tagName,
-                  `false`,
-                ]);
-              else
-                validEntries.push([
-                  opChecked.name ||
-                    opChecked.id ||
-                    opChecked.dataset.title ||
-                    opChecked.tagName,
-                  `true`,
-                ]);
-            } catch (e) {
-              console.error(
-                `Error executing procedure for pushing radio check:\n${
-                  (e as Error).message
-                }`
-              );
-            }
-          } else if (
-            entry instanceof HTMLInputElement &&
-            entry.type === "file" &&
-            entry.files
-          ) {
-            validEntries.push([
-              entry.name || entry.id || entry.dataset.title || entry.tagName,
-              entry.files[0],
-            ]);
-          } else if (entry instanceof HTMLCanvasElement) {
-            (async (): Promise<File> => {
-              return new Promise((res, rej) => {
-                entry.toBlob(blob => {
-                  if (blob) {
-                    res(
-                      new File(
-                        [blob],
-                        entry.name ||
-                          entry.id ||
-                          entry.dataset.title ||
-                          entry.tagName,
-                        { type: blob.type }
-                      )
-                    );
-                  } else rej(new Error(`Failed to extract file.`));
-                });
-              });
-            })().then(file =>
-              validEntries.push([
-                entry.name || entry.id || entry.dataset.title || entry.tagName,
-                file,
-              ])
+            const radioGroupList = parent.querySelectorAll(
+              'input[type="radio"]'
             );
-          } else
+            if (radioGroupList.length === 0)
+              throw new Error(`Error populating list of radios from parent`);
+            const opChecked = Array.from(radioGroupList).filter(
+              radio =>
+                radio instanceof HTMLInputElement &&
+                radio.type === "radio" &&
+                radio.checked
+            )[0];
+            if (
+              !(
+                opChecked instanceof HTMLInputElement &&
+                opChecked.type === "radio"
+              )
+            ) {
+              validEntries.push([opChecked.id || opChecked.tagName, `false`]);
+              throw new Error(`Failed to find checked radio in group`);
+            }
+            if (
+              opChecked.id.endsWith("No") ||
+              opChecked.id.endsWith("-no") ||
+              opChecked.id.endsWith("-No") ||
+              opChecked.classList.contains("radNo")
+            )
+              validEntries.push([
+                opChecked.name ||
+                  opChecked.id ||
+                  opChecked.dataset.title ||
+                  opChecked.tagName,
+                `false`,
+              ]);
+            else
+              validEntries.push([
+                opChecked.name ||
+                  opChecked.id ||
+                  opChecked.dataset.title ||
+                  opChecked.tagName,
+                `true`,
+              ]);
+          } catch (e) {
+            console.error(
+              `Error executing procedure for pushing radio check:\n${
+                (e as Error).message
+              }`
+            );
+          }
+        } else if (
+          entry instanceof HTMLInputElement &&
+          entry.type === "file" &&
+          entry.files
+        ) {
+          validEntries.push([
+            entry.name || entry.id || entry.dataset.title || entry.tagName,
+            entry.files[0],
+          ]);
+        } else if (entry instanceof HTMLCanvasElement) {
+          (async (): Promise<File> => {
+            return new Promise((res, rej) => {
+              entry.toBlob(blob => {
+                if (blob) {
+                  res(
+                    new File(
+                      [blob],
+                      entry.dataset.title || entry.id || entry.tagName,
+                      { type: blob.type }
+                    )
+                  );
+                } else rej(new Error(`Failed to extract file.`));
+              });
+            });
+          })().then(file =>
             validEntries.push([
-              entry.name || entry.id || entry.dataset.title || entry.tagName,
-              entry.value,
-            ]);
-        }
+              entry.dataset.title || entry.id || entry.tagName,
+              file,
+            ])
+          );
+        } else
+          validEntries.push([
+            entry.name || entry.id || entry.dataset.title || entry.tagName,
+            entry.value,
+          ]);
       }
     });
   } else

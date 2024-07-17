@@ -182,29 +182,6 @@ export default function ProfForm({
             "exportBtn in New Professional form",
             extLine(new Error())
           );
-      //adição de listeners para submissão
-      const btnSubmitProf = document.getElementById("btnSubmitNewProf");
-      if (btnSubmitProf instanceof HTMLButtonElement) {
-        userClass === "coordenador" &&
-          btnSubmitProf.addEventListener(
-            "click",
-            click =>
-              !validateForm(btnSubmitProf, formRef.current!) &&
-              click.preventDefault()
-          );
-        userClass === "coordenador" &&
-          formRef.current!.addEventListener(
-            "submit",
-            submit =>
-              !validateForm(btnSubmitProf, formRef.current!) &&
-              submit.preventDefault()
-          );
-      } else
-        elementNotFound(
-          btnSubmitProf,
-          "Button for submiting new Profent form",
-          extLine(new Error())
-        );
       //estilização e aria
       callbackNormalizeSizeSb();
       syncAriaStates([
@@ -272,6 +249,13 @@ export default function ProfForm({
           method="post"
           target="_top"
           ref={formRef}
+          onSubmit={ev =>
+            userClass === "coordenador" &&
+            validateForm(
+              document.getElementById("btnSubmitNewProf"),
+              ev.currentTarget
+            ).then(validation => !validation[0] && ev.preventDefault())
+          }
         >
           <div role="group" id="formAddProfHDiv" className="mg-3b">
             <h1 id="titleAddProfHBlock" className="bolded">
@@ -469,6 +453,13 @@ export default function ProfForm({
                 id="btnSubmitNewProf"
                 className="btn btn-success flexAlItCt flexJC flexBasis50 widFull noInvert"
                 formAction="#"
+                onClick={ev =>
+                  userClass === "coordenador" &&
+                  validateForm(
+                    ev.currentTarget,
+                    ev.currentTarget.closest("form") ?? document
+                  ).then(validation => !validation[0] && ev.preventDefault())
+                }
               >
                 <strong>Finalizar Cadastro</strong>
               </button>

@@ -11,7 +11,11 @@ export default function SectConfirmBtns(): JSX.Element {
         formAction="_self"
         formMethod="POST"
         accessKey="enter"
-        onClick={ev => !validateForm(ev.currentTarget!) && ev.preventDefault()}
+        onClick={ev =>
+          validateForm(ev.currentTarget).then(
+            validation => !validation[0] && ev.preventDefault()
+          )
+        }
       >
         Submeter
       </button>
