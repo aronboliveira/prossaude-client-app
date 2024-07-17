@@ -1,3 +1,4 @@
+import { RadioPairPros } from "@/lib/global/declarations/interfaces";
 import { textTransformPascal } from "@/lib/global/gModel";
 import { opRadioHandler } from "@/lib/global/handlers/gHandlers";
 
@@ -7,13 +8,7 @@ export default function RadioPair({
   ctx = false,
   add = "",
   altPh = "",
-}: {
-  name: string;
-  fullName?: string;
-  ctx?: boolean;
-  add?: "div" | "ta" | "";
-  altPh?: string;
-}): JSX.Element {
+}: RadioPairPros): JSX.Element {
   let camelName = /_/g.test(name)
     ? name
         .split("_")

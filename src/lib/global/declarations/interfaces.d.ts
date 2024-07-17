@@ -47,3 +47,17 @@ export interface ENTabsProps {
   targInpPGC: targEl;
   targInpSumDCut: targEl;
 }
+export interface ChecksProps {
+  name: string;
+  fullName?: string;
+}
+export interface RadioPairPros extends ChecksProps {
+  ctx?: boolean;
+  add?: "div" | "ta" | "";
+  altPh?: string;
+}
+export interface DivAntFamProps extends ChecksProps {
+  ta?: boolean;
+  gen?: boolean;
+  div?: boolean;
+}

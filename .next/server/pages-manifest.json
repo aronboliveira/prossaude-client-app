@@ -1,1 +1,12 @@
-{}
+{
+  "/_document": "pages/_document.js",
+  "/base": "pages/base.js",
+  "/login": "pages/login.js",
+  "/ag": "pages/ag.js",
+  "/od": "pages/od.js",
+  "/edfis": "pages/edfis.js",
+  "/_app": "pages/_app.js",
+  "/panel": "pages/panel.js",
+  "/": "pages/index.js",
+  "/_error": "pages/_error.js"
+}

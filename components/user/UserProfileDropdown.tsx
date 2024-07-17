@@ -23,7 +23,7 @@ export default function UserProfileDropdown({
   };
   const [shouldDisplayUserDlg, setUserDlg] = useState<boolean>(false);
   const callLogout = () => {
-    //TODO INSERIR AQUI CÓDIGO PARA IR PARA A OUTRA URL
+    //
   };
   useEffect(() => {
     if (poRef.current instanceof HTMLElement)

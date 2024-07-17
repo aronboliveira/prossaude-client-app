@@ -168,23 +168,6 @@ export default function UserPropsDlg({
         extLine(new Error())
       );
   }, [userPropsDlgRef]);
-  useEffect(() => {
-    if (
-      userPropsBtnRef.current instanceof HTMLButtonElement &&
-      userPropsDlgRef.current instanceof HTMLDialogElement
-    ) {
-      userPropsBtnRef.current.addEventListener("click", () => {
-        if (validateForm(userPropsBtnRef.current, userPropsDlgRef.current!))
-          setPropDlg(!shouldDisplayPropDlg);
-      });
-    } else
-      multipleElementsNotFound(
-        extLine(new Error()),
-        "Elements for useEffect() of submit entry for userProps",
-        userPropsBtnRef.current,
-        userPropsDlgRef.current
-      );
-  }, [userPropsBtnRef, userPropsDlgRef]);
   useEffect(() => {}, [newUserValueRef, userPropsDlgRef]);
   return (
     <ErrorBoundary
@@ -267,6 +250,14 @@ export default function UserPropsDlg({
             id="submitNewPropBtn"
             className="btn btn-info widHalf bolded mg-1t"
             ref={userPropsBtnRef}
+            onClick={ev => {
+              validateForm(
+                ev.currentTarget,
+                ev.currentTarget.closest("dialog")!
+              ).then(
+                validation => validation[0] && setPropDlg(!shouldDisplayPropDlg)
+              );
+            }}
           >
             Enviar
           </button>

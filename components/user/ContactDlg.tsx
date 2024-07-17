@@ -1,10 +1,6 @@
 import { nullishBtn, nullishDlg } from "@/lib/global/declarations/types";
 import { isClickOutside } from "@/lib/global/gStyleScript";
-import {
-  elementNotFound,
-  extLine,
-  multipleElementsNotFound,
-} from "@/lib/global/handlers/errorHandler";
+import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { validateForm, syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { ContactDlgProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import { useEffect, useRef } from "react";
@@ -29,32 +25,6 @@ export default function ContactDlg({
         extLine(new Error())
       );
   }, [contactDlgRef]);
-  useEffect(() => {
-    if (
-      contacBtnRef.current instanceof HTMLButtonElement &&
-      contactDlgRef.current instanceof HTMLDialogElement
-    ) {
-      contacBtnRef.current.addEventListener("click", () => {
-        console.log(
-          "length de textarea: ",
-          (document.getElementById("contactObs") as HTMLTextAreaElement)
-            .validity
-        );
-        console.log(
-          "validado " +
-            validateForm(contacBtnRef.current, contactDlgRef.current!)
-        );
-        if (validateForm(contacBtnRef.current, contactDlgRef.current!))
-          setContact(!shouldDisplayContact);
-      });
-    } else
-      multipleElementsNotFound(
-        extLine(new Error()),
-        "Elements for useEffect() of submit entry for contact",
-        contacBtnRef.current,
-        contactDlgRef.current
-      );
-  }, [contacBtnRef]);
   return (
     <>
       {shouldDisplayContact && (
@@ -107,6 +77,14 @@ export default function ContactDlg({
             id="submitContactBtn"
             className="btn btn-info widHalf bolded mg-1t"
             ref={contacBtnRef}
+            onClick={ev => {
+              validateForm(
+                ev.currentTarget,
+                ev.currentTarget.closest("dialog")!
+              ).then(
+                validation => validation[0] && setContact(!shouldDisplayContact)
+              );
+            }}
           >
             Enviar
           </button>
