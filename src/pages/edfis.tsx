@@ -23,7 +23,7 @@ import {
   defaultResult,
   validateTitlesForTargs,
 } from "@/lib/locals/edFisNutPage/edFisNutController";
-import { fluxGen, parseNotNaN } from "@/lib/global/gModel";
+import { parseNotNaN } from "@/lib/global/gModel";
 import {
   addCanvasListeners,
   addListenerExportBtn,
@@ -34,10 +34,8 @@ import {
 import { dinamicGridAdjust } from "@/lib/global/gStyleScript";
 import { Person } from "@/lib/global/declarations/classes";
 import {
-  changeToAstDigit,
   handleCondtReq,
   handleEventReq,
-  validateForm,
   syncAriaStates,
 } from "@/lib/global/handlers/gHandlers";
 import {
@@ -68,8 +66,16 @@ import ENDeclaration from "../../components/interactive/edfis/ENDeclaration";
 import { changeTabDCutLayout } from "@/lib/locals/edFisNutPage/edFisNutModel";
 import AgeElement from "../../components/interactive/edfis/defaulted/AgeElement";
 import ConfirmLocId from "../../components/interactive/def/ConfirmLocId";
+import Signature from "../../components/interactive/def/Signature";
+import Name from "../../components/interactive/def/Name";
+import SocialName from "../../components/interactive/def/SocialName";
+import GenDiv from "../../components/interactive/def/GenDiv";
+import HeaderDate from "../../components/interactive/def/HeaderDate";
+import ConfirmDate from "../../components/interactive/def/ConfirmDate";
+import SectConfirmBtns from "../../components/interactive/def/SectConfirmBtns";
 
 export const tabProps: ENTabsProps = {
+  isAutoFillActive: true,
   numCol: 1,
   IMC: 0,
   MLG: 0,
@@ -94,7 +100,6 @@ export const person = new Person("masculino", 0, 0, 0, 0, "leve");
 //   console.log(tabProps);
 // }, 2000);
 export let edIsAutoCorrectOn = true,
-  isAutoFillActive = true,
   areColGroupsSimilar = false,
   areNumConsOpsValid = false,
   numColsCons = 1,
@@ -410,27 +415,7 @@ export default function EdFisNutPage(): JSX.Element {
                   <ENTips state={shouldShowTips} dispatch={setTips} />
                 )}
               </div>
-              <span
-                role="group"
-                className="control flexJSt flexQ900NoW"
-                id="spanHFlex"
-              >
-                <input
-                  type="date"
-                  className="form-control d-ibl minCurrDate"
-                  id="dateHeader"
-                  placeholder="Date"
-                  data-title="Data no cabeçalho"
-                  required
-                />
-                <button
-                  type="button"
-                  className="datBtn d-ibl btn btn-secondary"
-                  id="headerDatBtn"
-                >
-                  Usar data atual
-                </button>
-              </span>
+              <HeaderDate />
             </div>
           </div>
         </header>
@@ -449,9 +434,9 @@ export default function EdFisNutPage(): JSX.Element {
                 data-title="Cálculo Automático"
                 defaultChecked
                 onChange={ev => {
-                  isAutoFillActive = switchAutoFill(
+                  tabProps.isAutoFillActive = switchAutoFill(
                     ev.currentTarget,
-                    isAutoFillActive
+                    tabProps.isAutoFillActive
                   );
                 }}
               />{" "}
@@ -469,7 +454,7 @@ export default function EdFisNutPage(): JSX.Element {
                 id="deactAutocorrectBtnPac"
                 data-title="Autocorreção"
                 defaultChecked
-              />{" "}
+              />
               <strong>Autocorreção</strong>
             </span>
           </div>
@@ -486,589 +471,15 @@ export default function EdFisNutPage(): JSX.Element {
                 Identificação
               </legend>
               <section className="sectionMain" id="fsAnamGSect">
-                <div
-                  role="group"
-                  className="fsAnamGDiv alItSt900Q flexQ900NoWC flexAlItE flexNoW flexSimple wsNoW cGap0 ws900N noInvert"
-                  id="fsAnamGDiv1"
-                >
-                  <span
-                    role="group"
-                    className="fsAnamGSpan flexAlItCt col"
-                    id="fsAnamGSpan1"
-                  >
-                    <label htmlFor="firstNameId" className="labelIdentif">
-                      Primeiro Nome (Simples ou Composto):
-                      <input
-                        type="text"
-                        name="firstNameName"
-                        id="firstNameId"
-                        className="form-control noInvert autocorrect inpIdentif minText maxText patternText"
-                        autoComplete="given-name"
-                        data-title="Primeiro nome"
-                        data-reqlength="3"
-                        data-maxlength="99"
-                        data-pattern="[^0-9]"
-                        data-flags="gi"
-                        minLength={3}
-                        maxLength={99}
-                        required
-                        onInput={ev => handleEventReq(ev.currentTarget)}
-                      />
-                    </label>
-                    <br role="presentation" />
-                  </span>
-                  <span
-                    role="group"
-                    className="fsAnamGSpan flexAlItCt col"
-                    id="fsAnamGSpan2"
-                  >
-                    <label htmlFor="additionalNameId" className="labelIdentif">
-                      Sobrenome(s) do Meio, se presente(s):
-                      <input
-                        type="text"
-                        name="additionalNameName"
-                        id="additionalNameId"
-                        className="form-control noInvert autocorrect inpIdentif"
-                        data-title="Nome do meio"
-                        autoComplete="additional-name"
-                        onInput={ev =>
-                          handleCondtReq(ev.currentTarget, {
-                            min: 3,
-                            max: 99,
-                            pattern: ["[^0-9]", "gi"],
-                          })
-                        }
-                      />
-                    </label>
-                    <br role="presentation" />
-                  </span>
-                  <span
-                    role="group"
-                    className="fsAnamGSpan flexAlItCt col"
-                    id="fsAnamGSpan3"
-                  >
-                    <label htmlFor="familyNameId" className="labelIdentif">
-                      Último Sobrenome:
-                      <input
-                        type="text"
-                        name="familyNameName"
-                        id="familyNameId"
-                        className="form-control noInvert autocorrect inpIdentif minText maxText patternText"
-                        autoComplete="family-name"
-                        required
-                        data-title="Último nome"
-                        data-reqlength="3"
-                        data-maxlength="99"
-                        data-pattern="[^0-9]"
-                        data-flags="gi"
-                        minLength={3}
-                        maxLength={99}
-                        onInput={ev => handleEventReq(ev.currentTarget)}
-                      />
-                    </label>
-                    <br role="presentation" />
-                  </span>
-                </div>
-                <span
-                  role="group"
-                  className="fsAnamGSpan flexAlItCt col"
-                  id="fsAnamGSpan4"
-                >
-                  <label htmlFor="socialNameId" className="labelIdentif">
-                    Nome Social:
-                    <input
-                      type="text"
-                      name="socialNameName"
-                      id="socialNameId"
-                      className="form-control noInvert autocorrect inpIdentif"
-                      data-title="Nome social"
-                      autoComplete="given-name"
-                      onInput={ev =>
-                        handleCondtReq(ev.currentTarget, {
-                          min: 3,
-                          max: 99,
-                          pattern: ["[^0-9]", "gi"],
-                        })
-                      }
-                    />
-                  </label>
-                </span>
+                <Name />
+                <SocialName />
                 <span role="group" className="fsAnamGSpan" id="fsAnamGSpan12">
                   <label htmlFor="dateAgeId" className="labelIdentif">
                     Idade:
                     <MemoAge />
                   </label>
                 </span>
-                <div role="group" id="genDiv" className="gridTwoCol noInvert">
-                  <span
-                    role="group"
-                    className="fsAnamGSpan flexAlItCt genSpan"
-                    id="spanFsAnamG13"
-                  >
-                    <label htmlFor="genId" className="labelIdentif">
-                      Gênero:
-                      <select
-                        name="genName"
-                        id="genId"
-                        className="form-select noInvert inpIdentif inpGen widMin75Q900"
-                        data-title="Gênero"
-                        required
-                        onChange={ev => {
-                          const genBirthRel =
-                            document.getElementById("genBirthRelId");
-                          const genTrans =
-                            document.getElementById("genTransId");
-                          const genFisAlin =
-                            document.getElementById("genFisAlinId");
-                          const textBodytype =
-                            document.getElementById("textBodytype");
-                          try {
-                            if (
-                              !(
-                                genBirthRel instanceof HTMLSelectElement ||
-                                genBirthRel instanceof HTMLInputElement
-                              )
-                            )
-                              throw elementNotFound(
-                                genBirthRel,
-                                `Gen Birth Relation Element`,
-                                extLine(new Error())
-                              );
-                            if (
-                              !(
-                                genTrans instanceof HTMLSelectElement ||
-                                genTrans instanceof HTMLInputElement
-                              )
-                            )
-                              throw elementNotFound(
-                                genTrans,
-                                `Gen Trans Element`,
-                                extLine(new Error())
-                              );
-                            if (
-                              !(
-                                genFisAlin instanceof HTMLSelectElement ||
-                                genFisAlin instanceof HTMLInputElement
-                              )
-                            )
-                              throw elementNotFound(
-                                genFisAlin,
-                                `Gen Physical Alignment Element`,
-                                extLine(new Error())
-                              );
-                            person.gen =
-                              fluxGen(
-                                [
-                                  ev.currentTarget,
-                                  genBirthRel,
-                                  genTrans,
-                                  genFisAlin,
-                                ],
-                                ev.currentTarget.value
-                              ) || "masculino";
-                            if (
-                              (genTrans.value !== "avancado" ||
-                                ev.currentTarget.value === "naoBinario") &&
-                              genTrans.hidden === false &&
-                              genFisAlin.hidden === false
-                            ) {
-                              textBodytype instanceof HTMLInputElement ||
-                              textBodytype instanceof HTMLSelectElement
-                                ? (textBodytype.value = person.gen)
-                                : inputNotFound(
-                                    textBodytype,
-                                    "textBodyType in callback for gender Elements",
-                                    extLine(new Error())
-                                  );
-                            }
-                          } catch (e) {
-                            console.error(
-                              `Error executing callback for Gen Elements:\n${
-                                (e as Error).message
-                              }`
-                            );
-                          }
-                        }}
-                      >
-                        <option className="optIdentif optGen" value="masculino">
-                          Masculino | Homem binário
-                        </option>
-                        <option className="optIdentif optGen" value="feminino">
-                          Feminino | Mulher binária
-                        </option>
-                        <option
-                          className="optIdentif optGen"
-                          value="naoBinario"
-                        >
-                          Não-Binário
-                        </option>
-                        <option className="optIdentif optGen" value="outros">
-                          Outros
-                        </option>
-                        <option className="optIdentif optGen" value="undefined">
-                          Não deseja declarar
-                        </option>
-                      </select>
-                    </label>
-                    <br role="presentation" />
-                  </span>
-
-                  <span
-                    role="group"
-                    className="fsAnamGSpan flexAlItCt genSpan"
-                    id="spanFsAnamG14"
-                  >
-                    <label htmlFor="genBirthRelId" className="labelIdentif">
-                      Identidade em relação ao gênero designado na nascença:
-                      <select
-                        name="genBirthRelName"
-                        id="genBirthRelId"
-                        className="form-select noInvert inpIdentif inpGen widMin75Q900"
-                        data-title="Identidade de gênero (nascença)"
-                        required
-                        onChange={ev => {
-                          const genElement = document.getElementById("genId");
-                          const genTrans =
-                            document.getElementById("genTransId");
-                          const genFisAlin =
-                            document.getElementById("genFisAlinId");
-                          const textBodytype =
-                            document.getElementById("textBodytype");
-                          try {
-                            if (
-                              !(
-                                genElement instanceof HTMLSelectElement ||
-                                genElement instanceof HTMLInputElement
-                              )
-                            )
-                              throw elementNotFound(
-                                genElement,
-                                `Gen Element`,
-                                extLine(new Error())
-                              );
-                            if (
-                              !(
-                                genTrans instanceof HTMLSelectElement ||
-                                genTrans instanceof HTMLInputElement
-                              )
-                            )
-                              throw elementNotFound(
-                                genTrans,
-                                `Gen Trans Element`,
-                                extLine(new Error())
-                              );
-                            if (
-                              !(
-                                genFisAlin instanceof HTMLSelectElement ||
-                                genFisAlin instanceof HTMLInputElement
-                              )
-                            )
-                              throw elementNotFound(
-                                genFisAlin,
-                                `Gen Physical Alignment Element`,
-                                extLine(new Error())
-                              );
-                            person.gen =
-                              fluxGen(
-                                [
-                                  genElement,
-                                  ev.currentTarget,
-                                  genTrans,
-                                  genFisAlin,
-                                ],
-                                genElement.value
-                              ) || "masculino";
-                            if (
-                              (genTrans.value !== "avancado" ||
-                                genElement.value === "naoBinario") &&
-                              genTrans.hidden === false &&
-                              genFisAlin.hidden === false
-                            ) {
-                              textBodytype instanceof HTMLInputElement ||
-                              textBodytype instanceof HTMLSelectElement
-                                ? (textBodytype.value = person.gen)
-                                : inputNotFound(
-                                    textBodytype,
-                                    "textBodyType in callback for gender Elements",
-                                    extLine(new Error())
-                                  );
-                            }
-                          } catch (e) {
-                            console.error(
-                              `Error executing callback for Gen Elements:\n${
-                                (e as Error).message
-                              }`
-                            );
-                          }
-                        }}
-                      >
-                        <option
-                          className="optIdentif optgenBirthRel"
-                          value="cis"
-                        >
-                          Cisgênero | Cissexual
-                        </option>
-                        <option
-                          className="optIdentif optgenBirthRel"
-                          value="trans"
-                        >
-                          Transgênero | Transsexual
-                        </option>
-                        <option
-                          className="optIdentif optgenBirthRel"
-                          value="outros"
-                        >
-                          Outros
-                        </option>
-                        <option
-                          className="optIdentif optgenBirthRel"
-                          value="undefined"
-                        >
-                          Não deseja declarar
-                        </option>
-                      </select>
-                    </label>
-                    <br role="presentation" />
-                  </span>
-
-                  <span
-                    role="group"
-                    className="fsAnamGSpan flexAlItCt genSpan"
-                    id="spanFsAnamG15"
-                    hidden
-                  >
-                    <label htmlFor="genTransId" className="labelIdentif">
-                      Estágio da Transição Hormonal:
-                      <select
-                        name="genTransName"
-                        id="genTransId"
-                        className="form-select noInvert inpIdentif inpGen widMin75Q900"
-                        data-title="Estágio de transicao hormonal"
-                        onChange={ev => {
-                          const genElement = document.getElementById("genId");
-                          const genBirthRel =
-                            document.getElementById("genBirthRelId");
-                          const genFisAlin =
-                            document.getElementById("genFisAlinId");
-                          const textBodytype =
-                            document.getElementById("textBodytype");
-                          try {
-                            if (
-                              !(
-                                genElement instanceof HTMLSelectElement ||
-                                genElement instanceof HTMLInputElement
-                              )
-                            )
-                              throw elementNotFound(
-                                genElement,
-                                `Gen Element`,
-                                extLine(new Error())
-                              );
-                            if (
-                              !(
-                                genBirthRel instanceof HTMLSelectElement ||
-                                genBirthRel instanceof HTMLInputElement
-                              )
-                            )
-                              throw elementNotFound(
-                                genBirthRel,
-                                `Gen Birth Relation Element`,
-                                extLine(new Error())
-                              );
-                            if (
-                              !(
-                                genFisAlin instanceof HTMLSelectElement ||
-                                genFisAlin instanceof HTMLInputElement
-                              )
-                            )
-                              throw elementNotFound(
-                                genFisAlin,
-                                `Gen Physical Alignment Element`,
-                                extLine(new Error())
-                              );
-                            person.gen =
-                              fluxGen(
-                                [
-                                  genElement,
-                                  genBirthRel,
-                                  ev.currentTarget,
-                                  genFisAlin,
-                                ],
-                                genElement.value
-                              ) || "masculino";
-                            if (
-                              (ev.currentTarget.value !== "avancado" ||
-                                genElement.value === "naoBinario") &&
-                              ev.currentTarget.hidden === false &&
-                              genFisAlin.hidden === false
-                            ) {
-                              textBodytype instanceof HTMLInputElement ||
-                              textBodytype instanceof HTMLSelectElement
-                                ? (textBodytype.value = person.gen)
-                                : inputNotFound(
-                                    textBodytype,
-                                    "textBodyType in callback for gender Elements",
-                                    extLine(new Error())
-                                  );
-                            }
-                          } catch (e) {
-                            console.error(
-                              `Error executing callback for Gen Elements:\n${
-                                (e as Error).message
-                              }`
-                            );
-                          }
-                        }}
-                      >
-                        <option
-                          className="optIdentif optgenTrans"
-                          value="avancado"
-                        >
-                          Avançado
-                        </option>
-                        <option
-                          className="optIdentif optgenTrans"
-                          value="undefined"
-                        >
-                          Indefinido
-                        </option>
-                        <option className="optIdentif optgenTrans" value="no">
-                          Não está em transição
-                        </option>
-                        <option
-                          className="optIdentif optgenTrans"
-                          value="inicial"
-                        >
-                          Inicial
-                        </option>
-                        <option
-                          className="optIdentif optgenTrans"
-                          value="intermediario"
-                        >
-                          Intermediário
-                        </option>
-                      </select>
-                    </label>
-                    <br role="presentation" />
-                  </span>
-
-                  <span
-                    role="group"
-                    className="fsAnamGSpan flexAlItCt genSpan noInvert inpIdentif"
-                    id="spanFsAnamG16"
-                    style={{
-                      paddingLeft: "0",
-                      paddingTop: "0",
-                      marginTop: "0.1rem",
-                    }}
-                    hidden
-                  >
-                    <label htmlFor="genFisAlinId" className="labelIdentif">
-                      Alinhamento de características físicas:
-                      <select
-                        name="genFisAlinName"
-                        id="genFisAlinId"
-                        className="form-select noInvert inpIdentif inpGen widMin75Q900"
-                        data-title="Alinhamento Físico"
-                        onChange={ev => {
-                          const genElement = document.getElementById("genId");
-                          const genBirthRel =
-                            document.getElementById("genBirthRelId");
-                          const genTrans =
-                            document.getElementById("genTransId");
-                          const textBodytype =
-                            document.getElementById("textBodytype");
-                          try {
-                            if (
-                              !(
-                                genElement instanceof HTMLSelectElement ||
-                                genElement instanceof HTMLInputElement
-                              )
-                            )
-                              throw elementNotFound(
-                                genElement,
-                                `Gen Element`,
-                                extLine(new Error())
-                              );
-                            if (
-                              !(
-                                genBirthRel instanceof HTMLSelectElement ||
-                                genBirthRel instanceof HTMLInputElement
-                              )
-                            )
-                              throw elementNotFound(
-                                genBirthRel,
-                                `Gen Birth Relation Element`,
-                                extLine(new Error())
-                              );
-                            if (
-                              !(
-                                genTrans instanceof HTMLSelectElement ||
-                                genTrans instanceof HTMLInputElement
-                              )
-                            )
-                              throw elementNotFound(
-                                genTrans,
-                                `Gen Trans Element`,
-                                extLine(new Error())
-                              );
-                            person.gen =
-                              fluxGen(
-                                [
-                                  genElement,
-                                  genBirthRel,
-                                  genTrans,
-                                  ev.currentTarget,
-                                ],
-                                (genElement as entryEl)?.value
-                              ) || "masculino";
-                            if (
-                              (genTrans.value !== "avancado" ||
-                                genElement.value === "naoBinario") &&
-                              genTrans.hidden === false &&
-                              ev.currentTarget.hidden === false
-                            ) {
-                              textBodytype instanceof HTMLInputElement ||
-                              textBodytype instanceof HTMLSelectElement
-                                ? (textBodytype.value = person.gen)
-                                : inputNotFound(
-                                    textBodytype,
-                                    "textBodyType in callback for gender Elements",
-                                    extLine(new Error())
-                                  );
-                            }
-                          } catch (e) {
-                            console.error(
-                              `Error executing callback for Gen Elements:\n${
-                                (e as Error).message
-                              }`
-                            );
-                          }
-                        }}
-                      >
-                        <option
-                          className="optIdentif optgenFisAlin"
-                          value="masculinizado"
-                        >
-                          Masculinizado
-                        </option>
-                        <option
-                          className="optIdentif optgenFisAlin"
-                          value="feminilizado"
-                        >
-                          Feminilizado
-                        </option>
-                        <option
-                          className="optIdentif optgenFisAlin"
-                          value="neutro"
-                        >
-                          Indeterminado | Neutro
-                        </option>
-                      </select>
-                    </label>
-                    <br role="presentation" />
-                  </span>
-                </div>
+                <GenDiv flux={true} />
               </section>
             </fieldset>
             <hr />
@@ -2109,7 +1520,7 @@ export default function EdFisNutPage(): JSX.Element {
                             ],
                           ],
                           ev.currentTarget,
-                          isAutoFillActive
+                          tabProps.isAutoFillActive
                         )
                       }
                     >
@@ -2187,7 +1598,7 @@ export default function EdFisNutPage(): JSX.Element {
                   <label htmlFor="confirmId" className="labConfirm"></label>
                   <input
                     type="checkbox"
-                    name="confirmName"
+                    name="confirm"
                     id="confirmId"
                     data-title="Concordancia"
                     required
@@ -2221,108 +1632,15 @@ export default function EdFisNutPage(): JSX.Element {
                       Local:
                       <MemoLoc />
                     </label>
-                    <label
-                      htmlFor="confirmDatId"
-                      className="labConfirm labDivConfirm2 pdT2pc900Q htFull900Q flexNoWC htHalf900Q bolded"
-                      id="labConfirmDate"
-                    >
-                      {" "}
-                      <span>Data:</span>
-                      <div
-                        className="widFull flexQ900NoW htFull900Q"
-                        id="divConfirmDat"
-                        role="group"
-                      >
-                        <input
-                          type="date"
-                          name="confirmDatName"
-                          id="confirmDatId"
-                          className="inpConfirm inpDate form-control noInvert minCurrDate"
-                          data-title="assinatura_data"
-                          required
-                        />
-                        <button
-                          type="button"
-                          className="datBtn confirmBtn btn btn-secondary widFull"
-                          id="confirmDatBtn"
-                        >
-                          Usar data atual
-                        </button>
-                      </div>
-                    </label>
+                    <ConfirmDate />
                     <hr />
                   </div>
-
-                  <div
-                    className="divSub divConfirm flexEl"
-                    id="divConfirm3"
-                    role="group"
-                  >
-                    <span
-                      role="group"
-                      id="spanAstPct"
-                      className="labConfirm labAst widHalf bolded"
-                    >
-                      <span>Assinatura do Paciente:</span>
-                      <canvas id="inpAstConfirmId"></canvas>
-                      <button
-                        type="button"
-                        className="astDigtBtn autocorrect confirmBtn btn btn-secondary"
-                        id="confirmAstDigtBtn"
-                        onClick={ev => {
-                          changeToAstDigit(ev.currentTarget);
-                        }}
-                      >
-                        Usar Assinatura Digital
-                      </button>
-                      <button
-                        type="button"
-                        className="btn btn-secondary"
-                        id="resetAstBtn"
-                      >
-                        Resetar
-                      </button>
-                    </span>
-                  </div>
+                  <Signature />
                 </div>
                 <hr />
               </section>
               <br role="presentation" />
-              <section
-                className="sectionMain sectionConfirm"
-                id="sectConfirmBut"
-              >
-                <button
-                  type="submit"
-                  name="submitFormButName"
-                  id="submitFormButId"
-                  className="confirmBut btn btn-success forceInvert"
-                  formAction="_self"
-                  formMethod="POST"
-                  accessKey="enter"
-                  onClick={ev => validateForm(ev.currentTarget)}
-                >
-                  Submeter
-                </button>
-                <button
-                  type="reset"
-                  className="confirmBut btn btn-warning forceInvert"
-                  id="resetFormBtn"
-                >
-                  Resetar
-                </button>
-                <button
-                  type="button"
-                  id="btnExport"
-                  className="btn btn-secondary forceInvert"
-                  style={{
-                    backgroundColor: "rgba(0, 0, 255, 0.904)",
-                    borderColor: "rgba(0, 0, 255, 0.904)",
-                  }}
-                >
-                  Gerar Planilha
-                </button>
-              </section>
+              <SectConfirmBtns />
               <hr />
             </fieldset>
           </form>
@@ -2348,7 +1666,7 @@ export function exeAutoFill(
       (targ instanceof HTMLInputElement ||
         targ instanceof HTMLTextAreaElement ||
         targ instanceof HTMLSelectElement) &&
-      isAutoFillActive === true &&
+      tabProps.isAutoFillActive === true &&
       person instanceof Person &&
       typeof context === "string"
     ) {
@@ -2740,7 +2058,7 @@ export function handleCallbackWHS(
     callbackResult: autofillResult,
     mainNum: number
   ): void => {
-    if (isAutoFillActive === true) {
+    if (tabProps.isAutoFillActive === true) {
       if (mainNum === 0) {
         tabProps.targInpWeigth = callbackResult[3][mainNum];
         for (const targWeight of document.getElementsByClassName("inpWeigth")) {
@@ -2829,7 +2147,7 @@ export function handleCallbackWHS(
       prop = person.weight;
       prop = validateEvResultNum(inpWHS, parseInt(inpWHS.value || "0", 10));
       person.weight = prop;
-      if (isAutoFillActive === true)
+      if (tabProps.isAutoFillActive === true)
         result = exeAutoFill(inpWHS, isAutoFillActive, "col");
       const callbackResult: [number, autofillResult] = [
         prop || 0,
@@ -2841,7 +2159,7 @@ export function handleCallbackWHS(
       prop = person.height;
       prop = validateEvResultNum(inpWHS, parseInt(inpWHS.value || "0", 10));
       person.height = prop;
-      if (isAutoFillActive === true)
+      if (tabProps.isAutoFillActive === true)
         result = exeAutoFill(inpWHS, isAutoFillActive, "col");
       const callbackResult: [number, autofillResult] = [
         prop || 0,
@@ -2860,7 +2178,7 @@ export function handleCallbackWHS(
       prop = person.sumDCut;
       prop = validateEvResultNum(inpWHS, parseInt(inpWHS.value || "0", 10));
       person.sumDCut = prop;
-      if (isAutoFillActive === true)
+      if (tabProps.isAutoFillActive === true)
         result = exeAutoFill(inpWHS, isAutoFillActive, "col");
       const callbackResult: [number, autofillResult] = [
         prop || 0,

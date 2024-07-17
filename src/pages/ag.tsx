@@ -23,17 +23,24 @@ import {
   handleCondtReq,
   handleEventReq,
   opRadioHandler,
-  validateForm,
   syncAriaStates,
   toggleConformDlg,
 } from "@/lib/global/handlers/gHandlers";
 import { addDblQuotes } from "@/lib/locals/aGPage/aGModel";
+import { formatTel } from "@/lib/global/gModel";
 import AntMedFs from "../../components/interactive/ag/AntMedFs";
 import AGTips from "../../components/interactive/ag/AGTips";
-import { formatTel } from "@/lib/global/gModel";
 import AGDeclaration from "../../components/interactive/ag/AGDeclaration";
 import ConfirmLocId from "../../components/interactive/def/ConfirmLocId";
 import AgeElement from "../../components/interactive/edfis/defaulted/AgeElement";
+import Signature from "../../components/interactive/def/Signature";
+import Name from "../../components/interactive/def/Name";
+import SocialName from "../../components/interactive/def/SocialName";
+import GenDiv from "../../components/interactive/def/GenDiv";
+import HeaderDate from "../../components/interactive/def/HeaderDate";
+import ConfirmDate from "../../components/interactive/def/ConfirmDate";
+import SectConfirmBtns from "../../components/interactive/def/SectConfirmBtns";
+import SwitchDiv from "../../components/interactive/def/SwitchDiv";
 
 let agGenElement = undefined,
   agGenValue = "masculino",
@@ -126,44 +133,9 @@ export default function AGPage(): JSX.Element {
                   <AGTips dispatch={setTips} state={shouldShowTips} />
                 )}
               </div>
-              <div className="switchDiv flexQ900NoWC" role="group">
-                <span
-                  role="group"
-                  className="form-switch spanRight"
-                  id="autocorrectDiv"
-                >
-                  <input
-                    type="checkbox"
-                    className="deActBtn form-check-input"
-                    role="switch"
-                    id="deactAutocorrectBtnPac"
-                    data-title="autocorrecao"
-                    defaultChecked
-                  />{" "}
-                  <strong>Autocorreção</strong>
-                </span>
-              </div>
+              <SwitchDiv />
             </div>
-            <span
-              role="group"
-              className="control flexJSt flexQ900NoW"
-              id="spanHFlex"
-            >
-              <input
-                type="date"
-                className="form-control d-ibl minCurrDate"
-                id="dateHeader"
-                placeholder="Date"
-                data-title="data_cabecalho"
-              />
-              <button
-                type="button"
-                className="datBtn d-ibl btn btn-secondary"
-                id="headerDatBtn"
-              >
-                Usar data atual
-              </button>
-            </span>
+            <HeaderDate />
           </div>
         </header>
         <main>
@@ -181,121 +153,13 @@ export default function AGPage(): JSX.Element {
               </legend>
               <section className="sectionMain" id="fsAnamGSect">
                 <div className="flexQ900NoWC" id="div1_div2flex" role="group">
-                  <div
-                    className="fsAnamGDiv alItSt900Q flexQ900NoWC flexAlItE flexNoW flexSimple wsNoW cGap0 ws900N"
-                    id="fsAnamGDiv1"
-                    role="group"
-                  >
-                    <span
-                      role="group"
-                      className="fsAnamGSpan flexAlItCt col"
-                      id="fsAnamGSpan1"
-                    >
-                      <label htmlFor="firstNameId" className="labelIdentif">
-                        Primeiro Nome (Simples ou Composto):
-                        <input
-                          type="text"
-                          name="firstNameName"
-                          id="firstNameId"
-                          className="form-control autocorrect inpIdentif noInvert minText maxText patternText"
-                          autoComplete="given-name"
-                          data-title="primeiro_nome"
-                          data-reqlength="3"
-                          data-maxlength="99"
-                          data-pattern="[^0-9]"
-                          data-flags="gi"
-                          minLength={3}
-                          maxLength={99}
-                          required
-                          onInput={ev => handleEventReq(ev.currentTarget)}
-                        />
-                      </label>
-                      <br role="presentation" />
-                    </span>
-                    <span
-                      role="group"
-                      className="fsAnamGSpan flexAlItCt col"
-                      id="fsAnamGSpan2"
-                    >
-                      <label
-                        htmlFor="additionalNameId"
-                        className="labelIdentif"
-                      >
-                        Sobrenome(s) do Meio, se presente(s):
-                        <input
-                          type="text"
-                          name="additionalNameName"
-                          id="additionalNameId"
-                          className="form-control autocorrect inpIdentif noInvert"
-                          data-title="nome_do_meio"
-                          autoComplete="additional-name"
-                          onInput={ev =>
-                            handleCondtReq(ev.currentTarget, {
-                              min: 3,
-                              max: 99,
-                              pattern: ["[^0-9]", "gi"],
-                            })
-                          }
-                        />
-                      </label>
-                      <br role="presentation" />
-                    </span>
-                    <span
-                      role="group"
-                      className="fsAnamGSpan flexAlItCt col"
-                      id="fsAnamGSpan3"
-                    >
-                      <label htmlFor="familyNameId" className="labelIdentif">
-                        Último Sobrenome:
-                        <input
-                          type="text"
-                          name="familyNameName"
-                          id="familyNameId"
-                          className="form-control autocorrect inpIdentif noInvert minText maxText patternText"
-                          autoComplete="family-name"
-                          required
-                          data-title="ultimo_nome"
-                          data-reqlength="3"
-                          data-maxlength="99"
-                          data-pattern="[^0-9]"
-                          data-flags="gi"
-                          minLength={3}
-                          maxLength={99}
-                          onInput={ev => handleEventReq(ev.currentTarget)}
-                        />
-                      </label>
-                      <br role="presentation" />
-                    </span>
-                  </div>
+                  <Name />
                   <div
                     className="fsAnamGDiv alItSt900Q flexQ900NoWC flexAlItE noAdj flexNoWR flexTwin-width"
                     role="group"
                     id="divIdentif_2"
                   >
-                    <span
-                      role="group"
-                      className="fsAnamGSpan flexAlItCt col"
-                      id="fsAnamGSpan4"
-                    >
-                      <label htmlFor="socialNameId" className="labelIdentif">
-                        Nome Social:
-                        <input
-                          type="text"
-                          name="socialNameName"
-                          id="socialNameId"
-                          className="form-control autocorrect inpIdentif noInvert"
-                          data-title="nome_social"
-                          autoComplete="given-name"
-                          onInput={ev =>
-                            handleCondtReq(ev.currentTarget, {
-                              min: 3,
-                              max: 99,
-                              pattern: ["[^0-9]", "gi"],
-                            })
-                          }
-                        />
-                      </label>
-                    </span>
+                    <SocialName />
                     <span
                       role="group"
                       className="fsAnamGSpan flexAlItCt col"
@@ -361,6 +225,7 @@ export default function AGPage(): JSX.Element {
                         </select>
                       </label>
                     </span>
+                    n
                   </div>
                   <hr />
                   <div
@@ -959,169 +824,7 @@ export default function AGPage(): JSX.Element {
                     </label>
                   </span>
                 </div>
-                <div className="gridTwoCol noInvert" id="genDiv" role="group">
-                  <span
-                    role="group"
-                    className="fsAnamGSpan flexAlItCt genSpan"
-                    id="spanFsAnamG13"
-                  >
-                    <label htmlFor="genId" className="labelIdentif">
-                      Gênero:
-                      <select
-                        name="genName"
-                        id="genId"
-                        className="form-select inpIdentif noInvert"
-                        data-title="genero"
-                        required
-                      >
-                        <option className="optIdentif optGen" value="masculino">
-                          Masculino | Homem binário
-                        </option>
-                        <option className="optIdentif optGen" value="feminino">
-                          Feminino | Mulher binária
-                        </option>
-                        <option
-                          className="optIdentif optGen"
-                          value="naoBinario"
-                        >
-                          Não-Binário
-                        </option>
-                        <option className="optIdentif optGen" value="outros">
-                          Outros
-                        </option>
-                        <option className="optIdentif optGen" value="undefined">
-                          Não deseja declarar
-                        </option>
-                      </select>
-                    </label>
-                    <br role="presentation" />
-                  </span>
-
-                  <span
-                    role="group"
-                    className="fsAnamGSpan flexAlItCt genSpan"
-                    id="spanFsAnamG14"
-                  >
-                    <label htmlFor="genBirthRelId" className="labelIdentif">
-                      Identidade em relação ao gênero designado na nascença:
-                      <select
-                        name="genBirthRelName"
-                        id="genBirthRelId"
-                        className="form-select inpIdentif noInvert"
-                        data-title="identidade_genero_nascenca"
-                        required
-                      >
-                        <option
-                          className="optIdentif optgenBirthRel"
-                          value="cis"
-                        >
-                          Cisgênero | Cissexual
-                        </option>
-                        <option
-                          className="optIdentif optgenBirthRel"
-                          value="trans"
-                        >
-                          Transgênero | Transsexual
-                        </option>
-                        <option
-                          className="optIdentif optgenBirthRel"
-                          value="outros"
-                        >
-                          Outros
-                        </option>
-                        <option
-                          className="optIdentif optgenBirthRel"
-                          value="undefined"
-                        >
-                          Não deseja declarar
-                        </option>
-                      </select>
-                    </label>
-                    <br role="presentation" />
-                  </span>
-                  <span
-                    role="group"
-                    className="fsAnamGSpan flexAlItCt genSpan"
-                    id="spanFsAnamG15"
-                    hidden
-                  >
-                    <label htmlFor="genTransId" className="labelIdentif">
-                      Estágio da Transição Hormonal:
-                      <select
-                        name="genTransName"
-                        id="genTransId"
-                        className="form-select inpIdentif noInvert"
-                        data-title="stg_transicao_hormonal"
-                      >
-                        <option
-                          className="optIdentif optgenTrans"
-                          value="avancado"
-                        >
-                          Avançado
-                        </option>
-                        <option
-                          className="optIdentif optgenTrans"
-                          value="undefined"
-                        >
-                          Indefinido
-                        </option>
-                        <option className="optIdentif optgenTrans" value="no">
-                          Não está em transição
-                        </option>
-                        <option
-                          className="optIdentif optgenTrans"
-                          value="inicial"
-                        >
-                          Inicial
-                        </option>
-                        <option
-                          className="optIdentif optgenTrans"
-                          value="intermediario"
-                        >
-                          Intermediário
-                        </option>
-                      </select>
-                    </label>
-                    <br role="presentation" />
-                  </span>
-
-                  <span
-                    role="group"
-                    id="spanFsAnamG16"
-                    className="fsAnamGSpan flexAlItCt genSpan inpIdentif noInvert"
-                    hidden
-                  >
-                    <label htmlFor="genFisAlinId" className="labelIdentif">
-                      Alinhamento de características físicas predominante:
-                      <select
-                        name="genFisAlinName"
-                        id="genFisAlinId"
-                        className="form-select inpIdentif noInvert"
-                        data-title="corpo_align"
-                      >
-                        <option
-                          className="optIdentif optgenFisAlin"
-                          value="masculinizado"
-                        >
-                          Masculinizado
-                        </option>
-                        <option
-                          className="optIdentif optgenFisAlin"
-                          value="feminilizado"
-                        >
-                          Feminilizado
-                        </option>
-                        <option
-                          className="optIdentif optgenFisAlin"
-                          value="neutro"
-                        >
-                          Indeterminado | Neutro
-                        </option>
-                      </select>
-                    </label>
-                    <br role="presentation" />
-                  </span>
-                </div>
+                <GenDiv />
               </section>
               <hr />
             </fieldset>
@@ -4885,6 +4588,7 @@ export default function AGPage(): JSX.Element {
                   ></label>
                   <input
                     type="checkbox"
+                    name="confirm"
                     className="form-check-input confirmName"
                     id="confirmId"
                     data-title="concordancia"
@@ -4919,104 +4623,14 @@ export default function AGPage(): JSX.Element {
                       Local:
                       <MemoLoc />
                     </label>
-                    <label
-                      htmlFor="confirmDatId"
-                      className="labConfirm labDivConfirm2 pdT2pc900Q htFull900Q flexNoWC htHalf900Q bolded"
-                      id="labConfirmDate"
-                    >
-                      {" "}
-                      <span>Data:</span>
-                      <div
-                        className="widFull flexQ900NoW htFull900Q"
-                        id="divConfirmDat"
-                        role="group"
-                      >
-                        <input
-                          type="date"
-                          name="confirmDatName"
-                          id="confirmDatId"
-                          className="inpConfirm inpDate form-control noInvert minCurrDate"
-                          data-title="assinatura_data"
-                          required
-                        />
-                        <button
-                          type="button"
-                          className="datBtn confirmBtn btn btn-secondary widFull"
-                          id="confirmDatBtn"
-                        >
-                          Usar data atual
-                        </button>
-                      </div>
-                    </label>
+                    <ConfirmDate />
                     <hr />
                   </div>
-
-                  <div
-                    className="divSub divConfirm flexEl"
-                    id="divConfirm3"
-                    role="group"
-                  >
-                    <span
-                      role="group"
-                      id="spanAstPct"
-                      className="labConfirm labAst widHalf bolded"
-                    >
-                      <span>Assinatura do Paciente:</span>
-                      <canvas id="inpAstConfirmId"></canvas>
-                      <button
-                        type="button"
-                        className="astDigtBtn autocorrect confirmBtn btn btn-secondary"
-                        id="confirmAstDigtBtn"
-                      >
-                        Usar Assinatura Digital
-                      </button>
-                      <button
-                        type="button"
-                        className="btn btn-secondary"
-                        id="resetAstBtn"
-                      >
-                        Resetar
-                      </button>
-                    </span>
-                  </div>
+                  <Signature />
                 </div>
                 <hr />
               </section>
-              <section
-                className="sectionMain sectionConfirm"
-                id="sectConfirmBut"
-              >
-                <button
-                  type="submit"
-                  name="submitFormButName"
-                  id="submitFormButId"
-                  className="confirmBut btn btn-success forceInvert"
-                  formAction="_self"
-                  formMethod="POST"
-                  accessKey="enter"
-                  onClick={ev => validateForm(ev.currentTarget)}
-                >
-                  Submeter
-                </button>
-                <button
-                  type="reset"
-                  className="confirmBut btn btn-warning forceInvert"
-                  id="resetFormBtn"
-                >
-                  Resetar
-                </button>
-                <button
-                  type="button"
-                  id="btnExport"
-                  className="btn btn-secondary forceInvert"
-                  style={{
-                    backgroundColor: "rgba(0, 0, 255, 0.904)",
-                    borderColor: "rgba(0, 0, 255, 0.904)",
-                  }}
-                >
-                  Gerar Planilha
-                </button>
-              </section>
+              <SectConfirmBtns />
               <hr />
             </fieldset>
           </form>

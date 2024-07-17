@@ -28,6 +28,7 @@ export interface DlgProps {
   dispatch: Dispatch<SetStateAction<boolean>>;
 }
 export interface ENTabsProps {
+  isAutoFillActive: boolean;
   numCol: number;
   IMC: number;
   MLG: number;

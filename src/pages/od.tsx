@@ -20,10 +20,7 @@ import {
   addListenersSubDivsQuadrs,
 } from "@/lib/locals/odPage/odController";
 import {
-  changeToAstDigit,
-  handleCondtReq,
   handleEventReq,
-  validateForm,
   syncAriaStates,
 } from "@/lib/global/handlers/gHandlers";
 import TratFs from "../../components/interactive/od/TratFs";
@@ -31,6 +28,13 @@ import OdTips from "../../components/interactive/od/OdTips";
 import OdDeclaration from "../../components/interactive/od/OdDeclaration";
 import ConfirmLocId from "../../components/interactive/def/ConfirmLocId";
 import { extLine, inputNotFound } from "@/lib/global/handlers/errorHandler";
+import Signature from "../../components/interactive/def/Signature";
+import Name from "../../components/interactive/def/Name";
+import SocialName from "../../components/interactive/def/SocialName";
+import HeaderDate from "../../components/interactive/def/HeaderDate";
+import ConfirmDate from "../../components/interactive/def/ConfirmDate";
+import SectConfirmBtns from "../../components/interactive/def/SectConfirmBtns";
+import SwitchDiv from "../../components/interactive/def/SwitchDiv";
 
 let odIsAutoCorrectOn = true,
   odIsDialogCalled = false,
@@ -172,47 +176,11 @@ export default function OdPage(): JSX.Element {
                 </article>
               </dialog>
             </div>
-            <span
-              role="group"
-              className="control flexJSt flexQ900NoW"
-              id="spanHFlex"
-            >
-              <input
-                type="date"
-                className="form-control d-ibl minCurrDate"
-                id="dateHeader"
-                placeholder="Date"
-                data-title="Data no cabeçalho"
-                required
-              />
-              <button
-                type="button"
-                className="datBtn d-ibl btn btn-secondary"
-                id="headerDatBtn"
-              >
-                Usar data atual
-              </button>
-            </span>
+            <HeaderDate />
           </div>
         </header>
         <main>
-          <div role="group" className="switchDiv flexQ900NoWC">
-            <span
-              role="group"
-              className="form-switch spanRight"
-              id="autocorrectDiv"
-            >
-              <input
-                type="checkbox"
-                className="deActBtn form-check-input"
-                role="switch"
-                id="deactAutocorrectBtnPac"
-                data-title="Autocorreção"
-                defaultChecked
-              />{" "}
-              <strong>Autocorreção</strong>
-            </span>
-          </div>
+          <SwitchDiv />
           <hr />
           <form
             name="formOdontName"
@@ -225,121 +193,10 @@ export default function OdPage(): JSX.Element {
               <legend id="fsAnamGLeg" className="legMain form-padded">
                 Identificação
               </legend>
-
               <section className="sectionMain" id="fsAnamGSect">
                 <div role="group" className="flexQ900NoWC" id="div1_div2flex">
-                  <div
-                    role="group"
-                    className="fsAnamGDiv alItSt900Q flexQ900NoWC flexAlItE flexNoW flexSimple wsNoW cGap0 ws900N"
-                    id="fsAnamGDiv1"
-                  >
-                    <span
-                      role="group"
-                      className="fsAnamGSpan flexAlItCt col"
-                      id="fsAnamGSpan1"
-                    >
-                      <label htmlFor="firstNameId" className="labelIdentif">
-                        Primeiro Nome (Simples ou Composto):
-                        <input
-                          type="text"
-                          name="firstNameName"
-                          id="firstNameId"
-                          className="form-control noInvert autocorrect inpIdentif minText maxText patternText"
-                          autoComplete="given-name"
-                          data-title="Primeiro nome"
-                          data-reqlength="3"
-                          data-maxlength="99"
-                          data-pattern="[^0-9]"
-                          data-flags="gi"
-                          minLength={3}
-                          maxLength={99}
-                          required
-                          onInput={ev => handleEventReq(ev.currentTarget)}
-                        />
-                      </label>
-                      <br role="presentation" />
-                    </span>
-                    <span
-                      role="group"
-                      className="fsAnamGSpan flexAlItCt col"
-                      id="fsAnamGSpan2"
-                    >
-                      <label
-                        htmlFor="additionalNameId"
-                        className="labelIdentif"
-                      >
-                        Sobrenome(s) do Meio, se presente(s):
-                        <input
-                          type="text"
-                          name="additionalNameName"
-                          id="additionalNameId"
-                          className="form-control noInvert autocorrect inpIdentif"
-                          data-title="Nome do meio"
-                          autoComplete="additional-name"
-                          onInput={ev =>
-                            handleCondtReq(ev.currentTarget, {
-                              min: 3,
-                              max: 99,
-                              pattern: ["[^0-9]", "gi"],
-                            })
-                          }
-                        />
-                      </label>
-                      <br role="presentation" />
-                    </span>
-
-                    <span
-                      role="group"
-                      className="fsAnamGSpan flexAlItCt col"
-                      id="fsAnamGSpan3"
-                    >
-                      <label htmlFor="familyNameId" className="labelIdentif">
-                        Último Sobrenome:
-                        <input
-                          type="text"
-                          name="familyNameName"
-                          id="familyNameId"
-                          className="form-control noInvert autocorrect inpIdentif minText maxText patternText"
-                          autoComplete="family-name"
-                          required
-                          data-title="Último nome"
-                          data-reqlength="3"
-                          data-maxlength="99"
-                          data-pattern="[^0-9]"
-                          data-flags="gi"
-                          minLength={3}
-                          maxLength={99}
-                          onInput={ev => handleEventReq(ev.currentTarget)}
-                        />
-                      </label>
-                      <br role="presentation" />
-                    </span>
-                  </div>
-
-                  <span
-                    role="group"
-                    className="fsAnamGSpan flexAlItCt col noInvert"
-                    id="fsAnamGSpan4"
-                  >
-                    <label htmlFor="socialNameId" className="labelIdentif">
-                      Nome Social:
-                      <input
-                        type="text"
-                        name="socialNameName"
-                        id="socialNameId"
-                        className="form-control noInvert autocorrect inpIdentif"
-                        data-title="Nome social"
-                        autoComplete="given-name"
-                        onInput={ev =>
-                          handleCondtReq(ev.currentTarget, {
-                            min: 3,
-                            max: 99,
-                            pattern: ["[^0-9]", "gi"],
-                          })
-                        }
-                      />
-                    </label>
-                  </span>
+                  <Name />
+                  <SocialName />
                 </div>
               </section>
               <hr />
@@ -3109,7 +2966,7 @@ export default function OdPage(): JSX.Element {
                   ></label>
                   <input
                     type="checkbox"
-                    name="confirmName"
+                    name="confirm"
                     id="confirmId"
                     data-title="Concordância"
                     required
@@ -3143,107 +3000,15 @@ export default function OdPage(): JSX.Element {
                       Local:
                       <MemoLoc />
                     </label>
-                    <label
-                      htmlFor="confirmDatId"
-                      className="labConfirm labDivConfirm2 pdT2pc900Q htFull900Q flexNoWC htHalf900Q bolded"
-                      id="labConfirmDate"
-                    >
-                      <span>Data:</span>
-                      <div
-                        className="widFull flexQ900NoW htFull900Q"
-                        id="divConfirmDat"
-                        role="group"
-                      >
-                        <input
-                          type="date"
-                          name="confirmDatName"
-                          id="confirmDatId"
-                          className="inpConfirm inpDate form-control noInvert minCurrDate"
-                          data-title="assinatura_data"
-                          required
-                        />
-                        <button
-                          type="button"
-                          className="datBtn confirmBtn btn btn-secondary widFull"
-                          id="confirmDatBtn"
-                        >
-                          Usar data atual
-                        </button>
-                      </div>
-                    </label>
+                    <ConfirmDate />
                     <hr />
                   </div>
-
-                  <div
-                    className="divSub divConfirm flexEl"
-                    id="divConfirm3"
-                    role="group"
-                  >
-                    <span
-                      role="group"
-                      id="spanAstPct"
-                      className="labConfirm labAst widHalf bolded"
-                    >
-                      <span>Assinatura do Paciente:</span>
-                      <canvas id="inpAstConfirmId"></canvas>
-                      <button
-                        type="button"
-                        className="astDigtBtn autocorrect confirmBtn btn btn-secondary"
-                        id="confirmAstDigtBtn"
-                        onClick={ev => {
-                          changeToAstDigit(ev.currentTarget);
-                        }}
-                      >
-                        Usar Assinatura Digital
-                      </button>
-                      <button
-                        type="button"
-                        className="btn btn-secondary"
-                        id="resetAstBtn"
-                      >
-                        Resetar
-                      </button>
-                    </span>
-                  </div>
+                  <Signature />
                 </div>
                 <hr />
               </section>
               <br role="presentation" />
-              <section
-                className="sectionMain sectionConfirm"
-                id="sectConfirmBut"
-              >
-                <button
-                  type="submit"
-                  name="submitFormButName"
-                  id="submitFormButId"
-                  className="confirmBut btn btn-success"
-                  formAction="_self"
-                  formMethod="POST"
-                  accessKey="enter"
-                  onClick={ev => validateForm(ev.currentTarget)}
-                >
-                  Submeter
-                </button>
-                <button
-                  type="reset"
-                  className="confirmBut btn btn-warning"
-                  id="resetFormBtn"
-                >
-                  Resetar
-                </button>
-                <button
-                  type="button"
-                  id="btnExport"
-                  className="btn btn-secondary"
-                  style={{
-                    backgroundColor: "rgba(0, 0, 255, 0.904)",
-                    borderColor: "rgba(0, 0, 255, 0.904)",
-                  }}
-                >
-                  Gerar Planilha
-                </button>
-              </section>
+              <SectConfirmBtns />
               <hr />
             </fieldset>
           </form>
