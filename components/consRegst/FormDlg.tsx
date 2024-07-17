@@ -32,7 +32,7 @@ import { isClickOutside } from "@/lib/global/gStyleScript";
 import {
   enableCPFBtn,
   handleCondtReq,
-  subForm,
+  validateForm,
   syncAriaStates,
 } from "@/lib/global/handlers/gHandlers";
 import { addListenerExportBtn } from "@/lib/global/gController";
@@ -1183,7 +1183,7 @@ export default function FormDlg({
                   ref={submitRef}
                   onClick={ev => {
                     if (
-                      subForm(
+                      validateForm(
                         ev.currentTarget,
                         dialogRef.current ??
                           ev.currentTarget.closest("dialog") ??
@@ -1201,8 +1201,10 @@ export default function FormDlg({
                         dialogRef.current ?? ev.currentTarget.closest("dialog")
                       );
                     }
-                    subForm(submitRef.current, dialogRef.current ?? document) &&
-                      onClose();
+                    validateForm(
+                      submitRef.current,
+                      dialogRef.current ?? document
+                    ) && onClose();
                   }}
                 >
                   <small role="textbox">

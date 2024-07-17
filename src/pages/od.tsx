@@ -23,7 +23,7 @@ import {
   changeToAstDigit,
   handleCondtReq,
   handleEventReq,
-  subForm,
+  validateForm,
   syncAriaStates,
 } from "@/lib/global/handlers/gHandlers";
 import TratFs from "../../components/interactive/od/TratFs";
@@ -3221,7 +3221,7 @@ export default function OdPage(): JSX.Element {
                   formAction="_self"
                   formMethod="POST"
                   accessKey="enter"
-                  onClick={ev => subForm(ev.currentTarget)}
+                  onClick={ev => validateForm(ev.currentTarget)}
                 >
                   Submeter
                 </button>

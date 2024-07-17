@@ -24,7 +24,7 @@ import { clearPhDates, normalizeSizeSb } from "@/lib/global/gStyleScript";
 import {
   handleCondtReq,
   handleEventReq,
-  subForm,
+  validateForm,
   syncAriaStates,
 } from "@/lib/global/handlers/gHandlers";
 import { handleClientPermissions } from "@/lib/locals/panelPage/handlers/consHandlerUsers";
@@ -148,12 +148,12 @@ export default function StudentForm({
       if (btnSubmitStud instanceof HTMLButtonElement) {
         (userClass === "coordenador" || userClass === "supervisor") &&
           btnSubmitStud.addEventListener("click", click => {
-            const validation = subForm(btnSubmitStud, formRef.current!);
+            const validation = validateForm(btnSubmitStud, formRef.current!);
             if (!validation) click.preventDefault();
           });
         (userClass === "coordenador" || userClass === "supervisor") &&
           formRef.current!.addEventListener("submit", submit => {
-            const validation = subForm(btnSubmitStud, formRef.current!);
+            const validation = validateForm(btnSubmitStud, formRef.current!);
             if (!validation) submit.preventDefault();
           });
       } else

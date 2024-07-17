@@ -20,7 +20,7 @@ import {
 import {
   handleCondtReq,
   handleEventReq,
-  subForm,
+  validateForm,
   syncAriaStates,
 } from "@/lib/global/handlers/gHandlers";
 import { DataProvider } from "@/lib/locals/panelPage/declarations/classesCons";
@@ -186,15 +186,19 @@ export default function ProfForm({
       const btnSubmitProf = document.getElementById("btnSubmitNewProf");
       if (btnSubmitProf instanceof HTMLButtonElement) {
         userClass === "coordenador" &&
-          btnSubmitProf.addEventListener("click", click => {
-            const validation = subForm(btnSubmitProf, formRef.current!);
-            if (!validation) click.preventDefault();
-          });
+          btnSubmitProf.addEventListener(
+            "click",
+            click =>
+              !validateForm(btnSubmitProf, formRef.current!) &&
+              click.preventDefault()
+          );
         userClass === "coordenador" &&
-          formRef.current!.addEventListener("submit", submit => {
-            const validation = subForm(btnSubmitProf, formRef.current!);
-            if (!validation) submit.preventDefault();
-          });
+          formRef.current!.addEventListener(
+            "submit",
+            submit =>
+              !validateForm(btnSubmitProf, formRef.current!) &&
+              submit.preventDefault()
+          );
       } else
         elementNotFound(
           btnSubmitProf,

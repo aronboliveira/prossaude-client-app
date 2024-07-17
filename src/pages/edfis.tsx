@@ -37,7 +37,7 @@ import {
   changeToAstDigit,
   handleCondtReq,
   handleEventReq,
-  subForm,
+  validateForm,
   syncAriaStates,
 } from "@/lib/global/handlers/gHandlers";
 import {
@@ -2300,7 +2300,7 @@ export default function EdFisNutPage(): JSX.Element {
                   formAction="_self"
                   formMethod="POST"
                   accessKey="enter"
-                  onClick={ev => subForm(ev.currentTarget)}
+                  onClick={ev => validateForm(ev.currentTarget)}
                 >
                   Submeter
                 </button>

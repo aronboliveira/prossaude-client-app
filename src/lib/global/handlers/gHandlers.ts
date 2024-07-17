@@ -792,7 +792,7 @@ export function toggleConformDlg(): void {
     );
 }
 
-export function subForm(
+export function validateForm(
   subButton: targEl,
   scope: HTMLElement | Document = document
 ): boolean {

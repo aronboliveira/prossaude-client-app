@@ -23,7 +23,7 @@ import {
   handleCondtReq,
   handleEventReq,
   opRadioHandler,
-  subForm,
+  validateForm,
   syncAriaStates,
   toggleConformDlg,
 } from "@/lib/global/handlers/gHandlers";
@@ -4994,7 +4994,7 @@ export default function AGPage(): JSX.Element {
                   formAction="_self"
                   formMethod="POST"
                   accessKey="enter"
-                  onClick={ev => subForm(ev.currentTarget)}
+                  onClick={ev => validateForm(ev.currentTarget)}
                 >
                   Submeter
                 </button>
