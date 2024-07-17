@@ -524,3 +524,12 @@ $swhite: rgba(255, 255, 255, 0.8);
     }
   }
 }
+
+@media screen and (max-width: 413px) {
+  .odBody {
+    #tratButSpan1 {
+      margin-right: 40vw;
+      margin-left: 3vw;
+    }
+  }
+}
