@@ -15,7 +15,7 @@ import {
   extLine,
   multipleElementsNotFound,
 } from "@/lib/global/handlers/errorHandler";
-import { subForm, syncAriaStates } from "@/lib/global/handlers/gHandlers";
+import { validateForm, syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { UserPropsDlgProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import { useEffect, useRef, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
@@ -174,7 +174,7 @@ export default function UserPropsDlg({
       userPropsDlgRef.current instanceof HTMLDialogElement
     ) {
       userPropsBtnRef.current.addEventListener("click", () => {
-        if (subForm(userPropsBtnRef.current, userPropsDlgRef.current!))
+        if (validateForm(userPropsBtnRef.current, userPropsDlgRef.current!))
           setPropDlg(!shouldDisplayPropDlg);
       });
     } else

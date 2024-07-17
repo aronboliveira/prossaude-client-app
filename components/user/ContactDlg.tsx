@@ -5,7 +5,7 @@ import {
   extLine,
   multipleElementsNotFound,
 } from "@/lib/global/handlers/errorHandler";
-import { subForm, syncAriaStates } from "@/lib/global/handlers/gHandlers";
+import { validateForm, syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { ContactDlgProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import { useEffect, useRef } from "react";
 
@@ -41,9 +41,10 @@ export default function ContactDlg({
             .validity
         );
         console.log(
-          "validado " + subForm(contacBtnRef.current, contactDlgRef.current!)
+          "validado " +
+            validateForm(contacBtnRef.current, contactDlgRef.current!)
         );
-        if (subForm(contacBtnRef.current, contactDlgRef.current!))
+        if (validateForm(contacBtnRef.current, contactDlgRef.current!))
           setContact(!shouldDisplayContact);
       });
     } else
