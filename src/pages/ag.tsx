@@ -1,7 +1,7 @@
 import { ErrorBoundary } from "react-error-boundary";
 import { useEffect, useCallback, useState, memo } from "react";
 import { handleLinkChanges } from "@/lib/global/handlers/gRoutingHandlers";
-import { entryEl } from "@/lib/global/declarations/types";
+import { entryEl, rMouseEvent } from "@/lib/global/declarations/types";
 import {
   addCanvasListeners,
   addListenerExportBtn,
@@ -44,6 +44,7 @@ import SwitchDiv from "../../components/interactive/def/SwitchDiv";
 import TipsBtn from "../../components/interactive/def/TipsBtn";
 import BtnConform from "../../components/interactive/def/BtnConform";
 import Declaration from "../../components/interactive/def/Declaration";
+import RadioPair from "../../components/interactive/ag/RadioPair";
 
 let agGenElement = undefined,
   agGenValue = "masculino",
@@ -61,6 +62,66 @@ export default function AGPage(): JSX.Element {
     equalizeFlexSibilings(document.querySelectorAll("[class*='flexTwin']"), [
       ["width", "px"],
     ]);
+  };
+  const handleDivAddShow = (ev: rMouseEvent | React.ChangeEvent) => {
+    try {
+      if (
+        !(
+          ev.currentTarget instanceof HTMLInputElement &&
+          (ev.currentTarget.type === "radio" ||
+            ev.currentTarget.type === "checkbox")
+        )
+      )
+        throw elementNotFound(
+          ev.currentTarget,
+          `Validation of Event Current Target`,
+          extLine(new Error())
+        );
+      const parentSpan =
+        ev.currentTarget.closest(".spanSectAnt") ||
+        ev.currentTarget.closest(".input-group") ||
+        ev.currentTarget.closest('span[role="group"]') ||
+        ev.currentTarget.closest("span");
+      if (!(parentSpan instanceof HTMLElement))
+        throw elementNotFound(
+          parentSpan,
+          `Validation of Parent Section Span`,
+          extLine(new Error())
+        );
+      let divAdd = parentSpan.nextElementSibling;
+      const idf = ev.currentTarget.id.replace("ant", "").replace("Id", "");
+      if (
+        !(divAdd instanceof HTMLElement && divAdd.classList.contains("divAdd"))
+      )
+        divAdd = document.getElementById(`divAdd${idf}`);
+      if (
+        !(divAdd instanceof HTMLElement && divAdd.classList.contains("divAdd"))
+      )
+        throw elementNotFound(
+          divAdd,
+          `Validation of Div Add`,
+          extLine(new Error())
+        );
+      if (ev.currentTarget.checked) {
+        divAdd.style.display = "grid";
+        divAdd.style.opacity = "0.8";
+        divAdd.style.minWidth = "70vw";
+      } else {
+        divAdd.style.display = "none";
+        divAdd.style.opacity = "0";
+        divAdd.style.minWidth = "0";
+      }
+    } catch (e) {
+      console.error(
+        `Error executing ${ev.type} callback for ${
+          ev.currentTarget instanceof HTMLElement
+            ? ev.currentTarget.id ||
+              ev.currentTarget.className ||
+              ev.currentTarget.tagName
+            : "undefined target"
+        }:\n${(e as Error).message}`
+      );
+    }
   };
   useEffect(() => {
     agGenElement = document.getElementById("genId");
@@ -876,127 +937,12 @@ export default function AGPage(): JSX.Element {
                   className="flexDiv flexColumn fsAGRadDiv"
                   role="group"
                 >
-                  <span
-                    role="group"
-                    className="spanMain spanMainFsAnamGRad noInvert"
-                    id="febrRSpan"
-                  >
-                    <strong>Febre Reumática</strong>
-                    <span
-                      role="group"
-                      className="spanSub spanSubFsAnamGRad form-check"
-                      id="febrRSpanSub"
-                    >
-                      <input
-                        type="radio"
-                        name="febrRName"
-                        id="febrRYes"
-                        className="noInvert radOp radYes form-check-input"
-                        tabIndex={0}
-                        data-title="sim_feb_reumatica"
-                        onKeyDown={keydown => {
-                          opRadioHandler(
-                            keydown,
-                            Array.from(
-                              document.querySelectorAll(
-                                'input[id$="Yes"], input[id$="No"]'
-                              )
-                            )
-                          );
-                        }}
-                      />
-                      <label
-                        htmlFor="febrRYes"
-                        className="noInvert labOp boolOp form-check-label"
-                      >
-                        Sim
-                      </label>
-                      <input
-                        type="radio"
-                        name="febrRName"
-                        id="febrRNo"
-                        className="noInvert radOp radNo"
-                        tabIndex={0}
-                        data-title="nao_feb_reumatica"
-                        onKeyDown={keydown => {
-                          opRadioHandler(
-                            keydown,
-                            Array.from(
-                              document.querySelectorAll(
-                                'input[id$="Yes"], input[id$="No"]'
-                              )
-                            )
-                          );
-                        }}
-                      />
-                      <label
-                        htmlFor="febrRNo"
-                        className="noInvert labOp boolOp form-check-label"
-                      >
-                        Não
-                      </label>
-                    </span>
-                  </span>
-
-                  <span
-                    role="group"
-                    className="spanMain spanMainFsAnamGRad noInvert"
-                    id="hepSpan"
-                  >
-                    <strong>Hepatite ou Outra(s) Doença(s) Hepática(s)</strong>
-                    <span
-                      role="group"
-                      className="spanSub spanSubFsAnamGRad form-check"
-                      id="hepSpanSub"
-                    >
-                      <input
-                        type="radio"
-                        name="hepName"
-                        id="CpbHepYes"
-                        className="noInvert radOp radYes form-check-input"
-                        data-title="sim_hepatite"
-                        onKeyDown={keydown => {
-                          opRadioHandler(
-                            keydown,
-                            Array.from(
-                              document.querySelectorAll(
-                                'input[id$="Yes"], input[id$="No"]'
-                              )
-                            )
-                          );
-                        }}
-                      />
-                      <label
-                        htmlFor="CpbHepYes"
-                        className="noInvert labOp boolOp form-check-label"
-                      >
-                        Sim
-                      </label>
-                      <input
-                        type="radio"
-                        name="hepName"
-                        id="CpbHepNo"
-                        className="noInvert radOp radNo"
-                        data-title="nao_hepatite"
-                        onKeyDown={keydown => {
-                          opRadioHandler(
-                            keydown,
-                            Array.from(
-                              document.querySelectorAll(
-                                'input[id$="Yes"], input[id$="No"]'
-                              )
-                            )
-                          );
-                        }}
-                      />
-                      <label
-                        htmlFor="CpbHepNo"
-                        className="noInvert labOp boolOp form-check-label"
-                      >
-                        Não
-                      </label>
-                    </span>
-                  </span>
+                  <RadioPair name="febr_r" fullName="Febre Reumática" />
+                  <RadioPair
+                    name="hep"
+                    fullName="Hepatite ou Outra(s) Doença(s) Hepática(s)"
+                    ctx={true}
+                  />
                   <div className="divAdd gridTwoCol" id="divAddHep" role="list">
                     <span role="listitem" className="cbDoencaSubt">
                       <input
@@ -1099,66 +1045,7 @@ export default function AGPage(): JSX.Element {
                       Induzida por Toxinas, Medicamentos ou Outra(s) Droga(s)
                     </span>
                   </div>
-
-                  <span
-                    role="group"
-                    className="spanMain spanMainFsAnamGRad noInvert"
-                    id="CpbDiabSpan"
-                  >
-                    <strong>Diabetes</strong>
-                    <span
-                      role="group"
-                      className="spanSub spanSubFsAnamGRad form-check"
-                      id="CpbDiabSpanSub"
-                    >
-                      <input
-                        type="radio"
-                        name="pbDiabName"
-                        id="CpbDiabYes"
-                        className="noInvert radOp radYes form-check-input"
-                        data-title="sim_diabete"
-                        onKeyDown={keydown => {
-                          opRadioHandler(
-                            keydown,
-                            Array.from(
-                              document.querySelectorAll(
-                                'input[id$="Yes"], input[id$="No"]'
-                              )
-                            )
-                          );
-                        }}
-                      />
-                      <label
-                        htmlFor="CpbDiabYes"
-                        className="noInvert labOp boolOp form-check-label"
-                      >
-                        Sim
-                      </label>
-                      <input
-                        type="radio"
-                        name="pbDiabName"
-                        id="CpbDiabNo"
-                        className="noInvert radOp radNo"
-                        data-title="nao_diabete"
-                        onKeyDown={keydown => {
-                          opRadioHandler(
-                            keydown,
-                            Array.from(
-                              document.querySelectorAll(
-                                'input[id$="Yes"], input[id$="No"]'
-                              )
-                            )
-                          );
-                        }}
-                      />
-                      <label
-                        htmlFor="CpbDiabNo"
-                        className="noInvert labOp boolOp form-check-label"
-                      >
-                        Não
-                      </label>
-                    </span>
-                  </span>
+                  <RadioPair name="diab" fullName="Diabetes" ctx={true} />
                   <div
                     className="divAdd gridTwoCol"
                     id="divAddDiab"
@@ -1225,66 +1112,7 @@ export default function AGPage(): JSX.Element {
                       MODY
                     </span>
                   </div>
-
-                  <span
-                    role="group"
-                    className="spanMain spanMainFsAnamGRad noInvert"
-                    id="hivSpan"
-                  >
-                    <strong>Portador de HIV</strong>
-                    <span
-                      role="group"
-                      className="spanSub spanSubFsAnamGRad form-check"
-                      id="hivSpanSub"
-                    >
-                      <input
-                        type="radio"
-                        name="hivName"
-                        id="CpbHivYes"
-                        className="noInvert radOp radYes form-check-input"
-                        data-title="sim_hiv"
-                        onKeyDown={keydown => {
-                          opRadioHandler(
-                            keydown,
-                            Array.from(
-                              document.querySelectorAll(
-                                'input[id$="Yes"], input[id$="No"]'
-                              )
-                            )
-                          );
-                        }}
-                      />
-                      <label
-                        htmlFor="CpbHivYes"
-                        className="noInvert labOp boolOp form-check-label"
-                      >
-                        Sim
-                      </label>
-                      <input
-                        type="radio"
-                        name="hivName"
-                        id="CpbHivNo"
-                        className="noInvert radOp radNo"
-                        data-title="no_hiv"
-                        onKeyDown={keydown => {
-                          opRadioHandler(
-                            keydown,
-                            Array.from(
-                              document.querySelectorAll(
-                                'input[id$="Yes"], input[id$="No"]'
-                              )
-                            )
-                          );
-                        }}
-                      />
-                      <label
-                        htmlFor="CpbHivNo"
-                        className="noInvert labOp boolOp form-check-label"
-                      >
-                        Não
-                      </label>
-                    </span>
-                  </span>
+                  <RadioPair name="hiv" fullName="Portador de HIV" ctx={true} />
                   <div
                     className="divAdd gridTwoCol"
                     id="divAddHiv"
@@ -1352,126 +1180,12 @@ export default function AGPage(): JSX.Element {
                       />
                     </div>
                   </div>
-
-                  <span
-                    role="group"
-                    className="spanMain spanMainFsAnamGRad noInvert"
-                    id="tSangSpan"
-                  >
-                    <strong>Tranfusão de Sangue</strong>
-                    <span
-                      role="group"
-                      className="spanSub spanSubFsAnamGRad form-check"
-                      id="tSangSpanSub"
-                    >
-                      <input
-                        type="radio"
-                        name="tSangName"
-                        id="tSangYes"
-                        className="noInvert radOp radYes form-check-input"
-                        data-title="sim_transfusao"
-                        onKeyDown={keydown => {
-                          opRadioHandler(
-                            keydown,
-                            Array.from(
-                              document.querySelectorAll(
-                                'input[id$="Yes"], input[id$="No"]'
-                              )
-                            )
-                          );
-                        }}
-                      />
-                      <label
-                        htmlFor="tSangYes"
-                        className="noInvert labOp boolOp form-check-label"
-                      >
-                        Sim
-                      </label>
-                      <input
-                        type="radio"
-                        name="tSangName"
-                        id="tSangNo"
-                        className="noInvert radOp radNo"
-                        data-title="nao_transfusao"
-                        onKeyDown={keydown => {
-                          opRadioHandler(
-                            keydown,
-                            Array.from(
-                              document.querySelectorAll(
-                                'input[id$="Yes"], input[id$="No"]'
-                              )
-                            )
-                          );
-                        }}
-                      />
-                      <label
-                        htmlFor="tSangNo"
-                        className="noInvert labOp boolOp form-check-label"
-                      >
-                        Não
-                      </label>
-                    </span>
-                  </span>
-
-                  <span
-                    role="group"
-                    className="spanMain spanMainFsAnamGRad noInvert"
-                    id="prAltaSpan"
-                  >
-                    <strong>Hipertensão Arterial Sistêmica</strong>
-                    <span
-                      role="group"
-                      className="spanSub spanSubFsAnamGRad form-check"
-                      id="prAltaSpanSub"
-                    >
-                      <input
-                        type="radio"
-                        name="prAltaName"
-                        id="CpbPrAltaYes"
-                        className="noInvert radOp radYes form-check-input"
-                        data-title="sim_hipertensao"
-                        onKeyDown={keydown => {
-                          opRadioHandler(
-                            keydown,
-                            Array.from(
-                              document.querySelectorAll(
-                                'input[id$="Yes"], input[id$="No"]'
-                              )
-                            )
-                          );
-                        }}
-                      />
-                      <label
-                        htmlFor="CpbPrAltaYes"
-                        className="noInvert labOp boolOp form-check-label"
-                      >
-                        Sim
-                      </label>
-                      <input
-                        type="radio"
-                        name="prAltaName"
-                        id="CpbPrAltaNo"
-                        className="noInvert radOp radNo"
-                        data-title="nao_hipertensao"
-                        onKeyDown={keydown => {
-                          opRadioHandler(
-                            keydown,
-                            Array.from(
-                              document.querySelectorAll(
-                                'input[id$="Yes"], input[id$="No"]'
-                              )
-                            )
-                          );
-                        }}
-                      />
-                      <label
-                        htmlFor="CpbPrAltaNo"
-                        className="noInvert labOp boolOp form-check-label"
-                      >
-                        Não
-                      </label>
-                    </span>
-                  </span>
+                  <RadioPair name="t_sang" fullName="Transfusão de Sangue" />
+                  <RadioPair
+                    name="pr_alta"
+                    fullName="Hipertensão Arterial Sistêmica"
+                    ctx={true}
+                  />
                   <div
                     className="divAdd gridTwoCol"
                     id="divAddPrAlta"
@@ -1629,347 +1343,41 @@ export default function AGPage(): JSX.Element {
                     </span>
                   </div>
                 </div>
-
                 <div
                   id="fsAGRadDiv2"
                   className="flexDiv flexColumn fsAGRadDiv"
                   role="group"
                 >
-                  <span
-                    role="group"
-                    className="spanMain spanMainFsAnamGRad noInvert"
-                    id="pbCardSpan"
-                  >
-                    <strong>Problema(s) Cardíacos</strong>
-                    <span
-                      role="group"
-                      className="spanSub spanSubFsAnamGRad form-check"
-                      id="pbCardSpanSub"
-                    >
-                      <input
-                        type="radio"
-                        name="pbCardName"
-                        id="pbCardYes"
-                        className="noInvert radOp radYes form-check-input"
-                        data-title="sim_prob_card"
-                        onKeyDown={keydown => {
-                          opRadioHandler(
-                            keydown,
-                            Array.from(
-                              document.querySelectorAll(
-                                'input[id$="Yes"], input[id$="No"]'
-                              )
-                            )
-                          );
-                        }}
-                      />
-                      <label
-                        htmlFor="pbCardYes"
-                        className="noInvert labOp boolOp form-check-label"
-                      >
-                        Sim
-                      </label>
-                      <input
-                        type="radio"
-                        name="pbCardName"
-                        id="pbCardNo"
-                        className="noInvert radOp radNo"
-                        data-title="no_prob_card"
-                        onKeyDown={keydown => {
-                          opRadioHandler(
-                            keydown,
-                            Array.from(
-                              document.querySelectorAll(
-                                'input[id$="Yes"], input[id$="No"]'
-                              )
-                            )
-                          );
-                        }}
-                      />
-                      <label
-                        htmlFor="pbCardNo"
-                        className="noInvert labOp boolOp form-check-label"
-                      >
-                        Não
-                      </label>
-                    </span>
-                  </span>
-                  <textarea
-                    className="form-control taOp taCard divAdd"
-                    id="textAddCard"
-                    maxLength={1000}
-                    placeholder="Escreva aqui os Problemas Cardíacos específicos"
-                    data-title="desc_prob_card"
-                  ></textarea>
-
-                  <span
-                    role="group"
-                    className="spanMain spanMainFsAnamGRad noInvert"
-                    id="pbRenSpan"
-                  >
-                    <strong>Problema(s) Renais</strong>
-                    <span
-                      role="group"
-                      className="spanSub spanSubFsAnamGRad form-check"
-                      id="pbRenSpanSub"
-                    >
-                      <input
-                        type="radio"
-                        name="pbRenName"
-                        id="pbRenYes"
-                        className="noInvert radOp radYes form-check-input"
-                        data-title="sim_prob_renal"
-                        onKeyDown={keydown => {
-                          opRadioHandler(
-                            keydown,
-                            Array.from(
-                              document.querySelectorAll(
-                                'input[id$="Yes"], input[id$="No"]'
-                              )
-                            )
-                          );
-                        }}
-                      />
-                      <label
-                        htmlFor="pbRenYes"
-                        className="noInvert labOp boolOp form-check-label"
-                      >
-                        Sim
-                      </label>
-                      <input
-                        type="radio"
-                        name="pbRenName"
-                        id="pbRenNo"
-                        className="noInvert radOp radNo"
-                        data-title="no_prob_renal"
-                        onKeyDown={keydown => {
-                          opRadioHandler(
-                            keydown,
-                            Array.from(
-                              document.querySelectorAll(
-                                'input[id$="Yes"], input[id$="No"]'
-                              )
-                            )
-                          );
-                        }}
-                      />
-                      <label
-                        htmlFor="pbRenNo"
-                        className="noInvert labOp boolOp form-check-label"
-                      >
-                        Não
-                      </label>
-                    </span>
-                  </span>
-                  <textarea
-                    className="form-control taOp divAdd"
-                    id="textAddRen"
-                    maxLength={1000}
-                    placeholder="Escreva aqui os Problemas Renais específicos"
-                    data-title="desc_prob_renal"
-                  ></textarea>
-
-                  <span
-                    role="group"
-                    className="spanMain spanMainFsAnamGRad noInvert"
-                    id="pbGastSpan"
-                  >
-                    <strong>Problema(s) Gástricos</strong>
-                    <span
-                      role="group"
-                      className="spanSub spanSubFsAnamGRad form-check"
-                      id="pbGastSpanSub"
-                    >
-                      <input
-                        type="radio"
-                        name="pbGastName"
-                        id="pbGastYes"
-                        className="noInvert radOp radYes form-check-input"
-                        data-title="sim_prob_gast"
-                        onKeyDown={keydown => {
-                          opRadioHandler(
-                            keydown,
-                            Array.from(
-                              document.querySelectorAll(
-                                'input[id$="Yes"], input[id$="No"]'
-                              )
-                            )
-                          );
-                        }}
-                      />
-                      <label
-                        htmlFor="pbGastYes"
-                        className="noInvert labOp boolOp form-check-label"
-                      >
-                        Sim
-                      </label>
-                      <input
-                        type="radio"
-                        name="pbGastName"
-                        id="pbGastNo"
-                        className="noInvert radOp radNo"
-                        data-title="no_prob_gast"
-                        onKeyDown={keydown => {
-                          opRadioHandler(
-                            keydown,
-                            Array.from(
-                              document.querySelectorAll(
-                                'input[id$="Yes"], input[id$="No"]'
-                              )
-                            )
-                          );
-                        }}
-                      />
-                      <label
-                        htmlFor="pbGastNo"
-                        className="noInvert labOp boolOp form-check-label"
-                      >
-                        Não
-                      </label>
-                    </span>
-                  </span>
-                  <textarea
-                    className="form-control taOp divAdd"
-                    id="textAddGast"
-                    maxLength={1000}
-                    placeholder="Escreva aqui os Problemas Gástricos específicos"
-                    data-title="desc_prob_gast"
-                  ></textarea>
-
-                  <span
-                    role="group"
-                    className="spanMain spanMainFsAnamGRad noInvert"
-                    id="pbRespSpan"
-                  >
-                    <strong>Problema(s) Respiratórios</strong>
-                    <span
-                      role="group"
-                      className="spanSub spanSubFsAnamGRad form-check"
-                      id="pbRespSpanSub"
-                    >
-                      <input
-                        type="radio"
-                        name="pbRespName"
-                        id="pbRespYes"
-                        className="noInvert radOp radYes form-check-input"
-                        data-title="sim_prob_resp"
-                        onKeyDown={keydown => {
-                          opRadioHandler(
-                            keydown,
-                            Array.from(
-                              document.querySelectorAll(
-                                'input[id$="Yes"], input[id$="No"]'
-                              )
-                            )
-                          );
-                        }}
-                      />
-                      <label
-                        htmlFor="pbRespYes"
-                        className="noInvert labOp boolOp form-check-label"
-                      >
-                        Sim
-                      </label>
-                      <input
-                        type="radio"
-                        name="pbRespName"
-                        id="pbRespNo"
-                        className="noInvert radOp radNo"
-                        data-title="no_prob_resp"
-                        onKeyDown={keydown => {
-                          opRadioHandler(
-                            keydown,
-                            Array.from(
-                              document.querySelectorAll(
-                                'input[id$="Yes"], input[id$="No"]'
-                              )
-                            )
-                          );
-                        }}
-                      />
-                      <label
-                        htmlFor="pbRespNo"
-                        className="noInvert labOp boolOp form-check-label"
-                      >
-                        Não
-                      </label>
-                    </span>
-                  </span>
-                  <textarea
-                    className="form-control taOp taResp divAdd"
-                    id="textAddResp"
-                    maxLength={1000}
-                    placeholder="Escreva aqui os Problemas Respiratórios específicos"
-                    data-title="desc_prob_resp"
-                  ></textarea>
-
-                  <span
-                    role="group"
-                    className="spanMain spanMainFsAnamGRad noInvert"
-                    id="pbAlergSpan"
-                  >
-                    <strong>Problema(s) Alérgicos</strong>
-                    <span
-                      role="group"
-                      className="spanSub spanSubFsAnamGRad form-check"
-                      id="pbAlergSpanSub"
-                    >
-                      <input
-                        type="radio"
-                        name="pbAlergName"
-                        id="pbAlergYes"
-                        className="noInvert radOp radYes form-check-input"
-                        data-title="sim_prob_alerg"
-                        onKeyDown={keydown => {
-                          opRadioHandler(
-                            keydown,
-                            Array.from(
-                              document.querySelectorAll(
-                                'input[id$="Yes"], input[id$="No"]'
-                              )
-                            )
-                          );
-                        }}
-                      />
-                      <label
-                        htmlFor="pbAlergYes"
-                        className="noInvert labOp boolOp form-check-label"
-                      >
-                        Sim
-                      </label>
-                      <input
-                        type="radio"
-                        name="pbAlergName"
-                        id="pbAlergNo"
-                        className="noInvert radOp radNo"
-                        data-title="no_prob_alerg"
-                        onKeyDown={keydown => {
-                          opRadioHandler(
-                            keydown,
-                            Array.from(
-                              document.querySelectorAll(
-                                'input[id$="Yes"], input[id$="No"]'
-                              )
-                            )
-                          );
-                        }}
-                      />
-                      <label
-                        htmlFor="pbAlergNo"
-                        className="noInvert labOp boolOp form-check-label"
-                      >
-                        Não
-                      </label>
-                    </span>
-                  </span>
-                  <textarea
-                    className="form-control taOp divAdd"
-                    id="textAddAlerg"
-                    maxLength={1000}
-                    placeholder="Escreva aqui os Problemas Alérgicos específicos"
-                    data-title="desc_prob_alerg"
-                  ></textarea>
-
+                  <RadioPair
+                    name="pb_card"
+                    fullName="Problema(s) Cardíaco(s)"
+                    add="ta"
+                  />
+                  <RadioPair
+                    name="pb_ren"
+                    fullName="Problema(s) Renal(is)"
+                    add="ta"
+                  />
+                  <RadioPair
+                    name="pb_gast"
+                    fullName="Problema(s) Gástrico(s)"
+                    add="ta"
+                  />
+                  <RadioPair
+                    name="pb_resp"
+                    fullName="Problema(s) Respiratório(s)"
+                    add="ta"
+                  />
+                  <RadioPair
+                    name="pb_alerg"
+                    fullName="Problema(s) Alérgico(s)"
+                    add="ta"
+                  />
+                  <RadioPair
+                    name="pb_art_reum"
+                    fullName="Problema(s) Articular(es) ou Reumáticos"
+                    add="ta"
+                  />
                   <span
                     role="group"
                     className="spanMain spanMainFsAnamGRad noInvert"
@@ -2037,205 +1445,22 @@ export default function AGPage(): JSX.Element {
                     data-title="desc_prob_art"
                   ></textarea>
                 </div>
-
                 <div
                   id="fsAGRadDiv3"
                   className="flexDiv flexColumn fsAGRadDiv"
                   role="group"
                 >
-                  <span
-                    role="group"
-                    className="spanMain spanMainFsAnamGRad noInvert"
-                    id="pbSistSpan"
-                  >
-                    <strong>Alguma Outra Doença Sistêmica</strong>
-                    <span
-                      role="group"
-                      className="spanSub spanSubFsAnamGRad form-check"
-                      id="pbSistSpanSub"
-                    >
-                      <input
-                        type="radio"
-                        name="pbSistName"
-                        id="pbSistYes"
-                        className="noInvert radOp radYes form-check-input"
-                        data-title="sim_prob_sistem"
-                        onKeyDown={keydown => {
-                          opRadioHandler(
-                            keydown,
-                            Array.from(
-                              document.querySelectorAll(
-                                'input[id$="Yes"], input[id$="No"]'
-                              )
-                            )
-                          );
-                        }}
-                      />
-                      <label
-                        htmlFor="pbSistYes"
-                        className="noInvert labOp boolOp form-check-label"
-                      >
-                        Sim
-                      </label>
-                      <input
-                        type="radio"
-                        name="pbSistName"
-                        id="pbSistNo"
-                        className="noInvert radOp radNo"
-                        data-title="no_prob_sistem"
-                        onKeyDown={keydown => {
-                          opRadioHandler(
-                            keydown,
-                            Array.from(
-                              document.querySelectorAll(
-                                'input[id$="Yes"], input[id$="No"]'
-                              )
-                            )
-                          );
-                        }}
-                      />
-                      <label
-                        htmlFor="pbSistNo"
-                        className="noInvert labOp boolOp form-check-label"
-                      >
-                        Não
-                      </label>
-                    </span>
-                  </span>
-                  <textarea
-                    className="form-control taOp divAdd"
-                    id="textAddSist"
-                    maxLength={1000}
-                    placeholder="Escreva aqui os nomes específicos das Doenças Sistêmicas"
-                    data-title="desc_prob_sistem"
-                  ></textarea>
-
-                  <span
-                    role="group"
-                    className="spanMain spanMainFsAnamGRad noInvert"
-                    id="pbAlcSpan"
-                  >
-                    <strong>Uso de Bebidas Alcoólicas</strong>
-                    <span
-                      role="group"
-                      className="spanSub spanSubFsAnamGRad form-check"
-                      id="pbAlcSpanSub"
-                    >
-                      <input
-                        type="radio"
-                        name="pbAlcName"
-                        id="pbAlcYes"
-                        className="noInvert radOp radYes form-check-input"
-                        data-title="sim_alcool"
-                        onKeyDown={keydown => {
-                          opRadioHandler(
-                            keydown,
-                            Array.from(
-                              document.querySelectorAll(
-                                'input[id$="Yes"], input[id$="No"]'
-                              )
-                            )
-                          );
-                        }}
-                      />
-                      <label
-                        htmlFor="pbAlcYes"
-                        className="noInvert labOp boolOp form-check-label"
-                      >
-                        Sim
-                      </label>
-                      <input
-                        type="radio"
-                        name="pbAlcName"
-                        id="pbAlcNo"
-                        className="noInvert radOp radNo"
-                        data-title="no_alcool"
-                        onKeyDown={keydown => {
-                          opRadioHandler(
-                            keydown,
-                            Array.from(
-                              document.querySelectorAll(
-                                'input[id$="Yes"], input[id$="No"]'
-                              )
-                            )
-                          );
-                        }}
-                      />
-                      <label
-                        htmlFor="pbAlcNo"
-                        className="noInvert labOp boolOp form-check-label"
-                      >
-                        Não
-                      </label>
-                    </span>
-                  </span>
-                  <textarea
-                    className="form-control taOp divAdd"
-                    id="textAddAlc"
-                    maxLength={1000}
-                    placeholder="Escreva aqui os detalhes sobre o uso de bebida alcoólicas, se necessários"
-                    data-title="desc_alcool"
-                  ></textarea>
-
-                  <span
-                    role="group"
-                    className="spanMain spanMainFsAnamGRad noInvert"
-                    id="CpbFumoSpan"
-                  >
-                    <strong>É fumante</strong>
-                    <span
-                      role="group"
-                      className="spanSub spanSubFsAnamGRad form-check"
-                      id="CpbFumoSpanSub"
-                    >
-                      <input
-                        type="radio"
-                        name="CpbFumoName"
-                        id="CpbFumoYes"
-                        className="noInvert radOp radYes form-check-input"
-                        data-title="sim_fumo"
-                        onKeyDown={keydown => {
-                          opRadioHandler(
-                            keydown,
-                            Array.from(
-                              document.querySelectorAll(
-                                'input[id$="Yes"], input[id$="No"]'
-                              )
-                            )
-                          );
-                        }}
-                      />
-                      <label
-                        htmlFor="CpbFumoYes"
-                        className="noInvert labOp boolOp form-check-label"
-                      >
-                        Sim
-                      </label>
-                      <input
-                        type="radio"
-                        name="CpbFumoName"
-                        id="CpbFumoNo"
-                        className="noInvert radOp radNo"
-                        data-title="nao_fumo"
-                        onKeyDown={keydown => {
-                          opRadioHandler(
-                            keydown,
-                            Array.from(
-                              document.querySelectorAll(
-                                'input[id$="Yes"], input[id$="No"]'
-                              )
-                            )
-                          );
-                        }}
-                      />
-                      <label
-                        htmlFor="CpbFumoNo"
-                        className="noInvert labOp boolOp form-check-label"
-                      >
-                        Não
-                      </label>
-                    </span>
-                  </span>
+                  <RadioPair
+                    name="pb_sist"
+                    fullName="Alguma Outra Doença Sistêmica"
+                    add="ta"
+                  />
+                  <RadioPair
+                    name="pb_alc"
+                    fullName="Uso de Bebidas Alcoólicas"
+                    add="ta"
+                  />
+                  <RadioPair name="fumo" fullName="É fumante" ctx={true} />
                   <div
                     className="divAdd gridTwoCol switchedDiv"
                     id="divAddFumo"
@@ -2354,133 +1579,12 @@ export default function AGPage(): JSX.Element {
                     </label>
                     <br role="presentation" />
                   </div>
-
-                  <span
-                    role="group"
-                    className="spanMain spanMainFsAnamGRad noInvert"
-                    id="pbDrgSpan"
-                  >
-                    <strong>Uso de Outras Drogas</strong>
-                    <span
-                      role="group"
-                      className="spanSub spanSubFsAnamGRad form-check"
-                      id="pbDrgSpan"
-                    >
-                      <input
-                        type="radio"
-                        name="pbDrgName"
-                        id="pbDrgYes"
-                        className="radOp radYes form-check-input"
-                        data-title="sim_drogas"
-                        onKeyDown={keydown => {
-                          opRadioHandler(
-                            keydown,
-                            Array.from(
-                              document.querySelectorAll(
-                                'input[id$="Yes"], input[id$="No"]'
-                              )
-                            )
-                          );
-                        }}
-                      />
-                      <label
-                        htmlFor="pbDrgYes"
-                        className="labOp boolOp form-check-label"
-                      >
-                        Sim
-                      </label>
-                      <input
-                        type="radio"
-                        name="pbDrgName"
-                        id="pbDrgNo"
-                        className="radOp radNo"
-                        data-title="no_drogas"
-                        onKeyDown={keydown => {
-                          opRadioHandler(
-                            keydown,
-                            Array.from(
-                              document.querySelectorAll(
-                                'input[id$="Yes"], input[id$="No"]'
-                              )
-                            )
-                          );
-                        }}
-                      />
-                      <label
-                        htmlFor="pbDrgNo"
-                        className="labOp boolOp form-check-label"
-                      >
-                        Não
-                      </label>
-                    </span>
-                  </span>
-                  <textarea
-                    className="form-control taOp divAdd"
-                    id="textAddDrg"
-                    maxLength={1000}
-                    placeholder="Qual ou quais Drogas?"
-                    data-title="desc_drogas"
-                  ></textarea>
-
-                  <span
-                    role="group"
-                    className="spanMain spanMainFsAnamGRad noInvert gridTwoCol"
-                    id="CpbGrvSpan"
-                  >
-                    <strong>Gravidez</strong>
-                    <span
-                      role="group"
-                      className="spanSub spanSubFsAnamGRad form-check"
-                      id="CpbGrvSpan"
-                    >
-                      <input
-                        type="radio"
-                        name="CpbGrvName"
-                        id="CpbGrvYes"
-                        className="radOp radYes form-check-input"
-                        data-title="sim_gravidez"
-                        onKeyDown={keydown => {
-                          opRadioHandler(
-                            keydown,
-                            Array.from(
-                              document.querySelectorAll(
-                                'input[id$="Yes"], input[id$="No"]'
-                              )
-                            )
-                          );
-                        }}
-                      />
-                      <label
-                        htmlFor="CpbGrvYes"
-                        className="labOp boolOp form-check-label"
-                      >
-                        Sim
-                      </label>
-                      <input
-                        type="radio"
-                        name="CpbGrvName"
-                        id="CpbGrvNo"
-                        className="radOp radNo"
-                        data-title="no_gravidez"
-                        onKeyDown={keydown => {
-                          opRadioHandler(
-                            keydown,
-                            Array.from(
-                              document.querySelectorAll(
-                                'input[id$="Yes"], input[id$="No"]'
-                              )
-                            )
-                          );
-                        }}
-                      />
-                      <label
-                        htmlFor="CpbGrvNo"
-                        className="labOp boolOp form-check-label"
-                      >
-                        Não
-                      </label>
-                    </span>
-                  </span>
+                  <RadioPair
+                    name="pb_drg"
+                    fullName="Uso de Outras Drogas"
+                    add="ta"
+                  />
+                  <RadioPair name="grv" fullName="Gravidez" ctx={true} />
                   <div className="divMain divAdd" id="divAddGrv" role="group">
                     <input
                       type="checkbox"
@@ -2499,485 +1603,53 @@ export default function AGPage(): JSX.Element {
                     />{" "}
                     Passada
                   </div>
-
-                  <span
-                    role="group"
-                    className="spanMain spanMainFsAnamGRad noInvert"
-                    id="pbAntCSpan"
-                  >
-                    <strong>Uso de Anticoncepional</strong>
-                    <span
-                      role="group"
-                      className="spanSub spanSubFsAnamGRad form-check"
-                      id="pbAntCSpan"
-                    >
-                      <input
-                        type="radio"
-                        name="pbAntCName"
-                        id="pbAntCYes"
-                        className="radOp radYes form-check-input"
-                        data-title="anticoncep_sim"
-                        onKeyDown={keydown => {
-                          opRadioHandler(
-                            keydown,
-                            Array.from(
-                              document.querySelectorAll(
-                                'input[id$="Yes"], input[id$="No"]'
-                              )
-                            )
-                          );
-                        }}
-                      />
-                      <label
-                        htmlFor="pbAntCYes"
-                        className="labOp boolOp form-check-label"
-                      >
-                        Sim
-                      </label>
-                      <input
-                        type="radio"
-                        name="pbAntCName"
-                        id="pbAntCNo"
-                        className="radOp radNo"
-                        data-title="anticoncep_nao"
-                        onKeyDown={keydown => {
-                          opRadioHandler(
-                            keydown,
-                            Array.from(
-                              document.querySelectorAll(
-                                'input[id$="Yes"], input[id$="No"]'
-                              )
-                            )
-                          );
-                        }}
-                      />
-                      <label
-                        htmlFor="pbAntCNo"
-                        className="labOp boolOp form-check-label"
-                      >
-                        Não
-                      </label>
-                    </span>
-                  </span>
-                  <textarea
-                    className="form-control taOp divAdd"
-                    id="textAddAntC"
-                    maxLength={1000}
-                    placeholder="Qual Anticoncepcional?"
-                    data-title="desc_anticoncep"
-                  ></textarea>
+                  <RadioPair
+                    name="ant_c"
+                    fullName="Uso de Anticoncepcional(is)"
+                    add="ta"
+                  />
                 </div>
-
                 <div
                   id="fsAGRadDiv4"
                   className="flexDiv flexColumn fsAGRadDiv"
                   role="group"
                 >
-                  <span
-                    role="group"
-                    className="spanMain spanMainFsAnamGRad noInvert"
-                    id="pbOpSpan"
-                  >
-                    <strong>Operação ou Extração de Dente</strong>
-                    <span
-                      role="group"
-                      className="spanSub spanSubFsAnamGRad form-check"
-                      id="pbOpSpan"
-                    >
-                      <input
-                        type="radio"
-                        name="pbOpName"
-                        id="pbOpYes"
-                        className="radOp radYes form-check-input"
-                        data-title="sim_extracao"
-                        onKeyDown={keydown => {
-                          opRadioHandler(
-                            keydown,
-                            Array.from(
-                              document.querySelectorAll(
-                                'input[id$="Yes"], input[id$="No"]'
-                              )
-                            )
-                          );
-                        }}
-                      />
-                      <label
-                        htmlFor="pbOpYes"
-                        className="labOp boolOp form-check-label"
-                      >
-                        Sim
-                      </label>
-                      <input
-                        type="radio"
-                        name="pbOpName"
-                        id="pbOpNo"
-                        className="radOp radNo"
-                        data-title="nao_extracao"
-                        onKeyDown={keydown => {
-                          opRadioHandler(
-                            keydown,
-                            Array.from(
-                              document.querySelectorAll(
-                                'input[id$="Yes"], input[id$="No"]'
-                              )
-                            )
-                          );
-                        }}
-                      />
-                      <label
-                        htmlFor="pbOpNo"
-                        className="labOp boolOp form-check-label"
-                      >
-                        Não
-                      </label>
-                    </span>
-                  </span>
-                  <textarea
-                    className="form-control taOp divAdd"
-                    id="textAddOp"
-                    maxLength={1000}
-                    placeholder="Qual ou quais Dente(s) Operado(s) e/ou Extraído(s)?"
-                    data-title="desc_extracao"
-                  ></textarea>
-
-                  <span
-                    role="group"
-                    className="spanMain spanMainFsAnamGRad noInvert"
-                    id="pbCicSpan"
-                  >
-                    <strong>Problema(s) com Cicatrização</strong>
-                    <span
-                      role="group"
-                      className="spanSub spanSubFsAnamGRad form-check"
-                      id="pbCicSpan"
-                    >
-                      <input
-                        type="radio"
-                        name="pbCicName"
-                        id="pbCicYes"
-                        className="radOp radYes form-check-input"
-                        data-title="sim_prob_cicatr"
-                        onKeyDown={keydown => {
-                          opRadioHandler(
-                            keydown,
-                            Array.from(
-                              document.querySelectorAll(
-                                'input[id$="Yes"], input[id$="No"]'
-                              )
-                            )
-                          );
-                        }}
-                      />
-                      <label
-                        htmlFor="pbCicYes"
-                        className="labOp boolOp form-check-label"
-                      >
-                        Sim
-                      </label>
-                      <input
-                        type="radio"
-                        name="pbCicName"
-                        id="pbCicNo"
-                        className="radOp radNo"
-                        data-title="nao_prob_cicatr"
-                        onKeyDown={keydown => {
-                          opRadioHandler(
-                            keydown,
-                            Array.from(
-                              document.querySelectorAll(
-                                'input[id$="Yes"], input[id$="No"]'
-                              )
-                            )
-                          );
-                        }}
-                      />
-                      <label
-                        htmlFor="pbCicNo"
-                        className="labOp boolOp form-check-label"
-                      >
-                        Não
-                      </label>
-                    </span>
-                  </span>
-                  <textarea
-                    className="form-control taOp divAdd"
-                    id="textAddCic"
-                    maxLength={1000}
-                    placeholder="Qual ou quais Problema(s) com Cicatrização?"
-                    data-title="desc_prob_cicatr"
-                  ></textarea>
-
-                  <span
-                    role="group"
-                    className="spanMain spanMainFsAnamGRad noInvert"
-                    id="pbAnstSpan"
-                  >
-                    <strong>Problema(s) com Anestesia</strong>
-                    <span
-                      role="group"
-                      className="spanSub spanSubFsAnamGRad form-check"
-                      id="pbAnstSpan"
-                    >
-                      <input
-                        type="radio"
-                        name="pbAnstName"
-                        id="pbAnstYes"
-                        className="radOp radYes form-check-input"
-                        data-title="sim_prob_anest"
-                        onKeyDown={keydown => {
-                          opRadioHandler(
-                            keydown,
-                            Array.from(
-                              document.querySelectorAll(
-                                'input[id$="Yes"], input[id$="No"]'
-                              )
-                            )
-                          );
-                        }}
-                      />
-                      <label
-                        htmlFor="pbAnstYes"
-                        className="labOp boolOp form-check-label"
-                      >
-                        Sim
-                      </label>
-                      <input
-                        type="radio"
-                        name="pbAnstName"
-                        id="pbAnstNo"
-                        className="radOp radNo"
-                        data-title="nao_prob_anest"
-                        onKeyDown={keydown => {
-                          opRadioHandler(
-                            keydown,
-                            Array.from(
-                              document.querySelectorAll(
-                                'input[id$="Yes"], input[id$="No"]'
-                              )
-                            )
-                          );
-                        }}
-                      />
-                      <label
-                        htmlFor="pbAnstNo"
-                        className="labOp boolOp form-check-label"
-                      >
-                        Não
-                      </label>
-                    </span>
-                  </span>
-                  <textarea
-                    className="form-control taOp divAdd"
-                    id="textAddAnst"
-                    maxLength={1000}
-                    placeholder="Qual ou quais Problema(s) com Anestesia?"
-                    data-title="desc_prob_anest"
-                  ></textarea>
-
-                  <span
-                    role="group"
-                    className="spanMain spanMainFsAnamGRad noInvert"
-                    id="pbHemSpan"
-                  >
-                    <strong>Problema(s) com Hemorragia</strong>
-                    <span
-                      role="group"
-                      className="spanSub spanSubFsAnamGRad form-check"
-                      id="pbHemSpan"
-                    >
-                      <input
-                        type="radio"
-                        name="pbHemName"
-                        id="pbHemYes"
-                        className="radOp radYes form-check-input"
-                        data-title="sim_prob_hemo"
-                        onKeyDown={keydown => {
-                          opRadioHandler(
-                            keydown,
-                            Array.from(
-                              document.querySelectorAll(
-                                'input[id$="Yes"], input[id$="No"]'
-                              )
-                            )
-                          );
-                        }}
-                      />
-                      <label
-                        htmlFor="pbHemYes"
-                        className="labOp boolOp form-check-label"
-                      >
-                        Sim
-                      </label>
-                      <input
-                        type="radio"
-                        name="pbHemName"
-                        id="pbHemNo"
-                        className="radOp radNo"
-                        data-title="nao_prob_hemo"
-                        onKeyDown={keydown => {
-                          opRadioHandler(
-                            keydown,
-                            Array.from(
-                              document.querySelectorAll(
-                                'input[id$="Yes"], input[id$="No"]'
-                              )
-                            )
-                          );
-                        }}
-                      />
-                      <label
-                        htmlFor="pbHemNo"
-                        className="labOp boolOp form-check-label"
-                      >
-                        Não
-                      </label>
-                    </span>
-                  </span>
-                  <textarea
-                    className="form-control taOp divAdd"
-                    id="textAddHem"
-                    maxLength={1000}
-                    placeholder="Qual ou quais Problema(s) com Hemorragia?"
-                    data-title="desc_prob_home"
-                  ></textarea>
-
-                  <span
-                    role="group"
-                    className="spanMain spanMainFsAnamGRad noInvert"
-                    id="pbIntrnpan"
-                  >
-                    <strong>Internação Recente</strong>
-                    <span
-                      role="group"
-                      className="spanSub spanSubFsAnamGRad form-check"
-                      id="pbIntrnSpan"
-                    >
-                      <input
-                        type="radio"
-                        name="pbIntrnName"
-                        id="pbIntrnYes"
-                        className="noInvert radOp radYes form-check-input"
-                        data-title="sim_internacao"
-                        onKeyDown={keydown => {
-                          opRadioHandler(
-                            keydown,
-                            Array.from(
-                              document.querySelectorAll(
-                                'input[id$="Yes"], input[id$="No"]'
-                              )
-                            )
-                          );
-                        }}
-                      />
-                      <label
-                        htmlFor="pbIntrnYes"
-                        className="noInvert labOp boolOp form-check-label"
-                      >
-                        Sim
-                      </label>
-                      <input
-                        type="radio"
-                        name="pbIntrnName"
-                        id="pbIntrnNo"
-                        className="noInvert radOp radNo"
-                        data-title="nao_internacao"
-                        onKeyDown={keydown => {
-                          opRadioHandler(
-                            keydown,
-                            Array.from(
-                              document.querySelectorAll(
-                                'input[id$="Yes"], input[id$="No"]'
-                              )
-                            )
-                          );
-                        }}
-                      />
-                      <label
-                        htmlFor="pbIntrnNo"
-                        className="noInvert labOp boolOp form-check-label"
-                      >
-                        Não
-                      </label>
-                    </span>
-                  </span>
-                  <textarea
-                    className="form-control taOp divAdd"
-                    id="textAddIntrn"
-                    maxLength={1000}
-                    placeholder="Tempo aproximado de Internação"
-                    data-title="desc_internacao"
-                  ></textarea>
-
-                  <span
-                    role="group"
-                    className="spanMain spanMainFsAnamGRad noInvert"
-                    id="pbMedSpan"
-                  >
-                    <strong>Uso Atual de Medicação Controlada</strong>
-                    <span
-                      role="group"
-                      className="spanSub spanSubFsAnamGRad form-check"
-                      id="pbMedSubSpan"
-                    >
-                      <input
-                        type="radio"
-                        name="pbMedName"
-                        id="pbMedYes"
-                        className="noInvert radOp radYes form-check-input"
-                        data-title="sim_medicacao_controlada"
-                        onKeyDown={keydown => {
-                          opRadioHandler(
-                            keydown,
-                            Array.from(
-                              document.querySelectorAll(
-                                'input[id$="Yes"], input[id$="No"]'
-                              )
-                            )
-                          );
-                        }}
-                      />
-                      <label
-                        htmlFor="pbMedYes"
-                        className="noInvert labOp boolOp form-check-label"
-                      >
-                        Sim
-                      </label>
-                      <input
-                        type="radio"
-                        name="pbMedName"
-                        id="pbMedNo"
-                        className="noInvert radOp radNo"
-                        data-title="nao_medicacao_controlada"
-                        onKeyDown={keydown => {
-                          opRadioHandler(
-                            keydown,
-                            Array.from(
-                              document.querySelectorAll(
-                                'input[id$="Yes"], input[id$="No"]'
-                              )
-                            )
-                          );
-                        }}
-                      />
-                      <label
-                        htmlFor="pbMedNo"
-                        className="noInvert labOp boolOp form-check-label"
-                      >
-                        Não
-                      </label>
-                    </span>
-                  </span>
-                  <textarea
-                    className="form-control taOp divAdd"
-                    id="textAddMed"
-                    maxLength={1000}
-                    placeholder="Qual ou quais Medicações Controladas?"
-                    data-title="desc_medicacao_controlada"
-                  ></textarea>
+                  <RadioPair
+                    name="op"
+                    fullName="Operação ou Extração de Dente(s)"
+                    add="ta"
+                    altPh="Qual ou quais Dente(s) Operado(s) e/ou Extraído(s)?"
+                  />
+                  <RadioPair
+                    name="pb_cic"
+                    fullName="Problema(s) com Cicatrização"
+                    add="ta"
+                  />
+                  <RadioPair
+                    name="pb_anst"
+                    fullName="Problema(s) com Anestesia(s)"
+                    add="ta"
+                  />
+                  <RadioPair
+                    name="pb_hem"
+                    fullName="Problema(s) com Hemorragia"
+                    add="ta"
+                  />
+                  <RadioPair
+                    name="pb_intrn"
+                    fullName="Internação Recente"
+                    add="ta"
+                    altPh="Tempo aproximado de Internação"
+                  />
+                  <RadioPair
+                    name="pb_med"
+                    fullName="Uso Atual de Medicação Controlado"
+                    add="ta"
+                    altPh="Qual ou quais Medicações Controladas?"
+                  />
                 </div>
               </section>
               <hr />
-
               <fieldset
                 className="sectionMain sectionConfirm noInvert"
                 id="fsAnamGRadODSectId"
@@ -3012,7 +1684,6 @@ export default function AGPage(): JSX.Element {
                       Candidíase
                     </label>
                   </span>
-
                   <span
                     role="listem"
                     className="spanMain sectODSpan input-group mb-3"
@@ -3104,7 +1775,6 @@ export default function AGPage(): JSX.Element {
                       Pneumonia
                     </label>
                   </span>
-
                   <span
                     role="listem"
                     className="spanMain sectODSpan input-group mb-3"
@@ -3127,7 +1797,6 @@ export default function AGPage(): JSX.Element {
                       Sífilis
                     </label>
                   </span>
-
                   <span
                     role="listem"
                     className="spanMain sectODSpan input-group mb-3 noExpandRad"
@@ -3173,7 +1842,6 @@ export default function AGPage(): JSX.Element {
                       Tuberculose
                     </label>
                   </span>
-
                   <span
                     role="listem"
                     className="spanMain sectODSpan input-group mb-3"
@@ -3216,7 +1884,6 @@ export default function AGPage(): JSX.Element {
                 </div>
               </fieldset>
               <hr />
-
               <section
                 className="sectionMain sectionConfirm"
                 id="fsAnamGCBAntSectId"
@@ -3225,7 +1892,6 @@ export default function AGPage(): JSX.Element {
                   <legend id="fsAntFamLeg" className="bolded">
                     Antecedentes Familiares
                   </legend>
-
                   <section id="fsAntFamSect" className="sectionSub">
                     <span
                       role="group"
@@ -3243,6 +1909,7 @@ export default function AGPage(): JSX.Element {
                           id="antFamDiabId"
                           className="cbFam"
                           data-title="familia_diabetes"
+                          onChange={ev => handleDivAddShow(ev)}
                         />
                       </div>
                       <label
@@ -3508,6 +2175,7 @@ export default function AGPage(): JSX.Element {
                           id="antFamDislipId"
                           className="cbFam"
                           data-title="fam_dislip"
+                          onChange={ev => handleDivAddShow(ev)}
                         />
                       </div>
                       <label
@@ -3774,6 +2442,7 @@ export default function AGPage(): JSX.Element {
                           id="antFamCardId"
                           className="cbFam"
                           data-title="fam_card"
+                          onChange={ev => handleDivAddShow(ev)}
                         />
                       </div>
                       <label
@@ -3978,6 +2647,7 @@ export default function AGPage(): JSX.Element {
                           id="antFamPulmId"
                           className="cbFam"
                           data-title="fam_pulm"
+                          onChange={ev => handleDivAddShow(ev)}
                         />
                       </div>
                       <label
@@ -4183,6 +2853,7 @@ export default function AGPage(): JSX.Element {
                           id="antFamOncId"
                           className="cbFam"
                           data-title="fam_oncologica"
+                          onChange={ev => handleDivAddShow(ev)}
                         />
                       </div>
                       <label
