@@ -1145,14 +1145,14 @@ export async function validateForm(
                     radio.type === "radio" &&
                     radio.checked
                 )[0];
-                const otherOpsChecked = Array.from(radioGroupList)
-                  .filter(
-                    radio =>
-                      radio instanceof HTMLInputElement &&
-                      radio.type === "radio" &&
-                      radio.checked
-                  )
-                  .slice(1);
+                // const otherOpsChecked = Array.from(radioGroupList)
+                //   .filter(
+                //     radio =>
+                //       radio instanceof HTMLInputElement &&
+                //       radio.type === "radio" &&
+                //       radio.checked
+                //   )
+                //   .slice(1);
                 if (
                   !(
                     opChecked instanceof HTMLInputElement &&
@@ -1195,17 +1195,6 @@ export async function validateForm(
                       opChecked.tagName,
                     opChecked.dataset.value || `true`,
                   ]);
-                  for (const otherOps of otherOpsChecked) {
-                    otherOps instanceof HTMLInputElement &&
-                      otherOps.type === "radio" &&
-                      validEntries.push([
-                        otherOps.name ||
-                          otherOps.id ||
-                          otherOps.dataset.title ||
-                          otherOps.tagName,
-                        `false`,
-                      ]);
-                  }
                 }
               }
             } catch (e) {
