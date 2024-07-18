@@ -586,3 +586,25 @@
     }
   }
 }
+
+@media screen and (max-width: 344px) {
+  .baseBody {
+    .main-article {
+      min-height: 121rem;
+      height: 121rem;
+    }
+    .main-container {
+      min-height: 121rem;
+      height: 121rem;
+    }
+    #bgDiv {
+      min-height: 132rem;
+      height: 132rem;
+    }
+    #cardSect {
+      min-height: 112rem;
+      height: 112rem;
+      margin-left: 2.5vw;
+    }
+  }
+}
