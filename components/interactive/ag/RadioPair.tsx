@@ -1,6 +1,7 @@
 import { RadioPairPros } from "@/lib/global/declarations/interfaces";
 import { textTransformPascal } from "@/lib/global/gModel";
 import { opRadioHandler } from "@/lib/global/handlers/gHandlers";
+import { useState } from "react";
 
 export default function RadioPair({
   name,
@@ -9,21 +10,22 @@ export default function RadioPair({
   add = "",
   altPh = "",
 }: RadioPairPros): JSX.Element {
+  const [shouldShowAdd, setAdd] = useState(false);
   let camelName = /_/g.test(name)
     ? name
         .split("_")
         .map((part, i) => (i === 0 ? part : textTransformPascal(part)))
         .join("")
     : name;
-  if (camelName.length <= name.length) camelName = name;
+  if (camelName.length >= name.length) camelName = name;
   let PascalName = /_/g.test(name)
     ? name
         .split("_")
         .map(part => textTransformPascal(part))
         .join("")
     : textTransformPascal(name);
-  if (PascalName.length <= name.length) PascalName = camelName;
-  if (PascalName.length <= name.length) PascalName = name;
+  if (PascalName.length >= name.length) PascalName = camelName;
+  if (PascalName.length >= name.length) PascalName = name;
   fullName ||= textTransformPascal(name);
   let problemIdf = /_/g.test(name)
     ? name
@@ -59,6 +61,9 @@ export default function RadioPair({
                 )
               );
             }}
+            onClick={ev =>
+              ev.currentTarget.checked ? setAdd(true) : setAdd(false)
+            }
           />
           <label
             htmlFor={ctx ? `Cpb${PascalName}Yes` : `${camelName}Yes`}
@@ -92,7 +97,7 @@ export default function RadioPair({
           </label>
         </span>
       </span>
-      {add === "ta" && (
+      {shouldShowAdd && add === "ta" && (
         <textarea
           className={`form-control taOp ta${problemIdf} divAdd`}
           id={`textAdd${problemIdf}`}
@@ -103,7 +108,9 @@ export default function RadioPair({
               : `Escreva aqui os ${fullName
                   .replaceAll("(", "")
                   .replaceAll(")", "")
-                  .replace("renalis", "renais")
+                  .replace("Renalis", "Renais")
+                  .replace("renalis", "Renais")
+                  .replace("Anticoncepcionalis", "Anticoncepcionais")
                   .replace(
                     "anticoncepcionalis",
                     "anticoncepcionais"

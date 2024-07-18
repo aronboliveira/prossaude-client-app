@@ -1,7 +1,7 @@
 import { ErrorBoundary } from "react-error-boundary";
 import { useEffect, useCallback, useState, memo } from "react";
 import { handleLinkChanges } from "@/lib/global/handlers/gRoutingHandlers";
-import { entryEl, rMouseEvent } from "@/lib/global/declarations/types";
+import { entryEl, targEl } from "@/lib/global/declarations/types";
 import {
   addCanvasListeners,
   addListenerExportBtn,
@@ -14,7 +14,6 @@ import { clearPhDates, equalizeFlexSibilings } from "@/lib/global/gStyleScript";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import {
   addListenerCPFCont,
-  addListenerFamHistChecks,
   addListenersCepElements,
   addListenersEmailInputs,
 } from "@/lib/locals/aGPage/aGController";
@@ -64,37 +63,45 @@ export default function AGPage(): JSX.Element {
       ["width", "px"],
     ]);
   };
-  const handleDivAddShow = (ev: rMouseEvent | React.ChangeEvent) => {
+  const handleDivAddShow = (targ: targEl) => {
     try {
       if (
         !(
-          ev.currentTarget instanceof HTMLInputElement &&
-          (ev.currentTarget.type === "radio" ||
-            ev.currentTarget.type === "checkbox")
+          targ instanceof HTMLInputElement &&
+          (targ.type === "radio" || targ.type === "checkbox")
         )
       )
         throw elementNotFound(
-          ev.currentTarget,
+          targ,
           `Validation of Event Current Target`,
           extLine(new Error())
         );
       const parentSpan =
-        ev.currentTarget.closest(".spanSectAnt") ||
-        ev.currentTarget.closest(".input-group") ||
-        ev.currentTarget.closest('span[role="group"]') ||
-        ev.currentTarget.closest("span");
+        targ.closest(".spanSectAnt") ||
+        targ.closest(".input-group") ||
+        targ.closest('span[role="group"]');
       if (!(parentSpan instanceof HTMLElement))
         throw elementNotFound(
           parentSpan,
           `Validation of Parent Section Span`,
           extLine(new Error())
         );
-      let divAdd = parentSpan.nextElementSibling;
-      const idf = ev.currentTarget.id.replace("ant", "").replace("Id", "");
+      let divAdd: targEl = parentSpan.nextElementSibling;
+      if (!divAdd?.classList.contains(".divAdd"))
+        divAdd = parentSpan.nextElementSibling?.nextElementSibling;
+      if (!divAdd?.classList.contains(".divAdd"))
+        divAdd =
+          parentSpan.nextElementSibling?.nextElementSibling?.nextElementSibling;
+      if (!divAdd?.classList.contains(".divAdd"))
+        divAdd =
+          parentSpan.nextElementSibling?.nextElementSibling?.nextElementSibling
+            ?.nextElementSibling;
       if (
         !(divAdd instanceof HTMLElement && divAdd.classList.contains("divAdd"))
       )
-        divAdd = document.getElementById(`divAdd${idf}`);
+        divAdd = document.getElementById(
+          `divAdd${targ.id.replace("ant", "").replace("Id", "")}`
+        );
       if (
         !(divAdd instanceof HTMLElement && divAdd.classList.contains("divAdd"))
       )
@@ -103,7 +110,7 @@ export default function AGPage(): JSX.Element {
           `Validation of Div Add`,
           extLine(new Error())
         );
-      if (ev.currentTarget.checked) {
+      if (targ.checked) {
         divAdd.style.display = "grid";
         divAdd.style.opacity = "0.8";
         divAdd.style.minWidth = "70vw";
@@ -114,13 +121,32 @@ export default function AGPage(): JSX.Element {
       }
     } catch (e) {
       console.error(
-        `Error executing ${ev.type} callback for ${
-          ev.currentTarget instanceof HTMLElement
-            ? ev.currentTarget.id ||
-              ev.currentTarget.className ||
-              ev.currentTarget.tagName
+        `Error executing callback for ${
+          targ instanceof HTMLElement
+            ? targ.id || targ.className || targ.tagName
             : "undefined target"
-        }:\n${(e as Error).message}`
+        }:\n${(e as Error).message}
+        Attempts for divAdd:
+        1. ${
+          (targ instanceof HTMLElement && targ.closest(".spanSectAnt")?.id) ||
+          "null"
+        }
+        2. ${
+          (targ instanceof HTMLElement && targ.closest(".input-group")?.id) ||
+          "null"
+        }
+        3. ${
+          (targ instanceof HTMLElement &&
+            targ.closest('span[role="group"]')?.id) ||
+          "null"
+        }
+        4. ${
+          (targ instanceof HTMLElement &&
+            document.getElementById(
+              `divAdd${targ.id.replace("ant", "").replace("Id", "")}`
+            )) ||
+          "null"
+        }`
       );
     }
   };
@@ -149,7 +175,6 @@ export default function AGPage(): JSX.Element {
       document.querySelectorAll('input[type="number"][id$=NumId]'),
       document.querySelectorAll("input[id$=NullId]")
     );
-    addListenerFamHistChecks();
     addListenerExportBtn("anamG");
     addCanvasListeners();
     addResetAstListener();
@@ -157,6 +182,7 @@ export default function AGPage(): JSX.Element {
     addEventListener("resize", handleResize);
     syncAriaStates(document.querySelectorAll("*"));
     watchLabels();
+    document.querySelectorAll(".cbFam").forEach(handleDivAddShow);
     const UFid = document.getElementById("UFid");
     if (UFid instanceof HTMLInputElement) UFid.value = "RJ";
     return () => removeEventListener("resize", handleResize);
@@ -1388,11 +1414,13 @@ export default function AGPage(): JSX.Element {
                     name="pb_sist"
                     fullName="Alguma Outra Doença Sistêmica"
                     add="ta"
+                    altPh="Escreva aqui sobre as Doenças Sistêmicas específicas"
                   />
                   <RadioPair
                     name="pb_alc"
                     fullName="Uso de Bebidas Alcoólicas"
                     add="ta"
+                    altPh="Escreva aqui sobre os problemas com uso de Bebidas alcoólicas"
                   />
                   <RadioPair name="fumo" fullName="É fumante" ctx={true} />
                   <div
@@ -1517,6 +1545,7 @@ export default function AGPage(): JSX.Element {
                     name="pb_drg"
                     fullName="Uso de Outras Drogas"
                     add="ta"
+                    altPh="Escreva aqui sobre os problemas com uso de drogas"
                   />
                   <RadioPair name="grv" fullName="Gravidez" ctx={true} />
                   <div className="divMain divAdd" id="divAddGrv" role="group">
@@ -1541,6 +1570,7 @@ export default function AGPage(): JSX.Element {
                     name="ant_c"
                     fullName="Uso de Anticoncepcional(is)"
                     add="ta"
+                    altPh="Escreva aqui sobre o uso de Anticoncepcionais"
                   />
                 </div>
                 <div
@@ -1577,7 +1607,7 @@ export default function AGPage(): JSX.Element {
                   />
                   <RadioPair
                     name="pb_med"
-                    fullName="Uso Atual de Medicação Controlado"
+                    fullName="Uso Atual de Medicação Controlada"
                     add="ta"
                     altPh="Qual ou quais Medicações Controladas?"
                   />
@@ -1843,7 +1873,7 @@ export default function AGPage(): JSX.Element {
                           id="antFamDiabId"
                           className="cbFam"
                           data-title="familia_diabetes"
-                          onChange={ev => handleDivAddShow(ev)}
+                          onClick={ev => handleDivAddShow(ev.currentTarget)}
                         />
                       </div>
                       <label
@@ -1859,11 +1889,11 @@ export default function AGPage(): JSX.Element {
                       id="divAddFamDiab"
                       role="group"
                     >
-                      <strong>Subtipo:</strong>
-                      <br role="presentation" />
+                      <strong style={{ marginLeft: "0.5rem" }}>Subtipo:</strong>
                       <div
                         className="divAdd gridThreeCol divAntFamCheck"
                         role="list"
+                        style={{ marginBlock: "0.5rem", padding: "0 0.5rem" }}
                       >
                         <span role="listitem" className="cbDoencaSubt">
                           <input
@@ -1944,7 +1974,7 @@ export default function AGPage(): JSX.Element {
                           id="antFamDislipId"
                           className="cbFam"
                           data-title="fam_dislip"
-                          onChange={ev => handleDivAddShow(ev)}
+                          onClick={ev => handleDivAddShow(ev.currentTarget)}
                         />
                       </div>
                       <label
@@ -2045,7 +2075,7 @@ export default function AGPage(): JSX.Element {
                           id="antFamCardId"
                           className="cbFam"
                           data-title="fam_card"
-                          onChange={ev => handleDivAddShow(ev)}
+                          onClick={ev => handleDivAddShow(ev.currentTarget)}
                         />
                       </div>
                       <label
@@ -2076,7 +2106,7 @@ export default function AGPage(): JSX.Element {
                           id="antFamPulmId"
                           className="cbFam"
                           data-title="fam_pulm"
-                          onChange={ev => handleDivAddShow(ev)}
+                          onClick={ev => handleDivAddShow(ev.currentTarget)}
                         />
                       </div>
                       <label
@@ -2108,7 +2138,7 @@ export default function AGPage(): JSX.Element {
                           id="antFamOncId"
                           className="cbFam"
                           data-title="fam_oncologica"
-                          onChange={ev => handleDivAddShow(ev)}
+                          onClick={ev => handleDivAddShow(ev.currentTarget)}
                         />
                       </div>
                       <label

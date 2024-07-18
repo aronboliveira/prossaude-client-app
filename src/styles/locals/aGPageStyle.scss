@@ -67,6 +67,7 @@
   .divAdd {
     border-radius: 0.5rem;
     min-width: 20vw;
+    overflow: auto;
     &.divAntFam {
       padding: 2%;
       border: 0.125rem groove #49505726;
@@ -87,7 +88,7 @@
       }
     }
     &:not(.divAntFam) {
-      margin-block: 2vh;
+      margin-block: 0.5rem;
       padding: 1rem;
     }
     &:not(textarea) {
@@ -96,6 +97,10 @@
     }
     &.gridTwoCol {
       column-gap: 5%;
+    }
+    &#divAddHep {
+      min-width: 80vw;
+      padding-bottom: 1.5rem;
     }
   }
 
@@ -293,6 +298,14 @@
     min-width: 23.4vw;
   }
 
+  #divAddFamDislip {
+    margin-left: 0;
+    padding-left: 1rem;
+    #divSubtypeDislip {
+      padding-left: 0;
+    }
+  }
+
   #divAddFumo {
     min-width: 70vw;
     overflow: auto;
@@ -374,9 +387,7 @@
 
   #hivCargId {
     height: 2.5rem;
-    + label {
-      margin-top: 0.5rem;
-    }
+    padding-bottom: 1.5rem;
   }
 
   .sectionConfirm,
@@ -557,8 +568,8 @@ $baseNullableVw900InpWidth: 70vw;
         }
         &#streetNumId,
         &#compNumId {
-          min-width: 92.7%;
-          max-width: 92.7%;
+          min-width: 93%;
+          max-width: 93%;
         }
       }
       select {

@@ -2,10 +2,6 @@
 
 import * as AGHandlers from "./aGHandlers";
 import {
-  cpbInpHandler,
-  doubleClickHandler,
-} from "../../global/handlers/gHandlers";
-import {
   formatCEP,
   formatCPF,
   formatTel,
@@ -18,8 +14,6 @@ import {
   multipleElementsNotFound,
 } from "../../global/handlers/errorHandler";
 import type { targEl } from "../../global/declarations/types";
-
-//exportações para o jest
 
 export function addListenerTelInputs(): Element[] {
   const telInputs = document.querySelectorAll('input[type="text"][id^="tel"]');
@@ -117,29 +111,4 @@ export function addListenersCepElements(): targEl[] {
       cepElementBtn
     );
   return [cepElement, cepElementBtn];
-}
-
-export function addListenerFamHistChecks(): Element[] {
-  const famHistChecks = document.querySelectorAll("input[id^='antFam']");
-  if (famHistChecks?.length > 0) {
-    famHistChecks.forEach(famHistCheck => {
-      if (famHistCheck instanceof HTMLInputElement) {
-        famHistCheck.addEventListener("change", change =>
-          cpbInpHandler(change, famHistCheck)
-        );
-        famHistCheck.addEventListener("dblclick", () =>
-          doubleClickHandler(famHistCheck)
-        );
-      } else
-        inputNotFound(
-          famHistCheck,
-          `target famHistCheck input id ${
-            famHistCheck?.id || "UNDEFINED ID INPUT"
-          }`,
-          extLine(new Error())
-        );
-    });
-  } else
-    elementNotPopulated(famHistChecks, "famHistChecks", extLine(new Error()));
-  return Array.from(famHistChecks);
 }
