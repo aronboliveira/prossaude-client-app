@@ -1644,10 +1644,10 @@ export default function AGPage(): JSX.Element {
                     <div className="input-group-text" role="group">
                       <input
                         type="checkbox"
-                        name="candName"
+                        name="cand"
                         id="candId"
                         className="radOD"
-                        data-title="candidiase"
+                        data-title="Candidiase"
                       />
                     </div>
                     <label
@@ -1666,10 +1666,10 @@ export default function AGPage(): JSX.Element {
                     <div className="input-group-text" role="group">
                       <input
                         type="checkbox"
-                        name="gonName"
+                        name="gon"
                         id="gonId"
                         className="radOD"
-                        data-title="gonorreia"
+                        data-title="Gonorreia"
                       />
                     </div>
                     <label
@@ -1680,7 +1680,6 @@ export default function AGPage(): JSX.Element {
                       Gonorreia
                     </label>
                   </span>
-
                   <span
                     role="listem"
                     className="spanMain sectODSpan input-group mb-3"
@@ -1689,10 +1688,10 @@ export default function AGPage(): JSX.Element {
                     <div className="input-group-text" role="group">
                       <input
                         type="checkbox"
-                        name="herpName"
+                        name="herp"
                         id="herpId"
                         className="radOD"
-                        data-title="herpes"
+                        data-title="Herpes"
                       />
                     </div>
                     <label
@@ -1703,7 +1702,6 @@ export default function AGPage(): JSX.Element {
                       Herpes
                     </label>
                   </span>
-
                   <span
                     role="listem"
                     className="spanMain sectODSpan input-group mb-3"
@@ -1712,10 +1710,10 @@ export default function AGPage(): JSX.Element {
                     <div className="input-group-text" role="group">
                       <input
                         type="checkbox"
-                        name="herpZName"
+                        name="herp_z"
                         id="herpZId"
                         className="radOD"
-                        data-title="herpes_zoster"
+                        data-title="Herpes Zoster"
                       />
                     </div>
                     <label
@@ -1726,7 +1724,6 @@ export default function AGPage(): JSX.Element {
                       Herpes Zoster
                     </label>
                   </span>
-
                   <span
                     role="listem"
                     className="spanMain sectODSpan input-group mb-3"
@@ -1735,10 +1732,10 @@ export default function AGPage(): JSX.Element {
                     <div className="input-group-text" role="group">
                       <input
                         type="checkbox"
-                        name="pneuName"
+                        name="pneumonia"
                         id="pneuId"
                         className="radOD"
-                        data-title="pneumonia"
+                        data-title="Pneumonia"
                       />
                     </div>
                     <label
@@ -1757,10 +1754,10 @@ export default function AGPage(): JSX.Element {
                     <div className="input-group-text" role="group">
                       <input
                         type="checkbox"
-                        name="sifName"
+                        name="sif"
                         id="sifId"
                         className="radOD"
-                        data-title="sifilis"
+                        data-title="Sífilis"
                       />
                     </div>
                     <label
@@ -1779,10 +1776,10 @@ export default function AGPage(): JSX.Element {
                     <div className="input-group-text" role="group">
                       <input
                         type="checkbox"
-                        name="toxopName"
+                        name="toxop"
                         id="toxopId"
                         className="radOD noExpandRad"
-                        data-title="toxoplasmose"
+                        data-title="Toxoplasmose"
                       />
                     </div>
                     <label
@@ -1793,7 +1790,6 @@ export default function AGPage(): JSX.Element {
                       Toxoplasmose
                     </label>
                   </span>
-
                   <span
                     role="listem"
                     className="spanMain sectODSpan input-group mb-3 noExpandRad"
@@ -1802,10 +1798,10 @@ export default function AGPage(): JSX.Element {
                     <div className="input-group-text" role="group">
                       <input
                         type="checkbox"
-                        name="tubercName"
+                        name="tuberc"
                         id="tubercId"
                         className="radOD noExpandRad"
-                        data-title="tuberculose"
+                        data-title="Tuberculose"
                       />
                     </div>
                     <label
@@ -1850,9 +1846,10 @@ export default function AGPage(): JSX.Element {
                     <textarea
                       id="textAddOtherDId"
                       className="form-control tAOD textAdd"
+                      name="other_d"
                       maxLength={1000}
                       placeholder="Qual ou quais?"
-                      data-title="desc_outras_doencas"
+                      data-title="Descrição – Outras Doenças"
                     ></textarea>
                   </span>
                 </div>
@@ -1879,10 +1876,10 @@ export default function AGPage(): JSX.Element {
                       >
                         <input
                           type="checkbox"
-                          name="FamDiabName"
+                          name="fam_diab"
                           id="antFamDiabId"
                           className="cbFam"
-                          data-title="familia_diabetes"
+                          data-title="Antecedentes Familiares — Diabetes"
                           onClick={ev => handleDivAddShow(ev.currentTarget)}
                         />
                       </div>
@@ -1903,7 +1900,7 @@ export default function AGPage(): JSX.Element {
                       <div
                         className="divAdd gridThreeCol divAntFamCheck"
                         role="list"
-                        style={{ marginBlock: "0.5rem", padding: "0 0.5rem" }}
+                        style={{ marginBlock: "0.5rem", padding: "0.5rem" }}
                       >
                         <span role="listitem" className="cbDoencaSubt">
                           <input
@@ -1980,10 +1977,10 @@ export default function AGPage(): JSX.Element {
                       >
                         <input
                           type="checkbox"
-                          name="FamDislipName"
+                          name="fam_dislip"
                           id="antFamDislipId"
                           className="cbFam"
-                          data-title="fam_dislip"
+                          data-title="Antecedentes Familiares — Dislipidemia"
                           onClick={ev => handleDivAddShow(ev.currentTarget)}
                         />
                       </div>
@@ -2081,10 +2078,10 @@ export default function AGPage(): JSX.Element {
                       >
                         <input
                           type="checkbox"
-                          name="FamCardName"
+                          name="fam_card"
                           id="antFamCardId"
                           className="cbFam"
-                          data-title="fam_card"
+                          data-title="Antecedentes Familiares — Doença(s) Cardíaca(s)"
                           onClick={ev => handleDivAddShow(ev.currentTarget)}
                         />
                       </div>
@@ -2112,10 +2109,10 @@ export default function AGPage(): JSX.Element {
                       >
                         <input
                           type="checkbox"
-                          name="FamPulmName"
+                          name="fam_pulm"
                           id="antFamPulmId"
                           className="cbFam"
-                          data-title="fam_pulm"
+                          data-title="Antecedentes Familiares — Doença(s) Pulmonar(es)"
                           onClick={ev => handleDivAddShow(ev.currentTarget)}
                         />
                       </div>
@@ -2124,7 +2121,7 @@ export default function AGPage(): JSX.Element {
                         className="famLabel input-group-text"
                         id="labAntFamPulm"
                       >
-                        Doença(s) Pulmonare(s)
+                        Doença(s) Pulmonar(es)
                       </label>
                       <br role="presentation" />
                     </span>
@@ -2144,10 +2141,10 @@ export default function AGPage(): JSX.Element {
                       >
                         <input
                           type="checkbox"
-                          name="FamOncName"
+                          name="fam_onc"
                           id="antFamOncId"
                           className="cbFam"
-                          data-title="fam_oncologica"
+                          data-title="Antecedentes Familiares — Doença(s) Oncológica(s)"
                           onClick={ev => handleDivAddShow(ev.currentTarget)}
                         />
                       </div>
@@ -2197,10 +2194,10 @@ export default function AGPage(): JSX.Element {
                     <input
                       type="number"
                       list="escovN"
-                      name="escovNName"
+                      name="escov_n_day"
                       id="escovNId"
                       className="form-control freqInpList"
-                      data-title="n_escovacoes"
+                      data-title="Escovações por dia"
                       autoCapitalize="on"
                     />
                     <datalist id="escovN">
@@ -2219,10 +2216,10 @@ export default function AGPage(): JSX.Element {
                     <input
                       type="number"
                       list="fioN"
-                      name="fioNName"
+                      name="fio_n_day"
                       id="fioNId"
                       className="form-control freqInpList"
-                      data-title="n_fio_dental"
+                      data-title="Uso de Fio Dental por dia"
                       autoCapitalize="on"
                     />
                     <datalist id="fioN">
@@ -2233,7 +2230,6 @@ export default function AGPage(): JSX.Element {
                     </datalist>
                     <br role="presentation" />
                   </span>
-
                   <span role="group" className="sectFreqSpan" id="spanFreqEnxg">
                     <label htmlFor="enxgNId" className="labDlist" id="labEnxgN">
                       Uso de Enxaguante Bucal por dia:
@@ -2241,10 +2237,10 @@ export default function AGPage(): JSX.Element {
                     <input
                       type="number"
                       list="enxgN"
-                      name="enxgNName"
+                      name="enxg_n_day"
                       id="enxgNId"
                       className="form-control freqInpList"
-                      data-title="n_enxaguante"
+                      data-title="Uso de Enxaguante Bucal por dia"
                       autoCapitalize="on"
                     />
                     <datalist className="dlistFreq" id="enxgN">
@@ -2263,7 +2259,6 @@ export default function AGPage(): JSX.Element {
                     </datalist>
                     <br role="presentation" />
                   </span>
-
                   <span role="group" className="sectFreqSpan" id="spanDoce">
                     <span
                       role="group"
@@ -2279,10 +2274,10 @@ export default function AGPage(): JSX.Element {
                       >
                         <input
                           type="radio"
-                          name="pbAlmName"
+                          name="cor_doces"
                           id="pbAlmYes"
                           className="freqRad freqAlmRad boolOp form-check-input"
-                          data-title="sim_doces"
+                          data-title="Doces (Sim)"
                           onKeyDown={keydown => {
                             opRadioHandler(
                               keydown,
@@ -2302,10 +2297,10 @@ export default function AGPage(): JSX.Element {
                         </label>
                         <input
                           type="radio"
-                          name="pbAlmName"
+                          name="cor_doces"
                           id="pbAlmNo"
                           className="freqRad freqAlmRad boolOp"
-                          data-title="nao_doces"
+                          data-title="Doces (Não)"
                           onKeyDown={keydown => {
                             opRadioHandler(
                               keydown,
@@ -2327,10 +2322,11 @@ export default function AGPage(): JSX.Element {
                     </span>
                     <textarea
                       id="textAddAlm"
+                      name="notes_cor_doces"
                       maxLength={1000}
                       placeholder="Qual ou quais?"
                       className="divAdd form-control"
-                      data-title="desc_doces"
+                      data-title="Descrição — Doces e/ou Corantes"
                     ></textarea>
                     <br role="presentation" />
                   </span>
@@ -2338,7 +2334,6 @@ export default function AGPage(): JSX.Element {
               </fieldset>
               <hr />
             </fieldset>
-
             <fieldset
               name="fsConfirmName"
               id="fsConfirmId"

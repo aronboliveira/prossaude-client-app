@@ -1088,7 +1088,11 @@ export async function validateForm(
         }
         arrValidity.push(isValid);
         if (isValid) {
-          if (entry instanceof HTMLInputElement && entry.type === "checkbox")
+          if (
+            entry instanceof HTMLInputElement &&
+            entry.type === "checkbox" &&
+            entry.role !== "switch"
+          )
             validEntries.push([
               entry.name || entry.id || entry.dataset.title || entry.tagName,
               `${entry.checked}`,

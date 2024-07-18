@@ -32,7 +32,7 @@ export default function DivAntFam({
       <span role="listitem" className="cbDoencSubt">
         <input
           type="checkbox"
-          name={`${name}FamG1Name`}
+          name={`${name}_mae`}
           id={`${name}FamMaeId`}
           className={`cpbOp famOp op${PascalName} op${PascalName}Fam op${PascalName}GFam`}
           data-title={`Mãe — ${fullName}`}
@@ -42,8 +42,8 @@ export default function DivAntFam({
       <span role="listitem" className="cbDoencSubt">
         <input
           type="checkbox"
-          name={`${name}FamG1Name`}
-          id={`${name}FamPaitId`}
+          name={`${name}_pai`}
+          id={`${name}FamPaiId`}
           className={`cpbOp famOp op${PascalName} op${PascalName}Fam op${PascalName}GFam`}
           data-title={`Pai — ${fullName}`}
         />{" "}
@@ -52,7 +52,7 @@ export default function DivAntFam({
       <span role="listitem" className="cbDoencSubt">
         <input
           type="checkbox"
-          name={`${name}FamAvóMatName`}
+          name={`${name}_avof_m`}
           id={`${name}FamAvóMatId`}
           className={`cpbOp famOp op${PascalName} op${PascalName}Fam op${PascalName}GFam`}
           data-title={`Avó Materna — ${fullName}`}
@@ -62,7 +62,7 @@ export default function DivAntFam({
       <span role="listitem" className="cbDoencSubt">
         <input
           type="checkbox"
-          name={`${name}FamAvóPatName`}
+          name={`${name}_avof_p`}
           id={`${name}FamAvóPatId`}
           className={`cpbOp famOp op${PascalName} op${PascalName}Fam op${PascalName}GFam`}
           data-title={`Avó Paterna — ${fullName}`}
@@ -72,7 +72,7 @@ export default function DivAntFam({
       <span role="listitem" className="cbDoencSubt">
         <input
           type="checkbox"
-          name={`${name}FamAvoMatName`}
+          name={`${name}_avom_m`}
           id={`${name}FamAvoMatId`}
           className={`cpbOp famOp op${PascalName} op${PascalName}Fam op${PascalName}GFam`}
           data-title={`Avô Materno — ${fullName}`}
@@ -82,7 +82,7 @@ export default function DivAntFam({
       <span role="listitem" className="cbDoencSubt">
         <input
           type="checkbox"
-          name={`${name}FamAvóPatName`}
+          name={`${name}_avom_p`}
           id={`${name}FamAvoPatId`}
           className={`cpbOp famOp op${PascalName} op${PascalName}Fam op${PascalName}GFam`}
           data-title={`Avô Paterno — ${fullName}`}
@@ -92,7 +92,7 @@ export default function DivAntFam({
       <span role="listitem" className="cbDoencSubt">
         <input
           type="checkbox"
-          name={`${name}FamBisavóMatMatName`}
+          name={`${name}_bisf_mm`}
           id={`${name}FamBisavóMatMatId`}
           className={`cpbOp famOp op${PascalName} op${PascalName}Fam op${PascalName}GFam`}
           data-title={`Bisavó Mater-materna — ${fullName}`}
@@ -102,7 +102,7 @@ export default function DivAntFam({
       <span role="listitem" className="cbDoencSubt">
         <input
           type="checkbox"
-          name={`${name}FamBisavóMatPatName`}
+          name={`${name}_bisf_mp`}
           id={`${name}FamBisavóMatPatId`}
           className={`cpbOp famOp op${PascalName} op${PascalName}Fam op${PascalName}GFam`}
           data-title={`Bisavó Mater-paterna — ${fullName}`}
@@ -112,7 +112,7 @@ export default function DivAntFam({
       <span role="listitem" className="cbDoencSubt">
         <input
           type="checkbox"
-          name={`${name}FamBisavóPatMatName`}
+          name={`${name}_bisf_pm`}
           id={`${name}FamBisavóPatMatId`}
           className={`cpbOp famOp op${PascalName} op${PascalName}Fam op${PascalName}GFam`}
           data-title={`Bisavó Pater-materna — ${fullName}`}
@@ -122,7 +122,7 @@ export default function DivAntFam({
       <span role="listitem" className="cbDoencSubt">
         <input
           type="checkbox"
-          name={`${name}FamBisavóPatPatName`}
+          name={`${name}_bisf_pp`}
           id={`${name}FamBisavóPatPatId`}
           className={`cpbOp famOp op${PascalName} op${PascalName}Fam op${PascalName}GFam`}
           data-title={`Bisavó Pater-paterna — ${fullName}`}
@@ -132,7 +132,7 @@ export default function DivAntFam({
       <span role="listitem" className="cbDoencSubt">
         <input
           type="checkbox"
-          name={`${name}FamBisavoMatMatName`}
+          name={`${name}_bism_mm`}
           id={`${name}FamBisavoMatMatId`}
           className={`cpbOp famOp op${PascalName} op${PascalName}Fam op${PascalName}GFam`}
           data-title={`Bisavô Mater-materno — ${fullName}`}
@@ -142,7 +142,7 @@ export default function DivAntFam({
       <span role="listitem" className="cbDoencSubt">
         <input
           type="checkbox"
-          name={`${name}FamBisavoMatPatName`}
+          name={`${name}_bism_mp`}
           id={`${name}FamBisavoMatPatId`}
           className={`cpbOp famOp op${PascalName} op${PascalName}Fam op${PascalName}GFam`}
           data-title={`Bisavô Mater-paterno — ${fullName}`}
@@ -152,7 +152,7 @@ export default function DivAntFam({
       <span role="listitem" className="cbDoencSubt">
         <input
           type="checkbox"
-          name={`${name}FamBisavoPatMatName`}
+          name={`${name}_bism_pm`}
           id={`${name}FamBisavoPatMatId`}
           className={`cpbOp famOp op${PascalName} op${PascalName}Fam op${PascalName}GFam`}
           data-title={`Bisavô Pater-materno — ${fullName}`}
@@ -162,7 +162,7 @@ export default function DivAntFam({
       <span role="listitem" className="cbDoencSubt">
         <input
           type="checkbox"
-          name={`${name}FamBisavoPatPatName`}
+          name={`${name}_bism_pp`}
           id={`${name}FamBisavoPatPatId`}
           className={`cpbOp famOp op${PascalName} op${PascalName}Fam op${PascalName}GFam`}
           data-title={`Bisavô Pater-paterno — ${fullName}`}
@@ -172,7 +172,7 @@ export default function DivAntFam({
       <span role="listitem" className="cbDoencSubt">
         <input
           type="checkbox"
-          name={`${name}FamOtherName`}
+          name={`${name}_tris`}
           id={`${name}FamOtherId`}
           className={`cpbOp famOp op${PascalName} op${PascalName}Fam op${PascalName}GFam`}
           data-title={`Trisavós ou anteriores — ${fullName}`}
@@ -214,7 +214,7 @@ export default function DivAntFam({
         <span role="listitem" className="cbDoencSubt">
           <input
             type="checkbox"
-            name={`${name}FamG1Name`}
+            name={`${name}_mae`}
             id={`${name}FamMaeId`}
             className={`cpbOp famOp op${PascalName} op${PascalName}Fam op${PascalName}GFam`}
             data-title={`Mãe — ${fullName}`}
@@ -224,7 +224,7 @@ export default function DivAntFam({
         <span role="listitem" className="cbDoencSubt">
           <input
             type="checkbox"
-            name={`${name}FamG1Name`}
+            name={`${name}_pai`}
             id={`${name}FamPaitId`}
             className={`cpbOp famOp op${PascalName} op${PascalName}Fam op${PascalName}GFam`}
             data-title={`Pai — ${fullName}`}
@@ -234,7 +234,7 @@ export default function DivAntFam({
         <span role="listitem" className="cbDoencSubt">
           <input
             type="checkbox"
-            name={`${name}FamAvóMatName`}
+            name={`${name}_avof_m`}
             id={`${name}FamAvóMatId`}
             className={`cpbOp famOp op${PascalName} op${PascalName}Fam op${PascalName}GFam`}
             data-title={`Avó Materna — ${fullName}`}
@@ -244,7 +244,7 @@ export default function DivAntFam({
         <span role="listitem" className="cbDoencSubt">
           <input
             type="checkbox"
-            name={`${name}FamAvóPatName`}
+            name={`${name}_avof_p`}
             id={`${name}FamAvóPatId`}
             className={`cpbOp famOp op${PascalName} op${PascalName}Fam op${PascalName}GFam`}
             data-title={`Avó Paterna — ${fullName}`}
@@ -254,7 +254,7 @@ export default function DivAntFam({
         <span role="listitem" className="cbDoencSubt">
           <input
             type="checkbox"
-            name={`${name}FamAvoMatName`}
+            name={`${name}_avom_m`}
             id={`${name}FamAvoMatId`}
             className={`cpbOp famOp op${PascalName} op${PascalName}Fam op${PascalName}GFam`}
             data-title={`Avô Materno — ${fullName}`}
@@ -264,7 +264,7 @@ export default function DivAntFam({
         <span role="listitem" className="cbDoencSubt">
           <input
             type="checkbox"
-            name={`${name}FamAvóPatName`}
+            name={`${name}_avom_p`}
             id={`${name}FamAvoPatId`}
             className={`cpbOp famOp op${PascalName} op${PascalName}Fam op${PascalName}GFam`}
             data-title={`Avô Paterno — ${fullName}`}
@@ -274,7 +274,7 @@ export default function DivAntFam({
         <span role="listitem" className="cbDoencSubt">
           <input
             type="checkbox"
-            name={`${name}FamBisavóMatMatName`}
+            name={`${name}_bisf_mm`}
             id={`${name}FamBisavóMatMatId`}
             className={`cpbOp famOp op${PascalName} op${PascalName}Fam op${PascalName}GFam`}
             data-title={`Bisavó Mater-materna — ${fullName}`}
@@ -284,7 +284,7 @@ export default function DivAntFam({
         <span role="listitem" className="cbDoencSubt">
           <input
             type="checkbox"
-            name={`${name}FamBisavóMatPatName`}
+            name={`${name}_bisf_mp`}
             id={`${name}FamBisavóMatPatId`}
             className={`cpbOp famOp op${PascalName} op${PascalName}Fam op${PascalName}GFam`}
             data-title={`Bisavó Mater-paterna — ${fullName}`}
@@ -294,7 +294,7 @@ export default function DivAntFam({
         <span role="listitem" className="cbDoencSubt">
           <input
             type="checkbox"
-            name={`${name}FamBisavóPatMatName`}
+            name={`${name}_bisf_pm`}
             id={`${name}FamBisavóPatMatId`}
             className={`cpbOp famOp op${PascalName} op${PascalName}Fam op${PascalName}GFam`}
             data-title={`Bisavó Pater-materna — ${fullName}`}
@@ -304,7 +304,7 @@ export default function DivAntFam({
         <span role="listitem" className="cbDoencSubt">
           <input
             type="checkbox"
-            name={`${name}FamBisavóPatPatName`}
+            name={`${name}_bisf_pp`}
             id={`${name}FamBisavóPatPatId`}
             className={`cpbOp famOp op${PascalName} op${PascalName}Fam op${PascalName}GFam`}
             data-title={`Bisavó Pater-paterna — ${fullName}`}
@@ -314,7 +314,7 @@ export default function DivAntFam({
         <span role="listitem" className="cbDoencSubt">
           <input
             type="checkbox"
-            name={`${name}FamBisavoMatMatName`}
+            name={`${name}_bism_mm`}
             id={`${name}FamBisavoMatMatId`}
             className={`cpbOp famOp op${PascalName} op${PascalName}Fam op${PascalName}GFam`}
             data-title={`Bisavô Mater-materno — ${fullName}`}
@@ -324,7 +324,7 @@ export default function DivAntFam({
         <span role="listitem" className="cbDoencSubt">
           <input
             type="checkbox"
-            name={`${name}FamBisavoMatPatName`}
+            name={`${name}_bism_mp`}
             id={`${name}FamBisavoMatPatId`}
             className={`cpbOp famOp op${PascalName} op${PascalName}Fam op${PascalName}GFam`}
             data-title={`Bisavô Mater-paterno — ${fullName}`}
@@ -334,7 +334,7 @@ export default function DivAntFam({
         <span role="listitem" className="cbDoencSubt">
           <input
             type="checkbox"
-            name={`${name}FamBisavoPatMatName`}
+            name={`${name}_bism_pm`}
             id={`${name}FamBisavoPatMatId`}
             className={`cpbOp famOp op${PascalName} op${PascalName}Fam op${PascalName}GFam`}
             data-title={`Bisavô Pater-materno — ${fullName}`}
@@ -344,7 +344,7 @@ export default function DivAntFam({
         <span role="listitem" className="cbDoencSubt">
           <input
             type="checkbox"
-            name={`${name}FamBisavoPatPatName`}
+            name={`${name}_bism_pp`}
             id={`${name}FamBisavoPatPatId`}
             className={`cpbOp famOp op${PascalName} op${PascalName}Fam op${PascalName}GFam`}
             data-title={`Bisavô Pater-paterno — ${fullName}`}
@@ -354,7 +354,7 @@ export default function DivAntFam({
         <span role="listitem" className="cbDoencSubt">
           <input
             type="checkbox"
-            name={`${name}FamOtherName`}
+            name={`${name}_tris`}
             id={`${name}FamOtherId`}
             className={`cpbOp famOp op${PascalName} op${PascalName}Fam op${PascalName}GFam`}
             data-title={`Trisavós ou anteriores — ${fullName}`}

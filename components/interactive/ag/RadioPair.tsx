@@ -101,6 +101,7 @@ export default function RadioPair({
         <textarea
           className={`form-control taOp ta${problemIdf} divAdd`}
           id={`textAdd${problemIdf}`}
+          name={`notes_${name}`}
           maxLength={1000}
           placeholder={
             altPh && altPh !== ""

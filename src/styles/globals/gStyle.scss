@@ -2847,6 +2847,14 @@ $baseMax750InpWidth: 85vw;
     row-gap: 2vh;
   }
 
+  #autocorrectDiv {
+    padding-left: 2.8rem;
+  }
+
+  #dateHeader {
+    min-width: 17ch;
+  }
+
   #submitFormButId,
   #resetFormBtn,
   #btnExport {
