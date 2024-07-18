@@ -318,13 +318,13 @@
 @media only screen and (min-width: 721px) and (max-width: 1024px) and (orientation: portrait) {
   .baseBody {
     .main-article {
-      min-height: 71rem;
-      height: 71rem;
+      min-height: 85rem;
+      height: 85rem;
       overflow: auto;
     }
     .main-container {
-      min-height: 71rem;
-      height: 71rem;
+      min-height: 85rem;
+      height: 85rem;
       overflow: auto;
     }
     #cardsSect {
@@ -332,11 +332,8 @@
       height: 70rem;
     }
     #bgDiv {
-      min-height: 77rem;
-      height: 77rem;
-    }
-    #panelSect {
-      padding-bottom: 5rem;
+      min-height: 85rem;
+      height: 85rem;
     }
     #profileIconImg {
       margin-left: 0.1rem;
@@ -512,11 +509,6 @@
 
 @media (max-width: 520px) {
   .baseBody {
-    header {
-      > div {
-        margin-left: 30%;
-      }
-    }
     .card {
       &.card23v {
         max-width: 90vw;
