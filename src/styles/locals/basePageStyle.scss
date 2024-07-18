@@ -320,10 +320,12 @@
     .main-article {
       min-height: 71rem;
       height: 71rem;
+      overflow: auto;
     }
     .main-container {
       min-height: 71rem;
       height: 71rem;
+      overflow: auto;
     }
     #cardsSect {
       min-height: 70rem;
@@ -464,6 +466,17 @@
   }
 }
 
+@media (max-width: 620px) {
+  .baseBody {
+    header {
+      &.header-main-container {
+        justify-content: center;
+        align-items: center;
+      }
+    }
+  }
+}
+
 @media screen and (max-width: 591px) {
   .baseBody {
     .main-article {
@@ -495,14 +508,6 @@
 }
 
 @media screen and (min-width: 520px) and (max-width: 620px) {
-  .baseBody {
-    .header-main-text {
-      margin-left: 8.5vw;
-      + #divUserPanel {
-        margin-left: 33vw;
-      }
-    }
-  }
 }
 
 @media (max-width: 520px) {
@@ -565,6 +570,27 @@
     #bgDiv {
       min-height: 126rem;
       height: 126rem;
+    }
+  }
+}
+
+@media screen and (max-width: 414px) {
+  .baseBody {
+    .main-article {
+      min-height: 121rem;
+      height: 121rem;
+    }
+    .main-container {
+      min-height: 121rem;
+      height: 121rem;
+    }
+    #bgDiv {
+      min-height: 132rem;
+      height: 132rem;
+    }
+    #cardSect {
+      min-height: 114rem;
+      height: 114rem;
     }
   }
 }
