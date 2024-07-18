@@ -262,6 +262,23 @@
     @include formCheckOpaque;
   }
 
+  .spanMainFsAnamGRad {
+    ~ .divAdd {
+      min-width: 60vw;
+      input {
+        &[type="checkbox"],
+        &[type="radio"] {
+          &:not(:checked) {
+            opacity: 0.3;
+          }
+          &:checked {
+            opacity: 1;
+          }
+        }
+      }
+    }
+  }
+
   #divAddGrv {
     input {
       @include formCheckOpaque;

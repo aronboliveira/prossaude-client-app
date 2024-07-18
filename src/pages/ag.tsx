@@ -974,104 +974,105 @@ export default function AGPage(): JSX.Element {
                     <span role="listitem" className="cbDoencaSubt">
                       <input
                         type="checkbox"
-                        name="hepAName"
+                        name="hep_a"
                         id="hepAId"
                         className="cpbOp indivOp opHep"
-                        data-title="hepA"
+                        data-title="Hepatite A"
                       />{" "}
                       A
                     </span>
                     <span role="listitem" className="cbDoencaSubt">
                       <input
                         type="checkbox"
-                        name="hepBName"
+                        name="hep_b"
                         id="hepBId"
                         className="cpbOp indivOp opHep"
-                        data-title="hepB"
+                        data-title="Hepatite B"
                       />{" "}
                       B
                     </span>
                     <span role="listitem" className="cbDoencaSubt">
                       <input
                         type="checkbox"
-                        name="hepCName"
+                        name="hep_c"
                         id="hepCId"
                         className="cpbOp indivOp opHep"
-                        data-title="hepC"
+                        data-title="Hepatite C"
                       />{" "}
                       C
                     </span>
                     <span role="listitem" className="cbDoencaSubt">
                       <input
                         type="checkbox"
-                        name="hepDName"
+                        name="hep_d"
                         id="hepDId"
                         className="cpbOp indivOp opHep"
-                        data-title="hepD"
+                        data-title="Hepatite D"
                       />{" "}
                       D
                     </span>
                     <span role="listitem" className="cbDoencaSubt">
                       <input
                         type="checkbox"
-                        name="hepEName"
+                        name="hep_e"
                         id="hepEId"
                         className="cpbOp indivOp opHep"
-                        data-title="hepE"
+                        data-title="Hepatite E"
                       />{" "}
                       E
                     </span>
                     <span role="listitem" className="cbDoencaSubt">
                       <input
                         type="checkbox"
-                        name="hepInfcName"
+                        name="hep_indirect"
                         id="hepInfcId"
                         className="cpbOp indivOp opHep"
-                        data-title="hep_outras"
+                        data-title="Hepatite por outras infecções"
                       />{" "}
                       Induzida por Outras Infecções
                     </span>
                     <span role="listitem" className="cbDoencaSubt">
                       <input
                         type="checkbox"
-                        name="hepImunName"
+                        name="hep_imun"
                         id="hepImunId"
                         className="cpbOp indivOp opHep"
-                        data-title="hep_autoimune"
+                        data-title="Hepatite Autoimune"
                       />{" "}
                       Autoimune
                     </span>
                     <span role="listitem" className="cbDoencaSubt">
                       <input
                         type="checkbox"
-                        name="hepOncName"
+                        name="hep_onc"
                         id="hepOncId"
                         className="cpbOp indivOp opHep"
-                        data-title="hep_oncologica"
+                        data-title="Hepatite Oncológica"
                       />{" "}
                       Oncológica
                     </span>
                     <span role="listitem" className="cbDoencaSubt">
                       <input
                         type="checkbox"
-                        name="hepAlcName"
+                        name="hep_alc"
                         id="hepAlcId"
                         className="cpbOp indivOp opHep"
-                        data-title="hep_alcoolica"
+                        data-title="Hepatite Alcoólica"
                       />{" "}
                       Alcoólica
                     </span>
                     <span role="listitem" className="cbDoencaSubt">
                       <input
                         type="checkbox"
-                        name="hepDrgName"
+                        name="hep_tox"
                         id="hepDrgId"
                         className="cpbOp indivOp opHep"
-                        data-title="hep_intoxicacao"
+                        data-title="Hepatite por intoxicação"
                       />{" "}
                       Induzida por Toxinas, Medicamentos ou Outra(s) Droga(s)
                     </span>
                   </div>
+                  <RadioPair name="diab" fullName="Diabetes" ctx={true} />
                   <div
                     className="divAdd gridTwoCol"
                     id="divAddDiab"
@@ -1080,60 +1081,60 @@ export default function AGPage(): JSX.Element {
                     <span role="listitem" className="cbDoencaSubt">
                       <input
                         type="checkbox"
-                        name="diabTipo1Name"
+                        name="diab_1"
                         id="diabTipo1Id"
                         className="cpbOp indivOp opDiab opDiabIndiv"
-                        data-title="diabete1"
+                        data-title="Diabetes tipo 1"
                       />{" "}
                       Tipo 1
                     </span>
                     <span role="listitem" className="cbDoencaSubt">
                       <input
                         type="checkbox"
-                        name="diabTipo2Name"
+                        name="diab_2"
                         id="diabTipo2Id"
                         className="cpbOp indivOp opDiab opDiabIndiv"
-                        data-title="diabete2"
+                        data-title="Diabetes tipo 2"
                       />{" "}
                       Tipo 2
                     </span>
                     <span role="listitem" className="cbDoencaSubt">
                       <input
                         type="checkbox"
-                        name="diabGestName"
+                        name="diab_gest"
                         id="diabGestId"
                         className="cpbOp indivOp opDiab opDiabIndiv"
-                        data-title="diabete_gestacional"
+                        data-title="Diabetes Gestacional"
                       />{" "}
                       Gestacional
                     </span>
                     <span role="listitem" className="cbDoencaSubt">
                       <input
                         type="checkbox"
-                        name="diabInsName"
+                        name="diab_ins"
                         id="diabInsId"
                         className="cpbOp indivOp opDiab opDiabIndiv"
-                        data-title="diabete_insipida"
+                        data-title="Diabetes Insipidus"
                       />{" "}
                       Insípido
                     </span>
                     <span role="listitem" className="cbDoencaSubt">
                       <input
                         type="checkbox"
-                        name="diabLadaName"
+                        name="diab_lada"
                         id="diabLadaId"
                         className="cpbOp indivOp opDiab opDiabIndiv"
-                        data-title="diabete_lada"
+                        data-title="Diabetes LADA"
                       />{" "}
                       LADA
                     </span>
                     <span role="listitem" className="cbDoencaSubt">
                       <input
                         type="checkbox"
-                        name="diabModyName"
+                        name="diab_mody"
                         id="diabModyId"
                         className="cpbOp indivOp opDiab opDiabIndiv"
-                        data-title="diabete_mody"
+                        data-title="Diabetes MODY"
                       />{" "}
                       MODY
                     </span>
@@ -1158,10 +1159,10 @@ export default function AGPage(): JSX.Element {
                       >
                         <input
                           type="number"
-                          name="hepAName"
+                          name="hiv_copies"
                           id="hivCargId"
                           className="form-control cpbOp indivOp opHiv"
-                          data-title="hiv_carga"
+                          data-title="HIV — Carga Viral (cópias/ml)"
                         />
                         <label
                           htmlFor="hivCargId"
@@ -1183,10 +1184,10 @@ export default function AGPage(): JSX.Element {
                       </span>
                       <input
                         type="date"
-                        name="hivDateDiagName"
+                        name="hiv_diagnosis"
                         id="hivDateDiagId"
                         className="form-control cpbOp indivOp opHiv maxCurrDate"
-                        data-title="hiv_diagnostico"
+                        data-title="HIV — Data do Diagnóstico"
                       />
                     </div>
                     <div role="group">
@@ -1199,10 +1200,10 @@ export default function AGPage(): JSX.Element {
                       </span>
                       <input
                         type="date"
-                        name="hivDateExamName"
+                        name="hiv_last_exam"
                         id="hivDateExamId"
                         className="form-control cpbOp indivOp opHiv maxCurrDate"
-                        data-title="hiv_ultimo_exame"
+                        data-title="HIV — Data do Último Exame"
                       />
                     </div>
                   </div>
@@ -1220,10 +1221,11 @@ export default function AGPage(): JSX.Element {
                     <span role="listitem" className="cbDoencaSubt">
                       <input
                         type="radio"
-                        name="HASStgName"
+                        name="has_stg"
                         id="HASPreId"
                         className="cpbOp indivOp opHAS"
-                        data-title="pre_hipertensao"
+                        data-title="Pré-hipertensão"
+                        data-value="pre"
                         onKeyDown={keydown => {
                           opRadioHandler(
                             keydown,
@@ -1240,10 +1242,11 @@ export default function AGPage(): JSX.Element {
                     <span role="listitem" className="cbDoencaSubt">
                       <input
                         type="radio"
-                        name="HASStgName"
+                        name="has_stg"
                         id="HASStg1Id"
                         className="cpbOp indivOp opHAS"
-                        data-title="hipertensao_estagio1"
+                        data-title="Hipertensão Estágio 1"
+                        data-value="1"
                         onKeyDown={keydown => {
                           opRadioHandler(
                             keydown,
@@ -1260,10 +1263,11 @@ export default function AGPage(): JSX.Element {
                     <span role="listitem" className="cbDoencaSubt">
                       <input
                         type="radio"
-                        name="HASStgName"
+                        name="has_stg"
                         id="HASStg2Id"
                         className="cpbOp indivOp opHAS"
-                        data-title="hipertensao_estagio2"
+                        data-title="Hipertensão Estágio 2"
+                        data-value="2"
                         onKeyDown={keydown => {
                           opRadioHandler(
                             keydown,
@@ -1280,10 +1284,11 @@ export default function AGPage(): JSX.Element {
                     <span role="listitem" className="cbDoencaSubt">
                       <input
                         type="radio"
-                        name="HASStgName"
+                        name="has_stg"
                         id="HASStg3Id"
                         className="cpbOp indivOp opHAS"
-                        data-title="hipertensao_estagio3"
+                        data-title="Hipertensão Estágio 3"
+                        data-value="3"
                         onKeyDown={keydown => {
                           opRadioHandler(
                             keydown,
@@ -1300,10 +1305,11 @@ export default function AGPage(): JSX.Element {
                     <span role="listitem" className="cbDoencaSubt">
                       <input
                         type="radio"
-                        name="HASLvlName"
+                        name="has_stg"
                         id="HASPrimId"
                         className="cpbOp indivOp opHAS"
-                        data-title="hipertensao_prim"
+                        data-title="Hipertensão Primária | Essencial"
+                        data-value="prim"
                         onKeyDown={keydown => {
                           opRadioHandler(
                             keydown,
@@ -1320,10 +1326,11 @@ export default function AGPage(): JSX.Element {
                     <span role="listitem" className="cbDoencaSubt">
                       <input
                         type="radio"
-                        name="HASLvlName"
+                        name="has_stg"
                         id="HASSecId"
                         className="cpbOp indivOp opHAS"
-                        data-title="hipertensao_sec"
+                        data-title="Hipertensão Secundária"
+                        data-value="sec"
                         onKeyDown={keydown => {
                           opRadioHandler(
                             keydown,
@@ -1340,30 +1347,30 @@ export default function AGPage(): JSX.Element {
                     <span role="listitem" className="cbDoencaSubt">
                       <input
                         type="checkbox"
-                        name="HASResName"
+                        name="has_res"
                         id="HASResId"
                         className="cpbOp indivOp opHAS"
-                        data-title="hipertensao_resist"
+                        data-title="Hipertensão Resistente"
                       />{" "}
                       Resistente
                     </span>
                     <span role="listitem" className="cbDoencaSubt">
                       <input
                         type="checkbox"
-                        name="HASIsolName"
+                        name="has_sist"
                         id="HASIsolId"
                         className="cpbOp indivOp opHAS"
-                        data-title="hipertensao_sistolica_isolada"
+                        data-title="Hipertensão Sistólica Isolada"
                       />{" "}
                       Sistólica Isolada
                     </span>
                     <span role="listitem" className="cbDoencaSubt">
                       <input
                         type="checkbox"
-                        name="HASMalName"
+                        name="has_mal"
                         id="HASMalId"
                         className="cpbOp indivOp opHAS"
-                        data-title="hipertensao_maligna"
+                        data-title="Hipertensão Maligna"
                       />{" "}
                       Maligna
                     </span>
@@ -1440,30 +1447,33 @@ export default function AGPage(): JSX.Element {
                         <div role="listitem">
                           <input
                             type="radio"
-                            name="nivelFumo"
+                            name="fumo_lvl"
                             id="fumoLeveId"
                             className="radOp radAdd radFumo"
                             data-title="fumo_leve"
+                            data-value="leve"
                           />{" "}
                           Leve
                         </div>
                         <div role="listitem">
                           <input
                             type="radio"
-                            name="nivelFumo"
+                            name="fumo_lvl"
                             id="fumoModId"
                             className="radOp radAdd radFumo"
                             data-title="fumo_moderado"
+                            data-value="moderado"
                           />{" "}
                           Moderado
                         </div>
                         <div role="listitem">
                           <input
                             type="radio"
-                            name="nivelFumo"
+                            name="fumo_lvl"
                             id="fumoAltoId"
                             className="radOp radAdd radFumo"
                             data-title="fumo_alto"
+                            data-value="alto"
                           />{" "}
                           Alto
                         </div>
@@ -1479,9 +1489,9 @@ export default function AGPage(): JSX.Element {
                         <input
                           type="checkbox"
                           className="opFumSubs"
-                          name="fumNameTab"
+                          name="fumo_tab"
                           id="fumIdTab"
-                          data-title="fumo_tabaco"
+                          data-title="Fumo — Consumo de Tabaco"
                         />
                         <label
                           htmlFor="fumIdTab"
@@ -1495,9 +1505,9 @@ export default function AGPage(): JSX.Element {
                         <input
                           type="checkbox"
                           className="opFumSubs"
-                          name="fumNameCan"
+                          name="fumo_can"
                           id="fumIdCan"
-                          data-title="fumo_cannabis"
+                          data-title="Fumo — Consumo de Cannabis"
                         />
                         <label
                           htmlFor="fumIdCan"
@@ -1511,9 +1521,9 @@ export default function AGPage(): JSX.Element {
                         <input
                           type="checkbox"
                           className="opFumSubs"
-                          name="fumNameOther"
+                          name="fumo_other"
                           id="fumIdOther"
-                          data-title="fumo_outros"
+                          data-title="Fumo — Consumo de Outras Substâncias"
                         />
                         <label
                           htmlFor="fumIdOther"
@@ -1532,11 +1542,11 @@ export default function AGPage(): JSX.Element {
                       <strong>Tempo aproximado do hábito, em meses:</strong>
                       <input
                         type="number"
-                        name="tempApFumoName"
+                        name="fumo_months"
                         className="form-control"
                         id="tempApFumoId"
                         min="0"
-                        data-title="fumo_tempo"
+                        data-title="Fumo — Tempo aproximado (meses)"
                       />
                     </label>
                     <br role="presentation" />

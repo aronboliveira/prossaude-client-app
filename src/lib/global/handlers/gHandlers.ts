@@ -38,7 +38,7 @@ export function updateSimpleProperty(el: targEl): primitiveType {
 }
 
 export function cursorCheckTimer(): number {
-  const selection = window.getSelection();
+  const selection = getSelection();
   if (selection && selection.focusNode !== null) {
     setTimeout(() => {
       return selection.getRangeAt(0)?.startOffset;
@@ -777,7 +777,7 @@ export function toggleConformDlg(): void {
         }
       }
     });
-    window.addEventListener("keydown", press => {
+    addEventListener("keydown", press => {
       if (press.key === "Escape") {
         showConformDlg = false;
         conformDlg.close();
@@ -980,11 +980,19 @@ export async function validateForm(
           entry.type === "radio"
         ) {
           try {
-            const parent = entry.parentElement;
+            let parent = entry.parentElement;
             if (!(parent instanceof Element))
               throw elementNotFound(
                 parent,
                 `Validation of parent instance`,
+                "Element"
+              );
+            if (parent.querySelectorAll('input[type="radio"]').length < 2)
+              parent = parent.closest(".divAdd") ?? parent.parentElement;
+            if (!(parent instanceof Element))
+              throw elementNotFound(
+                parent,
+                `Validation of parent parent instance`,
                 "Element"
               );
             const radioGroupList = parent.querySelectorAll(
@@ -1078,106 +1086,174 @@ export async function validateForm(
             displayInvalidity(isValid);
           }
         }
-      }
-      arrValidity.push(isValid);
-      if (isValid) {
-        if (entry instanceof HTMLInputElement && entry.type === "checkbox")
-          validEntries.push([
-            entry.name || entry.id || entry.dataset.title || entry.tagName,
-            `${entry.checked}`,
-          ]);
-        else if (entry instanceof HTMLInputElement && entry.type === "radio") {
-          try {
-            const parent = entry.parentElement;
-            if (!(parent instanceof Element))
-              throw elementNotFound(
-                parent,
-                `Validation of parent instance`,
-                "Element"
-              );
-            const radioGroupList = parent.querySelectorAll(
-              'input[type="radio"]'
-            );
-            if (radioGroupList.length === 0)
-              throw new Error(`Error populating list of radios from parent`);
-            const opChecked = Array.from(radioGroupList).filter(
-              radio =>
-                radio instanceof HTMLInputElement &&
-                radio.type === "radio" &&
-                radio.checked
-            )[0];
-            if (
-              !(
-                opChecked instanceof HTMLInputElement &&
-                opChecked.type === "radio"
-              )
-            ) {
-              validEntries.push([opChecked.id || opChecked.tagName, `false`]);
-              throw new Error(`Failed to find checked radio in group`);
-            }
-            if (
-              opChecked.id.endsWith("No") ||
-              opChecked.id.endsWith("-no") ||
-              opChecked.id.endsWith("-No") ||
-              opChecked.classList.contains("radNo")
-            )
-              validEntries.push([
-                opChecked.name ||
-                  opChecked.id ||
-                  opChecked.dataset.title ||
-                  opChecked.tagName,
-                `false`,
-              ]);
-            else
-              validEntries.push([
-                opChecked.name ||
-                  opChecked.id ||
-                  opChecked.dataset.title ||
-                  opChecked.tagName,
-                `true`,
-              ]);
-          } catch (e) {
-            console.error(
-              `Error executing procedure for pushing radio check:\n${
-                (e as Error).message
-              }`
-            );
-          }
-        } else if (
-          entry instanceof HTMLInputElement &&
-          entry.type === "file" &&
-          entry.files
-        ) {
-          validEntries.push([
-            entry.name || entry.id || entry.dataset.title || entry.tagName,
-            entry.files[0],
-          ]);
-        } else if (entry instanceof HTMLCanvasElement) {
-          (async (): Promise<File> => {
-            return new Promise((res, rej) => {
-              entry.toBlob(blob => {
-                if (blob) {
-                  res(
-                    new File(
-                      [blob],
-                      entry.dataset.title || entry.id || entry.tagName,
-                      { type: blob.type }
-                    )
-                  );
-                } else rej(new Error(`Failed to extract file.`));
-              });
-            });
-          })().then(file =>
+        arrValidity.push(isValid);
+        if (isValid) {
+          if (entry instanceof HTMLInputElement && entry.type === "checkbox")
             validEntries.push([
-              entry.dataset.title || entry.id || entry.tagName,
-              file,
-            ])
-          );
-        } else
-          validEntries.push([
-            entry.name || entry.id || entry.dataset.title || entry.tagName,
-            entry.value,
-          ]);
+              entry.name || entry.id || entry.dataset.title || entry.tagName,
+              `${entry.checked}`,
+            ]);
+          else if (
+            entry instanceof HTMLInputElement &&
+            entry.type === "radio"
+          ) {
+            try {
+              let parent = entry.parentElement;
+              if (!(parent instanceof Element))
+                throw elementNotFound(
+                  parent,
+                  `Validation of parent instance`,
+                  "Element"
+                );
+              if (parent.querySelectorAll('input[type="radio"]').length < 2)
+                parent = parent.closest(".divAdd") ?? parent.parentElement;
+              if (!(parent instanceof Element))
+                throw elementNotFound(
+                  parent,
+                  `Validation of parent parent instance`,
+                  "Element"
+                );
+              const radioGroupList = parent.querySelectorAll(
+                'input[type="radio"]'
+              );
+              if (radioGroupList.length === 0)
+                throw new Error(`Error populating list of radios from parent`);
+              if (
+                radioGroupList.length === 1 &&
+                radioGroupList[0] instanceof HTMLInputElement &&
+                radioGroupList[0].type === "radio"
+              ) {
+                radioGroupList[0].checked
+                  ? validEntries.push([
+                      radioGroupList[0].name ||
+                        radioGroupList[0].id ||
+                        radioGroupList[0].dataset.title ||
+                        radioGroupList[0].tagName,
+                      `true`,
+                    ])
+                  : validEntries.push([
+                      radioGroupList[0].name ||
+                        radioGroupList[0].id ||
+                        radioGroupList[0].dataset.title ||
+                        radioGroupList[0].tagName,
+                      `true`,
+                    ]);
+              } else {
+                const opChecked = Array.from(radioGroupList).filter(
+                  radio =>
+                    radio instanceof HTMLInputElement &&
+                    radio.type === "radio" &&
+                    radio.checked
+                )[0];
+                const otherOpsChecked = Array.from(radioGroupList)
+                  .filter(
+                    radio =>
+                      radio instanceof HTMLInputElement &&
+                      radio.type === "radio" &&
+                      radio.checked
+                  )
+                  .slice(1);
+                if (
+                  !(
+                    opChecked instanceof HTMLInputElement &&
+                    opChecked.type === "radio"
+                  )
+                ) {
+                  validEntries.push([
+                    opChecked.id || opChecked.tagName,
+                    `false`,
+                  ]);
+                  throw new Error(`Failed to find checked radio in group`);
+                }
+                if (radioGroupList.length === 2) {
+                  if (
+                    opChecked.id.endsWith("No") ||
+                    opChecked.id.endsWith("-no") ||
+                    opChecked.id.endsWith("-No") ||
+                    opChecked.classList.contains("radNo")
+                  )
+                    validEntries.push([
+                      opChecked.name ||
+                        opChecked.id ||
+                        opChecked.dataset.title ||
+                        opChecked.tagName,
+                      `false`,
+                    ]);
+                  else
+                    validEntries.push([
+                      opChecked.name ||
+                        opChecked.id ||
+                        opChecked.dataset.title ||
+                        opChecked.tagName,
+                      `true`,
+                    ]);
+                } else if (radioGroupList.length > 2) {
+                  validEntries.push([
+                    opChecked.name ||
+                      opChecked.id ||
+                      opChecked.dataset.title ||
+                      opChecked.tagName,
+                    opChecked.dataset.value || `true`,
+                  ]);
+                  for (const otherOps of otherOpsChecked) {
+                    otherOps instanceof HTMLInputElement &&
+                      otherOps.type === "radio" &&
+                      validEntries.push([
+                        otherOps.name ||
+                          otherOps.id ||
+                          otherOps.dataset.title ||
+                          otherOps.tagName,
+                        `false`,
+                      ]);
+                  }
+                }
+              }
+            } catch (e) {
+              console.error(
+                `Error executing procedure for pushing radio check:\n${
+                  (e as Error).message
+                }`
+              );
+            }
+          } else if (
+            entry instanceof HTMLInputElement &&
+            entry.type === "file" &&
+            entry.files
+          ) {
+            validEntries.push([
+              entry.name || entry.id || entry.dataset.title || entry.tagName,
+              entry.files[0],
+            ]);
+          } else if (entry instanceof HTMLCanvasElement) {
+            (async (): Promise<File> => {
+              return new Promise((res, rej) => {
+                entry.toBlob(blob => {
+                  if (blob) {
+                    res(
+                      new File(
+                        [blob],
+                        entry.name ||
+                          entry.id ||
+                          entry.dataset.title ||
+                          entry.tagName,
+                        { type: blob.type }
+                      )
+                    );
+                  } else rej(new Error(`Failed to extract file.`));
+                });
+              });
+            })().then(file =>
+              validEntries.push([
+                entry.name || entry.id || entry.dataset.title || entry.tagName,
+                file,
+              ])
+            );
+          } else
+            validEntries.push([
+              entry.name || entry.id || entry.dataset.title || entry.tagName,
+              entry.value,
+            ]);
+        }
       }
     });
   } else
