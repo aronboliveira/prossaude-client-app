@@ -30,6 +30,52 @@
     accent-color: rgba(0, 128, 0, 0.836);
   }
 
+  $primary-alert: darkgoldenrod;
+  $secondary-alert: firebrick;
+  $tert-alert: orangered;
+  $max-alert: red;
+  [type="checkbox"],
+  [type="radio"] {
+    &#HASPreId,
+    &#fumoLeveId {
+      accent-color: $primary-alert;
+    }
+    &#HASStg1Id,
+    &#fumoModId {
+      accent-color: $secondary-alert;
+    }
+    &#HASStg2Id,
+    &#fumoAltoId {
+      accent-color: $tert-alert;
+    }
+    &#HASStg3Id {
+      accent-color: $max-alert;
+    }
+    &.form-check-input {
+      &:checked {
+        &#HASPreId,
+        &#fumoLeveId {
+          background-color: $primary-alert;
+          border-color: $primary-alert;
+        }
+        &#HASStg1Id,
+        &#fumoModId {
+          background-color: $secondary-alert;
+          background-color: $secondary-alert;
+        }
+        &#HASStg2Id,
+        &#fumoAltoId {
+          background-color: $tert-alert;
+          background-color: $tert-alert;
+        }
+        &#HASStg3Id {
+          background-color: $max-alert;
+          background-color: $max-alert;
+        }
+      }
+    }
+  }
+
   .antMedBlock,
   .antMedContainer,
   .antMedDiv,
