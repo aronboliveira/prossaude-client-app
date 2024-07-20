@@ -16,6 +16,7 @@ $swhite: #ffffffcc;
   --mediumgrey: #adad93bd;
   --sbthumbdef: auto;
   --sbtrackdef: auto;
+  --formblue: #0d6efd;
 }
 
 %empPhDate {
@@ -1991,18 +1992,20 @@ td,
   filter: drop-shadow(0.1rem 0.1rem 0.05rem rgba(167, 164, 164, 0.829));
   &[id*="yes"],
   &[id*="Yes"]{
-    accent-color: green;
-    &.form-check-input:checked {
-      background-color: green;
-      border-color: green;
+    accent-color: firebrick;
+    &.form-check-input {
+      &:checked {
+        background-color: firebrick;
+        border-color: firebrick;
+      }
     }
   }
   &[id*="no"],
   &[id*="No"]{
-    accent-color: red;
+    accent-color: var(--formblue);
     &.form-check-input:checked {
-      background-color: red;
-      border-color: red;
+      background-color: var(--formblue);
+      border-color: var(--formblue);
     }
   }
 }
@@ -2012,18 +2015,18 @@ td,
   filter: drop-shadow(0.1rem 0.1rem 0.05rem rgba(167, 164, 164, 0.829));
   &[id*="yes"],
   &[id*="Yes"]{
-    accent-color: green;
+    accent-color: firebrick;
     &.form-check-input:checked {
-      background-color: green;
-      border-color: green;
+      background-color: firebrick;
+      border-color: firebrick;
     }
   }
   &[id*="no"],
   &[id*="No"]{
-    accent-color: red;
+    accent-color: var(--formblue);
     &.form-check-input:checked {
-      background-color: red;
-      border-color: red;
+      background-color: var(--formblue);
+      border-color: var(--formblue);
     }
     &:not(.form-check-input) {
       filter: drop-shadow(0.15rem 0.1rem 0.05rem rgba(167, 164, 164, 0.505));
