@@ -11,6 +11,7 @@ import { useRouter } from "next/router";
 import { AppRootContext } from "./_app";
 import { targEl } from "@/lib/global/declarations/types";
 import UserProfilePanel from "../../components/user/UserProfilePanel";
+import { parseNotNaN } from "@/lib/global/gModel";
 
 let baseRootUser: targEl;
 
@@ -44,6 +45,189 @@ export default function BasePage(): JSX.Element {
     equalizeParagraphs(Array.from(document.querySelectorAll("small")));
     syncAriaStates(document.querySelectorAll("*"));
     expandContent(document.getElementById("rootUserInfo"));
+    const handleBgResize = (): void => {
+      try {
+        const bgDiv = document.getElementById("bgDiv");
+        if (!(bgDiv instanceof HTMLElement)) {
+          console.warn(`Failed to fetch Background Div`);
+          return;
+        }
+        const mainArticle =
+          document.querySelector(".main-article") ||
+          document.querySelector("nav");
+        if (!(mainArticle instanceof HTMLElement)) {
+          console.warn(`Failed to fetch MainArticle`);
+          return;
+        }
+        const mainContainer =
+          document.querySelector(".main-container") ||
+          document.querySelector("main");
+        if (!(mainContainer instanceof HTMLElement)) {
+          console.warn(`Failed to fetch Main Container`);
+          return;
+        }
+        const cardsSect = document.getElementById("cardsSect");
+        if (!(cardsSect instanceof HTMLElement)) {
+          console.warn(`Failed to fetch Cards Section`);
+          return;
+        }
+        const panelBtn = document.getElementById("panelBtn");
+        const panelSect = document.getElementById("panelSect");
+        let factor = 1,
+          contFactor = 0.9,
+          numRows = 1,
+          factorRows = 0.5;
+        const rows = getComputedStyle(cardsSect).gridTemplateRows;
+        if (/repeat/g.test(rows))
+          numRows =
+            parseNotNaN(
+              rows
+                .slice(0, rows.indexOf(","))
+                .replace("repeat(", "")
+                .replace(/[^0-9]g/, "")
+            ) || 2;
+        else numRows = Array.from(rows.matchAll(/\s/g)).length + 1 || 1;
+        if (panelBtn instanceof HTMLElement) panelBtn.style.width = "23.2rem";
+        if (cardsSect instanceof HTMLElement) cardsSect.style.paddingTop = "0";
+        if (panelSect instanceof HTMLElement) {
+          panelSect.style.paddingTop = "0";
+        }
+        if (innerWidth > 520 && innerWidth <= 720) numRows /= 2;
+        if (innerWidth <= 1025 && numRows > 1) {
+          factor = 1.075 * numRows * factorRows;
+          contFactor = 1 * numRows * factorRows;
+          if (panelBtn instanceof HTMLElement) panelBtn.style.width = "23.2rem";
+        }
+        if (
+          innerWidth < 930 &&
+          numRows > 1 &&
+          panelSect instanceof HTMLElement
+        ) {
+          panelSect.style.paddingTop = "1rem";
+          panelSect.style.paddingBottom = "0";
+        }
+        if (innerWidth <= 850 && numRows > 1) {
+          factor = 1.013 * numRows * factorRows;
+          contFactor = 0.94 * numRows * factorRows;
+          if (cardsSect instanceof HTMLElement)
+            cardsSect.style.paddingTop = "2rem";
+          if (panelSect instanceof HTMLElement) {
+            panelSect.style.paddingTop = "4rem";
+            panelSect.style.paddingBottom = "0";
+          }
+        }
+        if (numRows >= 4) {
+          if (innerWidth > 520 && innerWidth <= 750) numRows /= 2;
+          if (innerWidth <= 520) factorRows = 0.25;
+        }
+        if (innerWidth <= 750 && numRows > 1) {
+          factor = 1.01 * numRows * factorRows;
+          contFactor = 0.93 * numRows * factorRows;
+          if (panelSect instanceof HTMLElement) {
+            panelSect.style.paddingTop = "1rem";
+            panelSect.style.paddingBottom = "3rem";
+          }
+        }
+        if (innerWidth <= 675 && numRows > 1) {
+          if (panelSect instanceof HTMLElement) {
+            panelSect.style.paddingTop = "2rem";
+            panelSect.style.paddingBottom = "3rem";
+          }
+        }
+        if (innerWidth <= 600 && numRows > 1) {
+          factor = 1.05 * numRows * factorRows;
+          contFactor = 0.93 * numRows * factorRows;
+        }
+        if (innerWidth <= 592 && numRows > 1) {
+          factor = 1.07 * numRows * factorRows;
+          contFactor = 0.95 * numRows * factorRows;
+          if (panelSect instanceof HTMLElement) {
+            panelSect.style.paddingTop = "0";
+            panelSect.style.paddingBottom = "0";
+          }
+        }
+        if (innerWidth <= 520 && numRows > 1) {
+          factor = 1.115 * numRows * factorRows;
+          contFactor = 1.045 * numRows * factorRows;
+          if (panelSect instanceof HTMLElement) {
+            panelSect.style.paddingTop = "0";
+            panelSect.style.paddingBottom = "6rem";
+            panelSect.style.marginTop = "0";
+            if (panelBtn instanceof HTMLElement) panelBtn.style.width = "75vw";
+          }
+        }
+        if (innerWidth <= 520 && numRows > 1) {
+          factor = 1.115 * numRows * factorRows;
+          contFactor = 1.045 * numRows * factorRows;
+          if (panelSect instanceof HTMLElement) {
+            panelSect.style.paddingTop = "0";
+            panelSect.style.paddingBottom = "6rem";
+            panelSect.style.marginTop = "0";
+            if (panelBtn instanceof HTMLElement) panelBtn.style.width = "75vw";
+          }
+        }
+        if (innerWidth <= 448 && numRows > 1) {
+          factor = 1.132 * numRows * factorRows;
+          contFactor = 1.045 * numRows * factorRows;
+          if (panelSect instanceof HTMLElement) {
+            panelSect.style.paddingTop = "0";
+            panelSect.style.paddingBottom = "6rem";
+            panelSect.style.marginTop = "0";
+            if (panelBtn instanceof HTMLElement) panelBtn.style.width = "75vw";
+          }
+        }
+        if (innerWidth <= 415 && numRows > 1) {
+          factor = 1.095 * numRows * factorRows;
+          contFactor = 1.01 * numRows * factorRows;
+          if (panelSect instanceof HTMLElement) {
+            panelSect.style.paddingTop = "0";
+            panelSect.style.paddingBottom = "6rem";
+            panelSect.style.marginTop = "0";
+            if (panelBtn instanceof HTMLElement) panelBtn.style.width = "75vw";
+          }
+        }
+        if (innerWidth <= 325 && numRows > 1) {
+          factor = 1.135 * numRows * factorRows;
+          contFactor = 1.05 * numRows * factorRows;
+          if (panelSect instanceof HTMLElement) {
+            panelSect.style.paddingTop = "0";
+            panelSect.style.paddingBottom = "6rem";
+            panelSect.style.marginTop = "0";
+            if (cardsSect instanceof HTMLElement)
+              cardsSect.style.paddingTop = "5rem";
+            if (panelBtn instanceof HTMLElement) panelBtn.style.width = "75vw";
+          }
+        }
+        bgDiv.style.height = `${
+          parseNotNaN(
+            getComputedStyle(mainArticle).height.replace("px", "").trim()
+          ) * factor || 1.856
+        }px`;
+        bgDiv.style.minHeight = `${
+          parseNotNaN(
+            getComputedStyle(mainArticle).height.replace("px", "").trim()
+          ) * factor || 1.856
+        }px`;
+        if (innerWidth <= 592) bgDiv.style.minHeight = `1212.15px`;
+        mainContainer.style.height = `${
+          parseNotNaN(
+            getComputedStyle(mainArticle).height.replace("px", "").trim()
+          ) * contFactor
+        }px`;
+        mainContainer.style.minHeight = `${
+          parseNotNaN(
+            getComputedStyle(mainArticle).height.replace("px", "").trim()
+          ) * contFactor
+        }px`;
+      } catch (e) {
+        console.error(
+          `Error executing handleBgResize:\n${(e as Error).message}`
+        );
+      }
+    };
+    handleBgResize();
+    addEventListener("resize", handleBgResize);
+    return () => removeEventListener("resize", handleBgResize);
   }, []);
   return (
     <ErrorBoundary FallbackComponent={() => <div>Erro!</div>}>

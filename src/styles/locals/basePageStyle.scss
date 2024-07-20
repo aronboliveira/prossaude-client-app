@@ -59,6 +59,7 @@
     &:has(> #rootUserInfo) {
       background-color: #529b85c6;
       border-color: #9cb6a6c6;
+      margin-right: 2.5vw;
     }
     #nameLogin {
       color: #ece8e8;
@@ -152,7 +153,7 @@
     color: #ece8e8e4;
     font-size: 1.5rem;
     font-weight: bolder;
-    margin-left: 1rem;
+    margin-left: 0.2vw;
     + * {
       max-width: 12rem;
       margin-right: 0.2rem;
@@ -243,7 +244,7 @@
   }
 }
 
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 1025px) {
   .baseBody {
     div {
       &:has(#agAnchoredBtn) {
@@ -295,6 +296,9 @@
       justify-content: center;
       max-width: 98.5%;
     }
+    #panelBtn {
+      min-width: 20vw;
+    }
   }
 }
 
@@ -320,16 +324,10 @@
     .main-article {
       min-height: 85rem;
       height: 85rem;
-      overflow: auto;
     }
     .main-container {
       min-height: 85rem;
       height: 85rem;
-      overflow: auto;
-    }
-    #cardsSect {
-      min-height: 70rem;
-      height: 70rem;
     }
     #bgDiv {
       min-height: 85rem;
@@ -367,30 +365,6 @@
   }
 }
 
-@media screen and (max-width: 750px) {
-  .baseBody {
-    .main-article {
-      min-height: 69.6rem;
-      height: 69.6rem;
-    }
-    .main-container {
-      min-height: 69.6rem;
-      height: 69.6rem;
-    }
-    #bgDiv {
-      min-height: 75rem;
-      height: 75rem;
-    }
-    #cardsSect {
-      min-height: 63rem;
-      height: 63rem;
-    }
-    #panelBtn {
-      transform: scale(1.1) translate(-1vw, 0);
-    }
-  }
-}
-
 @media screen and (max-width: 750px) and (min-width: 721) {
   .baseBody {
     #panelSect {
@@ -414,6 +388,10 @@
     div {
       &:has(#agAnchoredBtn):not(#bgDiv) {
         max-width: 90vw !important;
+      }
+      #bgDiv {
+        min-height: 70.7rem;
+        height: 70.7rem;
       }
     }
 
@@ -457,8 +435,15 @@
     }
 
     #cardsSect {
-      min-height: 132vh;
-      height: 132vh;
+      min-height: 56rem;
+      height: 56em;
+    }
+
+    #panelSect {
+      &:has(button) {
+        padding-top: 0rem;
+        padding-bottom: 0rem;
+      }
     }
   }
 }
@@ -474,37 +459,126 @@
   }
 }
 
-@media screen and (max-width: 591px) {
+@media (max-width: 615px) {
   .baseBody {
+    div {
+      #bgDiv {
+        min-height: max-content;
+        height: 70.7rem;
+      }
+    }
     .main-article {
-      min-height: 74rem;
+      min-height: max-content;
       height: 74rem;
     }
     .main-container {
-      min-height: 74rem;
+      min-height: max-content;
       height: 74rem;
     }
-    #bgDiv {
-      min-height: 82rem;
-      height: 82rem;
-    }
     #cardsSect {
-      min-height: 55rem;
-      height: 55rem;
+      min-height: max-content;
+      height: 58rem;
+    }
+  }
+}
+
+@media screen and (max-width: 592px) {
+  .baseBody {
+    #panelSect {
+      &:has(button) {
+        margin-top: 2rem;
+      }
     }
   }
 }
 
 @media screen and (min-width: 520px) and (max-width: 850px) {
   .baseBody {
-    #panelSect {
-      padding-top: 0;
-      padding-bottom: 6vh;
+    .main-article {
+      min-height: 70rem;
+      height: 70rem;
+    }
+    .main-container {
+      min-height: 67rem;
+      height: 67rem;
+    }
+    #bgDiv {
+      min-height: 70rem;
+      height: 70rem;
     }
   }
 }
 
-@media screen and (min-width: 520px) and (max-width: 620px) {
+@media screen and (max-width: 750px) {
+  .baseBody {
+    .main-article {
+      min-height: 71.5rem;
+      height: 71.5rem;
+    }
+    .main-container {
+      min-height: 66.5rem;
+      height: 66.5rem;
+    }
+    #bgDiv {
+      min-height: 75rem;
+      height: 75rem;
+    }
+    #cardsSect {
+      min-height: 63rem;
+      height: 63rem;
+    }
+    #panelBtn {
+      transform: scale(1.1) translate(-1vw, 0);
+    }
+  }
+}
+
+@media screen and (max-width: 720px) {
+  .baseBody {
+    .main-article {
+      min-height: 71.5rem;
+      height: 71.5rem;
+    }
+    .main-container {
+      min-height: 66.5rem;
+      height: 66.5rem;
+    }
+    #bgDiv {
+      min-height: 75rem;
+      height: 75rem;
+    }
+    #cardsSect {
+      min-height: 57rem;
+      height: 57rem;
+    }
+    #panelBtn {
+      transform: scale(1.1) translate(-1vw, 0);
+    }
+  }
+}
+
+@media screen and (max-width: 720px) {
+  .baseBody {
+    .main-article {
+      min-height: 71.5rem;
+      height: 71.5rem;
+    }
+    .main-container {
+      min-height: 65.1rem;
+      height: 65.1rem;
+    }
+    #bgDiv {
+      min-height: 75rem;
+      height: 75rem;
+    }
+    #cardsSect {
+      min-height: 58rem;
+      height: 58rem;
+    }
+    #panelBtn {
+      transform: scale(1.1) translate(-1vw, 0);
+    }
+  }
 }
 
 @media (max-width: 520px) {
