@@ -1,7 +1,8 @@
 import { RadioPairPros } from "@/lib/global/declarations/interfaces";
+import { nullishSpan } from "@/lib/global/declarations/types";
 import { textTransformPascal } from "@/lib/global/gModel";
 import { opRadioHandler } from "@/lib/global/handlers/gHandlers";
-import { useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 export default function RadioPair({
   name,
@@ -9,8 +10,18 @@ export default function RadioPair({
   ctx = false,
   add = "",
   altPh = "",
+  required = false,
 }: RadioPairPros): JSX.Element {
   const [shouldShowAdd, setAdd] = useState(false);
+  const mainRef = useRef<nullishSpan>(null);
+  useEffect(() => {
+    if (required && mainRef.current instanceof HTMLElement) {
+      for (const radio of mainRef.current.querySelectorAll(
+        'input[type="radio"]'
+      ))
+        if (radio instanceof HTMLInputElement) radio.dataset.required = "true";
+    }
+  }, []);
   let camelName = /_/g.test(name)
     ? name
         .split("_")
@@ -39,6 +50,7 @@ export default function RadioPair({
         role="group"
         className="spanMain spanMainFsAnamGRad noInvert"
         id={`${camelName}Span`}
+        ref={mainRef}
       >
         <strong id={`${camelName}Title`}>{fullName}</strong>
         <span

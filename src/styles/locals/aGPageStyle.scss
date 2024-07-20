@@ -114,6 +114,11 @@
     border-radius: 0.5rem;
     min-width: 20vw;
     overflow: auto;
+    input {
+      &[type="checkbox"] {
+        accent-color: mintcream;
+      }
+    }
     &.divAntFam {
       padding: 2%;
       border: 0.125rem groove #49505726;
@@ -147,11 +152,6 @@
     &#divAddHep {
       min-width: 80vw;
       padding-bottom: 1.5rem;
-    }
-    input {
-      &[type="checkbox"] {
-        accent-color: mintcream;
-      }
     }
   }
 

@@ -114,10 +114,23 @@ export default function AGPage(): JSX.Element {
         divAdd.style.display = "grid";
         divAdd.style.opacity = "0.8";
         divAdd.style.minWidth = "70vw";
+        for (const radio of [
+          ...divAdd.querySelectorAll('input[type="radio"'),
+          ...divAdd.querySelectorAll('input[type="number"]'),
+          ...divAdd.querySelectorAll('input[type="date"]'),
+        ])
+          if (radio instanceof HTMLInputElement)
+            radio.dataset.required = "true";
       } else {
         divAdd.style.display = "none";
         divAdd.style.opacity = "0";
         divAdd.style.minWidth = "0";
+        for (const radio of [
+          ...divAdd.querySelectorAll('input[type="radio"'),
+          ...divAdd.querySelectorAll('input[type="number"]'),
+          ...divAdd.querySelectorAll('input[type="date"]'),
+        ])
+          if (radio instanceof HTMLInputElement) delete radio.dataset.required;
       }
     } catch (e) {
       console.error(
@@ -964,11 +977,16 @@ export default function AGPage(): JSX.Element {
                   className="flexDiv flexColumn fsAGRadDiv"
                   role="group"
                 >
-                  <RadioPair name="febr_r" fullName="Febre Reumática" />
+                  <RadioPair
+                    name="febr_r"
+                    fullName="Febre Reumática"
+                    required={true}
+                  />
                   <RadioPair
                     name="hep"
                     fullName="Hepatite ou Outra(s) Doença(s) Hepática(s)"
                     ctx={true}
+                    required={true}
                   />
                   <div className="divAdd gridTwoCol" id="divAddHep" role="list">
                     <span role="listitem" className="cbDoencaSubt">
@@ -1072,7 +1090,12 @@ export default function AGPage(): JSX.Element {
                       Induzida por Toxinas, Medicamentos ou Outra(s) Droga(s)
                     </span>
                   </div>
-                  <RadioPair name="diab" fullName="Diabetes" ctx={true} />
+                  <RadioPair
+                    name="diab"
+                    fullName="Diabetes"
+                    ctx={true}
+                    required={true}
+                  />
                   <div
                     className="divAdd gridTwoCol"
                     id="divAddDiab"
@@ -1139,7 +1162,12 @@ export default function AGPage(): JSX.Element {
                       MODY
                     </span>
                   </div>
-                  <RadioPair name="hiv" fullName="Portador de HIV" ctx={true} />
+                  <RadioPair
+                    name="hiv"
+                    fullName="Portador de HIV"
+                    ctx={true}
+                    required={true}
+                  />
                   <div
                     className="divAdd gridTwoCol"
                     id="divAddHiv"
@@ -1207,11 +1235,16 @@ export default function AGPage(): JSX.Element {
                       />
                     </div>
                   </div>
-                  <RadioPair name="t_sang" fullName="Transfusão de Sangue" />
+                  <RadioPair
+                    name="t_sang"
+                    fullName="Transfusão de Sangue"
+                    required={true}
+                  />
                   <RadioPair
                     name="pr_alta"
                     fullName="Hipertensão Arterial Sistêmica"
                     ctx={true}
+                    required={true}
                   />
                   <div
                     className="divAdd gridTwoCol"
@@ -1385,31 +1418,37 @@ export default function AGPage(): JSX.Element {
                     name="pb_card"
                     fullName="Problema(s) Cardíaco(s)"
                     add="ta"
+                    required={true}
                   />
                   <RadioPair
                     name="pb_ren"
                     fullName="Problema(s) Renal(is)"
                     add="ta"
+                    required={true}
                   />
                   <RadioPair
                     name="pb_gast"
                     fullName="Problema(s) Gástrico(s)"
                     add="ta"
+                    required={true}
                   />
                   <RadioPair
                     name="pb_resp"
                     fullName="Problema(s) Respiratório(s)"
                     add="ta"
+                    required={true}
                   />
                   <RadioPair
                     name="pb_alerg"
                     fullName="Problema(s) Alérgico(s)"
                     add="ta"
+                    required={true}
                   />
                   <RadioPair
                     name="pb_art_reum"
                     fullName="Problema(s) Articular(es) ou Reumáticos"
                     add="ta"
+                    required={true}
                   />
                 </div>
                 <div
@@ -1422,14 +1461,21 @@ export default function AGPage(): JSX.Element {
                     fullName="Alguma Outra Doença Sistêmica"
                     add="ta"
                     altPh="Escreva aqui sobre as Doenças Sistêmicas específicas"
+                    required={true}
                   />
                   <RadioPair
                     name="pb_alc"
                     fullName="Uso de Bebidas Alcoólicas"
                     add="ta"
                     altPh="Escreva aqui sobre os problemas com uso de Bebidas alcoólicas"
+                    required={true}
                   />
-                  <RadioPair name="fumo" fullName="É fumante" ctx={true} />
+                  <RadioPair
+                    name="fumo"
+                    fullName="É fumante"
+                    ctx={true}
+                    required={true}
+                  />
                   <div
                     className="divAdd gridTwoCol switchedDiv"
                     id="divAddFumo"
@@ -1556,6 +1602,7 @@ export default function AGPage(): JSX.Element {
                     fullName="Uso de Outras Drogas"
                     add="ta"
                     altPh="Escreva aqui sobre os problemas com uso de drogas"
+                    required={true}
                   />
                   <RadioPair name="grv" fullName="Gravidez" ctx={true} />
                   <div className="divMain divAdd" id="divAddGrv" role="group">
@@ -1581,6 +1628,7 @@ export default function AGPage(): JSX.Element {
                     fullName="Uso de Anticoncepcional(is)"
                     add="ta"
                     altPh="Escreva aqui sobre o uso de Anticoncepcionais"
+                    required={true}
                   />
                 </div>
                 <div
@@ -1593,33 +1641,39 @@ export default function AGPage(): JSX.Element {
                     fullName="Operação ou Extração de Dente(s)"
                     add="ta"
                     altPh="Qual ou quais Dente(s) Operado(s) e/ou Extraído(s)?"
+                    required={true}
                   />
                   <RadioPair
                     name="pb_cic"
                     fullName="Problema(s) com Cicatrização"
                     add="ta"
+                    required={true}
                   />
                   <RadioPair
                     name="pb_anst"
                     fullName="Problema(s) com Anestesia(s)"
                     add="ta"
+                    required={true}
                   />
                   <RadioPair
                     name="pb_hem"
                     fullName="Problema(s) com Hemorragia"
                     add="ta"
+                    required={true}
                   />
                   <RadioPair
                     name="pb_intrn"
                     fullName="Internação Recente"
                     add="ta"
                     altPh="Tempo aproximado de Internação"
+                    required={true}
                   />
                   <RadioPair
                     name="pb_med"
                     fullName="Uso Atual de Medicação Controlada"
                     add="ta"
                     altPh="Qual ou quais Medicações Controladas?"
+                    required={true}
                   />
                 </div>
               </section>

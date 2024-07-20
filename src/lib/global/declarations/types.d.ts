@@ -69,6 +69,7 @@ export type nullishBtn = HTMLButtonElement | null;
 export type nullishTab = HTMLTableElement | null;
 export type nullishAnchor = HTMLAnchorElement | null;
 export type nullishDiv = HTMLDivElement | null;
+export type nullishSpan = HTMLSpanElement | null;
 export type nullishFs = HTMLFieldSetElement | null;
 export type nullishLab = HTMLLabelElement | null;
 export type nullishArtc = HTMLElement & {

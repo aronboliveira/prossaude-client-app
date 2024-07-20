@@ -55,6 +55,7 @@ export interface RadioPairPros extends ChecksProps {
   ctx?: boolean;
   add?: "div" | "ta" | "";
   altPh?: string;
+  required?: boolean;
 }
 export interface DivAntFamProps extends ChecksProps {
   ta?: boolean;

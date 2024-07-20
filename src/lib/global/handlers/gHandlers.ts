@@ -1001,6 +1001,17 @@ export async function validateForm(
             if (radioGroupList.length === 0)
               throw new Error(`Error populating list of radios from parent`);
             if (
+              Array.from(radioGroupList)
+                .filter(
+                  radio =>
+                    radio instanceof HTMLInputElement && radio.type === "radio"
+                )
+                .some(
+                  radio =>
+                    radio instanceof HTMLInputElement &&
+                    radio.type === "radio" &&
+                    (radio.dataset.required === "true" || radio.required)
+                ) &&
               !Array.from(radioGroupList)
                 .filter(
                   radio =>
@@ -1140,7 +1151,7 @@ export async function validateForm(
                         radioGroupList[0].id ||
                         radioGroupList[0].dataset.title ||
                         radioGroupList[0].tagName,
-                      `true`,
+                      `false`,
                     ]);
               } else {
                 const opChecked = Array.from(radioGroupList).filter(
@@ -1149,14 +1160,6 @@ export async function validateForm(
                     radio.type === "radio" &&
                     radio.checked
                 )[0];
-                // const otherOpsChecked = Array.from(radioGroupList)
-                //   .filter(
-                //     radio =>
-                //       radio instanceof HTMLInputElement &&
-                //       radio.type === "radio" &&
-                //       radio.checked
-                //   )
-                //   .slice(1);
                 if (
                   !(
                     opChecked instanceof HTMLInputElement &&
@@ -1165,40 +1168,41 @@ export async function validateForm(
                 ) {
                   validEntries.push([
                     opChecked.id || opChecked.tagName,
-                    `false`,
+                    `undefined`,
                   ]);
                   throw new Error(`Failed to find checked radio in group`);
-                }
-                if (radioGroupList.length === 2) {
-                  if (
-                    opChecked.id.endsWith("No") ||
-                    opChecked.id.endsWith("-no") ||
-                    opChecked.id.endsWith("-No") ||
-                    opChecked.classList.contains("radNo")
-                  )
+                } else {
+                  if (radioGroupList.length === 2) {
+                    if (
+                      opChecked.id.endsWith("No") ||
+                      opChecked.id.endsWith("-no") ||
+                      opChecked.id.endsWith("-No") ||
+                      opChecked.classList.contains("radNo")
+                    )
+                      validEntries.push([
+                        opChecked.name ||
+                          opChecked.id ||
+                          opChecked.dataset.title ||
+                          opChecked.tagName,
+                        `false`,
+                      ]);
+                    else
+                      validEntries.push([
+                        opChecked.name ||
+                          opChecked.id ||
+                          opChecked.dataset.title ||
+                          opChecked.tagName,
+                        `true`,
+                      ]);
+                  } else if (radioGroupList.length > 2) {
                     validEntries.push([
                       opChecked.name ||
                         opChecked.id ||
                         opChecked.dataset.title ||
                         opChecked.tagName,
-                      `false`,
+                      opChecked.dataset.value || `true`,
                     ]);
-                  else
-                    validEntries.push([
-                      opChecked.name ||
-                        opChecked.id ||
-                        opChecked.dataset.title ||
-                        opChecked.tagName,
-                      `true`,
-                    ]);
-                } else if (radioGroupList.length > 2) {
-                  validEntries.push([
-                    opChecked.name ||
-                      opChecked.id ||
-                      opChecked.dataset.title ||
-                      opChecked.tagName,
-                    opChecked.dataset.value || `true`,
-                  ]);
+                  }
                 }
               }
             } catch (e) {
