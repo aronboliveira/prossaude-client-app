@@ -148,6 +148,11 @@
       min-width: 80vw;
       padding-bottom: 1.5rem;
     }
+    input {
+      &[type="checkbox"] {
+        accent-color: mintcream;
+      }
+    }
   }
 
   .numNullId {
