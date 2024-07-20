@@ -404,7 +404,6 @@
 
   #hivCargId {
     height: 2.5rem;
-    padding-bottom: 1.5rem;
   }
 
   .sectionConfirm,
@@ -427,6 +426,9 @@
   .agBody {
     .addAntMed {
       margin-right: 0.5rem;
+    }
+    #labHivCarg {
+      margin-top: 0.5rem;
     }
   }
 }
