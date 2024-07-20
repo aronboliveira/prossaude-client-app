@@ -408,6 +408,11 @@
 
   #fsAnamGSpan8 {
     grid-row: 3 / 5;
+    transform: translateY(1rem);
+  }
+
+  #fsAnamGSpan9 {
+    transform: translateY(-3rem);
   }
 
   #fsAnamGSpan11 {
@@ -711,6 +716,10 @@ $baseNullableVw900InpWidth: 70vw;
       width: 85%;
       padding: 0;
       margin-left: 1%;
+    }
+
+    #fsAnamGSpan9 {
+      transform: translateY(-1rem);
     }
 
     #divFreqOdont {

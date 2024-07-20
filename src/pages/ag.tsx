@@ -11,10 +11,13 @@ import {
   watchLabels,
 } from "@/lib/global/gController";
 import { clearPhDates, equalizeFlexSibilings } from "@/lib/global/gStyleScript";
-import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
+import {
+  elementNotFound,
+  extLine,
+  inputNotFound,
+} from "@/lib/global/handlers/errorHandler";
 import {
   addListenerCPFCont,
-  addListenersCepElements,
   addListenersEmailInputs,
 } from "@/lib/locals/aGPage/aGController";
 import {
@@ -26,7 +29,7 @@ import {
   toggleConformDlg,
 } from "@/lib/global/handlers/gHandlers";
 import { addDblQuotes } from "@/lib/locals/aGPage/aGModel";
-import { formatTel } from "@/lib/global/gModel";
+import { formatCEP, formatTel } from "@/lib/global/gModel";
 import AntMedFs from "../../components/interactive/ag/AntMedFs";
 import AGTips from "../../components/interactive/ag/AGTips";
 import AGDeclaration from "../../components/interactive/ag/AGDeclaration";
@@ -45,6 +48,11 @@ import BtnConform from "../../components/interactive/def/BtnConform";
 import Declaration from "../../components/interactive/def/Declaration";
 import RadioPair from "../../components/interactive/ag/RadioPair";
 import DivAntFam from "../../components/interactive/ag/DivAntFam";
+import {
+  enableCEPBtn,
+  searchCEP,
+  searchCEPXML,
+} from "@/lib/locals/aGPage/aGHandlers";
 
 let agGenElement = undefined,
   agGenValue = "masculino",
@@ -58,10 +66,46 @@ export default function AGPage(): JSX.Element {
   const clearPhCb = useCallback(() => {
     clearPhDates(Array.from(document.querySelectorAll('input[type="date"]')));
   }, []);
+  const equalizeCepElements = (): void => {
+    try {
+      const cepInp = document.getElementById("cepId");
+      if (!(cepInp instanceof HTMLInputElement))
+        throw inputNotFound(
+          cepInp,
+          `validation of Input for CEP`,
+          extLine(new Error())
+        );
+      const cepBtn =
+        document.getElementById("autoCompCepBtn") ||
+        cepInp.nextElementSibling ||
+        cepInp.parentElement?.querySelector("button");
+      if (!(cepBtn instanceof HTMLInputElement))
+        throw elementNotFound(
+          cepBtn,
+          `Validation of Button for CEP`,
+          extLine(new Error())
+        );
+      cepBtn.style.width = `${
+        getComputedStyle(cepInp).width +
+        getComputedStyle(cepInp).paddingLeft +
+        getComputedStyle(cepInp).paddingRight
+      }px`;
+      cepBtn.style.maxWidth = `${
+        getComputedStyle(cepInp).width +
+        getComputedStyle(cepInp).paddingLeft +
+        getComputedStyle(cepInp).paddingRight
+      }px`;
+    } catch (e) {
+      console.error(
+        `Error executing equalizeCepElements:\n${(e as Error).message}`
+      );
+    }
+  };
   const handleResize = () => {
     equalizeFlexSibilings(document.querySelectorAll("[class*='flexTwin']"), [
       ["width", "px"],
     ]);
+    equalizeCepElements();
   };
   const handleDivAddShow = (targ: targEl) => {
     try {
@@ -183,7 +227,6 @@ export default function AGPage(): JSX.Element {
         );
     addListenerCPFCont();
     addListenersEmailInputs();
-    addListenersCepElements();
     deactTextInput(
       document.querySelectorAll('input[type="number"][id$=NumId]'),
       document.querySelectorAll("input[id$=NullId]")
@@ -198,6 +241,7 @@ export default function AGPage(): JSX.Element {
     document.querySelectorAll(".cbFam").forEach(handleDivAddShow);
     const UFid = document.getElementById("UFid");
     if (UFid instanceof HTMLInputElement) UFid.value = "RJ";
+    equalizeCepElements();
     return () => removeEventListener("resize", handleResize);
   }, []);
   return (
@@ -650,7 +694,20 @@ export default function AGPage(): JSX.Element {
                         data-maxlength="11"
                         data-pattern="^\d{2}[\s.-]?\d{3}[\s.-]?\d{2,3}$"
                         required
-                        onInput={ev => handleEventReq(ev.currentTarget)}
+                        onInput={ev => {
+                          const cepElementBtn =
+                            document.getElementById("autoCompCepBtn");
+                          formatCEP(ev.currentTarget);
+                          handleEventReq(ev.currentTarget);
+                          !enableCEPBtn(
+                            cepElementBtn,
+                            ev.currentTarget.value.length
+                          ) &&
+                            searchCEP(ev.currentTarget).then(
+                              res =>
+                                res === "fail" && searchCEPXML(ev.currentTarget)
+                            );
+                        }}
                       />
                       <button
                         type="button"
