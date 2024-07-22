@@ -1,15 +1,7 @@
 import { ErrorBoundary } from "react-error-boundary";
-import { useEffect, memo } from "react";
+import { memo } from "react";
 import { targEl } from "@/lib/global/declarations/types";
-import { getGlobalEls } from "@/lib/global/gController";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
-import {
-  handleCondtReq,
-  handleEventReq,
-  opRadioHandler,
-} from "@/lib/global/handlers/gHandlers";
-import { addDblQuotes } from "@/lib/locals/aGPage/aGModel";
-import { addEmailExtension, formatCPF, formatTel } from "@/lib/global/gModel";
 import AntMedFs from "../../components/interactive/ag/AntMedFs";
 import ConfirmLocId from "../../components/interactive/def/ConfirmLocId";
 import AgeElement from "../../components/interactive/edfis/defaulted/AgeElement";
@@ -36,7 +28,6 @@ import TelPrim from "../../components/interactive/ag/TelPrim";
 import TelSec from "../../components/interactive/ag/TelSec";
 import TelCodePrim from "../../components/interactive/ag/TelCodePrim";
 import TelCodeSec from "../../components/interactive/ag/TelCodeSec";
-import EmailPrim from "../../components/interactive/ag/Email";
 import Email from "../../components/interactive/ag/Email";
 import Nac from "../../components/interactive/ag/Nac";
 import City from "../../components/interactive/ag/City";
@@ -48,15 +39,21 @@ import LocComp from "../../components/interactive/ag/LocComp";
 import QxPrinc from "../../components/interactive/ag/QxPrinc";
 import HASDivAdd from "../../components/interactive/ag/Hist";
 import OtherD from "../../components/interactive/ag/OtherD";
+import FamCard from "../../components/interactive/ag/FamCard";
+import FamPulm from "../../components/interactive/ag/FamPulm";
+import RadioPairDoces from "../../components/interactive/ag/RadioPairDoces";
+import FamDislip from "../../components/interactive/ag/FamDislip";
+import FamDiab from "../../components/interactive/ag/FamDiab";
+import FamOnc from "../../components/interactive/ag/FamOnc";
 
-let agIsAutoCorrectOn = true;
 const MemoAge = memo(AgeElement);
 const MemoLoc = memo(ConfirmLocId);
 
+export const agProps = {
+  agIsAutoCorrectOn: true,
+};
+
 export default function AGPage(): JSX.Element {
-  useEffect(() => {
-    agIsAutoCorrectOn = getGlobalEls(agIsAutoCorrectOn, "num");
-  }, []);
   return (
     <ErrorBoundary FallbackComponent={() => <div>Erro!</div>}>
       <div className="pad1pc" id="bgDiv" role="document">
@@ -1238,14 +1235,7 @@ export default function AGPage(): JSX.Element {
                         id="divCheckDiabFam"
                         role="group"
                       >
-                        <input
-                          type="checkbox"
-                          name="fam_diab"
-                          id="antFamDiabId"
-                          className="cbFam"
-                          data-title="Antecedentes Familiares — Diabetes"
-                          onClick={ev => handleDivAddShow(ev.currentTarget)}
-                        />
+                        <FamDiab />
                       </div>
                       <label
                         htmlFor="antFamDiabId"
@@ -1339,14 +1329,7 @@ export default function AGPage(): JSX.Element {
                         id="divCheckDislipFam"
                         role="group"
                       >
-                        <input
-                          type="checkbox"
-                          name="fam_dislip"
-                          id="antFamDislipId"
-                          className="cbFam"
-                          data-title="Antecedentes Familiares — Dislipidemia"
-                          onClick={ev => handleDivAddShow(ev.currentTarget)}
-                        />
+                        <FamDislip />
                       </div>
                       <label
                         htmlFor="antFamDislipId"
@@ -1440,14 +1423,7 @@ export default function AGPage(): JSX.Element {
                         id="divCheckCardFam"
                         role="group"
                       >
-                        <input
-                          type="checkbox"
-                          name="fam_card"
-                          id="antFamCardId"
-                          className="cbFam"
-                          data-title="Antecedentes Familiares — Doença(s) Cardíaca(s)"
-                          onClick={ev => handleDivAddShow(ev.currentTarget)}
-                        />
+                        <FamCard />
                       </div>
                       <label
                         htmlFor="antFamCardId"
@@ -1471,14 +1447,7 @@ export default function AGPage(): JSX.Element {
                         id="divCheckPulmFam"
                         role="group"
                       >
-                        <input
-                          type="checkbox"
-                          name="fam_pulm"
-                          id="antFamPulmId"
-                          className="cbFam"
-                          data-title="Antecedentes Familiares — Doença(s) Pulmonar(es)"
-                          onClick={ev => handleDivAddShow(ev.currentTarget)}
-                        />
+                        <FamPulm />
                       </div>
                       <label
                         htmlFor="antFamPulmId"
@@ -1503,14 +1472,7 @@ export default function AGPage(): JSX.Element {
                         id="divCheckOncFam"
                         role="group"
                       >
-                        <input
-                          type="checkbox"
-                          name="fam_onc"
-                          id="antFamOncId"
-                          className="cbFam"
-                          data-title="Antecedentes Familiares — Doença(s) Oncológica(s)"
-                          onClick={ev => handleDivAddShow(ev.currentTarget)}
-                        />
+                        <FamOnc />
                       </div>
                       <label
                         htmlFor="antFamOncId"
@@ -1629,59 +1591,14 @@ export default function AGPage(): JSX.Element {
                       className="sectFreqSubSpan"
                       id="pbAlmSpan"
                     >
-                      Consumo de Corantes ou Doces:
+                      <span>Consumo de Corantes ou Doces:</span>
                       <br role="presentation" />
                       <span
                         role="group"
                         className="sectFreqSubSpan form-check"
                         id="pbAlmSubSubSpan"
                       >
-                        <input
-                          type="radio"
-                          name="cor_doces"
-                          id="pbAlmYes"
-                          className="freqRad freqAlmRad boolOp form-check-input"
-                          data-title="Doces (Sim)"
-                          onKeyDown={keydown => {
-                            opRadioHandler(
-                              keydown,
-                              Array.from(
-                                document.querySelectorAll(
-                                  'input[id$="Yes"], input[id$="No"]'
-                                )
-                              )
-                            );
-                          }}
-                        />
-                        <label
-                          htmlFor="pbAlmYes"
-                          className="labRad inpFreqRot form-check-label"
-                        >
-                          Sim
-                        </label>
-                        <input
-                          type="radio"
-                          name="cor_doces"
-                          id="pbAlmNo"
-                          className="freqRad freqAlmRad boolOp"
-                          data-title="Doces (Não)"
-                          onKeyDown={keydown => {
-                            opRadioHandler(
-                              keydown,
-                              Array.from(
-                                document.querySelectorAll(
-                                  'input[id$="Yes"], input[id$="No"]'
-                                )
-                              )
-                            );
-                          }}
-                        />
-                        <label
-                          htmlFor="pbAlmNo"
-                          className="labRad inpFreqRot form-check-label"
-                        >
-                          Não
-                        </label>
+                        <RadioPairDoces />
                       </span>
                     </span>
                     <textarea

@@ -1,14 +1,18 @@
 "use client";
 
 import { pageCases } from "@/lib/global/declarations/types";
-import { addListenerExportBtn, watchLabels } from "@/lib/global/gController";
+import {
+  addListenerExportBtn,
+  getGlobalEls,
+  watchLabels,
+} from "@/lib/global/gController";
 import { clearPhDates, equalizeFlexSibilings } from "@/lib/global/gStyleScript";
 import {
   deactTextInput,
   syncAriaStates,
 } from "@/lib/global/handlers/gHandlers";
 import { handleLinkChanges } from "@/lib/global/handlers/gRoutingHandlers";
-import { handleDivAddShow } from "@/pages/ag";
+import { agProps, handleDivAddShow } from "@/pages/ag";
 import { useEffect } from "react";
 
 export default function Watcher({
@@ -30,6 +34,10 @@ export default function Watcher({
       handleLinkChanges("base", "Base Page Style");
     } else if (routeCase === "ag") {
       handleLinkChanges("ag", "AG Page Style");
+      agProps.agIsAutoCorrectOn = getGlobalEls(
+        agProps.agIsAutoCorrectOn,
+        "num"
+      );
       equalizeFlexSibilings(document.querySelectorAll("[class*='flexTwin']"), [
         ["width", "px"],
       ]);
