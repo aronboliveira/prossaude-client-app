@@ -16,7 +16,6 @@ import SwitchDiv from "../../components/interactive/def/SwitchDiv";
 import Declaration from "../../components/interactive/def/Declaration";
 import RadioPair from "../../components/interactive/ag/RadioPair";
 import DivAntFam from "../../components/interactive/ag/DivAntFam";
-import TipsBtnWrapper from "../../components/interactive/ag/TipsBtnWrapper";
 import BtnConformWrapper from "../../components/interactive/ag/BtnConformWrapper";
 import CepElements from "../../components/interactive/ag/CepElements";
 import Uf from "../../components/interactive/ag/Uf";
@@ -45,10 +44,10 @@ import RadioPairDoces from "../../components/interactive/ag/RadioPairDoces";
 import FamDislip from "../../components/interactive/ag/FamDislip";
 import FamDiab from "../../components/interactive/ag/FamDiab";
 import FamOnc from "../../components/interactive/ag/FamOnc";
+import AgTipsBtnWrapper from "../../components/interactive/ag/AgTipsBtnWrapper";
 
 const MemoAge = memo(AgeElement);
 const MemoLoc = memo(ConfirmLocId);
-
 export const agProps = {
   agIsAutoCorrectOn: true,
 };
@@ -69,7 +68,7 @@ export default function AGPage(): JSX.Element {
                   Anamnese Geral
                 </h1>
                 <h2 className="bolded">PROSSaúde, UFRJ</h2>
-                <TipsBtnWrapper />
+                <AgTipsBtnWrapper />
               </div>
               <SwitchDiv />
             </div>

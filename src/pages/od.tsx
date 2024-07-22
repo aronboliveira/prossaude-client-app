@@ -1,5 +1,5 @@
 import { ErrorBoundary } from "react-error-boundary";
-import { useEffect, useState, memo } from "react";
+import { useEffect, memo } from "react";
 import {
   addListenerAvElemenDents,
   addListenerInspDialogBtns,
@@ -12,8 +12,6 @@ import {
 } from "@/lib/locals/odPage/odController";
 import { handleEventReq } from "@/lib/global/handlers/gHandlers";
 import TratFs from "../../components/interactive/od/TratFs";
-import OdTips from "../../components/interactive/od/OdTips";
-import OdDeclaration from "../../components/interactive/od/OdDeclaration";
 import ConfirmLocId from "../../components/interactive/def/ConfirmLocId";
 import Signature from "../../components/interactive/def/Signature";
 import Name from "../../components/interactive/def/Name";
@@ -22,13 +20,12 @@ import HeaderDate from "../../components/interactive/def/HeaderDate";
 import ConfirmDate from "../../components/interactive/def/ConfirmDate";
 import SectConfirmBtns from "../../components/interactive/def/SectConfirmBtns";
 import SwitchDiv from "../../components/interactive/def/SwitchDiv";
-import TipsBtn from "../../components/interactive/def/TipsBtn";
-import BtnConform from "../../components/interactive/def/BtnConform";
 import Declaration from "../../components/interactive/def/Declaration";
 import Watcher from "../../components/interactive/def/Watcher";
+import OdTipsBtnWrapper from "../../components/interactive/od/OdTipsBtnWrapper";
+import OdBtnConformWrapper from "../../components/interactive/od/OdBtnConformWrapper";
 
-let odIsAutoCorrectOn = true,
-  odIsDialogCalled = false,
+let odIsDialogCalled = false,
   odIsValuePreDef = false;
 const MemoLoc = memo(ConfirmLocId);
 export const odProps = {
@@ -36,8 +33,6 @@ export const odProps = {
 };
 
 export default function OdPage(): JSX.Element {
-  const [shouldShowTips, setTips] = useState<boolean>(false);
-  const [shouldShowDeclaration, setDeclaration] = useState<boolean>(false);
   useEffect(() => {
     addListenerInspRadios();
     [odIsDialogCalled] = addListenerInspDialogBtns(odIsDialogCalled);
@@ -66,10 +61,7 @@ export default function OdPage(): JSX.Element {
                   <strong>PROSSaúde — UFRJ</strong>
                 </p>
               </div>
-              <TipsBtn dispatch={setTips} state={shouldShowTips} />
-              {shouldShowTips && (
-                <OdTips state={shouldShowTips} dispatch={setTips} />
-              )}
+              <OdTipsBtnWrapper />
               <dialog className="modal-content-fit defDp wid50v" id="tipsDlg">
                 <div className="flexNoW flexAlItCt flexJBt">
                   <h3 className="bolded">Manual para controle de formulário</h3>
@@ -2911,16 +2903,7 @@ export default function OdPage(): JSX.Element {
               >
                 <Declaration text='"&#34;DECLARO QUE CONCORDO COM OS TRATAMENTOS PROPOSTOS ACIMA&#34;"' />
                 <div className="divMain" id="divConfirm" role="group">
-                  <BtnConform
-                    dispatch={setDeclaration}
-                    state={shouldShowDeclaration}
-                  />
-                  {shouldShowDeclaration && (
-                    <OdDeclaration
-                      state={shouldShowDeclaration}
-                      dispatch={setDeclaration}
-                    />
-                  )}
+                  <OdBtnConformWrapper />
                   <div
                     className="divSub flexEl divConfirm flexQ900NoW"
                     id="divConfirm2"
@@ -2935,7 +2918,7 @@ export default function OdPage(): JSX.Element {
                       <MemoLoc />
                     </label>
                     <ConfirmDate />
-                    <hr />
+                    <hr />o
                   </div>
                   <Signature />
                 </div>

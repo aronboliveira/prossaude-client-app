@@ -24,10 +24,7 @@ import {
   validateTitlesForTargs,
 } from "@/lib/locals/edFisNutPage/edFisNutController";
 import { parseNotNaN } from "@/lib/global/gModel";
-import {
-  addListenerExportBtn,
-  getGlobalEls,
-} from "@/lib/global/gController";
+import { addListenerExportBtn, getGlobalEls } from "@/lib/global/gController";
 import { dinamicGridAdjust } from "@/lib/global/gStyleScript";
 import { Person } from "@/lib/global/declarations/classes";
 import {
@@ -57,8 +54,6 @@ import TabIndPerc from "../../components/interactive/edfis/TabIndPerc";
 import TabDCut from "../../components/interactive/edfis/TabDCut";
 import TabProgSVi from "../../components/interactive/edfis/TabProgSVi";
 import TabMedAnt from "../../components/interactive/edfis/TabMedAnt";
-import ENTips from "../../components/interactive/edfis/ENTips";
-import ENDeclaration from "../../components/interactive/edfis/ENDeclaration";
 import { changeTabDCutLayout } from "@/lib/locals/edFisNutPage/edFisNutModel";
 import AgeElement from "../../components/interactive/edfis/defaulted/AgeElement";
 import ConfirmLocId from "../../components/interactive/def/ConfirmLocId";
@@ -69,10 +64,10 @@ import GenDiv from "../../components/interactive/def/GenDiv";
 import HeaderDate from "../../components/interactive/def/HeaderDate";
 import ConfirmDate from "../../components/interactive/def/ConfirmDate";
 import SectConfirmBtns from "../../components/interactive/def/SectConfirmBtns";
-import TipsBtn from "../../components/interactive/def/TipsBtn";
-import BtnConform from "../../components/interactive/def/BtnConform";
 import Declaration from "../../components/interactive/def/Declaration";
 import Watcher from "../../components/interactive/def/Watcher";
+import ENTipsBtnWrapper from "../../components/interactive/edfis/ENTipsBtnWrapper";
+import ENBtnConformWrapper from "../../components/interactive/edfis/ENBtnConformWrapper";
 
 export const tabProps: ENTabsProps = {
   isAutoFillActive: true,
@@ -109,8 +104,6 @@ const MemoAge = memo(AgeElement);
 const MemoLoc = memo(ConfirmLocId);
 
 export default function EdFisNutPage(): JSX.Element {
-  const [shouldShowTips, setTips] = useState<boolean>(false);
-  const [shouldShowDeclaration, setDeclaration] = useState<boolean>(false);
   const [mounted, setMounted] = useState<boolean>(false);
   useEffect(() => {
     handleLinkChanges("edfis", "EN Page Style");
@@ -391,10 +384,7 @@ export default function EdFisNutPage(): JSX.Element {
                 <p>
                   <strong>PROSSaúde — UFRJ</strong>
                 </p>
-                <TipsBtn dispatch={setTips} state={shouldShowTips} />
-                {shouldShowTips && (
-                  <ENTips state={shouldShowTips} dispatch={setTips} />
-                )}
+                <ENTipsBtnWrapper />
               </div>
               <HeaderDate />
             </div>
@@ -1575,16 +1565,7 @@ export default function EdFisNutPage(): JSX.Element {
               >
                 <Declaration text='"DECLARO QUE CONCORDO COM AS AVALIAÇÕES DESCRITAS ACIMA"' />
                 <div className="divMain" id="divConfirm" role="group">
-                  <BtnConform
-                    dispatch={setDeclaration}
-                    state={shouldShowDeclaration}
-                  />
-                  {shouldShowDeclaration && (
-                    <ENDeclaration
-                      state={shouldShowDeclaration}
-                      dispatch={setDeclaration}
-                    />
-                  )}
+                  <ENBtnConformWrapper />
                   <div
                     className="divSub flexEl divConfirm flexQ900NoW"
                     id="divConfirm2"
@@ -1599,7 +1580,7 @@ export default function EdFisNutPage(): JSX.Element {
                       <MemoLoc />
                     </label>
                     <ConfirmDate />
-                    <hr />
+                    <hr />e
                   </div>
                   <Signature />
                 </div>
