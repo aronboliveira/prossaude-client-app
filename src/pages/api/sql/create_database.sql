@@ -1,0 +1,51 @@
+-- CREATE DATABASE healthcare;
+-- USE healthcare;
+-- CREATE TABLE users (
+--     id INT PRIMARY KEY AUTO_INCREMENT,
+--     name VARCHAR(255),
+--     privilege ENUM('student', 'supervisor', 'coordinator'),
+--     area ENUM('general', 'medicine', 'nutrition', 'odontology', 'physical education', 'technology'),
+--     telephone VARCHAR(17),
+--     email VARCHAR(255)
+-- );
+-- CREATE TABLE student (
+--     id INT,
+--     cpf VARCHAR(11),
+--     dre VARCHAR(10),
+--     graduation VARCHAR(50),
+--     semester VARCHAR(10),
+--     beginning_semester DATE,
+--     beginning_day DATE,
+--     activity_day DATE,
+--     FOREIGN KEY (id) REFERENCES users(id)
+-- );
+-- CREATE TABLE professional (
+--     id INT,
+--     cpf VARCHAR(11),
+--     graduation VARCHAR(50),
+--     beginning_semester DATE,
+--     beginning_day DATE,
+--     FOREIGN KEY (id) REFERENCES users(id)
+-- );
+-- CREATE TABLE patients (
+--     cpf VARCHAR(11) PRIMARY KEY,
+--     name VARCHAR(255),
+--     email VARCHAR(255),
+--     telephone VARCHAR(17),
+--     next_appointed_day DATE,
+--     treatment_period VARCHAR(50),
+--     signature VARCHAR(255),
+--     current_status VARCHAR(50),
+--     historic INT
+-- );
+-- CREATE TABLE appointments (
+--     id INT AUTO_INCREMENT PRIMARY KEY,
+--     date DATE,
+--     type VARCHAR(50),
+--     professional INT,
+--     student INT,
+--     notes TEXT,
+--     FOREIGN KEY (professional) REFERENCES users(id),
+--     FOREIGN KEY (student) REFERENCES users(id)
+-- );
+-- ALTER TABLE patients ADD FOREIGN KEY (historic) REFERENCES appointments(id);
