@@ -1,8 +1,5 @@
 import { ErrorBoundary } from "react-error-boundary";
 import { useEffect, useState, memo } from "react";
-import { handleLinkChanges } from "@/lib/global/handlers/gRoutingHandlers";
-import { addListenerExportBtn, getGlobalEls } from "@/lib/global/gController";
-import { dinamicGridAdjust } from "@/lib/global/gStyleScript";
 import {
   addListenerAvElemenDents,
   addListenerInspDialogBtns,
@@ -18,7 +15,6 @@ import TratFs from "../../components/interactive/od/TratFs";
 import OdTips from "../../components/interactive/od/OdTips";
 import OdDeclaration from "../../components/interactive/od/OdDeclaration";
 import ConfirmLocId from "../../components/interactive/def/ConfirmLocId";
-import { extLine, inputNotFound } from "@/lib/global/handlers/errorHandler";
 import Signature from "../../components/interactive/def/Signature";
 import Name from "../../components/interactive/def/Name";
 import SocialName from "../../components/interactive/def/SocialName";
@@ -35,14 +31,14 @@ let odIsAutoCorrectOn = true,
   odIsDialogCalled = false,
   odIsValuePreDef = false;
 const MemoLoc = memo(ConfirmLocId);
+export const odProps = {
+  odIsAutoCorrectOn: true,
+};
 
 export default function OdPage(): JSX.Element {
   const [shouldShowTips, setTips] = useState<boolean>(false);
   const [shouldShowDeclaration, setDeclaration] = useState<boolean>(false);
   useEffect(() => {
-    handleLinkChanges("od", "Od Page Style");
-    odIsAutoCorrectOn = getGlobalEls(odIsAutoCorrectOn, "notNum");
-    dinamicGridAdjust(Array.from(document.querySelectorAll(".fsAnamGDiv")));
     addListenerInspRadios();
     [odIsDialogCalled] = addListenerInspDialogBtns(odIsDialogCalled);
     addListenerInspLIBtns();
@@ -51,24 +47,6 @@ export default function OdPage(): JSX.Element {
     addListenerQuadrInps();
     addListenerResetDivsQuadrs();
     addListenersSubDivsQuadrs();
-    addListenerExportBtn("od");
-    document.querySelectorAll(".inpAvDent").forEach((inpAvDent, i) => {
-      try {
-        if (!(inpAvDent instanceof HTMLInputElement))
-          throw inputNotFound(
-            inpAvDent,
-            `Validation of Input instance`,
-            extLine(new Error())
-          );
-        inpAvDent.value = "Hígido";
-      } catch (e) {
-        console.error(
-          `Error executing iteration ${i} for defaulting values to inpAvDents:\n${
-            (e as Error).message
-          }`
-        );
-      }
-    });
   }, []);
   return (
     <ErrorBoundary FallbackComponent={() => <div>Erro!</div>}>
