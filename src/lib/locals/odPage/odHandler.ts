@@ -80,14 +80,14 @@ export function showInspDialogs(
     const calledDialog =
       click.currentTarget.nextElementSibling ||
       click.currentTarget.parentElement?.querySelector("dialog");
-    if (!(calledDialog instanceof HTMLDialogElement))
-      throw elementNotFound(calledDialog, "calledDialog", extLine(new Error()));
-    if (!isDialogCalled) {
-      calledDialog.show();
-      click.currentTarget.textContent = "Esconder Sugestões";
-    } else {
-      calledDialog.close();
-      click.currentTarget.textContent = "Mostrar Sugestões";
+    if (calledDialog instanceof HTMLDialogElement) {
+      if (!isDialogCalled) {
+        calledDialog.show();
+        click.currentTarget.textContent = "Esconder Sugestões";
+      } else {
+        calledDialog.close();
+        click.currentTarget.textContent = "Mostrar Sugestões";
+      }
     }
   } catch (e) {
     console.error(`Error executing showInspDialogs:\n${(e as Error).message}`);

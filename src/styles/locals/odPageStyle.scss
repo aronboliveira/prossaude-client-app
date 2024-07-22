@@ -234,6 +234,16 @@ $swhite: rgba(255, 255, 255, 0.8);
       width: 50vw !important;
       padding: 0.7rem 0.3rem;
     }
+    .inspLITitle {
+      display: flex;
+      flex-flow: row wrap;
+      justify-content: space-between;
+      align-items: center;
+      .btn-close {
+        width: 0.75rem;
+        height: 0.75rem;
+      }
+    }
   }
 
   .inpAvDent {

@@ -95,7 +95,7 @@ export default function QuadrMainDiv({ qr }: qrProps): JSX.Element {
         ref={subDivRef}
       >
         {teethList.map(teethNum => (
-          <InpAvDent qr={qr} num={teethNum} />
+          <InpAvDent qr={qr} num={teethNum} key={`${qr}_${teethNum}`} />
         ))}
       </div>
     </div>

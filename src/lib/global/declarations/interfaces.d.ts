@@ -62,6 +62,22 @@ export interface DivAntFamProps extends ChecksProps {
   gen?: boolean;
   div?: boolean;
 }
+export interface InspProps {
+  count: looseNum;
+  ctx:
+    | "lab"
+    | "jug"
+    | "vest"
+    | "pltd"
+    | "pltm"
+    | "of"
+    | "lg"
+    | "asb"
+    | "mast"
+    | "peri";
+  fullName: string;
+}
+export interface InspDlgProps extends Omit<InspProps, "fullName">, DlgProps {}
 export interface qrProps {
   qr: quadrCases;
 }

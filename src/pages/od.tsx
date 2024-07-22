@@ -129,7 +129,7 @@ export default function OdPage(): JSX.Element {
                 <QuadrMainDiv qr="SupDir" />
                 <QuadrMainDiv qr="InfEsq" />
                 <QuadrMainDiv qr="SupEsq" />
-                <QuadrMainDiv qr="InfEsq" />
+                <QuadrMainDiv qr="InfDir" />
               </section>
             </fieldset>
             <hr />
@@ -160,7 +160,7 @@ export default function OdPage(): JSX.Element {
                 className="sectionMain sectionConfirm"
                 id="sectConfirmCheck"
               >
-                <Declaration text='"&#34;DECLARO QUE CONCORDO COM OS TRATAMENTOS PROPOSTOS ACIMA&#34;"' />
+                <Declaration text="&#34;DECLARO QUE CONCORDO COM OS TRATAMENTOS PROPOSTOS ACIMA&#34;" />
                 <div className="divMain" id="divConfirm" role="group">
                   <OdBtnConformWrapper />
                   <div
@@ -177,7 +177,7 @@ export default function OdPage(): JSX.Element {
                       <MemoLoc />
                     </label>
                     <ConfirmDate />
-                    <hr />o
+                    <hr />
                   </div>
                   <Signature />
                 </div>
