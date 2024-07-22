@@ -45,6 +45,7 @@ import FamDislip from "../../components/interactive/ag/FamDislip";
 import FamDiab from "../../components/interactive/ag/FamDiab";
 import FamOnc from "../../components/interactive/ag/FamOnc";
 import AgTipsBtnWrapper from "../../components/interactive/ag/AgTipsBtnWrapper";
+import GenericErrorComponent from "../../components/error/GenericErrorComponent";
 
 const MemoAge = memo(AgeElement);
 const MemoLoc = memo(ConfirmLocId);
@@ -54,7 +55,11 @@ export const agProps = {
 
 export default function AGPage(): JSX.Element {
   return (
-    <ErrorBoundary FallbackComponent={() => <div>Erro!</div>}>
+    <ErrorBoundary
+      FallbackComponent={() => (
+        <GenericErrorComponent message="Error loading form for Anamnesis" />
+      )}
+    >
       <div className="pad1pc" id="bgDiv" role="document">
         <header>
           <div

@@ -8,10 +8,8 @@ import {
 } from "../../global/handlers/errorHandler";
 import { targEl } from "../../global/declarations/types";
 
-export function resetAvDentValue(
-  targInp: targEl,
-  isValuePreDef: boolean = false
-): boolean {
+export function resetAvDentValue(targInp: targEl): boolean {
+  let isValuePreDef = false;
   if (
     targInp instanceof HTMLSelectElement ||
     targInp instanceof HTMLInputElement ||
@@ -29,7 +27,6 @@ export function resetAvDentValue(
           break;
         }
       }
-
       if (isValuePreDef && targInp instanceof HTMLElement) {
         setTimeout(() => {
           targInp.value = "";

@@ -18,9 +18,7 @@ export function addListenerInspRadios(): Element[] {
     inspRadios.forEach(inspRadio => {
       inspRadio instanceof HTMLInputElement &&
       (inspRadio.type === "radio" || inspRadio.type === "checkbox")
-        ? inspRadio.addEventListener("click", click =>
-            OdHandler.showInspSpanSub(click, inspRadio)
-          )
+        ? inspRadio.addEventListener("click", OdHandler.showInspSpanSub)
         : inputNotFound(
             inspRadio,
             `${inspRadio?.id || "UNDEFINED INSPRADIO INPUT"}`,
@@ -41,11 +39,7 @@ export function addListenerInspDialogBtns(
     inspDialogsBtns.forEach(inspDialogBtn => {
       inspDialogBtn instanceof HTMLButtonElement
         ? inspDialogBtn.addEventListener("click", (click): boolean => {
-            isDialogCalled = OdHandler.showInspDialogs(
-              click,
-              inspDialogBtn,
-              isDialogCalled
-            );
+            isDialogCalled = OdHandler.showInspDialogs(click, isDialogCalled);
             return isDialogCalled || false;
           })
         : elementNotFound(
@@ -68,9 +62,7 @@ export function addListenerInspLIBtns(): Element[] {
   if (inspLIBtns?.length > 0) {
     inspLIBtns.forEach(inspLIBtn => {
       inspLIBtn instanceof HTMLButtonElement
-        ? inspLIBtn.addEventListener("click", click =>
-            OdHandler.addTextToObs(click, inspLIBtn)
-          )
+        ? inspLIBtn.addEventListener("click", OdHandler.addTextToObs)
         : elementNotFound(
             inspLIBtn,
             `${inspLIBtn?.id || "UNDEFINED ID LI BUTTON"}`,
@@ -128,7 +120,7 @@ export function addListenerAvElemenDents(
       avElemDent instanceof HTMLSelectElement ||
       avElemDent instanceof HTMLInputElement
         ? avElemDent?.addEventListener("click", (): boolean => {
-            isValuePreDef = OdModel.resetAvDentValue(avElemDent, isValuePreDef);
+            isValuePreDef = OdModel.resetAvDentValue(avElemDent);
             return isValuePreDef || false;
           })
         : elementNotFound(

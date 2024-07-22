@@ -68,6 +68,7 @@ import Declaration from "../../components/interactive/def/Declaration";
 import Watcher from "../../components/interactive/def/Watcher";
 import ENTipsBtnWrapper from "../../components/interactive/edfis/ENTipsBtnWrapper";
 import ENBtnConformWrapper from "../../components/interactive/edfis/ENBtnConformWrapper";
+import GenericErrorComponent from "../../components/error/GenericErrorComponent";
 
 export const tabProps: ENTabsProps = {
   isAutoFillActive: true,
@@ -365,7 +366,11 @@ export default function EdFisNutPage(): JSX.Element {
     }
   }, [mounted]);
   return (
-    <ErrorBoundary FallbackComponent={() => <div>Erro!</div>}>
+    <ErrorBoundary
+      FallbackComponent={() => (
+        <GenericErrorComponent message="Error loading form Physical Education and Nutrition" />
+      )}
+    >
       <div id="bgDiv">
         <header>
           <div role="group" className="pad1pc">

@@ -1,3 +1,5 @@
+"use client";
+
 import { addCanvasListeners } from "@/lib/global/gController";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { validateForm } from "@/lib/global/handlers/gHandlers";

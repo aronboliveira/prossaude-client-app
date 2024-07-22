@@ -1,5 +1,5 @@
 import { SetStateAction } from "react";
-import { targEl } from "./types";
+import { looseNum, quadrCases, targEl } from "./types";
 
 export interface DocumentNodeProps {
   html: string;
@@ -61,4 +61,10 @@ export interface DivAntFamProps extends ChecksProps {
   ta?: boolean;
   gen?: boolean;
   div?: boolean;
+}
+export interface qrProps {
+  qr: quadrCases;
+}
+export interface qrInpProps extends qrProps {
+  num: looseNum;
 }

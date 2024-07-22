@@ -1,3 +1,5 @@
+"use client";
+
 import { fluxGen } from "@/lib/global/gModel";
 import {
   elementNotFound,

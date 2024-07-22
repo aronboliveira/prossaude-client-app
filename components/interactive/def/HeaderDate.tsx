@@ -1,3 +1,5 @@
+"use client";
+
 import { nullishInp } from "@/lib/global/declarations/types";
 import { clearPhDates } from "@/lib/global/gStyleScript";
 import { inputNotFound } from "@/lib/global/handlers/errorHandler";

@@ -1,3 +1,5 @@
+"use client";
+
 import { switchAutoFill } from "@/lib/locals/edFisNutPage/edFisNutHandler";
 import { tabProps } from "@/pages/edfis";
 
