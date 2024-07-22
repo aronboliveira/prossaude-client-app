@@ -31,7 +31,7 @@ import { panelFormsVariables } from "../panelFormsData";
 import { ErrorBoundary } from "react-error-boundary";
 import GenericErrorComponent from "../../error/GenericErrorComponent";
 import ReseterBtn from "../defs/ReseterBtn";
-import { globalDataProvider } from "@/pages/panel";
+import { globalDataProvider } from "../../mainPanel/MainFormPanel";
 
 export default function ProfForm({
   mainRoot,

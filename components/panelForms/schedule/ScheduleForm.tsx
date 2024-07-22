@@ -44,7 +44,7 @@ import GenericErrorComponent from "../../error/GenericErrorComponent";
 import RegstConsBtn from "./RegstConsBtn";
 import EraseAptBtn from "./EraseAptBtn";
 import ReseterBtn from "../defs/ReseterBtn";
-import { globalDataProvider } from "@/pages/panel";
+import { globalDataProvider } from "../../mainPanel/MainFormPanel";
 import { ErrorBoundary } from "react-error-boundary";
 
 export default function ScheduleForm({

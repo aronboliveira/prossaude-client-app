@@ -29,7 +29,7 @@ import {
 } from "@/lib/global/handlers/gHandlers";
 import { handleClientPermissions } from "@/lib/locals/panelPage/handlers/consHandlerUsers";
 import { addListenerExportBtn } from "@/lib/global/gController";
-import { globalDataProvider } from "@/pages/panel";
+import { globalDataProvider } from "../../mainPanel/MainFormPanel";
 import { ErrorBoundary } from "react-error-boundary";
 import GenericErrorComponent from "../../error/GenericErrorComponent";
 

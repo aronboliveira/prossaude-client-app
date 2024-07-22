@@ -8,7 +8,7 @@ import {
 } from "@/lib/global/handlers/gHandlers";
 import AvStudListDlg from "../lists/AvStudListDlg";
 import { FillerProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
-import { globalDataProvider } from "@/pages/panel";
+import { globalDataProvider } from "../mainPanel/MainFormPanel";
 
 export default function DREFiller({
   forwardedRef,
