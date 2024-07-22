@@ -75,6 +75,7 @@ export type nullishLab = HTMLLabelElement | null;
 export type nullishArtc = HTMLElement & {
   tagName: "ARTICLE";
 };
+export type nullishCanvas = HTMLCanvasElement | null;
 export type rMouseEvent = MouseEvent | React.MouseEvent;
 export type pageCases = "login" | "base" | "ag" | "edfis" | "od" | "panel";
 export type pageStyleCases =

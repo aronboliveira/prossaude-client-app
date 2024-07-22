@@ -1,10 +1,10 @@
+"use client";
+
 import { useEffect, useContext } from "react";
-import { handleLinkChanges } from "@/lib/global/handlers/gRoutingHandlers";
 import { User } from "@/lib/global/declarations/classes";
 import { createRoot } from "react-dom/client";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { equalizeParagraphs } from "@/lib/locals/basePage/baseStylescript";
-import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { expandContent } from "@/lib/global/gStyleScript";
 import { useRouter } from "next/router";
 import { AppRootContext } from "@/pages/_app";
@@ -18,7 +18,6 @@ export default function MainContainer(): JSX.Element {
   const context = useContext(AppRootContext);
   const nextRouter = useRouter();
   useEffect(() => {
-    handleLinkChanges("base", "Base Page Style");
     const user = new User("Coordenador", "psicologia", "João Almeida");
     baseRootUser = document.getElementById("rootUserInfo");
     baseRootUser instanceof HTMLElement && !context.roots.baseRootedUser
@@ -42,7 +41,6 @@ export default function MainContainer(): JSX.Element {
           extLine(new Error())
         );
     equalizeParagraphs(Array.from(document.querySelectorAll("small")));
-    syncAriaStates(document.querySelectorAll("*"));
     expandContent(document.getElementById("rootUserInfo"));
     const handleBgResize = (): void => {
       try {

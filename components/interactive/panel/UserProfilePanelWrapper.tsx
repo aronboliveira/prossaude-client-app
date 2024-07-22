@@ -1,0 +1,54 @@
+"use client";
+
+import { ErrorBoundary } from "react-error-boundary";
+import { useEffect, useContext } from "react";
+import { createRoot } from "react-dom/client";
+import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
+import { User } from "@/lib/global/declarations/classes";
+import { AppRootContext } from "@/pages/_app";
+import UserProfilePanel from "../../user/UserProfilePanel";
+import GenericErrorComponent from "../../error/GenericErrorComponent";
+import { useRouter } from "next/router";
+
+export default function UserProfilePanelWrapper({
+  user,
+}: {
+  user: Readonly<User>;
+}): JSX.Element {
+  const nextRouter = useRouter();
+  const context = useContext(AppRootContext);
+  useEffect(() => {
+    const profileSpan = document.getElementById("rootUserInfo");
+    if (profileSpan instanceof HTMLElement) {
+      if (!context.roots.userRoot)
+        context.roots.userRoot = createRoot(profileSpan);
+      if (!profileSpan.hasChildNodes())
+        context.roots.userRoot.render(
+          <UserProfilePanel user={user} router={nextRouter} />
+        );
+      setTimeout(() => {
+        if (!profileSpan.querySelector("img"))
+          context.roots.userRoot.render(
+            <GenericErrorComponent message="Erro renderizando painel de usuário" />
+          );
+      }, 2000);
+    } else
+      setTimeout(() => {
+        !document.getElementById("rootUserInfo")?.querySelector("img") &&
+          elementNotFound(
+            profileSpan,
+            "profileSpan during DOM initialization",
+            extLine(new Error())
+          );
+      }, 2000);
+  }, []);
+  return (
+    <ErrorBoundary
+      FallbackComponent={() => (
+        <GenericErrorComponent message="Error loading User Panel" />
+      )}
+    >
+      <UserProfilePanel user={user} router={nextRouter} />
+    </ErrorBoundary>
+  );
+}

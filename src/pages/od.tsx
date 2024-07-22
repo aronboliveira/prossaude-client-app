@@ -1,13 +1,7 @@
 import { ErrorBoundary } from "react-error-boundary";
 import { useEffect, useState, memo } from "react";
 import { handleLinkChanges } from "@/lib/global/handlers/gRoutingHandlers";
-import {
-  addCanvasListeners,
-  addListenerExportBtn,
-  addResetAstListener,
-  getGlobalEls,
-  watchLabels,
-} from "@/lib/global/gController";
+import { addListenerExportBtn, getGlobalEls } from "@/lib/global/gController";
 import { dinamicGridAdjust } from "@/lib/global/gStyleScript";
 import {
   addListenerAvElemenDents,
@@ -19,10 +13,7 @@ import {
   addListenerResetDivsQuadrs,
   addListenersSubDivsQuadrs,
 } from "@/lib/locals/odPage/odController";
-import {
-  handleEventReq,
-  syncAriaStates,
-} from "@/lib/global/handlers/gHandlers";
+import { handleEventReq } from "@/lib/global/handlers/gHandlers";
 import TratFs from "../../components/interactive/od/TratFs";
 import OdTips from "../../components/interactive/od/OdTips";
 import OdDeclaration from "../../components/interactive/od/OdDeclaration";
@@ -38,6 +29,7 @@ import SwitchDiv from "../../components/interactive/def/SwitchDiv";
 import TipsBtn from "../../components/interactive/def/TipsBtn";
 import BtnConform from "../../components/interactive/def/BtnConform";
 import Declaration from "../../components/interactive/def/Declaration";
+import Watcher from "../../components/interactive/def/Watcher";
 
 let odIsAutoCorrectOn = true,
   odIsDialogCalled = false,
@@ -60,10 +52,6 @@ export default function OdPage(): JSX.Element {
     addListenerResetDivsQuadrs();
     addListenersSubDivsQuadrs();
     addListenerExportBtn("od");
-    addCanvasListeners();
-    addResetAstListener();
-    syncAriaStates(document.querySelectorAll("*"));
-    watchLabels();
     document.querySelectorAll(".inpAvDent").forEach((inpAvDent, i) => {
       try {
         if (!(inpAvDent instanceof HTMLInputElement))
@@ -2982,6 +2970,7 @@ export default function OdPage(): JSX.Element {
           </form>
         </main>
       </div>
+      <Watcher routeCase="od" />
     </ErrorBoundary>
   );
 }

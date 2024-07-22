@@ -2239,6 +2239,14 @@ td,
 
 $base900InpWidth: 38.7rem;
 
+@media screen and (min-width: 900px) {
+  .agBody {
+    #confirmDatBtn {
+      transform: scale(1.017) translateY(0.5px);
+    }
+  }
+}
+
 @media screen and (max-width: 900px) {
   legend,
   .flexQ900NoW,

@@ -25,18 +25,14 @@ import {
 } from "@/lib/locals/edFisNutPage/edFisNutController";
 import { parseNotNaN } from "@/lib/global/gModel";
 import {
-  addCanvasListeners,
   addListenerExportBtn,
-  addResetAstListener,
   getGlobalEls,
-  watchLabels,
 } from "@/lib/global/gController";
 import { dinamicGridAdjust } from "@/lib/global/gStyleScript";
 import { Person } from "@/lib/global/declarations/classes";
 import {
   handleCondtReq,
   handleEventReq,
-  syncAriaStates,
 } from "@/lib/global/handlers/gHandlers";
 import {
   defineTargInps,
@@ -76,6 +72,7 @@ import SectConfirmBtns from "../../components/interactive/def/SectConfirmBtns";
 import TipsBtn from "../../components/interactive/def/TipsBtn";
 import BtnConform from "../../components/interactive/def/BtnConform";
 import Declaration from "../../components/interactive/def/Declaration";
+import Watcher from "../../components/interactive/def/Watcher";
 
 export const tabProps: ENTabsProps = {
   isAutoFillActive: true,
@@ -342,10 +339,6 @@ export default function EdFisNutPage(): JSX.Element {
           }`
         );
       }
-      addCanvasListeners();
-      addResetAstListener();
-      syncAriaStates(document.querySelectorAll("*"));
-      watchLabels();
       const inp2_2 = document.getElementById("tabInpRowMedAnt2_2");
       if (inp2_2 instanceof HTMLInputElement) inp2_2.value = "70";
       const inp2_3 = document.getElementById("tabInpRowMedAnt2_3");
@@ -1619,6 +1612,7 @@ export default function EdFisNutPage(): JSX.Element {
           </form>
         </main>
       </div>
+      <Watcher routeCase="edfis" />
     </ErrorBoundary>
   );
 }

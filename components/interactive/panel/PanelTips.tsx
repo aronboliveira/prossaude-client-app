@@ -1,3 +1,5 @@
+"use client";
+
 import { DlgProps } from "@/lib/global/declarations/interfaces";
 import { nullishDlg } from "@/lib/global/declarations/types";
 import { isClickOutside } from "@/lib/global/gStyleScript";

@@ -1,11 +1,14 @@
+"use client";
+
 import { CounterAction } from "@/lib/global/declarations/interfaces";
 import { nullishFs } from "@/lib/global/declarations/types";
+import { clearPhDates } from "@/lib/global/gStyleScript";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { addMedHistHandler } from "@/lib/locals/aGPage/aGHandlers";
 import { useEffect, useReducer, useRef } from "react";
 
-export default function AntMedFs({ phCb }: { phCb: () => void }): JSX.Element {
+export default function AntMedFs(): JSX.Element {
   const mainRef = useRef<nullishFs>(null);
   const [blockCount, setBlockCount] = useReducer(
     (s: number, a: CounterAction) => {
@@ -32,7 +35,7 @@ export default function AntMedFs({ phCb }: { phCb: () => void }): JSX.Element {
         mainRef.current,
         ...mainRef.current.querySelectorAll("*"),
       ]);
-      phCb();
+      clearPhDates(Array.from(document.querySelectorAll('input[type="date"]')));
     } catch (e) {
       console.error(
         `Error executing useEffect for blockCount:\n${(e as Error).message}`

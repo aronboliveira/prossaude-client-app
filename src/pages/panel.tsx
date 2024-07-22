@@ -1,20 +1,8 @@
 import { ErrorBoundary } from "react-error-boundary";
-import { useEffect, useState, useContext } from "react";
-import { handleLinkChanges } from "@/lib/global/handlers/gRoutingHandlers";
-import { createRoot } from "react-dom/client";
-import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
-import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
-import { isClickOutside } from "@/lib/global/gStyleScript";
 import { User } from "@/lib/global/declarations/classes";
-import { useRouter } from "next/router";
-import { DataProvider } from "@/lib/locals/panelPage/declarations/classesCons";
-import { voidVal } from "@/lib/global/declarations/types";
-import { AppRootContext } from "./_app";
-import UserProfilePanel from "../../components/user/UserProfilePanel";
 import FallbackedMainPanel from "../../components/mainPanel/FallbackedMainPanel";
-import ErrorMainDiv from "../../components/error/ErrorMainDiv";
-import GenericErrorComponent from "../../components/error/GenericErrorComponent";
-import PanelTips from "../../components/interactive/panel/PanelTips";
+import UserProfilePanelWrapper from "../../components/interactive/panel/UserProfilePanelWrapper";
+import TipsBtnWrapper from "../../components/interactive/panel/TipsBtnWrapper";
 
 export const fillScheduleState = { acc: 0 };
 export const formData: { [key: string]: string } = {};
@@ -48,72 +36,10 @@ export const user = await (async () => {
     );
   }
 })();
-export let globalDataProvider: DataProvider | voidVal = undefined;
 
-export default function PanelPage(): JSX.Element {
-  const [mounted, setMounted] = useState<boolean>(false);
-  const [shouldShowTips, setTips] = useState<boolean>(false);
-  const nextRouter = useRouter();
-  const context = useContext(AppRootContext);
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-  useEffect(() => {
-    globalDataProvider = new DataProvider(sessionStorage);
-    handleLinkChanges("panel", "Panel Page Style");
-    const selDiv = document.getElementById("formSelDiv");
-    if (selDiv instanceof HTMLElement && !selDiv.querySelector("select")) {
-      selDiv.innerHTML = ``;
-      if (!context.roots.rootSel) context.roots.rootSel = createRoot(selDiv);
-      context.roots.rootSel.render(<ErrorMainDiv />);
-    } else
-      setTimeout(() => {
-        !document.getElementById("formSelDiv")?.querySelector("select") &&
-          elementNotFound(
-            selDiv,
-            "selDiv during DOM initialization",
-            extLine(new Error())
-          );
-      }, 2000);
-    const profileSpan = document.getElementById("rootUserInfo");
-    if (profileSpan instanceof HTMLElement) {
-      if (!context.roots.userRoot)
-        context.roots.userRoot = createRoot(profileSpan);
-      if (!profileSpan.hasChildNodes())
-        context.roots.userRoot.render(
-          <UserProfilePanel user={user} router={nextRouter} />
-        );
-      setTimeout(() => {
-        if (!profileSpan.querySelector("img"))
-          context.roots.userRoot.render(
-            <GenericErrorComponent message="Erro renderizando painel de usuário" />
-          );
-      }, 2000);
-    } else
-      setTimeout(() => {
-        !document.getElementById("rootUserInfo")?.querySelector("img") &&
-          elementNotFound(
-            profileSpan,
-            "profileSpan during DOM initialization",
-            extLine(new Error())
-          );
-      }, 2000);
-    syncAriaStates(document.querySelectorAll("*"));
-    document
-      .getElementById("tipsDlg")
-      ?.addEventListener("click", function (click) {
-        const clickOutside = isClickOutside(
-          click,
-          document.getElementById("tipsDlg")!
-        );
-        clickOutside.some(point => point === true) &&
-          this instanceof HTMLDialogElement &&
-          this.close();
-      });
-  }, []);
-  return !mounted ? (
-    <></>
-  ) : (
+export default function PanelPage({ data }: { data: any }): JSX.Element {
+  console.log(data);
+  return (
     <ErrorBoundary FallbackComponent={() => <div>Erro!</div>}>
       <div role="group" className="pad1pc" id="bgDiv">
         <header className="flexJBt flexAlItSt flexNoWC600Q flexAlItCt600Q pd-2vQ460 rGap1v mg-0lm601Q pd-1rbm601Q">
@@ -124,26 +50,7 @@ export default function PanelPage(): JSX.Element {
             <h1 className="bolded mg-1t noInvert mgr-1v">
               <strong className="noInvert">Painel de Trabalho</strong>
             </h1>
-            <button
-              className="transparent-el-bg mg-2bv noInvert"
-              id="tipsBtn"
-              title="Dúvidas"
-              onClick={() => setTips(!shouldShowTips)}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                fill="currentColor"
-                className="bi bi-question-circle-fill widMax-3r htMax1-5r"
-                viewBox="0 0 16 16"
-              >
-                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.496 6.033h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286a.237.237 0 0 0 .241.247m2.325 6.443c.61 0 1.029-.394 1.029-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94 0 .533.425.927 1.01.927z" />
-              </svg>
-            </button>
-            {shouldShowTips && (
-              <PanelTips state={shouldShowTips} dispatch={setTips} />
-            )}
+            <TipsBtnWrapper />
           </div>
           <hr className="widFull d-no d-bl600Q" />
           <div
@@ -156,7 +63,7 @@ export default function PanelPage(): JSX.Element {
                 className="widFull flexNoW cGap2v rGap1v flexQ460NoWC wsNoW"
                 id="rootUserInfo"
               >
-                <UserProfilePanel user={user} router={nextRouter} />
+                <UserProfilePanelWrapper user={user} />
               </div>
             </section>
           </div>
@@ -165,14 +72,11 @@ export default function PanelPage(): JSX.Element {
         <main>
           <section className="flexColumn" id="registSect">
             <div role="group" id="panelDiv">
-              <div role="group" id="formSelDiv" className="form-padded--nosb">
-                <FallbackedMainPanel
-                  mainRoot={context.roots.rootSel}
-                  userClass={user.userClass}
-                  renderError={new Error(`Erro carregando Painel Principal!`)}
-                  defOp={"agenda"}
-                />
-              </div>
+              <FallbackedMainPanel
+                userClass={user.userClass}
+                renderError={new Error(`Erro carregando Painel Principal!`)}
+                defOp={"agenda"}
+              />
               <div role="group" id="pacDiv" className="form-padded"></div>
             </div>
           </section>
@@ -184,4 +88,24 @@ export default function PanelPage(): JSX.Element {
       </canvas>
     </ErrorBoundary>
   );
+}
+
+export async function getStaticProps() {
+  //conexão com a api para atualizar informações na página em intervalos
+  try {
+    const res = await fetch("/api-path");
+    if (!res.ok) throw new Error(`Failed to fetch`);
+    const data = await res.json();
+    return {
+      props: {
+        data,
+      },
+      revalidate: 300,
+    };
+  } catch (e) {
+    console.error(`Error fetching static props:\n${(e as Error).message}`);
+    return {
+      props: {},
+    };
+  }
 }

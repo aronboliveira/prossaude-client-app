@@ -1,38 +1,16 @@
 import { ErrorBoundary } from "react-error-boundary";
-import { useEffect, useCallback, useState, memo } from "react";
-import { handleLinkChanges } from "@/lib/global/handlers/gRoutingHandlers";
-import { entryEl, targEl } from "@/lib/global/declarations/types";
+import { useEffect, memo } from "react";
+import { targEl } from "@/lib/global/declarations/types";
+import { getGlobalEls } from "@/lib/global/gController";
+import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import {
-  addCanvasListeners,
-  addListenerExportBtn,
-  addListenersGenConts,
-  addResetAstListener,
-  getGlobalEls,
-  watchLabels,
-} from "@/lib/global/gController";
-import { clearPhDates, equalizeFlexSibilings } from "@/lib/global/gStyleScript";
-import {
-  elementNotFound,
-  extLine,
-  inputNotFound,
-} from "@/lib/global/handlers/errorHandler";
-import {
-  addListenerCPFCont,
-  addListenersEmailInputs,
-} from "@/lib/locals/aGPage/aGController";
-import {
-  deactTextInput,
   handleCondtReq,
   handleEventReq,
   opRadioHandler,
-  syncAriaStates,
-  toggleConformDlg,
 } from "@/lib/global/handlers/gHandlers";
 import { addDblQuotes } from "@/lib/locals/aGPage/aGModel";
-import { formatCEP, formatTel } from "@/lib/global/gModel";
+import { addEmailExtension, formatCPF, formatTel } from "@/lib/global/gModel";
 import AntMedFs from "../../components/interactive/ag/AntMedFs";
-import AGTips from "../../components/interactive/ag/AGTips";
-import AGDeclaration from "../../components/interactive/ag/AGDeclaration";
 import ConfirmLocId from "../../components/interactive/def/ConfirmLocId";
 import AgeElement from "../../components/interactive/edfis/defaulted/AgeElement";
 import Signature from "../../components/interactive/def/Signature";
@@ -43,206 +21,41 @@ import HeaderDate from "../../components/interactive/def/HeaderDate";
 import ConfirmDate from "../../components/interactive/def/ConfirmDate";
 import SectConfirmBtns from "../../components/interactive/def/SectConfirmBtns";
 import SwitchDiv from "../../components/interactive/def/SwitchDiv";
-import TipsBtn from "../../components/interactive/def/TipsBtn";
-import BtnConform from "../../components/interactive/def/BtnConform";
 import Declaration from "../../components/interactive/def/Declaration";
 import RadioPair from "../../components/interactive/ag/RadioPair";
 import DivAntFam from "../../components/interactive/ag/DivAntFam";
-import {
-  enableCEPBtn,
-  searchCEP,
-  searchCEPXML,
-} from "@/lib/locals/aGPage/aGHandlers";
+import TipsBtnWrapper from "../../components/interactive/ag/TipsBtnWrapper";
+import BtnConformWrapper from "../../components/interactive/ag/BtnConformWrapper";
+import CepElements from "../../components/interactive/ag/CepElements";
+import Uf from "../../components/interactive/ag/Uf";
+import Watcher from "../../components/interactive/def/Watcher";
+import CPFElement from "../../components/interactive/ag/CPFElement";
+import DDDElementPrim from "../../components/interactive/ag/DDDElementPrim";
+import DDDElementSec from "../../components/interactive/ag/DDDElementSec";
+import TelPrim from "../../components/interactive/ag/TelPrim";
+import TelSec from "../../components/interactive/ag/TelSec";
+import TelCodePrim from "../../components/interactive/ag/TelCodePrim";
+import TelCodeSec from "../../components/interactive/ag/TelCodeSec";
+import EmailPrim from "../../components/interactive/ag/Email";
+import Email from "../../components/interactive/ag/Email";
+import Nac from "../../components/interactive/ag/Nac";
+import City from "../../components/interactive/ag/City";
+import Nat from "../../components/interactive/ag/Nat";
+import Street from "../../components/interactive/ag/Street";
+import Nbh from "../../components/interactive/ag/Nbh";
+import StreetNum from "../../components/interactive/ag/StreetNum";
+import LocComp from "../../components/interactive/ag/LocComp";
+import QxPrinc from "../../components/interactive/ag/QxPrinc";
+import HASDivAdd from "../../components/interactive/ag/Hist";
+import OtherD from "../../components/interactive/ag/OtherD";
 
-let agGenElement = undefined,
-  agGenValue = "masculino",
-  agIsAutoCorrectOn = true;
+let agIsAutoCorrectOn = true;
 const MemoAge = memo(AgeElement);
 const MemoLoc = memo(ConfirmLocId);
 
 export default function AGPage(): JSX.Element {
-  const [shouldShowTips, setTips] = useState<boolean>(false);
-  const [shouldShowDeclaration, setDeclaration] = useState<boolean>(false);
-  const clearPhCb = useCallback(() => {
-    clearPhDates(Array.from(document.querySelectorAll('input[type="date"]')));
-  }, []);
-  const equalizeCepElements = (): void => {
-    try {
-      const cepInp = document.getElementById("cepId");
-      if (!(cepInp instanceof HTMLInputElement))
-        throw inputNotFound(
-          cepInp,
-          `validation of Input for CEP`,
-          extLine(new Error())
-        );
-      const cepBtn =
-        document.getElementById("autoCompCepBtn") ||
-        cepInp.nextElementSibling ||
-        cepInp.parentElement?.querySelector("button");
-      if (!(cepBtn instanceof HTMLInputElement))
-        throw elementNotFound(
-          cepBtn,
-          `Validation of Button for CEP`,
-          extLine(new Error())
-        );
-      cepBtn.style.width = `${
-        getComputedStyle(cepInp).width +
-        getComputedStyle(cepInp).paddingLeft +
-        getComputedStyle(cepInp).paddingRight
-      }px`;
-      cepBtn.style.maxWidth = `${
-        getComputedStyle(cepInp).width +
-        getComputedStyle(cepInp).paddingLeft +
-        getComputedStyle(cepInp).paddingRight
-      }px`;
-    } catch (e) {
-      console.error(
-        `Error executing equalizeCepElements:\n${(e as Error).message}`
-      );
-    }
-  };
-  const handleResize = () => {
-    equalizeFlexSibilings(document.querySelectorAll("[class*='flexTwin']"), [
-      ["width", "px"],
-    ]);
-    equalizeCepElements();
-  };
-  const handleDivAddShow = (targ: targEl) => {
-    try {
-      if (
-        !(
-          targ instanceof HTMLInputElement &&
-          (targ.type === "radio" || targ.type === "checkbox")
-        )
-      )
-        throw elementNotFound(
-          targ,
-          `Validation of Event Current Target`,
-          extLine(new Error())
-        );
-      const parentSpan =
-        targ.closest(".spanSectAnt") ||
-        targ.closest(".input-group") ||
-        targ.closest('span[role="group"]');
-      if (!(parentSpan instanceof HTMLElement))
-        throw elementNotFound(
-          parentSpan,
-          `Validation of Parent Section Span`,
-          extLine(new Error())
-        );
-      let divAdd: targEl = parentSpan.nextElementSibling;
-      if (!divAdd?.classList.contains(".divAdd"))
-        divAdd = parentSpan.nextElementSibling?.nextElementSibling;
-      if (!divAdd?.classList.contains(".divAdd"))
-        divAdd =
-          parentSpan.nextElementSibling?.nextElementSibling?.nextElementSibling;
-      if (!divAdd?.classList.contains(".divAdd"))
-        divAdd =
-          parentSpan.nextElementSibling?.nextElementSibling?.nextElementSibling
-            ?.nextElementSibling;
-      if (
-        !(divAdd instanceof HTMLElement && divAdd.classList.contains("divAdd"))
-      )
-        divAdd = document.getElementById(
-          `divAdd${targ.id.replace("ant", "").replace("Id", "")}`
-        );
-      if (
-        !(divAdd instanceof HTMLElement && divAdd.classList.contains("divAdd"))
-      )
-        throw elementNotFound(
-          divAdd,
-          `Validation of Div Add`,
-          extLine(new Error())
-        );
-      if (targ.checked) {
-        divAdd.style.display = "grid";
-        divAdd.style.opacity = "0.8";
-        divAdd.style.minWidth = "70vw";
-        for (const radio of [
-          ...divAdd.querySelectorAll('input[type="radio"'),
-          ...divAdd.querySelectorAll('input[type="number"]'),
-          ...divAdd.querySelectorAll('input[type="date"]'),
-        ])
-          if (radio instanceof HTMLInputElement)
-            radio.dataset.required = "true";
-      } else {
-        divAdd.style.display = "none";
-        divAdd.style.opacity = "0";
-        divAdd.style.minWidth = "0";
-        for (const radio of [
-          ...divAdd.querySelectorAll('input[type="radio"'),
-          ...divAdd.querySelectorAll('input[type="number"]'),
-          ...divAdd.querySelectorAll('input[type="date"]'),
-        ])
-          if (radio instanceof HTMLInputElement) delete radio.dataset.required;
-      }
-    } catch (e) {
-      console.error(
-        `Error executing callback for ${
-          targ instanceof HTMLElement
-            ? targ.id || targ.className || targ.tagName
-            : "undefined target"
-        }:\n${(e as Error).message}
-        Attempts for divAdd:
-        1. ${
-          (targ instanceof HTMLElement && targ.closest(".spanSectAnt")?.id) ||
-          "null"
-        }
-        2. ${
-          (targ instanceof HTMLElement && targ.closest(".input-group")?.id) ||
-          "null"
-        }
-        3. ${
-          (targ instanceof HTMLElement &&
-            targ.closest('span[role="group"]')?.id) ||
-          "null"
-        }
-        4. ${
-          (targ instanceof HTMLElement &&
-            document.getElementById(
-              `divAdd${targ.id.replace("ant", "").replace("Id", "")}`
-            )) ||
-          "null"
-        }`
-      );
-    }
-  };
   useEffect(() => {
-    agGenElement = document.getElementById("genId");
-    agGenValue = (agGenElement as entryEl)?.value || "masculino";
     agIsAutoCorrectOn = getGlobalEls(agIsAutoCorrectOn, "num");
-    handleLinkChanges("ag", "AG Page Style");
-    equalizeFlexSibilings(document.querySelectorAll("[class*='flexTwin']"), [
-      ["width", "px"],
-    ]);
-    clearPhCb();
-    agGenElement instanceof HTMLInputElement ||
-    agGenElement instanceof HTMLTextAreaElement ||
-    agGenElement instanceof HTMLSelectElement
-      ? (agGenElement.value = addListenersGenConts(agGenElement, agGenValue))
-      : elementNotFound(
-          agGenElement,
-          "instance of agGenElement for DOM initialization",
-          extLine(new Error())
-        );
-    addListenerCPFCont();
-    addListenersEmailInputs();
-    deactTextInput(
-      document.querySelectorAll('input[type="number"][id$=NumId]'),
-      document.querySelectorAll("input[id$=NullId]")
-    );
-    addListenerExportBtn("anamG");
-    addCanvasListeners();
-    addResetAstListener();
-    toggleConformDlg();
-    addEventListener("resize", handleResize);
-    syncAriaStates(document.querySelectorAll("*"));
-    watchLabels();
-    document.querySelectorAll(".cbFam").forEach(handleDivAddShow);
-    const UFid = document.getElementById("UFid");
-    if (UFid instanceof HTMLInputElement) UFid.value = "RJ";
-    equalizeCepElements();
-    return () => removeEventListener("resize", handleResize);
   }, []);
   return (
     <ErrorBoundary FallbackComponent={() => <div>Erro!</div>}>
@@ -259,10 +72,7 @@ export default function AGPage(): JSX.Element {
                   Anamnese Geral
                 </h1>
                 <h2 className="bolded">PROSSaúde, UFRJ</h2>
-                <TipsBtn dispatch={setTips} state={shouldShowTips} />
-                {shouldShowTips && (
-                  <AGTips dispatch={setTips} state={shouldShowTips} />
-                )}
+                <TipsBtnWrapper />
               </div>
               <SwitchDiv />
             </div>
@@ -297,24 +107,8 @@ export default function AGPage(): JSX.Element {
                       id="fsAnamGSpanCPF"
                     >
                       <label htmlFor="inpCPF" className="labelIdentif">
-                        CPF:
-                        <input
-                          type="text"
-                          id="inpCPF"
-                          maxLength={16}
-                          pattern="/^(\d{3}\.){2}\d{3}-\d{2}$/"
-                          className="form-control noInvert"
-                          placeholder="Preencha com o CPF"
-                          autoComplete="username"
-                          data-title="CPF"
-                          onInput={ev =>
-                            handleCondtReq(ev.currentTarget, {
-                              min: 1,
-                              max: 16,
-                              pattern: ["^(d{3}.){2}d{3}-d{2}$", ""],
-                            })
-                          }
-                        />
+                        <span>CPF:</span>
+                        <CPFElement />
                       </label>
                     </span>
                     <span role="group" className="fsAnamGSpan flexAlItCt col">
@@ -369,25 +163,8 @@ export default function AGPage(): JSX.Element {
                       id="fsAnamGSpan16"
                     >
                       <label htmlFor="telAreaCodeId" className="labelIdentif">
-                        DDD:
-                        <input
-                          type="number"
-                          name="ddd"
-                          id="telAreaCodeId"
-                          className="form-control inpIdentif noInvert inpDDD minText maxText patternText minNum maxNum"
-                          min="11"
-                          max="99"
-                          autoComplete="tel-area-code"
-                          data-title="ddd_prim"
-                          data-reqlength="2"
-                          data-maxlength="4"
-                          data-pattern="[0-9]{2,}"
-                          data-flags="g"
-                          minLength={2}
-                          maxLength={4}
-                          required
-                          onInput={ev => handleEventReq(ev.currentTarget)}
-                        />
+                        <span>DDD:</span>
+                        <DDDElementPrim />
                       </label>
                       <br role="presentation" />
                     </span>
@@ -397,26 +174,8 @@ export default function AGPage(): JSX.Element {
                       id="fsAnamGSpan19"
                     >
                       <label htmlFor="tel2AreaCodeId" className="labelIdentif">
-                        DDD do Telefone Secundário:
-                        <input
-                          type="number"
-                          name="ddd_sec"
-                          id="tel2AreaCodeId"
-                          className="form-control inpIdentif noInvert inpDDD"
-                          min="11"
-                          max="99"
-                          autoComplete="tel-area-code"
-                          data-title="ddd_sec"
-                          onInput={ev =>
-                            handleCondtReq(ev.currentTarget, {
-                              min: 2,
-                              max: 4,
-                              minNum: 11,
-                              maxNum: 11,
-                              pattern: ["[0-9]{2,}", "g"],
-                            })
-                          }
-                        />
+                        <span>DDD do Telefone Secundário:</span>
+                        <DDDElementSec />
                       </label>
                       <br role="presentation" />
                     </span>
@@ -426,26 +185,8 @@ export default function AGPage(): JSX.Element {
                       id="fsAnamGSpan17"
                     >
                       <label htmlFor="telId" className="labelIdentif">
-                        Telefone:
-                        <input
-                          type="text"
-                          name="tel"
-                          id="telId"
-                          className="form-control inpIdentif noInvert inpTel minText maxText patternText"
-                          minLength={8}
-                          maxLength={10}
-                          inputMode="tel"
-                          data-title="tel_prim"
-                          data-reqlength="8"
-                          data-maxlength="10"
-                          data-pattern="9?\d{4}-\d{4}"
-                          data-flags="g"
-                          required
-                          onInput={ev => {
-                            formatTel(ev.currentTarget, false);
-                            handleEventReq(ev.currentTarget);
-                          }}
-                        />
+                        <span>Telefone:</span>
+                        <TelPrim />
                       </label>
                       <br role="presentation" />
                     </span>
@@ -455,23 +196,8 @@ export default function AGPage(): JSX.Element {
                       id="fsAnamGSpan20"
                     >
                       <label htmlFor="tel2Id" className="labelIdentif">
-                        Telefone Secundário:
-                        <input
-                          type="text"
-                          name="tel_sec"
-                          id="tel2Id"
-                          className="form-control inpIdentif noInvert inpTel"
-                          inputMode="tel"
-                          data-title="tel_sec"
-                          onInput={ev => {
-                            formatTel(ev.currentTarget, false);
-                            handleCondtReq(ev.currentTarget, {
-                              min: 3,
-                              max: 10,
-                              pattern: ["9?d{4}-d{4}", "g"],
-                            });
-                          }}
-                        />
+                        <span>Telefone Secundário:</span>
+                        <TelSec />
                       </label>
                       <br role="presentation" />
                     </span>
@@ -484,25 +210,8 @@ export default function AGPage(): JSX.Element {
                         htmlFor="telCountryCodeId"
                         className="labelIdentif"
                       >
-                        Se estrangeiro, informe o código do País:
-                        <input
-                          type="number"
-                          name="country_code"
-                          id="telCountryCodeId"
-                          className="form-control inpIdentif noInvert"
-                          min="1"
-                          max="999"
-                          autoComplete="tel-country-code"
-                          data-title="cod_pais_prim"
-                          onInput={ev =>
-                            handleCondtReq(ev.currentTarget, {
-                              min: 1,
-                              max: 6,
-                              minNum: 1,
-                              maxNum: 999,
-                            })
-                          }
-                        />
+                        <span>Se estrangeiro, informe o código do País:</span>
+                        <TelCodePrim />
                       </label>
                       <br role="presentation" />
                     </span>
@@ -515,25 +224,8 @@ export default function AGPage(): JSX.Element {
                         htmlFor="tel2CountryCodeId"
                         className="labelIdentif"
                       >
-                        Se estrangeiro, informe o código do País:
-                        <input
-                          type="number"
-                          name="country_code_sec"
-                          id="tel2CountryCodeId"
-                          className="form-control inpIdentif noInvert"
-                          min="1"
-                          max="999"
-                          autoComplete="tel-country-code"
-                          data-title="cod_pais_sec"
-                          onInput={ev =>
-                            handleCondtReq(ev.currentTarget, {
-                              min: 1,
-                              max: 6,
-                              minNum: 1,
-                              maxNum: 999,
-                            })
-                          }
-                        />
+                        <span>Se estrangeiro, informe o código do País:</span>
+                        <TelCodeSec />
                       </label>
                       <br role="presentation" />
                     </span>
@@ -542,22 +234,9 @@ export default function AGPage(): JSX.Element {
                       className="spanMain fsAnamGSpan"
                       id="fsAnamGSpan22"
                     >
-                      <label htmlFor="email2Id" className="labelIdentif">
-                        E-mail:
-                        <input
-                          type="text"
-                          name="email"
-                          id="email1Id"
-                          className="form-control inpIdentif noInvert inpEmail"
-                          autoComplete="email"
-                          data-title="email_prim"
-                          onInput={ev =>
-                            handleCondtReq(ev.currentTarget, {
-                              min: 6,
-                              pattern: ["@", "g"],
-                            })
-                          }
-                        />
+                      <label htmlFor="email1Id" className="labelIdentif">
+                        <span>E-mail:</span>
+                        <Email />
                       </label>
                       <br role="presentation" />
                     </span>
@@ -570,20 +249,11 @@ export default function AGPage(): JSX.Element {
                         htmlFor="email2Id"
                         className="labelIdentif noInvert"
                       >
-                        E-mail Secundário:
-                        <input
-                          type="text"
+                        <span>E-mail secundário:</span>
+                        <Email
                           name="email_sec"
                           id="email2Id"
-                          className="form-control inpIdentif noInvert inpEmail"
-                          autoComplete="email"
-                          data-title="email_sec"
-                          onInput={ev =>
-                            handleCondtReq(ev.currentTarget, {
-                              min: 6,
-                              pattern: ["@", "g"],
-                            })
-                          }
+                          title="E-mail Secundário"
                         />
                       </label>
                     </span>
@@ -600,39 +270,15 @@ export default function AGPage(): JSX.Element {
                       htmlFor="countryId"
                       className="labelIdentif noInvert"
                     >
-                      Nacionalidade:
-                      <input
-                        type="text"
-                        name="country"
-                        id="countryId"
-                        className="form-control autocorrect inpIdentif noInvert minText patternText"
-                        autoComplete="country"
-                        data-title="nacionalidade"
-                        minLength={3}
-                        data-reqlength="3"
-                        data-pattern="[^0-9]"
-                        data-flags="g"
-                        required
-                        onInput={ev => handleEventReq(ev.currentTarget)}
-                      />
+                      <span>Nacionalidade:</span>
+                      <Nac />
                     </label>
                     <br role="presentation" />
                   </span>
-
                   <span role="group" className="fsAnamGSpan" id="fsAnamGSpan10">
                     <label htmlFor="streetId" className="labelIdentif noInvert">
-                      Cidade:
-                      <input
-                        type="text"
-                        name="city"
-                        id="cityId"
-                        className="form-control autocorrect inpIdentif noInvert minText"
-                        data-title="cidade"
-                        minLength={3}
-                        data-reqlength="3"
-                        required
-                        onInput={ev => handleEventReq(ev.currentTarget)}
-                      />
+                      <span>Cidade:</span>
+                      <City />
                     </label>
                     <br role="presentation" />
                   </span>
@@ -642,213 +288,33 @@ export default function AGPage(): JSX.Element {
                       className="labelIdentif noInvert"
                       id="labMunId"
                     >
-                      Naturalidade:
-                      <input
-                        type="text"
-                        name="naturality"
-                        id="munId"
-                        className="form-control autocorrect inpIdentif noInvert minText"
-                        autoComplete="address-level2"
-                        data-title="naturalidade"
-                        minLength={3}
-                        data-reqlength="3"
-                        required
-                        onInput={ev => handleEventReq(ev.currentTarget)}
-                      />
+                      <span>Naturalidade:</span>
+                      <Nat />
                     </label>
                     <br role="presentation" />
                   </span>
                   <span role="group" className="fsAnamGSpan" id="fsAnamGSpan12">
                     <label htmlFor="streetId" className="labelIdentif noInvert">
-                      Endereço | Logradouro | Rua:
-                      <input
-                        type="text"
-                        name="street"
-                        id="streetId"
-                        className="form-control autocorrect inpIdentif noInvert minText"
-                        autoComplete="address-level3"
-                        data-title="endereco"
-                        minLength={3}
-                        data-reqlength="3"
-                        required
-                        onInput={ev => handleEventReq(ev.currentTarget)}
-                      />
+                      <span>Endereço | Logradouro | Rua:</span>
+                      <Street />
                     </label>
                     <br role="presentation" />
                   </span>
                   <span role="group" className="fsAnamGSpan" id="fsAnamGSpan8">
-                    <label
-                      htmlFor="streetId"
-                      className="labelIdentif noInvert flexWC"
-                    >
-                      CEP:
-                      <input
-                        type="text"
-                        name="cep"
-                        id="cepId"
-                        className="form-control inpIdentif noInvert minText maxText patternText"
-                        minLength={3}
-                        maxLength={11}
-                        data-title="cep"
-                        data-reqlength="3"
-                        data-maxlength="11"
-                        data-pattern="^\d{2}[\s.-]?\d{3}[\s.-]?\d{2,3}$"
-                        required
-                        onInput={ev => {
-                          const cepElementBtn =
-                            document.getElementById("autoCompCepBtn");
-                          formatCEP(ev.currentTarget);
-                          handleEventReq(ev.currentTarget);
-                          !enableCEPBtn(
-                            cepElementBtn,
-                            ev.currentTarget.value.length
-                          ) &&
-                            searchCEP(ev.currentTarget).then(
-                              res =>
-                                res === "fail" && searchCEPXML(ev.currentTarget)
-                            );
-                        }}
-                      />
-                      <button
-                        type="button"
-                        id="autoCompCepBtn"
-                        className="btn btn-secondary"
-                        disabled
-                      >
-                        Preencher com CEP
-                      </button>
-                      <div
-                        className="min20H"
-                        id="divProgCEP"
-                        style={{ height: "1rem" }}
-                        role="separator"
-                      ></div>
-                      <div
-                        className="min20H customBlValidityWarn"
-                        id="divCEPWarn"
-                        style={{ height: "1.6rem" }}
-                        role="separator"
-                      ></div>
-                    </label>
+                    <CepElements />
                     <br role="presentation" />
                   </span>
                   <span role="group" className="fsAnamGSpan" id="fsAnamGSpan11">
                     <label htmlFor="streetId" className="labelIdentif noInvert">
-                      Bairro:
-                      <input
-                        type="text"
-                        name="neighbourhood"
-                        id="neighbourhoodId"
-                        className="form-control autocorrect inpIdentif noInvert minText"
-                        minLength={3}
-                        data-title="bairro"
-                        data-reqlength="3"
-                        required
-                        onInput={ev => handleEventReq(ev.currentTarget)}
-                      />
+                      <span>Bairro:</span>
+                      <Nbh />
                     </label>
                     <br role="presentation" />
                   </span>
                   <span role="group" className="fsAnamGSpan" id="fsAnamGSpan9">
                     <label htmlFor="UFId" className="labelIdentif forceInvert">
                       Unidade Federativa (Residência Atual):
-                      <select
-                        id="UFId"
-                        autoComplete="address-level1"
-                        className="form-select"
-                        data-title="uf"
-                        required
-                      >
-                        <optgroup label="Centro-Oeste">
-                          <option className="optIdentif optUF" value="GO">
-                            Goiás
-                          </option>
-                          <option className="optIdentif optUF" value="MT">
-                            Mato Grosso
-                          </option>
-                          <option className="optIdentif optUF" value="MS">
-                            Mato Grosso do Sul
-                          </option>
-                        </optgroup>
-
-                        <optgroup label="Nordeste">
-                          <option className="optIdentif optUF" value="AL">
-                            Alagoas
-                          </option>
-                          <option className="optIdentif optUF" value="BA">
-                            Bahia
-                          </option>
-                          <option className="optIdentif optUF" value="CE">
-                            Ceará
-                          </option>
-                          <option className="optIdentif optUF" value="MA">
-                            Maranhão
-                          </option>
-                          <option className="optIdentif optUF" value="PB">
-                            Paraíba
-                          </option>
-                          <option className="optIdentif optUF" value="PE">
-                            Pernambuco
-                          </option>
-                          <option className="optIdentif optUF" value="PI">
-                            Piauí
-                          </option>
-                          <option className="optIdentif optUF" value="RN">
-                            Rio Grande do Norte
-                          </option>
-                          <option className="optIdentif optUF" value="SE">
-                            Sergipe
-                          </option>
-                        </optgroup>
-
-                        <optgroup label="Norte">
-                          <option className="optIdentif optUF" value="AC">
-                            Acre
-                          </option>
-                          <option className="optIdentif optUF" value="AP">
-                            Amapá
-                          </option>
-                          <option className="optIdentif optUF" value="AM">
-                            Amazonas
-                          </option>
-                          <option className="optIdentif optUF" value="RO">
-                            Rondônia
-                          </option>
-                          <option className="optIdentif optUF" value="RR">
-                            Roraima
-                          </option>
-                          <option className="optIdentif optUF" value="TO">
-                            Tocantins
-                          </option>
-                        </optgroup>
-
-                        <optgroup label="Sudeste">
-                          <option className="optIdentif optUF" value="ES">
-                            Espírito Santo
-                          </option>
-                          <option className="optIdentif optUF" value="MG">
-                            Minas Gerais
-                          </option>
-                          <option className="optIdentif optUF" value="RJ">
-                            Rio de Janeiro
-                          </option>
-                          <option className="optIdentif optUF" value="SP">
-                            São Paulo
-                          </option>
-                        </optgroup>
-
-                        <optgroup label="Sul">
-                          <option className="optIdentif optUF" value="PR">
-                            Paraná
-                          </option>
-                          <option className="optIdentif optUF" value="RS">
-                            Rio Grande do Sul
-                          </option>
-                          <option className="optIdentif optUF" value="SC">
-                            Santa Catarina
-                          </option>
-                        </optgroup>
-                      </select>
+                      <Uf />
                     </label>
                     <br role="presentation" />
                   </span>
@@ -862,21 +328,7 @@ export default function AGPage(): JSX.Element {
                       role="group"
                       className="flexDiv spanLoc fitSpaced mg-07t"
                     >
-                      <input
-                        type="number"
-                        name="street_num"
-                        id="streetNumId"
-                        className="form-control inpIdentif noInvert inpLocNum halfL"
-                        min="1"
-                        autoComplete="address-level4"
-                        data-title="num_rua"
-                        onInput={ev =>
-                          handleCondtReq(ev.currentTarget, {
-                            min: 1,
-                            minNum: 0,
-                          })
-                        }
-                      />
+                      <StreetNum />
                       <span
                         role="group"
                         className="halfSpanCheck halfR flexAlItCt noInvert"
@@ -902,21 +354,7 @@ export default function AGPage(): JSX.Element {
                       role="group"
                       className="flexDiv spanLoc fitSpaced mg-07t"
                     >
-                      <input
-                        type="number"
-                        name="loc_complement"
-                        id="compNumId"
-                        className="form-control inpIdentif noInvert inpLocNum halfL"
-                        min="1"
-                        autoComplete="address-level4"
-                        data-title="comp_casa"
-                        onInput={ev =>
-                          handleCondtReq(ev.currentTarget, {
-                            min: 1,
-                            minNum: 0,
-                          })
-                        }
-                      />
+                      <LocComp />
                       <span
                         role="group"
                         className="halfSpanCheck halfR flexAlItCt noInvert"
@@ -929,6 +367,7 @@ export default function AGPage(): JSX.Element {
                           role="switch"
                           data-title="switch_comp_casa"
                         />
+                        l
                       </span>
                     </span>
                   </span>
@@ -985,16 +424,7 @@ export default function AGPage(): JSX.Element {
                   <label htmlFor="qxPrinc" className="labelSdGeral">
                     Queixa Principal
                   </label>
-                  <textarea
-                    className="form-control taSdGeral"
-                    name="issue"
-                    id="qxPrinc"
-                    maxLength={1000}
-                    placeholder="Escreva aqui a(s) queixa(s)"
-                    data-title="queixa_principal"
-                    onClick={ev => addDblQuotes(ev.currentTarget)}
-                    onInput={ev => addDblQuotes(ev.currentTarget)}
-                  ></textarea>
+                  <QxPrinc />
                   <br role="presentation" />
                 </span>
                 <span
@@ -1303,168 +733,7 @@ export default function AGPage(): JSX.Element {
                     ctx={true}
                     required={true}
                   />
-                  <div
-                    className="divAdd gridTwoCol"
-                    id="divAddPrAlta"
-                    role="list"
-                  >
-                    <span role="listitem" className="cbDoencaSubt">
-                      <input
-                        type="radio"
-                        name="has_stg"
-                        id="HASPreId"
-                        className="cpbOp indivOp opHAS"
-                        data-title="Pré-hipertensão"
-                        data-value="pre"
-                        onKeyDown={keydown => {
-                          opRadioHandler(
-                            keydown,
-                            Array.from(
-                              document.querySelectorAll(
-                                'input[id$="Yes"], input[id$="No"]'
-                              )
-                            )
-                          );
-                        }}
-                      />{" "}
-                      Pré-hipertensão
-                    </span>
-                    <span role="listitem" className="cbDoencaSubt">
-                      <input
-                        type="radio"
-                        name="has_stg"
-                        id="HASStg1Id"
-                        className="cpbOp indivOp opHAS"
-                        data-title="Hipertensão Estágio 1"
-                        data-value="1"
-                        onKeyDown={keydown => {
-                          opRadioHandler(
-                            keydown,
-                            Array.from(
-                              document.querySelectorAll(
-                                'input[id$="Yes"], input[id$="No"]'
-                              )
-                            )
-                          );
-                        }}
-                      />{" "}
-                      Estágio 1
-                    </span>
-                    <span role="listitem" className="cbDoencaSubt">
-                      <input
-                        type="radio"
-                        name="has_stg"
-                        id="HASStg2Id"
-                        className="cpbOp indivOp opHAS"
-                        data-title="Hipertensão Estágio 2"
-                        data-value="2"
-                        onKeyDown={keydown => {
-                          opRadioHandler(
-                            keydown,
-                            Array.from(
-                              document.querySelectorAll(
-                                'input[id$="Yes"], input[id$="No"]'
-                              )
-                            )
-                          );
-                        }}
-                      />{" "}
-                      Estágio 2
-                    </span>
-                    <span role="listitem" className="cbDoencaSubt">
-                      <input
-                        type="radio"
-                        name="has_stg"
-                        id="HASStg3Id"
-                        className="cpbOp indivOp opHAS"
-                        data-title="Hipertensão Estágio 3"
-                        data-value="3"
-                        onKeyDown={keydown => {
-                          opRadioHandler(
-                            keydown,
-                            Array.from(
-                              document.querySelectorAll(
-                                'input[id$="Yes"], input[id$="No"]'
-                              )
-                            )
-                          );
-                        }}
-                      />{" "}
-                      Estágio 3 | Em Crise
-                    </span>
-                    <span role="listitem" className="cbDoencaSubt">
-                      <input
-                        type="radio"
-                        name="has_stg"
-                        id="HASPrimId"
-                        className="cpbOp indivOp opHAS"
-                        data-title="Hipertensão Primária | Essencial"
-                        data-value="prim"
-                        onKeyDown={keydown => {
-                          opRadioHandler(
-                            keydown,
-                            Array.from(
-                              document.querySelectorAll(
-                                'input[id$="Yes"], input[id$="No"]'
-                              )
-                            )
-                          );
-                        }}
-                      />{" "}
-                      Primária | Essencial
-                    </span>
-                    <span role="listitem" className="cbDoencaSubt">
-                      <input
-                        type="radio"
-                        name="has_stg"
-                        id="HASSecId"
-                        className="cpbOp indivOp opHAS"
-                        data-title="Hipertensão Secundária"
-                        data-value="sec"
-                        onKeyDown={keydown => {
-                          opRadioHandler(
-                            keydown,
-                            Array.from(
-                              document.querySelectorAll(
-                                'input[id$="Yes"], input[id$="No"]'
-                              )
-                            )
-                          );
-                        }}
-                      />{" "}
-                      Secundária
-                    </span>
-                    <span role="listitem" className="cbDoencaSubt">
-                      <input
-                        type="checkbox"
-                        name="has_res"
-                        id="HASResId"
-                        className="cpbOp indivOp opHAS"
-                        data-title="Hipertensão Resistente"
-                      />{" "}
-                      Resistente
-                    </span>
-                    <span role="listitem" className="cbDoencaSubt">
-                      <input
-                        type="checkbox"
-                        name="has_sist"
-                        id="HASIsolId"
-                        className="cpbOp indivOp opHAS"
-                        data-title="Hipertensão Sistólica Isolada"
-                      />{" "}
-                      Sistólica Isolada
-                    </span>
-                    <span role="listitem" className="cbDoencaSubt">
-                      <input
-                        type="checkbox"
-                        name="has_mal"
-                        id="HASMalId"
-                        className="cpbOp indivOp opHAS"
-                        data-title="Hipertensão Maligna"
-                      />{" "}
-                      Maligna
-                    </span>
-                  </div>
+                  <HASDivAdd />
                 </div>
                 <div
                   id="fsAGRadDiv2"
@@ -1929,23 +1198,7 @@ export default function AGPage(): JSX.Element {
                     id="spanOtherD"
                   >
                     <div className="input-group-text" role="group">
-                      <input
-                        type="radio"
-                        name="pbOtherDName"
-                        id="pbOtherDIdYes"
-                        className="radOD"
-                        data-title="outras_doencas"
-                        onKeyDown={keydown => {
-                          opRadioHandler(
-                            keydown,
-                            Array.from(
-                              document.querySelectorAll(
-                                'input[id$="Yes"], input[id$="No"]'
-                              )
-                            )
-                          );
-                        }}
-                      />
+                      <OtherD />
                     </div>
                     <label
                       htmlFor="pbOtherDIdYes"
@@ -2275,7 +1528,7 @@ export default function AGPage(): JSX.Element {
                   </section>
                   <hr />
                 </fieldset>
-                <AntMedFs phCb={clearPhCb} />
+                <AntMedFs />
               </section>
               <hr />
               <fieldset
@@ -2456,16 +1709,7 @@ export default function AGPage(): JSX.Element {
               >
                 <Declaration text="&#34;DECLARO SEREM VERDADEIRAS AS INFORMAÇÕES ACIMA&#34;" />
                 <div className="divMain" id="divConfirm" role="group">
-                  <BtnConform
-                    dispatch={setDeclaration}
-                    state={shouldShowDeclaration}
-                  />
-                  {shouldShowDeclaration && (
-                    <AGDeclaration
-                      state={shouldShowDeclaration}
-                      dispatch={setDeclaration}
-                    />
-                  )}
+                  <BtnConformWrapper />
                   <div
                     className="divSub flexEl divConfirm flexQ900NoW"
                     id="divConfirm2"
@@ -2492,6 +1736,103 @@ export default function AGPage(): JSX.Element {
           </form>
         </main>
       </div>
+      <Watcher routeCase="ag" />
     </ErrorBoundary>
   );
+}
+
+export function handleDivAddShow(targ: targEl): void {
+  try {
+    if (
+      !(
+        targ instanceof HTMLInputElement &&
+        (targ.type === "radio" || targ.type === "checkbox")
+      )
+    )
+      throw elementNotFound(
+        targ,
+        `Validation of Event Current Target`,
+        extLine(new Error())
+      );
+    const parentSpan =
+      targ.closest(".spanSectAnt") ||
+      targ.closest(".input-group") ||
+      targ.closest('span[role="group"]');
+    if (!(parentSpan instanceof HTMLElement))
+      throw elementNotFound(
+        parentSpan,
+        `Validation of Parent Section Span`,
+        extLine(new Error())
+      );
+    let divAdd: targEl = parentSpan.nextElementSibling;
+    if (!divAdd?.classList.contains(".divAdd"))
+      divAdd = parentSpan.nextElementSibling?.nextElementSibling;
+    if (!divAdd?.classList.contains(".divAdd"))
+      divAdd =
+        parentSpan.nextElementSibling?.nextElementSibling?.nextElementSibling;
+    if (!divAdd?.classList.contains(".divAdd"))
+      divAdd =
+        parentSpan.nextElementSibling?.nextElementSibling?.nextElementSibling
+          ?.nextElementSibling;
+    if (!(divAdd instanceof HTMLElement && divAdd.classList.contains("divAdd")))
+      divAdd = document.getElementById(
+        `divAdd${targ.id.replace("ant", "").replace("Id", "")}`
+      );
+    if (!(divAdd instanceof HTMLElement && divAdd.classList.contains("divAdd")))
+      throw elementNotFound(
+        divAdd,
+        `Validation of Div Add`,
+        extLine(new Error())
+      );
+    if (targ.checked) {
+      divAdd.style.display = "grid";
+      divAdd.style.opacity = "0.8";
+      divAdd.style.minWidth = "70vw";
+      for (const radio of [
+        ...divAdd.querySelectorAll('input[type="radio"'),
+        ...divAdd.querySelectorAll('input[type="number"]'),
+        ...divAdd.querySelectorAll('input[type="date"]'),
+      ])
+        if (radio instanceof HTMLInputElement) radio.dataset.required = "true";
+    } else {
+      divAdd.style.display = "none";
+      divAdd.style.opacity = "0";
+      divAdd.style.minWidth = "0";
+      for (const radio of [
+        ...divAdd.querySelectorAll('input[type="radio"'),
+        ...divAdd.querySelectorAll('input[type="number"]'),
+        ...divAdd.querySelectorAll('input[type="date"]'),
+      ])
+        if (radio instanceof HTMLInputElement) delete radio.dataset.required;
+    }
+  } catch (e) {
+    console.error(
+      `Error executing callback for ${
+        targ instanceof HTMLElement
+          ? targ.id || targ.className || targ.tagName
+          : "undefined target"
+      }:\n${(e as Error).message}
+      Attempts for divAdd:
+      1. ${
+        (targ instanceof HTMLElement && targ.closest(".spanSectAnt")?.id) ||
+        "null"
+      }
+      2. ${
+        (targ instanceof HTMLElement && targ.closest(".input-group")?.id) ||
+        "null"
+      }
+      3. ${
+        (targ instanceof HTMLElement &&
+          targ.closest('span[role="group"]')?.id) ||
+        "null"
+      }
+      4. ${
+        (targ instanceof HTMLElement &&
+          document.getElementById(
+            `divAdd${targ.id.replace("ant", "").replace("Id", "")}`
+          )) ||
+        "null"
+      }`
+    );
+  }
 }

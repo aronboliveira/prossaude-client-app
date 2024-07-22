@@ -1,4 +1,5 @@
-import { handleLinkChanges } from "@/lib/global/handlers/gRoutingHandlers";
+"use client";
+
 import { useEffect, useRef } from "react";
 import { clearDefInvalidMsg, resetPhs } from "@/lib/global/gStyleScript";
 import {
@@ -10,7 +11,6 @@ import {
   callbackShowPw,
   callbackSubmitBtn,
 } from "@/lib/locals/loginPage/loginController";
-import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useRouter } from "next/router";
 import { basePath } from "../../../src/pages";
 import { nullishAnchor } from "@/lib/global/declarations/types";
@@ -19,7 +19,6 @@ export default function LoginInputs(): JSX.Element {
   const router = useRouter();
   const anchorRef = useRef<nullishAnchor>(null);
   useEffect(() => {
-    handleLinkChanges("login", "Login Page Style");
     try {
       if (!(anchorRef.current instanceof HTMLAnchorElement))
         throw elementNotFound(
@@ -56,7 +55,6 @@ export default function LoginInputs(): JSX.Element {
       user: "Nome de Usuário",
       pw: "Senha",
     });
-    syncAriaStates(document.querySelectorAll("*"));
   }, []);
   return (
     <section id="inputCont">

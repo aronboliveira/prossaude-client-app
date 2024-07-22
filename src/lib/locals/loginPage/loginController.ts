@@ -85,14 +85,10 @@ export function addListenerSubmitBtn(): targEl {
   return submitBtn;
 }
 
-export function callbackSubmitBtn(
-  submitBtn: HTMLButtonElement,
-  ev: SubmitEvent
-): void {
+export function callbackSubmitBtn(submitBtn: targEl, ev: SubmitEvent): void {
   if (submitBtn instanceof HTMLButtonElement) {
     const pwInp = document.getElementById("pw");
     const userInp = document.getElementById("user");
-
     if (pwInp instanceof HTMLInputElement) {
       !/^(?=.*[0-9])(?=.*[A-Z])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/.test(
         pwInp.value

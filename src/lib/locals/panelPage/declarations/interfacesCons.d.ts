@@ -179,13 +179,15 @@ export interface UserDlgProps
   callLogout: () => void;
 }
 
-export interface FallbackedMainPanelProps extends MainPanelProps {
+export interface FallbackedMainPanelProps
+  extends Omit<MainPanelProps, "mainRoot"> {
   renderError: Error;
 }
 
 export interface ErrorFallbackMainPanelProps extends FallbackedMainPanelProps {
   tryAcc: number;
   resetErrorBoundary(mainRoot: Root, userClass: string, tryAcc: number);
+  mainRoot: Root;
 }
 
 export interface ErrorDlgProps {

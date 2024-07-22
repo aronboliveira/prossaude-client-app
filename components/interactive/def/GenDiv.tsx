@@ -5,12 +5,38 @@ import {
   inputNotFound,
 } from "@/lib/global/handlers/errorHandler";
 import { person } from "@/pages/edfis";
+import { useEffect } from "react";
+
+let agGenElement = undefined;
 
 export default function GenDiv({
   flux = false,
 }: {
   flux?: boolean;
 }): JSX.Element {
+  useEffect(() => {
+    try {
+      const agBody = document.getElementById("agBody");
+      if (agBody instanceof HTMLElement) {
+        agGenElement = document.getElementById("genId");
+        agGenElement instanceof HTMLInputElement ||
+        agGenElement instanceof HTMLTextAreaElement ||
+        agGenElement instanceof HTMLSelectElement
+          ? (person.gen = agGenElement.value)
+          : elementNotFound(
+              agGenElement,
+              "instance of agGenElement for DOM initialization",
+              extLine(new Error())
+            );
+      } else {
+        //caso ed
+      }
+    } catch (e) {
+      console.error(
+        `Error executing procedure for agBody:\n${(e as Error).message}`
+      );
+    }
+  }, []);
   return (
     <div className="gridTwoCol noInvert" id="genDiv" role="group">
       <span
@@ -128,6 +154,73 @@ export default function GenDiv({
             className="form-select inpIdentif noInvert"
             data-title="identidade_genero_nascenca"
             required
+            onChange={() => {
+              const genId = document.getElementById("genId");
+              const genBirthRel = document.getElementById("genBirthRelId");
+              const genTrans = document.getElementById("genTransId");
+              const genFisAlin = document.getElementById("genFisAlinId");
+              try {
+                if (
+                  !(
+                    genId instanceof HTMLInputElement ||
+                    genId instanceof HTMLSelectElement ||
+                    genId instanceof HTMLTextAreaElement
+                  )
+                )
+                  throw inputNotFound(
+                    genId,
+                    `validation of genId`,
+                    extLine(new Error())
+                  );
+                if (
+                  !(
+                    genBirthRel instanceof HTMLInputElement ||
+                    genBirthRel instanceof HTMLSelectElement ||
+                    genBirthRel instanceof HTMLTextAreaElement
+                  )
+                )
+                  throw inputNotFound(
+                    genBirthRel,
+                    `validation of genBirthRel`,
+                    extLine(new Error())
+                  );
+                if (
+                  !(
+                    genTrans instanceof HTMLInputElement ||
+                    genTrans instanceof HTMLSelectElement ||
+                    genTrans instanceof HTMLTextAreaElement
+                  )
+                )
+                  throw inputNotFound(
+                    genTrans,
+                    `validation of genTrans`,
+                    extLine(new Error())
+                  );
+                if (
+                  !(
+                    genFisAlin instanceof HTMLInputElement ||
+                    genFisAlin instanceof HTMLSelectElement ||
+                    genFisAlin instanceof HTMLTextAreaElement
+                  )
+                )
+                  throw inputNotFound(
+                    genFisAlin,
+                    `validation of genFisAlin`,
+                    extLine(new Error())
+                  );
+                person.gen =
+                  fluxGen(
+                    [genId, genBirthRel, genTrans, genFisAlin],
+                    genId.value
+                  ) || "masculino";
+              } catch (e) {
+                console.error(
+                  `Error executing procedure for calling fluxGen:\n${
+                    (e as Error).message
+                  }`
+                );
+              }
+            }}
           >
             <option className="optIdentif optgenBirthRel" value="cis">
               Cisgênero | Cissexual
@@ -158,6 +251,73 @@ export default function GenDiv({
             id="genTransId"
             className="form-select inpIdentif noInvert"
             data-title="stg_transicao_hormonal"
+            onChange={() => {
+              const genId = document.getElementById("genId");
+              const genBirthRel = document.getElementById("genBirthRelId");
+              const genTrans = document.getElementById("genTransId");
+              const genFisAlin = document.getElementById("genFisAlinId");
+              try {
+                if (
+                  !(
+                    genId instanceof HTMLInputElement ||
+                    genId instanceof HTMLSelectElement ||
+                    genId instanceof HTMLTextAreaElement
+                  )
+                )
+                  throw inputNotFound(
+                    genId,
+                    `validation of genId`,
+                    extLine(new Error())
+                  );
+                if (
+                  !(
+                    genBirthRel instanceof HTMLInputElement ||
+                    genBirthRel instanceof HTMLSelectElement ||
+                    genBirthRel instanceof HTMLTextAreaElement
+                  )
+                )
+                  throw inputNotFound(
+                    genBirthRel,
+                    `validation of genBirthRel`,
+                    extLine(new Error())
+                  );
+                if (
+                  !(
+                    genTrans instanceof HTMLInputElement ||
+                    genTrans instanceof HTMLSelectElement ||
+                    genTrans instanceof HTMLTextAreaElement
+                  )
+                )
+                  throw inputNotFound(
+                    genTrans,
+                    `validation of genTrans`,
+                    extLine(new Error())
+                  );
+                if (
+                  !(
+                    genFisAlin instanceof HTMLInputElement ||
+                    genFisAlin instanceof HTMLSelectElement ||
+                    genFisAlin instanceof HTMLTextAreaElement
+                  )
+                )
+                  throw inputNotFound(
+                    genFisAlin,
+                    `validation of genFisAlin`,
+                    extLine(new Error())
+                  );
+                person.gen =
+                  fluxGen(
+                    [genId, genBirthRel, genTrans, genFisAlin],
+                    genId.value
+                  ) || "masculino";
+              } catch (e) {
+                console.error(
+                  `Error executing procedure for calling fluxGen:\n${
+                    (e as Error).message
+                  }`
+                );
+              }
+            }}
           >
             <option className="optIdentif optgenTrans" value="avancado">
               Avançado
@@ -191,6 +351,73 @@ export default function GenDiv({
             id="genFisAlinId"
             className="form-select inpIdentif noInvert"
             data-title="corpo_align"
+            onChange={() => {
+              const genId = document.getElementById("genId");
+              const genBirthRel = document.getElementById("genBirthRelId");
+              const genTrans = document.getElementById("genTransId");
+              const genFisAlin = document.getElementById("genFisAlinId");
+              try {
+                if (
+                  !(
+                    genId instanceof HTMLInputElement ||
+                    genId instanceof HTMLSelectElement ||
+                    genId instanceof HTMLTextAreaElement
+                  )
+                )
+                  throw inputNotFound(
+                    genId,
+                    `validation of genId`,
+                    extLine(new Error())
+                  );
+                if (
+                  !(
+                    genBirthRel instanceof HTMLInputElement ||
+                    genBirthRel instanceof HTMLSelectElement ||
+                    genBirthRel instanceof HTMLTextAreaElement
+                  )
+                )
+                  throw inputNotFound(
+                    genBirthRel,
+                    `validation of genBirthRel`,
+                    extLine(new Error())
+                  );
+                if (
+                  !(
+                    genTrans instanceof HTMLInputElement ||
+                    genTrans instanceof HTMLSelectElement ||
+                    genTrans instanceof HTMLTextAreaElement
+                  )
+                )
+                  throw inputNotFound(
+                    genTrans,
+                    `validation of genTrans`,
+                    extLine(new Error())
+                  );
+                if (
+                  !(
+                    genFisAlin instanceof HTMLInputElement ||
+                    genFisAlin instanceof HTMLSelectElement ||
+                    genFisAlin instanceof HTMLTextAreaElement
+                  )
+                )
+                  throw inputNotFound(
+                    genFisAlin,
+                    `validation of genFisAlin`,
+                    extLine(new Error())
+                  );
+                person.gen =
+                  fluxGen(
+                    [genId, genBirthRel, genTrans, genFisAlin],
+                    genId.value
+                  ) || "masculino";
+              } catch (e) {
+                console.error(
+                  `Error executing procedure for calling fluxGen:\n${
+                    (e as Error).message
+                  }`
+                );
+              }
+            }}
           >
             <option className="optIdentif optgenFisAlin" value="masculinizado">
               Masculinizado
