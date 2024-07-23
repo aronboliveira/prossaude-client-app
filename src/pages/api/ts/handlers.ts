@@ -99,41 +99,41 @@ export async function handleSubmit(
   }
 }
 
-// export async function handleFetchStuds(
-//   UNDER_TEST: boolean = true
-// ): Promise<void> {
-//   try {
-//     const res = await fetch("../api/django/studs_table");
-//     if (!res.ok) throw new Error(`Error fetching Students Table from API`);
-//     const data = await res.json();
-//     console.log(data);
-//   } catch (e) {
-//     console.error(`Error executing handleFetchStuds:\n${(e as Error).message}`);
-//   }
-// }
+export async function handleFetchStuds(
+  UNDER_TEST: boolean = true
+): Promise<void> {
+  try {
+    const res = await fetch("../api/django/studs_table");
+    if (!res.ok) throw new Error(`Error fetching Students Table from API`);
+    const data = await res.json();
+    console.log(data);
+  } catch (e) {
+    console.error(`Error executing handleFetchStuds:\n${(e as Error).message}`);
+  }
+}
 
-// export async function handleFetchProfs(
-//   UNDER_TEST: boolean = true
-// ): Promise<void> {
-//   try {
-//     const res = await fetch("../api/django/profs_table");
-//     if (!res.ok) throw new Error(`Error fetching Professionals Table from API`);
-//     const data = await res.json();
-//     console.log(data);
-//   } catch (e) {
-//     console.error(`Error executing handleFetchProfs:\n${(e as Error).message}`);
-//   }
-// }
+export async function handleFetchProfs(
+  UNDER_TEST: boolean = true
+): Promise<void> {
+  try {
+    const res = await fetch("../api/django/profs_table");
+    if (!res.ok) throw new Error(`Error fetching Professionals Table from API`);
+    const data = await res.json();
+    console.log(data);
+  } catch (e) {
+    console.error(`Error executing handleFetchProfs:\n${(e as Error).message}`);
+  }
+}
 
-// export async function handleFetchPacs(
-//   UNDER_TEST: boolean = true
-// ): Promise<void> {
-//   try {
-//     const res = await fetch("../api/django/patients_table");
-//     if (!res.ok) throw new Error(`Error fetching Patients Table from API`);
-//     const data = await res.json();
-//     console.log(data);
-//   } catch (e) {
-//     console.error(`Error executing handleFetchPacs:\n${(e as Error).message}`);
-//   }
-// }
+export async function handleFetchPacs(
+  UNDER_TEST: boolean = true
+): Promise<void> {
+  try {
+    const res = await fetch("../api/django/patients_table");
+    if (!res.ok) throw new Error(`Error fetching Patients Table from API`);
+    const data = await res.json();
+    console.log(data);
+  } catch (e) {
+    console.error(`Error executing handleFetchPacs:\n${(e as Error).message}`);
+  }
+}

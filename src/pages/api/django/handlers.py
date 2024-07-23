@@ -1,4 +1,5 @@
 import re
+from django.db import models
 
 def clean_email(email: str) -> str:
 		if "@" not in email:
@@ -27,3 +28,14 @@ def zero_falsish_int(value:str) -> int:
 def false_falsish(value:str) -> bool:
   if not value or value == '' or value.lower() == 'false':
     return False
+def extract_count_data(data) -> int:
+  count = 0
+  for k in data.keys():
+    if k.startswith('trat_'):
+      count += 1
+  return count
+def add_dynamic_fields(cls, field_prefix, count, field_type=models.CharField, **kwargs) -> None:
+    for i in range(1, count + 1):
+        field_name = f'{field_prefix}_{i}'
+        if not hasattr(cls, field_name):
+            cls.add_to_class(field_name, field_type(**kwargs))

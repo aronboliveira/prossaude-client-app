@@ -1,7 +1,7 @@
 import re
 import uuid
 from django.db import models
-from handlers import clean_email, normalize_name, null_falsish, zero_falsish, undefine_falsish, false_falsish
+from handlers import clean_email, normalize_name, null_falsish, zero_falsish, undefine_falsish, false_falsish, add_dynamic_fields, extract_count_data
 from datetime import date, datetime
 
 class Person(models.Model):
@@ -175,13 +175,9 @@ class Appointment(models.Model):
     verbose_name_plural = 'Appointments'
 class NamedFormData(models.Model):
   id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True, blank=False, null=False)
-  first_name = models.CharField(max_length=255, default="undefined", editable=True, unique=False, blank=False, null=False)
-  additional_name = models.CharField(max_length=255, default="undefined", editable=True, unique=False, blank=True, null=True)
-  family_name = models.CharField(max_length=255, default="undefined", editable=True, unique=False, blank=False, null=False)
-  full_name = models.CharField(max_length=255, default="undefined", editable=True, unique=False, blank=False, null=False)
-  social_name = models.CharField(max_length=255, default="undefined", editable=True, unique=False, blank=True, null=True)
+  for und255 in ['first_name', 'additional_name', 'family_name', 'full_name', 'social_name', 'confirm_loc']:
+    locals()[f'${und255}'] = models.CharField(max_length=255, default="undefined", editable=True, unique=False, blank=False, null=False)
   confirm = models.BooleanField(default=False, editable=False, unique=False, blank=False, null=False)
-  confirm_loc = models.CharField(max_length=255, default="undefined", editable=True, unique=False, blank=False, null=False)
   signature = models.FileField(upload_to='signatures/', blank=True, null=True, blank=True, null=True)
   def clean(self):
     super().clean()
@@ -273,38 +269,29 @@ class AGData(GenderedFormData):
 ])
   city = models.CharField(max_length=255, default="Rio de Janeiro", editable=True, unique=False, blank=False, null=False)
   naturality = models.CharField(max_length=255, default="Rio de Janeiro, Rio de Janeiro", editable=True, unique=False, blank=True, null=True)
-  street = models.CharField(max_length=255, default="undefined", editable=True, unique=False, blank=True, null=True)
-  neighbourhood = models.CharField(max_length=255, default="undefined", editable=True, unique=False, blank=True, null=True)
-  street_num = models.CharField(max_length=255, default="undefined", editable=True, unique=False, blank=True, null=True)
-  loc_complement = models.CharField(max_length=255, default="undefined", editable=True, unique=False, blank=True, null=True)
   birth = models.DateField(default=date.today(), editable=True, unique=False, blank=False, null=False)
-  issue = models.CharField(max_length=65535, default="null", editable=True, unique=False, blank=True, null=True)
-  history = models.CharField(max_length=65535, default="null", editable=True, unique=False, blank=True, null=True)
-  febr_r = models.BooleanField(default=False, editable=True, unique=False, blank=False, null=False)
-  hep = models.BooleanField(default=False, editable=True, unique=False, blank=False, null=False)
-  hep_a = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  hep_b = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  hep_c = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  hep_d = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  hep_e = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  hep_indirect = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  hep_imun = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  hep_onc = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  hep_alc = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  hep_tox = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  diab = models.BooleanField(default=False, editable=True, unique=False, blank=False, null=False)
-  diab_1 = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  diab_2 = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  diab_gest = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  diab_ins = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  diab_lada = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  diab_mody = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  hiv = models.BooleanField(default=False, editable=True, unique=False, blank=False, null=False)
+  for und255 in ['street', 'neighbourhood', 'street_num', 'loc_complement']:
+    locals()[f'${und255}'] = models.CharField(max_length=255, default="undefined", editable=True, unique=False, blank=True, null=True)
+  for d in ['febr_r', 'hep', 'diab', 'hiv', 't_sang', 'pr_alta', 'fumo', 
+            'pb_card', 'pb_ren', 'pb_gast', 'pb_resp', 'pb_alerg', 'pb_art_reum', 'pb_sist', 
+            'pb_alc', 'pb_drg', 'pb_cic', 'pb_anst', 'pb_hem', 'pb_med',
+            'grv', 'ant_c', 'op']:
+    locals()[f'{d}'] = models.BooleanField(default=False, editable=True, unique=False, blank=False, null=False)
+  for n in ['pb_card', 'pb_ren', 'pb_gast', 'pb_resp', 'pb_alerg', 'pb_art_reum', 'pb_sist', 
+            'pb_alc', 'pb_drg', 'pb_cic', 'pb_anst', 'pb_hem', 'pb_med',
+            'grv', 'ant_c', 'op']:
+    locals()[f'notes_{n}'] = models.CharField(max_length=65535, default="null", editable=True, unique=False, blank=True, null=True)
+  for h in ['a', 'b', 'c', 'd', 'e', 'indirect', 'imun', 'onc', 'alc', 'tox']:
+    locals()[f'hep_${h}'] = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
+  for db in ['1', '2', 'gest', 'ins', 'lada', 'mody']:
+    locals()[f'diab_{db}'] = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
+  for h in ['res', 'sist', 'mal']:
+    locals()[f'has_{h}'] = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
+  for f in ['can', 'tab', 'other']:
+    locals()[f'fumo_${f}'] = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
   hiv_copies = models.CharField(max_length=255, default="0 copies/ml", editable=True, unique=False, blank=True, null=True)
   hiv_diagnosis = models.DateField(default=date.today(), editable=True, unique=False, blank=True, null=True)
   hiv_last_exam = models.DateField(default=date.today(), editable=True, unique=False, blank=True, null=True)
-  t_sang = models.BooleanField(default=False, editable=True, unique=False, blank=False, null=False)
-  pr_alta = models.BooleanField(default=False, editable=True, unique=False, blank=False, null=False)
   has_stg = models.CharField(max_length=255, default="null", editable=True, unique=False, blank=True, null=True, choices=[
     ('null', 'Ausente')
     ('pre', 'Pré-hipertensão'),
@@ -314,175 +301,55 @@ class AGData(GenderedFormData):
     ("prim", "Primária | Essencial"),
     ("sec", "Secundária")
   ])
-  has_res = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  has_sist = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  has_mal = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  fumo = models.BooleanField(default=False, editable=True, unique=False, blank=False, null=False)
   fumo_lvl = models.CharField(max_length=255, default="null", editable=True, unique=False, blank=True, null=True, choices=[
     ('null', 'Ausente')
     ('leve', 'Leve'),
     ("moderado", "Moderado"),
     ('Alto', "Alto")
   ])
-  fumo_tab = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  fumo_can = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  fumo_other = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
   fumo_months = models.CharField(max_length=4, default="0", editable=True, unique=False, blank=True, null=True)
-  pb_card = models.BooleanField(default=False, editable=True, unique=False, blank=False, null=False)
-  notes_pb_card = models.CharField(max_length=65535, default="null", editable=True, unique=False, blank=True, null=True)
-  pb_ren = models.BooleanField(default=False, editable=True, unique=False, blank=False, null=False)
-  notes_pb_ren = models.CharField(max_length=65535, default="null", editable=True, unique=False, blank=True, null=True)
-  pb_gast = models.BooleanField(default=False, editable=True, unique=False, blank=False, null=False)
-  notes_pb_gast = models.CharField(max_length=65535, default="null", editable=True, unique=False, blank=True, null=True)
-  pb_resp = models.BooleanField(default=False, editable=True, unique=False, blank=False, null=False)
-  notes_pb_resp = models.CharField(max_length=65535, default="null", editable=True, unique=False, blank=True, null=True)
-  pb_alerg = models.BooleanField(default=False, editable=True, unique=False, blank=False, null=False)
-  notes_pb_alerg = models.CharField(max_length=65535, default="null", editable=True, unique=False, blank=True, null=True)
-  pb_art_reum = models.BooleanField(default=False, editable=True, unique=False, blank=False, null=False)
-  notes_pb_art_reum = models.CharField(max_length=65535, default="null", editable=True, unique=False, blank=True, null=True)
-  pb_sist = models.BooleanField(default=False, editable=True, unique=False, blank=False, null=False)
-  notes_pb_sist = models.CharField(max_length=65535, default="null", editable=True, unique=False, blank=True, null=True)
-  pb_alc = models.BooleanField(default=False, editable=True, unique=False, blank=False, null=False)
-  notes_pb_alc = models.CharField(max_length=65535, default="null", editable=True, unique=False, blank=True, null=True)
-  pb_drg = models.BooleanField(default=False, editable=True, unique=False, blank=False, null=False)
-  notes_pb_drg = models.CharField(max_length=65535, default="null", editable=True, unique=False, blank=True, null=True)
-  grv = models.BooleanField(default=False, editable=True, unique=False, blank=False, null=False)
-  notes_grv = models.CharField(max_length=65535, default="null", editable=True, unique=False, blank=True, null=True)
-  ant_c = models.BooleanField(default=False, editable=True, unique=False, blank=False, null=False)
-  notes_ant_c = models.CharField(max_length=65535, default="null", editable=True, unique=False, blank=True, null=True)
-  op = models.BooleanField(default=False, editable=True, unique=False, blank=False, null=False)
-  notes_op = models.CharField(max_length=65535, default="null", editable=True, unique=False, blank=True, null=True)
-  pb_cic = models.BooleanField(default=False, editable=True, unique=False, blank=False, null=False)
-  notes_pb_cic = models.CharField(max_length=65535, default="null", editable=True, unique=False, blank=True, null=True)
-  pb_anst = models.BooleanField(default=False, editable=True, unique=False, blank=False, null=False)
-  notes_pb_anst = models.CharField(max_length=65535, default="null", editable=True, unique=False, blank=True, null=True)
-  pb_hem = models.BooleanField(default=False, editable=True, unique=False, blank=False, null=False)
-  notes_pb_hem = models.CharField(max_length=65535, default="null", editable=True, unique=False, blank=True, null=True)
-  pb_intrn = models.BooleanField(default=False, editable=True, unique=False, blank=False, null=False)
-  notes_pb_intrn = models.CharField(max_length=65535, default="null", editable=True, unique=False, blank=True, null=True)
-  pb_med = models.BooleanField(default=False, editable=True, unique=False, blank=False, null=False)
-  notes_pb_med = models.CharField(max_length=65535, default="null", editable=True, unique=False, blank=True, null=True)
-  cand = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  gon = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  herp = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  herp_z = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  pneumonia = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  sif = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  toxop = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  tuberc = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  other_d = models.CharField(max_length=65535, default="null", editable=True, unique=False, blank=True, null=True)
-  fam_diab = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  diab_mae = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  diab_pai = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  diab_avof_m = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  diab_avof_p = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  diab_avom_m = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  diab_avom_p = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  diab_bisf_mm = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  diab_bisf_mp = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  diab_bisf_pm = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  diab_bisf_pp = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  diab_bism_mm = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  diab_bism_mp = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  diab_bism_pm = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  diab_bism_pp = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  diab_tris = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  fam_dislip = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  dislip_mae = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  dislip_pai = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  dislip_avof_m = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  dislip_avof_p = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  dislip_avom_m = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  dislip_avom_p = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  dislip_bisf_mm = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  dislip_bisf_mp = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  dislip_bisf_pm = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  dislip_bisf_pp = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  dislip_bism_mm = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  dislip_bism_mp = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  dislip_bism_pm = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  dislip_bism_pp = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  dislip_tris = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  fam_card = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  card_mae = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  card_pai = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  card_avof_m = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  card_avof_p = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  card_avom_m = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  card_avom_p = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  card_bisf_mm = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  card_bisf_mp = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  card_bisf_pm = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  card_bisf_pp = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  card_bism_mm = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  card_bism_mp = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  card_bism_pm = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  card_bism_pp = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  card_tris = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  fam_pulm = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  pulm_mae = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  pulm_pai = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  pulm_avof_m = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  pulm_avof_p = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  pulm_avom_m = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  pulm_avom_p = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  pulm_bisf_mm = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  pulm_bisf_mp = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  pulm_bisf_pm = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  pulm_bisf_pp = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  pulm_bism_mm = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  pulm_bism_mp = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  pulm_bism_pm = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  pulm_bism_pp = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  pulm_tris = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  fam_onc = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  onc_mae = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  onc_pai = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  onc_avof_m = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  onc_avof_p = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  onc_avom_m = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  onc_avom_p = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  onc_bisf_mm = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  onc_bisf_mp = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  onc_bisf_pm = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  onc_bisf_pp = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  onc_bism_mm = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  onc_bism_mp = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  onc_bism_pm = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  onc_bism_pp = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  onc_tris = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  escov_n_day = models.CharField(max_length=2, editable=True, unique=False, blank=True, null=True)
-  fio_n_day = models.CharField(max_length=2, editable=True, unique=False, blank=True, null=True)
-  exg_n_day = models.CharField(max_length=2, editable=True, unique=False, blank=True, null=True)
-  cor_doces = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
-  notes_cor_doces = models.CharField(max_length=65535, default="null", editable=True, unique=False, blank=True, null=True)
+  for d in ['cand', 'gon', 'herp', 'herp_z', 'pneumonia', 'sif', 'toxop', 'tuberc', 'other_d', 'cor_doces']:
+    locals()[f'{d}'] = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
+  for d in ['diab', 'dislip', 'card', 'pulm', 'onc']:
+    locals()[f'fam_{d}'] = models.BooleanField(default=False, editable=True, unique=False, blank=False, null=False)
+    for p in ['mae', 'pai', 'avof_m', 'avof_p', 'avom_m', 'avo_m_p', 
+      'avo_bisf_mm', 'avo_bisf_mp', 'avo_bisf_pm', 'avo_bisf_pp', 
+      'avo_bism_mm', 'avo_bism_mp', 'avo_bism_pm', 'avo_bismp_pp', 'tris']:
+      locals()[f'{d}_{p}'] = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
+  for at in ['escov', 'fio', 'exg']:
+    locals()[f'${at}_n_day'] = models.CharField(max_length=2, editable=True, unique=False, blank=True, null=True)
+  for note in ['notes_cor_doces', 'issue', 'history']:
+    locals()[f'${note}'] = models.CharField(max_length=65535, default="null", editable=True, unique=False, blank=True, null=True)
   def clean(self):
     super().clean()
-    self.cpf = re.sub(r"[^\d]", "", self.cpf)
     self.current_status = self.current_status if self.current_status in ['avaliacao', 'tratamento', 'emergência', 'emergencia', 
                                                                          'altaOdontologia', 'altaEducacaoFisica', 'altaNutricao', 
                                                                          'altaOdontologiaEducaoFisica', 'altaOdontologiaNutricao', 
                                                                          'altaEducaoFisicaNutricao', 'altaOdontologiaEducacaoFisicaNutricao'] else 'avaliacao'
-    self.ddd = re.sub(r"[^0-9]", "", self.ddd)
+    for field in ['cpf', 'country_code', 'country_code_sec', 'ddd', 'ddd_sec', 'tel', 'tel_sec', 'cep', 'hiv_copies', 'fumo_months']:
+      value = re.sub(r"[^0-9]", "", getattr(self, field))
+      if field.startswith('cep'):
+        value = value[:7]
+      elif field.startswith('tel'):
+        if value.startswith('9'):
+            value = value[:8]
+        else:
+            value = value[:7]
+      elif field.startswith('country') or field.startswith('fumo'):
+        value = value[:3]
+      elif field.startswith('ddd'):
+        value = value[:1]
+      setattr(self, field, value)
     if not self.ddd or len(self.ddd) < 2:
       self.ddd = "00"
-    self.ddd_sec = re.sub(r"[^0-9]", "", self.ddd_sec)
     if not self.ddd_sec or len(self.ddd_sec) < 2:
       self.ddd_sec = "00"
-    self.tel = re.sub(r"[^0-9]", "", self.tel)
-    if not self.tel.startswith('9'):
-      self.tel = self.tel[:7]
     if not self.tel or len(self.tel) < 8:
       self.telephone = "00000000"
-    self.tel_sec = re.sub(r"[^0-9]", "", self.tel_sec)
-    if not self.tel_sec.startswith('9'):
-      self.tel_sec = self.tel_sec[:7]
     if not self.tel_sec or len(self.tel_sec) < 8:
       self.telephone_sec = "00000000"
-    self.country_code = re.sub(r"[^0-9]", "", self.country_code)
     if not self.country_code or len(self.country_code) < 4:
       self.country_code = "55"
-    self.country_code_sec = re.sub(r"[^0-9]", "", self.country_code_sec)
     if not self.country_code_sec or len(self.country_code_sec) < 4:
       self.country_code_sec = "55"
     self.telephone = f"{self.country_code} {self.ddd} {self.tel}"
@@ -492,7 +359,6 @@ class AGData(GenderedFormData):
     self.country = normalize_name(self.country)
     if not self.country or self.country == '':
       self.country = 'Brasil'
-    self.cep = re.sub(r"[^0-9]", "", self.cep)
     if not self.cep or len(self.cep) < 8:
       self.cep = '00000000'
     else:
@@ -502,80 +368,31 @@ class AGData(GenderedFormData):
       self.city = 'Rio de Janeiro'
     if not self.naturality or self.naturality == '':
       self.naturality = f'{self.state}, ${self.city}'
-    self.street = undefine_falsish(self.street)
-    self.neighbourhood = undefine_falsish(self.neighbourhood)
-    self.street_num = undefine_falsish(re.sub(r"[^0-9]", "", self.street_num))
-    self.loc_complement = undefine_falsish(re.sub(r"[^a-zA-Z0-9\\/-\s]"))
-    self.birth = self.birth if self.birth and self.birth <= date.today() else date.today()
-    self.issue = null_falsish(self.issue)
-    self.history = null_falsish(self.history)
-    self.febr_r = false_falsish(self.febr_r)
-    self.hep = false_falsish(self.hep)
-    self.hep_a = false_falsish(self.hep_a)
-    self.hep_b = false_falsish(self.hep_b)
-    self.hep_c = false_falsish(self.hep_c)
-    self.hep_d = false_falsish(self.hep_d)
-    self.hep_e = false_falsish(self.hep_e)
-    self.hep_indirect = false_falsish(self.hep_indirect)
-    self.hep_imun = false_falsish(self.hep_imun)
-    self.hep_onc = false_falsish(self.hep_onc)
-    self.hep_alc = false_falsish(self.hep_alc)
-    self.hep_tox = false_falsish(self.hep_tox)
-    self.diab = false_falsish(self.diab)
-    self.diab_1 = false_falsish(self.diab_1)
-    self.diab_2 = false_falsish(self.diab_2)
-    self.diab_gest = false_falsish(self.diab_gest)
-    self.diab_ins = false_falsish(self.diab_ins)
-    self.diab_lada = false_falsish(self.diab_lada)
-    self.diab_mody = false_falsish(self.diab_mody)
-    self.hiv = false_falsish(self.hiv)
-    self.hiv_copies = re.sub(r"[^0-9]", "", self.hiv_copies)
+    for field in ['street', 'neighbourhood', 'street_num', 'loc_complement']:
+      setattr(self, field, undefine_falsish(getattr(self, field)))
+    for field in ['febr_r', 'hep', 'diab', 'hiv', 't_sang', 'pr_alta', 'fumo', 
+      'pb_card', 'pb_ren', 'pb_gast', 'pb_resp', 'pb_alerg', 'pb_art_reum', 'pb_sist', 
+      'pb_alc', 'pb_drg', 'pb_cic', 'pb_anst', 'pb_hem', 'pb_med',
+      'grv', 'ant_c', 'op']:
+      setattr(self, field, false_falsish(getattr(self, field)))
+    for field in ['a', 'b', 'c', 'd', 'e', 'indirect', 'imun', 'onc', 'alc', 'tox']:
+      setattr(self, f'hep_{field}', false_falsish(getattr(self, f'hep_{field}')))
+    for field in ['1', '2', 'gest', 'ins', 'lada', 'mody']:
+      setattr(self, f'diab_{field}', false_falsish(getattr(self, f'diab_{field}')))
+    for field in ['res', 'sist', 'mal']:
+      setattr(self, f'has_{field}', false_falsish(getattr(self, f'has_{field}')))
+    for field in ['can', 'tab', 'other']:
+      setattr(self, f'fumo_{field}', false_falsish(getattr(self, f'fumo_{field}')))
+    for date_value in ['birth', 'hiv_diagnosis', 'hiv_last_exam']:
+      setattr(self, field, date_value if date_value and date_value <= date.today() else date.today())
     if not self.hiv_copies or self.hiv_copies == '':
       self.hiv_copies = '0'
     self.hiv_copies = f"{self.hiv_copies} copies/ml"
-    self.hiv_diagnosis = self.hiv_diagnosis if self.hiv_diagnosis and self.hiv_diagnosis <= date.today() else date.today()
-    self.hiv_last_exam = self.hiv_last_exam if self.hiv_last_exam and self.hiv_last_exam <= date.today() else date.today()
-    self.t_sang = false_falsish(self.t_sang)
-    self.pr_alta = false_falsish(self.pr_alta)
     self.has_stg = self.has_stg if self.has_stg and self.has_stg in ['pre', '1', '2', '3', 'prim', 'sec'] else 'null'
-    self.has_res = false_falsish(self.has_res)
-    self.has_sis = false_falsish(self.has_sis)
-    self.has_mal = false_falsish(self.has_mal)
-    self.fumo = false_falsish(self.fumo)
-    self.fumo_lvl = self.fumo_lvl if self.fumo_lvl and self.fumo_lvl in ['leve', 'moderado', 'alto'] else 'null'
-    self.fumo_tab = false_falsish(self.fumo_tab)
-    self.fumo_can = false_falsish(self.fumo_can)
-    self.fumo_other = false_falsish(self.fumo_other)
-    self.fumo_months = re.sub(r"[^0-9]", "", self.fumo_months)
     if not self.fumo_months or self.fumo_months == '':
       self.fumo_months = '0'
-    self.pb_card = false_falsish(self.pb_card)
-    self.pb_ren = false_falsish(self.pb_ren)
-    self.pb_gast = false_falsish(self.pb_gast)
-    self.pb_resp = false_falsish(self.pb_resp)
-    self.pb_alerg = false_falsish(self.pb_alerg)
-    self.pb_art_reum = false_falsish(self.pb_art_reum)
-    self.pb_sist = false_falsish(self.pb_sist)
-    self.pb_alc = false_falsish(self.pb_alc)
-    self.pb_drg = false_falsish(self.pb_drg)
-    self.pb_cic = false_falsish(self.pb_cic)
-    self.pb_anst = false_falsish(self.pb_anst)
-    self.pb_cic = false_falsish(self.pb_cic)
-    self.pb_hem = false_falsish(self.pb_hem)
-    self.pb_intrn = false_falsish(self.pb_intrn)
-    self.pb_med = false_falsish(self.pb_med)
-    self.grv = false_falsish(self.grv)
-    self.ant_c = false_falsish(self.ant_c)
-    self.op = false_falsish(self.op)
-    self.escov_n_day = re.sub(r"[^0-9]", "", self.escov_n_day)[:2]
-    if not self.escov_n_day or self.escov_n_day == '':
-      self.escov_n_day = '0'
-    self.fio_n_day = re.sub(r"[^0-9]", "", self.fio_n_day)[:2]
-    if not self.fio_n_day or self.fio_n_day == '':
-      self.fio_n_day = '0'
-    self.exg_n_day = re.sub(r"[^0-9]", "", self.exg_n_day)[:2]
-    if not self.exg_n_day or self.exg_n_day == '':
-      self.exg_n_day = '0'
+    for field in ['escov_n_day', 'fio_n_day', 'exg_n_day']:
+      setattr(self, field, re.sub(r"[^0-9]", "", getattr(self, field) or '0')[:2])
   def __init__ (self, *args, **kwargs):
     super().__init__(*args, **kwargs)
     self.clean()
@@ -586,8 +403,60 @@ class EDData(GenderedFormData):
   atv_lvl = models.CharField(max_length=255, default="undefined", editable=True, unique=False, choices=[
     ('leve', 'Leve'), ('moderado', 'Moderado'), ('intenso', 'Intenso'),
     ('muitoIntenso', 'Muito intenso'), ('sedentario', 'Sedentário')])
-
 class OdData(NamedFormData):
-  ta_plan = models.CharField(max_length=65535, default="null", editable=True, unique=False)
+  TEETH_CHOICES = [
+    ('higido', 'Hígido'),
+    ('careado', 'Careado'),
+    ('trincado', 'Trincado'),
+    ('ausente', 'Ausente')
+  ]
+  ta_plan = models.CharField(max_length=65535, default="null", editable=True, unique=False, blank=False, null=False)
+  for field in ['lab', 'jug', 'vest', 'pltd', 'pltm', 'of', 'lg', 'asb', 'mast', 'peri']:
+    locals()[f'insp_{field}'] = models.BooleanField(default=False, editable=True, unique=False, blank=False, null=False)
+    locals()[f'desc_insp_${field}'] = models.CharField(max_length=65535, default="null", editable=True, unique=False, blank=False, null=False)
+  for i in range(11, 49):
+    locals()[f'teeth_{i}'] = models.CharField(
+        max_length=255,
+        default="higido",
+        editable=True,
+        unique=False,
+        blank=False,
+        null=False,
+        choices=TEETH_CHOICES
+    )
+  def __new__(cls, *args, **kwargs):
+    data = kwargs.get('data', {})
+    new_cls = super(OdData, cls).__new__(cls, *args, **kwargs)
+    cls.add_trat_fields(cls, data)
+    return new_cls
+  @classmethod
+  def add_trat_fields(cls, data):
+    count_trat = extract_count_data(data)
+    for _ in range(0, count_trat + 1):
+      for prefix in ['trat', 'date', 'sig']:
+        add_dynamic_fields(cls, prefix, count_trat, models.CharField, max_length=65535, blank=False, null=False)
+  def clean(self):
+    super().clean()
+    replacements = {
+        'a': '[áàäâã]',
+        'e': '[éèëê]',
+        'i': '[íìïî]',
+        'o': '[óòöôõ]',
+        'u': '[úùüû]'
+    }
+    for i in range(11, 49):
+      field = getattr(self, f'teeth_{i}')
+      for unaccented, accented in replacements.items():
+        setattr(self, field, re.sub(accented, unaccented, field))
+    for i in range(11, 49):
+      field_name = f'teeth_{i}'
+      if getattr(self, field_name) not in ['higido', 'careado', 'trincado', 'ausente']:
+          setattr(self, field_name, 'higido')
+  def __init__(self, *args, **kwargs):
+    super(OdData, self).__init__(*args, **kwargs)
+    self.clean()
+  def save(self, *args, **kwargs):
+    self.clean()
+    super().save(*args, **kwargs)
   
   

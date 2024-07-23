@@ -1,14 +1,27 @@
 "use client";
 
 import { CounterAction } from "@/lib/global/declarations/interfaces";
-import { nullishFs } from "@/lib/global/declarations/types";
-import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
-import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
+import {
+  nullishBtn,
+  nullishFs,
+  nullishInp,
+} from "@/lib/global/declarations/types";
+import {
+  elementNotFound,
+  extLine,
+  inputNotFound,
+} from "@/lib/global/handlers/errorHandler";
+import {
+  changeToAstDigit,
+  syncAriaStates,
+} from "@/lib/global/handlers/gHandlers";
 import { addSubDivTrat } from "@/lib/locals/odPage/odHandler";
 import { useEffect, useReducer, useRef } from "react";
 
 export default function TratFs(props: { phCb?: () => void }): JSX.Element {
   const mainRef = useRef<nullishFs>(null);
+  const btnRef = useRef<nullishBtn>(null);
+  const inpRef = useRef<nullishInp>(null);
   const [blockCount, setBlockCount] = useReducer(
     (s: number, a: CounterAction) => {
       switch (a.type) {
@@ -35,6 +48,21 @@ export default function TratFs(props: { phCb?: () => void }): JSX.Element {
         ...mainRef.current.querySelectorAll("*"),
       ]);
       props.phCb && props.phCb();
+      if (!(btnRef.current instanceof HTMLButtonElement))
+        throw elementNotFound(
+          btnRef.current,
+          `Validation of Button Reference for Signature`,
+          extLine(new Error())
+        );
+      if (!(inpRef.current instanceof HTMLInputElement))
+        throw inputNotFound(
+          inpRef.current,
+          `Validation of Input Reference for Signature`,
+          extLine(new Error())
+        );
+      inpRef.current.style.width = `${getComputedStyle(btnRef.current)
+        .width.replace("px", "")
+        .trim()}px`;
     } catch (e) {
       console.error(
         `Error executing useEffect for blockCount:\n${(e as Error).message}`
@@ -49,7 +77,6 @@ export default function TratFs(props: { phCb?: () => void }): JSX.Element {
       ref={mainRef}
     >
       <legend className="legMain" id="fsRelTratLeg">
-        {" "}
         Relação de Tratamentos
         <span
           role="group"
@@ -144,7 +171,7 @@ export default function TratFs(props: { phCb?: () => void }): JSX.Element {
                 id="tratTypeSpan1"
               >
                 <textarea
-                  name="taTratName1"
+                  name={`trat_${blockCount - 1}`}
                   id="taTratId1"
                   className="inlinebTa taTrat"
                   data-title="Tratamento 1"
@@ -157,7 +184,7 @@ export default function TratFs(props: { phCb?: () => void }): JSX.Element {
               >
                 <input
                   type="date"
-                  name="tratDateInpName1"
+                  name={`date_${blockCount - 1}`}
                   id="tratDateInpId1"
                   className="inpDate inpTrat tratDate"
                   data-title="Data do Tratamento 1"
@@ -177,15 +204,18 @@ export default function TratFs(props: { phCb?: () => void }): JSX.Element {
               >
                 <input
                   type="text"
-                  name="inpAstTratName1"
+                  name={`sig_${blockCount - 1}`}
                   id="inpAstTratId1"
                   className="inpTrat inpAst mg-07t tratAst form-control"
                   data-title="Assinatura do Tratamento 1"
+                  ref={inpRef}
                 />
                 <button
                   type="button"
-                  className="tratBtn astDigtBtn confirmBtn btn btn-secondary"
+                  className="tratBtn confirmBtn btn btn-secondary"
                   id="trat1AstDigtBtn"
+                  ref={btnRef}
+                  onClick={ev => changeToAstDigit(ev.currentTarget)}
                 >
                   Usar Assinatura Digital
                 </button>

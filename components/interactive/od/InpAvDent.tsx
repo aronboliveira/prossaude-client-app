@@ -17,6 +17,7 @@ export default function InpAvDent({ qr, num }: qrInpProps): JSX.Element {
         type="text"
         list={`avElemD${num}`}
         id={`inpD${num}`}
+        name={`teeth_${num}`}
         className="inpAvDent form-control noInvert minText patternText"
         onInput={ev => handleEventReq(ev.currentTarget)}
         data-title={`Estado do Dente ${num}`}

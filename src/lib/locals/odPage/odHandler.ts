@@ -452,17 +452,23 @@ export function addSubDivTrat(
             ${blockCount}&#41
           </td>
           <td class="spanMain tratMainSpan tratTypeSpan" id="tratTypeSpan${blockCount}">
-            <textarea name="taTratName${blockCount}" id="taTratId${blockCount}" class="inlinebTa taTrat" data-title="Tratamento ${blockCount}" required></textarea>
+            <textarea name="trat_${
+              blockCount - 1
+            }" id="taTratId${blockCount}" class="inlinebTa taTrat" data-title="Tratamento ${blockCount}" required></textarea>
           </td>
           <td class="spanMain tratMainSpan tratDateSpan" id="tratDateSpan${blockCount}">
-              <input type="date" name="tratDateInpName${blockCount}" id="tratDateInpId${blockCount}" class="inpDate inpTrat tratDate maxCurrDate" data-title="Data do Tratamento ${blockCount}" required />
+              <input type="date" name="date_${
+                blockCount - 1
+              }" id="tratDateInpId${blockCount}" class="inpDate inpTrat tratDate maxCurrDate" data-title="Data do Tratamento ${blockCount}" required />
               <button type="button" class="tratBtn datBtn btn btn-secondary forceInvert" id="trat2DatBtn">Usar data atual</button>
           </td>
           <td class="spanMain tratMainSpan tratFileSpan" id="tratFileSpan${blockCount}">
-            <input type="text" name="inpAstTratName${blockCount}" id="inpAstTratId${blockCount}"
+            <input type="text" name="sig_${
+              blockCount - 1
+            }" id="inpAstTratId${blockCount}"
             class="inpTrat inpAst tratAst form-control" data-title="Assinatura do Tratamento ${blockCount}" />
             <button type="button" class="tratBtn astDigtBtn confirmBtn btn btn-secondary forceInvert" 
-            id="trat${blockCount}AstDigtBtn">Usar Assinatura Digital</button>
+            id="trat${blockCount}AstDigtBtn" class="tratBtn confirmBtn btn btn-secondary">Usar Assinatura Digital</button>
           </td>
         </tr>
         `;
@@ -495,8 +501,8 @@ export function addSubDivTrat(
       newBlock
         .querySelectorAll('button[id$="AstDigtBtn')
         ?.forEach(astDigtBtn => {
-          astDigtBtn.addEventListener("click", () =>
-            changeToAstDigit(astDigtBtn as HTMLButtonElement)
+          astDigtBtn.addEventListener("click", ev =>
+            changeToAstDigit(ev.currentTarget as HTMLButtonElement)
           );
         });
       if (document.querySelector(`divSubTrat${blockCount}`)) {

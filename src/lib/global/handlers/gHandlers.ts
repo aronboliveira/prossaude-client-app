@@ -1,5 +1,5 @@
 //nesse file estão presentes principalmente as funções de manipulação dinâmica de texto e layout
-import { parseNotNaN, removeFirstClick } from "../gModel";
+import { autoCapitalizeInputs, parseNotNaN, removeFirstClick } from "../gModel";
 import { fadeElement, isClickOutside } from "../gStyleScript";
 import type { targEl, primitiveType, textEl } from "../declarations/types";
 import {
@@ -305,34 +305,70 @@ export function searchParents(
 }
 
 export function changeToAstDigit(toFileInpBtn: targEl): void {
-  if (toFileInpBtn instanceof HTMLButtonElement && toFileInpBtn.textContent) {
-    const inpAst =
-      toFileInpBtn.previousElementSibling ||
-      toFileInpBtn.parentElement!.querySelector("#inpAstConfirmId") ||
-      searchPreviousSiblings(toFileInpBtn, "inpAst") ||
-      searchPreviousSiblings(toFileInpBtn, "imgAstDigit");
+  try {
+    if (!(toFileInpBtn instanceof HTMLButtonElement))
+      throw elementNotFound(
+        toFileInpBtn,
+        `Validation of Button for changin Signature input`,
+        extLine(new Error())
+      );
+    if (!(toFileInpBtn.textContent || toFileInpBtn.textContent === ""))
+      throw new Error(
+        `No valid textContent for Button for changing Signature input`
+      );
+    const inpAst = toFileInpBtn.classList.contains("tratBtn")
+      ? toFileInpBtn.previousElementSibling ??
+        searchPreviousSiblings(toFileInpBtn, "inpAst") ??
+        toFileInpBtn.parentElement?.querySelector(".inpAst")
+      : toFileInpBtn.previousElementSibling ??
+        toFileInpBtn.parentElement!.querySelector("#inpAstConfirmId") ??
+        searchPreviousSiblings(toFileInpBtn, "inpAst") ??
+        searchPreviousSiblings(toFileInpBtn, "imgAstDigit");
     if (
-      (inpAst instanceof HTMLCanvasElement ||
+      !(
+        inpAst instanceof HTMLCanvasElement ||
         inpAst instanceof HTMLInputElement ||
-        inpAst instanceof HTMLImageElement) &&
-      inpAst.parentElement
+        inpAst instanceof HTMLImageElement
+      )
+    )
+      throw elementNotFound(
+        inpAst,
+        `Validation of field for Signature instance`,
+        extLine(new Error())
+      );
+    if (!(inpAst.parentElement instanceof HTMLElement))
+      throw elementNotFound(
+        inpAst.parentElement,
+        `Validation of Parent Element for field for Signature`,
+        extLine(new Error())
+      );
+    if (
+      /Usar/gi.test(toFileInpBtn.textContent) ||
+      inpAst instanceof HTMLCanvasElement ||
+      (inpAst instanceof HTMLInputElement && inpAst.type === "text")
     ) {
-      let labAst = document.querySelector(".labAst");
-
-      if (new RegExp(/Usar/gi).test(toFileInpBtn.textContent)) {
-        const fileInp = document.createElement("input");
-        Object.assign(fileInp, {
-          type: "file",
-          id: "inpAstConfirmId",
-          accept: "image/*",
-          required: true,
-        });
+      toFileInpBtn.textContent = "Retornar à Assinatura Escrita";
+      const fileInp = document.createElement("input");
+      fileInp.classList.add("inpAst", "mg-07t", "form-control");
+      if (toFileInpBtn.classList.contains("tratBtn")) {
+        fileInp.classList.add("inpTrat", "tratAst");
+        fileInp.dataset.title =
+          inpAst.dataset.title ||
+          `Assinatura do Tratamento ${
+            document.querySelectorAll(".tratAst").length + 1
+          }`;
+      } else {
         fileInp.dataset.title = "Assinatura do Paciente";
-        fileInp.classList.add("inpAst", "mg-07t", "form-control");
-        defineLabId(labAst, toFileInpBtn, fileInp);
-        toFileInpBtn.textContent = "Retornar à Assinatura Escrita";
+        defineLabId(document.querySelector(".labAst"), toFileInpBtn, fileInp);
+        fileInp.id = "inpAstConfirmId";
         if (toFileInpBtn.previousElementSibling instanceof HTMLButtonElement)
           toFileInpBtn.previousElementSibling?.setAttribute("hidden", "");
+      }
+      fileInp.type = "file";
+      fileInp.accept = "image/*";
+      fileInp.required = true;
+      inpAst.parentElement.replaceChild(fileInp, inpAst);
+      fileInp.type === "file" &&
         fileInp.addEventListener("change", chose => {
           try {
             let imgFile;
@@ -343,8 +379,7 @@ export function changeToAstDigit(toFileInpBtn: targEl): void {
               fileInp.files?.length > 0 &&
               imgFile &&
               imgFile.type?.startsWith("image") &&
-              fileInp.parentElement &&
-              labAst
+              fileInp.parentElement
             ) {
               const fileReader = new FileReader();
               fileReader.onload = load => {
@@ -368,57 +403,147 @@ export function changeToAstDigit(toFileInpBtn: targEl): void {
                     overflow: "auto",
                   },
                 });
-                fileInp.parentElement!.replaceChild(imgAstDigt, fileInp);
-                defineLabId(labAst, toFileInpBtn, imgAstDigt);
+                if (fileInp.classList.contains("inpTrat")) {
+                  imgAstDigt.style.height = "100%";
+                  imgAstDigt.style.maxHeight = "100%";
+                  imgAstDigt.style.width = "100%";
+                  imgAstDigt.style.maxHeight = "100%";
+                } else {
+                  imgAstDigt.style.maxWidth = "18.75rem";
+                  imgAstDigt.style.maxHeight = "12.5rem";
+                }
+                imgAstDigt.style.overflow = "auto";
+                fileInp.parentElement?.replaceChild(imgAstDigt, fileInp);
+                !fileInp.classList.contains("inpTrat") &&
+                  defineLabId(
+                    document.querySelector(".labAst"),
+                    toFileInpBtn,
+                    imgAstDigt
+                  );
               };
               fileReader.readAsDataURL(imgFile); //lê o file baseado na src carregada
             } else
               throw new Error(`Error on selecting the file and/or finding the parent Element for the file input.
-              chose.target: ${chose?.target ?? "UNDEFINED CHOSE"};
-              fileInp: ${fileInp ?? "UNDEFINED INP"};
-              files: ${fileInp?.files ?? "UNDEFINED FILES"};
-              parentElement: ${fileInp?.parentElement ?? "UNDEFINED PARENT"}; 
-              imgFile: ${imgFile ?? "UNDEFINED IMAGE"}; 
-              imgFile.type: ${imgFile?.type ?? "UNDEFINED TYPE"}; 
-              lab ${labAst ?? "UNDEFINED LABEL"}`);
+            chose.target: ${chose?.target ?? "UNDEFINED CHOSE"};
+            fileInp: ${fileInp ?? "UNDEFINED INP"};
+            files: ${fileInp?.files ?? "UNDEFINED FILES"};
+            parentElement: ${fileInp?.parentElement ?? "UNDEFINED PARENT"}; 
+            imgFile: ${imgFile ?? "UNDEFINED IMAGE"}; 
+            imgFile.type: ${imgFile?.type ?? "UNDEFINED TYPE"};`);
           } catch (error) {
             console.error((error as Error).message);
           }
         });
-        inpAst.parentElement.replaceChild(fileInp, inpAst);
-      } else if (new RegExp(/Retornar/gi).test(toFileInpBtn.textContent)) {
+      [
+        ...document.querySelectorAll(".inpAst"),
+        ...document.querySelectorAll(".tratBtn"),
+      ].forEach((fileInp, i) => {
+        try {
+          if (!(fileInp instanceof HTMLElement))
+            throw elementNotFound(
+              fileInp,
+              `Validation of field for Signature`,
+              extLine(new Error())
+            );
+          fileInp.style.width = `${Math.max(
+            ...Array.from(document.querySelectorAll(".tratBtn")).map(
+              tratBtn => {
+                return tratBtn instanceof HTMLElement
+                  ? parseNotNaN(
+                      getComputedStyle(tratBtn).width.replace("px", "").trim()
+                    )
+                  : 0;
+              }
+            )
+          )}px`;
+        } catch (e) {
+          console.error(
+            `Error executing iteration ${i} for applying width to Fields for Signatures:\n${
+              (e as Error).message
+            }`
+          );
+        }
+      });
+    } else if (
+      /Retornar/gi.test(toFileInpBtn.textContent) ||
+      !(
+        inpAst instanceof HTMLCanvasElement ||
+        (inpAst instanceof HTMLInputElement && inpAst.type === "text")
+      )
+    ) {
+      toFileInpBtn.textContent = "Usar Assinatura Digital";
+      if (toFileInpBtn.classList.contains("tratBtn")) {
+        const textInp = document.createElement("input");
+        textInp.id = inpAst.id;
+        textInp.classList.add(
+          "inpTrat",
+          "inpAst",
+          "mg-07t",
+          "tratAst",
+          "form-control"
+        );
+        textInp.dataset.title =
+          inpAst.dataset.title ||
+          `Assinatura do Tratamento ${
+            document.querySelectorAll(".tratAst").length + 1
+          }`;
+        textInp.required = true;
+        inpAst.parentElement.replaceChild(textInp, inpAst);
+        document.querySelectorAll(".inpAst").forEach((fileInp, i) => {
+          try {
+            if (!(fileInp instanceof HTMLElement))
+              throw elementNotFound(
+                fileInp,
+                `Validation of field for Signature`,
+                extLine(new Error())
+              );
+            fileInp.style.width = `${Math.max(
+              ...Array.from(document.querySelectorAll(".tratBtn")).map(
+                tratBtn => {
+                  return tratBtn instanceof HTMLElement
+                    ? parseNotNaN(
+                        getComputedStyle(tratBtn).width.replace("px", "").trim()
+                      )
+                    : 0;
+                }
+              )
+            )}px`;
+          } catch (e) {
+            console.error(
+              `Error executing iteration ${i} for applying width to Fields for Signatures:\n${
+                (e as Error).message
+              }`
+            );
+          }
+        });
+        textInp.addEventListener("input", ev =>
+          autoCapitalizeInputs(ev.currentTarget as HTMLInputElement)
+        );
+      } else {
         const fileInp = document.createElement("canvas");
         Object.assign(fileInp, {
           id: "inpAstConfirmId",
         });
         fileInp.dataset.title = "Assinatura do Paciente";
-        defineLabId(labAst, toFileInpBtn, fileInp as any);
-        toFileInpBtn.textContent = "Usar Assinatura Digital";
+        defineLabId(
+          document.querySelector(".labAst"),
+          toFileInpBtn,
+          fileInp as any
+        );
         toFileInpBtn.previousElementSibling?.removeAttribute("hidden");
         inpAst.parentElement.replaceChild(fileInp, inpAst);
         addCanvasListeners();
-      } else
-        stringError(
-          "textContent for toFileInpBtn",
-          toFileInpBtn?.textContent,
-          extLine(new Error())
-        );
+      }
     } else
-      multipleElementsNotFound(
-        extLine(new Error()),
-        "arguments for inpAst",
-        inpAst,
-        inpAst?.parentElement,
-        toFileInpBtn
+      stringError(
+        "textContent for toFileInpBtn",
+        toFileInpBtn?.textContent,
+        extLine(new Error())
       );
     // //TODO INCLUIR TOKEN ANTI-CSRF QUANDO HOUVER SERVIDOR
-  } else
-    multipleElementsNotFound(
-      extLine(new Error()),
-      "arguments for changToAstDigit()",
-      toFileInpBtn,
-      toFileInpBtn?.textContent
-    );
+  } catch (e) {
+    console.error(`Error executing changeToAstDigt:\n${(e as Error).message}`);
+  }
 }
 
 export function defineLabId(

@@ -36,6 +36,7 @@ export default function InspDlgElements({ count, ctx, fullName }: InspProps) {
               id={`inpYes${count}`}
               className="radOp radYes"
               data-title={`${fullName} (Sim)`}
+              data-required="true"
               onClick={showInspSpanSub}
               onDoubleClick={ev => {
                 const validSibling = searchNextSiblings(
@@ -59,6 +60,7 @@ export default function InspDlgElements({ count, ctx, fullName }: InspProps) {
               id={`inpNo${count}`}
               className="radOp radNo"
               data-title={`${fullName} (Não)`}
+              data-required="true"
               onClick={showInspSpanSub}
             />
             <label
@@ -79,6 +81,7 @@ export default function InspDlgElements({ count, ctx, fullName }: InspProps) {
                 id={`inspTa${count}`}
                 placeholder={`Insira aqui as observações sobre ${fullName}`}
                 data-title={`Observações: ${fullName}`}
+                name={`desc_insp_${ctx}`}
               ></textarea>
               <button
                 type="button"
