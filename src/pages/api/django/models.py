@@ -399,10 +399,44 @@ class AGData(GenderedFormData):
   def save(self, *args, **kwargs):
     self.clean()
     super.save(*args, **kwargs)
-class EDData(GenderedFormData):
+class ENData(GenderedFormData):
   atv_lvl = models.CharField(max_length=255, default="undefined", editable=True, unique=False, choices=[
     ('leve', 'Leve'), ('moderado', 'Moderado'), ('intenso', 'Intenso'),
     ('muitoIntenso', 'Muito intenso'), ('sedentario', 'Sedentário')])
+  def __new__(cls, *args, **kwargs):
+    data = kwargs.get('data', {})
+    new_cls = super(OdData, cls).__new__(cls, *args, **kwargs)
+    cls.add_comorb_fields(cls, data)
+    cls.add_atvr_fields(cls, data)
+    cls.add_atvp_fields(cls, data)
+    return new_cls
+  @classmethod
+  def add_comorb_fields(cls, data):
+    count_comorb = extract_count_data(data)
+    for _ in range(0, count_comorb + 1):
+      #precisa especificar posteriormente date como dateField and sig como possivelmente fileField 
+      for prefix in ['comorb', 'date', 'sig']:
+        add_dynamic_fields(cls, prefix, count_comorb, models.CharField, max_length=255, default="null", blank=False, null=False)
+  @classmethod
+  def add_atvr_fields(cls, data):
+    count_atvr = extract_count_data(data)
+    for _ in range(0, count_atvr + 1):
+      for prefix in ['atvr', 'date', 'sig']:
+        add_dynamic_fields(cls, prefix, count_atvr, models.CharField, max_length=255, default="null", blank=False, null=False)
+  @classmethod
+  def add_atvp_fields(cls, data):
+    count_atvp = extract_count_data(data)
+    for _ in range(0, count_atvp + 1):
+      for prefix in ['atvp', 'date', 'sig']:
+        add_dynamic_fields(cls, prefix, count_atvp, models.CharField, max_length=255, default="null", blank=False, null=False)
+  def clean(self):
+    super().clean()
+  def __init__(self, *args, **kwargs):
+    super(ENData, self).__init__(*args, **kwargs)
+    self.clean()
+  def save(self, *args, **kwargs):
+    self.clean()
+    super().save(*args, **kwargs)
 class OdData(NamedFormData):
   TEETH_CHOICES = [
     ('higido', 'Hígido'),
@@ -434,7 +468,7 @@ class OdData(NamedFormData):
     count_trat = extract_count_data(data)
     for _ in range(0, count_trat + 1):
       for prefix in ['trat', 'date', 'sig']:
-        add_dynamic_fields(cls, prefix, count_trat, models.CharField, max_length=65535, blank=False, null=False)
+        add_dynamic_fields(cls, prefix, count_trat, models.CharField, max_length=65535, default="null", blank=False, null=False)
   def clean(self):
     super().clean()
     replacements = {
