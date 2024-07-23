@@ -38,7 +38,7 @@ export default function SwitchDiv({
           data-title="Autocorreção"
           defaultChecked
         />{" "}
-        <strong style={{ marginLeft: "0.3rem" }}>Autocorreção</strong>
+        <strong>Autocorreção</strong>
       </span>
     </div>
   );

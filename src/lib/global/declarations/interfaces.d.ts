@@ -1,5 +1,5 @@
 import { SetStateAction } from "react";
-import { looseNum, quadrCases, targEl } from "./types";
+import { ctxRot, looseNum, quadrCases, targEl } from "./types";
 
 export interface DocumentNodeProps {
   html: string;
@@ -83,4 +83,28 @@ export interface qrProps {
 }
 export interface qrInpProps extends qrProps {
   num: looseNum;
+}
+export interface RotProps {
+  quest:
+    | "Faz quantas refeições por dia"
+    | "Quantas das refeições diárias são completas"
+    | "Ingere quantos litros de água por dia"
+    | "Quantas micções por dia"
+    | "Qual é o intervalo mínimo (em horas) entre cada micção?"
+    | "Qual é o intervalo máximo (em horas) entre cada micção?";
+  grp: "Alim";
+  ctx: ctxRot;
+  ur?: {
+    isUr: boolean;
+    ctx: "Elim" | "Interv";
+  };
+}
+export interface InpRotProps extends RotProps {
+  maxLength: number;
+  max: number;
+  isMax?: boolean;
+  minLength?: number;
+  min?: number;
+  pattern?: string;
+  flags?: string;
 }

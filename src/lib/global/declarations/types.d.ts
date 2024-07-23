@@ -80,6 +80,14 @@ export type rMouseEvent = MouseEvent | React.MouseEvent;
 export type rDragEvent = DragEvent | React.DragEvent;
 export type pageCases = "login" | "base" | "ag" | "edfis" | "od" | "panel";
 export type quadrCases = "SupDir" | "SupEsq" | "InfDir" | "InfEsq";
+export type ctxRot = "RefDia" | "RefCompDia" | "AguaDia" | "UrDia" | "UrInterv";
+export type mainContextRot =
+  | "Diário"
+  | "Refeições Diárias"
+  | "Refeições Completas Diárias"
+  | "Litros de Água Diários"
+  | "Micções Diárias"
+  | "Intervalo entre Micções";
 export type pageStyleCases =
   | "Login Page Style"
   | "Base Page Style"

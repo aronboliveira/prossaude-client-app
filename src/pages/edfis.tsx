@@ -38,7 +38,6 @@ import {
   matchPersonPropertiesDC,
   matchPersonPropertiesWH,
   matchTMBElements,
-  switchAutoFill,
   switchRequiredCols,
   updateAtvLvl,
   updateIndexesContexts,
@@ -69,6 +68,11 @@ import Watcher from "../../components/interactive/def/Watcher";
 import ENTipsBtnWrapper from "../../components/interactive/edfis/ENTipsBtnWrapper";
 import ENBtnConformWrapper from "../../components/interactive/edfis/ENBtnConformWrapper";
 import GenericErrorComponent from "../../components/error/GenericErrorComponent";
+import SwitchDiv from "../../components/interactive/def/SwitchDiv";
+import DivRot from "../../components/interactive/edfis/DivRot";
+import InpCorUr from "../../components/interactive/edfis/client/InpCorUr";
+import InpDiur from "../../components/interactive/edfis/client/InpDiur";
+import ProtUrLvl from "../../components/interactive/edfis/client/ProtUrLvl";
 
 export const tabProps: ENTabsProps = {
   isAutoFillActive: true,
@@ -396,44 +400,7 @@ export default function EdFisNutPage(): JSX.Element {
           </div>
         </header>
         <main>
-          <div role="group" className="switchDiv flexQ900NoWC divTab">
-            <span
-              role="group"
-              className="form-switch spanLeft"
-              id="autofillDiv"
-            >
-              <input
-                type="checkbox"
-                className="deActBtn form-check-input"
-                role="switch"
-                id="autoFillBtn"
-                data-title="Cálculo Automático"
-                defaultChecked
-                onChange={ev => {
-                  tabProps.isAutoFillActive = switchAutoFill(
-                    ev.currentTarget,
-                    tabProps.isAutoFillActive
-                  );
-                }}
-              />{" "}
-              <strong>Cálculo Automático</strong>
-            </span>
-            <span
-              role="group"
-              className="form-switch spanRight"
-              id="autocorrectDiv"
-            >
-              <input
-                type="checkbox"
-                className="deActBtn form-check-input"
-                role="switch"
-                id="deactAutocorrectBtnPac"
-                data-title="Autocorreção"
-                defaultChecked
-              />
-              <strong>Autocorreção</strong>
-            </span>
-          </div>
+          <SwitchDiv autofill={true} />
           <hr />
           <form
             name="formEdFisName"
@@ -466,287 +433,50 @@ export default function EdFisNutPage(): JSX.Element {
                 Hábitos Rotineiros — Alimentação
               </legend>
               <section className="sectionMain sectHabRot" id="sectAlimRot">
-                <div role="group" className="flexDiv divRot widMax900q80vw">
-                  <label
-                    htmlFor="inpRefDiaMin"
-                    className="labAlimRot fitSpaced labRef labRefDia"
-                  >
-                    Faz quantas refeições por dia, no mínimo?
-                    <input
-                      type="number"
-                      minLength={1}
-                      maxLength={4}
-                      min="0"
-                      max="99"
-                      className="form-control noInvert inpAlimRot inpRef inpRefDia minText maxText minNum maxNum patternText"
-                      id="inpRefDiaMin"
-                      required
-                      data-title="Refeicoes_diarias_minimo"
-                      data-reqlength="1"
-                      data-maxlength="4"
-                      data-minnum="0"
-                      data-maxnum="99"
-                      data-pattern="^[\d,.]+$"
-                      onInput={ev => handleEventReq(ev.currentTarget)}
-                    />
-                  </label>
-
-                  <label
-                    htmlFor="inpRefDiaMax"
-                    className="labAlimRot fitSpaced labRef labRefDia"
-                  >
-                    Faz quantas refeições por dia, no máximo?
-                    <input
-                      type="number"
-                      minLength={1}
-                      maxLength={4}
-                      min="1"
-                      max="99"
-                      className="form-control noInvert inpAlimRot inpRef inpRefDia minText maxText minNum maxNum patternText"
-                      id="inpRefDiaMax"
-                      required
-                      data-title="Refeicoes_diarias_maximo"
-                      data-reqlength="1"
-                      data-maxlength="4"
-                      data-minnum="1"
-                      data-maxnum="99"
-                      data-pattern="^[\d,.]+$"
-                      onInput={ev => handleEventReq(ev.currentTarget)}
-                    />
-                  </label>
-                </div>
-
-                <div role="group" className="flexDiv divRot widMax900q80vw">
-                  <label
-                    htmlFor="inpRefCompDiaMin"
-                    className="labAlimRot fitSpaced labRef labRefCompDia"
-                  >
-                    Quantas das refeições diárias são completas, no mínimo?
-                    <input
-                      type="number"
-                      minLength={1}
-                      maxLength={4}
-                      min="0"
-                      max="99"
-                      className="form-control noInvert inpAlimRot inpRef inpRefCompDia minText maxText minNum maxNum patternText"
-                      id="inpRefCompDiaMin"
-                      required
-                      data-title="Refeicoes_completas_diarias_minimo"
-                      data-reqlength="1"
-                      data-maxlength="4"
-                      data-minnum="0"
-                      data-maxnum="99"
-                      data-pattern="^[\d,.]+$"
-                      onInput={ev => handleEventReq(ev.currentTarget)}
-                    />
-                  </label>
-
-                  <label
-                    htmlFor="inpRefCompDiaMax"
-                    className="labAlimRot fitSpaced labRef labRefCompDia"
-                  >
-                    Quantas das refeições diárias são completas, no máximo?
-                    <input
-                      type="number"
-                      minLength={1}
-                      maxLength={4}
-                      min="1"
-                      max="9"
-                      className="form-control noInvert inpAlimRot inpRef inpRefCompDia minText maxText minNum maxNum patternText"
-                      id="inpRefCompDiaMax"
-                      required
-                      data-title="Refeicoes_completas_diarias_maximo"
-                      data-reqlength="1"
-                      data-maxlength="4"
-                      data-minnum="1"
-                      data-maxnum="99"
-                      data-pattern="^[\d,.]+$"
-                      onInput={ev => handleEventReq(ev.currentTarget)}
-                    />
-                  </label>
-                  <br role="presentation" />
-                </div>
+                <DivRot
+                  quest="Faz quantas refeições por dia"
+                  grp="Alim"
+                  ctx="RefDia"
+                />
+                <DivRot
+                  quest="Quantas das refeições diárias são completas"
+                  grp="Alim"
+                  ctx="RefCompDia"
+                />
                 <hr />
                 <h2 className="hRot legMain noInvert">
                   Hábitos Rotineiros — Hidratação
                 </h2>
-                <div role="group" className="flexDiv divRot widMax900q80vw">
-                  <label
-                    htmlFor="inpAguaDiaMin"
-                    className="labAlimRot fitSpaced labAgua"
-                  >
-                    Ingere quantos litros de água por dia, no mínimo?
-                    <input
-                      type="number"
-                      minLength={1}
-                      maxLength={4}
-                      min="0"
-                      max="99"
-                      className="form-control noInvert inpAlimRot inpAgua float sevenCharLongNum minText maxText minNum maxNum patternText"
-                      id="inpAguaDiaMin"
-                      required
-                      data-title="L_agua_diario_minimo"
-                      data-reqlength="1"
-                      data-maxlength="4"
-                      data-minnum="0"
-                      data-maxnum="99"
-                      data-pattern="^[\d,.]+$"
-                      onInput={ev => handleEventReq(ev.currentTarget)}
-                    />
-                  </label>
-                  <label
-                    htmlFor="inpAguaDiaMax"
-                    className="labAlimRot fitSpaced labAgua"
-                  >
-                    Ingere quantos litros de água por dia, no máximo?
-                    <input
-                      type="number"
-                      minLength={1}
-                      maxLength={4}
-                      min="1"
-                      max="99"
-                      className="form-control noInvert inpAlimRot inpAgua float sevenCharLongNum minText maxText minNum maxNum patternText"
-                      id="inpAguaDiaMax"
-                      required
-                      data-title="L_agua_diario_maximo"
-                      data-reqlength="1"
-                      data-maxlength="4"
-                      data-minnum="0"
-                      data-maxnum="99"
-                      data-pattern="^[\d,.]+$"
-                      onInput={ev => handleEventReq(ev.currentTarget)}
-                    />
-                  </label>
-                </div>
+                <DivRot
+                  quest="Ingere quantos litros de água por dia"
+                  grp="Alim"
+                  ctx="AguaDia"
+                />
                 <hr />
                 <h2 className="hRot legMain noInvert">
                   Hábitos Rotineiros — Excreção
                 </h2>
+                <DivRot
+                  quest="Quantas micções por dia"
+                  grp="Alim"
+                  ctx="UrDia"
+                  ur={{
+                    isUr: true,
+                    ctx: "Elim",
+                  }}
+                />
+                <DivRot
+                  quest="Qual é o intervalo mínimo (em horas) entre cada micção?"
+                  grp="Alim"
+                  ctx="UrInterv"
+                />
                 <div role="group" className="flexDiv divRot widMax900q80vw">
                   <label
-                    htmlFor="inpElimUrDiaMin"
-                    className="labAlimRot fitSpaced labUr labUrDia"
-                  >
-                    Quantas micções por dia, no mínimo?
-                    <input
-                      type="number"
-                      minLength={1}
-                      maxLength={4}
-                      min="0"
-                      max="99"
-                      className="form-control noInvert inpAlimRot inpUr inpUrDia minText maxText minNum maxNum patternText"
-                      id="inpElimUrDiaMin"
-                      required
-                      data-title="Miccoes_diarias_minimo"
-                      data-reqlength="1"
-                      data-maxlength="4"
-                      data-minnum="0"
-                      data-maxnum="99"
-                      data-pattern="^[\d,.]+$"
-                      onInput={ev => handleEventReq(ev.currentTarget)}
-                    />
-                  </label>
-
-                  <label
-                    htmlFor="inpElimUrDiaMax"
-                    className="labAlimRot fitSpaced labUr labUrDia"
-                  >
-                    Quantas micções por dia, no máximo?
-                    <input
-                      type="number"
-                      minLength={1}
-                      maxLength={4}
-                      min="1"
-                      max="99"
-                      className="form-control noInvert inpAlimRot inpUr inpUrDia minText maxText minNum maxNum patternText"
-                      id="inpElimUrDiaMax"
-                      required
-                      data-title="Miccoes_diarias_maximo"
-                      data-reqlength="1"
-                      data-maxlength="4"
-                      data-minnum="0"
-                      data-maxnum="99"
-                      data-pattern="^[\d,.]+$"
-                      onInput={ev => handleEventReq(ev.currentTarget)}
-                    />
-                  </label>
-                </div>
-
-                <div role="group" className="flexDiv divRot widMax900q80vw">
-                  <label
-                    htmlFor="inpElimUrDiaMin"
-                    className="labAlimRot fitSpaced labUr labUrInterval"
-                  >
-                    <span>
-                      Qual é o intervalo mínimo (em horas) entre cada micção?
-                    </span>
-                    <input
-                      type="number"
-                      minLength={1}
-                      maxLength={4}
-                      min="0"
-                      max="96"
-                      className="form-control noInvert inpAlimRot inpUr inpUrInterval float sevenCharLongNum minText maxText minNum maxNum patternText"
-                      id="inpElimUrIntervaloMin"
-                      required
-                      data-title="Miccoes_intervalo_minimo"
-                      data-reqlength="1"
-                      data-maxlength="4"
-                      data-minnum="1"
-                      data-maxnum="96"
-                      data-pattern="^[\d,.]+$"
-                      onInput={ev => handleEventReq(ev.currentTarget)}
-                    />
-                  </label>
-
-                  <label
-                    htmlFor="inpElimUrDiaMax"
-                    className="labAlimRot fitSpaced labUr labUrInterval"
-                  >
-                    <span>
-                      Qual é o intervalo máximo (em horas) entre cada micção?
-                    </span>
-                    <input
-                      type="number"
-                      minLength={1}
-                      maxLength={4}
-                      min="0"
-                      max="96"
-                      className="form-control noInvert inpAlimRot inpUr inpUrInterval float sevenCharLongNum minText maxText minNum maxNum patternText"
-                      id="inpElimUrIntervaloMax"
-                      required
-                      data-title="Miccoes_intervalo_maximo"
-                      data-reqlength="1"
-                      data-maxlength="4"
-                      data-minnum="1"
-                      data-maxnum="96"
-                      data-pattern="^[\d,.]+$"
-                      onInput={ev => handleEventReq(ev.currentTarget)}
-                    />
-                  </label>
-                </div>
-
-                <div role="group" className="flexDiv divRot widMax900q80vw">
-                  <label
-                    htmlFor="inpElimUrCor"
+                    htmlFor="inpCorUrDef"
                     className="labAlimRot fitSpaced labUr widMax900q80vw"
                   >
-                    Qual é a coloração da urina?
-                    <input
-                      type="text"
-                      minLength={4}
-                      maxLength={15}
-                      list="corUr"
-                      className="form-control noInvert inpAlimRot inpUr"
-                      id="inpElimUrCor"
-                      required
-                      data-title="Urina_coloracao"
-                      data-pattern="transparente|verde-claro|verde-escuro|amarelo-claro|amarelo-escuro|âmbar|laranja|rosa|avermelhada|marrom|azul|arroxeada|preta"
-                      data-flags="gi"
-                      data-reqlength="4"
-                      data-maxlength="15"
-                      onInput={ev => handleEventReq(ev.currentTarget)}
-                    />
+                    <span>Qual é a coloração da urina?</span>
+                    <InpCorUr />
                     <datalist id="corUr">
                       <option className="opCorUr" value="Transparente"></option>
                       <option className="opCorUr" value="Verde-claro"></option>
@@ -777,27 +507,13 @@ export default function EdFisNutPage(): JSX.Element {
                     id="spanDiur"
                     className="labAlimRot fitSpaced labUr labUrInterval widMax900q80vw"
                   >
-                    Diurese:
+                    <span>Diurese:</span>
                     <label
                       htmlFor="inpDiur"
                       id="labDiur"
                       className="form-control noInvert labAlimRot fitSpaced labUr labUrInterval widMax900q80vw noInvert"
                     >
-                      <input
-                        type="number"
-                        className="form-control noInvert inpAlimRot inpUr float"
-                        id="inpDiur"
-                        data-title="Diurese"
-                        onInput={ev =>
-                          handleCondtReq(ev.currentTarget, {
-                            minNum: 0,
-                            maxNum: 9999,
-                            min: 1,
-                            max: 6,
-                            pattern: ["^d+$", ""],
-                          })
-                        }
-                      />
+                      <InpDiur />
                       <p className="msrProgCons noInvert">ml/dia</p>
                     </label>
                   </span>
@@ -882,21 +598,7 @@ export default function EdFisNutPage(): JSX.Element {
                         id="labProtUrLvl"
                         className="form-control noInvert labUr"
                       >
-                        <input
-                          type="number"
-                          id="protUrLvl"
-                          className="form-control noInvert opProtUr"
-                          data-title="Proteinuria_mg/dL"
-                          onInput={ev =>
-                            handleCondtReq(ev.currentTarget, {
-                              minNum: 0,
-                              maxNum: 9999,
-                              min: 1,
-                              max: 6,
-                              pattern: ["^d+$", ""],
-                            })
-                          }
-                        />
+                        <ProtUrLvl />
                         <p className="msrProgCons noInvert">mg/dL</p>
                       </label>
                     </div>
@@ -1062,7 +764,6 @@ export default function EdFisNutPage(): JSX.Element {
               <h4 className="bolded" id="hProgCons">
                 Progresso em Consultas
               </h4>
-
               <div role="group" id="divProgSels">
                 <div
                   role="group"
@@ -1074,7 +775,6 @@ export default function EdFisNutPage(): JSX.Element {
                     id="labSelectNumCons"
                     className="consLab"
                   >
-                    {" "}
                     Consulta em Leitura:
                     <select
                       id="selectNumCons"
@@ -1245,7 +945,6 @@ export default function EdFisNutPage(): JSX.Element {
                       <option value="neutro">Neutro</option>
                     </select>
                   </div>
-
                   <div role="group" className="spanForm divLab">
                     Nível de Gordura Corporal aplicado:
                     <span
@@ -1451,7 +1150,6 @@ export default function EdFisNutPage(): JSX.Element {
                       </span>
                     </span>
                   </div>
-
                   <div
                     role="group"
                     className="divLab"
