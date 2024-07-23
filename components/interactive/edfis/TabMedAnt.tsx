@@ -1,12 +1,12 @@
 import { nullishDiv } from "@/lib/global/declarations/types";
-import {
-  handleEventReq,
-} from "@/lib/global/handlers/gHandlers";
+import { handleEventReq } from "@/lib/global/handlers/gHandlers";
 import { handleCallbackWHS, tabProps } from "@/pages/edfis";
 import { useRef, useState, useEffect } from "react";
+import { ErrorBoundary } from "react-error-boundary";
 import Col from "./tabs/Col";
 import Th from "./tabs/Th";
-import WatcherTab from "./client/tabs/WatcherIndPerc";
+import WatcherTab from "./client/tabs/WatcherTab";
+import GenericErrorComponent from "../../error/GenericErrorComponent";
 
 export default function TabMedAnt(): JSX.Element {
   const mainRef = useRef<nullishDiv>(null);
@@ -18,7 +18,11 @@ export default function TabMedAnt(): JSX.Element {
   return !mounted ? (
     <></>
   ) : (
-    <>
+    <ErrorBoundary
+      FallbackComponent={() => (
+        <GenericErrorComponent message="Error rendering Table for Measures" />
+      )}
+    >
       <div role="group" className="divTab" id="divTabMedAnt" ref={mainRef}>
         <table className="tabProgCons noInvert" id="tabMedAnt" itemScope>
           <caption
@@ -46,6 +50,7 @@ export default function TabMedAnt(): JSX.Element {
               className="tabRowProgCons tabRowMedAnt"
               id="tabRowMedAnt1"
               itemProp="rowMedAnt"
+              data-row="1"
             >
               {columns.map(nCol => (
                 <Th ctx="MedAnt" nCol={nCol} nRow={1} />
@@ -61,6 +66,7 @@ export default function TabMedAnt(): JSX.Element {
               className="tabRowProgCons tabRowMedAnt"
               id="tabRowMedAnt2"
               itemProp="rowMedAnt"
+              data-row="2"
             >
               <Th ctx="MedAnt" nRow={2} nCol={1} lab="Peso" />
               <td
@@ -1000,6 +1006,6 @@ export default function TabMedAnt(): JSX.Element {
         </table>
       </div>
       <WatcherTab tabName="divTabMedAnt" />
-    </>
+    </ErrorBoundary>
   );
 }

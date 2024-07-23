@@ -1,9 +1,11 @@
 import { nullishDiv } from "@/lib/global/declarations/types";
 import { handleEventReq } from "@/lib/global/handlers/gHandlers";
 import { useRef, useState, useEffect } from "react";
+import { ErrorBoundary } from "react-error-boundary";
 import Col from "./tabs/Col";
 import Th from "./tabs/Th";
-import WatcherTab from "./client/tabs/WatcherIndPerc";
+import WatcherTab from "./client/tabs/WatcherTab";
+import GenericErrorComponent from "../../error/GenericErrorComponent";
 
 export default function TabProgSVi(): JSX.Element {
   const mainRef = useRef<nullishDiv>(null);
@@ -15,7 +17,11 @@ export default function TabProgSVi(): JSX.Element {
   return !mounted ? (
     <></>
   ) : (
-    <>
+    <ErrorBoundary
+      FallbackComponent={() => (
+        <GenericErrorComponent message="Error rendering Table for Vital Signs" />
+      )}
+    >
       <div role="group" className="divTab" id="divTabSVi" ref={mainRef}>
         <table className="tabProgCons noInvert" id="tabProgSVi" itemScope>
           <caption
@@ -214,6 +220,6 @@ export default function TabProgSVi(): JSX.Element {
         </table>
       </div>
       <WatcherTab tabName="divTabSVi" />
-    </>
+    </ErrorBoundary>
   );
 }

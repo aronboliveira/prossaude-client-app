@@ -1,5 +1,12 @@
 import { SetStateAction } from "react";
-import { ctxRot, looseNum, quadrCases, targEl, validTabLabs } from "./types";
+import {
+  TabCelCtxs,
+  ctxRot,
+  looseNum,
+  quadrCases,
+  targEl,
+  validTabLabs,
+} from "./types";
 
 export interface DocumentNodeProps {
   html: string;
@@ -121,11 +128,16 @@ export interface TabInpProps {
   nRow: number;
   nCol: number;
 }
-export interface ThProps extends TabInpProps {
-  ctx: "ProgSVi" | "MedAnt" | "DCut" | "IndPerc";
+export interface TabBtnProps extends TabInpProps {
+  lab: validTabLabs;
+}
+export interface TabCelProps extends TabInpProps {
+  ctx: TabCelCtxs;
+}
+export interface ThProps extends TabCelProps {
   lab?: validTabLabs;
 }
-export interface ColProps extends Omit<ThProps, "nRow"> {}
-export interface TabInpProps extends TabInpProps {
-  ctx: validTabLabs;
+export interface TdProps extends TabCelProps {
+  lab: validTabLabs;
 }
+export interface ColProps extends Omit<ThProps, "nRow"> {}

@@ -1,15 +1,15 @@
 "use client";
 
-import { TabInpProps } from "@/lib/global/declarations/interfaces";
+import { TabBtnProps } from "@/lib/global/declarations/interfaces";
 import { handleIndEv } from "../../TabIndPerc";
 import { textTransformPascal } from "@/lib/global/gModel";
 
 export default function TabBtnInd({
   nRow,
   nCol,
-  ctx,
-}: TabInpProps): JSX.Element {
-  const pascalCtx = textTransformPascal(ctx);
+  lab,
+}: TabBtnProps): JSX.Element {
+  const pascalCtx = textTransformPascal(lab).replaceAll(" ", "_");
   return (
     <button
       type="button"

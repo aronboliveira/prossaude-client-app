@@ -119,6 +119,7 @@ export type validTabLabs =
   | "Tríciptal"
   | "Suprailíaca"
   | Exclude<IndCases, "BTN">;
+export type TabCelCtxs = "ProgSVi" | "MedAnt" | "DCut" | "IndPerc";
 export type pageStyleCases =
   | "Login Page Style"
   | "Base Page Style"

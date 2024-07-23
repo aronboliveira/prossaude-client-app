@@ -21,11 +21,13 @@ import {
 } from "@/lib/locals/edFisNutPage/edFisNutHandler";
 import { person, tabProps } from "@/pages/edfis";
 import { useRef, useState, useEffect } from "react";
+import { ErrorBoundary } from "react-error-boundary";
 import Col from "./tabs/Col";
 import Th from "./tabs/Th";
 import LockTabInd from "./tabs/LobTackInd";
 import TabBtnInd from "./client/tabs/TabBtnInd";
-import WatcherTab from "./client/tabs/WatcherIndPerc";
+import WatcherTab from "./client/tabs/WatcherTab";
+import GenericErrorComponent from "../../error/GenericErrorComponent";
 
 export default function TabIndPerc(): JSX.Element {
   const mainRef = useRef<nullishDiv>(null);
@@ -37,7 +39,11 @@ export default function TabIndPerc(): JSX.Element {
   return !mounted ? (
     <></>
   ) : (
-    <>
+    <ErrorBoundary
+      FallbackComponent={() => (
+        <GenericErrorComponent message="Error rendering Table for Indexes" />
+      )}
+    >
       <div role="group" className="divTab" id="divTabInd" ref={mainRef}>
         <table className="tabProgCons noInvert" id="tabIndPerc">
           <colgroup>
@@ -91,7 +97,7 @@ export default function TabIndPerc(): JSX.Element {
                     />
                     <p className="msrProgCons indMsr">kg/m²</p>
                   </label>
-                  <TabBtnInd nRow={2} nCol={2} ctx="IMC" />
+                  <TabBtnInd nRow={2} nCol={2} lab="IMC" />
                   <LockTabInd addGroup={["lockTabInd"]} ctx="IMC" />
                 </div>
               </td>
@@ -116,7 +122,7 @@ export default function TabIndPerc(): JSX.Element {
                     />
                     <p className="msrProgCons indMsr">kg/m²</p>
                   </label>
-                  <TabBtnInd nRow={2} nCol={3} ctx="IMC" />
+                  <TabBtnInd nRow={2} nCol={3} lab="IMC" />
                   <LockTabInd addGroup={["lockTabInd"]} ctx="IMC" />
                 </div>
               </td>
@@ -141,7 +147,7 @@ export default function TabIndPerc(): JSX.Element {
                     />
                     <p className="msrProgCons indMsr">kg/m²</p>
                   </label>
-                  <TabBtnInd nRow={2} nCol={4} ctx="IMC" />
+                  <TabBtnInd nRow={2} nCol={4} lab="IMC" />
                   <LockTabInd addGroup={["lockTabInd"]} ctx="IMC" />
                 </div>
               </td>
@@ -178,7 +184,7 @@ export default function TabIndPerc(): JSX.Element {
                     />
                     <p className="msrProgCons indMsr">%</p>
                   </label>
-                  <TabBtnInd nRow={3} nCol={2} ctx="MLG" />
+                  <TabBtnInd nRow={3} nCol={2} lab="MLG" />
                   <LockTabInd addGroup={["lockTabInd"]} ctx="MLG" />
                 </div>
               </td>
@@ -204,7 +210,7 @@ export default function TabIndPerc(): JSX.Element {
                     />
                     <p className="msrProgCons indMsr">%</p>
                   </label>
-                  <TabBtnInd nRow={3} nCol={3} ctx="MLG" />
+                  <TabBtnInd nRow={3} nCol={3} lab="MLG" />
                   <LockTabInd addGroup={["lockTabInd"]} ctx="MLG" />
                 </div>
               </td>
@@ -230,7 +236,7 @@ export default function TabIndPerc(): JSX.Element {
                     />
                     <p className="msrProgCons indMsr">%</p>
                   </label>
-                  <TabBtnInd nRow={3} nCol={4} ctx="MLG" />
+                  <TabBtnInd nRow={3} nCol={4} lab="MLG" />
                   <LockTabInd addGroup={["lockTabInd"]} ctx="MLG" />
                 </div>
               </td>
@@ -267,7 +273,7 @@ export default function TabIndPerc(): JSX.Element {
                     />
                     <p className="msrProgCons indMsr">%</p>
                   </label>
-                  <TabBtnInd nRow={4} nCol={2} ctx="PGC" />
+                  <TabBtnInd nRow={4} nCol={2} lab="PGC" />
                   <LockTabInd addGroup={["lockTabInd"]} ctx="PGC" />
                 </div>
               </td>
@@ -293,7 +299,7 @@ export default function TabIndPerc(): JSX.Element {
                     />
                     <p className="msrProgCons indMsr">%</p>
                   </label>
-                  <TabBtnInd nRow={4} nCol={3} ctx="PGC" />
+                  <TabBtnInd nRow={4} nCol={3} lab="PGC" />
                   <LockTabInd addGroup={["lockTabInd"]} ctx="PGC" />
                 </div>
               </td>
@@ -319,7 +325,7 @@ export default function TabIndPerc(): JSX.Element {
                     />
                     <p className="msrProgCons indMsr">%</p>
                   </label>
-                  <TabBtnInd nRow={4} nCol={4} ctx="PGC" />
+                  <TabBtnInd nRow={4} nCol={4} lab="PGC" />
                   <LockTabInd addGroup={["lockTabInd"]} ctx="PGC" />
                 </div>
               </td>
@@ -355,7 +361,7 @@ export default function TabIndPerc(): JSX.Element {
                     />
                     <p className="msrProgCons indMsr">kcal</p>
                   </label>
-                  <TabBtnInd nRow={5} nCol={2} ctx="TMB" />
+                  <TabBtnInd nRow={5} nCol={2} lab="TMB" />
                   <LockTabInd addGroup={["lockTabInd"]} ctx="TMB" />
                 </div>
               </td>
@@ -380,7 +386,7 @@ export default function TabIndPerc(): JSX.Element {
                     />
                     <p className="msrProgCons indMsr">kcal</p>
                   </label>
-                  <TabBtnInd nRow={5} nCol={3} ctx="TMB" />
+                  <TabBtnInd nRow={5} nCol={3} lab="TMB" />
                   <LockTabInd addGroup={["lockTabInd"]} ctx="TMB" />
                 </div>
               </td>
@@ -405,7 +411,7 @@ export default function TabIndPerc(): JSX.Element {
                     />
                     <p className="msrProgCons indMsr">kcal</p>
                   </label>
-                  <TabBtnInd nRow={5} nCol={4} ctx="TMB" />
+                  <TabBtnInd nRow={5} nCol={4} lab="TMB" />
                   <LockTabInd addGroup={["lockTabInd"]} ctx="TMB" />
                 </div>
               </td>
@@ -434,7 +440,7 @@ export default function TabIndPerc(): JSX.Element {
                     />
                     <p className="msrProgCons indMsr">kcal</p>
                   </label>
-                  <TabBtnInd nRow={6} nCol={2} ctx="GET" />
+                  <TabBtnInd nRow={6} nCol={2} lab="GET" />
                   <LockTabInd addGroup={["lockTabInd"]} ctx="GET" />
                 </div>
               </td>
@@ -456,7 +462,7 @@ export default function TabIndPerc(): JSX.Element {
                     />
                     <p className="msrProgCons indMsr">kcal</p>
                   </label>
-                  <TabBtnInd nRow={6} nCol={3} ctx="GET" />
+                  <TabBtnInd nRow={6} nCol={3} lab="GET" />
                   <LockTabInd addGroup={["lockTabInd"]} ctx="GET" />
                 </div>
               </td>
@@ -479,7 +485,7 @@ export default function TabIndPerc(): JSX.Element {
                     />
                     <p className="msrProgCons indMsr">kcal</p>
                   </label>
-                  <TabBtnInd nRow={6} nCol={4} ctx="GET" />
+                  <TabBtnInd nRow={6} nCol={4} lab="GET" />
                   <LockTabInd addGroup={["lockTabInd"]} ctx="GET" />
                 </div>
               </td>
@@ -488,7 +494,7 @@ export default function TabIndPerc(): JSX.Element {
         </table>
       </div>
       <WatcherTab tabName="divTabInd" />
-    </>
+    </ErrorBoundary>
   );
 }
 
