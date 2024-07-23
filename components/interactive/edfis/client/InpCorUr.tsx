@@ -12,7 +12,7 @@ export default function InpCorUr(): JSX.Element {
       className="form-control noInvert inpAlimRot inpUr"
       id="inpUrCorDef"
       required
-      data-title="Urina_coloracao"
+      data-title="Urina (Coloração)"
       data-pattern="transparente|verde-claro|verde-escuro|amarelo-claro|amarelo-escuro|âmbar|laranja|rosa|avermelhada|marrom|azul|arroxeada|preta"
       data-flags="gi"
       data-reqlength="4"

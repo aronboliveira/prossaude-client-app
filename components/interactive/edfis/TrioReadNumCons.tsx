@@ -41,7 +41,6 @@ export default function TrioReadNumCons(): JSX.Element {
       className="consLab"
       ref={mainRef}
     >
-      {" "}
       Número inicial da Consulta em Leitura:
       <input
         type="number"

@@ -88,5 +88,11 @@ export default function Watcher({
       if (routeCase === "ag") removeEventListener("resize", handleResize);
     };
   }, []);
-  return <div style={{ display: "none" }}></div>;
+  return (
+    <div
+      className="watcher"
+      id={`watcher-${routeCase}`}
+      style={{ display: "none" }}
+    ></div>
+  );
 }

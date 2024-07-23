@@ -8,7 +8,7 @@ export default function ProtUrLvl(): JSX.Element {
       type="number"
       id="protUrLvl"
       className="form-control noInvert opProtUr"
-      data-title="Proteinuria_mg/dL"
+      data-title="Proteinuria (mg/dL)"
       onInput={ev =>
         handleCondtReq(ev.currentTarget, {
           minNum: 0,

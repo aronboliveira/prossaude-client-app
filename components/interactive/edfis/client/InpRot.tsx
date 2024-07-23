@@ -28,6 +28,12 @@ export default function InpRot(props: InpRotProps): JSX.Element {
       case "UrInterv":
         mainCtx = "Intervalo entre Micções";
         break;
+      case "EvDia":
+        mainCtx = "Evacuações Diárias";
+        break;
+      case "EvInterv":
+        mainCtx = "Intervalo entre Evacuações";
+        break;
       default:
         mainCtx = "Diário";
         break;
@@ -59,8 +65,18 @@ export default function InpRot(props: InpRotProps): JSX.Element {
       )}
     >
       <span>
-        {props.ctx === "UrInterv"
-          ? props.quest
+        {props.ctx === "UrInterv" || props.ctx === "EvInterv"
+          ? (() => {
+              if (props.ctx === "UrInterv") {
+                return props.isMax
+                  ? "Qual é o intervalo máximo (em horas) entre cada micção?"
+                  : "Qual é o intervalo mínimo (em horas) entre cada micção?";
+              } else if (props.ctx === "EvInterv") {
+                return props.isMax
+                  ? "Qual é o intervalo máximo (em horas) entre evacuações?"
+                  : "Qual é o intervalo mínimo (em horas) entre evacuações?";
+              }
+            })()
           : (() =>
               props.isMax
                 ? `${props.quest}, no máximo?`
@@ -77,16 +93,27 @@ export default function InpRot(props: InpRotProps): JSX.Element {
         }Rot inp${props.ctx.replace("Dia", "")} inp${
           props.ctx
         } minText maxText minNum maxNum patternText${
-          props.ur && " inpUr inpUrDia"
+          /interv/gi.test(props.ctx) && " float sevenCharLongNum"
+        }${props.ur ? " inpUr inpUrDia" : ""}${
+          props.ev ? " inpEv inpEvDia" : ""
         }`}
         id={
-          !props.ur
+          !props.ur && !props.ev
             ? `${props.isMax ? `inp${props.ctx}Max` : `inp${props.ctx}Min`}`
-            : `${
-                props.isMax
-                  ? `inp${props.ur.ctx}${props.ctx}Max`
-                  : `inp${props.ur.ctx}${props.ctx}Min`
-              }`
+            : (() => {
+                if (props.ur) {
+                  return props.isMax
+                    ? `inp${props.ur.ctx}${props.ctx}Max`
+                    : `inp${props.ur.ctx}${props.ctx}Min`;
+                } else if (props.ev) {
+                  return props.isMax
+                    ? `inp${props.ev.ctx}${props.ctx}Max`
+                    : `inp${props.ev.ctx}${props.ctx}Min`;
+                } else
+                  return props.isMax
+                    ? `inp${props.ctx}Max`
+                    : `inp${props.ctx}Min`;
+              })()
         }
         required
         data-title={title}

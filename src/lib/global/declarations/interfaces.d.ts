@@ -1,5 +1,5 @@
 import { SetStateAction } from "react";
-import { ctxRot, looseNum, quadrCases, targEl } from "./types";
+import { ctxRot, looseNum, quadrCases, targEl, validTabLabs } from "./types";
 
 export interface DocumentNodeProps {
   html: string;
@@ -28,7 +28,13 @@ export interface DlgProps {
   dispatch: Dispatch<SetStateAction<boolean>>;
 }
 export interface ENTabsProps {
+  edIsAutoCorrectOn: boolean;
   isAutoFillActive: boolean;
+  areColGroupsSimilar: boolean;
+  areNumConsOpsValid: boolean;
+  numColsCons: number;
+  numCons: number;
+  numConsLastOp: number;
   numCol: number;
   IMC: number;
   MLG: number;
@@ -91,11 +97,14 @@ export interface RotProps {
     | "Ingere quantos litros de água por dia"
     | "Quantas micções por dia"
     | "Qual é o intervalo mínimo (em horas) entre cada micção?"
-    | "Qual é o intervalo máximo (em horas) entre cada micção?";
-  grp: "Alim";
+    | "Evacua quantas vezes por dia"
+    | "Qual é o intervalo mínimo (em horas) entre evacuações?";
   ctx: ctxRot;
+  grp?: "Alim";
   ur?: {
-    isUr: boolean;
+    ctx: "Elim" | "Interv";
+  };
+  ev?: {
     ctx: "Elim" | "Interv";
   };
 }
@@ -107,4 +116,16 @@ export interface InpRotProps extends RotProps {
   min?: number;
   pattern?: string;
   flags?: string;
+}
+export interface TabInpProps {
+  nRow: number;
+  nCol: number;
+}
+export interface ThProps extends TabInpProps {
+  ctx: "ProgSVi" | "MedAnt" | "DCut" | "IndPerc";
+  lab?: validTabLabs;
+}
+export interface ColProps extends Omit<ThProps, "nRow"> {}
+export interface TabInpProps extends TabInpProps {
+  ctx: validTabLabs;
 }

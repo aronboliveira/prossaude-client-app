@@ -1,11 +1,9 @@
 import { ErrorBoundary } from "react-error-boundary";
-import { useEffect, useState, memo } from "react";
-import { handleLinkChanges } from "@/lib/global/handlers/gRoutingHandlers";
+import { memo } from "react";
 import {
   elementNotFound,
   extLine,
   inputNotFound,
-  maxNumberError,
   multipleElementsNotFound,
   stringError,
   typeError,
@@ -14,23 +12,12 @@ import {
   autofillResult,
   contextAutofill,
   contextAutofillNums,
-  elCollection,
   entryEl,
   targEl,
 } from "@/lib/global/declarations/types";
-import {
-  addListenerInnerTabs,
-  defaultResult,
-  validateTitlesForTargs,
-} from "@/lib/locals/edFisNutPage/edFisNutController";
+import { defaultResult } from "@/lib/locals/edFisNutPage/edFisNutController";
 import { parseNotNaN } from "@/lib/global/gModel";
-import { addListenerExportBtn, getGlobalEls } from "@/lib/global/gController";
-import { dinamicGridAdjust } from "@/lib/global/gStyleScript";
 import { Person } from "@/lib/global/declarations/classes";
-import {
-  handleCondtReq,
-  handleEventReq,
-} from "@/lib/global/handlers/gHandlers";
 import {
   defineTargInps,
   fluxFormIMC,
@@ -38,7 +25,6 @@ import {
   matchPersonPropertiesDC,
   matchPersonPropertiesWH,
   matchTMBElements,
-  switchRequiredCols,
   updateAtvLvl,
   updateIndexesContexts,
   updatePGC,
@@ -64,7 +50,6 @@ import HeaderDate from "../../components/interactive/def/HeaderDate";
 import ConfirmDate from "../../components/interactive/def/ConfirmDate";
 import SectConfirmBtns from "../../components/interactive/def/SectConfirmBtns";
 import Declaration from "../../components/interactive/def/Declaration";
-import Watcher from "../../components/interactive/def/Watcher";
 import ENTipsBtnWrapper from "../../components/interactive/edfis/ENTipsBtnWrapper";
 import ENBtnConformWrapper from "../../components/interactive/edfis/ENBtnConformWrapper";
 import GenericErrorComponent from "../../components/error/GenericErrorComponent";
@@ -73,9 +58,26 @@ import DivRot from "../../components/interactive/edfis/DivRot";
 import InpCorUr from "../../components/interactive/edfis/client/InpCorUr";
 import InpDiur from "../../components/interactive/edfis/client/InpDiur";
 import ProtUrLvl from "../../components/interactive/edfis/client/ProtUrLvl";
+import SelectLvlAtFis from "../../components/interactive/edfis/client/SelectLvlAtFis";
+import SelectNumCons from "../../components/interactive/edfis/client/SelectNumCons";
+import TextBodyType from "../../components/interactive/edfis/client/TextBodyType";
+import GordCorpLvl from "../../components/interactive/edfis/client/GordCorpLvl";
+import NafType from "../../components/interactive/edfis/client/NafType";
+import FormCalcTmbType from "../../components/interactive/edfis/client/FormCalcTmbType";
+import SelFactorAtleta from "../../components/interactive/edfis/client/SelFactorAtleta";
+import Protocolo from "../../components/interactive/edfis/client/Protocolo";
+import WatcherEN from "../../components/interactive/def/WatcherEN";
+import OpProtUr from "../../components/interactive/edfis/OpProtUr";
+import LockTabInd from "../../components/interactive/edfis/tabs/LobTackInd";
 
 export const tabProps: ENTabsProps = {
+  edIsAutoCorrectOn: true,
   isAutoFillActive: true,
+  areColGroupsSimilar: false,
+  areNumConsOpsValid: false,
+  numColsCons: 1,
+  numCons: 1,
+  numConsLastOp: 1,
   numCol: 1,
   IMC: 0,
   MLG: 0,
@@ -99,276 +101,10 @@ export const person = new Person("masculino", 0, 0, 0, 0, "leve");
 //   console.log(person);
 //   console.log(tabProps);
 // }, 2000);
-export let edIsAutoCorrectOn = true,
-  areColGroupsSimilar = false,
-  areNumConsOpsValid = false,
-  numColsCons = 1,
-  numCons = 1,
-  numConsLastOp = 1;
 const MemoAge = memo(AgeElement);
 const MemoLoc = memo(ConfirmLocId);
 
 export default function EdFisNutPage(): JSX.Element {
-  const [mounted, setMounted] = useState<boolean>(false);
-  useEffect(() => {
-    handleLinkChanges("edfis", "EN Page Style");
-    //inicializações e chamadas
-    const selFactorAtleta = document.getElementById("selFactorAtleta");
-    const genElement = document.getElementById("genId");
-    tabProps.edGenValue = (genElement as entryEl)?.value || "masculino";
-    edIsAutoCorrectOn = getGlobalEls(edIsAutoCorrectOn, "num");
-    addListenerExportBtn("edFisNut");
-    dinamicGridAdjust(Array.from(document.querySelectorAll(".fsAnamGDiv")));
-    selFactorAtleta instanceof HTMLSelectElement
-      ? (tabProps.factorAtleta = selFactorAtleta.value)
-      : elementNotFound(
-          selFactorAtleta,
-          "selFactorAtleta",
-          extLine(new Error())
-        );
-    const mountInterval = setInterval(interv => {
-      if (document.getElementById("tabIndPerc")) {
-        setMounted(true);
-        clearInterval(interv);
-        return;
-      }
-    }, 200);
-    setTimeout(() => {
-      setMounted(true);
-      clearInterval(mountInterval);
-      !document.getElementById("tabIndPerc") &&
-        console.warn(`Could not find tabIndPerc`);
-    }, 10000);
-  }, []);
-  useEffect(() => {
-    if (mounted && document.getElementsByTagName("table").length > 3) {
-      const selectNumCons = document.getElementById("selectNumCons");
-      const consTablesFs = document.getElementById("fsProgConsId");
-      const genElement = document.getElementById("genId");
-      const atvLvlElement = document.getElementById("selectLvlAtFis");
-      document.querySelectorAll(".tabInpProg").forEach((inp, i) => {
-        try {
-          if (
-            !(
-              inp instanceof HTMLInputElement &&
-              (inp.type === "number" || inp.type === "text")
-            )
-          )
-            throw inputNotFound(
-              inp,
-              `Validation of Input instance and type`,
-              extLine(new Error())
-            );
-          if (inp.required) {
-            inp.minLength = 1;
-            inp.maxLength = 99;
-            inp.pattern = "^[\\d,.]+$";
-            inp.classList.add("minText", "maxText", "pattern");
-            if (inp.type === "number") {
-              inp.min = "0.05";
-              inp.max = "999999";
-              inp.classList.add("minNum", "maxNum");
-            }
-          }
-          inp.type === "number"
-            ? inp.addEventListener("input", ev =>
-                handleCondtReq(ev.currentTarget as HTMLInputElement, {
-                  minNum: 0.05,
-                  maxNum: 999999,
-                  min: 1,
-                  max: 99,
-                  pattern: ["^[\\d,.]+$", ""],
-                })
-              )
-            : inp.addEventListener("input", ev =>
-                handleCondtReq(ev.currentTarget as HTMLInputElement, {
-                  min: 1,
-                  max: 99,
-                  pattern: ["^[\\d,.]+$", ""],
-                })
-              );
-        } catch (e) {
-          console.error(
-            `Error executing iteration ${i} for Tab Inp Prog application of requirements:\n${
-              (e as Error).message
-            }`
-          );
-        }
-      });
-      tabProps.IMC =
-        parseFloat(
-          parseFloat((tabProps.targInpIMC as entryEl)?.value || "0").toFixed(4)
-        ) || 0;
-      tabProps.MLG =
-        parseFloat(
-          parseFloat((tabProps.targInpMLG as entryEl)?.value || "0").toFixed(4)
-        ) || 0;
-      tabProps.TMB =
-        parseFloat(
-          parseFloat((tabProps.targInpTMB as entryEl)?.value || "0").toFixed(4)
-        ) || 0;
-      tabProps.GET =
-        parseFloat(
-          parseFloat((tabProps.targInpGET as entryEl)?.value || "0").toFixed(4)
-        ) || 0;
-      tabProps.PGC =
-        parseFloat(
-          parseFloat((tabProps.targInpPGC as entryEl)?.value || "0").toFixed(4)
-        ) || 0;
-      tabProps.factorAtvLvl =
-        parseNotNaN((document.getElementById("nafType") as entryEl)?.value) ||
-        1.4;
-      try {
-        if (
-          !(
-            selectNumCons instanceof HTMLSelectElement ||
-            selectNumCons instanceof HTMLDataListElement
-          )
-        )
-          throw elementNotFound(
-            selectNumCons,
-            `Select Num Cons instance`,
-            extLine(new Error())
-          );
-        numCons = parseNotNaN((selectNumCons as entryEl)?.value || "1") || 1;
-        if (!(selectNumCons.lastElementChild instanceof HTMLOptionElement))
-          throw elementNotFound(
-            selectNumCons.lastElementChild,
-            `Last Element of Select for Número de Consulta`,
-            extLine(new Error())
-          );
-        numConsLastOp = parseNotNaN(
-          selectNumCons?.lastElementChild?.value ?? "1",
-          1
-        );
-        numColsCons = Math.min(
-          ...Array.from(document.querySelectorAll("table")).map(tab => {
-            return tab instanceof HTMLTableElement
-              ? tab.querySelectorAll("col").length
-              : 0;
-          })
-        );
-        if (!(numConsLastOp === numColsCons && numConsLastOp >= 3)) {
-          console.error(`
-          numConsLastOp: ${numConsLastOp};
-          numColsCons: ${numColsCons};
-          numConsLastOp: ${numConsLastOp};
-          `);
-          throw maxNumberError(
-            (selectNumCons?.lastElementChild as HTMLOptionElement)?.value ??
-              "1",
-            "Options para Consultas",
-            extLine(new Error())
-          );
-        }
-        areNumConsOpsValid = true;
-      } catch (e) {
-        console.error(
-          `Error executing procedure for determining Número de Consulta:\n${
-            (e as Error).message
-          }`
-        );
-      }
-      person.gen = (genElement as entryEl)?.value || "masculino";
-      person.age =
-        parseNotNaN(
-          (document.getElementById("dateAgeId") as entryEl)?.value ?? "0"
-        ) || 0;
-      numCons = parseNotNaN((selectNumCons as entryEl)?.value || "1") || 1;
-      person.sumDCut =
-        parseNotNaN(
-          (document.getElementById(`tabInpRowDCut9_${numCons + 1}`) as entryEl)
-            ?.value ?? "0",
-          0,
-          "float"
-        ) || 0;
-      person.weight =
-        parseNotNaN(
-          (
-            document.getElementById(
-              `tabInpRowMedAnt2_${numCons + 1}`
-            ) as entryEl
-          )?.value ?? "0",
-          0,
-          "float"
-        ) || 0;
-      person.height =
-        parseNotNaN(
-          (
-            document.getElementById(
-              `tabInpRowMedAnt3_${numCons + 1}`
-            ) as entryEl
-          )?.value ?? "0",
-          0,
-          "float"
-        ) || 0;
-      person.atvLvl = (atvLvlElement as entryEl)?.value ?? "leve";
-      [numColsCons, areColGroupsSimilar] = addListenerInnerTabs(
-        consTablesFs,
-        numColsCons,
-        areColGroupsSimilar
-      );
-      [
-        tabProps.targInpWeigth,
-        tabProps.targInpHeigth,
-        tabProps.targInpIMC,
-        tabProps.targInpMLG,
-        tabProps.targInpTMB,
-        tabProps.targInpGET,
-        tabProps.targInpSumDCut,
-        tabProps.targInpPGC,
-      ] = validateTitlesForTargs(numCons);
-      try {
-        if (
-          !(
-            genElement instanceof HTMLSelectElement ||
-            genElement instanceof HTMLInputElement
-          )
-        )
-          throw elementNotFound(
-            genElement,
-            `Gen Element`,
-            extLine(new Error())
-          );
-      } catch (e) {
-        console.error(
-          `Error executing procure for adding listeners to genElements:\n${
-            (e as Error).message
-          }`
-        );
-      }
-      const inp2_2 = document.getElementById("tabInpRowMedAnt2_2");
-      if (inp2_2 instanceof HTMLInputElement) inp2_2.value = "70";
-      const inp2_3 = document.getElementById("tabInpRowMedAnt2_3");
-      if (inp2_3 instanceof HTMLInputElement) inp2_3.value = "30";
-      const inp2_4 = document.getElementById("tabInpRowMedAnt2_4");
-      if (inp2_4 instanceof HTMLInputElement) inp2_4.value = "200";
-      const inp3_2 = document.getElementById("tabInpRowMedAnt3_2");
-      if (inp3_2 instanceof HTMLInputElement) inp3_2.value = "2";
-      const inp3_3 = document.getElementById("tabInpRowMedAnt3_3");
-      if (inp3_3 instanceof HTMLInputElement) inp3_3.value = "1";
-      const inp3_4 = document.getElementById("tabInpRowMedAnt3_4");
-      if (inp3_4 instanceof HTMLInputElement) inp3_4.value = "1.8";
-      const inp4_2 = document.getElementById("tabInpRowDCut4_2");
-      if (inp4_2 instanceof HTMLInputElement) inp4_2.value = "18";
-      const inp7_2 = document.getElementById("tabInpRowDCut7_2");
-      if (inp7_2 instanceof HTMLInputElement) inp7_2.value = "18";
-      const inp8_2 = document.getElementById("tabInpRowDCut8_2");
-      if (inp8_2 instanceof HTMLInputElement) inp8_2.value = "18";
-      const inp4_3 = document.getElementById("tabInpRowDCut4_3");
-      if (inp4_3 instanceof HTMLInputElement) inp4_3.value = "10";
-      const inp7_3 = document.getElementById("tabInpRowDCut7_3");
-      if (inp7_3 instanceof HTMLInputElement) inp7_3.value = "10";
-      const inp8_3 = document.getElementById("tabInpRowDCut8_3");
-      if (inp8_3 instanceof HTMLInputElement) inp8_3.value = "10";
-      const inp4_4 = document.getElementById("tabInpRowDCut4_4");
-      if (inp4_4 instanceof HTMLInputElement) inp4_4.value = "40";
-      const inp7_4 = document.getElementById("tabInpRowDCut7_4");
-      if (inp7_4 instanceof HTMLInputElement) inp7_4.value = "40";
-      const inp8_4 = document.getElementById("tabInpRowDCut8_4");
-      if (inp8_4 instanceof HTMLInputElement) inp8_4.value = "40";
-    }
-  }, [mounted]);
   return (
     <ErrorBoundary
       FallbackComponent={() => (
@@ -461,7 +197,6 @@ export default function EdFisNutPage(): JSX.Element {
                   grp="Alim"
                   ctx="UrDia"
                   ur={{
-                    isUr: true,
                     ctx: "Elim",
                   }}
                 />
@@ -566,32 +301,11 @@ export default function EdFisNutPage(): JSX.Element {
                       className="divMain divAdd"
                       id="divAddProtUr"
                     >
-                      <input
-                        type="radio"
-                        name="protUrTypeRadio"
-                        id="protUrOrtId"
-                        className="cpbOp opProtUr noInvert"
-                        data-title="Proteinuria_Ortostatica"
-                      />{" "}
-                      Ortostática
+                      <OpProtUr ctx="Persist" />
                       <br role="presentation" />
-                      <input
-                        type="radio"
-                        name="protUrTypeRadio"
-                        id="protUrTrId"
-                        className="cpbOp opProtUr noInvert"
-                        data-title="Proteinuria_Transitoria"
-                      />{" "}
-                      Transitória
+                      <OpProtUr ctx="Ort" />
                       <br role="presentation" />
-                      <input
-                        type="radio"
-                        name="protUrTypeRadio"
-                        id="protUrPersistId"
-                        className="cpbOp opProtUr noInvert"
-                        data-title="Proteinuria_Persistente"
-                      />{" "}
-                      Persistente
+                      <OpProtUr ctx="Tr" />
                       <br role="presentation" />
                       <label
                         htmlFor="protUrLvl"
@@ -604,103 +318,16 @@ export default function EdFisNutPage(): JSX.Element {
                     </div>
                   </div>
                 </div>
-                <div role="group" className="flexDiv divRot widMax900q80vw">
-                  <label
-                    htmlFor="inpElimEvDiaMin"
-                    className="labAlimRot fitSpaced labEv labEvDia"
-                  >
-                    Evacua quantas vezes por dia, no mínimo?
-                    <input
-                      type="number"
-                      minLength={1}
-                      maxLength={4}
-                      min="0"
-                      max="99"
-                      className="form-control noInvert inpAlimRot inpEv inpEvDia minText maxText minNum maxNum patternText"
-                      id="inpElimEvDiaMin"
-                      required
-                      data-title="Evacuacao_diaria_minimo"
-                      data-reqlength="1"
-                      data-maxlength="4"
-                      data-minnum="0"
-                      data-maxnum="99"
-                      data-pattern="^[\d,.]+$"
-                      onInput={ev => handleEventReq(ev.currentTarget)}
-                    />
-                  </label>
-                  <label
-                    htmlFor="inpElimEvDiaMax"
-                    className="labAlimRot fitSpaced labEv labEvDia"
-                  >
-                    Evacua quantas vezes por dia, no máximo?
-                    <input
-                      type="number"
-                      minLength={1}
-                      maxLength={4}
-                      min="1"
-                      max="99"
-                      className="form-control noInvert inpAlimRot inpEv inpEvDia minText maxText minNum maxNum patternText"
-                      id="inpElimEvDiaMax"
-                      required
-                      data-title="Evacuacao_diaria_maximo"
-                      data-reqlength="1"
-                      data-maxlength="4"
-                      data-minnum="1"
-                      data-maxnum="99"
-                      data-pattern="^[\d,.]+$"
-                      onInput={ev => handleEventReq(ev.currentTarget)}
-                    />
-                  </label>
-                </div>
-
-                <div role="group" className="flexDiv divRot widMax900q80vw">
-                  <label
-                    htmlFor="inpElimEvDiaMin"
-                    className="labAlimRot fitSpaced labEv labEvIntervalo"
-                  >
-                    Qual é o intervalo mínimo (em horas) entre evacuações?
-                    <input
-                      type="number"
-                      minLength={1}
-                      maxLength={4}
-                      min="0"
-                      max="96"
-                      className="form-control noInvert inpAlimRot inpEv inpEvIntervalo float sevenCharLongNum Evacuacao_intervalo_minimo minText maxText minNum maxNum patternText"
-                      id="inpElimEvIntervaloMin"
-                      required
-                      data-title="Intervalo Mínimo de Evacuação"
-                      data-reqlength="1"
-                      data-maxlength="4"
-                      data-minnum="0"
-                      data-maxnum="96"
-                      data-pattern="^[\d,.]+$"
-                      onInput={ev => handleEventReq(ev.currentTarget)}
-                    />
-                  </label>
-                  <label
-                    htmlFor="inpElimEvDiaMax"
-                    className="labAlimRot fitSpaced labEv labEvIntervalo"
-                  >
-                    Qual é o intervalo máximo (em horas) entre evacuações?
-                    <input
-                      type="number"
-                      minLength={1}
-                      maxLength={4}
-                      min="0"
-                      max="96"
-                      className="form-control noInvert inpAlimRot inpEv inpEvIntervalo float sevenCharLongNum Evacuacao_intervalo_maximo minText maxText minNum maxNum patternText"
-                      id="inpElimEvIntervaloMax"
-                      data-title="Intervalo Mínimo de Evacuação"
-                      required
-                      data-reqlength="1"
-                      data-maxlength="4"
-                      data-minnum="1"
-                      data-maxnum="96"
-                      data-pattern="^[\d,.]+$"
-                      onInput={ev => handleEventReq(ev.currentTarget)}
-                    />
-                  </label>
-                </div>
+                <DivRot
+                  quest="Evacua quantas vezes por dia"
+                  ctx="EvDia"
+                  ev={{ ctx: "Elim" }}
+                />
+                <DivRot
+                  quest="Qual é o intervalo mínimo (em horas) entre evacuações?"
+                  ctx="EvInterv"
+                  ev={{ ctx: "Interv" }}
+                />
                 <hr />
               </section>
               <div role="group" id="divAtFisRot">
@@ -710,43 +337,7 @@ export default function EdFisNutPage(): JSX.Element {
                   id="divLvlAtFis"
                 >
                   <strong>Nível de Atividade Física:</strong>
-                  <select
-                    className="form-select labelIdentif"
-                    id="selectLvlAtFis"
-                    data-title="Nivel_atividade_fisica"
-                    required
-                    onChange={ev => {
-                      [person.atvLvl, tabProps.factorAtvLvl] =
-                        callbackAtvLvlElementNaf(
-                          [
-                            [tabProps.factorAtvLvl, tabProps.IMC],
-                            [
-                              ev.currentTarget,
-                              document.getElementById("gordCorpLvl"),
-                              document.getElementById("formCalcTMBType"),
-                              document.getElementById("nafType"),
-                            ],
-                          ],
-                          ev.currentTarget.id
-                        );
-                    }}
-                  >
-                    <option value="leve" className="opLvlAtFis">
-                      Leve
-                    </option>
-                    <option value="moderado" className="opLvlAtFis">
-                      Moderado
-                    </option>
-                    <option value="intenso" className="opLvlAtFis">
-                      Intenso
-                    </option>
-                    <option value="muitoIntenso" className="opLvlAtFis">
-                      Muito intenso
-                    </option>
-                    <option value="sedentario" className="opLvlAtFis">
-                      Sedentário
-                    </option>
-                  </select>
+                  <SelectLvlAtFis />
                 </span>
                 <TabAtFirsRot />
                 <br role="presentation" />
@@ -775,117 +366,8 @@ export default function EdFisNutPage(): JSX.Element {
                     id="labSelectNumCons"
                     className="consLab"
                   >
-                    Consulta em Leitura:
-                    <select
-                      id="selectNumCons"
-                      className="form-select noInvert consInp"
-                      data-title="Consulta_lida"
-                      onChange={ev => {
-                        const contextEls = [
-                          document.getElementById("selectNumCons"),
-                          document.getElementById("fsProgConsId"),
-                          document.getElementById("tabDCut"),
-                        ];
-                        if (typeof numCons === "number") {
-                          numCons =
-                            parseNotNaN(ev.currentTarget.value || "1", 1) || 1;
-                          switchRequiredCols(
-                            contextEls as elCollection,
-                            numCons,
-                            areNumConsOpsValid
-                          );
-                          document
-                            .querySelectorAll(".tabInpProg")
-                            .forEach((inp, i) => {
-                              try {
-                                if (
-                                  !(
-                                    inp instanceof HTMLInputElement &&
-                                    (inp.type === "number" ||
-                                      inp.type === "text")
-                                  )
-                                )
-                                  throw inputNotFound(
-                                    inp,
-                                    `Validation of Input instance and type`,
-                                    extLine(new Error())
-                                  );
-                                if (inp.required) {
-                                  inp.minLength = 1;
-                                  inp.maxLength = 99;
-                                  inp.pattern = "^[\\d,.]+$";
-                                  inp.dataset.reqlength = "1";
-                                  inp.dataset.maxlength = "99";
-                                  inp.dataset.pattern = "^[\\d,.]+$";
-                                  !inp.classList.contains("minText") &&
-                                    inp.classList.add("minText");
-                                  !inp.classList.contains("maxText") &&
-                                    inp.classList.add("maxText");
-                                  !inp.classList.contains("patternText") &&
-                                    inp.classList.add("patternText");
-                                  if (inp.type === "number") {
-                                    inp.min = "0.05";
-                                    inp.max = "999999";
-                                    !inp.classList.contains("minNum") &&
-                                      inp.classList.add("minNum");
-                                    !inp.classList.contains("maxNum") &&
-                                      inp.classList.add("maxNum");
-                                  }
-                                  inp.addEventListener("input", handleEventReq);
-                                } else {
-                                  inp.minLength = 0;
-                                  inp.maxLength = 99;
-                                  inp.pattern = "";
-                                  delete inp.dataset.reqlength;
-                                  delete inp.dataset.maxlength;
-                                  delete inp.dataset.pattern;
-                                  inp.classList.contains("minText") &&
-                                    inp.classList.remove("minText");
-                                  inp.classList.contains("maxText") &&
-                                    inp.classList.remove("maxText");
-                                  inp.classList.contains("patternText") &&
-                                    inp.classList.remove("patternText");
-                                  if (inp.type === "number") {
-                                    inp.min = "";
-                                    inp.max = "999999";
-                                    inp.classList.contains("minNum") &&
-                                      inp.classList.remove("minNum");
-                                    inp.classList.contains("maxNum") &&
-                                      inp.classList.remove("maxNum");
-                                  }
-                                  inp.removeEventListener(
-                                    "input",
-                                    handleEventReq
-                                  );
-                                }
-                              } catch (e) {
-                                console.error(
-                                  `Error executing iteration ${i} for Tab Inp Prog application of requirements:\n${
-                                    (e as Error).message
-                                  }`
-                                );
-                              }
-                            });
-                        } else
-                          multipleElementsNotFound(
-                            extLine(new Error()),
-                            "arguments for callbackNumCons()",
-                            ev.currentTarget,
-                            ...contextEls,
-                            numCons
-                          );
-                      }}
-                    >
-                      <option value="1" id="opCons1">
-                        1ª
-                      </option>
-                      <option value="2" id="opCons2">
-                        2ª
-                      </option>
-                      <option value="3" id="opCons3">
-                        3ª
-                      </option>
-                    </select>
+                    <span>Consulta em Leitura:</span>
+                    <SelectNumCons />
                   </label>
                   <TrioReadNumCons />
                 </div>
@@ -895,133 +377,21 @@ export default function EdFisNutPage(): JSX.Element {
                   id="divProgType"
                 >
                   <div role="group" className="divLab">
-                    Tipo corporal aplicado:
-                    <select
-                      id="textBodytype"
-                      className="form-select noInvert consInp"
-                      data-title="Tipo_corporal_genero"
-                      onChange={() => {
-                        const genElement = document.getElementById("genId");
-                        try {
-                          if (
-                            !(
-                              genElement instanceof HTMLInputElement ||
-                              genElement instanceof HTMLSelectElement
-                            )
-                          )
-                            throw elementNotFound(
-                              genElement,
-                              `Gen Element`,
-                              extLine(new Error())
-                            );
-                          const genFisAlin =
-                            document.getElementById("genFisAlinId");
-                          if (
-                            !(
-                              genFisAlin instanceof HTMLInputElement ||
-                              genFisAlin instanceof HTMLSelectElement
-                            )
-                          )
-                            throw elementNotFound(
-                              genFisAlin,
-                              `Gen Fis Alin Element`,
-                              extLine(new Error())
-                            );
-                          [person.gen, genElement.value, genFisAlin.value] =
-                            callbackTextBodyEl(person);
-                        } catch (e) {
-                          console.error(
-                            `Error executing callback for textbodytype:\n${
-                              (e as Error).message
-                            }`
-                          );
-                        }
-                      }}
-                    >
-                      <option value="masculino">
-                        Masculino | Masculinizado
-                      </option>
-                      <option value="feminino">Feminino | Feminilizado</option>
-                      <option value="neutro">Neutro</option>
-                    </select>
+                    <span>Tipo corporal aplicado:</span>
+                    <TextBodyType />
                   </div>
                   <div role="group" className="spanForm divLab">
-                    Nível de Gordura Corporal aplicado:
+                    <span>Nível de Gordura Corporal aplicado:</span>
                     <span
                       role="group"
                       className="form-control noInvert spanSubForm consInp"
                     >
-                      <select
-                        id="gordCorpLvl"
-                        className="form-select noInvert lockSelect"
-                        data-title="Nivel_Gordura_Corporal"
-                        onChange={ev => {
-                          [person.atvLvl, tabProps.factorAtvLvl] =
-                            callbackAtvLvlElementNaf(
-                              [
-                                [tabProps.factorAtvLvl, tabProps.IMC],
-                                [
-                                  document.getElementById("selectLvlAtFis"),
-                                  ev.currentTarget,
-                                  document.getElementById("formCalcTMBType"),
-                                  document.getElementById("nafType"),
-                                ],
-                              ],
-                              ev.currentTarget.id
-                            );
-                        }}
-                      >
-                        <option value="abaixo">Com Baixo Peso</option>
-                        <option value="eutrofico">Eutrófico</option>
-                        <option value="sobrepeso">
-                          Com Sobrepeso (não Obeso)
-                        </option>
-                        <option value="obeso1">Obeso Grau 1</option>
-                        <option value="obeso2">Obeso Grau 2</option>
-                        <option value="obeso3">Obeso Grau 3</option>
-                      </select>
-                      <span
-                        role="group"
-                        className="spanLock noInvert"
-                        id="lockGordCorpLvl"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="16"
-                          height="16"
-                          fill="currentColor"
-                          className="bi bi-lock"
-                          viewBox="0 0 16 16"
-                        >
-                          <defs>
-                            <linearGradient
-                              id="gradiente-lock"
-                              x1="0%"
-                              y1="0%"
-                              x2="100%"
-                              y2="0%"
-                            >
-                              <stop
-                                offset="0%"
-                                style={{ stopColor: "rgb(233, 180, 7)" }}
-                              />
-                              <stop
-                                offset="100%"
-                                style={{ stopColor: "rgb(243, 221, 93)" }}
-                              />
-                            </linearGradient>
-                          </defs>
-                          <path
-                            d="M8 1 a2 2 0 0 1 2 2 v4 H6 V3 a2 2 0 0 1 2-2 m3 6 V3 a3 3 0 0 0-6 0 v4"
-                            className="svg-lock-hook"
-                          />
-                          <path
-                            d="M5 7 a2 2 0 0 0-2 2 v5 a2 2 0 0 0 2 2h 6 a2 2 0 0 0 2-2 V9 a2 2 0 0 0-2-2"
-                            className="svg-lock-body"
-                          />
-                          <line x1="5" y1="7" x2="11" y2="7" stroke="black" />
-                        </svg>
-                      </span>
+                      <GordCorpLvl />
+                      <LockTabInd
+                        ctx="GordCorpLvl"
+                        addGroup={["spanLock"]}
+                        isSpan={true}
+                      />
                     </span>
                   </div>
                 </div>
@@ -1031,123 +401,21 @@ export default function EdFisNutPage(): JSX.Element {
                   id="divProgFactor"
                 >
                   <div role="group" className="divLab">
-                    Fator de Nível de Atividade Física:
-                    <select
-                      id="nafType"
-                      className="form-select noInvert consInp"
-                      data-title="Fator_Nivel_Atividade"
-                      onChange={ev => {
-                        [person.atvLvl, tabProps.factorAtvLvl] =
-                          callbackAtvLvlElementNaf(
-                            [
-                              [tabProps.factorAtvLvl, tabProps.IMC],
-                              [
-                                document.getElementById("selectLvlAtFis"),
-                                document.getElementById("gordCorpLvl"),
-                                document.getElementById("formCalcTMBType"),
-                                ev.currentTarget,
-                              ],
-                            ],
-                            ev.currentTarget.id
-                          );
-                      }}
-                    >
-                      <option value="leve">1.4</option>
-                      <option value="moderado">1.6</option>
-                      <option value="intenso">1.9</option>
-                      <option value="muitoIntenso">2.2</option>
-                      <option value="sedentario">1.2</option>
-                    </select>
+                    <span>Fator de Nível de Atividade Física:</span>
+                    <NafType />
                   </div>
                   <div role="group" className="divLab spanForm">
-                    Fórmula aplicada para Cálculo de TMB:
+                    <span>Fórmula aplicada para Cálculo de TMB:</span>
                     <span
                       role="group"
                       className="form-control noInvert spanSubForm consInp"
                     >
-                      <select
-                        id="formCalcTMBType"
-                        className="form-select noInvert lockSelect"
-                        data-title="Formula_TMB"
-                        onChange={ev => {
-                          [person.atvLvl, tabProps.factorAtvLvl] =
-                            callbackAtvLvlElementNaf(
-                              [
-                                [tabProps.factorAtvLvl, tabProps.IMC],
-                                [
-                                  document.getElementById("selectLvlAtFis"),
-                                  document.getElementById("gordCorpLvl"),
-                                  ev.currentTarget,
-                                  document.getElementById("nafType"),
-                                ],
-                              ],
-                              ev.currentTarget.id
-                            );
-                        }}
-                      >
-                        <option value="harrisBenedict">Harris-Benedict</option>
-                        <option value="mifflinStJeor">Mifflin-St.Jeor</option>
-                        <option value="tinsley">Tinsley</option>
-                      </select>
-                      <span
-                        role="img"
-                        className="spanLock noInvert"
-                        id="lockformCalcTMB"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="16"
-                          height="16"
-                          fill="currentColor"
-                          className="bi bi-lock"
-                          viewBox="0 0 16 16"
-                        >
-                          <defs>
-                            <linearGradient
-                              id="gradiente-lock"
-                              x1="0%"
-                              y1="0%"
-                              x2="100%"
-                              y2="0%"
-                            >
-                              <stop
-                                offset="0%"
-                                style={{ stopColor: "rgb(233, 180, 7)" }}
-                              />
-                              <stop
-                                offset="100%"
-                                style={{ stopColor: "rgb(243, 221, 93)" }}
-                              />
-                            </linearGradient>
-                          </defs>
-                          {/* <!-- gancho --> */}
-                          <path
-                            d="M8 1 a2 2 0 0 1 2 2 v4 H6 V3 a2 2 0 0 1 2-2 m3 6 V3 a3 3 0 0 0-6 0 v4"
-                            className="svg-lock-hook"
-                          />
-                          <path
-                            d="M5 7 a2 2 0 0 0-2 2 v5 a2 2 0 0 0 2 2h 6 a2 2 0 0 0 2-2 V9 a2 2 0 0 0-2-2"
-                            className="svg-lock-body"
-                          />
-                          <line x1="5" y1="7" x2="11" y2="7" stroke="black" />
-                        </svg>
-                        {/* <!--
-                          coordenada inicial
-                          arco, x_inicial, y_inicial, ângulo, tamanho, direcao_rotacao
-                          vertical_relativo,
-                          horizontal_abs,
-                          vert_abs
-                          arco, x_inicial, y_inicial, ângulo, tamanho, calc(direcao_rotacao)
-                          move, x, y
-                          vertical, mov_y
-                          arco, x_inicial, y_inicial, ângulo, tamanho, direcao_rotacao
-                          vertical_relativo, mov_y
-                          preenchimento do
-                          arco do gancho
-                          lado essquerdo do corpo
-                          lado direito do corpo
-                         --> */}
-                      </span>
+                      <FormCalcTmbType />
+                      <LockTabInd
+                        ctx="formCalcTMB"
+                        addGroup={["spanLock"]}
+                        isSpan={true}
+                      />
                     </span>
                   </div>
                   <div
@@ -1156,50 +424,8 @@ export default function EdFisNutPage(): JSX.Element {
                     id="spanFactorAtleta"
                     hidden
                   >
-                    Fator para Calcúlo de TMB em Atletas:
-                    <select
-                      className="selFactorAtletaClass form-select noInvert consInp"
-                      id="selFactorAtleta"
-                      data-title="Fator_TMB_Atleta"
-                      onChange={ev =>
-                        handleCallbackWHS(
-                          [
-                            [
-                              document.getElementById("gordCorpLvl"),
-                              document.getElementById("formCalcTMBType"),
-                              document.getElementById("nafType"),
-                              [
-                                tabProps.targInpWeigth,
-                                tabProps.targInpHeigth,
-                                tabProps.targInpIMC,
-                                tabProps.targInpMLG,
-                                tabProps.targInpTMB,
-                                tabProps.targInpGET,
-                                tabProps.targInpSumDCut,
-                                tabProps.targInpPGC,
-                              ],
-                            ],
-                            [
-                              tabProps.numCol,
-                              tabProps.factorAtvLvl,
-                              tabProps.factorAtleta,
-                              [
-                                tabProps.IMC,
-                                tabProps.MLG,
-                                tabProps.TMB,
-                                tabProps.GET,
-                                tabProps.PGC,
-                              ],
-                            ],
-                          ],
-                          ev.currentTarget,
-                          tabProps.isAutoFillActive
-                        )
-                      }
-                    >
-                      <option value="Peso">Peso</option>
-                      <option value="MLG">MLG</option>
-                    </select>
+                    <span>Fator para Calcúlo de TMB em Atletas:</span>
+                    <SelFactorAtleta />
                   </div>
                 </div>
               </div>
@@ -1219,35 +445,7 @@ export default function EdFisNutPage(): JSX.Element {
                   id="tabSpanDCut"
                 >
                   <span className="forceInvert">Protocolo:</span>
-                  <select
-                    className="form-select selectTabProgCons consInp"
-                    id="tabSelectDCutId"
-                    name="tabSelectDCutName"
-                    data-title="Protocolo_DCut"
-                    required
-                    onChange={ev =>
-                      (ev.currentTarget.value = changeTabDCutLayout(
-                        ev.currentTarget,
-                        document.getElementById("tabDCut"),
-                        document.getElementById("textBodytype")
-                      ))
-                    }
-                  >
-                    <option
-                      value="pollock3"
-                      className="opTabProgCons opProtoc"
-                      id="opProtocJP3"
-                    >
-                      Jackson/Pollock 3
-                    </option>
-                    <option
-                      value="pollock7"
-                      className="opTabProgCons opProtoc"
-                      id="opProtocJP7"
-                    >
-                      Jackson/Pollock 7
-                    </option>
-                  </select>
+                  <Protocolo />
                 </div>
                 <TabDCut />
                 <hr />
@@ -1279,11 +477,11 @@ export default function EdFisNutPage(): JSX.Element {
                       className="labConfirm labDivConfirm2 pdT2pc900Q htFull900Q flexNoWC bolded widHalf900Q noInvert"
                       id="labConfirmLoc"
                     >
-                      Local:
+                      <span>Local:</span>
                       <MemoLoc />
                     </label>
                     <ConfirmDate />
-                    <hr />e
+                    <hr />
                   </div>
                   <Signature />
                 </div>
@@ -1296,7 +494,7 @@ export default function EdFisNutPage(): JSX.Element {
           </form>
         </main>
       </div>
-      <Watcher routeCase="edfis" />
+      <WatcherEN />
     </ErrorBoundary>
   );
 }
@@ -1325,13 +523,13 @@ export function exeAutoFill(
         const selectNumCons = document.getElementById("selectNumCons");
         selectNumCons instanceof HTMLInputElement ||
         selectNumCons instanceof HTMLSelectElement
-          ? (numCons = parseInt(selectNumCons?.value || "1"))
+          ? (tabProps.numCons = parseInt(selectNumCons?.value || "1"))
           : inputNotFound(
               selectNumCons,
               "selectNumCons in exeAutoFill()",
               extLine(new Error())
             );
-        numRef = numCons;
+        numRef = tabProps.numCons;
       } else if (context === "col") {
         tabProps.numCol = getNumCol(targ) || 2;
         numRef = tabProps.numCol;

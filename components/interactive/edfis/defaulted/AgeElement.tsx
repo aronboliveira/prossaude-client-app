@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { person, tabProps, numCons } from "@/pages/edfis";
+import { person, tabProps } from "@/pages/edfis";
 import { Person } from "@/lib/global/declarations/classes";
 import { validateEvResultNum } from "@/lib/locals/edFisNutPage/edFisNutHandler";
 import { exeAutoFill } from "@/pages/edfis";
@@ -63,7 +63,7 @@ export default function AgeElement() {
             person?.age,
             ev.currentTarget,
             `${[
-              numCons || 1,
+              tabProps.numCons || 1,
               [person.weight, person.height, person.sumDCut],
               [
                 tabProps.IMC,
