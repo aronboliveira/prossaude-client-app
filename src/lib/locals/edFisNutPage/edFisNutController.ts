@@ -174,7 +174,7 @@ export function validateTitlesForTargs(numCons: number = 1): targEl[] {
       );
   });
   arrTargs.length < 8 &&
-    console.error(`Invalid Elements for arrTargs: ${JSON.stringify(arrTargs)}`);
+    console.error(`Invalid Elements for arrTargs: ${arrTargs.toString()}`);
   while (arrTargs.length < 8) arrTargs.push(undefined);
   return arrTargs || [];
 }

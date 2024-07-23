@@ -3,6 +3,7 @@ import {
   IndCases,
   btnFillResult,
   nullishDiv,
+  validTabLabs,
 } from "@/lib/global/declarations/types";
 import {
   elementNotFound,
@@ -10,7 +11,6 @@ import {
   stringError,
   typeError,
 } from "@/lib/global/handlers/errorHandler";
-import { handleEventReq } from "@/lib/global/handlers/gHandlers";
 import { checkReturnIndex } from "@/lib/locals/edFisNutPage/edFisNutController";
 import {
   defineTargInps,
@@ -20,31 +20,29 @@ import {
   updatePGC,
 } from "@/lib/locals/edFisNutPage/edFisNutHandler";
 import { person, tabProps } from "@/pages/edfis";
-import { useRef, useState, useEffect } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import Col from "./tabs/Col";
 import Th from "./tabs/Th";
-import LockTabInd from "./tabs/LobTackInd";
-import TabBtnInd from "./client/tabs/TabBtnInd";
 import WatcherTab from "./client/tabs/WatcherTab";
 import GenericErrorComponent from "../../error/GenericErrorComponent";
+import Td from "./tabs/Td";
 
 export default function TabIndPerc(): JSX.Element {
-  const mainRef = useRef<nullishDiv>(null);
-  const [mounted, setMounted] = useState(false);
   const columns = [1, 2, 3, 4];
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-  return !mounted ? (
-    <></>
-  ) : (
+  const rows = [
+    [2, "IMC"],
+    [3, "MLG"],
+    [4, "PGC"],
+    [5, "TMB"],
+    [6, "GET"],
+  ];
+  return (
     <ErrorBoundary
       FallbackComponent={() => (
         <GenericErrorComponent message="Error rendering Table for Indexes" />
       )}
     >
-      <div role="group" className="divTab" id="divTabInd" ref={mainRef}>
+      <div role="group" className="divTab" id="divTabInd">
         <table className="tabProgCons noInvert" id="tabIndPerc">
           <colgroup>
             {columns.map(nCol => (
@@ -66,430 +64,31 @@ export default function TabIndPerc(): JSX.Element {
             </tr>
           </thead>
           <tbody className="tbodyProgCons">
-            <tr
-              className="tabRowProg tabRowProgIndPerc"
-              id="tabRowProgIndPerc2"
-              itemProp="rowIndPerc"
-            >
-              <Th ctx="IndPerc" nRow={2} nCol={1} lab="IMC" />
-              <td className="tabCelProgCons tabCelIndPerc tabCelRowIndPerc2">
-                <div
-                  role="group"
-                  className="flexDiv flexDivTab flexAlItCt noInvert"
-                >
-                  <label
-                    htmlFor="inpImc1Cel2_2"
-                    id="labImcCel2_2"
-                    className="form-control tabLabProgCons labInd labImc"
-                  >
-                    <input
-                      type="number"
-                      name="tabInpProgDC2_2"
-                      id="inpImc1Cel2_2"
-                      className="form-control tabInpProg tabInpProgIndPerc inpInd inpImc inpCol2 sevenCharLongNum"
-                      min="0"
-                      data-title="IMC_1_Consulta"
-                      required
-                      onInput={ev => {
-                        handleIndEv(ev, "IMC");
-                        handleEventReq(ev.currentTarget);
-                      }}
-                    />
-                    <p className="msrProgCons indMsr">kg/m²</p>
-                  </label>
-                  <TabBtnInd nRow={2} nCol={2} lab="IMC" />
-                  <LockTabInd addGroup={["lockTabInd"]} ctx="IMC" />
-                </div>
-              </td>
-              <td className="tabCelProgCons tabCelIndPerc tabCelRowIndPerc2">
-                <div
-                  role="group"
-                  className="flexDiv flexDivTab flexAlItCt noInvert"
-                >
-                  <label
-                    htmlFor="inpImc2Cel2_3"
-                    id="labImc2Cel2_3"
-                    className="form-control tabLabProgCons labInd labImc"
-                  >
-                    <input
-                      type="number"
-                      name="tabInpProgDC2_3"
-                      id="inpImc2Cel2_3"
-                      className="form-control tabInpProg tabInpProgIndPerc inpInd inpImc inpCol3 sevenCharLongNum"
-                      min="0"
-                      data-title="IMC_2_Consulta"
-                      onInput={ev => handleIndEv(ev, "IMC")}
-                    />
-                    <p className="msrProgCons indMsr">kg/m²</p>
-                  </label>
-                  <TabBtnInd nRow={2} nCol={3} lab="IMC" />
-                  <LockTabInd addGroup={["lockTabInd"]} ctx="IMC" />
-                </div>
-              </td>
-              <td className="tabCelProgCons tabCelIndPerc tabCelRowIndPerc2">
-                <div
-                  role="group"
-                  className="flexDiv flexDivTab flexAlItCt noInvert"
-                >
-                  <label
-                    htmlFor="inpImc3Cel2_4"
-                    id="labImc3Cel2_4"
-                    className="form-control tabLabProgCons labInd labImc"
-                  >
-                    <input
-                      type="number"
-                      name="tabInpProgDC2_4"
-                      id="inpImc3Cel2_4"
-                      className="form-control tabInpProg tabInpProgIndPerc inpInd inpImc inpCol4 sevenCharLongNum"
-                      min="0"
-                      data-title="IMC_3_Consulta"
-                      onInput={ev => handleIndEv(ev, "IMC")}
-                    />
-                    <p className="msrProgCons indMsr">kg/m²</p>
-                  </label>
-                  <TabBtnInd nRow={2} nCol={4} lab="IMC" />
-                  <LockTabInd addGroup={["lockTabInd"]} ctx="IMC" />
-                </div>
-              </td>
-            </tr>
-            <tr
-              className="tabRowProg tabRowProgIndPerc"
-              id="tabRowProgIndPerc3"
-              itemProp="rowIndPerc"
-            >
-              <Th ctx="IndPerc" nRow={3} nCol={1} lab="MLG" />
-              <td className="tabCelProgCons tabCelIndPerc tabCelRowIndPerc3">
-                <div
-                  role="group"
-                  className="flexDiv flexDivTab flexAlItCt noInvert"
-                >
-                  <label
-                    htmlFor="inpMlg1Cel3_2"
-                    id="labMlg1Cel3_2"
-                    className="form-control tabLabProgCons labInd labMlg"
-                  >
-                    <input
-                      type="number"
-                      name="tabInpProgDC3_2"
-                      id="inpMlg1Cel3_2"
-                      className="form-control tabInpProg tabInpProgIndPerc inpInd inpMlg inpCol2 sevenCharLongNum"
-                      min="0"
-                      max="100"
-                      data-title="MLG_1_Consulta"
-                      required
-                      onInput={ev => {
-                        handleIndEv(ev, "MLG");
-                        handleEventReq(ev.currentTarget);
-                      }}
-                    />
-                    <p className="msrProgCons indMsr">%</p>
-                  </label>
-                  <TabBtnInd nRow={3} nCol={2} lab="MLG" />
-                  <LockTabInd addGroup={["lockTabInd"]} ctx="MLG" />
-                </div>
-              </td>
-              <td className="tabCelProgCons tabCelIndPerc tabCelRowIndPerc3">
-                <div
-                  role="group"
-                  className="flexDiv flexDivTab flexAlItCt noInvert"
-                >
-                  <label
-                    htmlFor="inpMlg2Cel3_3"
-                    id="labMlg2Cel3_3"
-                    className="form-control tabLabProgCons labInd labMlg"
-                  >
-                    <input
-                      type="number"
-                      name="tabInpProgDC3_3"
-                      id="inpMlg2Cel3_3"
-                      className="form-control tabInpProg tabInpProgIndPerc inpInd inpMlg inpCol3 sevenCharLongNum"
-                      min="0"
-                      max="100"
-                      data-title="MLG_2_Consulta"
-                      onInput={ev => handleIndEv(ev, "MLG")}
-                    />
-                    <p className="msrProgCons indMsr">%</p>
-                  </label>
-                  <TabBtnInd nRow={3} nCol={3} lab="MLG" />
-                  <LockTabInd addGroup={["lockTabInd"]} ctx="MLG" />
-                </div>
-              </td>
-              <td className="tabCelProgCons tabCelIndPerc tabCelRowIndPerc3">
-                <div
-                  role="group"
-                  className="flexDiv flexDivTab flexAlItCt noInvert"
-                >
-                  <label
-                    htmlFor="inpMlg3Cel3_4"
-                    id="labMlg3Cel3_4"
-                    className="form-control tabLabProgCons labInd labMlg"
-                  >
-                    <input
-                      type="number"
-                      name="tabInpProgDC3_4"
-                      id="inpMlg3Cel3_4"
-                      className="form-control tabInpProg tabInpProgIndPerc inpInd inpMlg inpCol4 sevenCharLongNum"
-                      min="0"
-                      max="100"
-                      data-title="MLG_3_Consulta"
-                      onInput={ev => handleIndEv(ev, "MLG")}
-                    />
-                    <p className="msrProgCons indMsr">%</p>
-                  </label>
-                  <TabBtnInd nRow={3} nCol={4} lab="MLG" />
-                  <LockTabInd addGroup={["lockTabInd"]} ctx="MLG" />
-                </div>
-              </td>
-            </tr>
-            <tr
-              className="tabRowProg tabRowProgIndPerc"
-              id="tabRowProgIndPerc4"
-              itemProp="rowIndPerc"
-            >
-              <Th ctx="IndPerc" nRow={4} nCol={1} lab="PGC" />
-              <td className="tabCelProgCons tabCelIndPerc tabCelRowIndPerc4">
-                <div
-                  role="group"
-                  className="flexDiv flexDivTab flexAlItCt noInvert"
-                >
-                  <label
-                    htmlFor="inpPgc1Cel4_2"
-                    id="labPgc1Cel4_2"
-                    className="form-control tabLabProgCons labInd labPgc"
-                  >
-                    <input
-                      type="number"
-                      name="tabInpProgDC4_2"
-                      id="inpPgc1Cel4_2"
-                      className="form-control tabInpProg tabInpProgIndPerc inpInd inpPgc inpCol2 sevenCharLongNum"
-                      min="0"
-                      max="100"
-                      data-title="PGC_1_Consulta"
-                      required
-                      onInput={ev => {
-                        handleIndEv(ev, "PGC");
-                        handleEventReq(ev.currentTarget);
-                      }}
-                    />
-                    <p className="msrProgCons indMsr">%</p>
-                  </label>
-                  <TabBtnInd nRow={4} nCol={2} lab="PGC" />
-                  <LockTabInd addGroup={["lockTabInd"]} ctx="PGC" />
-                </div>
-              </td>
-              <td className="tabCelProgCons tabCelIndPerc tabCelRowIndPerc4">
-                <div
-                  role="group"
-                  className="flexDiv flexDivTab flexAlItCt noInvert"
-                >
-                  <label
-                    htmlFor="inpPgc2Cel4_3"
-                    id="labPgc2Cel4_3"
-                    className="form-control tabLabProgCons labInd labPgc"
-                  >
-                    <input
-                      type="number"
-                      name="tabInpProgDC4_3"
-                      id="inpPgc2Cel4_3"
-                      className="form-control tabInpProg tabInpProgIndPerc inpInd inpPgc inpCol3 sevenCharLongNum"
-                      min="0"
-                      max="100"
-                      data-title="PGC_2_Consulta"
-                      onInput={ev => handleIndEv(ev, "PGC")}
-                    />
-                    <p className="msrProgCons indMsr">%</p>
-                  </label>
-                  <TabBtnInd nRow={4} nCol={3} lab="PGC" />
-                  <LockTabInd addGroup={["lockTabInd"]} ctx="PGC" />
-                </div>
-              </td>
-              <td className="tabCelProgCons tabCelIndPerc tabCelRowIndPerc4">
-                <div
-                  role="group"
-                  className="flexDiv flexDivTab flexAlItCt noInvert"
-                >
-                  <label
-                    htmlFor="inpPgc3Cel4_4"
-                    id="labPgc3Cel4_4"
-                    className="form-control tabLabProgCons labInd labPgc"
-                  >
-                    <input
-                      type="number"
-                      name="tabInpProgDC4_4"
-                      id="inpPgc3Cel4_4"
-                      className="form-control tabInpProg tabInpProgIndPerc inpInd inpPgc inpCol4 sevenCharLongNum"
-                      min="0"
-                      max="100"
-                      data-title="PGC_3_Consulta"
-                      onInput={ev => handleIndEv(ev, "PGC")}
-                    />
-                    <p className="msrProgCons indMsr">%</p>
-                  </label>
-                  <TabBtnInd nRow={4} nCol={4} lab="PGC" />
-                  <LockTabInd addGroup={["lockTabInd"]} ctx="PGC" />
-                </div>
-              </td>
-            </tr>
-            <tr
-              className="tabRowProg tabRowProgIndPerc"
-              id="tabRowProgIndPerc5"
-              itemProp="rowIndPerc"
-            >
-              <Th ctx="IndPerc" nRow={5} nCol={1} lab="TMB" />
-              <td className="tabCelProgCons tabCelIndPerc tabCelRowIndPerc5">
-                <div
-                  role="group"
-                  className="flexDiv flexDivTab flexAlItCt noInvert"
-                >
-                  <label
-                    htmlFor="inpTmb1Cel5_2"
-                    id="labTmb1Cel5_2"
-                    className="form-control tabLabProgCons labInd labTmb"
-                  >
-                    <input
-                      type="number"
-                      name="tabInpProgDC5_2"
-                      id="inpTmb1Cel5_2"
-                      className="form-control tabInpProg tabInpProgIndPerc inpInd inpTmb inpCol2 sevenCharLongNum"
-                      min="0"
-                      data-title="TMB_1_Consulta"
-                      required
-                      onInput={ev => {
-                        handleIndEv(ev, "TMB");
-                        handleEventReq(ev.currentTarget);
-                      }}
-                    />
-                    <p className="msrProgCons indMsr">kcal</p>
-                  </label>
-                  <TabBtnInd nRow={5} nCol={2} lab="TMB" />
-                  <LockTabInd addGroup={["lockTabInd"]} ctx="TMB" />
-                </div>
-              </td>
-              <td className="tabCelProgCons tabCelIndPerc tabCelRowIndPerc5">
-                <div
-                  role="group"
-                  className="flexDiv flexDivTab flexAlItCt noInvert"
-                >
-                  <label
-                    htmlFor="inpTmb2Cel5_3"
-                    id="labTmb1Cel5_3"
-                    className="form-control tabLabProgCons labInd labTmb"
-                  >
-                    <input
-                      type="number"
-                      name="tabInpProgDC5_3"
-                      id="inpTmb2Cel5_3"
-                      className="form-control tabInpProg tabInpProgIndPerc inpInd inpTmb inpCol3 sevenCharLongNum"
-                      min="0"
-                      data-title="TMB_2_Consulta"
-                      onInput={ev => handleIndEv(ev, "TMB")}
-                    />
-                    <p className="msrProgCons indMsr">kcal</p>
-                  </label>
-                  <TabBtnInd nRow={5} nCol={3} lab="TMB" />
-                  <LockTabInd addGroup={["lockTabInd"]} ctx="TMB" />
-                </div>
-              </td>
-              <td className="tabCelProgCons tabCelIndPerc tabCelRowIndPerc5">
-                <div
-                  role="group"
-                  className="flexDiv flexDivTab flexAlItCt noInvert"
-                >
-                  <label
-                    htmlFor="inpTmb3Cel5_4"
-                    id="labTmb1Cel5_4"
-                    className="form-control tabLabProgCons labInd labTmb"
-                  >
-                    <input
-                      type="number"
-                      name="tabInpProgDC5_4"
-                      id="inpTmb3Cel5_4"
-                      className="form-control tabInpProg tabInpProgIndPerc inpInd inpTmb inpCol4 sevenCharLongNum"
-                      min="0"
-                      data-title="TMB_3_Consulta"
-                      onInput={ev => handleIndEv(ev, "TMB")}
-                    />
-                    <p className="msrProgCons indMsr">kcal</p>
-                  </label>
-                  <TabBtnInd nRow={5} nCol={4} lab="TMB" />
-                  <LockTabInd addGroup={["lockTabInd"]} ctx="TMB" />
-                </div>
-              </td>
-            </tr>
-            <tr
-              className="tabRowProg tabRowProgIndPerc"
-              id="tabRowProgIndPerc5"
-              itemProp="rowIndPerc"
-            >
-              <Th ctx="IndPerc" nRow={6} nCol={1} lab="GET" />
-              <td className="tabCelProgCons tabCelIndPerc tabCelRowIndPerc6">
-                <div role="group" className="flexDiv flexDivTab flexAlItCt">
-                  <label
-                    htmlFor="inpGet1Cel6_2"
-                    id="labGet1Cel6_2"
-                    className="form-control tabLabProgCons labInd labGet"
-                  >
-                    <input
-                      type="number"
-                      name="tabInpProgDC6_2"
-                      id="inpGet1Cel6_2"
-                      className="form-control tabInpProg tabInpProgIndPerc inpInd inpGet inpCol2 sevenCharLongNum"
-                      min="0"
-                      data-title="GET_1_Consulta"
-                      onInput={ev => handleIndEv(ev, "GET")}
-                    />
-                    <p className="msrProgCons indMsr">kcal</p>
-                  </label>
-                  <TabBtnInd nRow={6} nCol={2} lab="GET" />
-                  <LockTabInd addGroup={["lockTabInd"]} ctx="GET" />
-                </div>
-              </td>
-              <td className="tabCelProgCons tabCelIndPerc tabCelRowIndPerc6">
-                <div role="group" className="flexDiv flexDivTab flexAlItCt">
-                  <label
-                    htmlFor="inpGet2Cel6_3"
-                    id="labGet1Cel6_3"
-                    className="form-control tabLabProgCons labInd labGet"
-                  >
-                    <input
-                      type="number"
-                      name="tabInpProgDC6_3"
-                      id="inpGet2Cel6_3"
-                      className="form-control tabInpProg tabInpProgIndPerc inpInd inpGet inpCol3 sevenCharLongNum"
-                      min="0"
-                      data-title="GET_2_Consulta"
-                      onInput={ev => handleIndEv(ev, "GET")}
-                    />
-                    <p className="msrProgCons indMsr">kcal</p>
-                  </label>
-                  <TabBtnInd nRow={6} nCol={3} lab="GET" />
-                  <LockTabInd addGroup={["lockTabInd"]} ctx="GET" />
-                </div>
-              </td>
-
-              <td className="tabCelProgCons tabCelIndPerc tabCelRowIndPerc6">
-                <div role="group" className="flexDiv flexDivTab flexAlItCt">
-                  <label
-                    htmlFor="inpGet3Cel6_4"
-                    id="labGet1Cel6_4"
-                    className="form-control tabLabProgCons labInd labGet"
-                  >
-                    <input
-                      type="number"
-                      name="tabInpProgDC6_4"
-                      id="inpGet3Cel6_4"
-                      className="form-control tabInpProg tabInpProgIndPerc inpInd inpGet inpCol4 sevenCharLongNum"
-                      min="0"
-                      data-title="GET_3_Consulta"
-                      onInput={ev => handleIndEv(ev, "GET")}
-                    />
-                    <p className="msrProgCons indMsr">kcal</p>
-                  </label>
-                  <TabBtnInd nRow={6} nCol={4} lab="GET" />
-                  <LockTabInd addGroup={["lockTabInd"]} ctx="GET" />
-                </div>
-              </td>
-            </tr>
+            {rows.map(([nRow, lab], i) => (
+              <tr
+                className={`tabRowProg tabRowProgIndPerc`}
+                id={`tabRowProgIndPerc${nRow}`}
+                itemProp="rowIndPerc"
+                data-row={nRow}
+                key={`tr_ind-perc__${nRow}`}
+              >
+                <Th
+                  ctx="IndPerc"
+                  nRow={nRow as number}
+                  nCol={i + 1}
+                  lab={lab as validTabLabs}
+                />
+                {columns.slice(1).map(nCol => (
+                  <Td
+                    ctx="IndPerc"
+                    nRow={nRow as number}
+                    nCol={nCol}
+                    lab={lab as validTabLabs}
+                    key={`td_${nCol}__${nRow}`}
+                  />
+                ))}
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
