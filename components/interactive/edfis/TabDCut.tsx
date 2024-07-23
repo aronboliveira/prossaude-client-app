@@ -1,12 +1,10 @@
-import { nullishDiv, validTabLabs } from "@/lib/global/declarations/types";
+import { validTabLabs } from "@/lib/global/declarations/types";
 import {
   elementNotFound,
   extLine,
   typeError,
 } from "@/lib/global/handlers/errorHandler";
-import { handleEventReq } from "@/lib/global/handlers/gHandlers";
-import { useRef, useState, useEffect } from "react";
-import { handleCallbackWHS, person, tabProps } from "@/pages/edfis";
+import { person, tabProps } from "@/pages/edfis";
 import {
   createArraysRels,
   getNumCol,
@@ -21,8 +19,6 @@ import GenericErrorComponent from "../../error/GenericErrorComponent";
 import Td from "./tabs/Td";
 
 export default function TabDCut(): JSX.Element {
-  const mainRef = useRef<nullishDiv>(null);
-  const [mounted, setMounted] = useState(false);
   const columns = [1, 2, 3, 4];
   const rows = [
     [2, "Subescapular", "Subescap"],
@@ -34,19 +30,13 @@ export default function TabDCut(): JSX.Element {
     [8, "Abdominal", "Abd"],
     [9, "Soma", "Sum"],
   ];
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-  return !mounted ? (
-    <></>
-  ) : (
+  return (
     <ErrorBoundary
       FallbackComponent={() => (
         <GenericErrorComponent message="Error rendering Table for Skin Folds" />
       )}
     >
-      <div role="group" className="divTab" id="divTabDobrCut" ref={mainRef}>
+      <div role="group" className="divTab" id="divTabDobrCut">
         <table className="tabProgCons noInvert" id="tabDCut" itemScope>
           <caption
             className="tabLegProgCons"
