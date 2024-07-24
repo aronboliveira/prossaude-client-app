@@ -34,27 +34,45 @@ export default function Td({ nRow, nCol, ctx, lab }: TdProps): JSX.Element {
           <LockTabInd addGroup={["lockTabInd"]} ctx={lab} />
         </div>
       ) : (
-        <label
-          htmlFor={`tabInpRow${ctx}${nRow}_${nCol}`}
-          id={`labInpRow${ctx}${nRow}_${nCol}`}
-          className={`form-control tabLabProgCons tabLabRow${ctx}${nRow}`}
-          data-row={nRow}
-          data-col={nCol}
-        >
-          <TabInpProg nRow={nRow} nCol={nCol} ctx={ctx} lab={lab} />
-          <p
-            className={`msrProgCons${
-              ctx === "DCut" && lab === "Soma" ? " sumMsr" : ""
-            }`}
-          >
-            mm
-          </p>
-          {ctx === "DCut" && lab === "Soma" ? (
-            <TabBtnDCut nCol={nCol}></TabBtnDCut>
-          ) : (
-            <></>
-          )}
-        </label>
+        (() => {
+          if (ctx === "MedAnt")
+            return (
+              <label
+                htmlFor={`tabInpRow${ctx}${nRow}_${nCol}`}
+                id={`labInpRow${ctx}${nRow}_${nCol}`}
+                className={`form-control tabLabProgCons tabLabRow${ctx}${nRow}`}
+                data-row={nRow}
+                data-col={nCol}
+              >
+                <TabInpProg nRow={nRow} nCol={nCol} ctx={ctx} lab={lab} />
+                <p className={`msrProgCons`}>mm</p>
+              </label>
+            );
+          else
+            return (
+              <label
+                htmlFor={`tabInpRow${ctx}${nRow}_${nCol}`}
+                id={`labInpRow${ctx}${nRow}_${nCol}`}
+                className={`form-control tabLabProgCons tabLabRow${ctx}${nRow}`}
+                data-row={nRow}
+                data-col={nCol}
+              >
+                <TabInpProg nRow={nRow} nCol={nCol} ctx={ctx} lab={lab} />
+                <p
+                  className={`msrProgCons${
+                    ctx === "DCut" && lab === "Soma" ? " sumMsr" : ""
+                  }`}
+                >
+                  mm
+                </p>
+                {ctx === "DCut" && lab === "Soma" ? (
+                  <TabBtnDCut nCol={nCol}></TabBtnDCut>
+                ) : (
+                  <></>
+                )}
+              </label>
+            );
+        })()
       )}
     </td>
   );

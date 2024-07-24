@@ -2,7 +2,6 @@ import { Person } from "@/lib/global/declarations/classes";
 import {
   IndCases,
   btnFillResult,
-  nullishDiv,
   validTabLabs,
 } from "@/lib/global/declarations/types";
 import {

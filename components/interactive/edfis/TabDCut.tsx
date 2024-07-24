@@ -71,10 +71,10 @@ export default function TabDCut(): JSX.Element {
             </tr>
           </thead>
           <tbody className="tbodyProgCons" id="tbodyDCut" itemProp="blockDCut">
-            {rows.map(([nRow, label, shortLabel], i) => (
+            {rows.map(([nRow, lab, shortLabel], i) => (
               <tr
                 className={`tabRowProgCons${
-                  label === "Soma" ? " tabRowDCutSum" : " tabRowDCutMed"
+                  lab === "Soma" ? " tabRowDCutSum" : " tabRowDCutMed"
                 }`}
                 id={`row${shortLabel}${nRow}_`}
                 key={`tr_dcut__${nRow}`}
@@ -84,20 +84,20 @@ export default function TabDCut(): JSX.Element {
                   "Axilar Média",
                   "Tríciptal",
                   "Suprailíaca",
-                ].includes(label as string)}
+                ].includes(lab as string)}
               >
                 <Th
                   ctx="DCut"
                   nRow={nRow as number}
                   nCol={i + 1}
-                  lab={label as validTabLabs}
+                  lab={lab as validTabLabs}
                 />
                 {[2, 3, 4].map(nCol => (
                   <Td
                     ctx="DCut"
                     nRow={nRow as number}
                     nCol={nCol}
-                    lab={label as validTabLabs}
+                    lab={lab as validTabLabs}
                     key={`td_${nRow}__${nCol}`}
                   />
                 ))}

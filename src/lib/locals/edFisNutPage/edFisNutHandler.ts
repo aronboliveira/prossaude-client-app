@@ -1327,8 +1327,9 @@ export function switchRequiredCols(
             fReqCel instanceof HTMLInputElement ||
             fReqCel instanceof HTMLTextAreaElement ||
             fReqCel instanceof HTMLSelectElement
-          )
-            (fReqCel as entryEl).required = true;
+          ) {
+            fReqCel.required = true;
+          }
         });
       } else
         elementNotPopulated(
@@ -1486,7 +1487,81 @@ export function switchNumConsTitles(
         trioNums.push(iniValue, iniValue + 1, iniValue + 2);
     }
     for (let i = 0; i < consTitles.length; i++)
-      consTitles[i].textContent = `${trioNums[i] || `${1 + i}`}ª Consulta`;
+      consTitles[i].textContent = `${trioNums[i] || `${i + 1}`}ª Consulta`;
+    document.querySelectorAll(".tabInpProg").forEach((inp, i) => {
+      try {
+        if (
+          !(
+            inp instanceof HTMLInputElement ||
+            inp instanceof HTMLSelectElement ||
+            inp instanceof HTMLTextAreaElement
+          )
+        )
+          throw inputNotFound(
+            inp,
+            `Validation of Input instance`,
+            extLine(new Error())
+          );
+        if (!inp.dataset.title || inp.dataset.title === "") return;
+        const inpCol = inp.dataset.col;
+        if (!inpCol)
+          throw new Error(
+            `Failed to fetch input ${
+              inp.id || inp.className || inp.tagName
+            } Column Number`
+          );
+        const matchedHeadcel = Array.from(
+          document.getElementsByClassName("numConsTextHeadCel")
+        ).find((headcel, i) => {
+          try {
+            if (!(headcel instanceof HTMLElement))
+              throw elementNotFound(
+                headcel,
+                `Validation of Head cel instance`,
+                extLine(new Error())
+              );
+            return (
+              headcel.dataset.col === inp.dataset.col ||
+              headcel.innerText.replaceAll(/[^0-9]/g, "") === inp.dataset.col
+            );
+          } catch (e) {
+            console.error(
+              `Error executing iteration ${i} for finding matching head cell:\n${
+                (e as Error).message
+              }`
+            );
+          }
+        });
+        if (!(matchedHeadcel instanceof HTMLElement))
+          throw elementNotFound(
+            matchedHeadcel,
+            `Validation of Matched Head cel instance`,
+            extLine(new Error())
+          );
+        inp.dataset.title = inp.dataset.title
+          .slice(0, inp.dataset.title.indexOf("Consulta"))
+          .replaceAll("(", "")
+          .replaceAll(")", "")
+          .replaceAll(/[0-9]/g, "")
+          .trim();
+        inp.dataset.title += `(Consulta ${matchedHeadcel.innerText
+          .slice(
+            0,
+            Math.min(
+              matchedHeadcel.innerText.indexOf("ª"),
+              matchedHeadcel.innerText.indexOf(" ")
+            )
+          )
+          .trim()})`;
+      } catch (e) {
+        console.error(
+          `Error validating iteration ${i} for renaming titles for Table Progress Inputs:\n${
+            (e as Error).message
+          }`
+        );
+      }
+    });
+
     Array.from(
       document.getElementById("fsSubProgConsInd")?.querySelectorAll("table") ??
         []

@@ -2,8 +2,12 @@
 
 import { TdProps } from "@/lib/global/declarations/interfaces";
 import { handleIndEv } from "../../TabIndPerc";
-import { handleEventReq } from "@/lib/global/handlers/gHandlers";
+import {
+  handleCondtReq,
+  handleEventReq,
+} from "@/lib/global/handlers/gHandlers";
 import { textTransformPascal } from "@/lib/global/gModel";
+import { handleCallbackWHS, tabProps } from "@/pages/edfis";
 
 export default function TabInpProg({
   nRow,
@@ -52,15 +56,46 @@ export default function TabInpProg({
         return lab;
     }
   })();
+  let medAntCase = "";
+  if (ctx === "MedAnt") {
+    medAntCase = (() => {
+      switch (lab) {
+        case "Peso":
+          return "Weigth";
+        case "Altura":
+          return "Heigth";
+        case "Tórax":
+          return "Torax";
+        case "Cintura":
+          return "Waist";
+        case "Quadril":
+          return "Hips";
+        case "Cintura / Quadril":
+          return "WaistToHips";
+        case "Braço":
+          return "Arm";
+        case "Antebraço":
+          return "Forearm";
+        case "Coxa":
+          return "Thigh";
+        case "Panturrilha":
+          return "Calf";
+        default:
+          return "";
+      }
+    })();
+  }
   return ctx === "IndPerc" ? (
     <input
       type="number"
       name={`${lab.toLowerCase()}_${nRow}_${nCol}`}
       id={`inp${pascalLab}${nCol - 1}Cel${nRow}_${nCol}`}
-      className={`form-control tabInpProg tabInpProgIndPerc inpInd inpImc inpCol2 sevenCharLongNum`}
-      min="0"
-      data-title={`IMC (Consulta ${nCol - 1})`}
-      required
+      className={`form-control tabInpProg tabInpProgIndPerc inpInd inp${pascalLab} inpCol${nCol} sevenCharLongNum`}
+      min={nCol === 2 ? "0.05" : "0"}
+      data-title={`${lab} (Consulta ${nCol - 1})`}
+      data-row={nRow}
+      data-col={nCol}
+      required={nCol === 2 ? true : false}
       onInput={
         lab === "IMC" ||
         lab === "MLG" ||
@@ -69,24 +104,151 @@ export default function TabInpProg({
         lab === "GET"
           ? ev => {
               handleIndEv(ev, lab);
-              handleEventReq(ev.currentTarget);
+              if (ev.currentTarget.required) handleEventReq(ev.currentTarget);
+              else {
+                ev.currentTarget.type === "number"
+                  ? handleCondtReq(ev.currentTarget, {
+                      minNum: 0.05,
+                      maxNum: 999999,
+                      min: 1,
+                      max: 99,
+                      pattern: ["^[\\d,.]+$", ""],
+                    })
+                  : handleCondtReq(ev.currentTarget as HTMLInputElement, {
+                      min: 1,
+                      max: 99,
+                      pattern: ["^[\\d,.]+$", ""],
+                    });
+              }
             }
           : ev => {
-              handleEventReq(ev.currentTarget);
+              if (ev.currentTarget.required) handleEventReq(ev.currentTarget);
+              else {
+                ev.currentTarget.type === "number"
+                  ? handleCondtReq(ev.currentTarget, {
+                      minNum: 0.05,
+                      maxNum: 999999,
+                      min: 1,
+                      max: 99,
+                      pattern: ["^[\\d,.]+$", ""],
+                    })
+                  : handleCondtReq(ev.currentTarget as HTMLInputElement, {
+                      min: 1,
+                      max: 99,
+                      pattern: ["^[\\d,.]+$", ""],
+                    });
+              }
             }
       }
     />
   ) : (
-    <input
-      type="number"
-      name={`${lab.toLowerCase()}_${nRow}_${nCol}`}
-      className={`form-control tabInpProg tabInpProgSum${ctx} tabInpRow${ctx}${nRow} float sevenCharLongNum`}
-      id={`tabInpRow${ctx}${nRow}_${nCol}`}
-      min="0"
-      max="65535"
-      data-title={`Dobras Cutâneas ${fullName} (Consulta ${nCol - 1})`}
-      data-row={nRow}
-      data-col={nCol}
-    />
+    (() => {
+      if (ctx === "MedAnt") {
+        return (
+          <input
+            type="number"
+            name={`${lab.toLowerCase()}_${nRow}_${nCol}`}
+            className={`form-control tabInpProg tabInpProg${ctx} tabInpProg${lab}${ctx} tabInpRow${ctx}${nRow} float sevenCharLongNum ${
+              medAntCase !== "" ? ` inp${medAntCase}` : ""
+            }`}
+            id={`tabInpRow${ctx}${nRow}_${nCol}`}
+            min={nCol === 2 ? "0.05" : "0"}
+            max="65535"
+            data-title={`Medidas Antropométricas ${fullName} (Consulta ${
+              nCol - 1
+            })`}
+            data-row={nRow}
+            data-col={nCol}
+            required={nCol === 2 ? true : false}
+            onInput={ev => {
+              if (ev.currentTarget.required) handleEventReq(ev.currentTarget);
+              else {
+                ev.currentTarget.type === "number"
+                  ? handleCondtReq(ev.currentTarget, {
+                      minNum: 0.05,
+                      maxNum: 999999,
+                      min: 1,
+                      max: 99,
+                      pattern: ["^[\\d,.]+$", ""],
+                    })
+                  : handleCondtReq(ev.currentTarget as HTMLInputElement, {
+                      min: 1,
+                      max: 99,
+                      pattern: ["^[\\d,.]+$", ""],
+                    });
+              }
+              handleCallbackWHS(
+                [
+                  [
+                    document.getElementById("gordCorpLvl"),
+                    document.getElementById("formCalcTMBType"),
+                    document.getElementById("nafType"),
+                    [
+                      tabProps.targInpWeigth,
+                      tabProps.targInpHeigth,
+                      tabProps.targInpIMC,
+                      tabProps.targInpMLG,
+                      tabProps.targInpTMB,
+                      tabProps.targInpGET,
+                      tabProps.targInpSumDCut,
+                      tabProps.targInpPGC,
+                    ],
+                  ],
+                  [
+                    tabProps.numCol,
+                    tabProps.factorAtvLvl,
+                    tabProps.factorAtleta,
+                    [
+                      tabProps.IMC,
+                      tabProps.MLG,
+                      tabProps.TMB,
+                      tabProps.GET,
+                      tabProps.PGC,
+                    ],
+                  ],
+                ],
+                ev.currentTarget,
+                tabProps.isAutoFillActive
+              );
+            }}
+          />
+        );
+      } else {
+        return (
+          <input
+            type="number"
+            name={`${lab.toLowerCase()}_${nRow}_${nCol}`}
+            className={`form-control tabInpProg tabInpProg${ctx} tabInpProg${lab}${ctx} tabInpRow${ctx}${nRow} float sevenCharLongNum`}
+            id={`tabInpRow${ctx}${nRow}_${nCol}`}
+            min={nCol === 2 ? "0.05" : "0"}
+            max="65535"
+            data-title={`${
+              ctx === "DCut" ? "Dobras Cutâneas" : "Sinais Vitais"
+            } ${fullName} (Consulta ${nCol - 1})`}
+            data-row={nRow}
+            data-col={nCol}
+            required={nCol === 2 ? true : false}
+            onInput={ev => {
+              if (ev.currentTarget.required) handleEventReq(ev.currentTarget);
+              else {
+                ev.currentTarget.type === "number"
+                  ? handleCondtReq(ev.currentTarget, {
+                      minNum: 0.05,
+                      maxNum: 999999,
+                      min: 1,
+                      max: 99,
+                      pattern: ["^[\\d,.]+$", ""],
+                    })
+                  : handleCondtReq(ev.currentTarget as HTMLInputElement, {
+                      min: 1,
+                      max: 99,
+                      pattern: ["^[\\d,.]+$", ""],
+                    });
+              }
+            }}
+          />
+        );
+      }
+    })()
   );
 }

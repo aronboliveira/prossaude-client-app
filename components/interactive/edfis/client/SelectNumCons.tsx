@@ -79,7 +79,7 @@ export default function SelectNumCons(): JSX.Element {
                 inp.classList.contains("patternText") &&
                   inp.classList.remove("patternText");
                 if (inp.type === "number") {
-                  inp.min = "";
+                  inp.min = "0";
                   inp.max = "999999";
                   inp.classList.contains("minNum") &&
                     inp.classList.remove("minNum");

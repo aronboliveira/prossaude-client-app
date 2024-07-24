@@ -1,28 +1,24 @@
-import { nullishDiv } from "@/lib/global/declarations/types";
-import { handleEventReq } from "@/lib/global/handlers/gHandlers";
-import { useRef, useState, useEffect } from "react";
+import { validTabLabs } from "@/lib/global/declarations/types";
 import { ErrorBoundary } from "react-error-boundary";
 import Col from "./tabs/Col";
 import Th from "./tabs/Th";
 import WatcherTab from "./client/tabs/WatcherTab";
 import GenericErrorComponent from "../../error/GenericErrorComponent";
+import Td from "./tabs/Td";
 
 export default function TabProgSVi(): JSX.Element {
-  const mainRef = useRef<nullishDiv>(null);
-  const [mounted, setMounted] = useState(false);
   const columns = [1, 2, 3, 4];
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-  return !mounted ? (
-    <></>
-  ) : (
+  const rows = [
+    [2, "PA"],
+    [3, "FC"],
+  ];
+  return (
     <ErrorBoundary
       FallbackComponent={() => (
         <GenericErrorComponent message="Error rendering Table for Vital Signs" />
       )}
     >
-      <div role="group" className="divTab" id="divTabSVi" ref={mainRef}>
+      <div role="group" className="divTab" id="divTabSVi">
         <table className="tabProgCons noInvert" id="tabProgSVi" itemScope>
           <caption
             className="tabLegProg"
@@ -60,162 +56,30 @@ export default function TabProgSVi(): JSX.Element {
             id="tbodyProgSvi"
             itemProp="blockSVi"
           >
-            <tr
-              className="tabRowProg tabRowProgSVi"
-              id="tabRowProgSVi2"
-              itemProp="rowSVi"
-            >
-              <Th ctx="ProgSVi" nRow={2} nCol={1} lab="PA" />
-              <td
-                className="tabCelProgCons tabCelProgSvi tabCelRowProgSVi2"
-                id="tabCelRowProgSVi2_2"
-                itemProp="celSVi"
+            {rows.map(([nRow, lab], i) => (
+              <tr
+                className="tabRowProg tabRowProgSVi"
+                id={`tabRowProgSVi${nRow}`}
+                itemProp="rowSVi"
+                key={`tr_svi__${nRow}`}
               >
-                <label
-                  htmlFor="tabInpRowProgSVi2_2"
-                  className="form-control tabLabProg tabLabProgCons tabLabProgSvi tabLabRowProgSVi2"
-                  id="tabLabRowProgSVi2_2"
-                  itemProp="celLabSvi"
-                >
-                  <input
-                    type="number"
-                    min="0"
-                    max="65535"
-                    className="form-control tabInpProg tabInpProgSVi tabInpRowProgSVi2"
-                    id="tabInpRowProgSVi2_2"
-                    itemProp="celValueSvi"
-                    data-title="PA_1_Consulta"
-                    required
-                    onInput={ev => handleEventReq(ev.currentTarget)}
+                <Th
+                  ctx="ProgSVi"
+                  nRow={nRow as number}
+                  nCol={i + 1}
+                  lab={lab as validTabLabs}
+                />
+                {[2, 3, 4].map(nCol => (
+                  <Td
+                    ctx="ProgSVi"
+                    nRow={nRow as number}
+                    nCol={nCol}
+                    lab={lab as validTabLabs}
+                    key={`td_${nRow}__${nCol}`}
                   />
-                  <p className="msrProgCons">mmHg</p>
-                </label>
-              </td>
-              <td
-                className="tabCelProgCons tabCelProgSvi tabCelRowProgSVi2"
-                id="tabCelRowProgSVi2_3"
-                itemProp="celSVi"
-              >
-                <label
-                  htmlFor="tabInpRowProgSVi2_3"
-                  className="form-control tabLabProg tabLabProgSvi tabLabRowProgSVi2"
-                  id="tabLabRowProgSVi2_3"
-                  itemProp="celLabSvi"
-                >
-                  <input
-                    type="number"
-                    min="0"
-                    max="65535"
-                    className="form-control tabInpProg tabInpProgSVi tabInpRowProgSVi2"
-                    id="tabInpRowProgSVi2_3"
-                    itemProp="celValueSvi"
-                    data-title="PA_2_Consulta"
-                  />
-                  <p className="msrProgCons">mmHg</p>
-                </label>
-              </td>
-              <td
-                className="tabCelProgCons tabCelProgSvi tabCelRowProgSVi2"
-                id="tabCelRowProgSVi2_4"
-                itemProp="celSVi"
-              >
-                <label
-                  htmlFor="tabInpRowProgSVi2_4"
-                  className="form-control tabLabProg tabLabProgSvi tabLabRowProgSVi2"
-                  id="tabLabRowProgSVi2_4"
-                  itemProp="celLabSvi"
-                >
-                  <input
-                    type="number"
-                    min="0"
-                    max="65535"
-                    className="form-control tabInpProg tabInpProgSVi tabInpRowProgSVi2"
-                    id="tabInpRowProgSVi2_4"
-                    itemProp="celValueSvi"
-                    data-title="PA_3_Consulta"
-                  />
-                  <p className="msrProgCons">mmHg</p>
-                </label>
-              </td>
-            </tr>
-            <tr
-              className="tabRowProg tabRowProgSVi"
-              id="tabRowProgSVi3"
-              itemProp="rowSVi"
-            >
-              <Th ctx="ProgSVi" nRow={3} nCol={1} lab="FC" />
-              <td
-                className="tabCelProgCons tabCelProgSvi tabCelRowProgSVi2"
-                id="tabCelRowProgSVi3_2"
-                itemProp="celSVi"
-              >
-                <label
-                  htmlFor="tabInpRowProgSVi3_2"
-                  className="form-control tabLabProg tabLabProgSvi tabLabRowProgSVi2"
-                  id="tabLabRowProgSVi3_2"
-                  itemProp="celLabSvi"
-                >
-                  <input
-                    type="number"
-                    min="0"
-                    max="65535"
-                    className="form-control tabInpProg tabInpProgSVi tabInpRowProgSVi2"
-                    id="tabInpRowProgSVi3_2"
-                    itemProp="celValueSvi"
-                    data-title="FC_1_Consulta"
-                    required
-                    onInput={ev => handleEventReq(ev.currentTarget)}
-                  />
-                  <p className="msrProgCons">bpm</p>
-                </label>
-              </td>
-              <td
-                className="tabCelProgCons tabCelProgSvi tabCelRowProgSVi2"
-                id="tabCelRowProgSVi3_3"
-                itemProp="celSVi"
-              >
-                <label
-                  htmlFor="tabInpRowProgSVi3_3"
-                  className="form-control tabLabProg tabLabProgSvi tabLabRowProgSVi2"
-                  id="tabLabRowProgSVi3_3"
-                  itemProp="celLabSvi"
-                >
-                  <input
-                    type="number"
-                    min="0"
-                    max="65535"
-                    className="form-control tabInpProg tabInpProgSVi tabInpRowProgSVi2"
-                    id="tabInpRowProgSVi3_3"
-                    itemProp="celValueSvi"
-                    data-title="FC_2_Consulta"
-                  />
-                  <p className="msrProgCons">mmHg</p>
-                </label>
-              </td>
-              <td
-                className="tabCelProgCons tabCelProgSvi tabCelRowProgSVi2"
-                id="tabCelRowProgSVi3_4"
-                itemProp="celSVi"
-              >
-                <label
-                  htmlFor="tabInpRowProgSVi3_4"
-                  className="form-control tabLabProg tabLabProgSvi tabLabRowProgSVi2"
-                  id="tabLabRowProgSVi3_4"
-                  itemProp="celLabSvi"
-                >
-                  <input
-                    type="number"
-                    min="0"
-                    max="65535"
-                    className="form-control tabInpProg tabInpProgSVi tabInpRowProgSVi2"
-                    id="tabInpRowProgSVi3_4"
-                    itemProp="celValueSvi"
-                    data-title="FC_3_Consulta"
-                  />
-                  <p className="msrProgCons">mmHg</p>
-                </label>
-              </td>
-            </tr>
+                ))}
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
