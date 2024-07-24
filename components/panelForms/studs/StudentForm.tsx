@@ -29,7 +29,7 @@ import {
 } from "@/lib/global/handlers/gHandlers";
 import { handleClientPermissions } from "@/lib/locals/panelPage/handlers/consHandlerUsers";
 import { addListenerExportBtn } from "@/lib/global/gController";
-import { globalDataProvider } from "../../mainPanel/MainFormPanel";
+import { globalDataProvider, panelRoots } from "../defs/client/SelectPanel";
 import { ErrorBoundary } from "react-error-boundary";
 import GenericErrorComponent from "../../error/GenericErrorComponent";
 
@@ -590,7 +590,7 @@ export default function StudentForm({
                 Gerar Planilha
               </button>
               <ReseterBtn
-                root={mainRoot}
+                root={panelRoots.mainRoot!}
                 renderForm={
                   <StudentForm mainRoot={mainRoot} userClass={userClass} />
                 }

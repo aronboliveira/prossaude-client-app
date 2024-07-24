@@ -6,9 +6,9 @@ import GenericErrorComponent from "../../error/GenericErrorComponent";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import ResetDlg from "../../alerts/ResetDlg";
 import { scheduleReset } from "../panelFormsData";
+import { panelRoots } from "./client/SelectPanel";
 
 export default function ReseterBtn({
-  root,
   renderForm,
 }: ReseterBtnProps): JSX.Element {
   const [shouldDisplayResetDlg, setDisplayResetDlg] = useState(false);
@@ -44,7 +44,7 @@ export default function ReseterBtn({
         <ResetDlg
           setDisplayResetDlg={setDisplayResetDlg}
           shouldDisplayResetDlg={shouldDisplayResetDlg}
-          root={root}
+          root={panelRoots.mainRoot!}
           renderForm={renderForm}
         />
       )}

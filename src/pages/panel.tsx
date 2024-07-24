@@ -1,8 +1,8 @@
 import { ErrorBoundary } from "react-error-boundary";
 import { User } from "@/lib/global/declarations/classes";
-import FallbackedMainPanel from "../../components/mainPanel/FallbackedMainPanel";
 import UserProfilePanelWrapper from "../../components/interactive/panel/UserProfilePanelWrapper";
 import TipsBtnWrapper from "../../components/interactive/panel/TipsBtnWrapper";
+import MainFormPanel from "../../components/mainPanel/MainFormPanel";
 
 export const fillScheduleState = { acc: 0 };
 export const formData: { [key: string]: string } = {};
@@ -72,11 +72,7 @@ export default function PanelPage({ data }: { data: any }): JSX.Element {
         <main>
           <section className="flexColumn" id="registSect">
             <div role="group" id="panelDiv">
-              <FallbackedMainPanel
-                userClass={user.userClass}
-                renderError={new Error(`Erro carregando Painel Principal!`)}
-                defOp={"agenda"}
-              />
+              <MainFormPanel userClass={user.userClass} defOp={"agenda"} />
               <div role="group" id="pacDiv" className="form-padded"></div>
             </div>
           </section>

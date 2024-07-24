@@ -5,12 +5,18 @@ import { useEffect, useRef } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import MainFormPanel from "../mainPanel/MainFormPanel";
 import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
+import { panelRoots } from "../panelForms/defs/client/SelectPanel";
+import { createRoot } from "react-dom/client";
 
 export default function ResetDlg({
   root,
   setDisplayResetDlg,
   shouldDisplayResetDlg = true,
 }: ResetDlgProps): JSX.Element {
+  if (!panelRoots.mainRoot) {
+    panelRoots.mainRoot = createRoot(document.getElementById("formRoot")!);
+    root = panelRoots.mainRoot;
+  }
   const ResetDlgRef = useRef<nullishDlg>(null);
   const toggleClose = () => {
     setDisplayResetDlg(!shouldDisplayResetDlg);

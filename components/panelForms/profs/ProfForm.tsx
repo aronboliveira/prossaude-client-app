@@ -31,7 +31,7 @@ import { panelFormsVariables } from "../panelFormsData";
 import { ErrorBoundary } from "react-error-boundary";
 import GenericErrorComponent from "../../error/GenericErrorComponent";
 import ReseterBtn from "../defs/ReseterBtn";
-import { globalDataProvider } from "../../mainPanel/MainFormPanel";
+import { globalDataProvider, panelRoots } from "../defs/client/SelectPanel";
 
 export default function ProfForm({
   mainRoot,
@@ -474,7 +474,7 @@ export default function ProfForm({
                 Gerar Planilha
               </button>
               <ReseterBtn
-                root={mainRoot}
+                root={panelRoots.mainRoot!}
                 renderForm={
                   <ProfForm mainRoot={mainRoot} userClass={userClass} />
                 }

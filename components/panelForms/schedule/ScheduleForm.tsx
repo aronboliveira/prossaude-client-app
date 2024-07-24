@@ -44,7 +44,7 @@ import GenericErrorComponent from "../../error/GenericErrorComponent";
 import RegstConsBtn from "./RegstConsBtn";
 import EraseAptBtn from "./EraseAptBtn";
 import ReseterBtn from "../defs/ReseterBtn";
-import { globalDataProvider } from "../../mainPanel/MainFormPanel";
+import { globalDataProvider, panelRoots } from "../defs/client/SelectPanel";
 import { ErrorBoundary } from "react-error-boundary";
 
 export default function ScheduleForm({
@@ -2139,7 +2139,7 @@ export default function ScheduleForm({
                 Gerar Planilha
               </button>
               <ReseterBtn
-                root={mainRoot}
+                root={panelRoots.mainRoot!}
                 renderForm={
                   <ScheduleForm
                     mainRoot={mainRoot}

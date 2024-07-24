@@ -7,7 +7,6 @@ import { ErrorFallbackMainPanelProps } from "@/lib/locals/panelPage/declarations
 import { nullishSel } from "@/lib/global/declarations/types";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { ErrorBoundary } from "react-error-boundary";
-import FallbackedMainPanel from "../mainPanel/FallbackedMainPanel";
 import MainFormPanel from "../mainPanel/MainFormPanel";
 
 export default function ErrorFallbackMainPanel(
@@ -47,7 +46,7 @@ export default function ErrorFallbackMainPanel(
                   renderError={props.renderError}
                   resetErrorBoundary={() =>
                     resetErrorBoundary(
-                      () => <FallbackedMainPanel {...props} />,
+                      () => <MainFormPanel {...props} />,
                       props
                     )
                   }

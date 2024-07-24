@@ -44,7 +44,7 @@ import DREFiller from "./DREFiller";
 import AvProfListDlg from "../lists/AvProfListDlg";
 import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
 import AvPacListDlg from "../lists/AvPacListDlg";
-import { globalDataProvider } from "../mainPanel/MainFormPanel";
+import { globalDataProvider } from "../panelForms/defs/client/SelectPanel";
 import { createRoot } from "react-dom/client";
 
 let accFormData = 0;

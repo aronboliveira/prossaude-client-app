@@ -24,8 +24,8 @@ export interface UserProfile {
 }
 
 export interface GlobalFormProps {
-  mainRoot: Root;
   userClass: string;
+  mainRoot?: Root;
 }
 
 export interface MainPanelProps extends GlobalFormProps {
