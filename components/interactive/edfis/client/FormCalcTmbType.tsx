@@ -6,6 +6,7 @@ export default function FormCalcTmbType(): JSX.Element {
   return (
     <select
       id="formCalcTMBType"
+      name="form_tmb"
       className="form-select noInvert lockSelect"
       data-title="Fórmula para TMB"
       onChange={ev => {

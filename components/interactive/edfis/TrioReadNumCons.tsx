@@ -46,6 +46,7 @@ export default function TrioReadNumCons(): JSX.Element {
         type="number"
         className="form-control noInvert consInp minText maxText minNum maxNum patternText"
         id="trioReadNumCons"
+        name="trio_read_num_cons"
         min="1"
         max="255"
         defaultValue="1"

@@ -7,6 +7,7 @@ export default function ProtUrLvl(): JSX.Element {
     <input
       type="number"
       id="protUrLvl"
+      name="protur_lvl"
       className="form-control noInvert opProtUr"
       data-title="Proteinuria (mg/dL)"
       onInput={ev =>

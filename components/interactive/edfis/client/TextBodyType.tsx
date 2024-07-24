@@ -7,6 +7,7 @@ export default function TextBodyType(): JSX.Element {
   return (
     <select
       id="textBodytype"
+      name="body_type"
       className="form-select noInvert consInp"
       data-title="Tipo Corporal por Gênero"
       onChange={() => {

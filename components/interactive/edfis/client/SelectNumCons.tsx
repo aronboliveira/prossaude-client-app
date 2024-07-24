@@ -15,6 +15,7 @@ export default function SelectNumCons(): JSX.Element {
   return (
     <select
       id="selectNumCons"
+      name="num_cons"
       className="form-select noInvert consInp"
       data-title="Consulta Lida"
       onChange={ev => {

@@ -6,6 +6,7 @@ export default function GordCorpLvl(): JSX.Element {
   return (
     <select
       id="gordCorpLvl"
+      name="gord_corp_lvl"
       className="form-select noInvert lockSelect"
       data-title="Nível de Gordura Corporal"
       onChange={ev => {

@@ -7,6 +7,7 @@ export default function SelFactorAtleta(): JSX.Element {
     <select
       className="selFactorAtletaClass form-select noInvert consInp"
       id="selFactorAtleta"
+      name="factor_atl"
       data-title="Fator de TMB para Atletas"
       onChange={ev =>
         handleCallbackWHS(

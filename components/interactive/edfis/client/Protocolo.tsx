@@ -7,7 +7,7 @@ export default function Protocolo(): JSX.Element {
     <select
       className="form-select selectTabProgCons consInp"
       id="tabSelectDCutId"
-      name="tabSelectDCutName"
+      name="protocolo"
       data-title="Protocolo_DCut"
       required
       onChange={ev =>

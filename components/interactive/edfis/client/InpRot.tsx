@@ -115,6 +115,10 @@ export default function InpRot(props: InpRotProps): JSX.Element {
                     : `inp${props.ctx}Min`;
               })()
         }
+        name={`${props.ctx.slice(0, 1).toLowerCase()}${props.ctx
+          .slice(1)
+          .replaceAll(/([A-Z])/g, "_$1")
+          .toLowerCase()}_${props.isMax ? "max" : "min"}`}
         required
         data-title={title}
         data-reqlength={props.minLength ? props.minLength : 1}

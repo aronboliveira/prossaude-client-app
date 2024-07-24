@@ -270,7 +270,7 @@ export default function EdFisNutPage(): JSX.Element {
                         type="radio"
                         className="inpAlimRot inpUr inpUrRadio noInvert"
                         id="CpbinpProtUrRadioYes"
-                        name="inpProtUrRadio"
+                        name="protur"
                         data-title="Proteinuria_Sim"
                         style={{ marginTop: "0.7rem" }}
                       />
@@ -284,7 +284,7 @@ export default function EdFisNutPage(): JSX.Element {
                         type="radio"
                         className="inpAlimRot inpUr inpUrRadio"
                         id="CpbinpProtUrRadioNo"
-                        name="inpProtUrRadio"
+                        name="protur"
                         data-title="Proteinuria_Nao"
                         style={{ marginTop: "0.7rem" }}
                       />

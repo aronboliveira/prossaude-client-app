@@ -6,6 +6,7 @@ export default function InpDiur(): JSX.Element {
   return (
     <input
       type="number"
+      name="diur"
       className="form-control noInvert inpAlimRot inpUr float"
       id="inpDiur"
       data-title="Diurese"

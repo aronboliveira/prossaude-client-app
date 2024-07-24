@@ -7,6 +7,7 @@ export default function SelectLvlAtFis(): JSX.Element {
     <select
       className="form-select labelIdentif"
       id="selectLvlAtFis"
+      name="atv_lvl"
       data-title="Nivel de Atividade Física"
       required
       onChange={ev => {
