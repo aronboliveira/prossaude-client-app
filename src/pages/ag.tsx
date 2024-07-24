@@ -368,7 +368,6 @@ export default function AGPage(): JSX.Element {
                           role="switch"
                           data-title="switch_comp_casa"
                         />
-                        l
                       </span>
                     </span>
                   </span>

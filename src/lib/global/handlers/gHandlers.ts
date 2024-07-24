@@ -159,12 +159,122 @@ export function cpbInpHandler(ev: Event, radio: targEl): void {
           setTimeout(() => {
             fadeElement(divAdd, "1");
           }, 100);
+          setTimeout(() => {
+            if (
+              divAdd instanceof HTMLElement &&
+              getComputedStyle(divAdd).display !== "none"
+            ) {
+              [
+                ...divAdd.querySelectorAll('input[type="radio"]'),
+                ...divAdd.querySelectorAll('input[type="checkbox"]'),
+              ].forEach((rad, i) => {
+                try {
+                  if (
+                    !(
+                      rad instanceof HTMLInputElement &&
+                      (rad.type === "radio" || rad.type === "checkbox")
+                    )
+                  )
+                    throw inputNotFound(
+                      rad,
+                      `Validation of input instance`,
+                      extLine(new Error())
+                    );
+                  rad.dataset.required = "true";
+                } catch (e) {
+                  console.error(
+                    `Error executing iteration ${i} for updating checkboxes requirements:\n${
+                      (e as Error).message
+                    }`
+                  );
+                }
+              });
+              [
+                ...divAdd.querySelectorAll('input[type="text"]'),
+                ...divAdd.querySelectorAll('input[type="number"]'),
+                ...divAdd?.querySelectorAll('input[type="email"]'),
+                ...divAdd.querySelectorAll('input[type="tel"]'),
+                ...divAdd?.querySelectorAll('input[type="date"]'),
+              ].forEach((inp, i) => {
+                try {
+                  if (!(inp instanceof HTMLInputElement))
+                    throw inputNotFound(
+                      inp,
+                      `Validation of input instance`,
+                      extLine(new Error())
+                    );
+                  inp.required = true;
+                } catch (e) {
+                  console.error(
+                    `Error executing iteration ${i} for updating text inputs requirements:\n${
+                      (e as Error).message
+                    }`
+                  );
+                }
+              });
+            }
+          }, 300);
         }, 400);
       } else {
         fadeElement(divAdd, "0");
         setTimeout(() => {
           (divAdd as HTMLElement).style.display = "none";
         }, 400);
+        setTimeout(() => {
+          if (
+            divAdd instanceof HTMLElement &&
+            getComputedStyle(divAdd).display !== "none"
+          ) {
+            [
+              ...divAdd.querySelectorAll('input[type="radio"]'),
+              ...divAdd.querySelectorAll('input[type="checkbox"]'),
+            ].forEach((rad, i) => {
+              try {
+                if (
+                  !(
+                    rad instanceof HTMLInputElement &&
+                    (rad.type === "radio" || rad.type === "checkbox")
+                  )
+                )
+                  throw inputNotFound(
+                    rad,
+                    `Validation of input instance`,
+                    extLine(new Error())
+                  );
+                delete rad.dataset.required;
+              } catch (e) {
+                console.error(
+                  `Error executing iteration ${i} for updating checkboxes requirements:\n${
+                    (e as Error).message
+                  }`
+                );
+              }
+            });
+            [
+              ...divAdd.querySelectorAll('input[type="text"]'),
+              ...divAdd.querySelectorAll('input[type="number"]'),
+              ...divAdd?.querySelectorAll('input[type="email"]'),
+              ...divAdd.querySelectorAll('input[type="tel"]'),
+              ...divAdd?.querySelectorAll('input[type="date"]'),
+            ].forEach((inp, i) => {
+              try {
+                if (!(inp instanceof HTMLInputElement))
+                  throw inputNotFound(
+                    inp,
+                    `Validation of input instance`,
+                    extLine(new Error())
+                  );
+                inp.required = false;
+              } catch (e) {
+                console.error(
+                  `Error executing iteration ${i} for updating text inputs requirements:\n${
+                    (e as Error).message
+                  }`
+                );
+              }
+            });
+          }
+        }, 600);
       }
     }
   } else
@@ -1147,6 +1257,40 @@ export async function validateForm(
                     radio instanceof HTMLInputElement &&
                     radio.type === "radio" &&
                     radio.checked
+                )
+            ) {
+              isValid = false;
+              displayInvalidity(isValid);
+            }
+            const cbGrpL = parent.querySelectorAll('input[type="checkbox"]');
+            if (cbGrpL.length === 0)
+              throw new Error(
+                `Error populating list of checkboxes from parent`
+              );
+            if (
+              Array.from(cbGrpL)
+                .filter(
+                  checkbox =>
+                    checkbox instanceof HTMLInputElement &&
+                    checkbox.type === "checkbox"
+                )
+                .some(
+                  checkbox =>
+                    checkbox instanceof HTMLInputElement &&
+                    checkbox.type === "checkbox" &&
+                    (checkbox.dataset.required === "true" || checkbox.required)
+                ) &&
+              !Array.from(cbGrpL)
+                .filter(
+                  checkbox =>
+                    checkbox instanceof HTMLInputElement &&
+                    checkbox.type === "checkbox"
+                )
+                .some(
+                  checkbox =>
+                    checkbox instanceof HTMLInputElement &&
+                    checkbox.type === "checkbox" &&
+                    checkbox.checked
                 )
             ) {
               isValid = false;

@@ -116,6 +116,8 @@ export default function RadioPair({
           className={`form-control taOp ta${problemIdf} divAdd`}
           id={`textAdd${problemIdf}`}
           name={`notes_${name}`}
+          required
+          minLength={1}
           maxLength={1000}
           placeholder={
             altPh && altPh !== ""
