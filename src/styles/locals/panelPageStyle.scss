@@ -133,11 +133,23 @@ body {
     text-align: center;
   }
 
+  #btnExport {
+    width: 50%;
+  }
+
   #btnSubmitNewStud,
   #btnSubmitNewProf {
     + #btnExport {
       width: 100%;
       margin-right: 0;
+    }
+  }
+
+  #confirmDayMainDiv {
+    > div {
+      &:has(#labConfirmDay) {
+        transform: translate(0, 0.3rem);
+      }
     }
   }
 
@@ -154,6 +166,10 @@ body {
 
   #profileIconImg {
     margin-left: 0.2rem;
+  }
+
+  #tipsBtn {
+    transform: translate(0, -0.9rem);
   }
 }
 
@@ -231,6 +247,14 @@ body {
     #tipsDlg {
       left: 0%;
       border: ridge 0.3rem;
+    }
+  }
+}
+
+@media screen and (min-width: 460px) and (max-width: 900px) {
+  .panelBody {
+    #tipsBtn {
+      transform: translate(0, 0);
     }
   }
 }

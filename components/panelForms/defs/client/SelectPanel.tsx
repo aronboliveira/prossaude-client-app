@@ -1,14 +1,13 @@
 "use client";
 
 import { ErrorBoundary } from "react-error-boundary";
-import { useState, useRef, useEffect, ChangeEvent, useContext } from "react";
+import { useState, useRef, useEffect, useContext } from "react";
 import GenericErrorComponent from "../../../error/GenericErrorComponent";
 import { AppRootContext } from "@/pages/_app";
 import { MainPanelProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import {
   elementNotFound,
   extLine,
-  inputNotFound,
   stringError,
 } from "@/lib/global/handlers/errorHandler";
 import { DataProvider } from "@/lib/locals/panelPage/declarations/classesCons";
@@ -40,47 +39,58 @@ export default function SelectPanel({
   const [mounted, setMounted] = useState<boolean>(false);
   const formRootRef = useRef<nullishDiv>(null);
   const context = useContext(AppRootContext);
-  const handleChange = (change: ChangeEvent): void => {
-    change.target instanceof HTMLSelectElement ||
-    change.target instanceof HTMLInputElement
-      ? setSelectedOption(change.target.value)
-      : inputNotFound(
-          change.target,
-          "change.target in handleChange()",
-          extLine(new Error())
-        );
-  };
   useEffect(() => {
+    console.log("Setting to mounted...");
     setMounted(true);
   }, []);
   useEffect(() => {
+    console.log("Initializing global provider and handling route...");
     globalDataProvider = new DataProvider(sessionStorage);
     handleLinkChanges("panel", "Panel Page Style");
-    const selDiv = document.getElementById("formSelDiv");
-    if (selDiv instanceof HTMLElement && !selDiv.querySelector("select")) {
-      selDiv.innerHTML = ``;
-      if (!context.roots.rootSel) context.roots.rootSel = createRoot(selDiv);
-      context.roots.rootSel.render(<ErrorMainDiv />);
-    } else
-      setTimeout(() => {
-        !document.getElementById("formSelDiv")?.querySelector("select") &&
-          elementNotFound(
-            selDiv,
-            "selDiv during DOM initialization",
-            extLine(new Error())
-          );
-      }, 2000);
+  }, []);
+  //validating DOM structure using Main Select and parent for reference
+  useEffect(() => {
+    setTimeout(() => {
+      const selDiv = document.getElementById("formSelDiv");
+      if (
+        mounted &&
+        selDiv instanceof HTMLElement &&
+        !document.querySelector("select")
+      ) {
+        selDiv.innerHTML = ``;
+        if (!context.roots.rootSel) context.roots.rootSel = createRoot(selDiv);
+        context.roots.rootSel.render(<ErrorMainDiv />);
+      } else
+        setTimeout(() => {
+          const selDiv = document.getElementById("formSelDiv");
+          if (!document.getElementById("formSelDiv")?.querySelector("select")) {
+            elementNotFound(
+              selDiv,
+              "selDiv during DOM initialization",
+              extLine(new Error())
+            );
+            if (selDiv instanceof HTMLElement) {
+              selDiv.innerHTML = ``;
+              if (!context.roots.rootSel)
+                context.roots.rootSel = createRoot(selDiv);
+              context.roots.rootSel.render(<ErrorMainDiv />);
+            }
+          }
+        }, 2000);
+    }, 3000);
   }, [mounted]);
   useEffect(() => {
-    if (formRootRef instanceof HTMLElement) {
+    if (formRootRef.current instanceof HTMLElement) {
+      console.log("Started syncing...");
       syncAriaStates([
         ...(
           document.getElementById("formPanelDiv") ?? document
         )?.querySelectorAll("*"),
         document.getElementById("formPanelDiv")!,
       ]);
+      console.log("Creating mainRoot...");
       if (!panelRoots.mainRoot)
-        panelRoots.mainRoot = createRoot(document.getElementById("formRoot")!);
+        panelRoots.mainRoot = createRoot(formRootRef.current);
     }
   }, [mounted]);
   //Snippet para repassar para CSR totalmente (erro ainda não investigado)
@@ -102,9 +112,10 @@ export default function SelectPanel({
         <select
           className="form-select"
           id="coordPanelSelect"
+          name="actv_panel"
           data-title="Opção de Painel Ativa"
           value={selectedOption}
-          onChange={handleChange}
+          onChange={change => setSelectedOption(change.target.value)}
           autoFocus
           required
         >

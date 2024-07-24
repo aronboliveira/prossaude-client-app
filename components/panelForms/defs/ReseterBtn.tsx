@@ -17,11 +17,22 @@ export default function ReseterBtn({
   };
   const resetBtnRef = useRef<nullishBtn>(null);
   useEffect(() => {
-    if (resetBtnRef.current instanceof HTMLButtonElement) {
-      scheduleReset[`outerHTML`] = (document.getElementById(
-        "formBodySchedSect"
-      ) || document.querySelector("form"))!.outerHTML;
+    const formBody =
+      document.getElementById("formBodySchedSect") ||
+      document.querySelector("form");
+    if (resetBtnRef.current instanceof HTMLButtonElement && formBody) {
+      scheduleReset[`outerHTML`] = formBody.outerHTML;
       syncAriaStates([document.getElementById("btnResetTab")!]);
+    } else {
+      setTimeout(() => {
+        const formBody =
+          document.getElementById("formBodySchedSect") ||
+          document.querySelector("form");
+        if (resetBtnRef.current instanceof HTMLButtonElement && formBody) {
+          scheduleReset[`outerHTML`] = formBody.outerHTML;
+          syncAriaStates([document.getElementById("btnResetTab")!]);
+        }
+      }, 2000);
     }
   }, [resetBtnRef]);
   return (

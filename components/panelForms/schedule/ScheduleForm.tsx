@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useRef, useEffect, useCallback, JSX } from "react";
 import {
   clearPhDates,
@@ -236,6 +238,15 @@ export default function ScheduleForm({
       true,
       [document.getElementById("formBodySchedSect")]
     );
+    const daysCont = document.getElementById("mainConsDaysCont");
+    if (daysCont instanceof HTMLElement)
+      scheduleReset[`outerHTML`] = daysCont.outerHTML;
+    else
+      setTimeout(() => {
+        const daysCont = document.getElementById("mainConsDaysCont");
+        if (daysCont instanceof HTMLElement)
+          scheduleReset[`outerHTML`] = daysCont.outerHTML;
+      }, 200);
     addEventListener("resize", () => {
       if (innerWidth === 900 || innerWidth === 600 || innerWidth === 460) {
         normalizeSizeSb(
@@ -251,8 +262,6 @@ export default function ScheduleForm({
         );
       }
     });
-    scheduleReset[`outerHTML`] =
-      document.getElementById("mainConsDaysCont")!.outerHTML;
   }, []);
   useEffect(() => {
     if (formRef?.current instanceof HTMLElement) {
@@ -1030,7 +1039,6 @@ export default function ScheduleForm({
                       </div>
                     </th>
                     <th scope="col">
-                      {" "}
                       <label
                         className="consWeekday"
                         htmlFor="order_dayfInp"
@@ -1050,7 +1058,6 @@ export default function ScheduleForm({
                       </div>
                     </th>
                     <th scope="col">
-                      {" "}
                       <label
                         className="consWeekday"
                         htmlFor="order_dayfInp"
@@ -1070,7 +1077,6 @@ export default function ScheduleForm({
                       </div>
                     </th>
                     <th scope="col">
-                      {" "}
                       <label
                         className="consWeekday"
                         htmlFor="order_dayfInp"
@@ -1090,7 +1096,6 @@ export default function ScheduleForm({
                       </div>
                     </th>
                     <th scope="col">
-                      {" "}
                       <label
                         className="consWeekday"
                         htmlFor="order_dayfInp"
@@ -1110,7 +1115,6 @@ export default function ScheduleForm({
                       </div>
                     </th>
                     <th scope="col">
-                      {" "}
                       <label
                         className="consWeekday"
                         htmlFor="order_dayfInp"
@@ -1130,7 +1134,6 @@ export default function ScheduleForm({
                       </div>
                     </th>
                     <th scope="col">
-                      {" "}
                       <label
                         className="consWeekday"
                         htmlFor="order_dayfInp"
@@ -1150,7 +1153,6 @@ export default function ScheduleForm({
                       </div>
                     </th>
                     <th scope="col">
-                      {" "}
                       <label
                         className="consWeekday"
                         htmlFor="order_dayfInp"
@@ -1170,7 +1172,6 @@ export default function ScheduleForm({
                       </div>
                     </th>
                     <th className="tabCel lastConsDayCont" scope="col">
-                      {" "}
                       <label
                         className="consWeekday"
                         htmlFor="order_dayfInp"
@@ -1247,7 +1248,7 @@ export default function ScheduleForm({
                           />
                         </div>
                       </slot>
-                    </td>{" "}
+                    </td>
                     <td className="tabCel">
                       <slot
                         className="consSlot lcPersist htFull wid90 flexNoW cGap2v"
@@ -1272,7 +1273,7 @@ export default function ScheduleForm({
                           />
                         </div>
                       </slot>
-                    </td>{" "}
+                    </td>
                     <td className="tabCel">
                       <slot
                         className="consSlot lcPersist htFull wid90 flexNoW cGap2v"
@@ -1297,7 +1298,7 @@ export default function ScheduleForm({
                           />
                         </div>
                       </slot>
-                    </td>{" "}
+                    </td>
                     <td className="tabCel">
                       <slot
                         className="consSlot lcPersist htFull wid90 flexNoW cGap2v"
@@ -1322,7 +1323,7 @@ export default function ScheduleForm({
                           />
                         </div>
                       </slot>
-                    </td>{" "}
+                    </td>
                     <td className="tabCel">
                       <slot
                         className="consSlot lcPersist htFull wid90 flexNoW cGap2v"
@@ -1347,7 +1348,7 @@ export default function ScheduleForm({
                           />
                         </div>
                       </slot>
-                    </td>{" "}
+                    </td>
                     <td className="tabCel">
                       <slot
                         className="consSlot lcPersist htFull wid90 flexNoW cGap2v"
@@ -1372,7 +1373,7 @@ export default function ScheduleForm({
                           />
                         </div>
                       </slot>
-                    </td>{" "}
+                    </td>
                     <td className="tabCel">
                       <slot
                         className="consSlot lcPersist htFull wid90 flexNoW cGap2v"
@@ -1397,7 +1398,7 @@ export default function ScheduleForm({
                           />
                         </div>
                       </slot>
-                    </td>{" "}
+                    </td>
                     <td className="tabCel lastConsDayCont">
                       <slot
                         className="consSlot lcPersist htFull wid90 flexNoW cGap2v"
@@ -1479,7 +1480,7 @@ export default function ScheduleForm({
                           />
                         </div>
                       </slot>
-                    </td>{" "}
+                    </td>
                     <td className="tabCel">
                       <slot
                         className="consSlot lcPersist htFull wid90 flexNoW cGap2v"
@@ -1504,7 +1505,7 @@ export default function ScheduleForm({
                           />
                         </div>
                       </slot>
-                    </td>{" "}
+                    </td>
                     <td className="tabCel">
                       <slot
                         className="consSlot lcPersist htFull wid90 flexNoW cGap2v"
@@ -1529,7 +1530,7 @@ export default function ScheduleForm({
                           />
                         </div>
                       </slot>
-                    </td>{" "}
+                    </td>
                     <td className="tabCel">
                       <slot
                         className="consSlot lcPersist htFull wid90 flexNoW cGap2v"
@@ -1554,7 +1555,7 @@ export default function ScheduleForm({
                           />
                         </div>
                       </slot>
-                    </td>{" "}
+                    </td>
                     <td className="tabCel">
                       <slot
                         className="consSlot lcPersist htFull wid90 flexNoW cGap2v"
@@ -1579,7 +1580,7 @@ export default function ScheduleForm({
                           />
                         </div>
                       </slot>
-                    </td>{" "}
+                    </td>
                     <td className="tabCel">
                       <slot
                         className="consSlot lcPersist htFull wid90 flexNoW cGap2v"
@@ -1604,7 +1605,7 @@ export default function ScheduleForm({
                           />
                         </div>
                       </slot>
-                    </td>{" "}
+                    </td>
                     <td className="tabCel">
                       <slot
                         className="consSlot lcPersist htFull wid90 flexNoW cGap2v"
@@ -1629,7 +1630,7 @@ export default function ScheduleForm({
                           />
                         </div>
                       </slot>
-                    </td>{" "}
+                    </td>
                     <td className="tabCel lastConsDayCont">
                       <slot
                         className="consSlot lcPersist htFull wid90 flexNoW cGap2v"
@@ -1711,7 +1712,7 @@ export default function ScheduleForm({
                           />
                         </div>
                       </slot>
-                    </td>{" "}
+                    </td>
                     <td className="tabCel">
                       <slot
                         className="consSlot lcPersist htFull wid90 flexNoW cGap2v"
@@ -1736,7 +1737,7 @@ export default function ScheduleForm({
                           />
                         </div>
                       </slot>
-                    </td>{" "}
+                    </td>
                     <td className="tabCel">
                       <slot
                         className="consSlot lcPersist htFull wid90 flexNoW cGap2v"
@@ -1761,7 +1762,7 @@ export default function ScheduleForm({
                           />
                         </div>
                       </slot>
-                    </td>{" "}
+                    </td>
                     <td className="tabCel">
                       <slot
                         className="consSlot lcPersist htFull wid90 flexNoW cGap2v"
@@ -1786,7 +1787,7 @@ export default function ScheduleForm({
                           />
                         </div>
                       </slot>
-                    </td>{" "}
+                    </td>
                     <td className="tabCel">
                       <slot
                         className="consSlot lcPersist htFull wid90 flexNoW cGap2v"
@@ -1811,7 +1812,7 @@ export default function ScheduleForm({
                           />
                         </div>
                       </slot>
-                    </td>{" "}
+                    </td>
                     <td className="tabCel">
                       <slot
                         className="consSlot lcPersist htFull wid90 flexNoW cGap2v"
@@ -1836,7 +1837,7 @@ export default function ScheduleForm({
                           />
                         </div>
                       </slot>
-                    </td>{" "}
+                    </td>
                     <td className="tabCel">
                       <slot
                         className="consSlot lcPersist htFull wid90 flexNoW cGap2v"
@@ -1861,7 +1862,7 @@ export default function ScheduleForm({
                           />
                         </div>
                       </slot>
-                    </td>{" "}
+                    </td>
                     <td className="tabCel lastConsDayCont">
                       <slot
                         className="consSlot lcPersist htFull wid90 flexNoW cGap2v"
@@ -1943,7 +1944,7 @@ export default function ScheduleForm({
                           />
                         </div>
                       </slot>
-                    </td>{" "}
+                    </td>
                     <td className="tabCel">
                       <slot
                         className="consSlot lcPersist htFull wid90 flexNoW cGap2v"
@@ -1968,7 +1969,7 @@ export default function ScheduleForm({
                           />
                         </div>
                       </slot>
-                    </td>{" "}
+                    </td>
                     <td className="tabCel">
                       <slot
                         className="consSlot lcPersist htFull wid90 flexNoW cGap2v"
@@ -1993,7 +1994,7 @@ export default function ScheduleForm({
                           />
                         </div>
                       </slot>
-                    </td>{" "}
+                    </td>
                     <td className="tabCel">
                       <slot
                         className="consSlot lcPersist htFull wid90 flexNoW cGap2v"
@@ -2018,7 +2019,7 @@ export default function ScheduleForm({
                           />
                         </div>
                       </slot>
-                    </td>{" "}
+                    </td>
                     <td className="tabCel">
                       <slot
                         className="consSlot lcPersist htFull wid90 flexNoW cGap2v"
@@ -2043,7 +2044,7 @@ export default function ScheduleForm({
                           />
                         </div>
                       </slot>
-                    </td>{" "}
+                    </td>
                     <td className="tabCel">
                       <slot
                         className="consSlot lcPersist htFull wid90 flexNoW cGap2v"
@@ -2068,7 +2069,7 @@ export default function ScheduleForm({
                           />
                         </div>
                       </slot>
-                    </td>{" "}
+                    </td>
                     <td className="tabCel">
                       <slot
                         className="consSlot lcPersist htFull wid90 flexNoW cGap2v"
@@ -2093,7 +2094,7 @@ export default function ScheduleForm({
                           />
                         </div>
                       </slot>
-                    </td>{" "}
+                    </td>
                     <td className="tabCel lastConsDayCont">
                       <slot
                         className="consSlot lcPersist htFull wid90 flexNoW cGap2v"

@@ -32,7 +32,15 @@ export default function BtnAddPac({
       setFormElement(form);
     };
     loadForm();
-    syncAriaStates([document.getElementById("addAppointBtn")!]);
+    const aptBtn = document.getElementById("addAppointBtn");
+    if (aptBtn instanceof HTMLElement) {
+      syncAriaStates([aptBtn]);
+    } else {
+      setTimeout(() => {
+        const aptBtn = document.getElementById("addAppointBtn");
+        if (aptBtn instanceof HTMLElement) syncAriaStates([aptBtn]);
+      }, 2000);
+    }
   }, [pressState, toggleForm]);
   return context === true ? (
     <>

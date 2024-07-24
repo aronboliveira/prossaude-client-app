@@ -3,6 +3,7 @@ import { User } from "@/lib/global/declarations/classes";
 import UserProfilePanelWrapper from "../../components/interactive/panel/UserProfilePanelWrapper";
 import TipsBtnWrapper from "../../components/interactive/panel/TipsBtnWrapper";
 import MainFormPanel from "../../components/mainPanel/MainFormPanel";
+import GenericErrorComponent from "../../components/error/GenericErrorComponent";
 
 export const fillScheduleState = { acc: 0 };
 export const formData: { [key: string]: string } = {};
@@ -38,9 +39,13 @@ export const user = await (async () => {
 })();
 
 export default function PanelPage({ data }: { data: any }): JSX.Element {
-  console.log(data);
+  console.log(!data && "No fetched static data");
   return (
-    <ErrorBoundary FallbackComponent={() => <div>Erro!</div>}>
+    <ErrorBoundary
+      FallbackComponent={() => (
+        <GenericErrorComponent message="Error rendering Panel Page" />
+      )}
+    >
       <div role="group" className="pad1pc" id="bgDiv">
         <header className="flexJBt flexAlItSt flexNoWC600Q flexAlItCt600Q pd-2vQ460 rGap1v mg-0lm601Q pd-1rbm601Q">
           <div
