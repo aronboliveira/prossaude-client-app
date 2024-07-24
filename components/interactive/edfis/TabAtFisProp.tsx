@@ -1,3 +1,5 @@
+"use client";
+
 import { PayloadCounterAction } from "@/lib/global/declarations/interfaces";
 import { nullishDiv } from "@/lib/global/declarations/types";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";

@@ -399,10 +399,123 @@ class AGData(GenderedFormData):
   def save(self, *args, **kwargs):
     self.clean()
     super.save(*args, **kwargs)
-class EDData(GenderedFormData):
-  atv_lvl = models.CharField(max_length=255, default="undefined", editable=True, unique=False, choices=[
-    ('leve', 'Leve'), ('moderado', 'Moderado'), ('intenso', 'Intenso'),
-    ('muitoIntenso', 'Muito intenso'), ('sedentario', 'Sedentário')])
+class ENData(GenderedFormData):
+  rows = [
+    [2, "subescap"],
+    [3, "axilm"],
+    [4, "coxa"],
+    [5, "tricp"],
+    [6, "suprail"],
+    [7, "peit"],
+    [8, "abd"],
+    [9, "sum"],
+    [2, "imc"],
+    [3, "mlg"],
+    [4, "pgc"],
+    [5, "tmb"],
+    [6, "get"],
+    [2, "peso"],
+    [3, "altura"],
+    [4, "tórax"],
+    [5, "cintura"],
+    [6, "quadril"],
+    [7, "cintura / quadril"],
+    [8, "braço"],
+    [9, "antebraço"],
+    [10, "coxa"],
+    [11, "panturrilha"],
+    [2, "pa"],
+    [3, "fc"],
+  ]
+  for r in [1, 2, 3, 4]:
+    for c, lab in rows:
+      locals()[f'{lab}_{r}_{c}'] = models.CharField(max_length=255, default="0", editable=True, unique=False, blank=True, null=True)
+  for m in ['min', 'max']:
+    for f in [f'ref_dia_{m}', f'ref_comp_dia_{m}', f'agua_dia_{m}', f'ur_dia_${m}', f'ur_interv_${m}', f'ev_dia_{m}', f'ev_interv_{m}']:
+      locals()[f'{f}'] = models.CharField(max_length=255, default="0", editable=True, unique=False, blank=False, null=False)
+  for i in ['diur', 'ur_cor', 'protur_lvl']:
+    locals()[f'{i}'] = models.CharField(max_length=255, default="undefined", editable=True, unique=False, blank=True, null=True)
+  for b in ['protur', 'prour_persist', 'protur_ort', 'protur_tr']:
+    locals()[f'{b}'] = models.BooleanField(default=False, editable=True, unique=False, blank=True, null=True)
+  num_cons = models.CharField(max_length=4, default="1", editable=True, unique=False, blank=False, null=False)
+  trio_read_num_cons = models.CharField(max_length=4, default="1", editable=True, unique=False, blank=False, null=False)
+  body_type = models.CharField(max_length=255, default="undefined", editable=True, unique=False, blank=False, null=False, 
+    choices=[
+    ('masculino', 'Masculino | Masculinizado'), ('feminino', 'Feminino | Feminilizado'), ('neutro', 'Neutro')])  
+  naf = models.CharField(max_length=255, default="undefined", editable=True, unique=False, blank=False, null=False, 
+    choices=[
+    ('sedentario', 'Sedentário'), ('leve', 'Leve'), ('moderado', 'Moderado'), ('intenso', 'Intenso'), ('muitoIntenso', 'Muito Intenso')])  
+  factor_atl = models.CharField(max_length=255, default="undefined", editable=True, unique=False, blank=False, null=False, 
+    choices=[
+    ('peso', 'Peso'), ('mlg', 'MLG')])
+  gord_corp_lvl = models.CharField(max_length=255, default="undefined", editable=True, unique=False, blank=False, null=False, 
+    choices=[
+    ('abaixo', 'Com Baixo Peso'), ('eutrofico', 'Eutrófico'), ('sobrepeso', 'Com Sobrepeso (não Obeso)'), 
+    ('obeso1', 'Obeso Grau 1'), ('obeso2', 'Obeso Grau 2'), ('obeso3', 'Obeso Grau 3')]) 
+  protocolo = models.CharField(max_length=255, default="undefined", editable=True, unique=False, blank=False, null=False, 
+    choices=[
+    ('pollock3', 'Jackson/Pollock 3'), ('pollock7', 'Jackson/Pollock 7')])
+  form_tmb = models.CharField(max_length=255, default="undefined", editable=True, unique=False, blank=False, null=False, 
+    choices=[
+    ('harrisBenedict', 'Harris-Benedict'), ('mifflinStJeor', 'Mifflin-St.Jeor'), ('tinsley', 'Tinsley')])  
+  def __new__(cls, *args, **kwargs):
+    data = kwargs.get('data', {})
+    new_cls = super(OdData, cls).__new__(cls, *args, **kwargs)
+    cls.add_comorb_fields(cls, data)
+    cls.add_atvr_fields(cls, data)
+    cls.add_atvp_fields(cls, data)
+    return new_cls
+  @classmethod
+  def add_comorb_fields(cls, data):
+    count_comorb = extract_count_data(data)
+    for _ in range(0, count_comorb + 1):
+      #precisa especificar posteriormente date como dateField and sig como possivelmente fileField 
+      for prefix in ['comorb', 'date']:
+        add_dynamic_fields(cls, prefix, count_comorb, models.CharField, max_length=255, default="null", blank=False, null=False)
+  @classmethod
+  def add_atvr_fields(cls, data):
+    count_atvr = extract_count_data(data)
+    for _ in range(0, count_atvr + 1):
+      for prefix in ['atvr', 'atvr_n_week', 'atvr_min', 'atvr_months']:
+        add_dynamic_fields(cls, prefix, count_atvr, models.CharField, max_length=255, default="null", blank=False, null=False)
+  @classmethod
+  def add_atvp_fields(cls, data):
+    count_atvp = extract_count_data(data)
+    for _ in range(0, count_atvp + 1):
+      for prefix in ['atvp', 'atvp_n_week', 'atvp_min', 'atvp_months']:
+        add_dynamic_fields(cls, prefix, count_atvp, models.CharField, max_length=255, default="null", blank=False, null=False)
+  def clean(self):
+    super().clean()
+    for m in ['min', 'max']:
+      for f in [f'ref_dia_{m}', f'ref_comp_dia_{m}', f'agua_dia_{m}', f'ur_dia_${m}', f'ur_interv_${m}', f'ev_dia_{m}', f'ev_interv_{m}']:
+        if self[f'{f}'] == None or self[f'{f}'] == '' or float(self[f'{f}']) < 0:
+          setattr(self, self[f'{f}'], '0')
+    for r in [1, 2, 3, 4]:
+      for c, lab in self.rows:
+        setattr(self, self[f'{lab}_{r}_{c}'], re.sub(r"[^0-9\.]", "", getattr(self, self[f'{lab}_{r}_{c}'])))
+        if float(self[f'{lab}_{r}_{c}']) < 0 or self[f'{lab}_{r}_{c}'] == None or self[f'{lab}_{r}_{c}'] == '':
+          setattr(self, self[f'{lab}_{r}_{c}'], '0')
+    for i in ['diur', 'ur_cor', 'protur_lvl']:
+      if self[f'{i}'] == None or self[f'{i}'] == '':
+        self[f'{i}'] = 'undefined'
+    self.num_cons = re.sub(r'[^0-9]', "", getattr(self, self.num_cons))
+    if self.num_cons == None or self.num_cons == '':
+      setattr(self, self.num_cons, '1')
+    self.trio_read_num_cons = re.sub(r'[^0-9]', "", getattr(self, self.trio_read_num_cons))
+    if self.trio_read_num_cons == None or self.trio_read_num_cons == '':
+      setattr(self, self.trio_read_num_cons, '1')
+    self.naf = self.naf if self.naf in ['sedentario', 'leve', 'moderado', 'intenso', 'muitoIntenso'] else 'undefined'
+    self.body_type = self.body_type if self.body_type in ['masculino', 'feminino', 'neutro'] else 'undefined'
+    self.factor_atl = self.factor_atl if self.factor_atl in ['peso', 'mlg'] else 'undefined'
+    self.gord_corp_lvl = self.gord_corp_lvl if self.gord_corp_lvl in ['abaixo', 'eutrofico', 'sobrepeso', 'obeso1', 'obeso2', 'obeso3'] else 'undefined'
+    self.protocolo = self.protocolo if self.protocolo in ['pollock3', 'pollock7'] else 'undefined'
+    self.form_tmb = self.form_tmb if self.form_tmb in ['harrisBenedict', 'mifflinStJeor', 'tinsley'] else 'undefined'
+  def __init__(self, *args, **kwargs):
+    super(ENData, self).__init__(*args, **kwargs)
+    self.clean()
+  def save(self, *args, **kwargs):
+    self.clean()
+    super().save(*args, **kwargs)
 class OdData(NamedFormData):
   TEETH_CHOICES = [
     ('higido', 'Hígido'),
@@ -434,7 +547,7 @@ class OdData(NamedFormData):
     count_trat = extract_count_data(data)
     for _ in range(0, count_trat + 1):
       for prefix in ['trat', 'date', 'sig']:
-        add_dynamic_fields(cls, prefix, count_trat, models.CharField, max_length=65535, blank=False, null=False)
+        add_dynamic_fields(cls, prefix, count_trat, models.CharField, max_length=65535, default="null", blank=False, null=False)
   def clean(self):
     super().clean()
     replacements = {

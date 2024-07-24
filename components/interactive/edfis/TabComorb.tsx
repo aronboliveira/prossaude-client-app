@@ -1,3 +1,5 @@
+"use client";
+
 import { CounterAction } from "@/lib/global/declarations/interfaces";
 import { nullishFs } from "@/lib/global/declarations/types";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";

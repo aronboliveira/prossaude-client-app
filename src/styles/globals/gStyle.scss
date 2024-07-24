@@ -2210,6 +2210,10 @@ td,
   }
 }
 
+#tipsDlg {
+  min-width: 34rem;
+}
+
 #userWarn {
   padding-top: 0.4rem;
 }
@@ -2641,6 +2645,13 @@ $baseMax750InpWidth: 85vw;
 
   #dateHeader {
     min-width: 40vw;
+  }
+}
+
+@media screen and (max-width: 650px) {
+  #tipsDlg {
+    min-width: 80vw;
+    overflow: auto;
   }
 }
 

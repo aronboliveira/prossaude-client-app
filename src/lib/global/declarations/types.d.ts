@@ -80,6 +80,46 @@ export type rMouseEvent = MouseEvent | React.MouseEvent;
 export type rDragEvent = DragEvent | React.DragEvent;
 export type pageCases = "login" | "base" | "ag" | "edfis" | "od" | "panel";
 export type quadrCases = "SupDir" | "SupEsq" | "InfDir" | "InfEsq";
+export type ctxRot =
+  | "RefDia"
+  | "RefCompDia"
+  | "AguaDia"
+  | "UrDia"
+  | "UrInterv"
+  | "EvDia"
+  | "EvInterv";
+export type mainContextRot =
+  | "Diário"
+  | "Refeições Diárias"
+  | "Refeições Completas Diárias"
+  | "Litros de Água Diários"
+  | "Micções Diárias"
+  | "Intervalo entre Micções"
+  | "Evacuações Diárias"
+  | "Intervalo entre Evacuações";
+export type IndCases = "BTN" | "IMC" | "MLG" | "TMB" | "GET" | "PGC";
+export type validTabLabs =
+  | "PA"
+  | "FC"
+  | "Peso"
+  | "Altura"
+  | "Tórax"
+  | "Cintura"
+  | "Quadril"
+  | "Cintura / Quadril"
+  | "Antebraço"
+  | "Braço"
+  | "Panturrilha"
+  | "Coxa"
+  | "Peitoral"
+  | "Abdominal"
+  | "Soma"
+  | "Subescapular"
+  | "Axilar Média"
+  | "Tríciptal"
+  | "Suprailíaca"
+  | Exclude<IndCases, "BTN">;
+export type TabCelCtxs = "ProgSVi" | "MedAnt" | "DCut" | "IndPerc";
 export type pageStyleCases =
   | "Login Page Style"
   | "Base Page Style"
@@ -87,4 +127,3 @@ export type pageStyleCases =
   | "EN Page Style"
   | "Od Page Style"
   | "Panel Page Style";
-export type IndCases = "BTN" | "IMC" | "MLG" | "TMB" | "GET" | "PGC";

@@ -1,5 +1,12 @@
 import { SetStateAction } from "react";
-import { looseNum, quadrCases, targEl } from "./types";
+import {
+  TabCelCtxs,
+  ctxRot,
+  looseNum,
+  quadrCases,
+  targEl,
+  validTabLabs,
+} from "./types";
 
 export interface DocumentNodeProps {
   html: string;
@@ -28,7 +35,13 @@ export interface DlgProps {
   dispatch: Dispatch<SetStateAction<boolean>>;
 }
 export interface ENTabsProps {
+  edIsAutoCorrectOn: boolean;
   isAutoFillActive: boolean;
+  areColGroupsSimilar: boolean;
+  areNumConsOpsValid: boolean;
+  numColsCons: number;
+  numCons: number;
+  numConsLastOp: number;
   numCol: number;
   IMC: number;
   MLG: number;
@@ -84,3 +97,47 @@ export interface qrProps {
 export interface qrInpProps extends qrProps {
   num: looseNum;
 }
+export interface RotProps {
+  quest:
+    | "Faz quantas refeições por dia"
+    | "Quantas das refeições diárias são completas"
+    | "Ingere quantos litros de água por dia"
+    | "Quantas micções por dia"
+    | "Qual é o intervalo mínimo (em horas) entre cada micção?"
+    | "Evacua quantas vezes por dia"
+    | "Qual é o intervalo mínimo (em horas) entre evacuações?";
+  ctx: ctxRot;
+  grp?: "Alim";
+  ur?: {
+    ctx: "Elim" | "Interv";
+  };
+  ev?: {
+    ctx: "Elim" | "Interv";
+  };
+}
+export interface InpRotProps extends RotProps {
+  maxLength: number;
+  max: number;
+  isMax?: boolean;
+  minLength?: number;
+  min?: number;
+  pattern?: string;
+  flags?: string;
+}
+export interface TabInpProps {
+  nRow: number;
+  nCol: number;
+}
+export interface TabBtnProps extends TabInpProps {
+  lab: validTabLabs;
+}
+export interface TabCelProps extends TabInpProps {
+  ctx: TabCelCtxs;
+}
+export interface ThProps extends TabCelProps {
+  lab?: validTabLabs;
+}
+export interface TdProps extends TabCelProps {
+  lab: validTabLabs;
+}
+export interface ColProps extends Omit<ThProps, "nRow"> {}
