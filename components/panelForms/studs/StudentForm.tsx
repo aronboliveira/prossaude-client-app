@@ -275,7 +275,7 @@ export default function StudentForm({
                 id="deactAutocorrectBtnStud"
                 title="Correção automática de Nomes"
                 data-title="Autocorreção(Estudante)"
-              />{" "}
+              />
               <strong>Autocorreção</strong>
             </span>
             <span
@@ -290,7 +290,7 @@ export default function StudentForm({
                 id="deactAutofilltBtnStud"
                 title="Correção automática de CPF, Telefone e E-mail"
                 data-title="Autopreenchimento(Estudante)"
-              />{" "}
+              />
               <strong>Autopreenchimento</strong>
             </span>
           </div>
@@ -302,6 +302,7 @@ export default function StudentForm({
                 type="text"
                 list="listStudRegstName"
                 id="inpNameStud"
+                name="name"
                 className="form-control autocorrectAll ssPersist minText maxText patternText"
                 placeholder="Preencha com o nome completo"
                 autoFocus
@@ -325,6 +326,7 @@ export default function StudentForm({
                 type="text"
                 list="listStudRegstCPF"
                 id="inpCPFStud"
+                name="cpf"
                 className="form-control ssPersist minText maxText patternText"
                 minLength={15}
                 maxLength={16}
@@ -346,6 +348,7 @@ export default function StudentForm({
               <input
                 type="number"
                 id="inpDRE"
+                name="dre"
                 className="form-control ssPersist minText maxText patternText"
                 list="listStudRegstDRE"
                 minLength={1}
@@ -368,6 +371,7 @@ export default function StudentForm({
                 type="tel"
                 list="listStudRegstTel"
                 id="inpTel"
+                name="telephone"
                 pattern="/^(\+\d{2}\s?)?(\(\d{2}\)\s?)?\d{3,5}[-\s]?\d{4}$/"
                 className="form-control ssPersist minText maxText patternText"
                 minLength={8}
@@ -392,6 +396,7 @@ export default function StudentForm({
                 type="email"
                 list="listStudRegstEmail"
                 id="inpEmailStud"
+                name="email"
                 className="form-control ssPersist"
                 placeholder="Preencha com o E-mail para contato"
                 autoComplete="email"
@@ -411,6 +416,7 @@ export default function StudentForm({
                 type="text"
                 list="listCoursesStud"
                 id="inpCourseStud"
+                name="origin"
                 className="form-control ssPersist minText maxText patternText"
                 minLength={3}
                 maxLength={99}
@@ -437,6 +443,7 @@ export default function StudentForm({
               </strong>
               <select
                 id="inpAtuacaoStud"
+                name="area"
                 className="form-select ssPersist"
                 data-title="Área de Atuação do Estudante"
                 required
@@ -453,6 +460,7 @@ export default function StudentForm({
               <input
                 type="number"
                 id="inpPeriodo"
+                name="curr_semester"
                 min={1}
                 max={20}
                 minLength={1}
@@ -491,6 +499,7 @@ export default function StudentForm({
               <input
                 type="text"
                 id="inpEntr"
+                name="beginning_semester"
                 className="form-control ssPersist"
                 placeholder="Preencha com o Período do Aluno (ano.semestre, em número) na sua entrada"
                 data-title="Período de Entrada do aluno"
@@ -512,6 +521,7 @@ export default function StudentForm({
               <input
                 type="date"
                 id="inpDayEntr"
+                name="beginning_day"
                 className="form-control forceInvert ssPersist maxCurrDate"
                 placeholder="Preencha com o Dia de Entrada do Aluno no projeto"
                 data-title="Dia de Entrada do aluno"
@@ -535,9 +545,11 @@ export default function StudentForm({
                   >
                     Quarta-feira
                   </slot>
+                  {/* //TODO PRECISA CONCATENAR NOMES DAS CHECKBOXES COM CHECK */}
                   <input
                     type="checkbox"
                     id="checkQuarta"
+                    name="quarta-feira"
                     className="form-check-input mdGreen ssPersist"
                     data-title="Quarta-feira"
                   />
@@ -555,6 +567,7 @@ export default function StudentForm({
                   <input
                     type="checkbox"
                     id="checkSexta"
+                    name="sexta-feira"
                     className="form-check-input mdGreen ssPersist"
                     data-title="Sexta-feira"
                   />

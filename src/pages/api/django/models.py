@@ -49,6 +49,13 @@ class User(Person):
     ('sexta-feira', 'Sexta-feira'),
     ('quarta-feira_sexta-feira', 'Quarta-feira e Sexta-feira')
   ])
+  origin = models.CharField(max_length=255, default="undefined", unique=False, blank=False, null=False, choices=[
+    ('edfis', 'Educação Física'),
+    ('med', 'Medicina'),
+    ('nut', 'Nutrição'),
+    ('od', 'Odontologia'),
+    ('psi', 'Psicologia')
+  ])
   authorized = models.BooleanField(editable=True, blank=False, null=False)
   class Meta:
     abstract = True
@@ -63,6 +70,7 @@ class User(Person):
     if self.beginning_day and self.beginning_day > today:
         self.beginning_day = today
     self.activity_day = self.activity_day if self.activity_day in ['quarta-feira', 'sexta-feira', 'quarta-feira_sexta-feira'] else 'quarta-feira'
+    self.origin = self.origin if self.origin in ['edfis', 'med', 'nut', 'od', 'psi'] else 'undefined'
     if not self.authorized:
         self.authorized = False  
   def __init__(self, *args, **kwargs):
@@ -83,12 +91,16 @@ class User(Person):
       super().save(*args, **kwargs)
 class Student(User):
   dre = models.CharField(max_length=9, unique=True, blank=False, null=False)
+  curr_semester= models.CharField(max_length=3, unique=False, blank=False, null=False)
   class Meta:
     verbose_name = 'Student'
     verbose_name_plural = 'Students'
   def clean(self):
     super().clean()
-    self.dre = re.sub(r"[^\d]", "", self.dre)
+    for f in ['dre', 'curr_semester']:
+      setattr(self, self[f'{f}'], re.sub(r'[^0-9]', '', getattr(self, self[f'{f}'])))
+    self.dre = self.dre[:8]
+    self.curr_semester = self.curr_semester[:2]
   def __init__(self, *args, **kwargs):
     super().__init__(*args, **kwargs)
     self.clean()
@@ -173,6 +185,33 @@ class Appointment(models.Model):
   class Meta:
     verbose_name = 'Appointment'
     verbose_name_plural = 'Appointments'
+class Schedule(models.Model):
+  working_month = models.CharField(max_length=255, default='undefined', unique=False, blank=False, null=False,
+    choices=[
+      ('jan', 'Janeiro'),
+      ('feb', 'Fevereiro'),
+      ('mar', 'Março'),
+      ('apr', 'Abril'),
+      ('may', 'Maio'),
+      ('jun', 'Junho'),
+      ('jul', 'Julho'),
+      ('aug', 'Agosto'),
+      ('sep', 'Setembro'),
+      ('oct', 'Outubro'),
+      ('nov', 'Novembro'),
+      ('dec', 'Dezembro')
+    ])
+  for c in range(1, 10):
+    locals()[f'date_h_1_{c}'] = models.DateField(default=f"{date.year()}-00-00", editable=True, unique=False, blank=True, null=True)
+  def clean(self):
+    super().clean()
+    self.working_month = self.working_month if self.working_month in ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'] else 'undefined'
+  def __init__ (self, *args, **kwargs):
+    super().__init__(*args, **kwargs)
+    self.clean()
+  def save(self, *args, **kwargs):
+    self.clean()
+    super().save(*args, *kwargs)
 class NamedFormData(models.Model):
   id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True, blank=False, null=False)
   for und255 in ['first_name', 'additional_name', 'family_name', 'full_name', 'social_name', 'confirm_loc']:

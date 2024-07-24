@@ -507,7 +507,7 @@ export default function FormDlg({
                 data-title="Autocorreção(Consulta)"
                 ref={switchACConsRef}
                 onChange={() => toggleACCons(isAutocorrectConsOn)}
-              />{" "}
+              />
               <strong>Autocorreção</strong>
             </span>
             <span
@@ -524,7 +524,7 @@ export default function FormDlg({
                 data-title="Autopreenchimento(Consulta)"
                 ref={switchAFConsRef}
                 onChange={() => toggleAFCons(isAutofillConsOn)}
-              />{" "}
+              />
               <strong>Autopreenchimento</strong>
             </span>
           </div>
@@ -551,6 +551,7 @@ export default function FormDlg({
                     className="flexNoWRSwitch cGap5"
                     id="cpfBodyDiv"
                   >
+                    {/* //TODO PRECISA AJUSTA NAMES... */}
                     <input
                       type="text"
                       id="inpCPFPac"

@@ -278,7 +278,7 @@ export default function ProfForm({
                 id="deactAutocorrectBtnProf"
                 title="Correção automática de Nomes"
                 data-title="Autocorreção(Profissional)"
-              />{" "}
+              />
               <strong>Autocorreção</strong>
             </span>
             <span
@@ -293,7 +293,7 @@ export default function ProfForm({
                 id="deactAutofilltBtnProf"
                 title="Correção automática de CPF, Telefone e E-mail"
                 data-title="Autopreenchimento(Profissional)"
-              />{" "}
+              />
               <strong>Autopreenchimento</strong>
             </span>
           </div>
@@ -304,6 +304,7 @@ export default function ProfForm({
               <input
                 type="text"
                 id="inpNameProf"
+                name="name"
                 className="form-control autocorrectAll ssPersist minText maxText patternText"
                 placeholder="Preencha com o nome completo"
                 autoFocus
@@ -325,6 +326,7 @@ export default function ProfForm({
               <input
                 type="text"
                 id="inpCPFProf"
+                name="cpf"
                 minLength={15}
                 maxLength={16}
                 pattern="^(\d{3}\.?\d{3}\.?\d{3}-?\d{2})$"
@@ -345,6 +347,7 @@ export default function ProfForm({
                 type="tel"
                 list="listProfRegstTel"
                 id="inpTel"
+                name="telephone"
                 className="form-control ssPersist minText maxText patternText"
                 minLength={8}
                 maxLength={20}
@@ -366,6 +369,7 @@ export default function ProfForm({
                 type="email"
                 list="listProfRegstEmail"
                 id="inpEmailProf"
+                name="email"
                 className="form-control ssPersist"
                 maxLength={20}
                 placeholder="Preencha com o E-mail para contato"
@@ -386,6 +390,7 @@ export default function ProfForm({
                 type="text"
                 list="listCoursesProf"
                 id="inpCourseProf"
+                name="origin"
                 minLength={3}
                 maxLength={99}
                 className="form-control ssPersist minText maxText patternText"
@@ -410,6 +415,7 @@ export default function ProfForm({
               <strong id="titleActProf">Área de atuação:</strong>
               <select
                 id="inpAtuacao"
+                name="area"
                 className="form-select ssPersist"
                 data-title="Área de Atuação do Profissional"
               >
@@ -425,6 +431,7 @@ export default function ProfForm({
               <input
                 type="text"
                 id="inpEntr"
+                name="beginning_semester"
                 maxLength={7}
                 className="form-control ssPersist"
                 placeholder="Preencha com o Período (do Calendário) na entrada"
@@ -438,6 +445,7 @@ export default function ProfForm({
               <input
                 type="date"
                 id="inpDayEntrProf"
+                name="beginning_day"
                 className="form-control ssPersist maxCurrDate"
                 placeholder="Preencha com o Dia de Entrada do Profissional no projeto"
                 data-title="Dia de Entrada do Profissional"

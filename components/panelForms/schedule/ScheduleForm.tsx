@@ -48,12 +48,14 @@ import EraseAptBtn from "./EraseAptBtn";
 import ReseterBtn from "../defs/ReseterBtn";
 import { globalDataProvider, panelRoots } from "../defs/client/SelectPanel";
 import { ErrorBoundary } from "react-error-boundary";
+import ThDate from "./ThDate";
 
 export default function ScheduleForm({
   mainRoot,
   userClass = "estudante",
   context = false,
 }: ScheduleFormProps): JSX.Element {
+  const cols = [1, 2, 3, 4, 5, 6, 7, 8, 9];
   const [showForm] = useState(true);
   const formRef = useRef<nullishForm>(null);
   const workingDefinitionsRef = useRef<HTMLDivElement | null>(null);
@@ -817,6 +819,7 @@ export default function ScheduleForm({
                       <select
                         className="form-select widFull900Q widQ460FullW lcPersist"
                         id="monthSelector"
+                        name="working_month"
                         title="Selecione aqui o mês de trabalho"
                         data-title="Mês da tabela de agendamento"
                         ref={monthRef}
@@ -1002,15 +1005,13 @@ export default function ScheduleForm({
                 id="mainConsDaysCont"
               >
                 <colgroup>
-                  <col></col>
-                  <col></col>
-                  <col></col>
-                  <col></col>
-                  <col></col>
-                  <col></col>
-                  <col></col>
-                  <col></col>
-                  <col></col>
+                  {cols.map(nCol => (
+                    <col
+                      id={`schedule-col-${nCol}`}
+                      data-col={nCol}
+                      key={`schedule_col__${nCol}`}
+                    ></col>
+                  ))}
                 </colgroup>
                 <thead className="thead-light">
                   <tr>
@@ -1019,177 +1020,17 @@ export default function ScheduleForm({
                         <strong>Horário</strong>
                       </div>
                     </th>
-                    <th scope="col">
-                      <label
-                        className="consWeekday"
-                        htmlFor="order_dayfInp"
-                        contentEditable={true}
-                      ></label>
-                      <div role="group" className="flexAlItCt">
-                        <input
-                          type="date"
-                          className="form-control dayTabRef lcPersist noInvert flScape90"
-                          id="order_dayfInp"
-                          data-title="Primeiro dia do mês"
+                    {cols.map((nCol, _, arr) =>
+                      nCol === arr.slice(-1)[0] ? (
+                        <ThDate
+                          nCol={nCol}
+                          last={true}
+                          key={`th_date__${nCol}`}
                         />
-                        <span
-                          role="textbox"
-                          className="alertSpan flexBasis10 widMax10C widMin3C"
-                        ></span>
-                      </div>
-                    </th>
-                    <th scope="col">
-                      <label
-                        className="consWeekday"
-                        htmlFor="order_dayfInp"
-                        contentEditable={true}
-                      ></label>
-                      <div role="group" className="flexAlItCt">
-                        <input
-                          type="date"
-                          className="form-control dayTabRef lcPersist noInvert flScape90"
-                          id="order_dayfInp"
-                          data-title="Segundo dia do mês"
-                        />
-                        <span
-                          role="textbox"
-                          className="alertSpan flexBasis10 widMax10C widMin3C"
-                        ></span>
-                      </div>
-                    </th>
-                    <th scope="col">
-                      <label
-                        className="consWeekday"
-                        htmlFor="order_dayfInp"
-                        contentEditable={true}
-                      ></label>
-                      <div role="group" className="flexAlItCt">
-                        <input
-                          type="date"
-                          className="form-control dayTabRef lcPersist noInvert flScape90"
-                          id="order_dayfInp"
-                          data-title="Terceiro dia do mês"
-                        />
-                        <span
-                          role="textbox"
-                          className="alertSpan flexBasis10 widMax10C widMin3C"
-                        ></span>
-                      </div>
-                    </th>
-                    <th scope="col">
-                      <label
-                        className="consWeekday"
-                        htmlFor="order_dayfInp"
-                        contentEditable={true}
-                      ></label>
-                      <div role="group" className="flexAlItCt">
-                        <input
-                          type="date"
-                          className="form-control dayTabRef lcPersist noInvert flScape90"
-                          id="order_dayfInp"
-                          data-title="Quarto dia do mês"
-                        />
-                        <span
-                          role="textbox"
-                          className="alertSpan flexBasis10 widMax10C widMin3C"
-                        ></span>
-                      </div>
-                    </th>
-                    <th scope="col">
-                      <label
-                        className="consWeekday"
-                        htmlFor="order_dayfInp"
-                        contentEditable={true}
-                      ></label>
-                      <div role="group" className="flexAlItCt">
-                        <input
-                          type="date"
-                          className="form-control dayTabRef lcPersist noInvert flScape90"
-                          id="order_dayfInp"
-                          data-title="Quinto dia do mês"
-                        />
-                        <span
-                          role="textbox"
-                          className="alertSpan flexBasis10 widMax10C widMin3C"
-                        ></span>
-                      </div>
-                    </th>
-                    <th scope="col">
-                      <label
-                        className="consWeekday"
-                        htmlFor="order_dayfInp"
-                        contentEditable={true}
-                      ></label>
-                      <div role="group" className="flexAlItCt">
-                        <input
-                          type="date"
-                          className="form-control dayTabRef lcPersist noInvert flScape90"
-                          id="order_dayfInp"
-                          data-title="Sexto dia do mês"
-                        />
-                        <span
-                          role="textbox"
-                          className="alertSpan flexBasis10 widMax10C widMin3C"
-                        ></span>
-                      </div>
-                    </th>
-                    <th scope="col">
-                      <label
-                        className="consWeekday"
-                        htmlFor="order_dayfInp"
-                        contentEditable={true}
-                      ></label>
-                      <div role="group" className="flexAlItCt">
-                        <input
-                          type="date"
-                          className="form-control dayTabRef lcPersist noInvert flScape90"
-                          id="order_dayfInp"
-                          data-title="Sétimo dia do mês"
-                        />
-                        <span
-                          role="textbox"
-                          className="alertSpan flexBasis10 widMax10C widMin3C"
-                        ></span>
-                      </div>
-                    </th>
-                    <th scope="col">
-                      <label
-                        className="consWeekday"
-                        htmlFor="order_dayfInp"
-                        contentEditable={true}
-                      ></label>
-                      <div role="group" className="flexAlItCt">
-                        <input
-                          type="date"
-                          className="form-control dayTabRef lcPersist noInvert flScape90"
-                          id="order_dayfInp"
-                          data-title="Oitavo dia do mês"
-                        />
-                        <span
-                          role="textbox"
-                          className="alertSpan flexBasis10 widMax10C widMin3C"
-                        ></span>
-                      </div>
-                    </th>
-                    <th className="tabCel lastConsDayCont" scope="col">
-                      <label
-                        className="consWeekday"
-                        htmlFor="order_dayfInp"
-                        contentEditable={true}
-                      ></label>
-                      <div role="group" className="flexAlItCt">
-                        <input
-                          type="date"
-                          className="form-control dayTabRef lcPersist noInvert flScape90"
-                          id="order_dayfInp"
-                          data-title="Nono dia do mês (ignorar se 01)"
-                        />
-                        <span
-                          role="textbox"
-                          className="alertSpan flexBasis10 widMax10C widMin3C"
-                        ></span>
-                      </div>
-                    </th>
+                      ) : (
+                        <ThDate nCol={nCol} key={`th_date__${nCol}`} />
+                      )
+                    )}
                   </tr>
                 </thead>
                 <tbody id="tbSchedule">
