@@ -36,6 +36,16 @@ export interface ScheduleFormProps extends GlobalFormProps {
   context: boolean;
 }
 
+export interface HrRowProps extends GlobalFormProps {
+  nHr: 18 | 19 | 20 | 21;
+  nRow: number;
+  last?: boolean;
+}
+
+export interface HrCelProps extends HrRowProps {
+  nCol: number;
+}
+
 export interface DataContextType {
   formData: FormData;
   updateFormData: (newData: FormData) => void;

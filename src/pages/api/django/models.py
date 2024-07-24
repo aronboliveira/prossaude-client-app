@@ -202,7 +202,11 @@ class Schedule(models.Model):
       ('dec', 'Dezembro')
     ])
   for c in range(1, 10):
-    locals()[f'date_h_1_{c}'] = models.DateField(default=f"{date.year()}-00-00", editable=True, unique=False, blank=True, null=True)
+    locals()[f'date_h_1_{c}'] = models.DateField(default=f"{date.year()}-00-00", editable=True, unique=False, blank=False, null=False)
+  for c in range(1, 10):
+    for h in [18, 19, 20, 21]:
+      locals()[f'date_{h}-00_{c}'] = models.DateField(default=f"{date.year()}-00-00", editable=True, unique=False, blank=True, null=True)
+      locals()[f'date_conf_{h}-00_{c}'] = models.BooleanField(default=False, editable=False, unique=False, blank=True, null=True)
   def clean(self):
     super().clean()
     self.working_month = self.working_month if self.working_month in ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'] else 'undefined'

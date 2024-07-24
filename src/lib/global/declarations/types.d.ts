@@ -127,3 +127,4 @@ export type pageStyleCases =
   | "EN Page Style"
   | "Od Page Style"
   | "Panel Page Style";
+export type validSchedHours = 18 | 19 | 20 | 21;
