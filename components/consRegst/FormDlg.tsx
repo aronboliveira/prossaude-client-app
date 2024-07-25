@@ -535,7 +535,7 @@ export default function FormDlg({
         </div>
         <fieldset className="flexNoWC">
           <hr />
-          <fieldset className="flexWC" id="bodyRegsPac">
+          <form className="flexWC" id="bodyRegsPac" name="cons_form" action="submit_cons_form" method="post" >
             <section className="flexWC" id="inpsRegsPacSec">
               <div role="group" className="flexWR" id="cpfPacDiv">
                 <div
@@ -1227,7 +1227,7 @@ export default function FormDlg({
                 </button>
               </div>
             </section>
-          </fieldset>
+          </form>
         </fieldset>
       </ErrorBoundary>
     </dialog>

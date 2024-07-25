@@ -69,6 +69,8 @@ import Protocolo from "../../components/interactive/edfis/client/Protocolo";
 import WatcherEN from "../../components/interactive/def/WatcherEN";
 import OpProtUr from "../../components/interactive/edfis/OpProtUr";
 import LockTabInd from "../../components/interactive/edfis/tabs/LobTackInd";
+import { validateForm } from "@/lib/global/handlers/gHandlers";
+import { handleSubmit } from "./api/ts/handlers";
 
 export const tabProps: ENTabsProps = {
   edIsAutoCorrectOn: true,
@@ -139,11 +141,19 @@ export default function EdFisNutPage(): JSX.Element {
           <SwitchDiv autofill={true} />
           <hr />
           <form
-            name="formEdFisName"
-            action="#"
+            name="ed_form"
+            action="submit_ed_form"
             method="post"
             target="_top"
             id="formEdFis"
+            autoComplete="on"
+            onSubmit={ev =>
+              validateForm(ev.currentTarget).then(validation =>
+                validation[0]
+                  ? handleSubmit('ed', new Map(), true)
+                  : ev.preventDefault()
+              )
+            }
           >
             <fieldset name="fsAnamGName" id="fsAnamGId" className="fsMain">
               <legend className="legMain form-padded" id="fsAnamGLeg">

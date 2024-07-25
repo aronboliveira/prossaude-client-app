@@ -57,10 +57,10 @@ export default function PacTabForm({
   return (
     <form
       id="formRemovePac"
-      name="formRemovePacName"
+      name="form_pacs_table"
       className="form-padded-nosb wid101"
-      action="#"
-      method="post"
+      action="patients_table"
+      method="get"
       target="_top"
       ref={formRef}
     >

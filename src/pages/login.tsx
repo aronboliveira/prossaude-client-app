@@ -9,10 +9,11 @@ export default function LoginPage(): JSX.Element {
         <main>
           <form
             id="outerLoginCont"
-            name="outerLoginContFormName"
-            action="#"
+            name="login_form"
+            action="check_user_validity"
             method="post"
             target="_self"
+            autoComplete="on"
           >
             <div role="group" id="loginCont">
               <section id="logoCont">

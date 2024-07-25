@@ -32,6 +32,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import GenericErrorComponent from "../../error/GenericErrorComponent";
 import ReseterBtn from "../defs/ReseterBtn";
 import { globalDataProvider, panelRoots } from "../defs/client/SelectPanel";
+import { handleSubmit } from "@/pages/api/ts/handlers";
 
 export default function ProfForm({
   mainRoot,
@@ -244,17 +245,22 @@ export default function ProfForm({
       {showForm && (
         <form
           id="formAddProf"
-          name="formProfName"
-          action="#"
+          name="form_prof"
+          action="submit_prof_form"
           method="post"
           target="_top"
+          autoComplete="on"
           ref={formRef}
           onSubmit={ev =>
             userClass === "coordenador" &&
             validateForm(
               document.getElementById("btnSubmitNewProf"),
               ev.currentTarget
-            ).then(validation => !validation[0] && ev.preventDefault())
+            ).then(validation =>
+              validation[0]
+                ? handleSubmit("profs", new Map(), true)
+                : ev.preventDefault()
+            )
           }
         >
           <div role="group" id="formAddProfHDiv" className="mg-3b">
@@ -460,14 +466,6 @@ export default function ProfForm({
                 type="submit"
                 id="btnSubmitNewProf"
                 className="btn btn-success flexAlItCt flexJC flexBasis50 widFull noInvert"
-                formAction="#"
-                onClick={ev =>
-                  userClass === "coordenador" &&
-                  validateForm(
-                    ev.currentTarget,
-                    ev.currentTarget.closest("form") ?? document
-                  ).then(validation => !validation[0] && ev.preventDefault())
-                }
               >
                 <strong>Finalizar Cadastro</strong>
               </button>

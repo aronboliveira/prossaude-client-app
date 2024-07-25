@@ -2,7 +2,6 @@
 
 import { addCanvasListeners } from "@/lib/global/gController";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
-import { validateForm } from "@/lib/global/handlers/gHandlers";
 
 export default function SectConfirmBtns(): JSX.Element {
   return (
@@ -15,11 +14,6 @@ export default function SectConfirmBtns(): JSX.Element {
         formAction="_self"
         formMethod="POST"
         accessKey="enter"
-        onClick={ev =>
-          validateForm(ev.currentTarget).then(
-            validation => !validation[0] && ev.preventDefault()
-          )
-        }
       >
         Submeter
       </button>

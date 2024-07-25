@@ -74,9 +74,9 @@ export default function RemoveStudForm({
   return (
     <form
       id="formRemoveStud"
-      name="formRemoveStudName"
-      action="#"
-      method="post"
+      name="form_studs_table"
+      action="studs_table"
+      method="get"
       target="_top"
       ref={formRef}
       className="form-padded-nosb wid101"

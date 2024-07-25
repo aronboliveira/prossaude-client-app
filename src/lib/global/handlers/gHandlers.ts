@@ -1029,21 +1029,40 @@ export function toggleConformDlg(): void {
 
 const borderColors: { [k: string]: string } = {};
 export async function validateForm(
-  subButton: targEl,
+  targ: targEl,
   scope: HTMLElement | Document = document
 ): Promise<[boolean, string[], Array<[string, string | File]>]> {
   const arrValidity: boolean[] = [];
   const invalidEntries: string[] = [];
   const validEntries: Array<[string, string | File]> = [];
-  if (
-    subButton instanceof HTMLButtonElement &&
-    (scope instanceof HTMLElement || scope instanceof Document)
-  ) {
+  let form;
+  try {
+    if (
+      !(
+        targ instanceof HTMLFormElement ||
+        targ instanceof HTMLButtonElement ||
+        (targ instanceof HTMLInputElement && targ.type === "submit")
+      )
+    )
+      throw elementNotFound(
+        targ,
+        `Validation of Submit Button instance`,
+        extLine(new Error())
+      );
+    if (targ instanceof HTMLFormElement) form = targ;
+    else form = targ.closest("form");
+    if (!(form instanceof HTMLFormElement)) scope.querySelector("form");
+    if (!(form instanceof HTMLFormElement))
+      throw elementNotFound(
+        form,
+        `Validation of Form instance`,
+        extLine(new Error())
+      );
     [
-      ...scope.querySelectorAll("input"),
-      ...scope.querySelectorAll("textarea"),
-      ...scope.querySelectorAll("select"),
-      ...scope.querySelectorAll("canvas"),
+      ...form.querySelectorAll("input"),
+      ...form.querySelectorAll("textarea"),
+      ...form.querySelectorAll("select"),
+      ...form.querySelectorAll("canvas"),
     ].forEach(entry => {
       const displayInvalidity = (valid: boolean = true) => {
         if (!valid && !(entry instanceof HTMLCanvasElement)) {
@@ -1522,12 +1541,10 @@ export async function validateForm(
         }
       }
     });
-  } else
-    elementNotFound(
-      subButton,
-      `Button for submiting form id ${subButton?.id ?? "UNIDENTIFIED"}`,
-      extLine(new Error())
-    );
+  } catch (e) {
+    console.error(`Error executing validateForm:\n${(e as Error).message}`);
+  }
+
   return [
     arrValidity.some(validity => validity === false) ? false : true,
     invalidEntries.map(invalidIdf => `${invalidIdf} \n`),

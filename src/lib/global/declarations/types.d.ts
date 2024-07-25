@@ -78,7 +78,8 @@ export type nullishArtc = HTMLElement & {
 export type nullishCanvas = HTMLCanvasElement | null;
 export type rMouseEvent = MouseEvent | React.MouseEvent;
 export type rDragEvent = DragEvent | React.DragEvent;
-export type pageCases = "login" | "base" | "ag" | "edfis" | "od" | "panel";
+export type pageCases = "login" | "base" | "ag" | "ed" | "od" | "panel";
+export type formCases = "studs" | "profs" | "patients" | pageCases;
 export type quadrCases = "SupDir" | "SupEsq" | "InfDir" | "InfEsq";
 export type ctxRot =
   | "RefDia"

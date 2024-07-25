@@ -11,12 +11,13 @@ import {
   callbackShowPw,
   callbackSubmitBtn,
 } from "@/lib/locals/loginPage/loginController";
-import { useRouter } from "next/router";
+// import { useRouter } from "next/router";
 import { basePath } from "../../../src/pages";
 import { nullishAnchor } from "@/lib/global/declarations/types";
+import { handleLogin } from "@/pages/api/ts/handlers";
 
 export default function LoginInputs(): JSX.Element {
-  const router = useRouter();
+  // const router = useRouter();
   const anchorRef = useRef<nullishAnchor>(null);
   useEffect(() => {
     try {
@@ -67,10 +68,11 @@ export default function LoginInputs(): JSX.Element {
             aria-label="email ou usuário"
             placeholder="Nome de Usuário"
             title="Por favor, preencha este
-			campo."
+			      campo."
             minLength={5}
             maxLength={30}
             data-title="Usuário"
+            autoComplete="username"
             required
           />
         </div>
@@ -141,13 +143,11 @@ export default function LoginInputs(): JSX.Element {
             href={`${basePath.path}/base`}
             style={{ color: "#ffff" }}
             onClick={ev => {
-              const autorizado = true;
-              if (autorizado) router.push("/base");
-              const loginForm = document.getElementById("outerLoginCont");
+              handleLogin(ev, true);
               callbackSubmitBtn(
                 ev.currentTarget.closest("button"),
                 new SubmitEvent("submit", {
-                  submitter: loginForm,
+                  submitter: document.getElementById("outerLoginCont"),
                   bubbles: true,
                   cancelable: true,
                   composed: true,

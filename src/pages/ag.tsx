@@ -46,6 +46,8 @@ import FamDiab from "../../components/interactive/ag/FamDiab";
 import FamOnc from "../../components/interactive/ag/FamOnc";
 import AgTipsBtnWrapper from "../../components/interactive/ag/AgTipsBtnWrapper";
 import GenericErrorComponent from "../../components/error/GenericErrorComponent";
+import { validateForm } from "@/lib/global/handlers/gHandlers";
+import { handleSubmit } from "./api/ts/handlers";
 
 const MemoAge = memo(AgeElement);
 const MemoLoc = memo(ConfirmLocId);
@@ -83,11 +85,19 @@ export default function AGPage(): JSX.Element {
         <main>
           <hr />
           <form
-            name="formAnamGName"
+            name="ag_form"
             id="formAnamGId"
             method="post"
             target="_top"
-            action="#"
+            action="submit_ag_form"
+            autoComplete="on"
+            onSubmit={ev =>
+              validateForm(ev.currentTarget).then(validation =>
+                validation[0]
+                  ? handleSubmit("ag", new Map(), true)
+                  : ev.preventDefault()
+              )
+            }
           >
             <fieldset name="fsAnamGName" id="fsAnamGIdId" className="fsMain">
               <legend id="fsAnamGLeg" className="legMain form-padded">

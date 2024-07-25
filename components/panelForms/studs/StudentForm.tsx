@@ -32,6 +32,7 @@ import { addListenerExportBtn } from "@/lib/global/gController";
 import { globalDataProvider, panelRoots } from "../defs/client/SelectPanel";
 import { ErrorBoundary } from "react-error-boundary";
 import GenericErrorComponent from "../../error/GenericErrorComponent";
+import { handleSubmit } from "@/pages/api/ts/handlers";
 
 export default function StudentForm({
   mainRoot,
@@ -241,17 +242,22 @@ export default function StudentForm({
       {showForm && (
         <form
           id="formAddStud"
-          name="formStudName"
-          action="#"
+          name="form_stud"
+          action="submit_stud_form"
           method="post"
           target="_top"
+          autoComplete="on"
           ref={formRef}
           onSubmit={ev =>
             (userClass === "coordenador" || userClass === "supervisor") &&
             validateForm(
               document.getElementById("btnSubmitNewProf"),
               ev.currentTarget
-            ).then(validation => !validation[0] && ev.preventDefault())
+            ).then(validation =>
+              validation[0]
+                ? handleSubmit("studs", new Map(), true)
+                : ev.preventDefault()
+            )
           }
         >
           <div role="group" id="formAddStudHDiv" className="mg-3b">
@@ -582,14 +588,6 @@ export default function StudentForm({
                 type="submit"
                 id="btnSubmitNewStud"
                 className="btn btn-success flexAlItCt flexJC flexBasis50 widFull noInvert"
-                formAction="#"
-                onClick={ev =>
-                  (userClass === "coordenador" || userClass === "supervisor") &&
-                  validateForm(
-                    ev.currentTarget,
-                    ev.currentTarget.closest("form") ?? document
-                  ).then(validation => !validation[0] && ev.preventDefault())
-                }
               >
                 <strong>Finalizar Cadastro</strong>
               </button>

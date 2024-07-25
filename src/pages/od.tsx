@@ -16,6 +16,8 @@ import OdBtnConformWrapper from "../../components/interactive/od/OdBtnConformWra
 import InspDlgElements from "../../components/interactive/od/InspDlgElements";
 import GenericErrorComponent from "../../components/error/GenericErrorComponent";
 import QuadrMainDiv from "../../components/interactive/od/QuadrMainDiv";
+import { validateForm } from "@/lib/global/handlers/gHandlers";
+import { handleSubmit } from "./api/ts/handlers";
 
 const MemoLoc = memo(ConfirmLocId);
 export const odProps = {
@@ -54,11 +56,19 @@ export default function OdPage(): JSX.Element {
           <SwitchDiv />
           <hr />
           <form
-            name="formOdontName"
-            action="#"
+            name="od_form"
+            action="submit_od_form"
             method="post"
             target="_top"
             id="formOdont"
+            autoComplete="on"
+            onSubmit={ev =>
+              validateForm(ev.currentTarget).then(validation =>
+                validation[0]
+                  ? handleSubmit("od", new Map(), true)
+                  : ev.preventDefault()
+              )
+            }
           >
             <fieldset name="fsAnamGName" id="fsAnamGId" className="fsMain">
               <legend id="fsAnamGLeg" className="legMain form-padded">

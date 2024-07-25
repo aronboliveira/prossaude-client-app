@@ -1,7 +1,7 @@
 import {
   rMouseEvent,
   targEl,
-  pageCases,
+  formCases,
 } from "@/lib/global/declarations/types";
 import { NextRouter } from "next/router";
 
@@ -41,15 +41,22 @@ export async function handleLogin(
       }
     };
     if (!UNDER_TEST) {
-      const res = await fetch("../api/django/check_user_validity");
+      const res = await fetch("../api/django/check_user_validity", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
       if (!res.ok) throw new Error(`Error validating user from API`);
       const data = await res.json();
       console.log(data);
       const resSpan =
         document.getElementById("res-span") ||
         document.getElementById("pwWarn");
-      if (res.status !== 200 && resSpan instanceof HTMLElement)
+      if (res.status !== 200 && resSpan instanceof HTMLElement) {
         resSpan.innerText = data.message;
+        return;
+      }
       exeLogin(resSpan);
     } else exeLogin(document.getElementById("pwWarn"));
   } catch (e) {
@@ -58,7 +65,7 @@ export async function handleLogin(
 }
 
 export async function handleSubmit(
-  apiRoute: pageCases,
+  apiRoute: formCases,
   formData:
     | Array<[string, string]>
     | { [k: string]: string }
@@ -71,17 +78,16 @@ export async function handleSubmit(
     if (typeof UNDER_TEST !== "boolean")
       throw new Error(`Error validating typeof UNDER_TEST`);
     const body = (() => {
-      if (Array.isArray(formData)) {
+      if (Array.isArray(formData))
         return JSON.stringify(formData.map(entry => [entry[0], entry[1]]));
-      } else {
+      else {
         return formData instanceof Map
           ? JSON.stringify(formData.entries())
           : JSON.stringify(formData);
       }
     })();
     if (!UNDER_TEST) {
-      const resApiRoute = `../django/submit_${apiRoute}_form/`;
-      const res = await fetch(resApiRoute, {
+      const res = await fetch(`../django/submit_${apiRoute}_form/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -90,50 +96,31 @@ export async function handleSubmit(
       });
       if (!res.ok) throw new Error(`Error posting Table to API`);
       const data = await res.json();
-      console.log(data);
-    } else
-      console.log(`Submit handled:
-    ${body}`);
+      console.log(`Data fetched:\n${data}`);
+      console.log(`Submit handled:\n${body}`);
+    } else console.log(`Submit handled:\n${body}`);
   } catch (e) {
     console.error(`Error executing handleSubmit:\n${(e as Error).message}`);
   }
 }
 
-// export async function handleFetchStuds(
-//   UNDER_TEST: boolean = true
-// ): Promise<void> {
-//   try {
-//     const res = await fetch("../api/django/studs_table");
-//     if (!res.ok) throw new Error(`Error fetching Students Table from API`);
-//     const data = await res.json();
-//     console.log(data);
-//   } catch (e) {
-//     console.error(`Error executing handleFetchStuds:\n${(e as Error).message}`);
-//   }
-// }
-
-// export async function handleFetchProfs(
-//   UNDER_TEST: boolean = true
-// ): Promise<void> {
-//   try {
-//     const res = await fetch("../api/django/profs_table");
-//     if (!res.ok) throw new Error(`Error fetching Professionals Table from API`);
-//     const data = await res.json();
-//     console.log(data);
-//   } catch (e) {
-//     console.error(`Error executing handleFetchProfs:\n${(e as Error).message}`);
-//   }
-// }
-
-// export async function handleFetchPacs(
-//   UNDER_TEST: boolean = true
-// ): Promise<void> {
-//   try {
-//     const res = await fetch("../api/django/patients_table");
-//     if (!res.ok) throw new Error(`Error fetching Patients Table from API`);
-//     const data = await res.json();
-//     console.log(data);
-//   } catch (e) {
-//     console.error(`Error executing handleFetchPacs:\n${(e as Error).message}`);
-//   }
-// }
+export async function handleFetch(
+  apiRoute: formCases,
+  UNDER_TEST: boolean = true
+): Promise<void> {
+  try {
+    if (typeof UNDER_TEST !== "boolean")
+      throw new Error(`Error validating typeof UNDER_TEST`);
+    if (!UNDER_TEST) {
+      const res = await fetch(`../api/django/${apiRoute}_table`, {
+        method: "GET",
+        headers: { "Content-type": "application/json" },
+      });
+      if (!res.ok) throw new Error(`Error fetching Students Table from API`);
+      const data = await res.json();
+      console.log(`Data fetched:\n${data}`);
+    } else console.log("Handled fetch test");
+  } catch (e) {
+    console.error(`Error executing handleFetch:\n${(e as Error).message}`);
+  }
+}

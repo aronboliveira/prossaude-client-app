@@ -74,11 +74,12 @@ export default function RemoveProfForm({
   return (
     <form
       id="formRemoveProf"
-      name="formRemoveProfName"
+      name="form_profs_table"
       className="form-padded-nosb wid101"
-      action="#"
-      method="post"
+      action="profs_table"
+      method="get"
       target="_top"
+      autoComplete="on"
       ref={formRef}
     >
       <div role="group" className="wsBs flexNoWC cGap1v">
