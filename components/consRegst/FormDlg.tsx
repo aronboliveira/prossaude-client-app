@@ -541,6 +541,7 @@ export default function FormDlg({
             id="bodyRegsPac"
             name="cons_form"
             action="submit_cons_form"
+            encType="application/x-www-form-urlencoded"
             method="post"
           >
             <section className="flexWC" id="inpsRegsPacSec">
