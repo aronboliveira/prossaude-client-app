@@ -7,6 +7,7 @@ import { NextRouter } from "next/router";
 
 export async function handleLogin(
   ev: rMouseEvent,
+  userData: [string, string],
   UNDER_TEST: boolean = true,
   router?: NextRouter
 ): Promise<void> {
@@ -42,10 +43,11 @@ export async function handleLogin(
     };
     if (!UNDER_TEST) {
       const res = await fetch("../api/django/check_user_validity", {
-        method: "GET",
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
+        body: JSON.stringify(userData.map(entry => [entry[0], entry[1]])),
       });
       if (!res.ok) throw new Error(`Error validating user from API`);
       const data = await res.json();
@@ -67,9 +69,9 @@ export async function handleLogin(
 export async function handleSubmit(
   apiRoute: formCases,
   formData:
-    | Array<[string, string]>
-    | { [k: string]: string }
-    | Map<string, string>,
+    | Array<[string, string | File]>
+    | { [k: string]: string | File }
+    | Map<string, string | File>,
   UNDER_TEST: boolean = true
 ): Promise<void> {
   try {
@@ -124,3 +126,28 @@ export async function handleFetch(
     console.error(`Error executing handleFetch:\n${(e as Error).message}`);
   }
 }
+
+export async function handleDelete(
+  apiRoute: formCases,
+  UNDER_TEST: boolean = true
+): Promise<void> {
+  try {
+    if (typeof UNDER_TEST !== "boolean")
+      throw new Error(`Error validating typeof UNDER_TEST`);
+    if (!UNDER_TEST) {
+      //TODO DEFINIR LÓGICA PARA ELIMINAR ROW AO INVÉS DA TABLE
+      const res = await fetch(`../api/django/${apiRoute}_table`, {
+        method: "DELETE",
+        headers: { "Content-type": "application/json" },
+      });
+      if (!res.ok) throw new Error(`Error deleting Students Table from API`);
+      const data = await res.json();
+      console.log(`Data fetched:\n${data}`);
+    } else console.log("Handled delete test");
+  } catch (e) {
+    console.error(`Error executing handleDelete:\n${(e as Error).message}`);
+  }
+}
+//Stud para studs
+//Prof para profs
+//Pac para patients

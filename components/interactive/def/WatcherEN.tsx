@@ -45,7 +45,7 @@ export default function WatcherEN(): JSX.Element {
       tabProps.edIsAutoCorrectOn,
       "num"
     );
-    handleLinkChanges("edfis", "EN Page Style");
+    handleLinkChanges("ed", "EN Page Style");
     addListenerExportBtn("edFisNut");
     dinamicGridAdjust(Array.from(document.querySelectorAll(".fsAnamGDiv")));
     selFactorAtleta instanceof HTMLSelectElement

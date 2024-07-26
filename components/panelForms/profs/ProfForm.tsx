@@ -247,6 +247,7 @@ export default function ProfForm({
           id="formAddProf"
           name="form_prof"
           action="submit_prof_form"
+          encType="application/x-www-form-urlencoded"
           method="post"
           target="_top"
           autoComplete="on"
@@ -258,7 +259,7 @@ export default function ProfForm({
               ev.currentTarget
             ).then(validation =>
               validation[0]
-                ? handleSubmit("profs", new Map(), true)
+                ? handleSubmit("profs", validation[2], true)
                 : ev.preventDefault()
             )
           }

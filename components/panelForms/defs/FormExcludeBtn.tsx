@@ -48,6 +48,12 @@ export default function FormExcludeBtn({
       </button>
       {shouldDisplayExcludeDlg && (
         <ExcludeDlg
+          route={`${(() => {
+            if (context === "Stud") return "studs";
+            else if (context === "Prof") return "profs";
+            else if (context === "Pac") return "patients";
+            else return "studs";
+          })()}`}
           setDisplayExcludeDlg={setDisplayExcludeDlg}
           shouldDisplayExcludeDlg={shouldDisplayExcludeDlg}
         />

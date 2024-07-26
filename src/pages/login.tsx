@@ -11,6 +11,7 @@ export default function LoginPage(): JSX.Element {
             id="outerLoginCont"
             name="login_form"
             action="check_user_validity"
+            encType="application/x-www-form-urlencoded"
             method="post"
             target="_self"
             autoComplete="on"

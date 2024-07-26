@@ -143,6 +143,7 @@ export default function EdFisNutPage(): JSX.Element {
           <form
             name="ed_form"
             action="submit_ed_form"
+            encType="multipart/form-data"
             method="post"
             target="_top"
             id="formEdFis"
@@ -150,7 +151,7 @@ export default function EdFisNutPage(): JSX.Element {
             onSubmit={ev =>
               validateForm(ev.currentTarget).then(validation =>
                 validation[0]
-                  ? handleSubmit('ed', new Map(), true)
+                  ? handleSubmit("ed", validation[2], true)
                   : ev.preventDefault()
               )
             }

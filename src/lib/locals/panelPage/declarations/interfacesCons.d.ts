@@ -1,4 +1,4 @@
-import { looseNum } from "@/lib/global/declarations/types";
+import { formCases, looseNum } from "@/lib/global/declarations/types";
 import {
   nullishForm,
   nullishDlg,
@@ -139,6 +139,7 @@ export interface RegsConstBtnProps {
 export interface ExcludeDlgProps {
   setDisplayExcludeDlg: Dispatch<SetStateAction<boolean>>;
   shouldDisplayExcludeDlg: boolean;
+  route: formCases;
 }
 
 export interface ExcludeConsDlgProps extends ExcludeDlgProps {

@@ -362,9 +362,10 @@ export default function AlterFieldList({
                   }
                 }}
               ></select>
-              <fieldset
+              <form
                 className="flexNoW flexAlItCt flexQ900NoWC cGap2v rGap2v widFull"
                 id="sectFieldsBody"
+                name="alter_field"
               >
                 <div
                   role="group"
@@ -374,14 +375,11 @@ export default function AlterFieldList({
                   <label htmlFor="newValueOpt" className="bolded wsNoW">
                     Insira o Novo valor:
                   </label>
-                  <input
-                    id="newValueOpt"
-                    className="form-control noMargin"
-                  ></input>
+                  <input id="newValueOpt" className="form-control noMargin" />
                 </div>
                 <div role="group" className="flexNoWC">
                   <button
-                    type="button"
+                    type="submit"
                     formMethod="post"
                     formAction="#"
                     id="btnConfirmFieldOpt"
@@ -392,7 +390,7 @@ export default function AlterFieldList({
                     Confirmar Alteração
                   </button>
                 </div>
-              </fieldset>
+              </form>
             </section>
           </fieldset>
         </ErrorBoundary>

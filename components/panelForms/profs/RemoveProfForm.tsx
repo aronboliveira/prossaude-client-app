@@ -77,6 +77,7 @@ export default function RemoveProfForm({
       name="form_profs_table"
       className="form-padded-nosb wid101"
       action="profs_table"
+      encType="multipart/form-data"
       method="get"
       target="_top"
       autoComplete="on"

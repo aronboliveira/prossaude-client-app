@@ -1544,9 +1544,13 @@ export async function validateForm(
   } catch (e) {
     console.error(`Error executing validateForm:\n${(e as Error).message}`);
   }
-
+  const formValidated = arrValidity.some(validity => validity === false)
+    ? false
+    : true;
+  if (form instanceof HTMLFormElement)
+    !formValidated ? (form.noValidate = true) : (form.noValidate = false);
   return [
-    arrValidity.some(validity => validity === false) ? false : true,
+    formValidated,
     invalidEntries.map(invalidIdf => `${invalidIdf} \n`),
     validEntries,
   ];

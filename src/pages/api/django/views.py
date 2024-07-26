@@ -1,7 +1,7 @@
 # views.py
 from django.http import JsonResponse
 from django.views import View
-from .models import User, Patient, Student, Professional, Appointment, AGData, EDData, OdData
+from .models import User, Patient, Student, Professional, Appointment, AGData, EDData, OdData, Schedule
 from django.core.management import call_command
 
 class Controller(View):
@@ -30,19 +30,19 @@ class Controller(View):
             return JsonResponse({"message": "User authorized"}, status=200)
         else:
             return JsonResponse({"message": "Unknown status"}, status=400)
-    def patients_table(self):
-        return JsonResponse(list(Patient.objects.values(
-            'id', 'cpf', 'name', 'email', 'telephone', 'next_appointed_day',
-            'treatment_period', 'signature', 'current_status', 'historic__date',
-            'historic__type', 'historic__professional__id', 'historic__student__id',
-            'historic__notes'
-        )), safe=False)
     def studs_table(self):
         return JsonResponse(list(Student.objects.values('id', 'cpf', 'dre', 'graduation', 'semester', 'beginning_semester', 'beginning_day', 'activity_day')), 
         safe=False)
     def profs_table(self):
         return JsonResponse(list(Professional.objects.values(
             'id', 'cpf', 'graduation', 'beginning_semester', 'beginning_day'
+        )), safe=False)
+    def patients_table(self):
+        return JsonResponse(list(Patient.objects.values(
+            'id', 'cpf', 'name', 'email', 'telephone', 'next_appointed_day',
+            'treatment_period', 'signature', 'current_status', 'historic__date',
+            'historic__type', 'historic__professional__id', 'historic__student__id',
+            'historic__notes'
         )), safe=False)
     def submit_ag_form(self, request):
         return self._handle_form_submission(request, AGData, 'ag_data', 'submit_ag_form')
@@ -56,6 +56,8 @@ class Controller(View):
         return self._handle_form_submission(request, Student, 'students', 'submit_stud_form')
     def submit_prof_form(self, request):
         return self._handle_form_submission(request, Professional, 'professionals', 'submit_prof_form')
+    def schedule_form(self, request):
+        return self._handle_form_submission(request, Schedule, 'schedules', 'schedule_form')
     def _handle_form_submission(self, request, model_cls, dynamic_table_name, method_name):
         if request.method == 'POST':
             try:

@@ -76,6 +76,8 @@ export default function RemoveStudForm({
       id="formRemoveStud"
       name="form_studs_table"
       action="studs_table"
+      encType="multipart/form-data"
+      //TODO DEFINIR COMO SERÁ RENDERIZAÇÃO DINAMICA APÓS GET...
       method="get"
       target="_top"
       ref={formRef}

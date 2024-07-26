@@ -58,6 +58,21 @@ export default function ScheduleForm({
 }: ScheduleFormProps): JSX.Element {
   const cols = [1, 2, 3, 4, 5, 6, 7, 8, 9];
   const hours: validSchedHours[] = [18, 19, 20, 21];
+  const handleResize = (): void => {
+    if (innerWidth === 900 || innerWidth === 600 || innerWidth === 460) {
+      normalizeSizeSb(
+        [
+          ...document.querySelectorAll(".form-padded"),
+          ...document.querySelectorAll(".ovFlAut"),
+          ...document.querySelectorAll("[scrollbar-width=none]"),
+          ...document.querySelectorAll("table"),
+        ],
+        [true, 1],
+        true,
+        [document.getElementById("formBodySchedSect")]
+      );
+    }
+  };
   const [showForm] = useState(true);
   const formRef = useRef<nullishForm>(null);
   const workingDefinitionsRef = useRef<HTMLDivElement | null>(null);
@@ -251,21 +266,8 @@ export default function ScheduleForm({
         if (daysCont instanceof HTMLElement)
           scheduleReset[`outerHTML`] = daysCont.outerHTML;
       }, 200);
-    addEventListener("resize", () => {
-      if (innerWidth === 900 || innerWidth === 600 || innerWidth === 460) {
-        normalizeSizeSb(
-          [
-            ...document.querySelectorAll(".form-padded"),
-            ...document.querySelectorAll(".ovFlAut"),
-            ...document.querySelectorAll("[scrollbar-width=none]"),
-            ...document.querySelectorAll("table"),
-          ],
-          [true, 1],
-          true,
-          [document.getElementById("formBodySchedSect")]
-        );
-      }
-    });
+    addEventListener("resize", handleResize);
+    return () => removeEventListener("resize", handleResize);
   }, []);
   useEffect(() => {
     if (formRef?.current instanceof HTMLElement) {
@@ -581,8 +583,9 @@ export default function ScheduleForm({
           <form
             id="formSched"
             className="widFull"
-            name="formSchedName"
-            action="#"
+            name="schedule_form"
+            encType="application/x-www-form-urlencoded"
+            action="schedule_form"
             method="post"
             target="_top"
             ref={formRef}

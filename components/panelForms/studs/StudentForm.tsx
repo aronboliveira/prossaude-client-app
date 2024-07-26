@@ -244,6 +244,7 @@ export default function StudentForm({
           id="formAddStud"
           name="form_stud"
           action="submit_stud_form"
+          encType="application/x-www-form-urlencoded"
           method="post"
           target="_top"
           autoComplete="on"
@@ -255,7 +256,7 @@ export default function StudentForm({
               ev.currentTarget
             ).then(validation =>
               validation[0]
-                ? handleSubmit("studs", new Map(), true)
+                ? handleSubmit("studs", validation[2], true)
                 : ev.preventDefault()
             )
           }

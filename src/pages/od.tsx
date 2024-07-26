@@ -58,6 +58,7 @@ export default function OdPage(): JSX.Element {
           <form
             name="od_form"
             action="submit_od_form"
+            encType="multipart/form-data"
             method="post"
             target="_top"
             id="formOdont"
@@ -65,7 +66,7 @@ export default function OdPage(): JSX.Element {
             onSubmit={ev =>
               validateForm(ev.currentTarget).then(validation =>
                 validation[0]
-                  ? handleSubmit("od", new Map(), true)
+                  ? handleSubmit("od", validation[2], true)
                   : ev.preventDefault()
               )
             }

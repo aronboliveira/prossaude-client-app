@@ -5,8 +5,10 @@ import { ExcludeDlgProps } from "@/lib/locals/panelPage/declarations/interfacesC
 import { useEffect, useRef } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
+import { handleDelete } from "@/pages/api/ts/handlers";
 
 export default function ExcludeDlg({
+  route,
   setDisplayExcludeDlg,
   shouldDisplayExcludeDlg = true,
 }: ExcludeDlgProps): JSX.Element {
@@ -69,7 +71,12 @@ export default function ExcludeDlg({
               />
             )}
           >
-            <section role="alert" className="flexNoWC flexJC rGap2v">
+            <form
+              role="alert"
+              name={`form_removal_${route}`}
+              className="flexNoWC flexJC rGap2v"
+              onSubmit={() => handleDelete(route, true)}
+            >
               <div
                 role="group"
                 className="flexJC flexAlItCt flexNoWC wsBs noInvert"
@@ -79,10 +86,14 @@ export default function ExcludeDlg({
                   Esse processo é parcialmente ou totalmente irreversível!
                 </small>
               </div>
-              <button className="btn btn-warning bolded" onClick={toggleClose}>
+              <button
+                type="submit"
+                className="btn btn-warning bolded"
+                onClick={toggleClose}
+              >
                 Confirmar
               </button>
-            </section>
+            </form>
           </ErrorBoundary>
         </dialog>
       )}

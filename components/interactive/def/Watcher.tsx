@@ -34,11 +34,9 @@ export default function Watcher({
     };
     syncAriaStates(document.querySelectorAll("*"));
     watchLabels();
-    if (routeCase === "login") {
-      handleLinkChanges("login", "Login Page Style");
-    } else if (routeCase === "base") {
-      handleLinkChanges("base", "Base Page Style");
-    } else if (routeCase === "ag") {
+    if (routeCase === "login") handleLinkChanges("login", "Login Page Style");
+    else if (routeCase === "base") handleLinkChanges("base", "Base Page Style");
+    else if (routeCase === "ag") {
       handleLinkChanges("ag", "AG Page Style");
       agProps.agIsAutoCorrectOn = getGlobalEls(
         agProps.agIsAutoCorrectOn,

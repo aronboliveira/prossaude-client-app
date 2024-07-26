@@ -5,6 +5,7 @@ import { clearDefInvalidMsg, resetPhs } from "@/lib/global/gStyleScript";
 import {
   elementNotFound,
   extLine,
+  inputNotFound,
   multipleElementsNotFound,
 } from "@/lib/global/handlers/errorHandler";
 import {
@@ -64,6 +65,7 @@ export default function LoginInputs(): JSX.Element {
           <input
             className="form-control fade-in-element userInput"
             id="user"
+            name="user_name"
             type="text"
             aria-label="email ou usuário"
             placeholder="Nome de Usuário"
@@ -91,6 +93,7 @@ export default function LoginInputs(): JSX.Element {
             <input
               className="fade-in-element form-control userInput"
               id="pw"
+              name="pw"
               type="password"
               autoComplete="password"
               aria-label="senha"
@@ -139,11 +142,42 @@ export default function LoginInputs(): JSX.Element {
           <a
             ref={anchorRef}
             id="submitLogin"
+            rel="nofollow noreferrer"
             target="_self"
             href={`${basePath.path}/base`}
             style={{ color: "#ffff" }}
             onClick={ev => {
-              handleLogin(ev, true);
+              let user_name = "";
+              try {
+                const usernameEl = document.getElementById("user");
+                if (!(usernameEl instanceof HTMLInputElement))
+                  throw inputNotFound(
+                    usernameEl,
+                    `Validation of User name element`,
+                    extLine(new Error())
+                  );
+                user_name = usernameEl.value;
+              } catch (e) {
+                console.error(
+                  `Error executing fetch of user name from element:\n${
+                    (e as Error).message
+                  }`
+                );
+              }
+              let pw = "";
+              try {
+                const pwEl = document.getElementById("pw");
+                if (!(pwEl instanceof HTMLInputElement))
+                  throw inputNotFound(
+                    pwEl,
+                    `Validation of password element instance`,
+                    extLine(new Error())
+                  );
+                pw = pwEl.value;
+              } catch (e) {
+                console.error(`Error:${(e as Error).message}`);
+              }
+              handleLogin(ev, [user_name, pw], true);
               callbackSubmitBtn(
                 ev.currentTarget.closest("button"),
                 new SubmitEvent("submit", {

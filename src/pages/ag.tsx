@@ -90,11 +90,12 @@ export default function AGPage(): JSX.Element {
             method="post"
             target="_top"
             action="submit_ag_form"
+            encType="multipart/form-data"
             autoComplete="on"
             onSubmit={ev =>
               validateForm(ev.currentTarget).then(validation =>
                 validation[0]
-                  ? handleSubmit("ag", new Map(), true)
+                  ? handleSubmit("ag", validation[2], true)
                   : ev.preventDefault()
               )
             }

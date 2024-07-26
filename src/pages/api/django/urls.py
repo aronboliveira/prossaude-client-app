@@ -16,6 +16,7 @@ urlpatterns = [
     path('submit_cons_form/', Controller.as_view(actions={'post': 'submit_cons_form'}), name='cons_form'),
     path('submit_stud_form/', Controller.as_view(actions={'post': 'submit_stud_form'}), name='stud_form'),
     path('submit_prof_form/', Controller.as_view(actions={'post': 'submit_prof_form'}), name='prof_form'),
+    path('schedule_form/', Controller.as_view(actions={'post': 'schedule_form'}), name='schedule_form')
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -269,7 +269,7 @@ export function handleLinkChanges(
             document.body.className = "agBody";
             break;
           }
-          case "edfis": {
+          case "ed": {
             !head.querySelector("title") &&
               head.firstElementChild!.insertAdjacentHTML(
                 `beforebegin`,
