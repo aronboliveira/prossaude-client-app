@@ -27,7 +27,7 @@ import DefaultForm from "../DefaultForm";
 import { Root } from "react-dom/client";
 
 export let globalDataProvider: DataProvider | voidVal = undefined;
-export const panelRoots: { mainRoot: Root | undefined } = {
+export const panelRoots: { [k: string]: Root | undefined } = {
   mainRoot: undefined,
 };
 

@@ -132,3 +132,4 @@ export type pageStyleCases =
   | "Od Page Style"
   | "Panel Page Style";
 export type validSchedHours = 18 | 19 | 20 | 21;
+export type userClasses = "coordenador" | "supervisor" | "estudante";

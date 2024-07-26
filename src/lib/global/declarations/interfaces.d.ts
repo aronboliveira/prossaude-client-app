@@ -141,3 +141,18 @@ export interface TdProps extends TabCelProps {
   lab: validTabLabs;
 }
 export interface ColProps extends Omit<ThProps, "nRow"> {}
+
+export interface SpinnerComponentProps {
+  spinnerClass: "spinner-border" | "spinner-grow";
+  spinnerColor:
+    | "text-danger"
+    | "text-primary"
+    | "text-secondary"
+    | "text-success"
+    | "text-warning"
+    | "text-info"
+    | "text-light"
+    | "text-dark"
+    | "";
+  message: string;
+}

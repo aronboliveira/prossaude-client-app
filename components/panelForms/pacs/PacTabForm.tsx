@@ -25,6 +25,9 @@ export default function PacTabForm({
       [document.getElementById("sectPacsTab")]
     );
     document.querySelector("table")!.style.minHeight = "revert";
+    const nextDiv = document.getElementById("sectsPacsTab")?.nextElementSibling;
+    if (nextDiv?.id === "" && nextDiv instanceof HTMLDivElement)
+      nextDiv.remove();
   }, []);
   useEffect(() => {
     if (formRef?.current instanceof HTMLFormElement) {

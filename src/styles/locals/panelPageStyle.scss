@@ -153,9 +153,18 @@ body {
     }
   }
 
+  #deactAutocorrectBtnStud,
+  #deactAutofilltBtnStud,
+  #deactAutocorrectBtnProf,
+  #deactAutofilltBtnProf,
   #deactAutocorrectBtnCons,
   #deactAutofilltBtnCons {
     margin-right: 0.3rem;
+  }
+
+  #formAddStud,
+  #formAddProf {
+    padding-inline: 1vw;
   }
 
   #formBodySchedSect,

@@ -16,7 +16,7 @@ export interface FormData {
 }
 
 export interface UserProfile {
-  userClass: string;
+  userClass: userClasses;
   userArea: string;
   userName: string;
   userEmail: string;
@@ -24,7 +24,7 @@ export interface UserProfile {
 }
 
 export interface GlobalFormProps {
-  userClass: string;
+  userClass: userClasses;
   mainRoot?: Root;
 }
 
@@ -57,7 +57,7 @@ export interface PanelFormProps {
 
 export interface BtnAddPacPros {
   context: boolean;
-  userClass: string;
+  userClass: userClasses;
 }
 
 export interface ConsDlgProps extends Omit<BtnAddPacPros, "context"> {
@@ -70,7 +70,7 @@ export interface FormDlgProps extends ConsDlgProps {
 
 export interface FillerProps {
   forwardedRef: MutableRefObject<nullishDlg>;
-  userClass: string;
+  userClass: userClasses;
 }
 
 export interface AvStudListDlgProps extends FillerProps {
@@ -83,7 +83,7 @@ export interface AvProfListDlgProps {
   mainDlgRef: MutableRefObject<nullishDlg>;
   btnProf: HTMLButtonElement | null;
   isCPFFillerActive: boolean;
-  userClass: string;
+  userClass: userClasses;
 }
 
 export interface AvPacListDlgProps {
@@ -91,7 +91,7 @@ export interface AvPacListDlgProps {
   shouldDisplayPacList: boolean;
   shouldShowAlocBtn: boolean;
   mainDlgRef: MutableRefObject<nullishDlg>;
-  userClass: string;
+  userClass: userClasses;
 }
 
 export interface PacListProps
@@ -118,7 +118,7 @@ export interface AlterFieldListProps {
 export interface ProviderAptDataListProps {
   [key: string]: any;
   btnId: string;
-  userClass: string;
+  userClass: userClasses;
 }
 
 export interface AptDataListProps {
@@ -126,14 +126,14 @@ export interface AptDataListProps {
   data: { [key: string]: any };
   btnId: string;
   shouldDisplayAptList: boolean;
-  userClass: string;
+  userClass: userClasses;
   isDirectRender?: boolean;
 }
 
 export interface RegsConstBtnProps {
   rootEl: HTMLElement | voidVal;
   secondOp: string;
-  userClass: string;
+  userClass: userClasses;
 }
 
 export interface ExcludeDlgProps {
@@ -144,7 +144,7 @@ export interface ExcludeDlgProps {
 
 export interface ExcludeConsDlgProps extends ExcludeDlgProps {
   btn: nullishBtn;
-  userClass: string;
+  userClass: userClasses;
 }
 
 export interface FailedRegstProps {
@@ -197,7 +197,7 @@ export interface FallbackedMainPanelProps
 
 export interface ErrorFallbackMainPanelProps extends FallbackedMainPanelProps {
   tryAcc: number;
-  resetErrorBoundary(mainRoot: Root, userClass: string, tryAcc: number);
+  resetErrorBoundary(mainRoot: Root, userClass: userClasses, tryAcc: number);
   mainRoot: Root;
 }
 
@@ -209,7 +209,7 @@ export interface ErrorDlgProps {
 export interface StudRowProps {
   tabRef: MutableRefObject<nullishTab>;
   count: looseNum;
-  userClass: string;
+  userClass: userClasses;
   studInfo: StudInfo;
   state?: boolean;
   dispatch?: Dispatch<SetStateAction<boolean>>;
@@ -219,12 +219,19 @@ export interface StudRowProps {
 export interface ProfRowProps {
   tabRef: MutableRefObject<nullishTab>;
   count: looseNum;
-  userClass: string;
+  userClass: userClasses;
   profInfo: ProfInfo;
   state?: boolean;
   dispatch?: Dispatch<SetStateAction<boolean>>;
   inDlg?: boolean;
   external?: boolean;
+}
+
+export interface PacRowProps extends GlobalFormProps {
+  tabPacRef: MutableRefObject<nullishTab>;
+  pac: PacInfo;
+  nRow: number;
+  shouldShowAlocBtn: boolean;
 }
 
 export interface ProfInfo {
@@ -249,7 +256,6 @@ export interface StudInfo {
 }
 
 export interface PacInfo {
-  //TODO PRECISA DEFINIR PACROW
   name: string;
   email: string;
   tel: string;
@@ -258,4 +264,5 @@ export interface PacInfo {
   current_status: string;
   signature: File;
   historic: {};
+  idf?: string;
 }
