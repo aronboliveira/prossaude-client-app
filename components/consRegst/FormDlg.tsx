@@ -46,6 +46,7 @@ import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
 import AvPacListDlg from "../lists/AvPacListDlg";
 import { globalDataProvider } from "../panelForms/defs/client/SelectPanel";
 import { createRoot } from "react-dom/client";
+import { handleSubmit } from "@/pages/api/ts/handlers";
 
 let accFormData = 0;
 export default function FormDlg({
@@ -535,7 +536,13 @@ export default function FormDlg({
         </div>
         <fieldset className="flexNoWC">
           <hr />
-          <form className="flexWC" id="bodyRegsPac" name="cons_form" action="submit_cons_form" method="post" >
+          <form
+            className="flexWC"
+            id="bodyRegsPac"
+            name="cons_form"
+            action="submit_cons_form"
+            method="post"
+          >
             <section className="flexWC" id="inpsRegsPacSec">
               <div role="group" className="flexWR" id="cpfPacDiv">
                 <div
@@ -1183,7 +1190,7 @@ export default function FormDlg({
                   className="btn btn-success widFull"
                   ref={submitRef}
                   onClick={ev => {
-                    validateForm(ev.currentTarget).then(validation => {
+                    validateForm(ev, ev.currentTarget).then(validation => {
                       if (validation[0]) {
                         //acumulador é alinhado com o de contexto dos diálogos de consulta no handler comum
                         accFormData =
@@ -1197,6 +1204,7 @@ export default function FormDlg({
                           dialogRef.current ??
                             ev.currentTarget.closest("dialog")
                         );
+                        handleSubmit("cons", validation[2], true);
                         onClose();
                       } else ev.preventDefault();
                     });

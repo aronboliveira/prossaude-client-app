@@ -251,10 +251,7 @@ export default function StudentForm({
           ref={formRef}
           onSubmit={ev =>
             (userClass === "coordenador" || userClass === "supervisor") &&
-            validateForm(
-              document.getElementById("btnSubmitNewProf"),
-              ev.currentTarget
-            ).then(validation =>
+            validateForm(ev, ev.currentTarget).then(validation =>
               validation[0]
                 ? handleSubmit("studs", validation[2], true)
                 : ev.preventDefault()

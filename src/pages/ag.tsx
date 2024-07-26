@@ -93,7 +93,7 @@ export default function AGPage(): JSX.Element {
             encType="multipart/form-data"
             autoComplete="on"
             onSubmit={ev =>
-              validateForm(ev.currentTarget).then(validation =>
+              validateForm(ev).then(validation =>
                 validation[0]
                   ? handleSubmit("ag", validation[2], true)
                   : ev.preventDefault()

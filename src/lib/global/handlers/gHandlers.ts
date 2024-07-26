@@ -1,7 +1,12 @@
 //nesse file estão presentes principalmente as funções de manipulação dinâmica de texto e layout
 import { autoCapitalizeInputs, parseNotNaN, removeFirstClick } from "../gModel";
 import { fadeElement, isClickOutside } from "../gStyleScript";
-import type { targEl, primitiveType, textEl } from "../declarations/types";
+import type {
+  targEl,
+  primitiveType,
+  textEl,
+  rMouseEvent,
+} from "../declarations/types";
 import {
   extLine,
   elementNotFound,
@@ -11,6 +16,7 @@ import {
   elementNotPopulated,
 } from "./errorHandler";
 import { addCanvasListeners } from "../gController";
+import { FormEvent } from "react";
 
 export function updateSimpleProperty(el: targEl): primitiveType {
   if (el instanceof HTMLInputElement) {
@@ -1029,9 +1035,17 @@ export function toggleConformDlg(): void {
 
 const borderColors: { [k: string]: string } = {};
 export async function validateForm(
-  targ: targEl,
+  ev: FormEvent | SubmitEvent | rMouseEvent,
   scope: HTMLElement | Document = document
 ): Promise<[boolean, string[], Array<[string, string | File]>]> {
+  if (
+    ev.currentTarget instanceof HTMLFormElement ||
+    ((ev.currentTarget instanceof HTMLButtonElement ||
+      ev.currentTarget instanceof HTMLInputElement) &&
+      ev.currentTarget.type === "submit")
+  )
+    ev.preventDefault();
+  const targ = ev.currentTarget;
   const arrValidity: boolean[] = [];
   const invalidEntries: string[] = [];
   const validEntries: Array<[string, string | File]> = [];
@@ -1547,8 +1561,12 @@ export async function validateForm(
   const formValidated = arrValidity.some(validity => validity === false)
     ? false
     : true;
-  if (form instanceof HTMLFormElement)
-    !formValidated ? (form.noValidate = true) : (form.noValidate = false);
+  if (form instanceof HTMLFormElement) {
+    if (formValidated && form.checkValidity()) {
+      form.noValidate = false;
+      form.submit();
+    } else form.noValidate = true;
+  }
   return [
     formValidated,
     invalidEntries.map(invalidIdf => `${invalidIdf} \n`),

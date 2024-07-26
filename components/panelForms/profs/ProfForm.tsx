@@ -254,10 +254,7 @@ export default function ProfForm({
           ref={formRef}
           onSubmit={ev =>
             userClass === "coordenador" &&
-            validateForm(
-              document.getElementById("btnSubmitNewProf"),
-              ev.currentTarget
-            ).then(validation =>
+            validateForm(ev, ev.currentTarget).then(validation =>
               validation[0]
                 ? handleSubmit("profs", validation[2], true)
                 : ev.preventDefault()

@@ -64,7 +64,7 @@ export default function OdPage(): JSX.Element {
             id="formOdont"
             autoComplete="on"
             onSubmit={ev =>
-              validateForm(ev.currentTarget).then(validation =>
+              validateForm(ev).then(validation =>
                 validation[0]
                   ? handleSubmit("od", validation[2], true)
                   : ev.preventDefault()

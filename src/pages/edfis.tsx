@@ -149,7 +149,7 @@ export default function EdFisNutPage(): JSX.Element {
             id="formEdFis"
             autoComplete="on"
             onSubmit={ev =>
-              validateForm(ev.currentTarget).then(validation =>
+              validateForm(ev).then(validation =>
                 validation[0]
                   ? handleSubmit("ed", validation[2], true)
                   : ev.preventDefault()
