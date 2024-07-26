@@ -64,12 +64,12 @@ export class DataProvider {
       const handleSessionPanelChange = (elementId: string): void => {
         try {
           const scope = document.getElementById(elementId);
-          if (!(scope instanceof HTMLElement))
-            throw elementNotFound(
-              scope,
-              `Scope for Handling Session Panel Change`,
-              extLine(new Error())
+          if (!(scope instanceof HTMLElement)) {
+            console.warn(
+              `Could not find scopped element for handling panel change`
             );
+            return;
+          }
           const persisters = sessionStorage.getItem(elementId);
           if (!persisters)
             throw stringError(

@@ -1,8 +1,8 @@
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useCallback } from "react";
 import { handleClientPermissions } from "@/lib/locals/panelPage/handlers/consHandlerUsers";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
-import { normalizeSizeSb } from "@/lib/global/gStyleScript";
+import { equalizeTabCells, normalizeSizeSb } from "@/lib/global/gStyleScript";
 import { addListenerExportBtn } from "@/lib/global/gController";
 import {
   nullishBtn,
@@ -16,12 +16,16 @@ import {
 } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import ProfRow from "./ProfRow";
 import { handleFetch } from "@/pages/api/ts/handlers";
+import { panelRoots } from "../defs/client/SelectPanel";
+import { createRoot } from "react-dom/client";
+import { ErrorBoundary } from "react-error-boundary";
+import GenericErrorComponent from "../../error/GenericErrorComponent";
+import { fillTabAttr } from "@/lib/locals/panelPage/handlers/consHandlerList";
+import Spinner from "../../icons/Spinner";
 
 export default function RemoveProfForm({
   userClass = "estudante",
 }: GlobalFormProps): JSX.Element {
-  const [shouldDisplayRowData, setDisplayRowData] = useState(false);
-  //TODO USAR ARRAY PARA RENDERIZAÇÃO DINÂMICA APÓS TESTES COM API
   const profs: ProfInfo[] = [];
   const formRef = useRef<nullishForm>(null);
   const tabRef = useRef<nullishTab>(null);
@@ -39,6 +43,257 @@ export default function RemoveProfForm({
       [document.getElementById("sectProfsTab")]
     );
     document.querySelector("table")!.style.minHeight = "revert";
+    const nextDiv = document.getElementById("avPacsTab")?.nextElementSibling;
+    if (nextDiv?.id === "" && nextDiv instanceof HTMLDivElement)
+      nextDiv.remove();
+  }, []);
+  useEffect(() => {
+    try {
+      if (!(tbodyRef.current instanceof HTMLTableSectionElement))
+        throw elementNotFound(
+          tbodyRef.current,
+          `Validation of Table Body instance`,
+          extLine(new Error())
+        );
+      if (profs.length > 0 && tbodyRef.current.querySelector("tr")) return;
+      setTimeout(() => {
+        if (profs.length > 0) return;
+        handleFetch("profs", "_table", true).then(res => {
+          res.forEach(prof => {
+            !profs.includes(prof as ProfInfo) &&
+              profs.push({
+                name: prof.name,
+                tel: prof.tel,
+                email: prof.email,
+                area: (prof as ProfInfo)["area"],
+                interv: (prof as ProfInfo)["interv"],
+                day: (prof as ProfInfo)["day"],
+                idf: (prof as ProfInfo)["idf"],
+              });
+          });
+          try {
+            if (!(tabRef.current instanceof HTMLElement))
+              throw elementNotFound(
+                tabRef.current,
+                `Validation of Table reference`,
+                extLine(new Error())
+              );
+            if (!(tbodyRef.current instanceof HTMLElement))
+              throw elementNotFound(
+                tbodyRef.current,
+                `Validation of Table Body Reference`,
+                extLine(new Error())
+              );
+            if (
+              panelRoots[`${tbodyRef.current.id}`] &&
+              !(panelRoots[`${tbodyRef.current.id}`] as any)["_internalRoot"]
+            ) {
+              setTimeout(() => {
+                try {
+                  if (!(tabRef.current instanceof HTMLElement))
+                    throw elementNotFound(
+                      tabRef.current,
+                      `Validation of Table reference`,
+                      extLine(new Error())
+                    );
+                  if (!(tbodyRef.current instanceof HTMLElement))
+                    throw elementNotFound(
+                      tbodyRef.current,
+                      `Validation of Table Body Reference`,
+                      extLine(new Error())
+                    );
+                  if (tbodyRef.current.querySelector("tr")) return;
+                  panelRoots[`${tbodyRef.current.id}`]?.unmount();
+                  delete panelRoots[`${tbodyRef.current.id}`];
+                  tbodyRef.current.remove();
+                  if (!panelRoots[`${tabRef.current.id}`])
+                    panelRoots[`${tabRef.current.id}`] = createRoot(
+                      tabRef.current
+                    );
+                  panelRoots[`${tabRef.current.id}`]?.render(
+                    <ErrorBoundary
+                      FallbackComponent={() => (
+                        <GenericErrorComponent message="Error reloading replacement for table body" />
+                      )}
+                    >
+                      <caption className="caption-t">
+                        <strong>
+                          <small role="textbox">
+                            <em>
+                              Lista Recuperada da Ficha de Profissionais
+                              registrados. Acesse
+                              <samp>
+                                <a> ROTA_PLACEHOLDER </a>
+                              </samp>
+                              para cadastrar
+                            </em>
+                          </small>
+                        </strong>
+                      </caption>
+                      <colgroup>
+                        {userClass === "coordenador" && <col></col>}
+                        <col></col>
+                        <col></col>
+                        <col></col>
+                        <col></col>
+                        <col></col>
+                        {userClass === "coordenador" && <col></col>}
+                        {userClass === "coordenador" && <col></col>}
+                      </colgroup>
+                      <thead className="thead-dark">
+                        <tr id="avPacs-row1">
+                          {userClass === "coordenador" && (
+                            <th scope="col">CPF</th>
+                          )}
+                          <th scope="col">Nome</th>
+                          <th scope="col">Externo</th>
+                          <th scope="col">E-mail</th>
+                          <th scope="col">Telefone</th>
+                          <th scope="col">Área de Atuação</th>
+                          <th scope="col">Dia de Trablho</th>
+                          <th scope="col">Período de Participação</th>
+                          {userClass === "coordenador" && (
+                            <th scope="col">Alteração</th>
+                          )}
+                          {userClass === "coordenador" && (
+                            <th scope="col">Exclusão</th>
+                          )}
+                        </tr>
+                      </thead>
+                      <tbody id="profsTbody" ref={tbodyRef}>
+                        <span style={{ margin: "2rem", position: "absolute" }}>
+                          <Spinner
+                            spinnerClass="spinner-border"
+                            spinnerColor="text-info"
+                            message="Loading Professionals Table..."
+                          />
+                        </span>
+                      </tbody>
+                    </ErrorBoundary>
+                  );
+                  tbodyRef.current = document.getElementById(
+                    "profsTbody"
+                  ) as nullishTabSect;
+                  if (!(tbodyRef.current instanceof HTMLElement))
+                    throw elementNotFound(
+                      tbodyRef.current,
+                      `Validation of replaced tbody`,
+                      extLine(new Error())
+                    );
+                  if (!panelRoots[`${tbodyRef.current.id}`])
+                    panelRoots[`${tbodyRef.current.id}`] = createRoot(
+                      tbodyRef.current
+                    );
+                  if (!tbodyRef.current.querySelector("tr"))
+                    panelRoots[`${tbodyRef.current.id}`]?.render(
+                      profs.map((prof, i) => (
+                        <ProfRow
+                          nRow={i + 2}
+                          prof={prof}
+                          userClass={userClass}
+                          tabRef={tabRef}
+                          key={`prof_row__${i + 2}`}
+                        />
+                      ))
+                    );
+                  setTimeout(() => {
+                    if (tabRef?.current instanceof HTMLTableElement) {
+                      equalizeTabCells(tabRef.current);
+                      fillTabAttr(tabRef.current);
+                    } else
+                      elementNotFound(
+                        tabRef.current,
+                        `tabRef id ${
+                          (tabRef?.current as any)?.id || "UNIDENTIFIED"
+                        } in useEffect() for tableRef`,
+                        extLine(new Error())
+                      );
+                  }, 300);
+                } catch (e) {
+                  console.error(
+                    `Error executing scheduled rendering of Table Body Content Replacement:\n${
+                      (e as Error).message
+                    }`
+                  );
+                }
+                if (document) {
+                }
+              }, 1000);
+            } else
+              panelRoots[`${tbodyRef.current.id}`] = createRoot(
+                tbodyRef.current
+              );
+            if (!tbodyRef.current.querySelector("tr"))
+              panelRoots[`${tbodyRef.current.id}`]?.render(
+                profs.map((prof, i) => {
+                  return Array.from(
+                    tbodyRef.current?.querySelectorAll("output") ?? []
+                  ).some(
+                    outp => outp.innerText === (prof as ProfInfo)["idf"]
+                  ) ||
+                    Array.from(
+                      tbodyRef.current?.querySelectorAll("tr") ?? []
+                    ).some(
+                      tr =>
+                        tr.dataset.key &&
+                        tbodyRef.current?.querySelector(
+                          `tr[data-key=${tr.dataset.key}`
+                        )
+                    ) ? (
+                    <></>
+                  ) : (
+                    <ProfRow
+                      nRow={i + 2}
+                      prof={prof}
+                      userClass={userClass}
+                      tabRef={tabRef}
+                      key={`prof_row__${i + 2}`}
+                    />
+                  );
+                })
+              );
+            setTimeout(() => {
+              if (tabRef?.current instanceof HTMLTableElement) {
+                equalizeTabCells(tabRef.current);
+                fillTabAttr(tabRef.current);
+              } else
+                elementNotFound(
+                  tabRef.current,
+                  `tabRef id ${
+                    (tabRef?.current as any)?.id || "UNIDENTIFIED"
+                  } in useEffect() for tableRef`,
+                  extLine(new Error())
+                );
+            }, 300);
+            setTimeout(() => {
+              if (
+                !document.querySelector("tr") &&
+                document.querySelector("table")
+              ) {
+                if (!panelRoots[`${document.querySelector("table")!.id}`])
+                  panelRoots[`${document.querySelector("table")!.id}`] =
+                    createRoot(document.querySelector("table")!);
+                panelRoots[`${document.querySelector("table")!.id}`]?.render(
+                  <GenericErrorComponent message="Failed to render table" />
+                );
+              }
+            }, 5000);
+          } catch (e) {
+            console.error(
+              `Error executing rendering of Table Body Content:\n${
+                (e as Error).message
+              }`
+            );
+          }
+        });
+      }, 300);
+    } catch (e) {
+      console.error(
+        `Error executing useEffect for Table Body Reference:\n${
+          (e as Error).message
+        }`
+      );
+    }
   }, []);
   useEffect(() => {
     if (formRef?.current instanceof HTMLFormElement) {
@@ -78,35 +333,6 @@ export default function RemoveProfForm({
       );
     }
   }, [tabRef]);
-  useEffect(() => {
-    try {
-      if (!(tbodyRef.current instanceof HTMLTableSectionElement))
-        throw elementNotFound(
-          tbodyRef.current,
-          `Validation of Table Body instance`,
-          extLine(new Error())
-        );
-      handleFetch("profs", "_table", true).then(res =>
-        res.forEach(prof => {
-          profs.push({
-            name: prof.name,
-            tel: prof.tel,
-            email: prof.email,
-            area: (prof as ProfInfo)["area"] || "Indefinido",
-            day: (prof as ProfInfo)["day"] || "Indefinido",
-            interv: (prof as ProfInfo)["interv"] || "Indefinido",
-            idf: (prof as ProfInfo)["idf"] || "Indefinido",
-          });
-        })
-      );
-    } catch (e) {
-      console.error(
-        `Error executing useEffect for Table Body Reference:\n${
-          (e as Error).message
-        }`
-      );
-    }
-  }, [tbodyRef]);
   return (
     <form
       id="formRemoveProf"
@@ -177,91 +403,15 @@ export default function RemoveProfForm({
             </tr>
           </thead>
           <tbody ref={tbodyRef}>
-            <ProfRow
-              count={2}
-              tabRef={tabRef}
-              userClass={userClass}
-              dispatch={setDisplayRowData}
-              state={shouldDisplayRowData}
-              profInfo={{
-                idf: "156.789.99-00",
-                name: "João Almeida dos Santos",
-                area: "Odontologia & Coordenação",
-                email: "almeida.joao@gmail.com",
-                tel: "+55 21 99988-7766",
-                interv: "08/01/2020 – Presente",
-                day: "Quarta-feira & Sexta-Feira",
-              }}
-            />
-            <ProfRow
-              count={3}
-              tabRef={tabRef}
-              userClass={userClass}
-              dispatch={setDisplayRowData}
-              state={shouldDisplayRowData}
-              profInfo={{
-                idf: "156.789.99-00",
-                name: "Jéssica Bonifácio Barbosa",
-                area: "Educação Física",
-                email: "jess.barb@gmail.com",
-                tel: "+55 21 91516-7788",
-                interv: "08/01/2020 – 08/10/2020",
-                day: "Inativa",
-              }}
-            />
-            <ProfRow
-              count={4}
-              tabRef={tabRef}
-              userClass={userClass}
-              dispatch={setDisplayRowData}
-              state={shouldDisplayRowData}
-              profInfo={{
-                idf: "129.222.333-11",
-                name: "Gislayne Duarte Tavares",
-                area: "Nutrição & Supervisão",
-                email: "gislayne1994@gmail.com",
-                tel: "+55 11 91010-6689",
-                interv: "08/01/2020 – Presente",
-                day: "Sexta-Feira",
-              }}
-            />
-            <ProfRow
-              count={5}
-              tabRef={tabRef}
-              userClass={userClass}
-              external={true}
-              dispatch={setDisplayRowData}
-              state={shouldDisplayRowData}
-              profInfo={{
-                idf: "158.354.458-12",
-                name: "André Alfredo Gusmão",
-                area: "Educação Física",
-                email: "andregus@gmail.com",
-                tel: "+55 31 92015-6678",
-                interv: "08/01/2020 – Presente",
-                day: "Quarta-Feira",
-              }}
-            />
-            <ProfRow
-              count={6}
-              tabRef={tabRef}
-              userClass={userClass}
-              external={true}
-              dispatch={setDisplayRowData}
-              state={shouldDisplayRowData}
-              profInfo={{
-                idf: "158.555.459-19",
-                name: "Aline dos Santos Wanderhaus",
-                area: "Odontologia",
-                email: "aliwander@outlook.com",
-                tel: "+55 11 92299-6779",
-                interv: "08/01/2020 – 08/01/2021",
-                day: "Inativo",
-              }}
-            />
+            <span style={{ margin: "2rem", position: "absolute" }}>
+              <Spinner
+                spinnerClass="spinner-border"
+                spinnerColor="text-info"
+                message="Loading Professionals Table..."
+              />
+            </span>
           </tbody>
         </table>
-        <div role="group" className="form-padded pdL0 widQ460FullW "></div>
       </section>
       <button
         type="button"

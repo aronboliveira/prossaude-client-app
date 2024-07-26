@@ -49,6 +49,9 @@ export default function StudentForm({
       ...document.querySelectorAll(".ovFlAut"),
       ...document.querySelectorAll("[scrollbar-width=none]"),
     ]);
+    const nextDiv = document.getElementById("avPacsTab")?.nextElementSibling;
+    if (nextDiv?.id === "" && nextDiv instanceof HTMLDivElement)
+      nextDiv.remove();
   }, []);
   useEffect(() => {
     if (formRef?.current instanceof HTMLFormElement) {

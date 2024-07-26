@@ -34,7 +34,6 @@ export default function PacList({
   shouldDisplayPacList = true,
   userClass = "estudante",
 }: PacListProps): JSX.Element {
-  //TODO USAR ARRAY PARA RENDERIZAÇÃO DINÂMICA APÓS TESTES COM API
   const pacs: PacInfo[] = [];
   const tabPacRef = useRef<nullishTab>(null);
   const sectTabRef = useRef<nullishHtEl>(null);
@@ -64,7 +63,6 @@ export default function PacList({
         );
       if (pacs.length > 0 && tbodyRef.current.querySelector("tr")) return;
       setTimeout(() => {
-        console.log("Initiating rendering of patients table...");
         if (pacs.length > 0) return;
         handleFetch("patients", "_table", true).then(res => {
           res.forEach(pac => {
@@ -113,9 +111,6 @@ export default function PacList({
                       extLine(new Error())
                     );
                   if (tbodyRef.current.querySelector("tr")) return;
-                  console.log(
-                    "Trying to recover rendering of patients table..."
-                  );
                   panelRoots[`${tbodyRef.current.id}`]?.unmount();
                   delete panelRoots[`${tbodyRef.current.id}`];
                   tbodyRef.current.remove();
@@ -185,9 +180,26 @@ export default function PacList({
                           )}
                         </tr>
                       </thead>
-                      <tbody className="pacTbody" ref={tbodyRef}></tbody>
+                      <tbody className="pacTbody" ref={tbodyRef}>
+                        <span
+                          style={{ marginBlock: "2rem", position: "absolute" }}
+                        >
+                          <Spinner
+                            spinnerClass="spinner-border"
+                            spinnerColor="text-info"
+                            message="Loading Patients Table..."
+                          />
+                        </span>
+                      </tbody>
                     </ErrorBoundary>
                   );
+                  tbodyRef.current = document.querySelector(".pacTbody");
+                  if (!(tbodyRef.current instanceof HTMLElement))
+                    throw elementNotFound(
+                      tbodyRef.current,
+                      `Validation of replaced tbody`,
+                      extLine(new Error())
+                    );
                   if (!panelRoots[`${tbodyRef.current.id}`])
                     panelRoots[`${tbodyRef.current.id}`] = createRoot(
                       tbodyRef.current
@@ -232,7 +244,6 @@ export default function PacList({
               panelRoots[`${tbodyRef.current.id}`] = createRoot(
                 tbodyRef.current
               );
-            console.log("Checking tr for rendering...");
             if (!tbodyRef.current.querySelector("tr"))
               panelRoots[`${tbodyRef.current.id}`]?.render(
                 pacs.map((pac, i) => {
@@ -261,15 +272,6 @@ export default function PacList({
                   );
                 })
               );
-            if (!tbodyRef.current.querySelector("tr")) {
-              console.log("Failed to render. Trying recovery...");
-              console.log("References:");
-              console.log(panelRoots);
-              console.log(panelRoots[`${tbodyRef.current.id}`]);
-              console.log(
-                (panelRoots[`${tbodyRef.current.id}`] as any)["_internalRoot"]
-              );
-            }
             setTimeout(() => {
               if (tabPacRef?.current instanceof HTMLTableElement) {
                 equalizeTabCells(tabPacRef.current);
@@ -417,11 +419,13 @@ export default function PacList({
           </tr>
         </thead>
         <tbody className="pacTbody" ref={tbodyRef}>
-          <Spinner
-            spinnerClass="spinner-border"
-            spinnerColor="text-info"
-            message="Loading Patients Table..."
-          />
+          <span style={{ marginBlock: "2rem", position: "absolute" }}>
+            <Spinner
+              spinnerClass="spinner-border"
+              spinnerColor="text-info"
+              message="Loading Patients Table..."
+            />
+          </span>
         </tbody>
       </table>
     </section>

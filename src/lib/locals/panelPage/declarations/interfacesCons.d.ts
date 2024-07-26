@@ -208,9 +208,9 @@ export interface ErrorDlgProps {
 
 export interface StudRowProps {
   tabRef: MutableRefObject<nullishTab>;
-  count: looseNum;
+  nRow: looseNum;
   userClass: userClasses;
-  studInfo: StudInfo;
+  stud: StudInfo;
   state?: boolean;
   dispatch?: Dispatch<SetStateAction<boolean>>;
   inDlg?: boolean;
@@ -218,9 +218,9 @@ export interface StudRowProps {
 
 export interface ProfRowProps {
   tabRef: MutableRefObject<nullishTab>;
-  count: looseNum;
+  nRow: looseNum;
   userClass: userClasses;
-  profInfo: ProfInfo;
+  prof: ProfInfo;
   state?: boolean;
   dispatch?: Dispatch<SetStateAction<boolean>>;
   inDlg?: boolean;

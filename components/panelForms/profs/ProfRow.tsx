@@ -5,12 +5,12 @@ import AlterFieldList from "../../lists/AlterFieldList";
 export default function ProfRow({
   dispatch,
   tabRef,
-  count,
+  nRow,
   inDlg = false,
   userClass = "estudante",
   state = false,
   external = false,
-  profInfo = {
+  prof = {
     name: "Anônimo",
     email: "Não fornecido",
     tel: "Não fornecido",
@@ -20,91 +20,91 @@ export default function ProfRow({
     idf: "Não fornecido",
   },
 }: ProfRowProps) {
-  count = typeof count === "string" ? parseInt(count) : count;
-  if (!Number.isFinite(count)) count = 2;
+  nRow = typeof nRow === "string" ? parseInt(nRow) : nRow;
+  if (!Number.isFinite(nRow)) nRow = 2;
   return (
-    <tr id={`avProfs-row${count}`}>
+    <tr id={`avProfs-row${nRow}`}>
       {userClass === "coordenador" && (
         <th scope="row" className="celCPFProf">
           <output
-            className={`outputAvProf outputAvProf${count - 1}`}
-            id={`outpCPFProf-row${count}`}
-            data-title={`cpf-prof-row${count}`}
+            className={`outputAvProf outputAvProf${nRow - 1}`}
+            id={`outpCPFProf-row${nRow}`}
+            data-title={`cpf-prof-row${nRow}`}
           >
-            {profInfo.idf || "Não fornecido"}
+            {prof.idf || "Não fornecido"}
           </output>
         </th>
       )}
       <td className="celNameProf">
         <output
-          className={`outputAvProf outputAvProf${count - 1}`}
-          id={`outpNameProf-row${count}`}
-          data-title={`name-prof-row${count}`}
+          className={`outputAvProf outputAvProf${nRow - 1}`}
+          id={`outpNameProf-row${nRow}`}
+          data-title={`name-prof-row${nRow}`}
         >
-          {profInfo.name || "Anônimo"}
+          {prof.name || "Anônimo"}
         </output>
       </td>
       <td className="celExtProf">
         <output
-          className={`outputAvProf outputAvProf${count - 1}`}
-          id={`outpExtProf-row${count}`}
-          data-title={`ext-prof-row${count}`}
+          className={`outputAvProf outputAvProf${nRow - 1}`}
+          id={`outpExtProf-row${nRow}`}
+          data-title={`ext-prof-row${nRow}`}
         >
           {external ? "Externo" : "Interno"}
         </output>
       </td>
       <td className="celEmailProf">
         <output
-          className={`outputAvProf outputAvProf outputAvProf${count - 1}`}
-          id={`outpEmailProf-row${count}`}
-          data-title={`email-prof-row${count}`}
+          className={`outputAvProf outputAvProf outputAvProf${nRow - 1}`}
+          id={`outpEmailProf-row${nRow}`}
+          data-title={`email-prof-row${nRow}`}
         >
           <address>
             <a
-              href={`mailto:${profInfo.email || "null"}`}
+              href={`mailto:${prof.email || "null"}`}
               target="_blank"
               rel="nofollow"
-              id={`emaila-prof-row${count}`}
+              id={`emaila-prof-row${nRow}`}
             >
-              {`${profInfo.email || "Não fornecido"}`}
+              {`${prof.email || "Não fornecido"}`}
             </a>
           </address>
         </output>
       </td>
       <td className="celTelProf">
         <output
-          className={`outputAv outputAvProf outputAvProf${count - 1}`}
-          id={`outpTelProf-row${count}`}
-          data-title={`email-prof-row${count}`}
+          className={`outputAv outputAvProf outputAvProf${nRow - 1}`}
+          id={`outpTelProf-row${nRow}`}
+          data-title={`email-prof-row${nRow}`}
         >
-          {`${profInfo.tel || "Não fornecido"}`}
+          {`${prof.tel || "Não fornecido"}`}
         </output>
       </td>
       <td className="celAreaProf">
         <output
-          className={`outputAvProf outputAvProf${count - 1}`}
-          id={`outpAreaProf-row${count}`}
-          data-title={`area-prof-row${count}`}
+          className={`outputAvProf outputAvProf${nRow - 1}`}
+          id={`outpAreaProf-row${nRow}`}
+          data-title={`area-prof-row${nRow}`}
         >
-          {`${profInfo.area || "Não definido"}`}
+          {`${prof.area || "Não definido"}`}
         </output>
       </td>
       <td className="celDayProf">
         <output
-          className={`outputAvProf outputAvProf${count - 1}`}
-          id={`outpDayProf-row${count}`}
-          data-title={`day-prof-row${count}`}
+          className={`outputAvProf outputAvProf${nRow - 1}`}
+          id={`outpDayProf-row${nRow}`}
+          data-title={`day-prof-row${nRow}`}
         >
-          {`${profInfo.day || "Não definido"}`}
+          {`${prof.day || "Não definido"}`}
         </output>
       </td>
       <td className="celIntervProf">
         <output
-          className={`outputAvProf outputAvProf outputAvProf${count - 1}`}
-          id={`outpIntervProf-row${count}`}
-          data-title={`interv-prof-row${count}`}
+          className={`outputAvProf outputAvProf outputAvProf${nRow - 1}`}
+          id={`outpIntervProf-row${nRow}`}
+          data-title={`interv-prof-row${nRow}`}
         >
-          {`${profInfo.interv || "Não definido"}`}
+          {`${prof.interv || "Não definido"}`}
         </output>
       </td>
       {!inDlg &&
@@ -140,7 +140,7 @@ export default function ProfRow({
         <td className="alocCel">
           <button
             className="btnAlocProf btn btn-success widFull"
-            id={`btnAlocProf-row${count}`}
+            id={`btnAlocProf-row${nRow}`}
           >
             <span role="textbox">Alocar</span>
           </button>
