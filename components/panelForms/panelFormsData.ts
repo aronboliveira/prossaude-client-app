@@ -1,3 +1,5 @@
+import { Root } from "react-dom/client";
+
 export const scheduleReset: { outerHTML: string } = { outerHTML: `` };
 export const sessionScheduleState: {
   [k: string]: string | JSX.Element | Array<[string, string]>;
@@ -34,3 +36,4 @@ export const panelFormsVariables = {
   isAutocorrectProfOn: false,
   isAutofillProfOn: false,
 };
+export const panelRoots: { [k: string]: Root } = {};

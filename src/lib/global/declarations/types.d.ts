@@ -61,12 +61,14 @@ export interface objInnerTabs {
   numColsCons: number;
   areColGroupsSimilar: boolean;
 }
+export type nullishHtEl = HTMLElement | null;
 export type nullishForm = HTMLFormElement | null;
 export type nullishDlg = HTMLDialogElement | null;
 export type nullishInp = HTMLInputElement | null;
 export type nullishSel = HTMLSelectElement | null;
 export type nullishBtn = HTMLButtonElement | null;
 export type nullishTab = HTMLTableElement | null;
+export type nullishTabSect = HTMLTableSectionElement | null;
 export type nullishAnchor = HTMLAnchorElement | null;
 export type nullishDiv = HTMLDivElement | null;
 export type nullishSpan = HTMLSpanElement | null;
@@ -80,6 +82,7 @@ export type rMouseEvent = MouseEvent | React.MouseEvent;
 export type rDragEvent = DragEvent | React.DragEvent;
 export type pageCases = "login" | "base" | "ag" | "ed" | "od" | "panel";
 export type formCases = "studs" | "profs" | "patients" | "cons" | pageCases;
+export type fetchSuffixes = "_table";
 export type quadrCases = "SupDir" | "SupEsq" | "InfDir" | "InfEsq";
 export type ctxRot =
   | "RefDia"

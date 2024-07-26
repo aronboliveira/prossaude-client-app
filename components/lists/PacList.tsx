@@ -1,9 +1,17 @@
-import { nullishBtn, nullishTab } from "@/lib/global/declarations/types";
+import {
+  nullishBtn,
+  nullishHtEl,
+  nullishTab,
+  nullishTabSect,
+} from "@/lib/global/declarations/types";
 import { equalizeTabCells } from "@/lib/global/gStyleScript";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { strikeEntries } from "@/lib/locals/panelPage/consStyleScript";
-import { PacListProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
+import {
+  PacInfo,
+  PacListProps,
+} from "@/lib/locals/panelPage/declarations/interfacesCons";
 import {
   addListenerAlocation,
   checkLocalIntervs,
@@ -19,6 +27,7 @@ import {
 import PrevConsList from "./PrevConsList";
 import AlterFieldList from "./AlterFieldList";
 import FormExcludeBtn from "../panelForms/defs/FormExcludeBtn";
+import { handleFetch } from "@/pages/api/ts/handlers";
 
 export default function PacList({
   setDisplayRowData,
@@ -28,13 +37,17 @@ export default function PacList({
   shouldDisplayPacList = true,
   userClass = "estudante",
 }: PacListProps): JSX.Element {
+  //TODO USAR ARRAY PARA RENDERIZAÇÃO DINÂMICA APÓS TESTES COM API
+  const pacs: PacInfo[] = [];
   const toggleDisplayRowData = (shouldDisplayRowData: boolean = true) => {
     setDisplayRowData(!shouldDisplayRowData);
   };
   const tabPacRef = useRef<nullishTab>(null);
-  const sectTabRef = useRef<HTMLElement | null>(null);
+  const sectTabRef = useRef<nullishHtEl>(null);
+  const tbodyRef = useRef<nullishTabSect>(null);
   const btnPrevListRef = useRef<nullishBtn>(null);
-  const [shouldDisplayPrevList, setDisplayPrevList] = useState(false);
+  const alocBtnRef = useRef<nullishBtn>(null);
+  const [shouldDisplayPrevList, setDisplayPrevList] = useState<boolean>(false);
   useEffect(() => {
     if (sectTabRef?.current instanceof HTMLElement) {
       syncAriaStates([
@@ -81,7 +94,6 @@ export default function PacList({
           extLine(new Error())
         );
   };
-  const alocBtnRef = useRef<nullishBtn>(null);
   useEffect(() => {
     const ancestral = document.getElementById("regstPacDlg");
     ancestral instanceof HTMLElement
@@ -126,6 +138,36 @@ export default function PacList({
       }
     });
   }, []);
+  useEffect(() => {
+    try {
+      if (!(tbodyRef.current instanceof HTMLTableSectionElement))
+        throw elementNotFound(
+          tbodyRef.current,
+          `Validation of Table Body instance`,
+          extLine(new Error())
+        );
+      handleFetch("patients", "_table", true).then(res =>
+        res.forEach(pac => {
+          pacs.push({
+            name: pac.name,
+            tel: pac.tel,
+            email: pac.email,
+            next_appointed_day: (pac as PacInfo)["next_appointed_day"],
+            treatment_period: (pac as PacInfo)["treatment_period"],
+            current_status: (pac as PacInfo)["current_status"],
+            signature: (pac as PacInfo)["signature"],
+            historic: (pac as PacInfo)["historic"],
+          });
+        })
+      );
+    } catch (e) {
+      console.error(
+        `Error executing useEffect for Table Body Reference:\n${
+          (e as Error).message
+        }`
+      );
+    }
+  }, [tbodyRef]);
   return (
     <section className="form-padded" id="sectPacsTab" ref={sectTabRef}>
       <table
@@ -180,7 +222,7 @@ export default function PacList({
             )}
           </tr>
         </thead>
-        <tbody>
+        <tbody className="pacTbody" ref={tbodyRef}>
           <tr id={`avPacs-rowUnfilled0`}>
             {userClass === "coordenador" && (
               <th scope="row" className={`tagPhUnfilledTextPac`}>

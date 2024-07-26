@@ -9,13 +9,19 @@ import {
   nullishForm,
   nullishTab,
 } from "@/lib/global/declarations/types";
-import { GlobalFormProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
+import {
+  GlobalFormProps,
+  StudInfo,
+} from "@/lib/locals/panelPage/declarations/interfacesCons";
 import StudRow from "./StudRow";
+import { handleFetch } from "@/pages/api/ts/handlers";
 
 export default function RemoveStudForm({
   userClass = "estudante",
 }: GlobalFormProps): JSX.Element {
   const [shouldDisplayRowData, setDisplayRowData] = useState<boolean>(false);
+  //TODO USAR ARRAY PARA RENDERIZAÇÃO DINÂMICA APÓS TESTES COM API
+  const studs: StudInfo[] = [];
   const formRef = useRef<nullishForm>(null);
   const tabRef = useRef<nullishTab>(null);
   const tbodyRef = useRef<HTMLTableSectionElement | null>(null);
@@ -71,6 +77,36 @@ export default function RemoveStudForm({
       );
     }
   }, [tabRef]);
+  useEffect(() => {
+    try {
+      if (!(tbodyRef.current instanceof HTMLTableSectionElement))
+        throw elementNotFound(
+          tbodyRef.current,
+          `Validation of Table Body instance`,
+          extLine(new Error())
+        );
+      handleFetch("studs", "_table", true).then(res =>
+        res.forEach(stud => {
+          studs.push({
+            name: stud.name,
+            tel: stud.tel,
+            email: stud.email,
+            area: (stud as StudInfo)["area"] || "Indefinido",
+            day: (stud as StudInfo)["day"] || "Indefinido",
+            interv: (stud as StudInfo)["interv"] || "Indefinido",
+            cpf: (stud as StudInfo)["cpf"] || "Indefinido",
+            dre: (stud as StudInfo)["dre"] || "Indefinido",
+          });
+        })
+      );
+    } catch (e) {
+      console.error(
+        `Error executing useEffect for Table Body Reference:\n${
+          (e as Error).message
+        }`
+      );
+    }
+  }, [tbodyRef]);
   return (
     <form
       id="formRemoveStud"

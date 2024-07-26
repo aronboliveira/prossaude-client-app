@@ -8,17 +8,24 @@ import {
   nullishBtn,
   nullishForm,
   nullishTab,
+  nullishTabSect,
 } from "@/lib/global/declarations/types";
-import { GlobalFormProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
+import {
+  GlobalFormProps,
+  ProfInfo,
+} from "@/lib/locals/panelPage/declarations/interfacesCons";
 import ProfRow from "./ProfRow";
+import { handleFetch } from "@/pages/api/ts/handlers";
 
 export default function RemoveProfForm({
   userClass = "estudante",
 }: GlobalFormProps): JSX.Element {
   const [shouldDisplayRowData, setDisplayRowData] = useState(false);
+  //TODO USAR ARRAY PARA RENDERIZAÇÃO DINÂMICA APÓS TESTES COM API
+  const profs: ProfInfo[] = [];
   const formRef = useRef<nullishForm>(null);
   const tabRef = useRef<nullishTab>(null);
-  const tbodyRef = useRef<HTMLTableSectionElement | null>(null);
+  const tbodyRef = useRef<nullishTabSect>(null);
   const btnExportProfsTabRef = useRef<nullishBtn>(null);
   const callbackNormalizeSizesSb = useCallback(() => {
     normalizeSizeSb(
@@ -71,6 +78,35 @@ export default function RemoveProfForm({
       );
     }
   }, [tabRef]);
+  useEffect(() => {
+    try {
+      if (!(tbodyRef.current instanceof HTMLTableSectionElement))
+        throw elementNotFound(
+          tbodyRef.current,
+          `Validation of Table Body instance`,
+          extLine(new Error())
+        );
+      handleFetch("profs", "_table", true).then(res =>
+        res.forEach(prof => {
+          profs.push({
+            name: prof.name,
+            tel: prof.tel,
+            email: prof.email,
+            area: (prof as ProfInfo)["area"] || "Indefinido",
+            day: (prof as ProfInfo)["day"] || "Indefinido",
+            interv: (prof as ProfInfo)["interv"] || "Indefinido",
+            idf: (prof as ProfInfo)["idf"] || "Indefinido",
+          });
+        })
+      );
+    } catch (e) {
+      console.error(
+        `Error executing useEffect for Table Body Reference:\n${
+          (e as Error).message
+        }`
+      );
+    }
+  }, [tbodyRef]);
   return (
     <form
       id="formRemoveProf"

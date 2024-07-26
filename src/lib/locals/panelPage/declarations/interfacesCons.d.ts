@@ -210,16 +210,7 @@ export interface StudRowProps {
   tabRef: MutableRefObject<nullishTab>;
   count: looseNum;
   userClass: string;
-  studInfo: {
-    name: string;
-    email: string;
-    tel: string;
-    area: string;
-    day: string;
-    interv: string;
-    dre?: string;
-    cpf?: string;
-  };
+  studInfo: StudInfo;
   state?: boolean;
   dispatch?: Dispatch<SetStateAction<boolean>>;
   inDlg?: boolean;
@@ -229,17 +220,42 @@ export interface ProfRowProps {
   tabRef: MutableRefObject<nullishTab>;
   count: looseNum;
   userClass: string;
-  profInfo: {
-    name: string;
-    email: string;
-    tel: string;
-    area: string;
-    day: string;
-    interv: string;
-    idf?: string;
-  };
+  profInfo: ProfInfo;
   state?: boolean;
   dispatch?: Dispatch<SetStateAction<boolean>>;
   inDlg?: boolean;
   external?: boolean;
+}
+
+export interface ProfInfo {
+  name: string;
+  email: string;
+  tel: string;
+  area: string;
+  day: string;
+  interv: string;
+  idf?: string;
+}
+
+export interface StudInfo {
+  name: string;
+  email: string;
+  tel: string;
+  area: string;
+  day: string;
+  interv: string;
+  dre?: string;
+  cpf?: string;
+}
+
+export interface PacInfo {
+  //TODO PRECISA DEFINIR PACROW
+  name: string;
+  email: string;
+  tel: string;
+  next_appointed_day: string;
+  treatment_period: string;
+  current_status: string;
+  signature: File;
+  historic: {};
 }
