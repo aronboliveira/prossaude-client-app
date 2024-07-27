@@ -212,7 +212,7 @@ export default function PacList({
                           pac={pac}
                           userClass={userClass}
                           shouldShowAlocBtn={shouldShowAlocBtn}
-                          tabPacRef={tabPacRef}
+                          tabRef={tabPacRef}
                           key={`pac_row__${i + 2}`}
                         />
                       ))
@@ -266,7 +266,7 @@ export default function PacList({
                       pac={pac}
                       userClass={userClass}
                       shouldShowAlocBtn={shouldShowAlocBtn}
-                      tabPacRef={tabPacRef}
+                      tabRef={tabPacRef}
                       key={`pac_row__${i + 2}`}
                     />
                   );

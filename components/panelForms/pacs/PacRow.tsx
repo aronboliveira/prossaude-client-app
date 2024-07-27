@@ -9,7 +9,7 @@ import AlterFieldList from "../../lists/AlterFieldList";
 import { PacRowProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
 
 export default function PacRow({
-  tabPacRef,
+  tabRef,
   pac,
   nRow = -1,
   userClass = "estudante",
@@ -282,7 +282,7 @@ export default function PacRow({
           {shouldDisplayRowData && (
             <AlterFieldList
               setDisplayRowData={setDisplayRowData}
-              tabRef={tabPacRef}
+              tabRef={tabRef}
               shouldDisplayRowData={shouldDisplayRowData}
             />
           )}

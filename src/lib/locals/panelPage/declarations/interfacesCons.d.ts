@@ -206,59 +206,53 @@ export interface ErrorDlgProps {
   onClick: () => void;
 }
 
-export interface StudRowProps {
+export interface TabRowProps extends GlobalFormProps {
   tabRef: MutableRefObject<nullishTab>;
   nRow: looseNum;
-  userClass: userClasses;
-  stud: StudInfo;
+}
+
+export interface UserRowProps extends TabRowProps {
   state?: boolean;
   dispatch?: Dispatch<SetStateAction<boolean>>;
   inDlg?: boolean;
 }
 
-export interface ProfRowProps {
-  tabRef: MutableRefObject<nullishTab>;
-  nRow: looseNum;
-  userClass: userClasses;
+export interface StudRowProps extends UserRowProps {
+  stud: StudInfo;
+}
+
+export interface ProfRowProps extends UserRowProps {
   prof: ProfInfo;
-  state?: boolean;
-  dispatch?: Dispatch<SetStateAction<boolean>>;
-  inDlg?: boolean;
   external?: boolean;
 }
 
-export interface PacRowProps extends GlobalFormProps {
-  tabPacRef: MutableRefObject<nullishTab>;
+export interface PacRowProps extends TabRowProps {
   pac: PacInfo;
-  nRow: number;
   shouldShowAlocBtn: boolean;
 }
 
-export interface ProfInfo {
+export interface PersonProps {
   name: string;
   email: string;
   tel: string;
+}
+
+export interface UserProps extends PersonProps {
   area: string;
   day: string;
   interv: string;
+}
+
+export interface ProfInfo extends UserProps {
   idf?: string;
 }
 
-export interface StudInfo {
-  name: string;
-  email: string;
-  tel: string;
-  area: string;
-  day: string;
-  interv: string;
+export interface StudInfo extends UserProps {
   dre?: string;
   cpf?: string;
 }
 
-export interface PacInfo {
-  name: string;
-  email: string;
-  tel: string;
+export interface PacInfo extends PersonProps {
   next_appointed_day: string;
   treatment_period: string;
   current_status: string;
