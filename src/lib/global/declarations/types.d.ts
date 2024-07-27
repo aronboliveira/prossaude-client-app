@@ -81,8 +81,25 @@ export type nullishCanvas = HTMLCanvasElement | null;
 export type rMouseEvent = MouseEvent | React.MouseEvent;
 export type rDragEvent = DragEvent | React.DragEvent;
 export type pageCases = "login" | "base" | "ag" | "ed" | "od" | "panel";
-export type formCases = "studs" | "profs" | "patients" | "cons" | pageCases;
-export type fetchSuffixes = "_table";
+export type formCases =
+  | "schedule"
+  | "studs"
+  | "profs"
+  | "patients"
+  | "cons"
+  | pageCases;
+export type fetchSuffixes = "_table" | "_form";
+export type pacStatus =
+  | "avaliacao"
+  | "tratamento"
+  | "emergência"
+  | "altaOdontologia"
+  | "altaEducacaoFisica"
+  | "altaNutricao"
+  | "altaOdontologiaEducacaoFisica"
+  | "altaOdontologiaNutricao"
+  | "altaEducacaoFisicaNutricao"
+  | "altaOdontologiaEducacaoFisicaNutricao";
 export type quadrCases = "SupDir" | "SupEsq" | "InfDir" | "InfEsq";
 export type ctxRot =
   | "RefDia"
@@ -133,3 +150,16 @@ export type pageStyleCases =
   | "Panel Page Style";
 export type validSchedHours = 18 | 19 | 20 | 21;
 export type userClasses = "coordenador" | "supervisor" | "estudante";
+export type aptTypes =
+  | "anamnese"
+  | "retorno"
+  | "exodontia"
+  | "profilaxia"
+  | "raspagem"
+  | "rcarie"
+  | "acompanhamento"
+  | "analise"
+  | "diagnostico"
+  | "avaliacao"
+  | "recordatorio"
+  | "suplementacao";

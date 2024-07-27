@@ -1284,3 +1284,34 @@ export function textTransformPascal(text: string): string {
     return text.toString();
   }
 }
+
+export function dateISOtoBRL(isoDate: string): string {
+  try {
+    if (typeof isoDate !== "string")
+      throw new Error(`Invalid typeof passed to dateISOtoBRL`);
+    if (/\//g.test(isoDate) || /\\/g.test(isoDate) || /present/gi.test(isoDate))
+      return isoDate;
+    isoDate = isoDate.replaceAll(/[^0-9\-]/g, "");
+    if (isoDate.length < 5 || !/\-/g.test(isoDate))
+      throw new Error(`Invalid date passed to dateISOtoBRL`);
+    let d, m, y;
+    const dateFragments = isoDate.split("-");
+    if (dateFragments.length === 1) {
+      console.warn(
+        `No month and day were found after date split during conversion to BRL.`
+      );
+      [y] = dateFragments;
+      (m = "00"), (d = "00");
+    } else if (dateFragments.length === 2) {
+      console.warn(
+        `No day was found after date split during conversion to BRL.`
+      );
+      [y, m] = dateFragments;
+      d = "00";
+    } else [y, m, d] = dateFragments;
+    return `${d}/${m}/${y}`;
+  } catch (e) {
+    console.error(`Error executing dateISOtoBRL:\n${(e as Error).message}`);
+    return "00/00/0000";
+  }
+}

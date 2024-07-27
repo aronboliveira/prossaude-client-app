@@ -147,13 +147,13 @@ export default function AGPage(): JSX.Element {
                             Alta — Educação Física
                           </option>
                           <option value="altaNutricao">Alta — Nutrição</option>
-                          <option value="altaOdontologiaEducaoFisica">
+                          <option value="altaOdontologiaEducacaoFisica">
                             Alta — Odontologia — Educação Física
                           </option>
                           <option value="altaOdontologiaNutricao">
                             Alta — Odontologia — Nutrição
                           </option>
-                          <option value="altaEducaoFisicaNutricao">
+                          <option value="altaEducacaoFisicaNutricao">
                             Alta — Educação Física — Nutrição
                           </option>
                           <option value="altaOdontologiaEducacaoFisicaNutricao">

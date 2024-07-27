@@ -1035,17 +1035,21 @@ export function toggleConformDlg(): void {
 
 const borderColors: { [k: string]: string } = {};
 export async function validateForm(
-  ev: FormEvent | SubmitEvent | rMouseEvent,
+  ev: FormEvent | SubmitEvent | rMouseEvent | HTMLFormElement,
   scope: HTMLElement | Document = document
 ): Promise<[boolean, string[], Array<[string, string | File]>]> {
-  if (
+  let targ;
+  if (!(ev instanceof HTMLFormElement || "currentTarget" in ev))
+    throw new Error(`Invalid form reference`);
+  if (ev instanceof HTMLFormElement) targ = ev;
+  else if (
     ev.currentTarget instanceof HTMLFormElement ||
     ((ev.currentTarget instanceof HTMLButtonElement ||
       ev.currentTarget instanceof HTMLInputElement) &&
       ev.currentTarget.type === "submit")
   )
     ev.preventDefault();
-  const targ = ev.currentTarget;
+  targ = ev.currentTarget;
   const arrValidity: boolean[] = [];
   const invalidEntries: string[] = [];
   const validEntries: Array<[string, string | File]> = [];

@@ -66,7 +66,8 @@ export default function RemoveProfForm({
                 tel: prof.tel,
                 email: prof.email,
                 area: (prof as ProfInfo)["area"],
-                interv: (prof as ProfInfo)["interv"],
+                start_day: (prof as ProfInfo)["start_day"],
+                end_day: (prof as ProfInfo)["end_day"],
                 day: (prof as ProfInfo)["day"],
                 idf: (prof as ProfInfo)["idf"],
               });

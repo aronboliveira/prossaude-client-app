@@ -72,7 +72,8 @@ export default function PacList({
                 tel: pac.tel,
                 email: pac.email,
                 next_appointed_day: (pac as PacInfo)["next_appointed_day"],
-                treatment_period: (pac as PacInfo)["treatment_period"],
+                treatment_beg: (pac as PacInfo)["treatment_beg"],
+                treatment_end: (pac as PacInfo)["treatment_end"],
                 current_status: (pac as PacInfo)["current_status"],
                 signature: (pac as PacInfo)["signature"],
                 historic: (pac as PacInfo)["historic"],
@@ -139,42 +140,103 @@ export default function PacList({
                         </strong>
                       </caption>
                       <colgroup>
-                        <col></col>
-                        <col></col>
-                        <col></col>
-                        <col></col>
-                        <col></col>
-                        <col></col>
-                        <col></col>
-                        {userClass === "coordenador" && <col></col>}
-                        {userClass === "coordenador" && <col></col>}
-                        {userClass === "coordenador" && <col></col>}
-                        {userClass === "coordenador" && <col></col>}
-                        {shouldShowAlocBtn && <col></col>}
+                        <col data-col={1}></col>
+                        <col data-col={2}></col>
+                        <col data-col={3}></col>
+                        <col data-col={4}></col>
+                        <col data-col={5}></col>
+                        <col data-col={6}></col>
+                        <col data-col={7}></col>
+                        <col data-col={8}></col>
+                        {userClass === "coordenador" && (
+                          <col data-col={9}></col>
+                        )}
+                        {userClass === "coordenador" && (
+                          <col data-col={10}></col>
+                        )}
+                        {userClass === "coordenador" && (
+                          <col data-col={11}></col>
+                        )}
+                        {shouldShowAlocBtn && <col data-col={12}></col>}
                       </colgroup>
                       <thead className="thead-dark">
-                        <tr id={`avPacs-rowUnfilled0`}>
+                        <tr id={`avPacs-rowUnfilled0`} data-row={1}>
                           {userClass === "coordenador" && (
-                            <th scope="col">CPF</th>
+                            <th scope="col" data-row={1} data-col={1}>
+                              CPF
+                            </th>
                           )}
-                          <th scope="col">Nome</th>
-                          <th scope="col">E-mail</th>
-                          <th scope="col">Telefone</th>
-                          <th scope="col">Próximo Dia de Consulta</th>
-                          <th scope="col">Período de Acompanhamento</th>
+                          <th
+                            scope="col"
+                            data-row={1}
+                            data-col={userClass === "coordenador" ? 2 : 1}
+                          >
+                            Nome
+                          </th>
+                          <th
+                            scope="col"
+                            data-row={1}
+                            data-col={userClass === "coordenador" ? 3 : 2}
+                          >
+                            E-mail
+                          </th>
+                          <th
+                            scope="col"
+                            data-row={1}
+                            data-col={userClass === "coordenador" ? 4 : 3}
+                          >
+                            Telefone
+                          </th>
+                          <th
+                            scope="col"
+                            data-row={1}
+                            data-col={userClass === "coordenador" ? 5 : 4}
+                          >
+                            Próximo Dia de Consulta
+                          </th>
+                          <th
+                            scope="col"
+                            data-row={1}
+                            data-col={userClass === "coordenador" ? 6 : 5}
+                          >
+                            Período de Acompanhamento
+                          </th>
                           {userClass === "coordenador" && (
-                            <th scope="col">Assinatura</th>
+                            <th scope="col" data-row={1} data-col={7}>
+                              Assinatura
+                            </th>
                           )}
-                          <th scope="col">Status</th>
-                          <th scope="col">Histórico</th>
+                          <th
+                            scope="col"
+                            data-row={1}
+                            data-col={userClass === "coordenador" ? 8 : 6}
+                          >
+                            Status
+                          </th>
+                          <th
+                            scope="col"
+                            data-row={1}
+                            data-col={userClass === "coordenador" ? 9 : 7}
+                          >
+                            Histórico
+                          </th>
                           {userClass === "coordenador" && (
-                            <th scope="col">Alteração</th>
+                            <th scope="col" data-row={1} data-col={10}>
+                              Alteração
+                            </th>
                           )}
                           {userClass === "coordenador" && (
-                            <th scope="col">Exclusão</th>
+                            <th scope="col" data-row={1} data-col={11}>
+                              Exclusão
+                            </th>
                           )}
                           {shouldShowAlocBtn && (
-                            <th className="alocCel" scope="col">
+                            <th
+                              className="alocCel"
+                              scope="col"
+                              data-row={1}
+                              data-col={userClass === "coordenador" ? 12 : 8}
+                            >
                               Alocação
                             </th>
                           )}
@@ -385,34 +447,97 @@ export default function PacList({
           </strong>
         </caption>
         <colgroup>
-          <col></col>
-          <col></col>
-          <col></col>
-          <col></col>
-          <col></col>
-          <col></col>
-          <col></col>
-          {userClass === "coordenador" && <col></col>}
-          {userClass === "coordenador" && <col></col>}
-          {userClass === "coordenador" && <col></col>}
-          {userClass === "coordenador" && <col></col>}
-          {shouldShowAlocBtn && <col></col>}
+          <col data-col={1}></col>
+          <col data-col={2}></col>
+          <col data-col={3}></col>
+          <col data-col={4}></col>
+          <col data-col={5}></col>
+          <col data-col={6}></col>
+          <col data-col={7}></col>
+          <col data-col={8}></col>
+          {userClass === "coordenador" && <col data-col={9}></col>}
+          {userClass === "coordenador" && <col data-col={10}></col>}
+          {userClass === "coordenador" && <col data-col={11}></col>}
+          {shouldShowAlocBtn && <col data-col={12}></col>}
         </colgroup>
         <thead className="thead-dark">
-          <tr id={`avPacs-rowUnfilled0`}>
-            {userClass === "coordenador" && <th scope="col">CPF</th>}
-            <th scope="col">Nome</th>
-            <th scope="col">E-mail</th>
-            <th scope="col">Telefone</th>
-            <th scope="col">Próximo Dia de Consulta</th>
-            <th scope="col">Período de Acompanhamento</th>
-            {userClass === "coordenador" && <th scope="col">Assinatura</th>}
-            <th scope="col">Status</th>
-            <th scope="col">Histórico</th>
-            {userClass === "coordenador" && <th scope="col">Alteração</th>}
-            {userClass === "coordenador" && <th scope="col">Exclusão</th>}
+          <tr id={`avPacs-rowUnfilled0`} data-row={1}>
+            {userClass === "coordenador" && (
+              <th scope="col" data-row={1} data-col={1}>
+                CPF
+              </th>
+            )}
+            <th
+              scope="col"
+              data-row={1}
+              data-col={userClass === "coordenador" ? 2 : 1}
+            >
+              Nome
+            </th>
+            <th
+              scope="col"
+              data-row={1}
+              data-col={userClass === "coordenador" ? 3 : 2}
+            >
+              E-mail
+            </th>
+            <th
+              scope="col"
+              data-row={1}
+              data-col={userClass === "coordenador" ? 4 : 3}
+            >
+              Telefone
+            </th>
+            <th
+              scope="col"
+              data-row={1}
+              data-col={userClass === "coordenador" ? 5 : 4}
+            >
+              Próximo Dia de Consulta
+            </th>
+            <th
+              scope="col"
+              data-row={1}
+              data-col={userClass === "coordenador" ? 6 : 5}
+            >
+              Período de Acompanhamento
+            </th>
+            {userClass === "coordenador" && (
+              <th scope="col" data-row={1} data-col={7}>
+                Assinatura
+              </th>
+            )}
+            <th
+              scope="col"
+              data-row={1}
+              data-col={userClass === "coordenador" ? 8 : 6}
+            >
+              Status
+            </th>
+            <th
+              scope="col"
+              data-row={1}
+              data-col={userClass === "coordenador" ? 9 : 7}
+            >
+              Histórico
+            </th>
+            {userClass === "coordenador" && (
+              <th scope="col" data-row={1} data-col={10}>
+                Alteração
+              </th>
+            )}
+            {userClass === "coordenador" && (
+              <th scope="col" data-row={1} data-col={11}>
+                Exclusão
+              </th>
+            )}
             {shouldShowAlocBtn && (
-              <th className="alocCel" scope="col">
+              <th
+                className="alocCel"
+                scope="col"
+                data-row={1}
+                data-col={userClass === "coordenador" ? 12 : 8}
+              >
                 Alocação
               </th>
             )}

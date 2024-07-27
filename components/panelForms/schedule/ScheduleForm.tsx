@@ -33,7 +33,10 @@ import {
   handleScheduleChange,
   rootDlgContext,
 } from "../../../src/lib/locals/panelPage/handlers/consHandlerCmn";
-import { syncAriaStates } from "../../../src/lib/global/handlers/gHandlers";
+import {
+  syncAriaStates,
+  validateForm,
+} from "../../../src/lib/global/handlers/gHandlers";
 import { DataProvider } from "../../../src/lib/locals/panelPage/declarations/classesCons";
 import { handleClientPermissions } from "../../../src/lib/locals/panelPage/handlers/consHandlerUsers";
 import { fillScheduleState } from "../../../src/lib/locals/panelPage/consController";
@@ -50,6 +53,11 @@ import { globalDataProvider, panelRoots } from "../defs/client/SelectPanel";
 import { ErrorBoundary } from "react-error-boundary";
 import ThDate from "./ThDate";
 import TrBSchedTab from "./TrBSchedTab";
+import { handleSubmit } from "@/pages/api/ts/handlers";
+
+export const scheduleProps: { autoSaving: boolean } = {
+  autoSaving: true,
+};
 
 export default function ScheduleForm({
   mainRoot,
@@ -286,6 +294,26 @@ export default function ScheduleForm({
           scheduleDataProvider,
           globalDataProvider
         );
+      const saveInterv = setInterval(async () => {
+        try {
+          if (!(formRef.current instanceof HTMLFormElement))
+            throw elementNotFound(
+              formRef.current,
+              `Validation of Form instance`,
+              extLine(new Error())
+            );
+          validateForm(formRef.current, formRef.current).then(validation =>
+            handleSubmit("schedule", validation[2], true)
+          );
+        } catch (e) {
+          console.error(
+            `Error executing interval for saving schedule at ${new Date().getMinutes()}:\n${
+              (e as Error).message
+            }`
+          );
+        }
+      }, 60000);
+      return () => clearInterval(saveInterv);
     } else
       elementNotFound(
         formRef.current,

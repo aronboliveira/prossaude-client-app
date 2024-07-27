@@ -1,17 +1,30 @@
+"use client";
+
 import { nullishDlg, nullishTab } from "@/lib/global/declarations/types";
 import { isClickOutside } from "@/lib/global/gStyleScript";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
-import { PrevConsListProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
+import { HistoricDlgProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import { useEffect, useRef } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
 import GenericErrorComponent from "../error/GenericErrorComponent";
+import PrevConsRow from "./PrevConsRow";
 
 export default function PrevConsList({
-  setDisplayPrevList,
-  shouldDisplayPrevList = true,
-}: PrevConsListProps): JSX.Element {
+  dispatch,
+  state = true,
+  name = "Anônimo",
+  historic = [
+    {
+      type: "avaliacao",
+      day: "0000-00-00",
+      prof: "Anônimo",
+      stud: "Anônimo",
+      notes: "",
+    },
+  ],
+}: HistoricDlgProps): JSX.Element {
   const prevConsDlgRef = useRef<nullishDlg>(null);
   const prevConsTabRef = useRef<nullishTab>(null);
   useEffect(() => {
@@ -28,9 +41,7 @@ export default function PrevConsList({
         extLine(new Error())
       );
   }, [prevConsDlgRef]);
-  const togglePrevConsDisplay = (shouldDisplayPrevList: boolean = true) => {
-    setDisplayPrevList(!shouldDisplayPrevList);
-  };
+  const togglePrevConsDisplay = (state: boolean = true) => dispatch(!state);
   return (
     <ErrorBoundary
       FallbackComponent={() => (
@@ -45,7 +56,7 @@ export default function PrevConsList({
             isClickOutside(ev, ev.currentTarget).some(coord => coord === true)
           ) {
             ev.currentTarget.close();
-            setDisplayPrevList(!shouldDisplayPrevList);
+            dispatch(!state);
           }
         }}
       >
@@ -53,7 +64,7 @@ export default function PrevConsList({
           FallbackComponent={() => (
             <ErrorFallbackDlg
               renderError={new Error(`Erro carregando a janela modal!`)}
-              onClick={() => togglePrevConsDisplay(shouldDisplayPrevList)}
+              onClick={() => togglePrevConsDisplay(state)}
             />
           )}
         >
@@ -63,7 +74,7 @@ export default function PrevConsList({
             </h2>
             <button
               className="btn btn-close forceInvert"
-              onClick={() => togglePrevConsDisplay(shouldDisplayPrevList)}
+              onClick={() => togglePrevConsDisplay(state)}
             ></button>
           </section>
           <section className="form-padded" id="sectPacsTab">
@@ -86,69 +97,44 @@ export default function PrevConsList({
                 </strong>
               </caption>
               <colgroup>
-                <col></col>
-                <col></col>
-                <col></col>
-                <col></col>
-                <col></col>
+                <col data-col={1}></col>
+                <col data-col={2}></col>
+                <col data-col={3}></col>
+                <col data-col={4}></col>
+                <col data-col={5}></col>
+                <col data-col={6}></col>
               </colgroup>
               <thead className="thead-dark">
-                <tr id="avPacs-row1">
-                  <th scope="col">Data</th>
-                  <th scope="col">Tipo da Consulta</th>
-                  <th scope="col">Profissional Responsável</th>
-                  <th scope="col">Estudante Alocado</th>
-                  <th scope="col">Anotações</th>
+                <tr id="avPacs-row1" data-row={1}>
+                  <th scope="col" data-row={1} data-col={1}>
+                    Nome
+                  </th>
+                  <th scope="col" data-row={1} data-col={2}>
+                    Data
+                  </th>
+                  <th scope="col" data-row={1} data-col={3}>
+                    Tipo da Consulta
+                  </th>
+                  <th scope="col" data-row={1} data-col={4}>
+                    Profissional Responsável
+                  </th>
+                  <th scope="col" data-row={1} data-col={5}>
+                    Estudante Alocado
+                  </th>
+                  <th scope="col" data-row={1} data-col={6}>
+                    Anotações
+                  </th>
                 </tr>
               </thead>
               <tbody>
-                <tr id="prevCons-row2">
-                  <td className="celDatePrevCons">
-                    <output
-                      className="outputPrevCons outputPrevConsPac1"
-                      id="outpDatePrevCons-row2"
-                      data-title="date-prevcons-row2"
-                    >
-                      01/01/2024
-                    </output>
-                  </td>
-                  <td className="celTypePrevCons">
-                    <output
-                      className="outputPrevCons outputPrevConsPac1"
-                      id="outpTypePrevCons-row2"
-                      data-title="type-prevcons-row2"
-                    >
-                      Anamnese Geral
-                    </output>
-                  </td>
-                  <td className="celProfPrevCons">
-                    <output
-                      className="outputPrevCons outputPrevConsPac1"
-                      id="outpProfPrevCons-row2"
-                      data-title="prof-prevcons-row2"
-                    >
-                      Ângela Celeste Barreto de Azevedo
-                    </output>
-                  </td>
-                  <td className="celStudPrevCons">
-                    <output
-                      className="outputPrevCons outputPrevConsPac1"
-                      id="outpStudPrevCons-row2"
-                      data-title="stud-prevcons-row2"
-                    >
-                      Marina Celani Guedes
-                    </output>
-                  </td>
-                  <td className="celNotesPrevCons">
-                    <output
-                      className="outputPrevCons outputPrevConsPac1"
-                      id="outpNotesPrevCons-row2"
-                      data-title="notes-prevcons-row2"
-                    >
-                      Fulaninho tem medo de agulha.
-                    </output>
-                  </td>
-                </tr>
+                {historic.map((iHist, i) => (
+                  <PrevConsRow
+                    name={name}
+                    nRow={i + 2}
+                    historic={iHist}
+                    key={`i-hist__${i + 2}`}
+                  />
+                ))}
               </tbody>
             </table>
           </section>

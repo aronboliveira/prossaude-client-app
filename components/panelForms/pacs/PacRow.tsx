@@ -7,10 +7,30 @@ import PrevConsList from "../../lists/PrevConsList";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import AlterFieldList from "../../lists/AlterFieldList";
 import { PacRowProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
+import { dateISOtoBRL } from "@/lib/global/gModel";
 
 export default function PacRow({
   tabRef,
-  pac,
+  pac = {
+    name: "Anônimo",
+    email: "Não fornecido",
+    tel: "Não fornecido",
+    next_appointed_day: "Não definido",
+    treatment_beg: "Não definido",
+    treatment_end: "Não definido",
+    current_status: "Não definido",
+    idf: "Não fornecido",
+    signature: new File([], "error"),
+    historic: [
+      {
+        type: "Indefinido",
+        day: "0000-00-00",
+        prof: "Anônimo",
+        stud: "Anônimo",
+        notes: "",
+      },
+    ],
+  },
   nRow = -1,
   userClass = "estudante",
   shouldShowAlocBtn = false,
@@ -165,7 +185,9 @@ export default function PacRow({
             data-row={nRow}
             data-col={userClass === "coordenador" ? 6 : 5}
           >
-            {pac.treatment_period || "Indefinido"}
+            {`${dateISOtoBRL(pac.treatment_beg) || "Não definido"} — ${
+              dateISOtoBRL(pac.treatment_end) || "Não definido"
+            }`}
           </output>
         </div>
       </td>
@@ -260,8 +282,10 @@ export default function PacRow({
         </button>
         {shouldDisplayPrevList && (
           <PrevConsList
-            setDisplayPrevList={setDisplayPrevList}
-            shouldDisplayPrevList={shouldDisplayPrevList}
+            dispatch={setDisplayPrevList}
+            state={shouldDisplayPrevList}
+            historic={pac.historic}
+            name={pac.name}
           />
         )}
       </td>

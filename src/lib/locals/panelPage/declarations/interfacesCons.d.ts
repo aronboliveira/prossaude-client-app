@@ -1,4 +1,5 @@
-import { formCases, looseNum } from "@/lib/global/declarations/types";
+import { DlgProps } from "@/lib/global/declarations/interfaces";
+import { aptTypes, formCases, looseNum } from "@/lib/global/declarations/types";
 import {
   nullishForm,
   nullishDlg,
@@ -240,11 +241,13 @@ export interface PersonProps {
 export interface UserProps extends PersonProps {
   area: string;
   day: string;
-  interv: string;
+  start_day: string;
+  end_day: string;
 }
 
 export interface ProfInfo extends UserProps {
   idf?: string;
+  external?: boolean;
 }
 
 export interface StudInfo extends UserProps {
@@ -254,9 +257,32 @@ export interface StudInfo extends UserProps {
 
 export interface PacInfo extends PersonProps {
   next_appointed_day: string;
-  treatment_period: string;
+  treatment_beg: string;
+  treatment_end: string;
   current_status: string;
   signature: File;
-  historic: {};
+  historic: HistoricInfo[];
   idf?: string;
+}
+
+export interface PrevAppointmentRowProps
+  extends GlobalFormProps,
+    Omit<TabRowProps, "tabRef"> {}
+
+export interface HistoricInfo {
+  type: "Indefinido" | aptTypes;
+  day: string;
+  prof: string;
+  stud?: string;
+  notes?: string;
+}
+
+export interface HistoricDlgProps extends DlgProps {
+  historic: HistoricInfo[];
+  name: string;
+}
+
+export interface HistoricRowProps extends Pick<HistoricDlgProps, "name"> {
+  historic: HistoricInfo;
+  nRow: number;
 }

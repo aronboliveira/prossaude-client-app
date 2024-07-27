@@ -3,12 +3,16 @@ import {
   nullishBtn,
   nullishDlg,
   nullishTab,
+  nullishTabSect,
 } from "@/lib/global/declarations/types";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { equalizeTabCells, isClickOutside } from "@/lib/global/gStyleScript";
 import { ErrorBoundary } from "react-error-boundary";
-import { AvProfListDlgProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
+import {
+  AvProfListDlgProps,
+  ProfInfo,
+} from "@/lib/locals/panelPage/declarations/interfacesCons";
 import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
 import {
   addListenerAlocation,
@@ -18,11 +22,21 @@ import {
 } from "@/lib/locals/panelPage/handlers/consHandlerList";
 import { strikeEntries } from "@/lib/locals/panelPage/consStyleScript";
 import ProfRow from "../panelForms/profs/ProfRow";
+import Spinner from "../icons/Spinner";
+import { panelRoots } from "../panelForms/defs/client/SelectPanel";
+import { createRoot } from "react-dom/client";
+import GenericErrorComponent from "../error/GenericErrorComponent";
+import { handleFetch } from "@/pages/api/ts/handlers";
 
 export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
   const dialogRef = useRef<nullishDlg>(null);
   const alocBtnRef = useRef<nullishBtn>(null);
   const tabProfIntRef = useRef<nullishTab>(null);
+  const tabProfExtRef = useRef<nullishTab>(null);
+  const tbodyIntRef = useRef<nullishTabSect>(null);
+  const tbodyExtRef = useRef<nullishTabSect>(null);
+  const internalProfs: ProfInfo[] = [];
+  const externalProfs: ProfInfo[] = [];
   useEffect(() => {
     if (dialogRef.current instanceof HTMLDialogElement) {
       dialogRef.current!.showModal();
@@ -110,7 +124,613 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
     },
     [dialogRef, props.mainDlgRef, alocBtnRef]
   );
-  const tabProfExtRef = useRef<nullishTab>(null);
+  useEffect(() => {
+    try {
+      if (!(tbodyExtRef.current instanceof HTMLTableSectionElement))
+        throw elementNotFound(
+          tbodyExtRef.current,
+          `Validation of Table Body instance`,
+          extLine(new Error())
+        );
+      if (!(tbodyIntRef.current instanceof HTMLTableSectionElement))
+        throw elementNotFound(
+          tbodyExtRef.current,
+          `Validation of Table Body instance`,
+          extLine(new Error())
+        );
+      if (
+        internalProfs.length > 0 &&
+        externalProfs.length > 0 &&
+        tbodyExtRef.current.querySelector("tr") &&
+        tbodyIntRef.current.querySelector("tr")
+      )
+        return;
+      setTimeout(() => {
+        if (internalProfs.length > 0 || externalProfs.length > 0) return;
+        handleFetch("profs", "_table", true).then(res => {
+          res.forEach(prof => {
+            if ((prof as ProfInfo).external) {
+              !externalProfs.includes(prof as ProfInfo) &&
+                externalProfs.push({
+                  name: prof.name,
+                  tel: prof.tel,
+                  email: prof.email,
+                  area: (prof as ProfInfo)["area"],
+                  start_day: (prof as ProfInfo)["start_day"],
+                  end_day: (prof as ProfInfo)["end_day"],
+                  day: (prof as ProfInfo)["day"],
+                  idf: (prof as ProfInfo)["idf"],
+                  external: (prof as ProfInfo)["external"] || false,
+                });
+            } else {
+              !internalProfs.includes(prof as ProfInfo) &&
+                internalProfs.push({
+                  name: prof.name,
+                  tel: prof.tel,
+                  email: prof.email,
+                  area: (prof as ProfInfo)["area"],
+                  start_day: (prof as ProfInfo)["start_day"],
+                  end_day: (prof as ProfInfo)["end_day"],
+                  day: (prof as ProfInfo)["day"],
+                  idf: (prof as ProfInfo)["idf"],
+                  external: (prof as ProfInfo)["external"] || false,
+                });
+            }
+          });
+          try {
+            if (!(tabProfIntRef.current instanceof HTMLElement))
+              throw elementNotFound(
+                tabProfIntRef.current,
+                `Validation of Table reference`,
+                extLine(new Error())
+              );
+            if (!(tabProfIntRef.current instanceof HTMLElement))
+              throw elementNotFound(
+                tabProfExtRef.current,
+                `Validation of Table reference`,
+                extLine(new Error())
+              );
+            if (!(tbodyExtRef.current instanceof HTMLTableSectionElement))
+              throw elementNotFound(
+                tbodyExtRef.current,
+                `Validation of Table Body instance`,
+                extLine(new Error())
+              );
+            if (!(tbodyIntRef.current instanceof HTMLTableSectionElement))
+              throw elementNotFound(
+                tbodyExtRef.current,
+                `Validation of Table Body instance`,
+                extLine(new Error())
+              );
+            if (
+              panelRoots[`${tbodyIntRef.current.id}`] &&
+              !(panelRoots[`${tbodyIntRef.current.id}`] as any)["_internalRoot"]
+            ) {
+              setTimeout(() => {
+                try {
+                  if (!(tabProfIntRef.current instanceof HTMLElement))
+                    throw elementNotFound(
+                      tabProfIntRef.current,
+                      `Validation of Table reference`,
+                      extLine(new Error())
+                    );
+                  if (!(tbodyIntRef.current instanceof HTMLElement))
+                    throw elementNotFound(
+                      tbodyIntRef.current,
+                      `Validation of Table Body Reference`,
+                      extLine(new Error())
+                    );
+                  if (tbodyIntRef.current.querySelector("tr")) return;
+                  panelRoots[`${tbodyIntRef.current.id}`]?.unmount();
+                  delete panelRoots[`${tbodyIntRef.current.id}`];
+                  tbodyIntRef.current.remove();
+                  if (!panelRoots[`${tabProfIntRef.current.id}`])
+                    panelRoots[`${tabProfIntRef.current.id}`] = createRoot(
+                      tabProfIntRef.current
+                    );
+                  panelRoots[`${tabProfIntRef.current.id}`]?.render(
+                    <ErrorBoundary
+                      FallbackComponent={() => (
+                        <GenericErrorComponent message="Error reloading replacement for table body" />
+                      )}
+                    >
+                      <caption className="caption-t">
+                        <hgroup className="noInvert">
+                          <h3 className="noInvert">
+                            <strong>Membros Internos</strong>
+                          </h3>
+                          <strong>
+                            <small role="textbox" className="noInvert">
+                              <em className="noInvert">
+                                Lista Recuperada da Ficha de Profissionais
+                                registrados. Acesse
+                                <samp>
+                                  {" "}
+                                  <a> ROTA_PLACEHOLDER </a>{" "}
+                                </samp>{" "}
+                                para cadastrar
+                              </em>
+                            </small>
+                          </strong>
+                        </hgroup>
+                      </caption>
+                      <colgroup>
+                        <col data-row="1" data-col="1"></col>
+                        <col data-row="1" data-col="2"></col>
+                        <col data-row="1" data-col="3"></col>
+                        <col data-row="1" data-col="4"></col>
+                        <col data-row="1" data-col="5"></col>
+                        <col data-row="1" data-col="6"></col>
+                        <col data-row="1" data-col="7"></col>
+                        {props.userClass === "coordenador" && (
+                          <col data-row="1" data-col="8"></col>
+                        )}
+                      </colgroup>
+                      <thead className="thead-dark">
+                        <tr id="avProfsInt-row1" data-row="1">
+                          {props.userClass === "coordenador" && (
+                            <th scope="col" data-row="1" data-col="1">
+                              Identificador
+                            </th>
+                          )}
+                          <th
+                            scope="col"
+                            data-row="1"
+                            data-col={
+                              props.userClass === "coordenador" ? "2" : "1"
+                            }
+                          >
+                            Nome
+                          </th>
+                          <th
+                            scope="col"
+                            data-row="1"
+                            data-col={
+                              props.userClass === "coordenador" ? "3" : "2"
+                            }
+                          >
+                            E-mail
+                          </th>
+                          <th
+                            scope="col"
+                            data-row="1"
+                            data-col={
+                              props.userClass === "coordenador" ? "4" : "3"
+                            }
+                          >
+                            Telefone
+                          </th>
+                          <th
+                            scope="col"
+                            data-row="1"
+                            data-col={
+                              props.userClass === "coordenador" ? "5" : "4"
+                            }
+                          >
+                            Área de Atuação
+                          </th>
+                          <th
+                            scope="col"
+                            data-row="1"
+                            data-col={
+                              props.userClass === "coordenador" ? "6" : "5"
+                            }
+                          >
+                            Dia de Trablho
+                          </th>
+                          <th
+                            scope="col"
+                            data-row="1"
+                            data-col={
+                              props.userClass === "coordenador" ? "7" : "6"
+                            }
+                          >
+                            Período de Participação
+                          </th>
+                          <th
+                            className="alocCel"
+                            scope="col"
+                            data-row="1"
+                            data-col={
+                              props.userClass === "coordenador" ? "8" : "7"
+                            }
+                          ></th>
+                        </tr>
+                      </thead>
+                      <tbody id="profsIntTbody" ref={tbodyIntRef}>
+                        <span style={{ margin: "2rem", position: "absolute" }}>
+                          <Spinner
+                            spinnerClass="spinner-border"
+                            spinnerColor="text-info"
+                            message="Loading Internal Professionals Table..."
+                          />
+                        </span>
+                      </tbody>
+                    </ErrorBoundary>
+                  );
+                  tbodyIntRef.current = document.getElementById(
+                    "profsIntTbody"
+                  ) as nullishTabSect;
+                  if (!(tbodyIntRef.current instanceof HTMLElement))
+                    throw elementNotFound(
+                      tbodyIntRef.current,
+                      `Validation of replaced tbody`,
+                      extLine(new Error())
+                    );
+                  if (!panelRoots[`${tbodyIntRef.current.id}`])
+                    panelRoots[`${tbodyIntRef.current.id}`] = createRoot(
+                      tbodyIntRef.current
+                    );
+                  if (!tbodyIntRef.current.querySelector("tr"))
+                    panelRoots[`${tbodyIntRef.current.id}`]?.render(
+                      internalProfs.map((prof, i) => (
+                        <ProfRow
+                          nRow={i + 2}
+                          prof={prof}
+                          userClass={props.userClass}
+                          tabRef={tabProfIntRef}
+                          key={`prof_int_row__${i + 2}`}
+                          inDlg={true}
+                        />
+                      ))
+                    );
+                  setTimeout(() => {
+                    if (tabProfIntRef?.current instanceof HTMLTableElement) {
+                      equalizeTabCells(tabProfIntRef.current);
+                      fillTabAttr(tabProfIntRef.current);
+                    } else
+                      elementNotFound(
+                        tabProfIntRef.current,
+                        `tabProfIntRef id ${
+                          (tabProfIntRef?.current as any)?.id || "UNIDENTIFIED"
+                        } in useEffect() for tableRef`,
+                        extLine(new Error())
+                      );
+                  }, 300);
+                } catch (e) {
+                  console.error(
+                    `Error executing scheduled rendering of Table Body Content Replacement:\n${
+                      (e as Error).message
+                    }`
+                  );
+                }
+                if (document) {
+                }
+              }, 1000);
+            } else
+              panelRoots[`${tbodyIntRef.current.id}`] = createRoot(
+                tbodyIntRef.current
+              );
+            if (!tbodyIntRef.current.querySelector("tr"))
+              panelRoots[`${tbodyIntRef.current.id}`]?.render(
+                internalProfs.map((prof, i) => {
+                  return Array.from(
+                    tbodyIntRef.current?.querySelectorAll("output") ?? []
+                  ).some(
+                    outp => outp.innerText === (prof as ProfInfo)["idf"]
+                  ) ||
+                    Array.from(
+                      tbodyIntRef.current?.querySelectorAll("tr") ?? []
+                    ).some(
+                      tr =>
+                        tr.dataset.key &&
+                        tbodyIntRef.current?.querySelector(
+                          `tr[data-key=${tr.dataset.key}`
+                        )
+                    ) ? (
+                    <></>
+                  ) : (
+                    <ProfRow
+                      nRow={i + 2}
+                      prof={prof}
+                      userClass={props.userClass}
+                      tabRef={tabProfIntRef}
+                      key={`prof_int_row__${i + 2}`}
+                      inDlg={true}
+                    />
+                  );
+                })
+              );
+            setTimeout(() => {
+              if (tabProfIntRef?.current instanceof HTMLTableElement) {
+                equalizeTabCells(tabProfIntRef.current);
+                fillTabAttr(tabProfIntRef.current);
+              } else
+                elementNotFound(
+                  tabProfIntRef.current,
+                  `tabProfIntRef id ${
+                    (tabProfIntRef?.current as any)?.id || "UNIDENTIFIED"
+                  } in useEffect() for tableRef`,
+                  extLine(new Error())
+                );
+            }, 300);
+            setTimeout(() => {
+              if (
+                !document.querySelector("tr") &&
+                document.querySelector("table")
+              ) {
+                if (!panelRoots[`${document.querySelector("table")!.id}`])
+                  panelRoots[`${document.querySelector("table")!.id}`] =
+                    createRoot(document.querySelector("table")!);
+                panelRoots[`${document.querySelector("table")!.id}`]?.render(
+                  <GenericErrorComponent message="Failed to render table" />
+                );
+              }
+            }, 5000);
+            //
+            //
+            if (
+              panelRoots[`${tbodyExtRef.current.id}`] &&
+              !(panelRoots[`${tbodyExtRef.current.id}`] as any)["_internalRoot"]
+            ) {
+              setTimeout(() => {
+                try {
+                  if (!(tabProfIntRef.current instanceof HTMLElement))
+                    throw elementNotFound(
+                      tabProfIntRef.current,
+                      `Validation of Table reference`,
+                      extLine(new Error())
+                    );
+                  if (!(tbodyExtRef.current instanceof HTMLElement))
+                    throw elementNotFound(
+                      tbodyExtRef.current,
+                      `Validation of Table Body Reference`,
+                      extLine(new Error())
+                    );
+                  if (tbodyExtRef.current.querySelector("tr")) return;
+                  panelRoots[`${tbodyExtRef.current.id}`]?.unmount();
+                  delete panelRoots[`${tbodyExtRef.current.id}`];
+                  tbodyExtRef.current.remove();
+                  if (!panelRoots[`${tabProfIntRef.current.id}`])
+                    panelRoots[`${tabProfIntRef.current.id}`] = createRoot(
+                      tabProfIntRef.current
+                    );
+                  panelRoots[`${tabProfIntRef.current.id}`]?.render(
+                    <ErrorBoundary
+                      FallbackComponent={() => (
+                        <GenericErrorComponent message="Error reloading replacement for table body" />
+                      )}
+                    >
+                      <caption className="caption-t">
+                        <hgroup className="noInvert">
+                          <h3 className="noInvert">
+                            <strong>Membros Externos</strong>
+                          </h3>
+                          <strong>
+                            <small role="textbox" className="noInvert">
+                              <em className="noInvert">
+                                Lista Recuperada da Ficha de Profissionais
+                                registrados. Acesse
+                                <samp>
+                                  {" "}
+                                  <a> ROTA_PLACEHOLDER </a>{" "}
+                                </samp>{" "}
+                                para cadastrar
+                              </em>
+                            </small>
+                          </strong>
+                        </hgroup>
+                      </caption>
+                      <colgroup>
+                        <col data-row="1" data-col="1"></col>
+                        <col data-row="1" data-col="2"></col>
+                        <col data-row="1" data-col="3"></col>
+                        <col data-row="1" data-col="4"></col>
+                        <col data-row="1" data-col="5"></col>
+                        <col data-row="1" data-col="6"></col>
+                        <col data-row="1" data-col="7"></col>
+                        {props.userClass === "coordenador" && (
+                          <col data-row="1" data-col="8"></col>
+                        )}
+                      </colgroup>
+                      <thead className="thead-dark">
+                        <tr id="avProfsExt-row1" data-row="1">
+                          {props.userClass === "coordenador" && (
+                            <th scope="col" data-row="1" data-col="1">
+                              Identificador
+                            </th>
+                          )}
+                          <th
+                            scope="col"
+                            data-row="1"
+                            data-col={
+                              props.userClass === "coordenador" ? "2" : "1"
+                            }
+                          >
+                            Nome
+                          </th>
+                          <th
+                            scope="col"
+                            data-row="1"
+                            data-col={
+                              props.userClass === "coordenador" ? "3" : "2"
+                            }
+                          >
+                            E-mail
+                          </th>
+                          <th
+                            scope="col"
+                            data-row="1"
+                            data-col={
+                              props.userClass === "coordenador" ? "4" : "3"
+                            }
+                          >
+                            Telefone
+                          </th>
+                          <th
+                            scope="col"
+                            data-row="1"
+                            data-col={
+                              props.userClass === "coordenador" ? "5" : "4"
+                            }
+                          >
+                            Área de Atuação
+                          </th>
+                          <th
+                            scope="col"
+                            data-row="1"
+                            data-col={
+                              props.userClass === "coordenador" ? "6" : "5"
+                            }
+                          >
+                            Dia de Trablho
+                          </th>
+                          <th
+                            scope="col"
+                            data-row="1"
+                            data-col={
+                              props.userClass === "coordenador" ? "7" : "6"
+                            }
+                          >
+                            Período de Participação
+                          </th>
+                          <th
+                            className="alocCel"
+                            scope="col"
+                            data-row="1"
+                            data-col={
+                              props.userClass === "coordenador" ? "8" : "7"
+                            }
+                          ></th>
+                        </tr>
+                      </thead>
+                      <tbody id="profsExtTbody" ref={tbodyExtRef}>
+                        <span style={{ margin: "2rem", position: "absolute" }}>
+                          <Spinner
+                            spinnerClass="spinner-border"
+                            spinnerColor="text-info"
+                            message="Loading External Professionals Table..."
+                          />
+                        </span>
+                      </tbody>
+                    </ErrorBoundary>
+                  );
+                  tbodyExtRef.current = document.getElementById(
+                    "profsExtTbody"
+                  ) as nullishTabSect;
+                  if (!(tbodyExtRef.current instanceof HTMLElement))
+                    throw elementNotFound(
+                      tbodyExtRef.current,
+                      `Validation of replaced tbody`,
+                      extLine(new Error())
+                    );
+                  if (!panelRoots[`${tbodyExtRef.current.id}`])
+                    panelRoots[`${tbodyExtRef.current.id}`] = createRoot(
+                      tbodyExtRef.current
+                    );
+                  if (!tbodyExtRef.current.querySelector("tr"))
+                    panelRoots[`${tbodyExtRef.current.id}`]?.render(
+                      externalProfs.map((prof, i) => (
+                        <ProfRow
+                          nRow={i + 2}
+                          prof={prof}
+                          userClass={props.userClass}
+                          tabRef={tabProfIntRef}
+                          key={`prof_ext_row__${i + 2}`}
+                          inDlg={true}
+                        />
+                      ))
+                    );
+                  setTimeout(() => {
+                    if (tabProfIntRef?.current instanceof HTMLTableElement) {
+                      equalizeTabCells(tabProfIntRef.current);
+                      fillTabAttr(tabProfIntRef.current);
+                    } else
+                      elementNotFound(
+                        tabProfIntRef.current,
+                        `tabProfIntRef id ${
+                          (tabProfIntRef?.current as any)?.id || "UNIDENTIFIED"
+                        } in useEffect() for tableRef`,
+                        extLine(new Error())
+                      );
+                  }, 300);
+                } catch (e) {
+                  console.error(
+                    `Error executing scheduled rendering of Table Body Content Replacement:\n${
+                      (e as Error).message
+                    }`
+                  );
+                }
+                if (document) {
+                }
+              }, 1000);
+            } else
+              panelRoots[`${tbodyExtRef.current.id}`] = createRoot(
+                tbodyExtRef.current
+              );
+            if (!tbodyExtRef.current.querySelector("tr"))
+              panelRoots[`${tbodyExtRef.current.id}`]?.render(
+                externalProfs.map((prof, i) => {
+                  return Array.from(
+                    tbodyExtRef.current?.querySelectorAll("output") ?? []
+                  ).some(
+                    outp => outp.innerText === (prof as ProfInfo)["idf"]
+                  ) ||
+                    Array.from(
+                      tbodyExtRef.current?.querySelectorAll("tr") ?? []
+                    ).some(
+                      tr =>
+                        tr.dataset.key &&
+                        tbodyExtRef.current?.querySelector(
+                          `tr[data-key=${tr.dataset.key}`
+                        )
+                    ) ? (
+                    <></>
+                  ) : (
+                    <ProfRow
+                      nRow={i + 2}
+                      prof={prof}
+                      userClass={props.userClass}
+                      tabRef={tabProfIntRef}
+                      key={`prof_ext_row__${i + 2}`}
+                      inDlg={true}
+                    />
+                  );
+                })
+              );
+            setTimeout(() => {
+              if (tabProfIntRef?.current instanceof HTMLTableElement) {
+                equalizeTabCells(tabProfIntRef.current);
+                fillTabAttr(tabProfIntRef.current);
+              } else
+                elementNotFound(
+                  tabProfIntRef.current,
+                  `tabProfIntRef id ${
+                    (tabProfIntRef?.current as any)?.id || "UNIDENTIFIED"
+                  } in useEffect() for tableRef`,
+                  extLine(new Error())
+                );
+            }, 300);
+            setTimeout(() => {
+              if (
+                !document.querySelector("tr") &&
+                document.querySelector("table")
+              ) {
+                if (!panelRoots[`${document.querySelector("table")!.id}`])
+                  panelRoots[`${document.querySelector("table")!.id}`] =
+                    createRoot(document.querySelector("table")!);
+                panelRoots[`${document.querySelector("table")!.id}`]?.render(
+                  <GenericErrorComponent message="Failed to render table" />
+                );
+              }
+            }, 5000);
+          } catch (e) {
+            console.error(
+              `Error executing rendering of Table Body Content:\n${
+                (e as Error).message
+              }`
+            );
+          }
+        });
+      }, 300);
+    } catch (e) {
+      console.error(
+        `Error executing useEffect for Table Body Reference:\n${
+          (e as Error).message
+        }`
+      );
+    }
+  }, []);
   useEffect(() => {
     if (tabProfExtRef?.current instanceof HTMLTableElement) {
       fillTabAttr(tabProfExtRef.current);
@@ -164,18 +784,18 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
         extLine(new Error())
       );
   }, [props.mainDlgRef, dialogRef, tabProfExtRef, tabProfIntRef]);
-  const sectTabRef = useRef<HTMLElement | null>(null);
+  const secttabProfIntRef = useRef<HTMLElement | null>(null);
   useEffect(() => {
-    if (sectTabRef?.current instanceof HTMLElement) {
-      checkLocalIntervs(sectTabRef.current);
-      strikeEntries(sectTabRef.current);
+    if (secttabProfIntRef?.current instanceof HTMLElement) {
+      checkLocalIntervs(secttabProfIntRef.current);
+      strikeEntries(secttabProfIntRef.current);
     } else
       elementNotFound(
-        sectTabRef.current,
-        "sectTabRef in useEffect()",
+        secttabProfIntRef.current,
+        "secttabProfIntRef in useEffect()",
         extLine(new Error())
       );
-  }, [sectTabRef]);
+  }, [secttabProfIntRef]);
   return (
     <>
       {props.isCPFFillerActive &&
@@ -210,7 +830,7 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
               <section
                 className="form-padded"
                 id="sectProfsTabs"
-                ref={sectTabRef}
+                ref={secttabProfIntRef}
               >
                 <table
                   className="table table-striped table-responsive table-hover tabProfs"
@@ -238,75 +858,82 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                     </hgroup>
                   </caption>
                   <colgroup>
-                    {props.userClass === "coordenador" && <col></col>}
-                    <col></col>
-                    <col></col>
-                    <col></col>
-                    <col></col>
-                    <col></col>
-                    <col></col>
-                    <col></col>
+                    <col data-row="1" data-col="1"></col>
+                    <col data-row="1" data-col="2"></col>
+                    <col data-row="1" data-col="3"></col>
+                    <col data-row="1" data-col="4"></col>
+                    <col data-row="1" data-col="5"></col>
+                    <col data-row="1" data-col="6"></col>
+                    <col data-row="1" data-col="7"></col>
+                    {props.userClass === "coordenador" && (
+                      <col data-row="1" data-col="8"></col>
+                    )}
                   </colgroup>
                   <thead className="thead-dark">
-                    <tr id="avProfsInt-row1">
+                    <tr id="avProfsInt-row1" data-row="1">
                       {props.userClass === "coordenador" && (
-                        <th scope="col">Identificador</th>
+                        <th scope="col" data-row="1" data-col="1">
+                          Identificador
+                        </th>
                       )}
-                      <th scope="col">Nome</th>
-                      <th scope="col">E-mail</th>
-                      <th scope="col">Telefone</th>
-                      <th scope="col">Área de Atuação</th>
-                      <th scope="col">Dia de Trablho</th>
-                      <th scope="col">Período de Participação</th>
-                      <th className="alocCel" scope="col"></th>
+                      <th
+                        scope="col"
+                        data-row="1"
+                        data-col={props.userClass === "coordenador" ? "2" : "1"}
+                      >
+                        Nome
+                      </th>
+                      <th
+                        scope="col"
+                        data-row="1"
+                        data-col={props.userClass === "coordenador" ? "3" : "2"}
+                      >
+                        E-mail
+                      </th>
+                      <th
+                        scope="col"
+                        data-row="1"
+                        data-col={props.userClass === "coordenador" ? "4" : "3"}
+                      >
+                        Telefone
+                      </th>
+                      <th
+                        scope="col"
+                        data-row="1"
+                        data-col={props.userClass === "coordenador" ? "5" : "4"}
+                      >
+                        Área de Atuação
+                      </th>
+                      <th
+                        scope="col"
+                        data-row="1"
+                        data-col={props.userClass === "coordenador" ? "6" : "5"}
+                      >
+                        Dia de Trablho
+                      </th>
+                      <th
+                        scope="col"
+                        data-row="1"
+                        data-col={props.userClass === "coordenador" ? "7" : "6"}
+                      >
+                        Período de Participação
+                      </th>
+                      <th
+                        className="alocCel"
+                        scope="col"
+                        data-row="1"
+                        data-col={props.userClass === "coordenador" ? "8" : "7"}
+                      ></th>
                     </tr>
                   </thead>
-                  <tbody>
-                    <ProfRow
-                      count={2}
-                      tabRef={tabProfIntRef}
-                      inDlg={true}
-                      userClass={props.userClass}
-                      profInfo={{
-                        idf: "156.789.99-00",
-                        name: "João Almeida dos Santos",
-                        area: "Odontologia & Coordenação",
-                        email: "almeida.joao@gmail.com",
-                        tel: "+55 21 99988-7766",
-                        interv: "08/01/2020 – Presente",
-                        day: "Quarta-feira & Sexta-Feira",
-                      }}
-                    />
-                    <ProfRow
-                      count={3}
-                      tabRef={tabProfIntRef}
-                      inDlg={true}
-                      userClass={props.userClass}
-                      profInfo={{
-                        idf: "156.789.99-00",
-                        name: "Jéssica Bonifácio Barbosa",
-                        area: "Educação Física",
-                        email: "jess.barb@gmail.com",
-                        tel: "+55 21 91516-7788",
-                        interv: "08/01/2020 – 08/10/2020",
-                        day: "Inativa",
-                      }}
-                    />
-                    <ProfRow
-                      count={4}
-                      tabRef={tabProfIntRef}
-                      inDlg={true}
-                      userClass={props.userClass}
-                      profInfo={{
-                        idf: "129.222.333-11",
-                        name: "Gislayne Duarte Tavares",
-                        area: "Nutrição & Supervisão",
-                        email: "gislayne1994@gmail.com",
-                        tel: "+55 11 91010-6689",
-                        interv: "08/01/2020 – Presente",
-                        day: "Sexta-Feira",
-                      }}
-                    />
+                  <tbody id="profsIntTbody" ref={tbodyIntRef}>
+                    <span style={{ margin: "2rem", position: "absolute" }}>
+                      <Spinner
+                        spinnerClass="spinner-border"
+                        spinnerColor="text-info"
+                        message="Loading Internal Professionals Table..."
+                      />
+                    </span>
                   </tbody>
                 </table>
                 <table
@@ -335,60 +962,82 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                     </hgroup>
                   </caption>
                   <colgroup>
-                    {props.userClass === "coordenador" && <col></col>}
-                    <col></col>
-                    <col></col>
-                    <col></col>
-                    <col></col>
-                    <col></col>
-                    <col></col>
-                    <col></col>
+                    <col data-row="1" data-col="1"></col>
+                    <col data-row="1" data-col="2"></col>
+                    <col data-row="1" data-col="3"></col>
+                    <col data-row="1" data-col="4"></col>
+                    <col data-row="1" data-col="5"></col>
+                    <col data-row="1" data-col="6"></col>
+                    <col data-row="1" data-col="7"></col>
+                    {props.userClass === "coordenador" && (
+                      <col data-row="1" data-col="8"></col>
+                    )}
                   </colgroup>
                   <thead className="thead-dark">
-                    <tr id="avProfsExt-row1">
+                    <tr id="avProfsExt-row1" data-row="1">
                       {props.userClass === "coordenador" && (
-                        <th scope="col">Identificador</th>
+                        <th scope="col" data-row="1" data-col="1">
+                          Identificador
+                        </th>
                       )}
-                      <th scope="col">Nome</th>
-                      <th scope="col">E-mail</th>
-                      <th scope="col">Telefone</th>
-                      <th scope="col">Área de Atuação</th>
-                      <th scope="col">Dia de Trablho</th>
-                      <th scope="col">Período de Participação</th>
-                      <th className="alocCel" scope="col"></th>
+                      <th
+                        scope="col"
+                        data-row="1"
+                        data-col={props.userClass === "coordenador" ? "2" : "1"}
+                      >
+                        Nome
+                      </th>
+                      <th
+                        scope="col"
+                        data-row="1"
+                        data-col={props.userClass === "coordenador" ? "3" : "2"}
+                      >
+                        E-mail
+                      </th>
+                      <th
+                        scope="col"
+                        data-row="1"
+                        data-col={props.userClass === "coordenador" ? "4" : "3"}
+                      >
+                        Telefone
+                      </th>
+                      <th
+                        scope="col"
+                        data-row="1"
+                        data-col={props.userClass === "coordenador" ? "5" : "4"}
+                      >
+                        Área de Atuação
+                      </th>
+                      <th
+                        scope="col"
+                        data-row="1"
+                        data-col={props.userClass === "coordenador" ? "6" : "5"}
+                      >
+                        Dia de Trablho
+                      </th>
+                      <th
+                        scope="col"
+                        data-row="1"
+                        data-col={props.userClass === "coordenador" ? "7" : "6"}
+                      >
+                        Período de Participação
+                      </th>
+                      <th
+                        className="alocCel"
+                        scope="col"
+                        data-row="1"
+                        data-col={props.userClass === "coordenador" ? "8" : "7"}
+                      ></th>
                     </tr>
                   </thead>
-                  <tbody>
-                    <ProfRow
-                      count={2}
-                      tabRef={tabProfExtRef}
-                      inDlg={true}
-                      userClass={props.userClass}
-                      profInfo={{
-                        idf: "158.354.458-12",
-                        name: "André Alfredo Gusmão",
-                        area: "Educação Física",
-                        email: "andregus@gmail.com",
-                        tel: "+55 31 92015-6678",
-                        interv: "08/01/2020 – Presente",
-                        day: "Quarta-Feira",
-                      }}
-                    />
-                    <ProfRow
-                      count={3}
-                      tabRef={tabProfExtRef}
-                      inDlg={true}
-                      userClass={props.userClass}
-                      profInfo={{
-                        idf: "158.555.459-19",
-                        name: "Aline dos Santos Wanderhaus",
-                        area: "Odontologia",
-                        email: "aliwander@outlook.com",
-                        tel: "+55 11 92299-6779",
-                        interv: "08/01/2020 – 08/01/2021",
-                        day: "Inativo",
-                      }}
-                    />
+                  <tbody id="profsExtTbody" ref={tbodyExtRef}>
+                    <span style={{ margin: "2rem", position: "absolute" }}>
+                      <Spinner
+                        spinnerClass="spinner-border"
+                        spinnerColor="text-info"
+                        message="Loading External Professionals Table..."
+                      />
+                    </span>
                   </tbody>
                 </table>
               </section>

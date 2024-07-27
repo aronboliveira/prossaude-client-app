@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useRef, useState } from "react";
 import { nullishBtn } from "@/lib/global/declarations/types";
 import { addListenerAvMembers } from "@/lib/locals/panelPage/handlers/consHandlerList";
@@ -15,10 +17,8 @@ export default function DREFiller({
   userClass,
 }: FillerProps): JSX.Element {
   const btnStudListRef = useRef<nullishBtn>(null);
-  const [shouldDisplayStudList, setStudListDisplay] = useState(false);
-  const toggleStudListDisplay = (shouldDisplayStudList: boolean = false) => {
-    setStudListDisplay(!shouldDisplayStudList);
-  };
+  const [shouldDisplayStudList, setStudListDisplay] = useState<boolean>(false);
+  const toggleStudListDisplay = (s: boolean = false) => setStudListDisplay(!s);
   const fillerDivRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
     if (fillerDivRef.current instanceof HTMLDivElement) {
@@ -40,16 +40,12 @@ export default function DREFiller({
       ]);
     }
   }, [fillerDivRef]);
-  const renderStudList = (
-    shouldDisplayStudList: boolean = false
-  ): JSX.Element => {
-    return shouldDisplayStudList ? (
+  const renderStudList = (s: boolean = false): JSX.Element => {
+    return s ? (
       <AvStudListDlg
-        onClose={(shouldDisplayStudList: boolean = false) =>
-          toggleStudListDisplay(shouldDisplayStudList)
-        }
+        onClose={(s: boolean = false) => toggleStudListDisplay(s)}
         forwardedRef={forwardedRef}
-        shouldDisplayStudList={shouldDisplayStudList}
+        shouldDisplayStudList={s}
         userClass={userClass}
       />
     ) : (

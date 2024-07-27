@@ -1,6 +1,7 @@
 import FormExcludeBtn from "../defs/FormExcludeBtn";
 import { StudRowProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import AlterFieldList from "../../lists/AlterFieldList";
+import { dateISOtoBRL } from "@/lib/global/gModel";
 
 export default function StudRow({
   dispatch,
@@ -15,7 +16,8 @@ export default function StudRow({
     tel: "Não fornecido",
     area: "Não definido",
     day: "Não definido",
-    interv: "Não definido",
+    start_day: "Não definido",
+    end_day: "Não definido",
     dre: "Não fornecido",
     cpf: "Não fornecido",
   },
@@ -106,7 +108,9 @@ export default function StudRow({
           id={`outpIntervStud-row${nRow}`}
           data-title={`interv-stud-row${nRow}`}
         >
-          {`${stud.interv || "Não definido"}`}
+          {`${dateISOtoBRL(stud.start_day) || "Não definido"} — ${
+            dateISOtoBRL(stud.end_day) || "Não definido"
+          }`}
         </output>
       </td>
       {!inDlg &&
