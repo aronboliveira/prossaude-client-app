@@ -59,7 +59,7 @@
     &:has(> #rootUserInfo) {
       background-color: #529b85c6;
       border-color: #9cb6a6c6;
-      margin-right: 2.5vw;
+      margin-right: 1.5vw;
     }
     #nameLogin {
       color: #ece8e8;
@@ -162,7 +162,8 @@
 
   .main-article {
     margin: auto;
-    height: 100vh;
+    height: 100%;
+    width: 100%;
   }
 
   .main-container {
