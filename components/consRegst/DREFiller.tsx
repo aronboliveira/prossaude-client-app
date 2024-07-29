@@ -40,18 +40,6 @@ export default function DREFiller({
       ]);
     }
   }, [fillerDivRef]);
-  const renderStudList = (s: boolean = false): JSX.Element => {
-    return s ? (
-      <AvStudListDlg
-        onClose={(s: boolean = false) => toggleStudListDisplay(s)}
-        forwardedRef={forwardedRef}
-        shouldDisplayStudList={s}
-        userClass={userClass}
-      />
-    ) : (
-      <></>
-    );
-  };
   return (
     <>
       <div
@@ -155,7 +143,16 @@ export default function DREFiller({
           >
             Consultar Lista de Estudantes
           </button>
-          {renderStudList(shouldDisplayStudList)}
+          {shouldDisplayStudList ? (
+            <AvStudListDlg
+              forwardedRef={forwardedRef}
+              dispatch={setStudListDisplay}
+              state={shouldDisplayStudList}
+              userClass={userClass}
+            />
+          ) : (
+            <></>
+          )}
         </div>
       </div>
     </>

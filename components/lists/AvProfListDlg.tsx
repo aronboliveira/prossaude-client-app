@@ -1,7 +1,10 @@
+"use client";
+
 import { useEffect, useRef, MutableRefObject, useCallback } from "react";
 import {
   nullishBtn,
   nullishDlg,
+  nullishHtEl,
   nullishTab,
   nullishTabSect,
 } from "@/lib/global/declarations/types";
@@ -29,14 +32,63 @@ import GenericErrorComponent from "../error/GenericErrorComponent";
 import { handleFetch } from "@/pages/api/ts/handlers";
 
 export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
+  const internalProfs: ProfInfo[] = [];
+  const externalProfs: ProfInfo[] = [];
   const dialogRef = useRef<nullishDlg>(null);
   const alocBtnRef = useRef<nullishBtn>(null);
   const tabProfIntRef = useRef<nullishTab>(null);
   const tabProfExtRef = useRef<nullishTab>(null);
   const tbodyIntRef = useRef<nullishTabSect>(null);
   const tbodyExtRef = useRef<nullishTabSect>(null);
-  const internalProfs: ProfInfo[] = [];
-  const externalProfs: ProfInfo[] = [];
+  const secttabProfIntRef = useRef<nullishHtEl>(null);
+  const gatherProfData = useCallback(
+    (
+      alocBtnRef: MutableRefObject<nullishBtn>,
+      dialogRef: MutableRefObject<nullishDlg>
+    ) =>
+      addListenerAlocation(
+        alocBtnRef.current,
+        dialogRef.current,
+        props.mainDlgRef.current!,
+        "Prof",
+        props.state,
+        props.dispatch,
+        props.userClass
+      ),
+    [dialogRef, props.mainDlgRef, alocBtnRef]
+  );
+  //push em history
+  useEffect(() => {
+    history.pushState(
+      {},
+      "",
+      `${location.origin}${location.pathname}${location.search}&av-prof=open`
+    );
+    setTimeout(() => {
+      history.pushState(
+        {},
+        "",
+        `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#")
+      );
+    }, 300);
+    return () => {
+      history.pushState(
+        {},
+        "",
+        `${location.origin}${location.pathname}${location.search}`.replaceAll(
+          "&av-prof=open",
+          ""
+        )
+      );
+      setTimeout(() => {
+        history.pushState(
+          {},
+          "",
+          `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#")
+        );
+      }, 300);
+    };
+  }, []);
   useEffect(() => {
     if (dialogRef.current instanceof HTMLDialogElement) {
       dialogRef.current!.showModal();
@@ -45,14 +97,10 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
         dialogRef.current,
       ]);
       const handleKeyDown = (press: KeyboardEvent) => {
-        if (press.key === "Escape") {
-          props.onClick(props.isCPFFillerActive);
-        }
+        press.key === "Escape" && props.dispatch(!props.state);
       };
-      document.addEventListener("keydown", handleKeyDown);
-      return () => {
-        document.removeEventListener("keydown", handleKeyDown);
-      };
+      addEventListener("keydown", handleKeyDown);
+      return () => removeEventListener("keydown", handleKeyDown);
     } else
       elementNotFound(
         dialogRef.current,
@@ -107,23 +155,6 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
   useEffect(() => {
     gatherProfData(alocBtnRef, dialogRef);
   }, [alocBtnRef, dialogRef]);
-  const gatherProfData = useCallback(
-    (
-      alocBtnRef: MutableRefObject<nullishBtn>,
-      dialogRef: MutableRefObject<nullishDlg>
-    ) => {
-      addListenerAlocation(
-        alocBtnRef.current,
-        dialogRef.current,
-        props.mainDlgRef.current!,
-        "Prof",
-        props.isCPFFillerActive,
-        props.onClick,
-        props.userClass
-      );
-    },
-    [dialogRef, props.mainDlgRef, alocBtnRef]
-  );
   useEffect(() => {
     try {
       if (!(tbodyExtRef.current instanceof HTMLTableSectionElement))
@@ -784,7 +815,6 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
         extLine(new Error())
       );
   }, [props.mainDlgRef, dialogRef, tabProfExtRef, tabProfIntRef]);
-  const secttabProfIntRef = useRef<HTMLElement | null>(null);
   useEffect(() => {
     if (secttabProfIntRef?.current instanceof HTMLElement) {
       checkLocalIntervs(secttabProfIntRef.current);
@@ -798,252 +828,251 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
   }, [secttabProfIntRef]);
   return (
     <>
-      {props.isCPFFillerActive &&
-        props.btnProf instanceof HTMLButtonElement && (
-          <dialog
-            className="modal-content-stk2"
-            id="avProfListDlg"
-            ref={dialogRef}
-            onClick={ev => {
-              isClickOutside(ev, ev.currentTarget).some(
-                coord => coord === true
-              ) && props.onClick(props.isCPFFillerActive);
-            }}
+      {props.state && props.btnProf instanceof HTMLButtonElement && (
+        <dialog
+          className="modal-content-stk2"
+          id="avProfListDlg"
+          ref={dialogRef}
+          onClick={ev => {
+            isClickOutside(ev, ev.currentTarget).some(
+              coord => coord === true
+            ) && props.dispatch(!props.state);
+          }}
+        >
+          <ErrorBoundary
+            FallbackComponent={() => (
+              <ErrorFallbackDlg
+                renderError={new Error(`Erro carregando a janela modal!`)}
+                onClick={props.dispatch(props.state)}
+              />
+            )}
           >
-            <ErrorBoundary
-              FallbackComponent={() => (
-                <ErrorFallbackDlg
-                  renderError={new Error(`Erro carregando a janela modal!`)}
-                  onClick={() => props.onClick(props.isCPFFillerActive)}
-                />
-              )}
+            <section className="flexRNoWBetCt widFull" id="headProfList">
+              <h2 className="mg-1b noInvert">
+                <strong>Profissionais Cadastrados</strong>
+              </h2>
+              <button
+                className="btn btn-close forceInvert"
+                onClick={() => props.dispatch(!props.state)}
+              ></button>
+            </section>
+            <section
+              className="form-padded"
+              id="sectProfsTabs"
+              ref={secttabProfIntRef}
             >
-              <section className="flexRNoWBetCt widFull" id="headProfList">
-                <h2 className="mg-1b noInvert">
-                  <strong>Profissionais Cadastrados</strong>
-                </h2>
-                <button
-                  className="btn btn-close forceInvert"
-                  onClick={() => props.onClick(props.isCPFFillerActive)}
-                ></button>
-              </section>
-              <section
-                className="form-padded"
-                id="sectProfsTabs"
-                ref={secttabProfIntRef}
+              <table
+                className="table table-striped table-responsive table-hover tabProfs"
+                id="avProfsIntTab"
+                ref={tabProfIntRef}
               >
-                <table
-                  className="table table-striped table-responsive table-hover tabProfs"
-                  id="avProfsIntTab"
-                  ref={tabProfIntRef}
-                >
-                  <caption className="caption-t">
-                    <hgroup className="noInvert">
-                      <h3 className="noInvert">
-                        <strong>Membros Internos</strong>
-                      </h3>
-                      <strong>
-                        <small role="textbox" className="noInvert">
-                          <em className="noInvert">
-                            Lista Recuperada da Ficha de Profissionais
-                            registrados. Acesse
-                            <samp>
-                              {" "}
-                              <a> ROTA_PLACEHOLDER </a>{" "}
-                            </samp>{" "}
-                            para cadastrar
-                          </em>
-                        </small>
-                      </strong>
-                    </hgroup>
-                  </caption>
-                  <colgroup>
-                    <col data-row="1" data-col="1"></col>
-                    <col data-row="1" data-col="2"></col>
-                    <col data-row="1" data-col="3"></col>
-                    <col data-row="1" data-col="4"></col>
-                    <col data-row="1" data-col="5"></col>
-                    <col data-row="1" data-col="6"></col>
-                    <col data-row="1" data-col="7"></col>
+                <caption className="caption-t">
+                  <hgroup className="noInvert">
+                    <h3 className="noInvert">
+                      <strong>Membros Internos</strong>
+                    </h3>
+                    <strong>
+                      <small role="textbox" className="noInvert">
+                        <em className="noInvert">
+                          Lista Recuperada da Ficha de Profissionais
+                          registrados. Acesse
+                          <samp>
+                            {" "}
+                            <a> ROTA_PLACEHOLDER </a>{" "}
+                          </samp>{" "}
+                          para cadastrar
+                        </em>
+                      </small>
+                    </strong>
+                  </hgroup>
+                </caption>
+                <colgroup>
+                  <col data-row="1" data-col="1"></col>
+                  <col data-row="1" data-col="2"></col>
+                  <col data-row="1" data-col="3"></col>
+                  <col data-row="1" data-col="4"></col>
+                  <col data-row="1" data-col="5"></col>
+                  <col data-row="1" data-col="6"></col>
+                  <col data-row="1" data-col="7"></col>
+                  {props.userClass === "coordenador" && (
+                    <col data-row="1" data-col="8"></col>
+                  )}
+                </colgroup>
+                <thead className="thead-dark">
+                  <tr id="avProfsInt-row1" data-row="1">
                     {props.userClass === "coordenador" && (
-                      <col data-row="1" data-col="8"></col>
+                      <th scope="col" data-row="1" data-col="1">
+                        Identificador
+                      </th>
                     )}
-                  </colgroup>
-                  <thead className="thead-dark">
-                    <tr id="avProfsInt-row1" data-row="1">
-                      {props.userClass === "coordenador" && (
-                        <th scope="col" data-row="1" data-col="1">
-                          Identificador
-                        </th>
-                      )}
-                      <th
-                        scope="col"
-                        data-row="1"
-                        data-col={props.userClass === "coordenador" ? "2" : "1"}
-                      >
-                        Nome
-                      </th>
-                      <th
-                        scope="col"
-                        data-row="1"
-                        data-col={props.userClass === "coordenador" ? "3" : "2"}
-                      >
-                        E-mail
-                      </th>
-                      <th
-                        scope="col"
-                        data-row="1"
-                        data-col={props.userClass === "coordenador" ? "4" : "3"}
-                      >
-                        Telefone
-                      </th>
-                      <th
-                        scope="col"
-                        data-row="1"
-                        data-col={props.userClass === "coordenador" ? "5" : "4"}
-                      >
-                        Área de Atuação
-                      </th>
-                      <th
-                        scope="col"
-                        data-row="1"
-                        data-col={props.userClass === "coordenador" ? "6" : "5"}
-                      >
-                        Dia de Trablho
-                      </th>
-                      <th
-                        scope="col"
-                        data-row="1"
-                        data-col={props.userClass === "coordenador" ? "7" : "6"}
-                      >
-                        Período de Participação
-                      </th>
-                      <th
-                        className="alocCel"
-                        scope="col"
-                        data-row="1"
-                        data-col={props.userClass === "coordenador" ? "8" : "7"}
-                      ></th>
-                    </tr>
-                  </thead>
-                  <tbody id="profsIntTbody" ref={tbodyIntRef}>
-                    <span style={{ margin: "2rem", position: "absolute" }}>
-                      <Spinner
-                        spinnerClass="spinner-border"
-                        spinnerColor="text-info"
-                        message="Loading Internal Professionals Table..."
-                      />
-                    </span>
-                  </tbody>
-                </table>
-                <table
-                  className="table table-striped table-responsive table-hover tabProfs"
-                  id="avProfsExtTab"
-                  ref={tabProfExtRef}
-                >
-                  <caption className="caption-t">
-                    <hgroup className="noInvert">
-                      <h3 className="noInvert">
-                        <strong>Membros Externos</strong>
-                      </h3>
-                      <strong>
-                        <small role="textbox" className="noInvert">
-                          <em className="noInvert">
-                            Lista Recuperada da Ficha de Profissionais
-                            registrados. Acesse
-                            <samp>
-                              {" "}
-                              <a> ROTA_PLACEHOLDER </a>{" "}
-                            </samp>{" "}
-                            para cadastrar
-                          </em>
-                        </small>
-                      </strong>
-                    </hgroup>
-                  </caption>
-                  <colgroup>
-                    <col data-row="1" data-col="1"></col>
-                    <col data-row="1" data-col="2"></col>
-                    <col data-row="1" data-col="3"></col>
-                    <col data-row="1" data-col="4"></col>
-                    <col data-row="1" data-col="5"></col>
-                    <col data-row="1" data-col="6"></col>
-                    <col data-row="1" data-col="7"></col>
+                    <th
+                      scope="col"
+                      data-row="1"
+                      data-col={props.userClass === "coordenador" ? "2" : "1"}
+                    >
+                      Nome
+                    </th>
+                    <th
+                      scope="col"
+                      data-row="1"
+                      data-col={props.userClass === "coordenador" ? "3" : "2"}
+                    >
+                      E-mail
+                    </th>
+                    <th
+                      scope="col"
+                      data-row="1"
+                      data-col={props.userClass === "coordenador" ? "4" : "3"}
+                    >
+                      Telefone
+                    </th>
+                    <th
+                      scope="col"
+                      data-row="1"
+                      data-col={props.userClass === "coordenador" ? "5" : "4"}
+                    >
+                      Área de Atuação
+                    </th>
+                    <th
+                      scope="col"
+                      data-row="1"
+                      data-col={props.userClass === "coordenador" ? "6" : "5"}
+                    >
+                      Dia de Trablho
+                    </th>
+                    <th
+                      scope="col"
+                      data-row="1"
+                      data-col={props.userClass === "coordenador" ? "7" : "6"}
+                    >
+                      Período de Participação
+                    </th>
+                    <th
+                      className="alocCel"
+                      scope="col"
+                      data-row="1"
+                      data-col={props.userClass === "coordenador" ? "8" : "7"}
+                    ></th>
+                  </tr>
+                </thead>
+                <tbody id="profsIntTbody" ref={tbodyIntRef}>
+                  <span style={{ margin: "2rem", position: "absolute" }}>
+                    <Spinner
+                      spinnerClass="spinner-border"
+                      spinnerColor="text-info"
+                      message="Loading Internal Professionals Table..."
+                    />
+                  </span>
+                </tbody>
+              </table>
+              <table
+                className="table table-striped table-responsive table-hover tabProfs"
+                id="avProfsExtTab"
+                ref={tabProfExtRef}
+              >
+                <caption className="caption-t">
+                  <hgroup className="noInvert">
+                    <h3 className="noInvert">
+                      <strong>Membros Externos</strong>
+                    </h3>
+                    <strong>
+                      <small role="textbox" className="noInvert">
+                        <em className="noInvert">
+                          Lista Recuperada da Ficha de Profissionais
+                          registrados. Acesse
+                          <samp>
+                            {" "}
+                            <a> ROTA_PLACEHOLDER </a>{" "}
+                          </samp>{" "}
+                          para cadastrar
+                        </em>
+                      </small>
+                    </strong>
+                  </hgroup>
+                </caption>
+                <colgroup>
+                  <col data-row="1" data-col="1"></col>
+                  <col data-row="1" data-col="2"></col>
+                  <col data-row="1" data-col="3"></col>
+                  <col data-row="1" data-col="4"></col>
+                  <col data-row="1" data-col="5"></col>
+                  <col data-row="1" data-col="6"></col>
+                  <col data-row="1" data-col="7"></col>
+                  {props.userClass === "coordenador" && (
+                    <col data-row="1" data-col="8"></col>
+                  )}
+                </colgroup>
+                <thead className="thead-dark">
+                  <tr id="avProfsExt-row1" data-row="1">
                     {props.userClass === "coordenador" && (
-                      <col data-row="1" data-col="8"></col>
+                      <th scope="col" data-row="1" data-col="1">
+                        Identificador
+                      </th>
                     )}
-                  </colgroup>
-                  <thead className="thead-dark">
-                    <tr id="avProfsExt-row1" data-row="1">
-                      {props.userClass === "coordenador" && (
-                        <th scope="col" data-row="1" data-col="1">
-                          Identificador
-                        </th>
-                      )}
-                      <th
-                        scope="col"
-                        data-row="1"
-                        data-col={props.userClass === "coordenador" ? "2" : "1"}
-                      >
-                        Nome
-                      </th>
-                      <th
-                        scope="col"
-                        data-row="1"
-                        data-col={props.userClass === "coordenador" ? "3" : "2"}
-                      >
-                        E-mail
-                      </th>
-                      <th
-                        scope="col"
-                        data-row="1"
-                        data-col={props.userClass === "coordenador" ? "4" : "3"}
-                      >
-                        Telefone
-                      </th>
-                      <th
-                        scope="col"
-                        data-row="1"
-                        data-col={props.userClass === "coordenador" ? "5" : "4"}
-                      >
-                        Área de Atuação
-                      </th>
-                      <th
-                        scope="col"
-                        data-row="1"
-                        data-col={props.userClass === "coordenador" ? "6" : "5"}
-                      >
-                        Dia de Trablho
-                      </th>
-                      <th
-                        scope="col"
-                        data-row="1"
-                        data-col={props.userClass === "coordenador" ? "7" : "6"}
-                      >
-                        Período de Participação
-                      </th>
-                      <th
-                        className="alocCel"
-                        scope="col"
-                        data-row="1"
-                        data-col={props.userClass === "coordenador" ? "8" : "7"}
-                      ></th>
-                    </tr>
-                  </thead>
-                  <tbody id="profsExtTbody" ref={tbodyExtRef}>
-                    <span style={{ margin: "2rem", position: "absolute" }}>
-                      <Spinner
-                        spinnerClass="spinner-border"
-                        spinnerColor="text-info"
-                        message="Loading External Professionals Table..."
-                      />
-                    </span>
-                  </tbody>
-                </table>
-              </section>
-            </ErrorBoundary>
-          </dialog>
-        )}
+                    <th
+                      scope="col"
+                      data-row="1"
+                      data-col={props.userClass === "coordenador" ? "2" : "1"}
+                    >
+                      Nome
+                    </th>
+                    <th
+                      scope="col"
+                      data-row="1"
+                      data-col={props.userClass === "coordenador" ? "3" : "2"}
+                    >
+                      E-mail
+                    </th>
+                    <th
+                      scope="col"
+                      data-row="1"
+                      data-col={props.userClass === "coordenador" ? "4" : "3"}
+                    >
+                      Telefone
+                    </th>
+                    <th
+                      scope="col"
+                      data-row="1"
+                      data-col={props.userClass === "coordenador" ? "5" : "4"}
+                    >
+                      Área de Atuação
+                    </th>
+                    <th
+                      scope="col"
+                      data-row="1"
+                      data-col={props.userClass === "coordenador" ? "6" : "5"}
+                    >
+                      Dia de Trablho
+                    </th>
+                    <th
+                      scope="col"
+                      data-row="1"
+                      data-col={props.userClass === "coordenador" ? "7" : "6"}
+                    >
+                      Período de Participação
+                    </th>
+                    <th
+                      className="alocCel"
+                      scope="col"
+                      data-row="1"
+                      data-col={props.userClass === "coordenador" ? "8" : "7"}
+                    ></th>
+                  </tr>
+                </thead>
+                <tbody id="profsExtTbody" ref={tbodyExtRef}>
+                  <span style={{ margin: "2rem", position: "absolute" }}>
+                    <Spinner
+                      spinnerClass="spinner-border"
+                      spinnerColor="text-info"
+                      message="Loading External Professionals Table..."
+                    />
+                  </span>
+                </tbody>
+              </table>
+            </section>
+          </ErrorBoundary>
+        </dialog>
+      )}
     </>
   );
 }

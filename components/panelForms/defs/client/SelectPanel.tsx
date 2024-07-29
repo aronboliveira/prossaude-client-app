@@ -25,6 +25,8 @@ import PacTabForm from "../../pacs/PacTabForm";
 import ScheduleForm from "../../schedule/ScheduleForm";
 import DefaultForm from "../DefaultForm";
 import { Root } from "react-dom/client";
+import { AppRootContextType } from "@/lib/global/declarations/interfaces";
+import { camelToKebab } from "@/lib/global/gModel";
 
 export let globalDataProvider: DataProvider | voidVal = undefined;
 export const panelRoots: { [k: string]: Root | undefined } = {
@@ -38,16 +40,40 @@ export default function SelectPanel({
   const [selectedOption, setSelectedOption] = useState<string>(defOp);
   const [mounted, setMounted] = useState<boolean>(false);
   const formRootRef = useRef<nullishDiv>(null);
-  const context = useContext(AppRootContext);
+  const context = useContext<AppRootContextType>(AppRootContext);
+  const handlePanelPath = (
+    change: React.ChangeEvent<HTMLSelectElement> | string
+  ): void => {
+    const changeValue =
+      typeof change === "object" && "target" in change
+        ? change.target.value
+        : change;
+    history.pushState(
+      {},
+      "",
+      `${location.origin}${
+        location.pathname.endsWith("/")
+          ? location.pathname.slice(0, -1)
+          : location.pathname
+      }?panel=${camelToKebab(changeValue)}`
+        .replace("/?", "?")
+        .replace("/#", "#")
+    );
+    setTimeout(() => {
+      history.pushState(
+        {},
+        "",
+        `${location.href}`.replace("/?", "?").replace("/#", "#")
+      );
+    }, 300);
+  };
+  useEffect(() => setMounted(true), []);
   useEffect(() => {
-    console.log("Setting to mounted...");
-    setMounted(true);
-  }, []);
-  useEffect(() => {
-    console.log("Initializing global provider and handling route...");
     globalDataProvider = new DataProvider(sessionStorage);
     handleLinkChanges("panel", "Panel Page Style");
+    handlePanelPath(defOp);
   }, []);
+  useEffect(() => {}, []);
   //validating DOM structure using Main Select and parent for reference
   useEffect(() => {
     setTimeout(() => {
@@ -81,14 +107,12 @@ export default function SelectPanel({
   }, [mounted]);
   useEffect(() => {
     if (formRootRef.current instanceof HTMLElement) {
-      console.log("Started syncing...");
       syncAriaStates([
         ...(
           document.getElementById("formPanelDiv") ?? document
         )?.querySelectorAll("*"),
         document.getElementById("formPanelDiv")!,
       ]);
-      console.log("Creating mainRoot...");
       if (!panelRoots.mainRoot)
         panelRoots.mainRoot = createRoot(formRootRef.current);
     }
@@ -115,7 +139,10 @@ export default function SelectPanel({
           name="actv_panel"
           data-title="Opção de Painel Ativa"
           value={selectedOption}
-          onChange={change => setSelectedOption(change.target.value)}
+          onChange={change => {
+            handlePanelPath(change.target.value);
+            setSelectedOption(change.target.value);
+          }}
           autoFocus
           required
         >

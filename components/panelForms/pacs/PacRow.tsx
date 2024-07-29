@@ -305,9 +305,10 @@ export default function PacRow({
           </button>
           {shouldDisplayRowData && (
             <AlterFieldList
-              setDisplayRowData={setDisplayRowData}
+              dispatch={setDisplayRowData}
               tabRef={tabRef}
-              shouldDisplayRowData={shouldDisplayRowData}
+              state={shouldDisplayRowData}
+              name={pac.name}
             />
           )}
         </td>

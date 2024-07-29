@@ -14,6 +14,38 @@ export default function AGTips({ state, dispatch }: DlgProps): JSX.Element {
       !state && dlgRef.current?.close();
     }
   };
+  //push em history
+  useEffect(() => {
+    history.pushState(
+      {},
+      "",
+      `${location.origin}${location.pathname}${location.search}&tips=open`
+    );
+    setTimeout(() => {
+      history.pushState(
+        {},
+        "",
+        `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#")
+      );
+    }, 300);
+    return () => {
+      history.pushState(
+        {},
+        "",
+        `${location.origin}${location.pathname}${location.search}`.replaceAll(
+          "&tips=open",
+          ""
+        )
+      );
+      setTimeout(() => {
+        history.pushState(
+          {},
+          "",
+          `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#")
+        );
+      }, 300);
+    };
+  }, []);
   useEffect(() => {
     try {
       if (!(dlgRef.current instanceof HTMLDialogElement))

@@ -27,6 +27,39 @@ export default function PrevConsList({
 }: HistoricDlgProps): JSX.Element {
   const prevConsDlgRef = useRef<nullishDlg>(null);
   const prevConsTabRef = useRef<nullishTab>(null);
+  //push em history
+  useEffect(() => {
+    history.pushState(
+      {},
+      "",
+      `${location.origin}${location.pathname}${
+        location.search
+      }&prev-cons=open#${name.toLowerCase().replaceAll(" ", "-")}`
+    );
+    setTimeout(() => {
+      history.pushState(
+        {},
+        "",
+        `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#")
+      );
+    }, 300);
+    return () => {
+      history.pushState(
+        {},
+        "",
+        `${location.origin}${location.pathname}${location.search}`
+          .replaceAll(`&prev-cons=open`, "")
+          .replaceAll(`#${name.toLowerCase().replaceAll(" ", "-")}`, "")
+      );
+      setTimeout(() => {
+        history.pushState(
+          {},
+          "",
+          `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#")
+        );
+      }, 300);
+    };
+  }, []);
   useEffect(() => {
     if (prevConsDlgRef.current instanceof HTMLDialogElement) {
       prevConsDlgRef.current.showModal();
@@ -51,6 +84,7 @@ export default function PrevConsList({
       <dialog
         className="modal-content-stk2"
         ref={prevConsDlgRef}
+        id={`prev-cons-${name.toLowerCase().replaceAll(" ", "-")}`}
         onClick={ev => {
           if (
             isClickOutside(ev, ev.currentTarget).some(coord => coord === true)

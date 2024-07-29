@@ -1,3 +1,5 @@
+"use client";
+
 import { AvStudListDlgProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import { useEffect, useRef, useCallback, MutableRefObject } from "react";
 import { nullishBtn, nullishDlg } from "@/lib/global/declarations/types";
@@ -15,12 +17,58 @@ import { strikeEntries } from "@/lib/locals/panelPage/consStyleScript";
 import StudList from "./StudList";
 
 export default function AvStudListDlg({
-  onClose,
   forwardedRef,
-  shouldDisplayStudList = false,
+  dispatch,
+  state = false,
   userClass = "estudante",
 }: AvStudListDlgProps): JSX.Element {
   const dialogRef = useRef<nullishDlg>(null);
+  const sectTabRef = useRef<HTMLElement | null>(null);
+  const gatherStudData = useCallback(
+    (alocBtnRef: nullishBtn, dialogRef: MutableRefObject<nullishDlg>) => {
+      addListenerAlocation(
+        alocBtnRef,
+        dialogRef.current,
+        forwardedRef.current!,
+        "Stud",
+        state,
+        dispatch,
+        userClass
+      );
+    },
+    [dialogRef, forwardedRef]
+  );
+  useEffect(() => {
+    history.pushState(
+      {},
+      "",
+      `${location.origin}${location.pathname}${location.search}&av-stud=open`
+    );
+    setTimeout(() => {
+      history.pushState(
+        {},
+        "",
+        `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#")
+      );
+    }, 300);
+    return () => {
+      history.pushState(
+        {},
+        "",
+        `${location.origin}${location.pathname}${location.search}`.replaceAll(
+          "&av-stud=open",
+          ""
+        )
+      );
+      setTimeout(() => {
+        history.pushState(
+          {},
+          "",
+          `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#")
+        );
+      }, 300);
+    };
+  }, []);
   useEffect(() => {
     if (dialogRef?.current instanceof HTMLDialogElement) {
       dialogRef.current.showModal();
@@ -81,32 +129,13 @@ export default function AvStudListDlg({
     alocBtnRef instanceof HTMLButtonElement &&
       gatherStudData(alocBtnRef, dialogRef);
   }, [dialogRef]);
-  const gatherStudData = useCallback(
-    (alocBtnRef: nullishBtn, dialogRef: MutableRefObject<nullishDlg>) => {
-      addListenerAlocation(
-        alocBtnRef,
-        dialogRef.current,
-        forwardedRef.current!,
-        "Stud",
-        shouldDisplayStudList,
-        onClose,
-        userClass
-      );
-    },
-    [dialogRef, forwardedRef]
-  );
-  const sectTabRef = useRef<HTMLElement | null>(null);
   useEffect(() => {
     if (dialogRef.current instanceof HTMLElement) {
       const handleKeyDown = (press: KeyboardEvent) => {
-        if (press.key === "Escape") {
-          onClose(shouldDisplayStudList);
-        }
+        press.key === "Escape" && dispatch(state);
       };
-      document.addEventListener("keydown", handleKeyDown);
-      return () => {
-        document.removeEventListener("keydown", handleKeyDown);
-      };
+      addEventListener("keydown", handleKeyDown);
+      return () => removeEventListener("keydown", handleKeyDown);
     }
   }, [dialogRef]);
   useEffect(() => {
@@ -122,7 +151,7 @@ export default function AvStudListDlg({
   }, [sectTabRef]);
   return (
     <>
-      {shouldDisplayStudList && (
+      {state && (
         <dialog
           className="modal-content-stk2"
           id="avStudListDlg"
@@ -130,14 +159,14 @@ export default function AvStudListDlg({
           onClick={ev => {
             isClickOutside(ev, ev.currentTarget).some(
               coord => coord === true
-            ) && onClose(shouldDisplayStudList);
+            ) && dispatch(!state);
           }}
         >
           <ErrorBoundary
             FallbackComponent={() => (
               <ErrorFallbackDlg
                 renderError={new Error(`Erro carregando a janela modal!`)}
-                onClick={() => onClose(shouldDisplayStudList)}
+                onClick={() => dispatch(!state)}
               />
             )}
           >
@@ -147,7 +176,7 @@ export default function AvStudListDlg({
               </h2>
               <button
                 className="btn btn-close forceInvert"
-                onClick={() => onClose(shouldDisplayStudList)}
+                onClick={() => dispatch(!state)}
               ></button>
             </section>
             <section className="form-padded" id="sectStudsTab" ref={sectTabRef}>

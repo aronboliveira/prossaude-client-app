@@ -1315,3 +1315,13 @@ export function dateISOtoBRL(isoDate: string): string {
     return "00/00/0000";
   }
 }
+
+export function camelToKebab(str: string): string {
+  const iniStr = str;
+  try {
+    return str.split(/(?=[A-Z])/g).join('-').toLowerCase();
+  } catch (e) {
+    console.error(`Error executing camelToKebab:\n${(e as Error).message}`);
+    return iniStr;
+  }
+}

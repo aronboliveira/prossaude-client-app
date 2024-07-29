@@ -1,3 +1,5 @@
+"use client";
+
 import {
   useEffect,
   useRef,
@@ -18,8 +20,12 @@ import {
   inputNotFound,
   multipleElementsNotFound,
 } from "@/lib/global/handlers/errorHandler";
-import { FormDlgProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
-import { nullishBtn, nullishInp } from "@/lib/global/declarations/types";
+import { ConsDlgProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
+import {
+  nullishBtn,
+  nullishDlg,
+  nullishInp,
+} from "@/lib/global/declarations/types";
 import {
   addEmailExtension,
   autoCapitalizeInputs,
@@ -50,191 +56,39 @@ import { handleSubmit } from "@/pages/api/ts/handlers";
 
 let accFormData = 0;
 export default function FormDlg({
-  dialogRef,
   onClose,
   userClass = "estudante",
-}: FormDlgProps): JSX.Element {
+}: ConsDlgProps): JSX.Element {
   //display de campos para identificadores de estudante
-  const [isDREFillerActive, setDREFiller] = useState(false);
-  const toggleDREFiller = () => {
-    setDREFiller(!isDREFillerActive);
-  };
-  //display de tabela para pacientes
+  const dlgRef = useRef<nullishDlg>(null);
   const pacBtnRef = useRef<nullishBtn>(null);
-  const [shouldDisplayPacList, setPacFiller] = useState(false);
-  const togglePacFiller = (shouldDisplayPacList: boolean = false) => {
-    setPacFiller(!shouldDisplayPacList);
-  };
-  //autocorreções de input
-  const [isAutocorrectConsOn, setAutocorrectCons] = useState(true);
-  const toggleACCons = (isAutocorrectConsOn: boolean = false) => {
-    setAutocorrectCons(!isAutocorrectConsOn);
-  };
-  const switchACConsRef = useRef<nullishInp>(null);
-  useEffect(() => {
-    if (
-      switchACConsRef.current instanceof HTMLInputElement &&
-      (switchACConsRef.current.type === "checkbox" ||
-        switchACConsRef.current.type === "radio")
-    ) {
-      switchACConsRef.current.checked = true;
-      toggleACCons(isAutocorrectConsOn);
-      const inpFirstName = dialogRef.current!.querySelector("#firstNamePac");
-      const inpFamilyName = dialogRef.current!.querySelector("#familyNamePac");
-      inpFirstName instanceof HTMLInputElement
-        ? inpFirstName.addEventListener("input", () => {
-            isAutocorrectConsOn &&
-              autoCapitalizeInputs(inpFirstName, isAutocorrectConsOn);
-          })
-        : inputNotFound(
-            inpFirstName,
-            "<input> for patient's first name in new appointment form",
-            extLine(new Error())
-          );
-      inpFamilyName instanceof HTMLInputElement
-        ? inpFamilyName.addEventListener("input", () => {
-            isAutocorrectConsOn &&
-              autoCapitalizeInputs(inpFamilyName, isAutocorrectConsOn);
-          })
-        : inputNotFound(
-            inpFamilyName,
-            "<input> for patient's middle and family names in new appointment form",
-            extLine(new Error())
-          );
-    } else
-      inputNotFound(
-        switchACConsRef.current,
-        "Switch for toggling autocorrect in new appointment form",
-        extLine(new Error())
-      );
-  }, [switchACConsRef]);
-  const [isAutofillConsOn, setAutofillCons] = useState(true);
-  const toggleAFCons = (isAutofillConsOn: boolean = false) => {
-    setAutofillCons(!isAutofillConsOn);
-  };
-  const switchAFConsRef = useRef<nullishInp>(null);
-  useEffect(() => {
-    if (
-      switchAFConsRef.current instanceof HTMLInputElement &&
-      (switchAFConsRef.current.type === "checkbox" ||
-        switchAFConsRef.current.type === "radio")
-    ) {
-      switchAFConsRef.current.checked = true;
-      toggleAFCons(isAutofillConsOn);
-      const inpCPF = dialogRef.current!.querySelector("#inpCPFPac");
-      const inpTel = dialogRef.current!.querySelector("#inpTelPac");
-      const inpEmail = dialogRef.current!.querySelector("#emailPac");
-      inpCPF instanceof HTMLInputElement
-        ? inpCPF.addEventListener("input", () => {
-            isAutofillConsOn && formatCPF(inpCPF);
-          })
-        : inputNotFound(
-            inpCPF,
-            "<input> for entering CPF data in new appointment form",
-            extLine(new Error())
-          );
-      inpTel instanceof HTMLInputElement
-        ? inpTel.addEventListener("input", () => {
-            isAutofillConsOn && formatTel(inpTel);
-          })
-        : inputNotFound(
-            inpTel,
-            "<input> for telephone number in new appointment form",
-            extLine(new Error())
-          );
-      if (inpEmail instanceof HTMLInputElement) {
-        inpEmail.addEventListener("input", () => {
-          isAutofillConsOn && addEmailExtension(inpEmail);
-        });
-        inpEmail.addEventListener("click", () => {
-          isAutofillConsOn && addEmailExtension(inpEmail);
-        });
-      }
-    } else
-      inputNotFound(
-        switchAFConsRef.current,
-        "Switch for toggling autofill in new appointment form",
-        extLine(new Error())
-      );
-  }, [switchAFConsRef]);
-  useEffect(() => {
-    if (dialogRef.current instanceof HTMLElement) {
-      //garante que tela irá centralizar modal
-      setTimeout(() => {
-        dialogRef.current?.scrollIntoView({
-          behavior: "smooth",
-          block: "center",
-          inline: "center",
-        });
-      }, 300);
-      //armazenamento local
-      const consDataProvider = new DataProvider(
-        DataProvider.persistSessionEntries(dialogRef.current)
-      );
-      globalDataProvider &&
-        globalDataProvider.initPersist(
-          dialogRef.current,
-          consDataProvider,
-          globalDataProvider
-        );
-      //remodela datalistas com base em membros disponíveis para tipo de consulta
-      addListenerAvMembers(dialogRef, true);
-      //estilização e aria
-      syncAriaStates([
-        ...dialogRef.current!.querySelectorAll("*"),
-        dialogRef.current,
-      ]);
-      const handleKeyDown = (press: KeyboardEvent) => {
-        if (press.key === "Escape") {
-          onClose();
-        }
-      };
-      document.addEventListener("keydown", handleKeyDown);
-      return () => {
-        document.removeEventListener("keydown", handleKeyDown);
-      };
-    }
-  }, [dialogRef]);
-  //fechamento de modal com clique fora da área do mesmo
-  const handleClickOutside = (ev: MouseEvent) => {
-    if (
-      dialogRef.current &&
-      isClickOutside(ev, dialogRef.current).some(
-        clickArea => clickArea === true
-      )
-    ) {
-      onClose();
-    }
-  };
-  useEffect(() => {
-    document.addEventListener("click", handleClickOutside);
-    return () => {
-      document.removeEventListener("click", handleClickOutside);
-    };
-  }, [dialogRef, onClose]);
   //autocompleção
   const CPFPacInpRef = useRef<nullishInp>(null);
-  useEffect(() => {
-    if (
-      CPFPacInpRef?.current instanceof HTMLInputElement &&
-      CPFPacInpRef.current.id.match(/cpf/gi)
-    ) {
-      CPFPacInpRef.current.addEventListener("input", () => {
-        formatCPF(CPFPacInpRef.current);
-      });
-      return () => {
-        CPFPacInpRef.current?.removeEventListener("input", () => {
-          formatCPF(CPFPacInpRef.current);
-        });
-      };
-    } else
-      inputNotFound(
-        CPFPacInpRef.current,
-        "CPFPacInpRef.current in useEffect()",
-        extLine(new Error())
-      );
-  }, [CPFPacInpRef]);
   const CPFPacBtnRef = useRef<nullishBtn>(null);
+  const switchACConsRef = useRef<nullishInp>(null);
+  const switchAFConsRef = useRef<nullishInp>(null);
+  const telPacInpRef = useRef<nullishInp>(null);
+  const CPFProfBtnRef = useRef<nullishBtn>(null);
+  const exportRef = useRef<nullishBtn>(null);
+  const submitRef = useRef<nullishBtn>(null);
+  const [isDREFillerActive, setDREFiller] = useState<boolean>(false);
+  const toggleDREFiller = () => setDREFiller(!isDREFillerActive);
+  //display de tabela para pacientes
+  const [shouldDisplayPacList, setPacFiller] = useState<boolean>(false);
+  const togglePacFiller = (s: boolean = false) => setPacFiller(!s);
+  //autocorreções de input
+  const [isAutocorrectConsOn, setAutocorrectCons] = useState<boolean>(true);
+  const toggleACCons = (s: boolean = false) => setAutocorrectCons(!s);
+  const [isAutofillConsOn, setAutofillCons] = useState<boolean>(true);
+  const toggleAFCons = (s: boolean = false) => setAutofillCons(!s);
+  //fechamento de modal com clique fora da área do mesmo
+  const handleClickOutside = (ev: MouseEvent) => {
+    dlgRef.current &&
+      isClickOutside(ev, dlgRef.current).some(
+        clickArea => clickArea === true
+      ) &&
+      onClose();
+  };
   const callbackCPFPacBtnClick = useCallback(
     (retrvDataPh: { [key: string]: Object }) => {
       const matchDataPh = (() => {
@@ -244,14 +98,14 @@ export default function FormDlg({
         });
         return matchDataPh;
       })();
-      if (dialogRef?.current instanceof Element) {
+      if (dlgRef?.current instanceof Element) {
         const cpfInp =
-          dialogRef.current.querySelector("input[id*=cpf]") ||
-          dialogRef.current.querySelector("input[id*=CPF]");
+          dlgRef.current.querySelector("input[id*=cpf]") ||
+          dlgRef.current.querySelector("input[id*=CPF]");
         const currentInps = Array.from([
-          ...dialogRef.current.querySelectorAll("input"),
-          ...dialogRef.current.querySelectorAll("select"),
-          ...dialogRef.current.querySelectorAll("textarea"),
+          ...dlgRef.current.querySelectorAll("input"),
+          ...dlgRef.current.querySelectorAll("select"),
+          ...dlgRef.current.querySelectorAll("textarea"),
         ]).filter(inp => !/cpf/gi.test(inp.id));
         if (
           cpfInp instanceof HTMLInputElement &&
@@ -302,41 +156,16 @@ export default function FormDlg({
         } else
           multipleElementsNotFound(
             extLine(new Error()),
-            `inputs in the dialog id ${dialogRef.current.id}`,
+            `inputs in the dialog id ${dlgRef.current.id}`,
             cpfInp
           );
       } else
         console.warn(
-          `dialogRef.current not validated in callbackCPFPacBtnClick()`
+          `dlgRef.current not validated in callbackCPFPacBtnClick()`
         );
       return matchDataPh;
     },
     [CPFPacBtnRef]
-  );
-  const telPacInpRef = useRef<nullishInp>(null);
-  useEffect(() => {
-    if (
-      telPacInpRef?.current instanceof HTMLInputElement &&
-      telPacInpRef.current.id.match(/tel/gi)
-    ) {
-      callbackTelPacBtnClick(telPacInpRef.current);
-      return telPacInpRef.current!.removeEventListener("input", () => {
-        formatTel(telPacInpRef.current!);
-      });
-    } else
-      inputNotFound(
-        telPacInpRef.current,
-        "telPacInpRef.current in useEffect()",
-        extLine(new Error())
-      );
-  }, [telPacInpRef]);
-  const callbackTelPacBtnClick = useCallback(
-    (telPacInp: HTMLInputElement) => {
-      telPacInp.addEventListener("input", () => {
-        formatTel(telPacInp);
-      });
-    },
-    [telPacInpRef]
   );
   //ativação de preenchimento de paciente com CPF
   const handleCPFBtnClick = useCallback(() => {
@@ -352,36 +181,9 @@ export default function FormDlg({
           "argument for handleCPFBtnClick",
           extLine(new Error())
         );
-  }, [dialogRef, CPFPacBtnRef]);
-  const callbackEnableCPFBtn = useCallback(() => {
-    enableCPFBtn(CPFPacBtnRef.current, CPFPacInpRef.current?.value);
-    CPFPacInpRef.current!.addEventListener("input", () => {
-      enableCPFBtn(CPFPacBtnRef.current, CPFPacInpRef.current?.value);
-    });
-  }, [dialogRef, CPFPacBtnRef]);
-  useEffect(() => {
-    //permite uso de CPF caso satisfaça o pattern para esse tipo de input
-    if (
-      CPFPacInpRef?.current instanceof HTMLInputElement &&
-      CPFPacInpRef.current.id.match(/cpf/gi) &&
-      CPFPacBtnRef?.current instanceof HTMLButtonElement &&
-      CPFPacBtnRef.current.id.match(/cpf/gi)
-    ) {
-      callbackEnableCPFBtn();
-      return CPFPacInpRef.current.removeEventListener("input", () => {
-        enableCPFBtn(CPFPacBtnRef.current, CPFPacInpRef.current?.value);
-      });
-    } else
-      multipleElementsNotFound(
-        extLine(new Error()),
-        "useEffect() for adding listener to call enableCPFBtn",
-        CPFPacInpRef.current,
-        CPFPacBtnRef.current
-      );
-  }, [CPFPacInpRef, CPFPacBtnRef]);
+  }, [dlgRef, CPFPacBtnRef]);
   //ativação de preenchimento de Profisional com tabela
-  const CPFProfBtnRef = useRef<nullishBtn>(null);
-  const [isCPFFillerActive, setCPFFiller] = useState(false);
+  const [isCPFFillerActive, setCPFFiller] = useState<boolean>(false);
   const toggleCPFFiller = useCallback(
     (
       CPFProfBtnRef: MutableRefObject<nullishBtn>,
@@ -395,30 +197,8 @@ export default function FormDlg({
             extLine(new Error())
           );
     },
-    [dialogRef, CPFProfBtnRef]
+    [dlgRef, CPFProfBtnRef]
   );
-  const exportRef = useRef<nullishBtn>(null);
-  //adicionar listener para exportação de excel
-  useEffect(() => {
-    if (
-      exportRef?.current instanceof HTMLButtonElement &&
-      exportRef.current.id.match(/export/gi) &&
-      (dialogRef?.current instanceof HTMLDialogElement ||
-        (dialogRef.current! instanceof HTMLElement &&
-          (dialogRef.current as HTMLElement).classList
-            .toString()
-            .match(/modal/gi)))
-    )
-      addListenerExportBtn("Paciente", dialogRef.current, "#firstNamePac");
-    else
-      multipleElementsNotFound(
-        extLine(new Error()),
-        "refs in useEffect() for FormDlg",
-        exportRef.current,
-        dialogRef.current
-      );
-  }, [exportRef]);
-  const submitRef = useRef<nullishBtn>(null);
   const generateSchedBtn = useCallback(
     (dialog: HTMLDialogElement) => {
       const allEntryEls = [
@@ -458,8 +238,56 @@ export default function FormDlg({
       );
       handleDragAptBtn(newBtn, userClass);
     },
-    [dialogRef, submitRef]
+    [dlgRef, submitRef]
   );
+  //push em history
+  useEffect(() => {
+    history.pushState(
+      {},
+      "",
+      `${location.origin}${location.pathname}${location.search}&new-cons=open`
+    );
+    setTimeout(() => {
+      history.pushState(
+        {},
+        "",
+        `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#")
+      );
+    }, 300);
+    return () => {
+      history.pushState(
+        {},
+        "",
+        `${location.origin}${location.pathname}${location.search}`.replaceAll(
+          "&new-cons=open",
+          ""
+        )
+      );
+      setTimeout(() => {
+        history.pushState(
+          {},
+          "",
+          `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#")
+        );
+      }, 300);
+    };
+  }, []);
+  useEffect(() => {
+    if (dlgRef?.current instanceof HTMLDialogElement) {
+      (() => {
+        dlgRef.current.showModal();
+      })();
+      syncAriaStates([
+        ...dlgRef.current!.querySelectorAll("*"),
+        dlgRef.current,
+      ]);
+    } else
+      elementNotFound(
+        dlgRef.current,
+        "dialogElement in RegstPacDlg",
+        extLine(new Error())
+      );
+  }, [dlgRef]);
   //adição de listener para submissão e criação de botão posterior
   useEffect(() => {
     handleClientPermissions(
@@ -470,9 +298,101 @@ export default function FormDlg({
       document.getElementById("autoFillDREBtn"),
       document.getElementById("autoFillCPFRespBtn")
     );
-  }, [dialogRef]);
+  }, [dlgRef]);
+  useEffect(() => {
+    if (dlgRef.current instanceof HTMLElement) {
+      //garante que tela irá centralizar modal
+      setTimeout(() => {
+        dlgRef.current?.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+          inline: "center",
+        });
+      }, 300);
+      //armazenamento local
+      const consDataProvider = new DataProvider(
+        DataProvider.persistSessionEntries(dlgRef.current)
+      );
+      globalDataProvider &&
+        globalDataProvider.initPersist(
+          dlgRef.current,
+          consDataProvider,
+          globalDataProvider
+        );
+      //remodela datalistas com base em membros disponíveis para tipo de consulta
+      addListenerAvMembers(dlgRef, true);
+      //estilização e aria
+      syncAriaStates([
+        ...dlgRef.current!.querySelectorAll("*"),
+        dlgRef.current,
+      ]);
+      const handleKeyDown = (press: KeyboardEvent) => {
+        if (press.key === "Escape") {
+          onClose();
+        }
+      };
+      addEventListener("keydown", handleKeyDown);
+      return () => {
+        removeEventListener("keydown", handleKeyDown);
+      };
+    }
+  }, [dlgRef]);
+  useEffect(() => {
+    addEventListener("click", handleClickOutside);
+    return () => removeEventListener("click", handleClickOutside);
+  }, [dlgRef, onClose]);
+  useEffect(() => {
+    if (
+      switchAFConsRef.current instanceof HTMLInputElement &&
+      (switchAFConsRef.current.type === "checkbox" ||
+        switchAFConsRef.current.type === "radio")
+    ) {
+      switchAFConsRef.current.checked = true;
+      toggleAFCons(isAutofillConsOn);
+    } else
+      inputNotFound(
+        switchAFConsRef.current,
+        "Switch for toggling autofill in new appointment form",
+        extLine(new Error())
+      );
+  }, [switchAFConsRef]);
+  useEffect(() => {
+    if (
+      switchACConsRef.current instanceof HTMLInputElement &&
+      (switchACConsRef.current.type === "checkbox" ||
+        switchACConsRef.current.type === "radio")
+    ) {
+      switchACConsRef.current.checked = true;
+      toggleACCons(isAutocorrectConsOn);
+    } else
+      inputNotFound(
+        switchACConsRef.current,
+        "Switch for toggling autocorrect in new appointment form",
+        extLine(new Error())
+      );
+  }, [switchACConsRef]);
+  //adicionar listener para exportação de excel
+  useEffect(() => {
+    if (
+      exportRef?.current instanceof HTMLButtonElement &&
+      exportRef.current.id.match(/export/gi) &&
+      (dlgRef?.current instanceof HTMLDialogElement ||
+        (dlgRef.current! instanceof HTMLElement &&
+          (dlgRef.current as HTMLElement).classList
+            .toString()
+            .match(/modal/gi)))
+    )
+      addListenerExportBtn("Paciente", dlgRef.current, "#firstNamePac");
+    else
+      multipleElementsNotFound(
+        extLine(new Error()),
+        "refs in useEffect() for FormDlg",
+        exportRef.current,
+        dlgRef.current
+      );
+  }, [exportRef]);
   return (
-    <dialog className="modal-content flexWC" ref={dialogRef} id="regstPacDlg">
+    <dialog className="modal-content flexWC" ref={dlgRef} id="regstPacDlg">
       <ErrorBoundary
         FallbackComponent={() => (
           <ErrorFallbackDlg
@@ -574,11 +494,13 @@ export default function FormDlg({
                       data-aloc="cpf-pac"
                       ref={CPFPacInpRef}
                       onInput={ev => {
+                        isAutofillConsOn && formatCPF(ev.currentTarget);
                         handleCondtReq(ev.currentTarget, {
                           min: 14,
                           max: 16,
                           pattern: ["^(d{3}.){2}d{3}-d{2}$", ""],
                         });
+                        enableCPFBtn(ev.currentTarget, ev.currentTarget.value);
                       }}
                     />
                     <datalist id="listCPFPacCons">
@@ -638,6 +560,11 @@ export default function FormDlg({
                           max: 99,
                           pattern: ["[^0-9]", "gi"],
                         });
+                        isAutocorrectConsOn &&
+                          autoCapitalizeInputs(
+                            ev.currentTarget,
+                            isAutocorrectConsOn
+                          );
                         if (ev.currentTarget.value.length > 2) {
                           try {
                             const familyNamePac =
@@ -807,11 +734,9 @@ export default function FormDlg({
                 </div>
                 {shouldDisplayPacList && (
                   <AvPacListDlg
-                    onClick={(shouldDisplayPacList: boolean) => {
-                      togglePacFiller(shouldDisplayPacList);
-                    }}
-                    shouldDisplayPacList={shouldDisplayPacList}
-                    mainDlgRef={dialogRef}
+                    dispatch={setPacFiller}
+                    state={shouldDisplayPacList}
+                    mainDlgRef={dlgRef}
                     shouldShowAlocBtn={true}
                     userClass={userClass}
                   />
@@ -836,6 +761,11 @@ export default function FormDlg({
                   data-title="Sobrenome Paciente"
                   data-aloc="familyname-pac"
                   onInput={ev => {
+                    isAutocorrectConsOn &&
+                      autoCapitalizeInputs(
+                        ev.currentTarget,
+                        isAutocorrectConsOn
+                      );
                     handleCondtReq(ev.currentTarget, {
                       min: 3,
                       max: 99,
@@ -903,6 +833,7 @@ export default function FormDlg({
                       data-aloc="tel-pac"
                       ref={telPacInpRef}
                       onInput={ev => {
+                        isAutofillConsOn && formatTel(ev.currentTarget);
                         handleCondtReq(ev.currentTarget, {
                           min: 8,
                           max: 10,
@@ -928,12 +859,16 @@ export default function FormDlg({
                   data-title="Email Paciente"
                   data-aloc="email-pac"
                   onInput={ev => {
+                    isAutofillConsOn && addEmailExtension(ev.currentTarget);
                     handleCondtReq(ev.currentTarget, {
                       min: 6,
                       max: 99,
                       pattern: ["@", "g"],
                     });
                   }}
+                  onClick={ev =>
+                    isAutofillConsOn && addEmailExtension(ev.currentTarget)
+                  }
                 />
               </div>
               <div role="group" className="flexWR" id="statusPacDiv">
@@ -1068,7 +1003,7 @@ export default function FormDlg({
                   </div>
                 </div>
                 {isDREFillerActive && (
-                  <DREFiller forwardedRef={dialogRef} userClass={userClass} />
+                  <DREFiller forwardedRef={dlgRef} userClass={userClass} />
                 )}
                 <div
                   role="group"
@@ -1131,12 +1066,10 @@ export default function FormDlg({
                 </div>
                 {isCPFFillerActive && (
                   <AvProfListDlg
-                    onClick={() =>
-                      toggleCPFFiller(CPFProfBtnRef, isCPFFillerActive)
-                    }
-                    mainDlgRef={dialogRef}
+                    dispatch={setCPFFiller}
+                    state={isCPFFillerActive}
+                    mainDlgRef={dlgRef}
                     btnProf={CPFPacBtnRef.current}
-                    isCPFFillerActive={isCPFFillerActive}
                     userClass={userClass}
                   />
                 )}
@@ -1198,12 +1131,10 @@ export default function FormDlg({
                           document.querySelectorAll(".appointmentBtn").length +
                           1;
                         providerFormData[accFormData] = generateSchedPacData(
-                          dialogRef.current ??
-                            ev.currentTarget.closest("dialog")
+                          dlgRef.current ?? ev.currentTarget.closest("dialog")
                         );
                         generateSchedBtn(
-                          dialogRef.current ??
-                            ev.currentTarget.closest("dialog")
+                          dlgRef.current ?? ev.currentTarget.closest("dialog")!
                         );
                         handleSubmit("cons", validation[2], true);
                         onClose();

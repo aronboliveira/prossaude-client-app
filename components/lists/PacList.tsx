@@ -1,3 +1,5 @@
+"use client";
+
 import {
   nullishBtn,
   nullishHtEl,
@@ -29,9 +31,9 @@ import Spinner from "../icons/Spinner";
 export default function PacList({
   setDisplayRowData,
   shouldDisplayRowData,
+  dispatch,
   shouldShowAlocBtn = true,
-  onClick,
-  shouldDisplayPacList = true,
+  state = true,
   userClass = "estudante",
 }: PacListProps): JSX.Element {
   const pacs: PacInfo[] = [];
@@ -46,8 +48,8 @@ export default function PacList({
         ancestral,
         ancestral,
         "Pac",
-        shouldDisplayPacList,
-        onClick,
+        state,
+        dispatch,
         userClass
       );
     },
