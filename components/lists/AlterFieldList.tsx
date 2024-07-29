@@ -1,17 +1,18 @@
+import { AlterFieldListProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
+import { ErrorBoundary } from "react-error-boundary";
+import { isClickOutside } from "@/lib/global/gStyleScript";
+import { nullishDlg, nullishSel } from "@/lib/global/declarations/types";
+import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
+import { useEffect, useRef, useState } from "react";
+import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
+import GenericErrorComponent from "../error/GenericErrorComponent";
 "use client";
 
-import { nullishDlg, nullishSel } from "@/lib/global/declarations/types";
-import { isClickOutside } from "@/lib/global/gStyleScript";
 import {
   elementNotFound,
   extLine,
   inputNotFound,
 } from "@/lib/global/handlers/errorHandler";
-import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
-import { AlterFieldListProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
-import { useEffect, useRef, useState } from "react";
-import { ErrorBoundary } from "react-error-boundary";
-import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
 import {
   addEmailExtension,
   autoCapitalizeInputs,
@@ -19,7 +20,6 @@ import {
   formatCPF,
   formatTel,
 } from "@/lib/global/gModel";
-import GenericErrorComponent from "../error/GenericErrorComponent";
 
 export default function AlterFieldList({
   dispatch,

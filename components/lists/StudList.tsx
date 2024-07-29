@@ -1,21 +1,21 @@
-"use client";
-
-import StudRow from "../panelForms/studs/StudRow";
-import { useRef, useEffect } from "react";
-import { nullishTab, nullishTabSect } from "@/lib/global/declarations/types";
+import { ErrorBoundary } from "react-error-boundary";
+import { createRoot } from "react-dom/client";
+import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { equalizeTabCells } from "@/lib/global/gStyleScript";
 import { fillTabAttr } from "@/lib/locals/panelPage/handlers/consHandlerList";
+import { handleFetch } from "@/pages/api/ts/handlers";
+import { nullishTab, nullishTabSect } from "@/lib/global/declarations/types";
 import { panelRoots } from "../panelForms/defs/client/SelectPanel";
-import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
-import { createRoot } from "react-dom/client";
+import { useRef, useEffect } from "react";
 import GenericErrorComponent from "../error/GenericErrorComponent";
 import Spinner from "../icons/Spinner";
+import StudRow from "../panelForms/studs/StudRow";
+"use client";
+
 import {
   GlobalFormProps,
   StudInfo,
 } from "@/lib/locals/panelPage/declarations/interfacesCons";
-import { handleFetch } from "@/pages/api/ts/handlers";
-import { ErrorBoundary } from "react-error-boundary";
 
 export default function StudList({
   userClass = "estudante",

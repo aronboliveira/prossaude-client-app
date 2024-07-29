@@ -1,13 +1,13 @@
-"use client";
-
 import { DlgProps } from "@/lib/global/declarations/interfaces";
-import { nullishDlg } from "@/lib/global/declarations/types";
-import { isClickOutside } from "@/lib/global/gStyleScript";
+import { ErrorBoundary } from "react-error-boundary";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
+import { isClickOutside } from "@/lib/global/gStyleScript";
+import { nullishDlg } from "@/lib/global/declarations/types";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useEffect, useRef } from "react";
-import { ErrorBoundary } from "react-error-boundary";
 import GenericErrorComponent from "../../error/GenericErrorComponent";
+"use client";
+
 
 export default function OdDeclaration({
   state,

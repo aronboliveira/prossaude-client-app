@@ -1,6 +1,6 @@
+import { changeTabDCutLayout } from "@/lib/locals/edFisNutPage/edFisNutModel";
 "use client";
 
-import { changeTabDCutLayout } from "@/lib/locals/edFisNutPage/edFisNutModel";
 
 export default function Protocolo(): JSX.Element {
   return (

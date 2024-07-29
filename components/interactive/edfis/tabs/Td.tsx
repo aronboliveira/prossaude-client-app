@@ -1,9 +1,9 @@
 import { TdProps } from "@/lib/global/declarations/interfaces";
-import TabInpProg from "../client/tabs/TabInpProg";
-import TabBtnDCut from "../client/tabs/TabBtnDCut";
 import { textTransformPascal } from "@/lib/global/gModel";
-import TabBtnInd from "../client/tabs/TabBtnInd";
 import LockTabInd from "./LobTackInd";
+import TabBtnDCut from "../client/tabs/TabBtnDCut";
+import TabBtnInd from "../client/tabs/TabBtnInd";
+import TabInpProg from "../client/tabs/TabInpProg";
 
 export default function Td({ nRow, nCol, ctx, lab }: TdProps): JSX.Element {
   const pascalLab = textTransformPascal(lab);

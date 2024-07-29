@@ -1,3 +1,15 @@
+import { ErrorBoundary } from "react-error-boundary";
+import { createRoot } from "react-dom/client";
+import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
+import { equalizeTabCells } from "@/lib/global/gStyleScript";
+import { handleFetch } from "@/pages/api/ts/handlers";
+import { panelRoots } from "../panelForms/defs/client/SelectPanel";
+import { strikeEntries } from "@/lib/locals/panelPage/consStyleScript";
+import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
+import { useEffect, useRef, useCallback, MutableRefObject } from "react";
+import GenericErrorComponent from "../error/GenericErrorComponent";
+import PacRow from "../panelForms/pacs/PacRow";
+import Spinner from "../icons/Spinner";
 "use client";
 
 import {
@@ -6,10 +18,6 @@ import {
   nullishTab,
   nullishTabSect,
 } from "@/lib/global/declarations/types";
-import { equalizeTabCells } from "@/lib/global/gStyleScript";
-import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
-import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
-import { strikeEntries } from "@/lib/locals/panelPage/consStyleScript";
 import {
   PacInfo,
   PacListProps,
@@ -19,14 +27,6 @@ import {
   checkLocalIntervs,
   fillTabAttr,
 } from "@/lib/locals/panelPage/handlers/consHandlerList";
-import { useEffect, useRef, useCallback, MutableRefObject } from "react";
-import { handleFetch } from "@/pages/api/ts/handlers";
-import { panelRoots } from "../panelForms/defs/client/SelectPanel";
-import { createRoot } from "react-dom/client";
-import { ErrorBoundary } from "react-error-boundary";
-import GenericErrorComponent from "../error/GenericErrorComponent";
-import PacRow from "../panelForms/pacs/PacRow";
-import Spinner from "../icons/Spinner";
 
 export default function PacList({
   setDisplayRowData,

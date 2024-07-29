@@ -1,15 +1,15 @@
-"use client";
-
-import { nullishDlg, nullishTab } from "@/lib/global/declarations/types";
-import { isClickOutside } from "@/lib/global/gStyleScript";
-import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
-import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
-import { HistoricDlgProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
-import { useEffect, useRef } from "react";
 import { ErrorBoundary } from "react-error-boundary";
+import { HistoricDlgProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
+import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
+import { isClickOutside } from "@/lib/global/gStyleScript";
+import { nullishDlg, nullishTab } from "@/lib/global/declarations/types";
+import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
+import { useEffect, useRef } from "react";
 import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
 import GenericErrorComponent from "../error/GenericErrorComponent";
 import PrevConsRow from "./PrevConsRow";
+"use client";
+
 
 export default function PrevConsList({
   dispatch,

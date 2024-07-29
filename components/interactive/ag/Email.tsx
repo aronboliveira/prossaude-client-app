@@ -1,7 +1,7 @@
-"use client";
-
 import { addEmailExtension } from "@/lib/global/gModel";
 import { handleCondtReq } from "@/lib/global/handlers/gHandlers";
+"use client";
+
 
 export default function Email({
   name = "email",

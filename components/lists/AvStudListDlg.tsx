@@ -1,20 +1,20 @@
-"use client";
-
 import { AvStudListDlgProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
-import { useEffect, useRef, useCallback, MutableRefObject } from "react";
-import { nullishBtn, nullishDlg } from "@/lib/global/declarations/types";
-import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
+import { ErrorBoundary } from "react-error-boundary";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { equalizeTabCells, isClickOutside } from "@/lib/global/gStyleScript";
-import { ErrorBoundary } from "react-error-boundary";
+import { nullishBtn, nullishDlg } from "@/lib/global/declarations/types";
+import { strikeEntries } from "@/lib/locals/panelPage/consStyleScript";
+import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
+import { useEffect, useRef, useCallback, MutableRefObject } from "react";
 import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
+import StudList from "./StudList";
+"use client";
+
 import {
   addListenerAlocation,
   checkLocalIntervs,
   filterTabMembers,
 } from "@/lib/locals/panelPage/handlers/consHandlerList";
-import { strikeEntries } from "@/lib/locals/panelPage/consStyleScript";
-import StudList from "./StudList";
 
 export default function AvStudListDlg({
   forwardedRef,

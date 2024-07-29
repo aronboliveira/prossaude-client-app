@@ -1,7 +1,7 @@
 import { DlgProps } from "@/lib/global/declarations/interfaces";
-import { nullishDlg } from "@/lib/global/declarations/types";
-import { isClickOutside } from "@/lib/global/gStyleScript";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
+import { isClickOutside } from "@/lib/global/gStyleScript";
+import { nullishDlg } from "@/lib/global/declarations/types";
 import { useRef, useEffect } from "react";
 
 export default function ENTips({ state, dispatch }: DlgProps): JSX.Element {

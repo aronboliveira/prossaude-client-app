@@ -1,5 +1,5 @@
-import { textTransformPascal } from "@/lib/global/gModel";
 import { ErrorBoundary } from "react-error-boundary";
+import { textTransformPascal } from "@/lib/global/gModel";
 import GenericErrorComponent from "../../error/GenericErrorComponent";
 
 export default function OpProtUr({

@@ -1,6 +1,6 @@
+import { handleDivAddShow } from "@/pages/ag";
 "use client";
 
-import { handleDivAddShow } from "@/pages/ag";
 
 export default function FamOnc(): JSX.Element {
   return (

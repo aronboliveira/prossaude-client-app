@@ -1,8 +1,8 @@
+import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
+import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
+import { useEffect, useState } from "react";
 "use client";
 
-import { useEffect, useState } from "react";
-import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
-import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 
 export default function WatcherTab({
   tabName,

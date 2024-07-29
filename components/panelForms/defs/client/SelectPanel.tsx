@@ -1,32 +1,32 @@
+import { AppRootContext } from "@/pages/_app";
+import { AppRootContextType } from "@/lib/global/declarations/interfaces";
+import { DataProvider } from "@/lib/locals/panelPage/declarations/classesCons";
+import { ErrorBoundary } from "react-error-boundary";
+import { MainPanelProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
+import { Root } from "react-dom/client";
+import { camelToKebab } from "@/lib/global/gModel";
+import { createRoot } from "react-dom/client";
+import { handleLinkChanges } from "@/lib/global/handlers/gRoutingHandlers";
+import { nullishDiv, voidVal } from "@/lib/global/declarations/types";
+import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
+import { useState, useRef, useEffect, useContext } from "react";
+import DefaultForm from "../DefaultForm";
+import ErrorMainDiv from "../../../error/ErrorMainDiv";
+import GenericErrorComponent from "../../../error/GenericErrorComponent";
+import PacTabForm from "../../pacs/PacTabForm";
+import ProfForm from "../../profs/ProfForm";
+import RemoveProfForm from "../../profs/RemoveProfForm";
+import RemoveStudForm from "../../studs/RemoveStudForm";
+import ScheduleForm from "../../schedule/ScheduleForm";
+import StudentForm from "../../studs/StudentForm";
+import Unauthorized from "../Unauthorized";
 "use client";
 
-import { ErrorBoundary } from "react-error-boundary";
-import { useState, useRef, useEffect, useContext } from "react";
-import GenericErrorComponent from "../../../error/GenericErrorComponent";
-import { AppRootContext } from "@/pages/_app";
-import { MainPanelProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import {
   elementNotFound,
   extLine,
   stringError,
 } from "@/lib/global/handlers/errorHandler";
-import { DataProvider } from "@/lib/locals/panelPage/declarations/classesCons";
-import { handleLinkChanges } from "@/lib/global/handlers/gRoutingHandlers";
-import ErrorMainDiv from "../../../error/ErrorMainDiv";
-import { nullishDiv, voidVal } from "@/lib/global/declarations/types";
-import { createRoot } from "react-dom/client";
-import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
-import StudentForm from "../../studs/StudentForm";
-import Unauthorized from "../Unauthorized";
-import ProfForm from "../../profs/ProfForm";
-import RemoveStudForm from "../../studs/RemoveStudForm";
-import RemoveProfForm from "../../profs/RemoveProfForm";
-import PacTabForm from "../../pacs/PacTabForm";
-import ScheduleForm from "../../schedule/ScheduleForm";
-import DefaultForm from "../DefaultForm";
-import { Root } from "react-dom/client";
-import { AppRootContextType } from "@/lib/global/declarations/interfaces";
-import { camelToKebab } from "@/lib/global/gModel";
 
 export let globalDataProvider: DataProvider | voidVal = undefined;
 export const panelRoots: { [k: string]: Root | undefined } = {

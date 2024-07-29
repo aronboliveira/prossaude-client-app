@@ -1,14 +1,14 @@
-import { useState, useEffect, useRef } from "react";
-import { person, tabProps } from "@/pages/edfis";
 import { Person } from "@/lib/global/declarations/classes";
-import { validateEvResultNum } from "@/lib/locals/edFisNutPage/edFisNutHandler";
 import { exeAutoFill } from "@/pages/edfis";
+import { handleEventReq } from "@/lib/global/handlers/gHandlers";
+import { nullishInp } from "@/lib/global/declarations/types";
+import { person, tabProps } from "@/pages/edfis";
+import { useState, useEffect, useRef } from "react";
+import { validateEvResultNum } from "@/lib/locals/edFisNutPage/edFisNutHandler";
 import {
   multipleElementsNotFound,
   extLine,
 } from "@/lib/global/handlers/errorHandler";
-import { handleEventReq } from "@/lib/global/handlers/gHandlers";
-import { nullishInp } from "@/lib/global/declarations/types";
 
 export default function AgeElement() {
   const [value, setValue] = useState<string>("");

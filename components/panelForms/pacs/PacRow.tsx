@@ -1,13 +1,13 @@
-"use client";
-
-import { useState, useRef } from "react";
-import { nullishBtn } from "@/lib/global/declarations/types";
-import FormExcludeBtn from "../defs/FormExcludeBtn";
-import PrevConsList from "../../lists/PrevConsList";
-import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
-import AlterFieldList from "../../lists/AlterFieldList";
 import { PacRowProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import { dateISOtoBRL } from "@/lib/global/gModel";
+import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
+import { nullishBtn } from "@/lib/global/declarations/types";
+import { useState, useRef } from "react";
+import AlterFieldList from "../../lists/AlterFieldList";
+import FormExcludeBtn from "../defs/FormExcludeBtn";
+import PrevConsList from "../../lists/PrevConsList";
+"use client";
+
 
 export default function PacRow({
   tabRef,

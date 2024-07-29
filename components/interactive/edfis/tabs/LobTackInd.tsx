@@ -1,5 +1,5 @@
-import { validTabLabs } from "@/lib/global/declarations/types";
 import { textTransformPascal } from "@/lib/global/gModel";
+import { validTabLabs } from "@/lib/global/declarations/types";
 
 export default function LockTabInd({
   ctx,

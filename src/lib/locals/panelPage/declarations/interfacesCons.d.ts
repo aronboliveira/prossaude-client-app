@@ -1,10 +1,5 @@
 import { DlgProps } from "@/lib/global/declarations/interfaces";
-import {
-  aptTypes,
-  formCases,
-  looseNum,
-  validPanels,
-} from "@/lib/global/declarations/types";
+import { aptTypes, formCases, looseNum } from "@/lib/global/declarations/types";
 import {
   nullishForm,
   nullishDlg,
@@ -35,7 +30,7 @@ export interface GlobalFormProps {
 }
 
 export interface MainPanelProps extends GlobalFormProps {
-  defOp: validPanels;
+  defOp: string;
 }
 
 export interface ScheduleFormProps extends GlobalFormProps {
@@ -70,20 +65,31 @@ export interface ConsDlgProps extends Omit<BtnAddPacPros, "context"> {
   onClose: () => void;
 }
 
+export interface FormDlgProps extends ConsDlgProps {
+  dialogRef: MutableRefObject<nullishDlg>;
+}
+
 export interface FillerProps {
   forwardedRef: MutableRefObject<nullishDlg>;
   userClass: userClasses;
 }
 
-export interface AvStudListDlgProps extends FillerProps, DlgProps {}
+export interface AvStudListDlgProps extends FillerProps {
+  onClose: (shouldDisplayStudList: boolean) => void;
+  shouldDisplayStudList: boolean;
+}
 
-export interface AvProfListDlgProps extends DlgProps {
+export interface AvProfListDlgProps {
+  onClick: (isCPFFillerActive: boolean) => void;
   mainDlgRef: MutableRefObject<nullishDlg>;
   btnProf: HTMLButtonElement | null;
+  isCPFFillerActive: boolean;
   userClass: userClasses;
 }
 
-export interface AvPacListDlgProps extends DlgProps {
+export interface AvPacListDlgProps {
+  onClick: (shouldDisplayStudList: boolean) => void;
+  shouldDisplayPacList: boolean;
   shouldShowAlocBtn: boolean;
   mainDlgRef: MutableRefObject<nullishDlg>;
   userClass: userClasses;
@@ -94,10 +100,9 @@ export interface PacListProps
       AvPacListDlgProps,
       "mainDlgRef" | "onClick" | "shouldDisplayPacList"
     >,
-    Partial<Pick<AvPacListDlgProps, "dispatch" | "shouldDisplayPacList">> {
+    Partial<Pick<AvPacListDlgProps, "onClick" | "shouldDisplayPacList">> {
   setDisplayRowData: Dispatch<SetStateAction<boolean>>;
   shouldDisplayRowData: boolean;
-  state: boolean;
 }
 
 export interface PrevConsListProps {
@@ -105,9 +110,10 @@ export interface PrevConsListProps {
   shouldDisplayPrevList: boolean;
 }
 
-export interface AlterFieldListProps extends DlgProps {
+export interface AlterFieldListProps {
+  setDisplayRowData: Dispatch<SetStateAction<boolean>>;
   tabRef: MutableRefObject<nullishTab>;
-  name: string;
+  shouldDisplayRowData: boolean;
 }
 
 export interface ProviderAptDataListProps {

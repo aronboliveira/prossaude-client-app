@@ -1,6 +1,6 @@
+import { handleCondtReq } from "@/lib/global/handlers/gHandlers";
 "use client";
 
-import { handleCondtReq } from "@/lib/global/handlers/gHandlers";
 
 export default function SocialName(): JSX.Element {
   return (

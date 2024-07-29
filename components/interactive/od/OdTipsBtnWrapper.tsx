@@ -1,10 +1,10 @@
+import { ErrorBoundary } from "react-error-boundary";
+import { useState } from "react";
+import GenericErrorComponent from "../../error/GenericErrorComponent";
+import OdTips from "./OdTips";
+import TipsBtn from "../def/TipsBtn";
 "use client";
 
-import GenericErrorComponent from "../../error/GenericErrorComponent";
-import TipsBtn from "../def/TipsBtn";
-import OdTips from "./OdTips";
-import { useState } from "react";
-import { ErrorBoundary } from "react-error-boundary";
 
 export default function OdTipsBtnWrapper(): JSX.Element {
   const [shouldShowTips, setTips] = useState<boolean>(false);

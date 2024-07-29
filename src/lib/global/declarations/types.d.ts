@@ -150,13 +150,6 @@ export type pageStyleCases =
   | "Panel Page Style";
 export type validSchedHours = 18 | 19 | 20 | 21;
 export type userClasses = "coordenador" | "supervisor" | "estudante";
-export type validPanels =
-  | "registStud"
-  | "registProf"
-  | "removeStud"
-  | "removeProf"
-  | "pacList"
-  | "agenda";
 export type aptTypes =
   | "anamnese"
   | "retorno"

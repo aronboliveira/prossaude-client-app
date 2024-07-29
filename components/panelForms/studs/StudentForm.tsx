@@ -1,13 +1,20 @@
-import { useEffect, useRef, useState, useCallback } from "react";
-import ReseterBtn from "../defs/ReseterBtn";
+import { DataProvider } from "@/lib/locals/panelPage/declarations/classesCons";
+import { ErrorBoundary } from "react-error-boundary";
 import { GlobalFormProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
+import { addListenerExportBtn } from "@/lib/global/gController";
+import { clearPhDates, normalizeSizeSb } from "@/lib/global/gStyleScript";
+import { globalDataProvider, panelRoots } from "../defs/client/SelectPanel";
+import { handleClientPermissions } from "@/lib/locals/panelPage/handlers/consHandlerUsers";
+import { handleSubmit } from "@/pages/api/ts/handlers";
+import { panelFormsVariables } from "../panelFormsData";
+import { useEffect, useRef, useState, useCallback } from "react";
+import GenericErrorComponent from "../../error/GenericErrorComponent";
+import ReseterBtn from "../defs/ReseterBtn";
 import {
   nullishBtn,
   nullishForm,
   nullishInp,
 } from "@/lib/global/declarations/types";
-import { DataProvider } from "@/lib/locals/panelPage/declarations/classesCons";
-import { panelFormsVariables } from "../panelFormsData";
 import {
   addEmailExtension,
   autoCapitalizeInputs,
@@ -20,19 +27,12 @@ import {
   extLine,
   inputNotFound,
 } from "@/lib/global/handlers/errorHandler";
-import { clearPhDates, normalizeSizeSb } from "@/lib/global/gStyleScript";
 import {
   handleCondtReq,
   handleEventReq,
   validateForm,
   syncAriaStates,
 } from "@/lib/global/handlers/gHandlers";
-import { handleClientPermissions } from "@/lib/locals/panelPage/handlers/consHandlerUsers";
-import { addListenerExportBtn } from "@/lib/global/gController";
-import { globalDataProvider, panelRoots } from "../defs/client/SelectPanel";
-import { ErrorBoundary } from "react-error-boundary";
-import GenericErrorComponent from "../../error/GenericErrorComponent";
-import { handleSubmit } from "@/pages/api/ts/handlers";
 
 export default function StudentForm({
   mainRoot,

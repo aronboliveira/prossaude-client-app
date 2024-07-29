@@ -1,6 +1,6 @@
+import { handleEventReq } from "@/lib/global/handlers/gHandlers";
 "use client";
 
-import { handleEventReq } from "@/lib/global/handlers/gHandlers";
 
 export default function DDDElementPrim(): JSX.Element {
   return (

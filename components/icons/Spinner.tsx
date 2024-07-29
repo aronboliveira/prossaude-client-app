@@ -1,6 +1,6 @@
+import { ErrorBoundary } from "react-error-boundary";
 import { SpinnerComponentProps } from "@/lib/global/declarations/interfaces";
 import GenericErrorComponent from "../error/GenericErrorComponent";
-import { ErrorBoundary } from "react-error-boundary";
 
 export default function Spinner({
   spinnerClass = "spinner-border",

@@ -1,9 +1,9 @@
+import { BtnAddPacPros } from "@/lib/locals/panelPage/declarations/interfacesCons";
+import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
+import { useEffect, useState } from "react";
+import FormDlg from "./FormDlg";
 "use client";
 
-import { BtnAddPacPros } from "@/lib/locals/panelPage/declarations/interfacesCons";
-import { useEffect, useState } from "react";
-import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
-import FormDlg from "./FormDlg";
 
 export default function BtnAddPac({
   userClass = "estudante",

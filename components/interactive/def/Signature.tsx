@@ -1,9 +1,9 @@
+import { changeToAstDigit } from "@/lib/global/handlers/gHandlers";
+import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
+import { nullishCanvas } from "@/lib/global/declarations/types";
+import { useEffect, useState, useRef } from "react";
 "use client";
 
-import { nullishCanvas } from "@/lib/global/declarations/types";
-import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
-import { changeToAstDigit } from "@/lib/global/handlers/gHandlers";
-import { useEffect, useState, useRef } from "react";
 
 let ctx: CanvasRenderingContext2D | null = null;
 

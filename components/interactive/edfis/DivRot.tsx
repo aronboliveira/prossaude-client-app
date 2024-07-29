@@ -1,7 +1,7 @@
-import { RotProps } from "@/lib/global/declarations/interfaces";
-import InpRot from "./client/InpRot";
 import { ErrorBoundary } from "react-error-boundary";
+import { RotProps } from "@/lib/global/declarations/interfaces";
 import GenericErrorComponent from "../../error/GenericErrorComponent";
+import InpRot from "./client/InpRot";
 
 export default function DivRot({
   quest,

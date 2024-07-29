@@ -1,8 +1,8 @@
+import { handleEventReq } from "@/lib/global/handlers/gHandlers";
+import { nullishInp } from "@/lib/global/declarations/types";
+import { useEffect, useRef, useState } from "react";
 "use client";
 
-import { nullishInp } from "@/lib/global/declarations/types";
-import { handleEventReq } from "@/lib/global/handlers/gHandlers";
-import { useEffect, useRef, useState } from "react";
 
 export default function ConfirmLocId() {
   const mainRef = useRef<nullishInp>(null);

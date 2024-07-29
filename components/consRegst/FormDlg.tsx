@@ -1,3 +1,20 @@
+import { ConsDlgProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
+import { DataProvider } from "@/lib/locals/panelPage/declarations/classesCons";
+import { ErrorBoundary } from "react-error-boundary";
+import { addListenerAvMembers } from "@/lib/locals/panelPage/handlers/consHandlerList";
+import { addListenerExportBtn } from "@/lib/global/gController";
+import { consVariablesData } from "./consVariables";
+import { createRoot } from "react-dom/client";
+import { formData } from "@/lib/locals/panelPage/consController";
+import { globalDataProvider } from "../panelForms/defs/client/SelectPanel";
+import { handleClientPermissions } from "@/lib/locals/panelPage/handlers/consHandlerUsers";
+import { handleSubmit } from "@/pages/api/ts/handlers";
+import { isClickOutside } from "@/lib/global/gStyleScript";
+import { providerFormData } from "./consVariables";
+import AvPacListDlg from "../lists/AvPacListDlg";
+import AvProfListDlg from "../lists/AvProfListDlg";
+import DREFiller from "./DREFiller";
+import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
 "use client";
 
 import {
@@ -7,7 +24,6 @@ import {
   useState,
   MutableRefObject,
 } from "react";
-import { providerFormData } from "./consVariables";
 import {
   createAptBtn,
   generateSchedPacData,
@@ -20,7 +36,6 @@ import {
   inputNotFound,
   multipleElementsNotFound,
 } from "@/lib/global/handlers/errorHandler";
-import { ConsDlgProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import {
   nullishBtn,
   nullishDlg,
@@ -32,27 +47,12 @@ import {
   formatCPF,
   formatTel,
 } from "@/lib/global/gModel";
-import { DataProvider } from "@/lib/locals/panelPage/declarations/classesCons";
-import { addListenerAvMembers } from "@/lib/locals/panelPage/handlers/consHandlerList";
-import { isClickOutside } from "@/lib/global/gStyleScript";
 import {
   enableCPFBtn,
   handleCondtReq,
   validateForm,
   syncAriaStates,
 } from "@/lib/global/handlers/gHandlers";
-import { addListenerExportBtn } from "@/lib/global/gController";
-import { handleClientPermissions } from "@/lib/locals/panelPage/handlers/consHandlerUsers";
-import { ErrorBoundary } from "react-error-boundary";
-import { formData } from "@/lib/locals/panelPage/consController";
-import { consVariablesData } from "./consVariables";
-import DREFiller from "./DREFiller";
-import AvProfListDlg from "../lists/AvProfListDlg";
-import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
-import AvPacListDlg from "../lists/AvPacListDlg";
-import { globalDataProvider } from "../panelForms/defs/client/SelectPanel";
-import { createRoot } from "react-dom/client";
-import { handleSubmit } from "@/pages/api/ts/handlers";
 
 let accFormData = 0;
 export default function FormDlg({

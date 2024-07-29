@@ -1,9 +1,17 @@
-import { useEffect, useRef, useCallback } from "react";
-import { handleClientPermissions } from "@/lib/locals/panelPage/handlers/consHandlerUsers";
-import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
-import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
-import { equalizeTabCells, normalizeSizeSb } from "@/lib/global/gStyleScript";
+import { ErrorBoundary } from "react-error-boundary";
 import { addListenerExportBtn } from "@/lib/global/gController";
+import { createRoot } from "react-dom/client";
+import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
+import { equalizeTabCells, normalizeSizeSb } from "@/lib/global/gStyleScript";
+import { fillTabAttr } from "@/lib/locals/panelPage/handlers/consHandlerList";
+import { handleClientPermissions } from "@/lib/locals/panelPage/handlers/consHandlerUsers";
+import { handleFetch } from "@/pages/api/ts/handlers";
+import { panelRoots } from "../defs/client/SelectPanel";
+import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
+import { useEffect, useRef, useCallback } from "react";
+import GenericErrorComponent from "../../error/GenericErrorComponent";
+import ProfRow from "./ProfRow";
+import Spinner from "../../icons/Spinner";
 import {
   nullishBtn,
   nullishForm,
@@ -14,14 +22,6 @@ import {
   GlobalFormProps,
   ProfInfo,
 } from "@/lib/locals/panelPage/declarations/interfacesCons";
-import ProfRow from "./ProfRow";
-import { handleFetch } from "@/pages/api/ts/handlers";
-import { panelRoots } from "../defs/client/SelectPanel";
-import { createRoot } from "react-dom/client";
-import { ErrorBoundary } from "react-error-boundary";
-import GenericErrorComponent from "../../error/GenericErrorComponent";
-import { fillTabAttr } from "@/lib/locals/panelPage/handlers/consHandlerList";
-import Spinner from "../../icons/Spinner";
 
 export default function RemoveProfForm({
   userClass = "estudante",

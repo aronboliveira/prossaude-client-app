@@ -1,15 +1,15 @@
+import { ErrorBoundary } from "react-error-boundary";
+import { InspProps } from "@/lib/global/declarations/interfaces";
+import { searchNextSiblings } from "@/lib/global/handlers/gHandlers";
+import { useState } from "react";
+import GenericErrorComponent from "../../error/GenericErrorComponent";
+import InspDlg from "./InspDlg";
 "use client";
 
 import {
   showInspDialogs,
   showInspSpanSub,
 } from "@/lib/locals/odPage/odHandler";
-import { useState } from "react";
-import { ErrorBoundary } from "react-error-boundary";
-import GenericErrorComponent from "../../error/GenericErrorComponent";
-import { searchNextSiblings } from "@/lib/global/handlers/gHandlers";
-import { InspProps } from "@/lib/global/declarations/interfaces";
-import InspDlg from "./InspDlg";
 
 export default function InspDlgElements({ count, ctx, fullName }: InspProps) {
   const [shouldShowDlg, setDlg] = useState<boolean>(false);

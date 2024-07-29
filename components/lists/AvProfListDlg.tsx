@@ -1,6 +1,18 @@
+import { ErrorBoundary } from "react-error-boundary";
+import { createRoot } from "react-dom/client";
+import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
+import { equalizeTabCells, isClickOutside } from "@/lib/global/gStyleScript";
+import { handleFetch } from "@/pages/api/ts/handlers";
+import { panelRoots } from "../panelForms/defs/client/SelectPanel";
+import { strikeEntries } from "@/lib/locals/panelPage/consStyleScript";
+import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
+import { useEffect, useRef, MutableRefObject, useCallback } from "react";
+import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
+import GenericErrorComponent from "../error/GenericErrorComponent";
+import ProfRow from "../panelForms/profs/ProfRow";
+import Spinner from "../icons/Spinner";
 "use client";
 
-import { useEffect, useRef, MutableRefObject, useCallback } from "react";
 import {
   nullishBtn,
   nullishDlg,
@@ -8,28 +20,16 @@ import {
   nullishTab,
   nullishTabSect,
 } from "@/lib/global/declarations/types";
-import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
-import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
-import { equalizeTabCells, isClickOutside } from "@/lib/global/gStyleScript";
-import { ErrorBoundary } from "react-error-boundary";
 import {
   AvProfListDlgProps,
   ProfInfo,
 } from "@/lib/locals/panelPage/declarations/interfacesCons";
-import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
 import {
   addListenerAlocation,
   checkLocalIntervs,
   fillTabAttr,
   filterTabMembers,
 } from "@/lib/locals/panelPage/handlers/consHandlerList";
-import { strikeEntries } from "@/lib/locals/panelPage/consStyleScript";
-import ProfRow from "../panelForms/profs/ProfRow";
-import Spinner from "../icons/Spinner";
-import { panelRoots } from "../panelForms/defs/client/SelectPanel";
-import { createRoot } from "react-dom/client";
-import GenericErrorComponent from "../error/GenericErrorComponent";
-import { handleFetch } from "@/pages/api/ts/handlers";
 
 export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
   const internalProfs: ProfInfo[] = [];

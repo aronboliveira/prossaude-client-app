@@ -1,11 +1,11 @@
+import { CounterAction } from "@/lib/global/declarations/interfaces";
+import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
+import { nullishFs } from "@/lib/global/declarations/types";
+import { switchRowComorb } from "@/lib/locals/edFisNutPage/edFisNutHandler";
+import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
+import { useEffect, useReducer, useRef, useState } from "react";
 "use client";
 
-import { CounterAction } from "@/lib/global/declarations/interfaces";
-import { nullishFs } from "@/lib/global/declarations/types";
-import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
-import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
-import { switchRowComorb } from "@/lib/locals/edFisNutPage/edFisNutHandler";
-import { useEffect, useReducer, useRef, useState } from "react";
 
 export default function TabComorb(): JSX.Element {
   const mainRef = useRef<nullishFs>(null);

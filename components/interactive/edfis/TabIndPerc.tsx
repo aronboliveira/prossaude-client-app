@@ -1,4 +1,12 @@
+import { ErrorBoundary } from "react-error-boundary";
 import { Person } from "@/lib/global/declarations/classes";
+import { checkReturnIndex } from "@/lib/locals/edFisNutPage/edFisNutController";
+import { person, tabProps } from "@/pages/edfis";
+import Col from "./tabs/Col";
+import GenericErrorComponent from "../../error/GenericErrorComponent";
+import Td from "./tabs/Td";
+import Th from "./tabs/Th";
+import WatcherTab from "./client/tabs/WatcherTab";
 import {
   IndCases,
   btnFillResult,
@@ -10,7 +18,6 @@ import {
   stringError,
   typeError,
 } from "@/lib/global/handlers/errorHandler";
-import { checkReturnIndex } from "@/lib/locals/edFisNutPage/edFisNutController";
 import {
   defineTargInps,
   getNumCol,
@@ -18,13 +25,6 @@ import {
   updateIndexesContexts,
   updatePGC,
 } from "@/lib/locals/edFisNutPage/edFisNutHandler";
-import { person, tabProps } from "@/pages/edfis";
-import { ErrorBoundary } from "react-error-boundary";
-import Col from "./tabs/Col";
-import Th from "./tabs/Th";
-import WatcherTab from "./client/tabs/WatcherTab";
-import GenericErrorComponent from "../../error/GenericErrorComponent";
-import Td from "./tabs/Td";
 
 export default function TabIndPerc(): JSX.Element {
   const columns = [1, 2, 3, 4];

@@ -1,13 +1,13 @@
+import { TdProps } from "@/lib/global/declarations/interfaces";
+import { handleCallbackWHS, tabProps } from "@/pages/edfis";
+import { handleIndEv } from "../../TabIndPerc";
+import { textTransformPascal } from "@/lib/global/gModel";
 "use client";
 
-import { TdProps } from "@/lib/global/declarations/interfaces";
-import { handleIndEv } from "../../TabIndPerc";
 import {
   handleCondtReq,
   handleEventReq,
 } from "@/lib/global/handlers/gHandlers";
-import { textTransformPascal } from "@/lib/global/gModel";
-import { handleCallbackWHS, tabProps } from "@/pages/edfis";
 
 export default function TabInpProg({
   nRow,

@@ -1,11 +1,11 @@
-import { nullishDlg } from "@/lib/global/declarations/types";
-import { isClickOutside } from "@/lib/global/gStyleScript";
-import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
-import { ExcludeDlgProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
-import { useEffect, useRef } from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
+import { ExcludeDlgProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import { handleDelete } from "@/pages/api/ts/handlers";
+import { isClickOutside } from "@/lib/global/gStyleScript";
+import { nullishDlg } from "@/lib/global/declarations/types";
+import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
+import { useEffect, useRef } from "react";
+import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
 
 export default function ExcludeDlg({
   route,

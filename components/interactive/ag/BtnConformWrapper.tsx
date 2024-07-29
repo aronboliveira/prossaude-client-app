@@ -1,8 +1,8 @@
+import { useState } from "react";
+import AGDeclaration from "./AGDeclaration";
+import BtnConform from "../def/BtnConform";
 "use client";
 
-import { useState } from "react";
-import BtnConform from "../def/BtnConform";
-import AGDeclaration from "./AGDeclaration";
 
 export default function BtnConformWrapper(): JSX.Element {
   const [shouldShowDeclaration, setDeclaration] = useState<boolean>(false);

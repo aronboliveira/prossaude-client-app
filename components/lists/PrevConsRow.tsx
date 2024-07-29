@@ -1,5 +1,5 @@
-import { dateISOtoBRL } from "@/lib/global/gModel";
 import { HistoricRowProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
+import { dateISOtoBRL } from "@/lib/global/gModel";
 
 export default function PrevConsRow({
   historic,

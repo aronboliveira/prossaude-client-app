@@ -1,6 +1,6 @@
+import { DlgProps } from "@/lib/global/declarations/interfaces";
 "use client";
 
-import { DlgProps } from "@/lib/global/declarations/interfaces";
 
 export default function TipsBtn({ dispatch, state }: DlgProps): JSX.Element {
   return (

@@ -1,10 +1,10 @@
-"use client";
-
+import { ErrorBoundary } from "react-error-boundary";
+import { useState } from "react";
+import ENTips from "./ENTips";
 import GenericErrorComponent from "../../error/GenericErrorComponent";
 import TipsBtn from "../def/TipsBtn";
-import { useState } from "react";
-import { ErrorBoundary } from "react-error-boundary";
-import ENTips from "./ENTips";
+"use client";
+
 
 export default function ENTipsBtnWrapper(): JSX.Element {
   const [shouldShowTips, setTips] = useState<boolean>(false);

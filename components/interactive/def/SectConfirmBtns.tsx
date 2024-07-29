@@ -1,7 +1,7 @@
-"use client";
-
 import { addCanvasListeners } from "@/lib/global/gController";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
+"use client";
+
 
 export default function SectConfirmBtns(): JSX.Element {
   return (

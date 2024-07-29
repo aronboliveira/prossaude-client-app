@@ -1,6 +1,20 @@
+import { DataProvider } from "../../../src/lib/locals/panelPage/declarations/classesCons";
+import { ErrorBoundary } from "react-error-boundary";
+import { ScheduleFormProps } from "../../../src/lib/locals/panelPage/declarations/interfacesCons";
+import { addListenerExportBtn } from "../../../src/lib/global/gController";
+import { fillScheduleState } from "../../../src/lib/locals/panelPage/consController";
+import { globalDataProvider, panelRoots } from "../defs/client/SelectPanel";
+import { handleClientPermissions } from "../../../src/lib/locals/panelPage/handlers/consHandlerUsers";
+import { handleSubmit } from "@/pages/api/ts/handlers";
+import { useState, useRef, useEffect, useCallback, JSX } from "react";
+import BtnAddPac from "../../consRegst/BtnAddPac";
+import GenericErrorComponent from "../../error/GenericErrorComponent";
+import RegstConsBtn from "./RegstConsBtn";
+import ReseterBtn from "../defs/ReseterBtn";
+import ThDate from "./ThDate";
+import TrBSchedTab from "./TrBSchedTab";
 "use client";
 
-import { useState, useRef, useEffect, useCallback, JSX } from "react";
 import {
   clearPhDates,
   equalizeFlexSibilings,
@@ -20,12 +34,10 @@ import {
   nullishBtn,
   validSchedHours,
 } from "../../../src/lib/global/declarations/types";
-import { ScheduleFormProps } from "../../../src/lib/locals/panelPage/declarations/interfacesCons";
 import {
   correlateDayOpts,
   setListenersForDates,
 } from "../../../src/lib/locals/panelPage/consStyleScript";
-import { addListenerExportBtn } from "../../../src/lib/global/gController";
 import {
   addListenerForSchedUpdates,
   checkConfirmApt,
@@ -37,23 +49,11 @@ import {
   syncAriaStates,
   validateForm,
 } from "../../../src/lib/global/handlers/gHandlers";
-import { DataProvider } from "../../../src/lib/locals/panelPage/declarations/classesCons";
-import { handleClientPermissions } from "../../../src/lib/locals/panelPage/handlers/consHandlerUsers";
-import { fillScheduleState } from "../../../src/lib/locals/panelPage/consController";
 import {
   scheduleReset,
   panelFormsVariables,
   sessionScheduleState,
 } from "../panelFormsData";
-import BtnAddPac from "../../consRegst/BtnAddPac";
-import GenericErrorComponent from "../../error/GenericErrorComponent";
-import RegstConsBtn from "./RegstConsBtn";
-import ReseterBtn from "../defs/ReseterBtn";
-import { globalDataProvider, panelRoots } from "../defs/client/SelectPanel";
-import { ErrorBoundary } from "react-error-boundary";
-import ThDate from "./ThDate";
-import TrBSchedTab from "./TrBSchedTab";
-import { handleSubmit } from "@/pages/api/ts/handlers";
 
 export const scheduleProps: { autoSaving: boolean } = {
   autoSaving: true,

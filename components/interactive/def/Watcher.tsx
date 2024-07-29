@@ -1,6 +1,11 @@
+import { agProps, handleDivAddShow } from "@/pages/ag";
+import { extLine, inputNotFound } from "@/lib/global/handlers/errorHandler";
+import { handleLinkChanges } from "@/lib/global/handlers/gRoutingHandlers";
+import { odProps } from "@/pages/od";
+import { pageCases, targEl } from "@/lib/global/declarations/types";
+import { useEffect } from "react";
 "use client";
 
-import { pageCases, targEl } from "@/lib/global/declarations/types";
 import {
   addListenerExportBtn,
   getGlobalEls,
@@ -11,15 +16,10 @@ import {
   dinamicGridAdjust,
   equalizeFlexSibilings,
 } from "@/lib/global/gStyleScript";
-import { extLine, inputNotFound } from "@/lib/global/handlers/errorHandler";
 import {
   deactTextInput,
   syncAriaStates,
 } from "@/lib/global/handlers/gHandlers";
-import { handleLinkChanges } from "@/lib/global/handlers/gRoutingHandlers";
-import { agProps, handleDivAddShow } from "@/pages/ag";
-import { odProps } from "@/pages/od";
-import { useEffect } from "react";
 
 export default function Watcher({
   routeCase,

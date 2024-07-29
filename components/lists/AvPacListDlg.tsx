@@ -1,14 +1,14 @@
-"use client";
-
 import { AvPacListDlgProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
-import { useEffect, useRef, useState } from "react";
-import { nullishDlg, nullishTab } from "@/lib/global/declarations/types";
-import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
+import { ErrorBoundary } from "react-error-boundary";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { equalizeTabCells, isClickOutside } from "@/lib/global/gStyleScript";
-import { ErrorBoundary } from "react-error-boundary";
+import { nullishDlg, nullishTab } from "@/lib/global/declarations/types";
+import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
+import { useEffect, useRef, useState } from "react";
 import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
 import PacList from "./PacList";
+"use client";
+
 
 export default function AvPacListDlg({
   dispatch,

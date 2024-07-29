@@ -1,6 +1,8 @@
+import { CounterAction } from "@/lib/global/declarations/interfaces";
+import { addSubDivTrat } from "@/lib/locals/odPage/odHandler";
+import { useEffect, useReducer, useRef } from "react";
 "use client";
 
-import { CounterAction } from "@/lib/global/declarations/interfaces";
 import {
   nullishBtn,
   nullishFs,
@@ -15,8 +17,6 @@ import {
   changeToAstDigit,
   syncAriaStates,
 } from "@/lib/global/handlers/gHandlers";
-import { addSubDivTrat } from "@/lib/locals/odPage/odHandler";
-import { useEffect, useReducer, useRef } from "react";
 
 export default function TratFs(props: { phCb?: () => void }): JSX.Element {
   const mainRef = useRef<nullishFs>(null);

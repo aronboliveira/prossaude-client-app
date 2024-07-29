@@ -1,8 +1,8 @@
-import FormExcludeBtn from "../defs/FormExcludeBtn";
 import { ProfRowProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
-import AlterFieldList from "../../lists/AlterFieldList";
 import { dateISOtoBRL } from "@/lib/global/gModel";
 import { useState } from "react";
+import AlterFieldList from "../../lists/AlterFieldList";
+import FormExcludeBtn from "../defs/FormExcludeBtn";
 
 export default function ProfRow({
   tabRef,

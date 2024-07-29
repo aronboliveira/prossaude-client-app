@@ -1,10 +1,10 @@
 import { ErrorBoundary } from "react-error-boundary";
+import { validTabLabs } from "@/lib/global/declarations/types";
 import Col from "./tabs/Col";
+import GenericErrorComponent from "../../error/GenericErrorComponent";
+import Td from "./tabs/Td";
 import Th from "./tabs/Th";
 import WatcherTab from "./client/tabs/WatcherTab";
-import GenericErrorComponent from "../../error/GenericErrorComponent";
-import { validTabLabs } from "@/lib/global/declarations/types";
-import Td from "./tabs/Td";
 
 export default function TabMedAnt(): JSX.Element {
   const columns = [1, 2, 3, 4];

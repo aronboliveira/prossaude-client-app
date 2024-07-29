@@ -1,7 +1,7 @@
-"use client";
-
 import { formatTel } from "@/lib/global/gModel";
 import { handleCondtReq } from "@/lib/global/handlers/gHandlers";
+"use client";
+
 
 export default function TelSec(): JSX.Element {
   return (

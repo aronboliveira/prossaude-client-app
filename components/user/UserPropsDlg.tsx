@@ -1,3 +1,9 @@
+import { ErrorBoundary } from "react-error-boundary";
+import { UserPropsDlgProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
+import { isClickOutside } from "@/lib/global/gStyleScript";
+import { useEffect, useRef, useState } from "react";
+import { validateForm, syncAriaStates } from "@/lib/global/handlers/gHandlers";
+import GenericErrorComponent from "../error/GenericErrorComponent";
 import {
   nullishBtn,
   nullishDlg,
@@ -9,17 +15,11 @@ import {
   autoCapitalizeInputs,
   formatTel,
 } from "@/lib/global/gModel";
-import { isClickOutside } from "@/lib/global/gStyleScript";
 import {
   elementNotFound,
   extLine,
   multipleElementsNotFound,
 } from "@/lib/global/handlers/errorHandler";
-import { validateForm, syncAriaStates } from "@/lib/global/handlers/gHandlers";
-import { UserPropsDlgProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
-import { useEffect, useRef, useState } from "react";
-import { ErrorBoundary } from "react-error-boundary";
-import GenericErrorComponent from "../error/GenericErrorComponent";
 
 export default function UserPropsDlg({
   setPropDlg,
