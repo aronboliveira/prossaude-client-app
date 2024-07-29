@@ -2,14 +2,13 @@ import FormExcludeBtn from "../defs/FormExcludeBtn";
 import { ProfRowProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import AlterFieldList from "../../lists/AlterFieldList";
 import { dateISOtoBRL } from "@/lib/global/gModel";
+import { useState } from "react";
 
 export default function ProfRow({
-  dispatch,
   tabRef,
   nRow,
   inDlg = false,
   userClass = "estudante",
-  state = false,
   external = false,
   prof = {
     name: "Anônimo",
@@ -24,6 +23,7 @@ export default function ProfRow({
   },
 }: ProfRowProps) {
   nRow = typeof nRow === "string" ? parseInt(nRow) : nRow;
+  const [shouldShowAlterDlg, setAlterDlg] = useState<boolean>(false);
   if (!Number.isFinite(nRow)) nRow = 2;
   return (
     <tr id={`avProfs-row${nRow}`} data-row={nRow}>
@@ -225,37 +225,34 @@ export default function ProfRow({
           }`}
         </output>
       </td>
-      {!inDlg &&
-        dispatch &&
-        typeof state === "boolean" &&
-        userClass === "coordenador" && (
-          <>
-            <td className="celAlterProf" data-row={nRow} data-col="9">
-              <button
-                type="button"
-                id="btnAlterRegstProf"
-                className="btn btn-info btnAffectRegst btnAlterRegst opaquelightEl"
-                onClick={() => dispatch(!state)}
-                data-row={nRow}
-                data-col="9"
-              >
-                <small role="textbox" className="bolded fontLightWt">
-                  Alterar
-                </small>
-              </button>
-              {state && (
-                <AlterFieldList
-                  setDisplayRowData={dispatch}
-                  tabRef={tabRef}
-                  shouldDisplayRowData={state}
-                />
-              )}
-            </td>
-            <td data-row={nRow} data-col="10">
-              <FormExcludeBtn context="Prof" />
-            </td>
-          </>
-        )}
+      {!inDlg && userClass === "coordenador" && (
+        <>
+          <td className="celAlterProf" data-row={nRow} data-col="9">
+            <button
+              type="button"
+              id="btnAlterRegstProf"
+              className="btn btn-info btnAffectRegst btnAlterRegst opaquelightEl"
+              onClick={() => setAlterDlg(!shouldShowAlterDlg)}
+              data-row={nRow}
+              data-col="9"
+            >
+              <small role="textbox" className="bolded fontLightWt">
+                Alterar
+              </small>
+            </button>
+            {shouldShowAlterDlg && (
+              <AlterFieldList
+                setDisplayRowData={setAlterDlg}
+                tabRef={tabRef}
+                shouldDisplayRowData={shouldShowAlterDlg}
+              />
+            )}
+          </td>
+          <td data-row={nRow} data-col="10">
+            <FormExcludeBtn context="Prof" />
+          </td>
+        </>
+      )}
       {inDlg && (
         <td
           className="alocCel"
