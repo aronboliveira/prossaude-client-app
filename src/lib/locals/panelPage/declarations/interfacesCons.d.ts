@@ -143,7 +143,7 @@ export interface ExcludeDlgProps {
   route: formCases;
 }
 
-export interface ExcludeConsDlgProps extends ExcludeDlgProps {
+export interface ExcludeConsDlgProps extends Omit<ExcludeDlgProps, "route"> {
   btn: nullishBtn;
   userClass: userClasses;
 }

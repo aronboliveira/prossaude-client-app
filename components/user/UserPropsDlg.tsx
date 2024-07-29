@@ -251,10 +251,7 @@ export default function UserPropsDlg({
             className="btn btn-info widHalf bolded mg-1t"
             ref={userPropsBtnRef}
             onClick={ev => {
-              validateForm(
-                ev.currentTarget,
-                ev.currentTarget.closest("dialog")!
-              ).then(
+              validateForm(ev, ev.currentTarget.closest("dialog")!).then(
                 validation => validation[0] && setPropDlg(!shouldDisplayPropDlg)
               );
             }}
