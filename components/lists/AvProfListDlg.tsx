@@ -1,3 +1,4 @@
+("use client");
 import { ErrorBoundary } from "react-error-boundary";
 import { createRoot } from "react-dom/client";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
@@ -11,7 +12,7 @@ import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
 import GenericErrorComponent from "../error/GenericErrorComponent";
 import ProfRow from "../panelForms/profs/ProfRow";
 import Spinner from "../icons/Spinner";
-("use client");
+
 
 import {
   nullishBtn,

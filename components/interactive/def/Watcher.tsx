@@ -1,11 +1,10 @@
+"use client";
 import { agProps, handleDivAddShow } from "@/pages/ag";
 import { extLine, inputNotFound } from "@/lib/global/handlers/errorHandler";
 import { handleLinkChanges } from "@/lib/global/handlers/gRoutingHandlers";
 import { odProps } from "@/pages/od";
 import { pageCases, targEl } from "@/lib/global/declarations/types";
 import { useEffect } from "react";
-"use client";
-
 import {
   addListenerExportBtn,
   getGlobalEls,
@@ -20,7 +19,6 @@ import {
   deactTextInput,
   syncAriaStates,
 } from "@/lib/global/handlers/gHandlers";
-
 export default function Watcher({
   routeCase,
 }: {

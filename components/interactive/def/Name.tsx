@@ -1,10 +1,8 @@
 "use client";
-
 import {
   handleCondtReq,
   handleEventReq,
 } from "@/lib/global/handlers/gHandlers";
-
 export default function Name(): JSX.Element {
   return (
     <div

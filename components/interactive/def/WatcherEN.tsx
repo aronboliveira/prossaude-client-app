@@ -1,10 +1,9 @@
+"use client";
 import { entryEl } from "@/lib/global/declarations/types";
 import { handleLinkChanges } from "@/lib/global/handlers/gRoutingHandlers";
 import { parseNotNaN } from "@/lib/global/gModel";
 import { person, tabProps } from "@/pages/edfis";
 import { useEffect, useState } from "react";
-"use client";
-
 import {
   addListenerExportBtn,
   getGlobalEls,
@@ -29,7 +28,6 @@ import {
   addListenerInnerTabs,
   validateTitlesForTargs,
 } from "@/lib/locals/edFisNutPage/edFisNutController";
-
 export default function WatcherEN(): JSX.Element {
   const [mounted, setMounted] = useState<boolean>(false);
   useEffect(() => {

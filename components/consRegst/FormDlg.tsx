@@ -1,3 +1,4 @@
+("use client");
 import { ConsDlgProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import { DataProvider } from "@/lib/locals/panelPage/declarations/classesCons";
 import { ErrorBoundary } from "react-error-boundary";
@@ -14,9 +15,7 @@ import { providerFormData } from "./consVariables";
 import AvPacListDlg from "../lists/AvPacListDlg";
 import AvProfListDlg from "../lists/AvProfListDlg";
 import DREFiller from "./DREFiller";
-import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
-("use client");
-
+import ErrorFallbackDlg from "../error/ErrorFallbackDlg"; 
 import {
   useEffect,
   useRef,
@@ -52,9 +51,7 @@ import {
   handleCondtReq,
   validateForm,
   syncAriaStates,
-} from "@/lib/global/handlers/gHandlers";
-
-let accFormData = 0;
+} from "@/lib/global/handlers/gHandlers"; let accFormData = 0;
 export default function FormDlg({
   onClose,
   userClass = "estudante",

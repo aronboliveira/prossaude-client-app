@@ -1,11 +1,10 @@
+"use client";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { nullishDiv } from "@/lib/global/declarations/types";
 import { orderLabels } from "@/lib/locals/odPage/odModel";
 import { qrProps } from "@/lib/global/declarations/interfaces";
 import { useEffect, useRef } from "react";
 import InpAvDent from "./InpAvDent";
-"use client";
-
 import {
   dragEnd,
   dragEnter,
@@ -15,7 +14,6 @@ import {
   dragStart,
   resetLabels,
 } from "@/lib/locals/odPage/odHandler";
-
 export default function QuadrMainDiv({ qr }: qrProps): JSX.Element {
   const subDivRef = useRef<nullishDiv>(null);
   const teethList = (() => {

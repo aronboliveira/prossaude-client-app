@@ -1,8 +1,7 @@
+"use client";
 import { formatCEP } from "@/lib/global/gModel";
 import { handleEventReq } from "@/lib/global/handlers/gHandlers";
 import { useEffect } from "react";
-"use client";
-
 import {
   elementNotFound,
   extLine,
@@ -13,7 +12,6 @@ import {
   searchCEP,
   searchCEPXML,
 } from "@/lib/locals/aGPage/aGHandlers";
-
 export default function CepElements(): JSX.Element {
   const equalizeCepElements = (): void => {
     try {

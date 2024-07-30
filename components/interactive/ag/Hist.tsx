@@ -1,7 +1,5 @@
-import { opRadioHandler } from "@/lib/global/handlers/gHandlers";
 "use client";
-
-
+import { opRadioHandler } from "@/lib/global/handlers/gHandlers";
 export default function HASDivAdd(): JSX.Element {
   return (
     <div className="divAdd gridTwoCol" id="divAddPrAlta" role="list">

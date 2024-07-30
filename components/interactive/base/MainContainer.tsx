@@ -1,3 +1,4 @@
+"use client";
 import { AppRootContext } from "@/pages/_app";
 import { User } from "@/lib/global/declarations/classes";
 import { createRoot } from "react-dom/client";
@@ -9,11 +10,7 @@ import { targEl } from "@/lib/global/declarations/types";
 import { useEffect, useContext } from "react";
 import { useRouter } from "next/router";
 import UserProfilePanel from "../../user/UserProfilePanel";
-"use client";
-
-
 let baseRootUser: targEl;
-
 export default function MainContainer(): JSX.Element {
   const context = useContext(AppRootContext);
   const nextRouter = useRouter();

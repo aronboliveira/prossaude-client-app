@@ -1,10 +1,8 @@
+"use client";
 import { clearQuadrInps } from "@/lib/locals/odPage/odHandler";
 import { handleEventReq } from "@/lib/global/handlers/gHandlers";
 import { qrInpProps } from "@/lib/global/declarations/interfaces";
 import { resetAvDentValue } from "@/lib/locals/odPage/odModel";
-"use client";
-
-
 export default function InpAvDent({ qr, num }: qrInpProps): JSX.Element {
   return (
     <label className={`labelAvDent labelAvDent${qr}`} id={`labD${num}`}>

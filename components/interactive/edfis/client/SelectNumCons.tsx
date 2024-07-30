@@ -1,16 +1,14 @@
+"use client";
 import { elCollection } from "@/lib/global/declarations/types";
 import { handleEventReq } from "@/lib/global/handlers/gHandlers";
 import { parseNotNaN } from "@/lib/global/gModel";
 import { switchRequiredCols } from "@/lib/locals/edFisNutPage/edFisNutHandler";
 import { tabProps } from "@/pages/edfis";
-"use client";
-
 import {
   extLine,
   inputNotFound,
   multipleElementsNotFound,
 } from "@/lib/global/handlers/errorHandler";
-
 export default function SelectNumCons(): JSX.Element {
   return (
     <select

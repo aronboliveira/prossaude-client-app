@@ -1,7 +1,5 @@
-import { callbackAtvLvlElementNaf, person, tabProps } from "@/pages/edfis";
 "use client";
-
-
+import { callbackAtvLvlElementNaf, person, tabProps } from "@/pages/edfis";
 export default function GordCorpLvl(): JSX.Element {
   return (
     <select

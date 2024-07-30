@@ -1,8 +1,7 @@
+("use client");
 import { useState, useEffect } from "react";
 import AGDeclaration from "./AGDeclaration";
 import BtnConform from "../def/BtnConform";
-("use client");
-
 export default function BtnConformWrapper(): JSX.Element {
   const [shouldShowDeclaration, setDeclaration] = useState<boolean>(false);
   useEffect(() => {

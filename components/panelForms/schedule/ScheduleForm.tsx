@@ -1,3 +1,4 @@
+"use client";
 import { DataProvider } from "../../../src/lib/locals/panelPage/declarations/classesCons";
 import { ErrorBoundary } from "react-error-boundary";
 import { ScheduleFormProps } from "../../../src/lib/locals/panelPage/declarations/interfacesCons";
@@ -13,7 +14,7 @@ import RegstConsBtn from "./RegstConsBtn";
 import ReseterBtn from "../defs/ReseterBtn";
 import ThDate from "./ThDate";
 import TrBSchedTab from "./TrBSchedTab";
-"use client";
+
 
 import {
   clearPhDates,

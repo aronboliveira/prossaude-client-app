@@ -1,10 +1,9 @@
+("use client");
 import { ErrorBoundary } from "react-error-boundary";
 import { useState, useEffect } from "react";
 import BtnConform from "../def/BtnConform";
 import GenericErrorComponent from "../../error/GenericErrorComponent";
 import OdDeclaration from "./OdDeclaration";
-("use client");
-
 export default function OdBtnConformWrapper(): JSX.Element {
   const [shouldShowDeclaration, setDeclaration] = useState<boolean>(false);
   useEffect(() => {

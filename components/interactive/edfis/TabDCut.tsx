@@ -17,7 +17,6 @@ import {
   getNumCol,
   updatePGC,
 } from "@/lib/locals/edFisNutPage/edFisNutHandler";
-
 export default function TabDCut(): JSX.Element {
   const columns = [1, 2, 3, 4];
   const rows = [
@@ -110,7 +109,6 @@ export default function TabDCut(): JSX.Element {
     </ErrorBoundary>
   );
 }
-
 export const handleSumClick = (ev: React.MouseEvent) => {
   const protocolo = document.getElementById("tabSelectDCutId");
   const rowsDCArray = Array.from(

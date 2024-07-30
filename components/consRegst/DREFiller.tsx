@@ -1,3 +1,4 @@
+("use client");
 import { DataProvider } from "@/lib/locals/panelPage/declarations/classesCons";
 import { FillerProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import { addListenerAvMembers } from "@/lib/locals/panelPage/handlers/consHandlerList";
@@ -5,13 +6,10 @@ import { globalDataProvider } from "../panelForms/defs/client/SelectPanel";
 import { nullishBtn, nullishDiv } from "@/lib/global/declarations/types";
 import { useEffect, useRef, useState } from "react";
 import AvStudListDlg from "../lists/AvStudListDlg";
-("use client");
-
 import {
   handleCondtReq,
   syncAriaStates,
 } from "@/lib/global/handlers/gHandlers";
-
 export default function DREFiller({
   forwardedRef,
   userClass,

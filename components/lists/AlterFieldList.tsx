@@ -1,3 +1,4 @@
+"use client";
 import { AlterFieldListProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import { ErrorBoundary } from "react-error-boundary";
 import { isClickOutside } from "@/lib/global/gStyleScript";
@@ -6,7 +7,7 @@ import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useEffect, useRef, useState } from "react";
 import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
 import GenericErrorComponent from "../error/GenericErrorComponent";
-"use client";
+
 
 import {
   elementNotFound,

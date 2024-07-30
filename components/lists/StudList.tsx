@@ -1,3 +1,4 @@
+"use client";
 import { ErrorBoundary } from "react-error-boundary";
 import { createRoot } from "react-dom/client";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
@@ -10,7 +11,7 @@ import { useRef, useEffect } from "react";
 import GenericErrorComponent from "../error/GenericErrorComponent";
 import Spinner from "../icons/Spinner";
 import StudRow from "../panelForms/studs/StudRow";
-"use client";
+
 
 import {
   GlobalFormProps,

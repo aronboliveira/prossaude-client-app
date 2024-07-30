@@ -6,7 +6,6 @@ import { nullishDlg } from "@/lib/global/declarations/types";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useEffect, useRef } from "react";
 import GenericErrorComponent from "../../error/GenericErrorComponent";
-
 export default function ENDeclaration({
   state,
   dispatch,
@@ -62,7 +61,6 @@ export default function ENDeclaration({
         mainRef.current,
         ...mainRef.current.querySelectorAll("*"),
       ]);
-
       mainRef.current instanceof HTMLDialogElement &&
         mainRef.current.showModal();
       addEventListener("keypress", handleKp);

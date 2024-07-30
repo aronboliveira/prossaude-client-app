@@ -1,8 +1,7 @@
+"use client";
 import { CounterAction } from "@/lib/global/declarations/interfaces";
 import { addSubDivTrat } from "@/lib/locals/odPage/odHandler";
 import { useEffect, useReducer, useRef } from "react";
-"use client";
-
 import {
   nullishBtn,
   nullishFs,
@@ -17,7 +16,6 @@ import {
   changeToAstDigit,
   syncAriaStates,
 } from "@/lib/global/handlers/gHandlers";
-
 export default function TratFs(props: { phCb?: () => void }): JSX.Element {
   const mainRef = useRef<nullishFs>(null);
   const btnRef = useRef<nullishBtn>(null);
@@ -128,8 +126,7 @@ export default function TratFs(props: { phCb?: () => void }): JSX.Element {
             </svg>
           </button>
         </span>
-      </legend>
-
+      </legend>{" "}
       <div role="group" className="tratDiv noInvert">
         <table id="tratContainer">
           <colgroup>
@@ -223,8 +220,7 @@ export default function TratFs(props: { phCb?: () => void }): JSX.Element {
             </tr>
           </tbody>
         </table>
-      </div>
-
+      </div>{" "}
       <hr />
     </fieldset>
   );

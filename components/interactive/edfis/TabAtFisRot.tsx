@@ -1,9 +1,8 @@
+"use client";
 import { PayloadCounterAction } from "@/lib/global/declarations/interfaces";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { nullishDiv } from "@/lib/global/declarations/types";
 import { useEffect, useReducer, useRef } from "react";
-"use client";
-
 import {
   handleEventReq,
   syncAriaStates,
@@ -12,7 +11,6 @@ import {
   addRowAtivFis,
   removeRowAtivFis,
 } from "@/lib/locals/edFisNutPage/edFisNutHandler";
-
 export default function TabAtFirsRot(): JSX.Element {
   const mainRef = useRef<nullishDiv>(null);
   const [blockCount, setBlockCount] = useReducer(

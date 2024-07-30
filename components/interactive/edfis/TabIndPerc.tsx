@@ -25,7 +25,6 @@ import {
   updateIndexesContexts,
   updatePGC,
 } from "@/lib/locals/edFisNutPage/edFisNutHandler";
-
 export default function TabIndPerc(): JSX.Element {
   const columns = [1, 2, 3, 4];
   const rows = [
@@ -100,7 +99,6 @@ export default function TabIndPerc(): JSX.Element {
     </ErrorBoundary>
   );
 }
-
 export function handleIndEv(
   ev: React.MouseEvent | React.FormEvent | React.ChangeEvent,
   context: IndCases

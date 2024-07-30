@@ -1,9 +1,7 @@
+"use client";
 import { handleEventReq } from "@/lib/global/handlers/gHandlers";
 import { nullishInp } from "@/lib/global/declarations/types";
 import { useEffect, useRef, useState } from "react";
-"use client";
-
-
 export default function ConfirmLocId() {
   const mainRef = useRef<nullishInp>(null);
   const [value, setValue] = useState("Rio de Janeiro, Rio de Janeiro");

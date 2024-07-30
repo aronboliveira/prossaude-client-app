@@ -1,3 +1,4 @@
+"use client";
 import { ErrorBoundary } from "react-error-boundary";
 import { InpRotProps } from "@/lib/global/declarations/interfaces";
 import { extLine, inputNotFound } from "@/lib/global/handlers/errorHandler";
@@ -5,9 +6,6 @@ import { handleEventReq } from "@/lib/global/handlers/gHandlers";
 import { mainContextRot, nullishInp } from "@/lib/global/declarations/types";
 import { useEffect, useRef } from "react";
 import GenericErrorComponent from "../../../error/GenericErrorComponent";
-"use client";
-
-
 export default function InpRot(props: InpRotProps): JSX.Element {
   const inpRef = useRef<nullishInp>(null);
   const title = (() => {

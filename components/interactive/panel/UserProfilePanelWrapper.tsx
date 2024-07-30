@@ -1,3 +1,4 @@
+"use client";
 import { AppRootContext } from "@/pages/_app";
 import { ErrorBoundary } from "react-error-boundary";
 import { User } from "@/lib/global/declarations/classes";
@@ -7,9 +8,6 @@ import { useEffect, useContext } from "react";
 import { useRouter } from "next/router";
 import GenericErrorComponent from "../../error/GenericErrorComponent";
 import UserProfilePanel from "../../user/UserProfilePanel";
-"use client";
-
-
 export default function UserProfilePanelWrapper({
   user,
 }: {

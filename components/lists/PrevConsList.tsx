@@ -1,3 +1,4 @@
+"use client";
 import { ErrorBoundary } from "react-error-boundary";
 import { HistoricDlgProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
@@ -8,7 +9,7 @@ import { useEffect, useRef } from "react";
 import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
 import GenericErrorComponent from "../error/GenericErrorComponent";
 import PrevConsRow from "./PrevConsRow";
-"use client";
+
 
 
 export default function PrevConsList({

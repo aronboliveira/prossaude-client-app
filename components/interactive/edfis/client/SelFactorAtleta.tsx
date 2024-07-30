@@ -1,7 +1,5 @@
-import { handleCallbackWHS, tabProps } from "@/pages/edfis";
 "use client";
-
-
+import { handleCallbackWHS, tabProps } from "@/pages/edfis";
 export default function SelFactorAtleta(): JSX.Element {
   return (
     <select

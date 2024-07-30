@@ -1,7 +1,5 @@
-import { handleCondtReq } from "@/lib/global/handlers/gHandlers";
 "use client";
-
-
+import { handleCondtReq } from "@/lib/global/handlers/gHandlers";
 export default function ProtUrLvl(): JSX.Element {
   return (
     <input

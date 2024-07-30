@@ -5,7 +5,6 @@ import GenericErrorComponent from "../../error/GenericErrorComponent";
 import Td from "./tabs/Td";
 import Th from "./tabs/Th";
 import WatcherTab from "./client/tabs/WatcherTab";
-
 export default function TabProgSVi(): JSX.Element {
   const columns = [1, 2, 3, 4];
   const rows = [

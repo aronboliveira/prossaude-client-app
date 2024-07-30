@@ -1,7 +1,5 @@
-import { opRadioHandler } from "@/lib/global/handlers/gHandlers";
 "use client";
-
-
+import { opRadioHandler } from "@/lib/global/handlers/gHandlers";
 export default function OtherD(): JSX.Element {
   return (
     <input

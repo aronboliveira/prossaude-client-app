@@ -1,7 +1,5 @@
-import { useEffect } from "react";
 "use client";
-
-
+import { useEffect } from "react";
 export default function Uf(): JSX.Element {
   useEffect(() => {
     const UFid = document.getElementById("UFid");

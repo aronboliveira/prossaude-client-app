@@ -1,10 +1,9 @@
+("use client");
 import { ErrorBoundary } from "react-error-boundary";
 import { useState, useEffect } from "react";
 import GenericErrorComponent from "../../error/GenericErrorComponent";
 import OdTips from "./OdTips";
 import TipsBtn from "../def/TipsBtn";
-("use client");
-
 export default function OdTipsBtnWrapper(): JSX.Element {
   const [shouldShowTips, setTips] = useState<boolean>(false);
   useEffect(() => {
