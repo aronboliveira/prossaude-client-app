@@ -1,13 +1,15 @@
 import { ErrorBoundary } from "react-error-boundary";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import AGTips from "./AGTips";
 import GenericErrorComponent from "../../error/GenericErrorComponent";
 import TipsBtn from "../def/TipsBtn";
-"use client";
-
+("use client");
 
 export default function AgTipsBtnWrapper(): JSX.Element {
   const [shouldShowTips, setTips] = useState<boolean>(false);
+  useEffect(() => {
+    /tips=open/gi.test(location.search) && setTips(true);
+  }, []);
   return (
     <ErrorBoundary
       FallbackComponent={() => (

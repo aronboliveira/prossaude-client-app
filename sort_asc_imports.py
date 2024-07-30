@@ -17,7 +17,7 @@ def sort_asc_imports(path):
   def_imps = [];
   alias_imps = [];
   styles_imps = [];
-  content = re.sub(r'["\']{1,}use client["\']{1,};\n?', '', content)
+  content = re.sub(r'?\(["\']{1,}use client["\']{1,}?\);\n?', '', content)
   use_client_match = re.search(r'["\']{1,}use client["\']{1,};', content)
   use_client_directive = use_client_match.group(0) + '\n' if use_client_match else ''
   for imp in imports:
