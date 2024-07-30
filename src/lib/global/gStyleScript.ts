@@ -1,3 +1,4 @@
+import { parseNotNaN } from "./gModel";
 import { targEl, entryEl } from "./declarations/types";
 import {
   extLine,
@@ -6,7 +7,6 @@ import {
   multipleElementsNotFound,
   inputNotFound,
 } from "./handlers/errorHandler";
-import { parseNotNaN } from "./gModel";
 
 export function dinamicGridAdjust(gridDivs: Array<targEl>): void {
   if (

@@ -1,6 +1,8 @@
-//nesse file estão presentes principalmente as funções de manipulação dinâmica de texto e layout
+import { FormEvent } from "react";
+import { addCanvasListeners } from "../gController";
 import { autoCapitalizeInputs, parseNotNaN, removeFirstClick } from "../gModel";
 import { fadeElement, isClickOutside } from "../gStyleScript";
+//nesse file estão presentes principalmente as funções de manipulação dinâmica de texto e layout
 import type {
   targEl,
   primitiveType,
@@ -15,8 +17,6 @@ import {
   stringError,
   elementNotPopulated,
 } from "./errorHandler";
-import { addCanvasListeners } from "../gController";
-import { FormEvent } from "react";
 
 export function updateSimpleProperty(el: targEl): primitiveType {
   if (el instanceof HTMLInputElement) {

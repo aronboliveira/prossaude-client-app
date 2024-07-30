@@ -1,7 +1,7 @@
-//nesse file estão presentes principalmente as funções relacionadas à exigência de modelo textual e de visualização
 import { cursorCheckTimer } from "./handlers/gHandlers";
 import { fadeElement } from "./gStyleScript";
 import type { entryEl, textEl, targStr, targEl } from "./declarations/types";
+//nesse file estão presentes principalmente as funções relacionadas à exigência de modelo textual e de visualização
 import {
   extLine,
   elementNotFound,
