@@ -26,7 +26,7 @@ export default function OptGrpUsers({
   const users: UserProps[] = [];
   useEffect(() => {
     try {
-      if (!(optGrpRef.current instanceof HTMLDataListElement))
+      if (!(optGrpRef.current instanceof HTMLOptGroupElement))
         throw elementNotFound(
           optGrpRef.current,
           `Validation of Optgroup instance`,
@@ -46,7 +46,7 @@ export default function OptGrpUsers({
                 day: (user as UserProps)["day"],
               });
           });
-          if (!(optGrpRef.current instanceof HTMLDataListElement))
+          if (!(optGrpRef.current instanceof HTMLOptGroupElement))
             throw elementNotFound(
               optGrpRef.current,
               `Validation of Optgroup instance`,
@@ -98,7 +98,9 @@ export default function OptGrpUsers({
                   panelRoots[`${optGrpRef.current.id}`]?.render(
                     users.map(
                       (user, i) =>
-                        new RegExp(area, "gi").test(user.area) && (
+                        new RegExp(area.slice(0, area.indexOf(" ")), "gi").test(
+                          user.area
+                        ) && (
                           <option
                             value={user.name}
                             key={`${area}-${grp}__${i}`}
@@ -120,11 +122,13 @@ export default function OptGrpUsers({
             panelRoots[`${optGrpRef.current.id}`] = createRoot(
               optGrpRef.current
             );
-          if (!optGrpRef.current.querySelector("tr"))
+          if (!optGrpRef.current.querySelector("option"))
             panelRoots[`${optGrpRef.current.id}`]?.render(
               users.map(
                 (user, i) =>
-                  new RegExp(area, "gi").test(user.area) && (
+                  new RegExp(area.slice(0, area.indexOf(" ")), "gi").test(
+                    user.area
+                  ) && (
                     <option value={user.name} key={`${area}-${grp}__${i}`}>
                       {user.area}
                     </option>

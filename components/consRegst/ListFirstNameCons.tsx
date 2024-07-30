@@ -10,7 +10,11 @@ import { createRoot } from "react-dom/client";
 import { ErrorBoundary } from "react-error-boundary";
 import GenericErrorComponent from "../error/GenericErrorComponent";
 
-export default function ListFirstNameCons(): JSX.Element {
+export default function ListFirstNameCons({
+  first = false,
+}: {
+  first?: boolean;
+}): JSX.Element {
   const dlRef = useRef<nullishDl>(null);
   const pacs: PersonProps[] = [];
   useEffect(() => {
@@ -79,8 +83,12 @@ export default function ListFirstNameCons(): JSX.Element {
                   panelRoots[`${dlRef.current.id}`]?.render(
                     pacs.map((pac, i) => (
                       <option
-                        value={pac.name}
-                        key={`first-name-pac__${i}`}
+                        value={
+                          first
+                            ? pac.name.slice(0, pac.name.indexOf(" "))
+                            : pac.name.slice(pac.name.indexOf(" ") + 1)
+                        }
+                        key={`${first ? "first" : "family"}-name-pac__${i}`}
                       ></option>
                     ))
                   );
@@ -96,7 +104,14 @@ export default function ListFirstNameCons(): JSX.Element {
           if (!dlRef.current.querySelector("tr"))
             panelRoots[`${dlRef.current.id}`]?.render(
               pacs.map((pac, i) => (
-                <option value={pac.name} key={`first-name-pac__${i}`}></option>
+                <option
+                  value={
+                    first
+                      ? pac.name.slice(0, pac.name.indexOf(" "))
+                      : pac.name.slice(pac.name.indexOf(" ") + 1)
+                  }
+                  key={`${first ? "first" : "family"}-name-pac__${i}`}
+                ></option>
               ))
             );
         })
@@ -131,5 +146,10 @@ export default function ListFirstNameCons(): JSX.Element {
       );
     }
   }, []);
-  return <datalist id="listFirstNameCons" ref={dlRef}></datalist>;
+  return (
+    <datalist
+      id={first ? "listFirstNameCons" : "listFamilyNameCons"}
+      ref={dlRef}
+    ></datalist>
+  );
 }

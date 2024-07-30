@@ -55,6 +55,8 @@ import {
 import ListFirstNameCons from "./ListFirstNameCons";
 import ListCPFPacCons from "./ListCPFPacCons";
 import OptGrpUsers from "./OptGrpUsers";
+import ListTelPacCons from "./ListTelPacCons";
+import ListEmailPacCons from "./ListEmailPacCons";
 let accFormData = 0;
 export default function FormDlg({
   onClose,
@@ -716,7 +718,7 @@ export default function FormDlg({
                         }
                       }}
                     />
-                    <ListFirstNameCons />
+                    <ListFirstNameCons first={true} />
                     <button
                       type="button"
                       id="btnShowAvStuds"
@@ -754,6 +756,7 @@ export default function FormDlg({
                   placeholder="Preencha com Sobrenome(s) do Paciente"
                   className="form-control autocorrectAll ssPersist"
                   id="familyNamePac"
+                  list="listFamilyNameCons"
                   autoComplete="family-name"
                   autoCapitalize="true"
                   data-title="Sobrenome Paciente"
@@ -771,6 +774,7 @@ export default function FormDlg({
                     });
                   }}
                 />
+                <ListFirstNameCons first={false} />
               </div>
               <div role="group" className="flexWR cGap5" id="telPacDiv">
                 <div
@@ -803,6 +807,7 @@ export default function FormDlg({
                     <input
                       type="number"
                       id="DDDPac"
+                      list="ddds"
                       maxLength={5}
                       pattern="^\(?\d{2}\)?$"
                       className="form-control d-ibl noInvert ssPersist"
@@ -818,6 +823,82 @@ export default function FormDlg({
                         });
                       }}
                     />
+                    <datalist id="ddds">
+                      <optgroup label="Sudeste">
+                        <option value="21">RJ</option>
+                        <option value="11">SP</option>
+                        <option value="12">SP</option>
+                        <option value="13">SP</option>
+                        <option value="14">SP</option>
+                        <option value="15">SP</option>
+                        <option value="16">SP</option>
+                        <option value="17">SP</option>
+                        <option value="18">SP</option>
+                        <option value="31">MG</option>
+                        <option value="32">MG</option>
+                        <option value="33">MG</option>
+                        <option value="34">MG</option>
+                        <option value="35">MG</option>
+                        <option value="37">MG</option>
+                        <option value="38">MG</option>
+                        <option value="27">ES</option>
+                        <option value="28">ES</option>
+                      </optgroup>
+                      <optgroup label="Sul">
+                        <option value="41">PR</option>
+                        <option value="42">PR</option>
+                        <option value="43">PR</option>
+                        <option value="44">PR</option>
+                        <option value="45">PR</option>
+                        <option value="46">PR</option>
+                        <option value="47">SC</option>
+                        <option value="48">SC</option>
+                        <option value="49">SC</option>
+                        <option value="51">RS</option>
+                        <option value="53">RS</option>
+                        <option value="54">RS</option>
+                        <option value="55">RS</option>
+                      </optgroup>
+                      <optgroup label="Centro-Oeste">
+                        <option value="61">DF</option>
+                        <option value="62">GO</option>
+                        <option value="64">GO</option>
+                        <option value="65">MT</option>
+                        <option value="66">MT</option>
+                        <option value="67">MS</option>
+                      </optgroup>
+                      <optgroup label="Nordeste">
+                        <option value="71">BA</option>
+                        <option value="73">BA</option>
+                        <option value="74">BA</option>
+                        <option value="75">BA</option>
+                        <option value="77">BA</option>
+                        <option value="79">SE</option>
+                        <option value="81">PE</option>
+                        <option value="87">PE</option>
+                        <option value="82">AL</option>
+                        <option value="83">PB</option>
+                        <option value="84">RN</option>
+                        <option value="85">CE</option>
+                        <option value="88">CE</option>
+                        <option value="86">PI</option>
+                        <option value="89">PI</option>
+                        <option value="98">MA</option>
+                        <option value="99">MA</option>
+                      </optgroup>
+                      <optgroup label="Norte">
+                        <option value="91">PA</option>
+                        <option value="93">PA</option>
+                        <option value="94">PA</option>
+                        <option value="92">AM</option>
+                        <option value="97">AM</option>
+                        <option value="95">RR</option>
+                        <option value="96">AP</option>
+                        <option value="63">TO</option>
+                        <option value="69">RO</option>
+                        <option value="68">AC</option>
+                      </optgroup>
+                    </datalist>
                     <input
                       type="tel"
                       id="inpTelPac"
@@ -839,6 +920,7 @@ export default function FormDlg({
                         });
                       }}
                     />
+                    <ListTelPacCons />
                   </div>
                 </div>
               </div>
@@ -852,6 +934,7 @@ export default function FormDlg({
                   placeholder="Preencha com o E-mail do Paciente"
                   className="form-control noInvert ssPersist"
                   id="emailPac"
+                  list="listEmailPacCons"
                   name="emailPac-in"
                   autoComplete="email"
                   data-title="Email Paciente"
@@ -868,6 +951,7 @@ export default function FormDlg({
                     isAutofillConsOn && addEmailExtension(ev.currentTarget)
                   }
                 />
+                <ListEmailPacCons />
               </div>
               <div role="group" className="flexWR" id="statusPacDiv">
                 <label className="stLab" id="hStatusPac" htmlFor="statusPac">
@@ -1011,7 +1095,7 @@ export default function FormDlg({
                       type="text"
                       id="relProfName"
                       name="relProf-in"
-                      list="avProfsResps"
+                      list="avProfs"
                       className="form-control noInvert ssPersist"
                       maxLength={99}
                       placeholder="Preencha com o Nome do Profissional Responsável alocado"

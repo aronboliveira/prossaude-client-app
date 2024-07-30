@@ -86,7 +86,7 @@ export default function ListCPFPacCons(): JSX.Element {
                   panelRoots[`${dlRef.current.id}`]?.render(
                     pacs.map((pac, i) => (
                       <option value={pac.idf} key={`cpf-pac__${i}`}>
-                        {pac.idf}
+                        {pac.name}
                       </option>
                     ))
                   );
@@ -103,7 +103,7 @@ export default function ListCPFPacCons(): JSX.Element {
             panelRoots[`${dlRef.current.id}`]?.render(
               pacs.map((pac, i) => (
                 <option value={pac.idf} key={`cpf-pac__${i}`}>
-                  {pac.idf}
+                  {pac.name}
                 </option>
               ))
             );
@@ -139,5 +139,5 @@ export default function ListCPFPacCons(): JSX.Element {
       );
     }
   }, []);
-  return <datalist id="listFirstNameCons" ref={dlRef}></datalist>;
+  return <datalist id="listCPFPacCons" ref={dlRef}></datalist>;
 }
