@@ -210,6 +210,11 @@ body {
     margin-bottom: 0.5rem;
   }
 
+  #pacDiv {
+    min-width: 0 !important;
+    min-height: 0 !important;
+  }
+
   #profileIconImg {
     margin-left: 0.2rem;
   }
@@ -220,6 +225,18 @@ body {
 
   #titlePanelSelect {
     margin-bottom: 0.3rem;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .panelBody {
+    #confirmDayMainDiv {
+      > div {
+        &:has(#labConfirmDay) {
+          transform: translate(0, 0.3rem);
+        }
+      }
+    }
   }
 }
 
