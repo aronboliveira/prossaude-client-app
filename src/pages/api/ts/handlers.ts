@@ -409,11 +409,7 @@ export async function handleFetch(
       const data = await res.json();
       console.log(`Data fetched:\n${data}`);
       return JSON.parse(data);
-    } else {
-      console.log("Handled fetch test");
-      console.log(arrJSONResTest);
-      return arrJSONResTest;
-    }
+    } else return arrJSONResTest;
   } catch (e) {
     console.error(`Error executing handleFetch:\n${(e as Error).message}`);
     return arrJSONResTest;

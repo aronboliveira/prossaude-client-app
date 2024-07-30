@@ -2,10 +2,10 @@ import { DataProvider } from "@/lib/locals/panelPage/declarations/classesCons";
 import { FillerProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import { addListenerAvMembers } from "@/lib/locals/panelPage/handlers/consHandlerList";
 import { globalDataProvider } from "../panelForms/defs/client/SelectPanel";
-import { nullishBtn } from "@/lib/global/declarations/types";
+import { nullishBtn, nullishDiv } from "@/lib/global/declarations/types";
 import { useEffect, useRef, useState } from "react";
 import AvStudListDlg from "../lists/AvStudListDlg";
-"use client";
+("use client");
 
 import {
   handleCondtReq,
@@ -17,9 +17,12 @@ export default function DREFiller({
   userClass,
 }: FillerProps): JSX.Element {
   const btnStudListRef = useRef<nullishBtn>(null);
+  const fillerDivRef = useRef<nullishDiv>(null);
   const [shouldDisplayStudList, setStudListDisplay] = useState<boolean>(false);
   const toggleStudListDisplay = (s: boolean = false) => setStudListDisplay(!s);
-  const fillerDivRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    /av-stud=open/gi.test(location.search) && setStudListDisplay(true);
+  }, []);
   useEffect(() => {
     if (fillerDivRef.current instanceof HTMLDivElement) {
       addListenerAvMembers(forwardedRef || fillerDivRef, false);

@@ -8,7 +8,7 @@ import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useEffect, useRef, useCallback, MutableRefObject } from "react";
 import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
 import StudList from "./StudList";
-"use client";
+("use client");
 
 import {
   addListenerAlocation,
@@ -39,11 +39,12 @@ export default function AvStudListDlg({
     [dialogRef, forwardedRef]
   );
   useEffect(() => {
-    history.pushState(
-      {},
-      "",
-      `${location.origin}${location.pathname}${location.search}&av-stud=open`
-    );
+    !/av-stud=open/gi.test(location.search) &&
+      history.pushState(
+        {},
+        "",
+        `${location.origin}${location.pathname}${location.search}&av-stud=open`
+      );
     setTimeout(() => {
       history.pushState(
         {},

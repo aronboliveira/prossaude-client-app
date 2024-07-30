@@ -15,7 +15,7 @@ import AvPacListDlg from "../lists/AvPacListDlg";
 import AvProfListDlg from "../lists/AvProfListDlg";
 import DREFiller from "./DREFiller";
 import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
-"use client";
+("use client");
 
 import {
   useEffect,
@@ -242,11 +242,15 @@ export default function FormDlg({
   );
   //push em history
   useEffect(() => {
-    history.pushState(
-      {},
-      "",
-      `${location.origin}${location.pathname}${location.search}&new-cons=open`
-    );
+    !/new-cons=open/g.test(location.search) &&
+      history.pushState(
+        {},
+        "",
+        `${location.origin}${location.pathname}${location.search}&new-cons=open`
+      );
+    /av-pac=open/gi.test(location.search) && setPacFiller(true);
+    /av-prof=open/gi.test(location.search) && setCPFFiller(true);
+    /av-stud=open/gi.test(location.search) && setDREFiller(true);
     setTimeout(() => {
       history.pushState(
         {},

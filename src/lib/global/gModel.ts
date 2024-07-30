@@ -1319,7 +1319,25 @@ export function dateISOtoBRL(isoDate: string): string {
 export function camelToKebab(str: string): string {
   const iniStr = str;
   try {
-    return str.split(/(?=[A-Z])/g).join('-').toLowerCase();
+    return str
+      .split(/(?=[A-Z])/g)
+      .join("-")
+      .toLowerCase();
+  } catch (e) {
+    console.error(`Error executing camelToKebab:\n${(e as Error).message}`);
+    return iniStr;
+  }
+}
+
+export function kebabToCamel(str: string): string {
+  const iniStr = str;
+  try {
+    return str
+      .split("-")
+      .map((fragment, i) =>
+        i === 0 ? fragment : textTransformPascal(fragment)
+      )
+      .join("");
   } catch (e) {
     console.error(`Error executing camelToKebab:\n${(e as Error).message}`);
     return iniStr;

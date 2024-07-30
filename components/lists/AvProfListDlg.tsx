@@ -11,7 +11,7 @@ import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
 import GenericErrorComponent from "../error/GenericErrorComponent";
 import ProfRow from "../panelForms/profs/ProfRow";
 import Spinner from "../icons/Spinner";
-"use client";
+("use client");
 
 import {
   nullishBtn,
@@ -59,11 +59,12 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
   );
   //push em history
   useEffect(() => {
-    history.pushState(
-      {},
-      "",
-      `${location.origin}${location.pathname}${location.search}&av-prof=open`
-    );
+    !/av-prof=open/gi.test(location.search) &&
+      history.pushState(
+        {},
+        "",
+        `${location.origin}${location.pathname}${location.search}&av-prof=open`
+      );
     setTimeout(() => {
       history.pushState(
         {},

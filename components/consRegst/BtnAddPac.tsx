@@ -2,14 +2,16 @@ import { BtnAddPacPros } from "@/lib/locals/panelPage/declarations/interfacesCon
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useEffect, useState } from "react";
 import FormDlg from "./FormDlg";
-"use client";
-
+("use client");
 
 export default function BtnAddPac({
   userClass = "estudante",
 }: BtnAddPacPros): JSX.Element {
   const [pressState, setTogglePress] = useState<boolean>(false);
   const toggleForm = (): void => setTogglePress(() => !pressState);
+  useEffect(() => {
+    /new-cons=open/gi.test(location.search) && setTogglePress(true);
+  }, []);
   useEffect(() => {
     const aptBtn = document.getElementById("addAppointBtn");
     aptBtn instanceof HTMLElement

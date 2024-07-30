@@ -20,11 +20,12 @@ export default function AvPacListDlg({
   const tabPacRef = useRef<nullishTab>(null);
   //push em history
   useEffect(() => {
-    history.pushState(
-      {},
-      "",
-      `${location.origin}${location.pathname}${location.search}&av-pac=open`
-    );
+    !/av-pac=open/gi.test(location.search) &&
+      history.pushState(
+        {},
+        "",
+        `${location.origin}${location.pathname}${location.search}&av-pac=open`
+      );
     setTimeout(() => {
       history.pushState(
         {},

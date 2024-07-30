@@ -4,7 +4,7 @@ import { DataProvider } from "@/lib/locals/panelPage/declarations/classesCons";
 import { ErrorBoundary } from "react-error-boundary";
 import { MainPanelProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import { Root } from "react-dom/client";
-import { camelToKebab } from "@/lib/global/gModel";
+import { camelToKebab, kebabToCamel } from "@/lib/global/gModel";
 import { createRoot } from "react-dom/client";
 import { handleLinkChanges } from "@/lib/global/handlers/gRoutingHandlers";
 import { nullishDiv, voidVal } from "@/lib/global/declarations/types";
@@ -20,11 +20,12 @@ import RemoveStudForm from "../../studs/RemoveStudForm";
 import ScheduleForm from "../../schedule/ScheduleForm";
 import StudentForm from "../../studs/StudentForm";
 import Unauthorized from "../Unauthorized";
-"use client";
+("use client");
 
 import {
   elementNotFound,
   extLine,
+  inputNotFound,
   stringError,
 } from "@/lib/global/handlers/errorHandler";
 
@@ -41,6 +42,45 @@ export default function SelectPanel({
   const [mounted, setMounted] = useState<boolean>(false);
   const formRootRef = useRef<nullishDiv>(null);
   const context = useContext<AppRootContextType>(AppRootContext);
+  const renderSelectPanel = (): JSX.Element => {
+    switch (selectedOption) {
+      case "registStud":
+        return userClass === "coordenador" || userClass === "supervisor" ? (
+          <StudentForm userClass={userClass} />
+        ) : (
+          <Unauthorized />
+        );
+      case "registProf":
+        return userClass === "coordenador" ? (
+          <ProfForm userClass={userClass} />
+        ) : (
+          <Unauthorized />
+        );
+      case "removeStud":
+        return userClass === "coordenador" || userClass === "supervisor" ? (
+          <RemoveStudForm userClass={userClass} />
+        ) : (
+          <Unauthorized />
+        );
+      case "removeProf":
+        return userClass === "coordenador" || userClass === "supervisor" ? (
+          <RemoveProfForm userClass={userClass} />
+        ) : (
+          <Unauthorized />
+        );
+      case "pacList":
+        return <PacTabForm userClass={userClass} />;
+      case "agenda":
+        return <ScheduleForm context={false} userClass={userClass} />;
+      default:
+        stringError(
+          selectedOption,
+          "selectedOption in renderSelectedForm()",
+          extLine(new Error())
+        );
+        return <DefaultForm userClass={userClass} />;
+    }
+  };
   const handlePanelPath = (
     change: React.ChangeEvent<HTMLSelectElement> | string
   ): void => {
@@ -73,7 +113,94 @@ export default function SelectPanel({
     handleLinkChanges("panel", "Panel Page Style");
     handlePanelPath(defOp);
   }, []);
-  useEffect(() => {}, []);
+  useEffect(() => {
+    setTimeout(() => {
+      try {
+        const formRoot = document.getElementById("formRoot");
+        const panelSelect = document.getElementById("coordPanelSelect");
+        if (!(formRoot instanceof HTMLElement))
+          throw elementNotFound(
+            formRoot,
+            `Validation of Option Selection Element`,
+            extLine(new Error())
+          );
+        if (
+          !(
+            panelSelect instanceof HTMLSelectElement ||
+            panelSelect instanceof HTMLInputElement
+          )
+        )
+          throw inputNotFound(
+            panelSelect,
+            `Validation of Select for panel instance`,
+            extLine(new Error())
+          );
+        if (!context.roots.formRoot)
+          context.roots.formRoot = createRoot(formRoot);
+        const kebabSearch = kebabToCamel(location.search);
+        console.log(formRoot);
+        console.log(context.roots.formRoot);
+        console.log(kebabSearch);
+        if (/registStud/gi.test(kebabSearch)) {
+          context.roots.formRoot.render(
+            userClass === "coordenador" || userClass === "supervisor" ? (
+              <StudentForm userClass={userClass} />
+            ) : (
+              <Unauthorized />
+            )
+          );
+          panelSelect.value = "registStud";
+        } else if (/registProf/gi.test(kebabSearch)) {
+          context.roots.formRoot.render(
+            userClass === "coordenador" ? (
+              <ProfForm userClass={userClass} />
+            ) : (
+              <Unauthorized />
+            )
+          );
+          panelSelect.value = "registProf";
+        } else if (/removeProf/gi.test(kebabSearch)) {
+          context.roots.formRoot.render(
+            userClass === "coordenador" || userClass === "supervisor" ? (
+              <RemoveProfForm userClass={userClass} />
+            ) : (
+              <Unauthorized />
+            )
+          );
+          panelSelect.value = "removeProf";
+        } else if (/removeStud/gi.test(kebabSearch)) {
+          context.roots.formRoot.render(
+            userClass === "coordenador" || userClass === "supervisor" ? (
+              <RemoveStudForm userClass={userClass} />
+            ) : (
+              <Unauthorized />
+            )
+          );
+          panelSelect.value = "removeStud";
+        } else if (/agenda/gi.test(kebabSearch)) {
+          context.roots.formRoot.render(
+            <ScheduleForm context={false} userClass={userClass} />
+          );
+          panelSelect.value = "agenda";
+        } else if (/pacList/gi.test(kebabSearch)) {
+          context.roots.formRoot.render(<PacTabForm userClass={userClass} />);
+          panelSelect.value = "pacList";
+        } else {
+          history.pushState(
+            {},
+            "",
+            `${location.origin}${location.pathname}?panel=${defOp}`
+          );
+        }
+      } catch (e) {
+        console.error(
+          `Error executing procedure for adjusting selected panel option based on route:\n${
+            (e as Error).message
+          }`
+        );
+      }
+    }, 500);
+  }, []);
   //validating DOM structure using Main Select and parent for reference
   useEffect(() => {
     setTimeout(() => {
@@ -173,48 +300,7 @@ export default function SelectPanel({
             <GenericErrorComponent message="Error rendering Selected Form for Panel" />
           )}
         >
-          {(() => {
-            switch (selectedOption) {
-              case "registStud":
-                return userClass === "coordenador" ||
-                  userClass === "supervisor" ? (
-                  <StudentForm userClass={userClass} />
-                ) : (
-                  <Unauthorized />
-                );
-              case "registProf":
-                return userClass === "coordenador" ? (
-                  <ProfForm userClass={userClass} />
-                ) : (
-                  <Unauthorized />
-                );
-              case "removeStud":
-                return userClass === "coordenador" ||
-                  userClass === "supervisor" ? (
-                  <RemoveStudForm userClass={userClass} />
-                ) : (
-                  <Unauthorized />
-                );
-              case "removeProf":
-                return userClass === "coordenador" ||
-                  userClass === "supervisor" ? (
-                  <RemoveProfForm userClass={userClass} />
-                ) : (
-                  <Unauthorized />
-                );
-              case "pacList":
-                return <PacTabForm userClass={userClass} />;
-              case "agenda":
-                return <ScheduleForm context={false} userClass={userClass} />;
-              default:
-                stringError(
-                  selectedOption,
-                  "selectedOption in renderSelectedForm()",
-                  extLine(new Error())
-                );
-                return <DefaultForm userClass={userClass} />;
-            }
-          })()}
+          {selectedOption && renderSelectPanel()}
         </ErrorBoundary>
       </div>
     </ErrorBoundary>
