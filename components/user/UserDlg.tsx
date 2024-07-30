@@ -1,15 +1,15 @@
-import { nullishDlg } from "@/lib/global/declarations/types";
-import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
-import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
-import { UserDlgProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
-import { useEffect, useRef } from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
-import UserPropsDlg from "./UserPropsDlg";
-import ContactDlg from "./ContactDlg";
-import GenericErrorComponent from "../error/GenericErrorComponent";
+import { UserDlgProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import { basePath } from "@/pages";
+import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
+import { nullishDlg } from "@/lib/global/declarations/types";
+import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
+import { useEffect, useRef } from "react";
 import { useRouter } from "next/router";
+import ContactDlg from "./ContactDlg";
+import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
+import GenericErrorComponent from "../error/GenericErrorComponent";
+import UserPropsDlg from "./UserPropsDlg";
 
 export default function UserDlg({
   user,

@@ -1,13 +1,11 @@
 "use client";
-
+import { ErrorBoundary } from "react-error-boundary";
 import { InspDlgProps } from "@/lib/global/declarations/interfaces";
 import { addTextToObs } from "@/lib/locals/odPage/odHandler";
-import { ErrorBoundary } from "react-error-boundary";
+import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
+import { nullishDlg } from "@/lib/global/declarations/types";
 import { useEffect, useRef } from "react";
 import GenericErrorComponent from "../../error/GenericErrorComponent";
-import { nullishDlg } from "@/lib/global/declarations/types";
-import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
-
 export default function InspDlg({
   count,
   ctx,

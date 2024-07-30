@@ -1,25 +1,26 @@
-"use client";
-
-import { useEffect, useRef, useState } from "react";
-import { nullishBtn } from "@/lib/global/declarations/types";
-import { addListenerAvMembers } from "@/lib/locals/panelPage/handlers/consHandlerList";
+("use client");
 import { DataProvider } from "@/lib/locals/panelPage/declarations/classesCons";
+import { FillerProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
+import { addListenerAvMembers } from "@/lib/locals/panelPage/handlers/consHandlerList";
+import { globalDataProvider } from "../panelForms/defs/client/SelectPanel";
+import { nullishBtn, nullishDiv } from "@/lib/global/declarations/types";
+import { useEffect, useRef, useState } from "react";
+import AvStudListDlg from "../lists/AvStudListDlg";
 import {
   handleCondtReq,
   syncAriaStates,
 } from "@/lib/global/handlers/gHandlers";
-import AvStudListDlg from "../lists/AvStudListDlg";
-import { FillerProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
-import { globalDataProvider } from "../panelForms/defs/client/SelectPanel";
-
 export default function DREFiller({
   forwardedRef,
   userClass,
 }: FillerProps): JSX.Element {
   const btnStudListRef = useRef<nullishBtn>(null);
+  const fillerDivRef = useRef<nullishDiv>(null);
   const [shouldDisplayStudList, setStudListDisplay] = useState<boolean>(false);
   const toggleStudListDisplay = (s: boolean = false) => setStudListDisplay(!s);
-  const fillerDivRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    /av-stud=open/gi.test(location.search) && setStudListDisplay(true);
+  }, []);
   useEffect(() => {
     if (fillerDivRef.current instanceof HTMLDivElement) {
       addListenerAvMembers(forwardedRef || fillerDivRef, false);
@@ -40,18 +41,6 @@ export default function DREFiller({
       ]);
     }
   }, [fillerDivRef]);
-  const renderStudList = (s: boolean = false): JSX.Element => {
-    return s ? (
-      <AvStudListDlg
-        onClose={(s: boolean = false) => toggleStudListDisplay(s)}
-        forwardedRef={forwardedRef}
-        shouldDisplayStudList={s}
-        userClass={userClass}
-      />
-    ) : (
-      <></>
-    );
-  };
   return (
     <>
       <div
@@ -155,7 +144,16 @@ export default function DREFiller({
           >
             Consultar Lista de Estudantes
           </button>
-          {renderStudList(shouldDisplayStudList)}
+          {shouldDisplayStudList ? (
+            <AvStudListDlg
+              forwardedRef={forwardedRef}
+              dispatch={setStudListDisplay}
+              state={shouldDisplayStudList}
+              userClass={userClass}
+            />
+          ) : (
+            <></>
+          )}
         </div>
       </div>
     </>

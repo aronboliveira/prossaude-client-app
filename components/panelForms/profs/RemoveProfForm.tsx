@@ -1,9 +1,17 @@
-import { useEffect, useRef, useCallback } from "react";
-import { handleClientPermissions } from "@/lib/locals/panelPage/handlers/consHandlerUsers";
-import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
-import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
-import { equalizeTabCells, normalizeSizeSb } from "@/lib/global/gStyleScript";
+import { ErrorBoundary } from "react-error-boundary";
 import { addListenerExportBtn } from "@/lib/global/gController";
+import { createRoot } from "react-dom/client";
+import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
+import { equalizeTabCells, normalizeSizeSb } from "@/lib/global/gStyleScript";
+import { fillTabAttr } from "@/lib/locals/panelPage/handlers/consHandlerList";
+import { handleClientPermissions } from "@/lib/locals/panelPage/handlers/consHandlerUsers";
+import { handleFetch } from "@/pages/api/ts/handlers";
+import { panelRoots } from "../defs/client/SelectPanel";
+import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
+import { useEffect, useRef, useCallback } from "react";
+import GenericErrorComponent from "../../error/GenericErrorComponent";
+import ProfRow from "./ProfRow";
+import Spinner from "../../icons/Spinner";
 import {
   nullishBtn,
   nullishForm,
@@ -14,14 +22,7 @@ import {
   GlobalFormProps,
   ProfInfo,
 } from "@/lib/locals/panelPage/declarations/interfacesCons";
-import ProfRow from "./ProfRow";
-import { handleFetch } from "@/pages/api/ts/handlers";
-import { panelRoots } from "../defs/client/SelectPanel";
-import { createRoot } from "react-dom/client";
-import { ErrorBoundary } from "react-error-boundary";
-import GenericErrorComponent from "../../error/GenericErrorComponent";
-import { fillTabAttr } from "@/lib/locals/panelPage/handlers/consHandlerList";
-import Spinner from "../../icons/Spinner";
+import { strikeEntries } from "@/lib/locals/panelPage/consStyleScript";
 
 export default function RemoveProfForm({
   userClass = "estudante",
@@ -58,235 +59,291 @@ export default function RemoveProfForm({
       if (profs.length > 0 && tbodyRef.current.querySelector("tr")) return;
       setTimeout(() => {
         if (profs.length > 0) return;
-        handleFetch("profs", "_table", true).then(res => {
-          res.forEach(prof => {
-            !profs.includes(prof as ProfInfo) &&
-              profs.push({
-                name: prof.name,
-                tel: prof.tel,
-                email: prof.email,
-                area: (prof as ProfInfo)["area"],
-                start_day: (prof as ProfInfo)["start_day"],
-                end_day: (prof as ProfInfo)["end_day"],
-                day: (prof as ProfInfo)["day"],
-                idf: (prof as ProfInfo)["idf"],
-              });
-          });
-          try {
-            if (!(tabRef.current instanceof HTMLElement))
-              throw elementNotFound(
-                tabRef.current,
-                `Validation of Table reference`,
-                extLine(new Error())
-              );
-            if (!(tbodyRef.current instanceof HTMLElement))
-              throw elementNotFound(
-                tbodyRef.current,
-                `Validation of Table Body Reference`,
-                extLine(new Error())
-              );
-            if (
-              panelRoots[`${tbodyRef.current.id}`] &&
-              !(panelRoots[`${tbodyRef.current.id}`] as any)["_internalRoot"]
-            ) {
-              setTimeout(() => {
-                try {
-                  if (!(tabRef.current instanceof HTMLElement))
-                    throw elementNotFound(
-                      tabRef.current,
-                      `Validation of Table reference`,
-                      extLine(new Error())
-                    );
-                  if (!(tbodyRef.current instanceof HTMLElement))
-                    throw elementNotFound(
-                      tbodyRef.current,
-                      `Validation of Table Body Reference`,
-                      extLine(new Error())
-                    );
-                  if (tbodyRef.current.querySelector("tr")) return;
-                  panelRoots[`${tbodyRef.current.id}`]?.unmount();
-                  delete panelRoots[`${tbodyRef.current.id}`];
-                  tbodyRef.current.remove();
-                  if (!panelRoots[`${tabRef.current.id}`])
-                    panelRoots[`${tabRef.current.id}`] = createRoot(
-                      tabRef.current
-                    );
-                  panelRoots[`${tabRef.current.id}`]?.render(
-                    <ErrorBoundary
-                      FallbackComponent={() => (
-                        <GenericErrorComponent message="Error reloading replacement for table body" />
-                      )}
-                    >
-                      <caption className="caption-t">
-                        <strong>
-                          <small role="textbox">
-                            <em>
-                              Lista Recuperada da Ficha de Profissionais
-                              registrados. Acesse
-                              <samp>
-                                <a> ROTA_PLACEHOLDER </a>
-                              </samp>
-                              para cadastrar
-                            </em>
-                          </small>
-                        </strong>
-                      </caption>
-                      <colgroup>
-                        {userClass === "coordenador" && <col></col>}
-                        <col></col>
-                        <col></col>
-                        <col></col>
-                        <col></col>
-                        <col></col>
-                        {userClass === "coordenador" && <col></col>}
-                        {userClass === "coordenador" && <col></col>}
-                      </colgroup>
-                      <thead className="thead-dark">
-                        <tr id="avPacs-row1">
-                          {userClass === "coordenador" && (
-                            <th scope="col">CPF</th>
-                          )}
-                          <th scope="col">Nome</th>
-                          <th scope="col">Externo</th>
-                          <th scope="col">E-mail</th>
-                          <th scope="col">Telefone</th>
-                          <th scope="col">Área de Atuação</th>
-                          <th scope="col">Dia de Trablho</th>
-                          <th scope="col">Período de Participação</th>
-                          {userClass === "coordenador" && (
-                            <th scope="col">Alteração</th>
-                          )}
-                          {userClass === "coordenador" && (
-                            <th scope="col">Exclusão</th>
-                          )}
-                        </tr>
-                      </thead>
-                      <tbody id="profsTbody" ref={tbodyRef}>
-                        <span style={{ margin: "2rem", position: "absolute" }}>
-                          <Spinner
-                            spinnerClass="spinner-border"
-                            spinnerColor="text-info"
-                            message="Loading Professionals Table..."
-                          />
-                        </span>
-                      </tbody>
-                    </ErrorBoundary>
-                  );
-                  tbodyRef.current = document.getElementById(
-                    "profsTbody"
-                  ) as nullishTabSect;
-                  if (!(tbodyRef.current instanceof HTMLElement))
-                    throw elementNotFound(
-                      tbodyRef.current,
-                      `Validation of replaced tbody`,
-                      extLine(new Error())
-                    );
-                  if (!panelRoots[`${tbodyRef.current.id}`])
-                    panelRoots[`${tbodyRef.current.id}`] = createRoot(
-                      tbodyRef.current
-                    );
-                  if (!tbodyRef.current.querySelector("tr"))
-                    panelRoots[`${tbodyRef.current.id}`]?.render(
-                      profs.map((prof, i) => (
-                        <ProfRow
-                          nRow={i + 2}
-                          prof={prof}
-                          userClass={userClass}
-                          tabRef={tabRef}
-                          key={`prof_row__${i + 2}`}
-                        />
-                      ))
-                    );
-                  setTimeout(() => {
-                    if (tabRef?.current instanceof HTMLTableElement) {
-                      equalizeTabCells(tabRef.current);
-                      fillTabAttr(tabRef.current);
-                    } else
-                      elementNotFound(
-                        tabRef.current,
-                        `tabRef id ${
-                          (tabRef?.current as any)?.id || "UNIDENTIFIED"
-                        } in useEffect() for tableRef`,
-                        extLine(new Error())
-                      );
-                  }, 300);
-                } catch (e) {
-                  console.error(
-                    `Error executing scheduled rendering of Table Body Content Replacement:\n${
-                      (e as Error).message
-                    }`
-                  );
-                }
-                if (document) {
-                }
-              }, 1000);
-            } else
-              panelRoots[`${tbodyRef.current.id}`] = createRoot(
-                tbodyRef.current
-              );
-            if (!tbodyRef.current.querySelector("tr"))
-              panelRoots[`${tbodyRef.current.id}`]?.render(
-                profs.map((prof, i) => {
-                  return Array.from(
-                    tbodyRef.current?.querySelectorAll("output") ?? []
-                  ).some(
-                    outp => outp.innerText === (prof as ProfInfo)["idf"]
-                  ) ||
-                    Array.from(
-                      tbodyRef.current?.querySelectorAll("tr") ?? []
-                    ).some(
-                      tr =>
-                        tr.dataset.key &&
-                        tbodyRef.current?.querySelector(
-                          `tr[data-key=${tr.dataset.key}`
-                        )
-                    ) ? (
-                    <></>
-                  ) : (
-                    <ProfRow
-                      nRow={i + 2}
-                      prof={prof}
-                      userClass={userClass}
-                      tabRef={tabRef}
-                      key={`prof_row__${i + 2}`}
-                    />
-                  );
-                })
-              );
-            setTimeout(() => {
-              if (tabRef?.current instanceof HTMLTableElement) {
-                equalizeTabCells(tabRef.current);
-                fillTabAttr(tabRef.current);
-              } else
-                elementNotFound(
+        handleFetch("profs", "_table", true)
+          .then(res => {
+            res.forEach(prof => {
+              !profs.includes(prof as ProfInfo) &&
+                profs.push({
+                  name: prof.name,
+                  tel: prof.tel,
+                  email: prof.email,
+                  area: (prof as ProfInfo)["area"],
+                  start_day: (prof as ProfInfo)["start_day"],
+                  end_day: (prof as ProfInfo)["end_day"],
+                  day: (prof as ProfInfo)["day"],
+                  idf: (prof as ProfInfo)["idf"],
+                });
+            });
+            try {
+              if (!(tabRef.current instanceof HTMLElement))
+                throw elementNotFound(
                   tabRef.current,
-                  `tabRef id ${
-                    (tabRef?.current as any)?.id || "UNIDENTIFIED"
-                  } in useEffect() for tableRef`,
+                  `Validation of Table reference`,
                   extLine(new Error())
                 );
-            }, 300);
-            setTimeout(() => {
+              if (!(tbodyRef.current instanceof HTMLElement))
+                throw elementNotFound(
+                  tbodyRef.current,
+                  `Validation of Table Body Reference`,
+                  extLine(new Error())
+                );
               if (
-                !document.querySelector("tr") &&
-                document.querySelector("table")
+                panelRoots[`${tbodyRef.current.id}`] &&
+                !(panelRoots[`${tbodyRef.current.id}`] as any)["_internalRoot"]
               ) {
-                if (!panelRoots[`${document.querySelector("table")!.id}`])
-                  panelRoots[`${document.querySelector("table")!.id}`] =
-                    createRoot(document.querySelector("table")!);
-                panelRoots[`${document.querySelector("table")!.id}`]?.render(
-                  <GenericErrorComponent message="Failed to render table" />
+                setTimeout(() => {
+                  try {
+                    if (!(tabRef.current instanceof HTMLElement))
+                      throw elementNotFound(
+                        tabRef.current,
+                        `Validation of Table reference`,
+                        extLine(new Error())
+                      );
+                    if (!(tbodyRef.current instanceof HTMLElement))
+                      throw elementNotFound(
+                        tbodyRef.current,
+                        `Validation of Table Body Reference`,
+                        extLine(new Error())
+                      );
+                    if (tbodyRef.current.querySelector("tr")) return;
+                    panelRoots[`${tbodyRef.current.id}`]?.unmount();
+                    delete panelRoots[`${tbodyRef.current.id}`];
+                    tbodyRef.current.remove();
+                    if (!panelRoots[`${tabRef.current.id}`])
+                      panelRoots[`${tabRef.current.id}`] = createRoot(
+                        tabRef.current
+                      );
+                    panelRoots[`${tabRef.current.id}`]?.render(
+                      <ErrorBoundary
+                        FallbackComponent={() => (
+                          <GenericErrorComponent message="Error reloading replacement for table body" />
+                        )}
+                      >
+                        <caption className="caption-t">
+                          <strong>
+                            <small role="textbox">
+                              <em>
+                                Lista Recuperada da Ficha de Profissionais
+                                registrados. Acesse
+                                <samp>
+                                  <a> ROTA_PLACEHOLDER </a>
+                                </samp>
+                                para cadastrar
+                              </em>
+                            </small>
+                          </strong>
+                        </caption>
+                        <colgroup>
+                          {userClass === "coordenador" && <col></col>}
+                          <col></col>
+                          <col></col>
+                          <col></col>
+                          <col></col>
+                          <col></col>
+                          {userClass === "coordenador" && <col></col>}
+                          {userClass === "coordenador" && <col></col>}
+                        </colgroup>
+                        <thead className="thead-dark">
+                          <tr id="avPacs-row1">
+                            {userClass === "coordenador" && (
+                              <th scope="col">CPF</th>
+                            )}
+                            <th scope="col">Nome</th>
+                            <th scope="col">Externo</th>
+                            <th scope="col">E-mail</th>
+                            <th scope="col">Telefone</th>
+                            <th scope="col">Área de Atuação</th>
+                            <th scope="col">Dia de Trablho</th>
+                            <th scope="col">Período de Participação</th>
+                            {userClass === "coordenador" && (
+                              <th scope="col">Alteração</th>
+                            )}
+                            {userClass === "coordenador" && (
+                              <th scope="col">Exclusão</th>
+                            )}
+                          </tr>
+                        </thead>
+                        <tbody id="profsTbody" ref={tbodyRef}>
+                          <span
+                            style={{ margin: "2rem", position: "absolute" }}
+                          >
+                            <Spinner
+                              spinnerClass="spinner-border"
+                              spinnerColor="text-info"
+                              message="Loading Professionals Table..."
+                            />
+                          </span>
+                        </tbody>
+                      </ErrorBoundary>
+                    );
+                    tbodyRef.current = document.getElementById(
+                      "profsTbody"
+                    ) as nullishTabSect;
+                    if (!(tbodyRef.current instanceof HTMLElement))
+                      throw elementNotFound(
+                        tbodyRef.current,
+                        `Validation of replaced tbody`,
+                        extLine(new Error())
+                      );
+                    if (!panelRoots[`${tbodyRef.current.id}`])
+                      panelRoots[`${tbodyRef.current.id}`] = createRoot(
+                        tbodyRef.current
+                      );
+                    if (!tbodyRef.current.querySelector("tr"))
+                      panelRoots[`${tbodyRef.current.id}`]?.render(
+                        profs.map((prof, i) => (
+                          <ProfRow
+                            nRow={i + 2}
+                            prof={prof}
+                            userClass={userClass}
+                            tabRef={tabRef}
+                            key={`prof_row__${i + 2}`}
+                          />
+                        ))
+                      );
+                    setTimeout(() => {
+                      if (tabRef?.current instanceof HTMLTableElement) {
+                        equalizeTabCells(tabRef.current);
+                        fillTabAttr(tabRef.current);
+                      } else
+                        elementNotFound(
+                          tabRef.current,
+                          `tabRef id ${
+                            (tabRef?.current as any)?.id || "UNIDENTIFIED"
+                          } in useEffect() for tableRef`,
+                          extLine(new Error())
+                        );
+                    }, 300);
+                  } catch (e) {
+                    console.error(
+                      `Error executing scheduled rendering of Table Body Content Replacement:\n${
+                        (e as Error).message
+                      }`
+                    );
+                  }
+                  if (document) {
+                  }
+                }, 1000);
+              } else
+                panelRoots[`${tbodyRef.current.id}`] = createRoot(
+                  tbodyRef.current
+                );
+              if (!tbodyRef.current.querySelector("tr"))
+                panelRoots[`${tbodyRef.current.id}`]?.render(
+                  profs.map((prof, i) => {
+                    return Array.from(
+                      tbodyRef.current?.querySelectorAll("output") ?? []
+                    ).some(
+                      outp => outp.innerText === (prof as ProfInfo)["idf"]
+                    ) ||
+                      Array.from(
+                        tbodyRef.current?.querySelectorAll("tr") ?? []
+                      ).some(
+                        tr =>
+                          tr.dataset.key &&
+                          tbodyRef.current?.querySelector(
+                            `tr[data-key=${tr.dataset.key}`
+                          )
+                      ) ? (
+                      <></>
+                    ) : (
+                      <ProfRow
+                        nRow={i + 2}
+                        prof={prof}
+                        userClass={userClass}
+                        tabRef={tabRef}
+                        key={`prof_row__${i + 2}`}
+                      />
+                    );
+                  })
+                );
+              setTimeout(() => {
+                if (tabRef?.current instanceof HTMLTableElement) {
+                  equalizeTabCells(tabRef.current);
+                  fillTabAttr(tabRef.current);
+                } else
+                  elementNotFound(
+                    tabRef.current,
+                    `tabRef id ${
+                      (tabRef?.current as any)?.id || "UNIDENTIFIED"
+                    } in useEffect() for tableRef`,
+                    extLine(new Error())
+                  );
+              }, 300);
+              setTimeout(() => {
+                if (
+                  !document.querySelector("tr") &&
+                  document.querySelector("table")
+                ) {
+                  if (!panelRoots[`${document.querySelector("table")!.id}`])
+                    panelRoots[`${document.querySelector("table")!.id}`] =
+                      createRoot(document.querySelector("table")!);
+                  panelRoots[`${document.querySelector("table")!.id}`]?.render(
+                    <GenericErrorComponent message="Failed to render table" />
+                  );
+                }
+              }, 5000);
+            } catch (e) {
+              console.error(
+                `Error executing rendering of Table Body Content:\n${
+                  (e as Error).message
+                }`
+              );
+            }
+            const handleAttempt = () => {
+              try {
+                if (!(tabRef.current instanceof HTMLElement))
+                  throw elementNotFound(
+                    tabRef.current,
+                    `Validation of Table instance`,
+                    extLine(new Error())
+                  );
+                equalizeTabCells(tabRef.current);
+                strikeEntries(tabRef.current);
+                document.getElementById("btnExport") &&
+                  handleClientPermissions(
+                    userClass,
+                    ["coordenador"],
+                    tabRef.current,
+                    document.getElementById("btnExport")
+                  );
+              } catch (e) {
+                console.error(
+                  `Error executing handleAttempt for Professionals table:\n${
+                    (e as Error).message
+                  }`
                 );
               }
-            }, 5000);
-          } catch (e) {
+            };
+            setTimeout(() => {
+              !tbodyRef.current?.querySelector("tr")
+                ? setTimeout(() => handleAttempt(), 1800)
+                : handleAttempt();
+            }, 1200);
+          })
+          .catch(e =>
             console.error(
-              `Error executing rendering of Table Body Content:\n${
-                (e as Error).message
-              }`
+              `Failed to fetch from Professionals Table: ${e.message}`
+            )
+          )
+          .finally(() => {
+            setTimeout(
+              () =>
+                syncAriaStates([
+                  ...(tabRef.current?.querySelectorAll("*") ?? []),
+                  tabRef.current!,
+                ]),
+              1200
             );
-          }
-        });
+            setTimeout(
+              () =>
+                syncAriaStates([
+                  ...(tabRef.current?.querySelectorAll("*") ?? []),
+                  tabRef.current!,
+                ]),
+              3000
+            );
+          });
       }, 300);
     } catch (e) {
       console.error(

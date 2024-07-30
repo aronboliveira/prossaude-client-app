@@ -1,3 +1,4 @@
+import { DocumentNodeProps } from "@/lib/global/declarations/interfaces";
 import Document, {
   Html,
   Head,
@@ -5,7 +6,6 @@ import Document, {
   NextScript,
   DocumentContext,
 } from "next/document";
-import { DocumentNodeProps } from "@/lib/global/declarations/interfaces";
 
 export default function MyDocument() {
   return (

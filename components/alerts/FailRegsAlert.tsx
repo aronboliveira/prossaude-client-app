@@ -1,8 +1,8 @@
+import { ErrorBoundary } from "react-error-boundary";
+import { FailedRegstProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import { nullishDlg } from "@/lib/global/declarations/types";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
-import { FailedRegstProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import { useEffect, useRef } from "react";
-import { ErrorBoundary } from "react-error-boundary";
 import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
 
 export default function FailRegstAlert({

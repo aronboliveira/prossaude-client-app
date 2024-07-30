@@ -1,8 +1,9 @@
 "use client";
-
 import { TabBtnProps } from "@/lib/global/declarations/interfaces";
 import { handleIndEv } from "../../TabIndPerc";
 import { textTransformPascal } from "@/lib/global/gModel";
+
+
 
 export default function TabBtnInd({
   nRow,

@@ -1,11 +1,9 @@
 "use client";
-
 import { RadioPairPros } from "@/lib/global/declarations/interfaces";
 import { nullishSpan } from "@/lib/global/declarations/types";
-import { textTransformPascal } from "@/lib/global/gModel";
 import { opRadioHandler } from "@/lib/global/handlers/gHandlers";
+import { textTransformPascal } from "@/lib/global/gModel";
 import { useEffect, useState, useRef } from "react";
-
 export default function RadioPair({
   name,
   fullName = "",

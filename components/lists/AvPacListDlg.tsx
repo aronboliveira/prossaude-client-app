@@ -1,22 +1,56 @@
+("use client");
 import { AvPacListDlgProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
-import { useEffect, useRef, useState } from "react";
-import { nullishDlg, nullishTab } from "@/lib/global/declarations/types";
-import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
-import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
-import { equalizeTabCells, isClickOutside } from "@/lib/global/gStyleScript";
 import { ErrorBoundary } from "react-error-boundary";
+import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
+import { isClickOutside } from "@/lib/global/gStyleScript";
+import { nullishDlg } from "@/lib/global/declarations/types";
+import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
+import { useEffect, useRef, useState } from "react";
 import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
 import PacList from "./PacList";
 
 export default function AvPacListDlg({
-  onClick,
-  shouldDisplayPacList,
+  dispatch,
+  state,
   shouldShowAlocBtn,
   userClass,
 }: AvPacListDlgProps): JSX.Element {
-  const [shouldDisplayRowData, setDisplayRowData] = useState(false);
+  const [shouldDisplayRowData, setDisplayRowData] = useState<boolean>(false);
   const dialogRef = useRef<nullishDlg>(null);
-  const tabPacRef = useRef<nullishTab>(null);
+  //push em history
+  useEffect(() => {
+    !/av-pac=open/gi.test(location.search) &&
+      history.pushState(
+        {},
+        "",
+        `${location.origin}${location.pathname}${location.search}&av-pac=open`
+      );
+    setTimeout(() => {
+      history.pushState(
+        {},
+        "",
+        `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#")
+      );
+    }, 300);
+    return () => {
+      history.pushState(
+        {},
+        "",
+        `${location.origin}${location.pathname}${location.search}`.replaceAll(
+          "&av-pac=open",
+          ""
+        )
+      );
+      setTimeout(() => {
+        history.pushState(
+          {},
+          "",
+          `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#")
+        );
+      }, 300);
+    };
+  }, []);
+  //listeners para dlg
   useEffect(() => {
     if (dialogRef?.current instanceof HTMLDialogElement) {
       dialogRef.current.showModal();
@@ -25,14 +59,10 @@ export default function AvPacListDlg({
         dialogRef.current,
       ]);
       const handleKeyDown = (press: KeyboardEvent) => {
-        if (press.key === "Escape") {
-          setDisplayRowData(!shouldDisplayRowData);
-        }
+        press.key === "Escape" && setDisplayRowData(!shouldDisplayRowData);
       };
-      document.addEventListener("keydown", handleKeyDown);
-      return () => {
-        document.removeEventListener("keydown", handleKeyDown);
-      };
+      addEventListener("keydown", handleKeyDown);
+      return () => removeEventListener("keydown", handleKeyDown);
     } else
       elementNotFound(
         dialogRef.current,
@@ -40,35 +70,24 @@ export default function AvPacListDlg({
         extLine(new Error())
       );
   }, [dialogRef]);
-  useEffect(() => {
-    if (tabPacRef?.current instanceof HTMLTableElement)
-      equalizeTabCells(tabPacRef.current);
-    else
-      elementNotFound(
-        tabPacRef.current,
-        `tabPacRef id ${
-          (tabPacRef?.current as any)?.id || "UNIDENTIFIED"
-        } in useEffect() for tableRef`,
-        extLine(new Error())
-      );
-  }, [dialogRef, tabPacRef]);
   return (
     <>
-      {shouldDisplayPacList && (
+      {state && (
         <dialog
           className="modal-content-stk2"
+          id="avPacListDlg"
           ref={dialogRef}
           onClick={ev => {
             isClickOutside(ev, ev.currentTarget).some(
               coord => coord === true
-            ) && onClick(shouldDisplayPacList);
+            ) && dispatch(!state);
           }}
         >
           <ErrorBoundary
             FallbackComponent={() => (
               <ErrorFallbackDlg
                 renderError={new Error(`Erro carregando a janela modal!`)}
-                onClick={() => onClick(shouldDisplayPacList)}
+                onClick={() => dispatch(state)}
               />
             )}
           >
@@ -78,16 +97,16 @@ export default function AvPacListDlg({
               </h2>
               <button
                 className="btn btn-close forceInvert"
-                onClick={() => onClick(shouldDisplayPacList)}
+                onClick={() => dispatch(!state)}
               ></button>
             </section>
             <PacList
               setDisplayRowData={setDisplayRowData}
               shouldDisplayRowData={shouldDisplayRowData}
-              shouldDisplayPacList={shouldDisplayPacList}
-              onClick={onClick}
               shouldShowAlocBtn={shouldShowAlocBtn}
               userClass={userClass}
+              dispatch={dispatch}
+              state={state}
             />
           </ErrorBoundary>
         </dialog>

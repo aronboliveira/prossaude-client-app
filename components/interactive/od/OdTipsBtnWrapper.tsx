@@ -1,13 +1,14 @@
-"use client";
-
-import GenericErrorComponent from "../../error/GenericErrorComponent";
-import TipsBtn from "../def/TipsBtn";
-import OdTips from "./OdTips";
-import { useState } from "react";
+("use client");
 import { ErrorBoundary } from "react-error-boundary";
-
+import { useState, useEffect } from "react";
+import GenericErrorComponent from "../../error/GenericErrorComponent";
+import OdTips from "./OdTips";
+import TipsBtn from "../def/TipsBtn";
 export default function OdTipsBtnWrapper(): JSX.Element {
   const [shouldShowTips, setTips] = useState<boolean>(false);
+  useEffect(() => {
+    /tips=open/gi.test(location.search) && setTips(true);
+  }, []);
   return (
     <ErrorBoundary
       FallbackComponent={() => (

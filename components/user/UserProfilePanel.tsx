@@ -1,9 +1,9 @@
+import { NextRouter } from "next/router";
+import { UserProfile } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
-import { UserProfile } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import { useEffect, useRef, useState } from "react";
 import UserProfileDropdown from "./UserProfileDropdown";
-import { NextRouter } from "next/router";
 
 export default function UserProfilePanel({
   user,

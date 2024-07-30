@@ -1,13 +1,13 @@
+import { ErrorBoundary } from "react-error-boundary";
+import { ErrorFallbackMainPanelProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
+import { nullishSel } from "@/lib/global/declarations/types";
+import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useEffect, useRef, useState } from "react";
+import MainFormPanel from "../mainPanel/MainFormPanel";
 import {
   mainPanelVariables,
   resetErrorBoundary,
 } from "../mainPanel/mainPanelVariables";
-import { ErrorFallbackMainPanelProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
-import { nullishSel } from "@/lib/global/declarations/types";
-import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
-import { ErrorBoundary } from "react-error-boundary";
-import MainFormPanel from "../mainPanel/MainFormPanel";
 
 export default function ErrorFallbackMainPanel(
   props: ErrorFallbackMainPanelProps

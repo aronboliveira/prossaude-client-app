@@ -1,7 +1,7 @@
-//nesse file estão presentes principalmente as funções relacionadas à exigência de modelo textual e de visualização
 import { cursorCheckTimer } from "./handlers/gHandlers";
 import { fadeElement } from "./gStyleScript";
 import type { entryEl, textEl, targStr, targEl } from "./declarations/types";
+//nesse file estão presentes principalmente as funções relacionadas à exigência de modelo textual e de visualização
 import {
   extLine,
   elementNotFound,
@@ -1313,5 +1313,33 @@ export function dateISOtoBRL(isoDate: string): string {
   } catch (e) {
     console.error(`Error executing dateISOtoBRL:\n${(e as Error).message}`);
     return "00/00/0000";
+  }
+}
+
+export function camelToKebab(str: string): string {
+  const iniStr = str;
+  try {
+    return str
+      .split(/(?=[A-Z])/g)
+      .join("-")
+      .toLowerCase();
+  } catch (e) {
+    console.error(`Error executing camelToKebab:\n${(e as Error).message}`);
+    return iniStr;
+  }
+}
+
+export function kebabToCamel(str: string): string {
+  const iniStr = str;
+  try {
+    return str
+      .split("-")
+      .map((fragment, i) =>
+        i === 0 ? fragment : textTransformPascal(fragment)
+      )
+      .join("");
+  } catch (e) {
+    console.error(`Error executing camelToKebab:\n${(e as Error).message}`);
+    return iniStr;
   }
 }

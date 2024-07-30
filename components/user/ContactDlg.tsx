@@ -1,9 +1,9 @@
-import { nullishBtn, nullishDlg } from "@/lib/global/declarations/types";
-import { isClickOutside } from "@/lib/global/gStyleScript";
-import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
-import { validateForm, syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { ContactDlgProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
+import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
+import { isClickOutside } from "@/lib/global/gStyleScript";
+import { nullishBtn, nullishDlg } from "@/lib/global/declarations/types";
 import { useEffect, useRef } from "react";
+import { validateForm, syncAriaStates } from "@/lib/global/handlers/gHandlers";
 
 export default function ContactDlg({
   setContact,

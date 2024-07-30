@@ -1,12 +1,12 @@
-import { nullishDlg } from "@/lib/global/declarations/types";
-import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
-import { ResetDlgProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
-import { useEffect, useRef } from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import MainFormPanel from "../mainPanel/MainFormPanel";
-import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
-import { panelRoots } from "../panelForms/defs/client/SelectPanel";
+import { ResetDlgProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import { createRoot } from "react-dom/client";
+import { nullishDlg } from "@/lib/global/declarations/types";
+import { panelRoots } from "../panelForms/defs/client/SelectPanel";
+import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
+import { useEffect, useRef } from "react";
+import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
+import MainFormPanel from "../mainPanel/MainFormPanel";
 
 export default function ResetDlg({
   root,

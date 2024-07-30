@@ -1,26 +1,56 @@
+("use client");
 import { AvStudListDlgProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
-import { useEffect, useRef, useCallback, MutableRefObject } from "react";
-import { nullishBtn, nullishDlg } from "@/lib/global/declarations/types";
-import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
-import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
-import { equalizeTabCells, isClickOutside } from "@/lib/global/gStyleScript";
 import { ErrorBoundary } from "react-error-boundary";
+import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
+import { isClickOutside } from "@/lib/global/gStyleScript";
+import { nullishDlg } from "@/lib/global/declarations/types";
+import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
+import { useEffect, useRef } from "react";
 import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
-import {
-  addListenerAlocation,
-  checkLocalIntervs,
-  filterTabMembers,
-} from "@/lib/locals/panelPage/handlers/consHandlerList";
-import { strikeEntries } from "@/lib/locals/panelPage/consStyleScript";
 import StudList from "./StudList";
 
 export default function AvStudListDlg({
-  onClose,
   forwardedRef,
-  shouldDisplayStudList = false,
+  dispatch,
+  state = false,
   userClass = "estudante",
 }: AvStudListDlgProps): JSX.Element {
   const dialogRef = useRef<nullishDlg>(null);
+  const sectTabRef = useRef<HTMLElement | null>(null);
+  //push em history
+  useEffect(() => {
+    !/av-stud=open/gi.test(location.search) &&
+      history.pushState(
+        {},
+        "",
+        `${location.origin}${location.pathname}${location.search}&av-stud=open`
+      );
+    setTimeout(() => {
+      history.pushState(
+        {},
+        "",
+        `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#")
+      );
+    }, 300);
+    return () => {
+      history.pushState(
+        {},
+        "",
+        `${location.origin}${location.pathname}${location.search}`.replaceAll(
+          "&av-stud=open",
+          ""
+        )
+      );
+      setTimeout(() => {
+        history.pushState(
+          {},
+          "",
+          `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#")
+        );
+      }, 300);
+    };
+  }, []);
+  //listeners de dialog
   useEffect(() => {
     if (dialogRef?.current instanceof HTMLDialogElement) {
       dialogRef.current.showModal();
@@ -28,6 +58,11 @@ export default function AvStudListDlg({
         ...dialogRef.current!.querySelectorAll("*"),
         dialogRef.current,
       ]);
+      const handleKeyDown = (press: KeyboardEvent) => {
+        press.key === "Escape" && dispatch(state);
+      };
+      addEventListener("keydown", handleKeyDown);
+      return () => removeEventListener("keydown", handleKeyDown);
     } else
       elementNotFound(
         dialogRef.current,
@@ -35,94 +70,9 @@ export default function AvStudListDlg({
         extLine(new Error())
       );
   }, [forwardedRef, dialogRef]);
-  useEffect(() => {
-    const tabStudRef = dialogRef.current?.querySelector("table");
-    if (tabStudRef instanceof HTMLTableElement) {
-      equalizeTabCells(tabStudRef);
-      const typeConsSel = forwardedRef.current?.querySelector("#typeConsSel");
-      if (typeConsSel instanceof HTMLSelectElement) {
-        const [selectedOp] = Array.from(
-          typeConsSel.querySelectorAll("option")
-        ).filter(opt => opt.selected === true);
-        if (selectedOp instanceof HTMLOptionElement) {
-          const relOptgrp = selectedOp.closest("optgroup");
-          if (
-            relOptgrp instanceof HTMLOptGroupElement &&
-            relOptgrp.label !== ""
-          )
-            filterTabMembers(tabStudRef, relOptgrp.label.toLowerCase().trim());
-        } else
-          elementNotFound(
-            selectedOp,
-            `<option> for getting type of appointment for ${
-              tabStudRef.id || "UNIDENTIFIED"
-            }`,
-            extLine(new Error())
-          );
-      } else
-        elementNotFound(
-          typeConsSel,
-          `<select> for getting type of appointment for ${
-            tabStudRef.id || "UNIDENTIFIED"
-          }`,
-          extLine(new Error())
-        );
-    } else
-      elementNotFound(
-        tabStudRef,
-        `tabStudRef id ${
-          (tabStudRef as any)?.id || "UNIDENTIFIED"
-        } in useEffect() for tableRef`,
-        extLine(new Error())
-      );
-  }, [dialogRef]);
-  useEffect(() => {
-    const alocBtnRef = document.getElementById("btnAlocStud-row2");
-    alocBtnRef instanceof HTMLButtonElement &&
-      gatherStudData(alocBtnRef, dialogRef);
-  }, [dialogRef]);
-  const gatherStudData = useCallback(
-    (alocBtnRef: nullishBtn, dialogRef: MutableRefObject<nullishDlg>) => {
-      addListenerAlocation(
-        alocBtnRef,
-        dialogRef.current,
-        forwardedRef.current!,
-        "Stud",
-        shouldDisplayStudList,
-        onClose,
-        userClass
-      );
-    },
-    [dialogRef, forwardedRef]
-  );
-  const sectTabRef = useRef<HTMLElement | null>(null);
-  useEffect(() => {
-    if (dialogRef.current instanceof HTMLElement) {
-      const handleKeyDown = (press: KeyboardEvent) => {
-        if (press.key === "Escape") {
-          onClose(shouldDisplayStudList);
-        }
-      };
-      document.addEventListener("keydown", handleKeyDown);
-      return () => {
-        document.removeEventListener("keydown", handleKeyDown);
-      };
-    }
-  }, [dialogRef]);
-  useEffect(() => {
-    if (sectTabRef?.current instanceof HTMLElement) {
-      checkLocalIntervs(sectTabRef.current);
-      strikeEntries(sectTabRef.current);
-    } else
-      elementNotFound(
-        sectTabRef.current,
-        "sectTabRef in useEffect()",
-        extLine(new Error())
-      );
-  }, [sectTabRef]);
   return (
     <>
-      {shouldDisplayStudList && (
+      {state && (
         <dialog
           className="modal-content-stk2"
           id="avStudListDlg"
@@ -130,14 +80,14 @@ export default function AvStudListDlg({
           onClick={ev => {
             isClickOutside(ev, ev.currentTarget).some(
               coord => coord === true
-            ) && onClose(shouldDisplayStudList);
+            ) && dispatch(!state);
           }}
         >
           <ErrorBoundary
             FallbackComponent={() => (
               <ErrorFallbackDlg
                 renderError={new Error(`Erro carregando a janela modal!`)}
-                onClick={() => onClose(shouldDisplayStudList)}
+                onClick={() => dispatch(!state)}
               />
             )}
           >
@@ -147,11 +97,16 @@ export default function AvStudListDlg({
               </h2>
               <button
                 className="btn btn-close forceInvert"
-                onClick={() => onClose(shouldDisplayStudList)}
+                onClick={() => dispatch(!state)}
               ></button>
             </section>
             <section className="form-padded" id="sectStudsTab" ref={sectTabRef}>
-              <StudList userClass={userClass} />
+              <StudList
+                userClass={userClass}
+                mainDlgRef={forwardedRef}
+                state={state}
+                dispatch={dispatch}
+              />
             </section>
           </ErrorBoundary>
         </dialog>

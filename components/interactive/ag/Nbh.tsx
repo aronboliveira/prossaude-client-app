@@ -1,7 +1,5 @@
 "use client";
-
 import { handleEventReq } from "@/lib/global/handlers/gHandlers";
-
 export default function Nbh(): JSX.Element {
   return (
     <input

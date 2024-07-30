@@ -1,4 +1,5 @@
 import { checkPasswordPattern } from "../../global/gModel";
+import { targEl } from "../../global/declarations/types";
 import {
   fillCustomValidityWarn,
   highlightChange,
@@ -8,7 +9,6 @@ import {
   elementNotFound,
   inputNotFound,
 } from "../../global/handlers/errorHandler";
-import { targEl } from "../../global/declarations/types";
 
 export function addListenerShowPw(): targEl {
   const spanShowPw = document.getElementById("spanShowPw");

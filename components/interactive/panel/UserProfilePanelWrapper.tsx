@@ -1,15 +1,13 @@
 "use client";
-
+import { AppRootContext } from "@/pages/_app";
 import { ErrorBoundary } from "react-error-boundary";
-import { useEffect, useContext } from "react";
+import { User } from "@/lib/global/declarations/classes";
 import { createRoot } from "react-dom/client";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
-import { User } from "@/lib/global/declarations/classes";
-import { AppRootContext } from "@/pages/_app";
-import UserProfilePanel from "../../user/UserProfilePanel";
-import GenericErrorComponent from "../../error/GenericErrorComponent";
+import { useEffect, useContext } from "react";
 import { useRouter } from "next/router";
-
+import GenericErrorComponent from "../../error/GenericErrorComponent";
+import UserProfilePanel from "../../user/UserProfilePanel";
 export default function UserProfilePanelWrapper({
   user,
 }: {

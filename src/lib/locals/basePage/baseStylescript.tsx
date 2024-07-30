@@ -1,9 +1,9 @@
+import { parseNotNaN } from "../../global/gModel";
+import { targEl } from "../../global/declarations/types";
 import {
   elementNotPopulated,
   extLine,
 } from "../../global/handlers/errorHandler";
-import { parseNotNaN } from "../../global/gModel";
-import { targEl } from "../../global/declarations/types";
 
 export function equalizeParagraphs(textEls: Array<targEl>): void {
   if (

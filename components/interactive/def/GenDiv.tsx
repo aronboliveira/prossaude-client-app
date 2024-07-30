@@ -1,16 +1,13 @@
 "use client";
-
 import { fluxGen } from "@/lib/global/gModel";
+import { person } from "@/pages/edfis";
+import { useEffect } from "react";
 import {
   elementNotFound,
   extLine,
   inputNotFound,
 } from "@/lib/global/handlers/errorHandler";
-import { person } from "@/pages/edfis";
-import { useEffect } from "react";
-
 let agGenElement = undefined;
-
 export default function GenDiv({
   flux = false,
 }: {

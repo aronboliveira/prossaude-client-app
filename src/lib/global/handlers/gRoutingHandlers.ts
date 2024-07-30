@@ -1,5 +1,5 @@
-import { pageCases, pageStyleCases } from "../declarations/types";
 import { elementNotFound, extLine } from "./errorHandler";
+import { pageCases, pageStyleCases } from "../declarations/types";
 
 export function handleLinkChanges(
   componentCase: pageCases,

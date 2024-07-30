@@ -1,7 +1,8 @@
 "use client";
-
 import { HrRowProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import TdBSchedTab from "./TdBSchedTab";
+
+
 
 export default function TrBSchedTab({
   userClass,

@@ -1,13 +1,14 @@
-"use client";
-
+("use client");
+import { ErrorBoundary } from "react-error-boundary";
+import { useState, useEffect } from "react";
+import ENTips from "./ENTips";
 import GenericErrorComponent from "../../error/GenericErrorComponent";
 import TipsBtn from "../def/TipsBtn";
-import { useState } from "react";
-import { ErrorBoundary } from "react-error-boundary";
-import ENTips from "./ENTips";
-
 export default function ENTipsBtnWrapper(): JSX.Element {
   const [shouldShowTips, setTips] = useState<boolean>(false);
+  useEffect(() => {
+    /tips=open/gi.test(location.search) && setTips(true);
+  }, []);
   return (
     <ErrorBoundary
       FallbackComponent={() => (

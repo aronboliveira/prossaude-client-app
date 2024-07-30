@@ -1,23 +1,22 @@
+import { ErrorBoundary } from "react-error-boundary";
+import { Person } from "@/lib/global/declarations/classes";
+import { person, tabProps } from "@/pages/edfis";
 import { validTabLabs } from "@/lib/global/declarations/types";
+import Col from "./tabs/Col";
+import GenericErrorComponent from "../../error/GenericErrorComponent";
+import Td from "./tabs/Td";
+import Th from "./tabs/Th";
+import WatcherTab from "./client/tabs/WatcherTab";
 import {
   elementNotFound,
   extLine,
   typeError,
 } from "@/lib/global/handlers/errorHandler";
-import { person, tabProps } from "@/pages/edfis";
 import {
   createArraysRels,
   getNumCol,
   updatePGC,
 } from "@/lib/locals/edFisNutPage/edFisNutHandler";
-import { Person } from "@/lib/global/declarations/classes";
-import { ErrorBoundary } from "react-error-boundary";
-import Col from "./tabs/Col";
-import Th from "./tabs/Th";
-import WatcherTab from "./client/tabs/WatcherTab";
-import GenericErrorComponent from "../../error/GenericErrorComponent";
-import Td from "./tabs/Td";
-
 export default function TabDCut(): JSX.Element {
   const columns = [1, 2, 3, 4];
   const rows = [
@@ -110,7 +109,6 @@ export default function TabDCut(): JSX.Element {
     </ErrorBoundary>
   );
 }
-
 export const handleSumClick = (ev: React.MouseEvent) => {
   const protocolo = document.getElementById("tabSelectDCutId");
   const rowsDCArray = Array.from(

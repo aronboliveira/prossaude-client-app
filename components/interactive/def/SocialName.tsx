@@ -1,7 +1,5 @@
 "use client";
-
 import { handleCondtReq } from "@/lib/global/handlers/gHandlers";
-
 export default function SocialName(): JSX.Element {
   return (
     <span role="group" className="fsAnamGSpan flexAlItCt col" id="fsAnamGSpan4">

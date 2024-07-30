@@ -1,9 +1,9 @@
+import { UserProfileDropdownProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
-import { UserProfileDropdownProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import { useEffect, useRef, useState } from "react";
-import UserDlg from "./UserDlg";
 import ContactDlg from "./ContactDlg";
+import UserDlg from "./UserDlg";
 import UserPropsDlg from "./UserPropsDlg";
 
 export default function UserProfileDropdown({

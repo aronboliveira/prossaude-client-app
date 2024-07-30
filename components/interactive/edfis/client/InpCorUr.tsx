@@ -1,7 +1,5 @@
 "use client";
-
 import { handleEventReq } from "@/lib/global/handlers/gHandlers";
-
 export default function InpCorUr(): JSX.Element {
   return (
     <input

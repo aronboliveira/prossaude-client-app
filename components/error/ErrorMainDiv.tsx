@@ -1,8 +1,8 @@
-import { nullishArtc } from "@/lib/global/declarations/types";
+import { ErrorBoundary } from "react-error-boundary";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
+import { nullishArtc } from "@/lib/global/declarations/types";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useRef, useEffect } from "react";
-import { ErrorBoundary } from "react-error-boundary";
 import GenericErrorComponent from "./GenericErrorComponent";
 
 export default function ErrorMainDiv(): JSX.Element {

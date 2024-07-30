@@ -1,8 +1,6 @@
 "use client";
-
-import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { callbackTextBodyEl, person } from "@/pages/edfis";
-
+import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 export default function TextBodyType(): JSX.Element {
   return (
     <select

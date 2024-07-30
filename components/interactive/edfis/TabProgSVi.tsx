@@ -1,11 +1,10 @@
-import { validTabLabs } from "@/lib/global/declarations/types";
 import { ErrorBoundary } from "react-error-boundary";
+import { validTabLabs } from "@/lib/global/declarations/types";
 import Col from "./tabs/Col";
-import Th from "./tabs/Th";
-import WatcherTab from "./client/tabs/WatcherTab";
 import GenericErrorComponent from "../../error/GenericErrorComponent";
 import Td from "./tabs/Td";
-
+import Th from "./tabs/Th";
+import WatcherTab from "./client/tabs/WatcherTab";
 export default function TabProgSVi(): JSX.Element {
   const columns = [1, 2, 3, 4];
   const rows = [

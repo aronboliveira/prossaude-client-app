@@ -78,6 +78,8 @@ export type nullishArtc = HTMLElement & {
   tagName: "ARTICLE";
 };
 export type nullishCanvas = HTMLCanvasElement | null;
+export type nullishDl = HTMLDataListElement | null;
+export type nullishOptGrp = HTMLOptGroupElement | null;
 export type rMouseEvent = MouseEvent | React.MouseEvent;
 export type rDragEvent = DragEvent | React.DragEvent;
 export type pageCases = "login" | "base" | "ag" | "ed" | "od" | "panel";
@@ -150,6 +152,8 @@ export type pageStyleCases =
   | "Panel Page Style";
 export type validSchedHours = 18 | 19 | 20 | 21;
 export type userClasses = "coordenador" | "supervisor" | "estudante";
+export type personAbrvClasses = "stud" | "prof" | "pac";
+export type personAbrvUpperClasses = "Stud" | "Prof" | "Pac";
 export type aptTypes =
   | "anamnese"
   | "retorno"
@@ -163,3 +167,10 @@ export type aptTypes =
   | "avaliacao"
   | "recordatorio"
   | "suplementacao";
+export type validAreas =
+  | "Odontologia"
+  | "Educação Física"
+  | "Nutrição"
+  | "Coordenação"
+  | "Psicologia"
+  | "Medicina";

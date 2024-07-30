@@ -1,6 +1,7 @@
-import * as GlobalModel from "./gModel";
-import * as GlobalHandler from "./handlers/gHandlers";
 import { entryEl, targEl, voidVal } from "./declarations/types";
+import { writeFile, utils } from "./xlsx.mjs";
+import * as GlobalHandler from "./handlers/gHandlers";
+import * as GlobalModel from "./gModel";
 import {
   extLine,
   elementNotFound,
@@ -8,7 +9,6 @@ import {
   multipleElementsNotFound,
   elementNotPopulated,
 } from "./handlers/errorHandler";
-import { writeFile, utils } from "./xlsx.mjs";
 
 export function getGlobalEls(
   isAutocorrectOn: boolean = true,

@@ -1,16 +1,15 @@
-"use client";
-
-import { useState, useEffect } from "react";
+("use client");
 import { ErrorBoundary } from "react-error-boundary";
-import PanelTips from "./PanelTips";
-import GenericErrorComponent from "../../error/GenericErrorComponent";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
+import { useState, useEffect } from "react";
+import GenericErrorComponent from "../../error/GenericErrorComponent";
+import PanelTips from "./PanelTips";
 import TipsBtn from "../def/TipsBtn";
-
 export default function TipsBtnWrapper(): JSX.Element {
   const [shouldShowTips, setTips] = useState<boolean>(false);
   useEffect(() => {
     syncAriaStates(document.querySelectorAll("*"));
+    /tips=open/gi.test(location.search) && setTips(true);
   }, []);
   return (
     <ErrorBoundary

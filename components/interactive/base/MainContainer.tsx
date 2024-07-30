@@ -1,19 +1,16 @@
 "use client";
-
-import { useEffect, useContext } from "react";
+import { AppRootContext } from "@/pages/_app";
 import { User } from "@/lib/global/declarations/classes";
 import { createRoot } from "react-dom/client";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { equalizeParagraphs } from "@/lib/locals/basePage/baseStylescript";
 import { expandContent } from "@/lib/global/gStyleScript";
-import { useRouter } from "next/router";
-import { AppRootContext } from "@/pages/_app";
-import { targEl } from "@/lib/global/declarations/types";
 import { parseNotNaN } from "@/lib/global/gModel";
+import { targEl } from "@/lib/global/declarations/types";
+import { useEffect, useContext } from "react";
+import { useRouter } from "next/router";
 import UserProfilePanel from "../../user/UserProfilePanel";
-
 let baseRootUser: targEl;
-
 export default function MainContainer(): JSX.Element {
   const context = useContext(AppRootContext);
   const nextRouter = useRouter();

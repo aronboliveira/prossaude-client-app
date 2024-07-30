@@ -1,7 +1,7 @@
-import { useEffect, useRef } from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import GenericErrorComponent from "../../error/GenericErrorComponent";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
+import { useEffect, useRef } from "react";
+import GenericErrorComponent from "../../error/GenericErrorComponent";
 
 export default function Unauthorized(): JSX.Element {
   const mainRef = useRef(null);

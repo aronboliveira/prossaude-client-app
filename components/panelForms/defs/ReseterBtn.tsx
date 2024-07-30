@@ -1,12 +1,12 @@
-import { nullishBtn } from "@/lib/global/declarations/types";
-import { ReseterBtnProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
-import { useEffect, useRef, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import GenericErrorComponent from "../../error/GenericErrorComponent";
-import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
-import ResetDlg from "../../alerts/ResetDlg";
-import { scheduleReset } from "../panelFormsData";
+import { ReseterBtnProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
+import { nullishBtn } from "@/lib/global/declarations/types";
 import { panelRoots } from "./client/SelectPanel";
+import { scheduleReset } from "../panelFormsData";
+import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
+import { useEffect, useRef, useState } from "react";
+import GenericErrorComponent from "../../error/GenericErrorComponent";
+import ResetDlg from "../../alerts/ResetDlg";
 
 export default function ReseterBtn({
   renderForm,

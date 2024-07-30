@@ -1,7 +1,5 @@
 "use client";
-
 import { handleCondtReq } from "@/lib/global/handlers/gHandlers";
-
 export default function InpDiur(): JSX.Element {
   return (
     <input

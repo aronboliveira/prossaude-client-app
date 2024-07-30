@@ -1,8 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import { ErrorBoundary } from "react-error-boundary";
+import { GlobalFormProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { nullishBtn } from "@/lib/global/declarations/types";
-import { GlobalFormProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
-import { ErrorBoundary } from "react-error-boundary";
+import { useEffect, useRef, useState } from "react";
 import ExcludeConsDlg from "../../alerts/ExcludeConsDlg";
 import GenericErrorComponent from "../../error/GenericErrorComponent";
 

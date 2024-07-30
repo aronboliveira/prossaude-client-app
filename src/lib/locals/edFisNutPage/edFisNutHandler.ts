@@ -1,3 +1,7 @@
+import { Person } from "@/lib/global/declarations/classes";
+import { evaluatePGCDecay } from "./edFisNutModel";
+import { formatValue } from "./edFisNutController";
+import { highlightChange, fadeElement } from "../../global/gStyleScript";
 //nesse file estão presentes principalmente as funções de manipulação dinâmica de texto e layout
 import {
   parseNotNaN,
@@ -10,7 +14,6 @@ import {
   syncAriaStates,
   updateSimpleProperty,
 } from "../../global/handlers/gHandlers";
-import { highlightChange, fadeElement } from "../../global/gStyleScript";
 import {
   extLine,
   inputNotFound,
@@ -31,9 +34,6 @@ import {
   textEl,
   looseNum,
 } from "../../global/declarations/types";
-import { formatValue } from "./edFisNutController";
-import { evaluatePGCDecay } from "./edFisNutModel";
-import { Person } from "@/lib/global/declarations/classes";
 
 enum EnumTargInpTypes {
   "weight",

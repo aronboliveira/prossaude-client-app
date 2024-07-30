@@ -1,8 +1,6 @@
 "use client";
-
 import { formatCPF } from "@/lib/global/gModel";
 import { handleCondtReq } from "@/lib/global/handlers/gHandlers";
-
 export default function CPFElement(): JSX.Element {
   return (
     <input

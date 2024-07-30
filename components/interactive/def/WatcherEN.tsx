@@ -1,12 +1,14 @@
 "use client";
-
 import { entryEl } from "@/lib/global/declarations/types";
+import { handleLinkChanges } from "@/lib/global/handlers/gRoutingHandlers";
+import { parseNotNaN } from "@/lib/global/gModel";
+import { person, tabProps } from "@/pages/edfis";
+import { useEffect, useState } from "react";
 import {
   addListenerExportBtn,
   getGlobalEls,
   watchLabels,
 } from "@/lib/global/gController";
-import { parseNotNaN } from "@/lib/global/gModel";
 import {
   clearPhDates,
   dinamicGridAdjust,
@@ -22,14 +24,10 @@ import {
   handleCondtReq,
   syncAriaStates,
 } from "@/lib/global/handlers/gHandlers";
-import { handleLinkChanges } from "@/lib/global/handlers/gRoutingHandlers";
 import {
   addListenerInnerTabs,
   validateTitlesForTargs,
 } from "@/lib/locals/edFisNutPage/edFisNutController";
-import { person, tabProps } from "@/pages/edfis";
-import { useEffect, useState } from "react";
-
 export default function WatcherEN(): JSX.Element {
   const [mounted, setMounted] = useState<boolean>(false);
   useEffect(() => {

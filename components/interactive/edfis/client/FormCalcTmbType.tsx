@@ -1,7 +1,5 @@
 "use client";
-
 import { callbackAtvLvlElementNaf, person, tabProps } from "@/pages/edfis";
-
 export default function FormCalcTmbType(): JSX.Element {
   return (
     <select

@@ -1,17 +1,15 @@
 "use client";
-
+import { highlightChange } from "@/lib/global/gStyleScript";
 import { nullishLab } from "@/lib/global/declarations/types";
 import { parseNotNaN } from "@/lib/global/gModel";
-import { highlightChange } from "@/lib/global/gStyleScript";
+import { switchNumConsTitles } from "@/lib/locals/edFisNutPage/edFisNutHandler";
+import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
+import { useEffect, useRef } from "react";
 import {
   elementNotFound,
   elementNotPopulated,
   extLine,
 } from "@/lib/global/handlers/errorHandler";
-import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
-import { switchNumConsTitles } from "@/lib/locals/edFisNutPage/edFisNutHandler";
-import { useEffect, useRef } from "react";
-
 export default function TrioReadNumCons(): JSX.Element {
   const mainRef = useRef<nullishLab>(null);
   useEffect(() => {

@@ -1,3 +1,4 @@
+import { NextRouter } from "next/router";
 import {
   rMouseEvent,
   targEl,
@@ -9,7 +10,6 @@ import {
   ProfInfo,
   StudInfo,
 } from "@/lib/locals/panelPage/declarations/interfacesCons";
-import { NextRouter } from "next/router";
 
 export async function handleLogin(
   ev: rMouseEvent,
@@ -94,7 +94,8 @@ export async function handleSubmit(
         apiRoute === "panel" ||
         apiRoute === "patients" ||
         apiRoute === "profs" ||
-        apiRoute === "studs"
+        apiRoute === "studs" ||
+        apiRoute === "schedule"
       )
     )
       throw new Error(`Invalidating route for API argumented to handler`);
@@ -408,11 +409,7 @@ export async function handleFetch(
       const data = await res.json();
       console.log(`Data fetched:\n${data}`);
       return JSON.parse(data);
-    } else {
-      console.log("Handled fetch test");
-      console.log(arrJSONResTest);
-      return arrJSONResTest;
-    }
+    } else return arrJSONResTest;
   } catch (e) {
     console.error(`Error executing handleFetch:\n${(e as Error).message}`);
     return arrJSONResTest;

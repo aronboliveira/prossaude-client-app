@@ -1,3 +1,12 @@
+import { MutableRefObject } from "react";
+import {
+  nullishDlg,
+  personAbrvClasses,
+  personAbrvUpperClasses,
+  targEl,
+} from "../../../global/declarations/types";
+import { parseNotNaN } from "../../../global/gModel";
+import { switchBtnBS } from "../../../global/gStyleScript";
 import {
   multipleElementsNotFound,
   extLine,
@@ -5,10 +14,6 @@ import {
   elementNotFound,
   stringError,
 } from "../../../global/handlers/errorHandler";
-import { nullishDlg, targEl } from "../../../global/declarations/types";
-import { switchBtnBS } from "../../../global/gStyleScript";
-import { parseNotNaN } from "../../../global/gModel";
-import { MutableRefObject } from "react";
 
 //nesse arquivo estão as funções para handling de casos dos modais de listas tabeladas
 
@@ -66,7 +71,7 @@ export function transferDataAloc(
   btn: targEl,
   mainAncestral: HTMLElement,
   ancestral: Exclude<HTMLElement, HTMLTableElement>,
-  pattern: string = "stud"
+  pattern: personAbrvClasses = "stud"
 ): boolean {
   if (btn instanceof HTMLButtonElement) {
     //alocação ocorre aqui
@@ -141,15 +146,50 @@ export function transferDataAloc(
         .filter(entry => !/,/g.test(entry[0]))
         .map(entry => {
           if (/\+/g.test(entry[1])) entry[1].replace("+", "");
-          if (/status/gi.test(entry[0]))
-            entry[1]
-              .replaceAll(" ", "")
-              .replaceAll(/^em/gi, "")
-              .replaceAll(/[\-—–]/g, "");
+          if (/status/gi.test(entry[0]) && typeof entry[1] === "string") {
+            if (/emerg[eê]ncia/gi.test(entry[1]))
+              (entry[1] as string) = "emergência";
+            else if (/avalia[çc][aã]o/gi.test(entry[1]))
+              (entry[1] as string) = "avaliacao";
+            else if (/tratamento/gi.test(entry[1]))
+              (entry[1] as string) = "tratamento";
+            else if (/alta/gi.test(entry[1])) {
+              if (
+                /odont/gi.test(entry[1]) &&
+                /educa[cç][aã]o/gi.test(entry[1]) &&
+                /nutri[cç][aã]o/gi.test(entry[1])
+              )
+                (entry[1] as string) = "altaOdontologiaEducacaoFisicaNutricao";
+              else if (
+                /odont/gi.test(entry[1]) &&
+                /educa[cç][aã]o/gi.test(entry[1])
+              ) {
+                (entry[1] as string) = "altaOdontologiaEducaoFisica";
+              } else if (
+                /educa[cç][aã]o/gi.test(entry[1]) &&
+                /nutri[cç][aã]o/gi.test(entry[1])
+              ) {
+                (entry[1] as string) = "altaEducaoFisicaNutricao";
+              } else if (
+                /odont/gi.test(entry[1]) &&
+                /nutri[cç][aã]o/gi.test(entry[1])
+              ) {
+                (entry[1] as string) = "altaOdontologiaNutricao";
+              } else if (/odont/gi.test(entry[1])) {
+                (entry[1] as string) = "altaOdontologia";
+              } else if (/educa[cç][aã]o/gi.test(entry[1])) {
+                (entry[1] as string) = "altaEducacaoFisica";
+              } else if (/nutri[cç][aã]o/gi.test(entry[1])) {
+                (entry[1] as string) = "altaNutricao";
+              }
+            }
+          }
           return entry;
         });
       const outpData: { [key: string]: Array<string[]> } =
         Object.fromEntries(arrFinalData);
+      console.log("OUTPDATA");
+      console.log(outpData);
       const allInps = [
         ...ancestral!.querySelectorAll("input"),
         ...ancestral!.querySelectorAll("textarea"),
@@ -177,60 +217,69 @@ export function transferDataAloc(
           .slice(0, 4)}`;
         const matchedInps = [
           //nome
-          ancestral!.querySelector(`input[data-title*=${patternBefore}]`) ||
+          ancestral!.querySelector(`input[data-aloc^="name-${pattern}"]`) ||
+            ancestral!.querySelector(`input[data-title*=${patternBefore}]`) ||
             ancestral!.querySelector(`select[data-title*=${patternBefore}]`) ||
             ancestral!.querySelector(`input[data-title*=${patternAfter}]`) ||
             ancestral!.querySelector(`select[data-title*=${patternAfter}]`),
           //cpf
-          ancestral!.querySelector(
-            `input[id*=${patternBefore.replace("cpf", "CPF")}]`
-          ) ||
+          ancestral!.querySelector(`input[data-aloc*="cpf-${pattern}"]`) ||
+            ancestral!.querySelector(
+              `input[id*=${patternBefore.replace("cpf", "CPF")}]`
+            ) ||
             ancestral!.querySelector(
               `select[id*=${patternBefore.replace("cpf", "CPF")}]`
             ) ||
             ancestral!.querySelector(
               `input[id*=${patternAfter.replace("cpf", "CPF")}] 
-                `
+               `
             ),
-          ancestral!.querySelector(
-            `input[data-title*="Nacional ${pattern
-              .slice(0, 1)
-              .toUpperCase()}${pattern.slice(1, pattern.length)}"]`
-          ) ||
+          //nacional
+          ancestral!.querySelector(`input[data-aloc*="nac-${pattern}"]`) ||
+            ancestral!.querySelector(
+              `input[data-title*="Nacional ${pattern
+                .slice(0, 1)
+                .toUpperCase()}${pattern.slice(1, pattern.length)}"]`
+            ) ||
             ancestral!.querySelector(
               `input[id*="nac${pattern
                 .slice(0, 1)
                 .toUpperCase()}${pattern.slice(1, pattern.length)}"]`
             ),
-          ancestral!.querySelector(
-            `input[data-title*="Tel ${pattern
-              .slice(0, 1)
-              .toUpperCase()}${pattern.slice(1, pattern.length)}"]`
-          ),
-          ancestral!.querySelector(
-            `input[data-title*="DDD ${pattern
-              .slice(0, 1)
-              .toUpperCase()}${pattern.slice(1, pattern.length)}"]`
-          ),
-          ancestral!.querySelector(
-            `input[id*="email-${pattern
-              .slice(0, 1)
-              .toUpperCase()}${pattern.slice(1, pattern.length)}"]`
-          ) ||
+          //tel
+          ancestral!.querySelector(`input[data-aloc*="tel-${pattern}"]`) ||
+            ancestral!.querySelector(
+              `input[data-title*="Tel ${pattern
+                .slice(0, 1)
+                .toUpperCase()}${pattern.slice(1, pattern.length)}"]`
+            ),
+          //ddd
+          ancestral!.querySelector(`input[data-aloc*="ddd-${pattern}"]`) ||
+            ancestral!.querySelector(
+              `input[data-title*="DDD ${pattern
+                .slice(0, 1)
+                .toUpperCase()}${pattern.slice(1, pattern.length)}"]`
+            ),
+          //email
+          ancestral!.querySelector(`input[data-aloc*="email-${pattern}"]`) ||
+            ancestral!.querySelector(
+              `input[id*="email-${pattern
+                .slice(0, 1)
+                .toUpperCase()}${pattern.slice(1, pattern.length)}"]`
+            ) ||
             ancestral!.querySelector(
               `input[data-title*="Email ${pattern
                 .slice(0, 1)
                 .toUpperCase()}${pattern.slice(1, pattern.length)}"]`
             ),
-
-          //
         ];
         if (pattern === "stud") {
           //dre
           matchedInps.push(
-            ancestral!.querySelector(
-              `input[id*=${patternBefore.replace("dre", "DRE")}] `
-            ) ||
+            ancestral!.querySelector(`input[data-aloc*="dre-${pattern}"]`) ||
+              ancestral!.querySelector(
+                `input[id*=${patternBefore.replace("dre", "DRE")}] `
+              ) ||
               ancestral!.querySelector(
                 `select[id*=${patternBefore.replace("dre", "DRE")}]`
               ) ||
@@ -243,16 +292,41 @@ export function transferDataAloc(
           );
         }
         if (pattern === "pac") {
-          //nome e sobrenome
           matchedInps.push(
-            ancestral!.querySelector(`input[id*=${patternBefore}Name] `) ||
+            //primeiro nome
+            ancestral!.querySelector(
+              `input[data-aloc*="firstname-${pattern}"]`
+            ) ||
+              ancestral!.querySelector(
+                `input[data-aloc*="first-name-${pattern}"]`
+              ) ||
+              ancestral!.querySelector(`input[id*=${patternBefore}Name]`) ||
               ancestral!.querySelector(`input[id*=name${patternAfter}]`) ||
               ancestral!.querySelector(`input[data-title*=Primeiro]`) ||
               ancestral!.querySelector(`input[data-title*=Sobrenome]`),
-            ancestral!.querySelector(`input[id*=family]`) ||
-              ancestral!.querySelector(`input[data-title*=Sobrenome]`)
+            //sobrenome
+            ancestral!.querySelector(
+              `input[data-aloc*="familyname-${pattern}"]`
+            ) ||
+              ancestral!.querySelector(
+                `input[data-aloc*="family-name-${pattern}"]`
+              ) ||
+              ancestral!.querySelector(`input[id*=family]`) ||
+              ancestral!.querySelector(`input[data-title*=Sobrenome]`),
+            //status
+            ancestral!.querySelector(
+              `select[data-aloc*="status-${pattern}"]`
+            ) ||
+              ancestral!.querySelector(`select[id*=status]`) ||
+              ancestral!.querySelector(`select[data-title*=Status]`) ||
+              ancestral!.querySelector(`input[data-aloc*="status"]`) ||
+              ancestral!.querySelector(`input[id*=status]`) ||
+              ancestral!.querySelector(`input[data-title*=Status]`)
           );
         }
+        console.log(
+          matchedInps.map(match => match?.id || match?.tagName || "null")
+        );
         matchedInps.forEach(matchedInp => {
           if (matchedInp) {
             Object.keys(outpData).forEach(key => {
@@ -276,9 +350,20 @@ export function transferDataAloc(
                     parseNotNaN(outpData[`${key}`].replace("+", ""));
                 }
                 //
-                else {
+                else if (
+                  matchedInp instanceof HTMLInputElement ||
+                  matchedInp instanceof HTMLSelectElement ||
+                  matchedInp instanceof HTMLTextAreaElement
+                ) {
                   // @ts-ignore
-                  (matchedInp as HTMLInputElement).value = outpData[`${key}`];
+                  matchedInp.value = outpData[`${key}`];
+                  key === "status" &&
+                    console.log([
+                      matchedInp.id,
+                      matchedInp.dataset.title,
+                      matchedInp.dataset.aloc,
+                    ]);
+                  console.log(outpData[`${key}`]);
                 }
               }
             });
@@ -312,9 +397,9 @@ export function addListenerAlocation(
   alocBtn: targEl,
   parentRef: Exclude<targEl, HTMLTableElement>,
   forwardedRef: HTMLElement,
-  context: string = "Stud",
+  context: personAbrvUpperClasses | personAbrvClasses = "Stud",
   state: boolean = true,
-  onAction?: (state: boolean) => void,
+  dispatch: (state: boolean) => void,
   userClass: string = "estudante"
 ): void {
   if (
@@ -343,11 +428,11 @@ export function addListenerAlocation(
               btn.addEventListener("click", () => {
                 state = transferDataAloc(
                   btn,
-                  parentRef!,
-                  forwardedRef!,
-                  context.toLowerCase()
+                  parentRef,
+                  forwardedRef,
+                  context.toLowerCase() as personAbrvClasses
                 );
-                if (typeof state === "boolean" && onAction) onAction(state);
+                if (typeof state === "boolean" && dispatch) dispatch(!state);
                 else {
                   alert(
                     `Erro obtendo dados para alocação selecionada. Feche manualmente.`

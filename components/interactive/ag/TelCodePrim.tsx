@@ -1,7 +1,5 @@
 "use client";
-
 import { handleCondtReq } from "@/lib/global/handlers/gHandlers";
-
 export default function TelCodePrim(): JSX.Element {
   return (
     <input

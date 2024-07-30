@@ -1,7 +1,7 @@
-import { nullishForm } from "@/lib/global/declarations/types";
-import { GlobalFormProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
-import { useEffect, useRef, useState, useCallback } from "react";
 import { ErrorBoundary } from "react-error-boundary";
+import { GlobalFormProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
+import { nullishForm } from "@/lib/global/declarations/types";
+import { useEffect, useRef, useState, useCallback } from "react";
 import GenericErrorComponent from "../../error/GenericErrorComponent";
 
 export default function DefaultForm({

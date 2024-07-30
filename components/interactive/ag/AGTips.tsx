@@ -1,11 +1,9 @@
 "use client";
-
 import { DlgProps } from "@/lib/global/declarations/interfaces";
-import { nullishDlg } from "@/lib/global/declarations/types";
-import { isClickOutside } from "@/lib/global/gStyleScript";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
+import { isClickOutside } from "@/lib/global/gStyleScript";
+import { nullishDlg } from "@/lib/global/declarations/types";
 import { useRef, useEffect } from "react";
-
 export default function AGTips({ state, dispatch }: DlgProps): JSX.Element {
   const dlgRef = useRef<nullishDlg>(null);
   const handleEscape = (ev: KeyboardEvent) => {
@@ -14,6 +12,38 @@ export default function AGTips({ state, dispatch }: DlgProps): JSX.Element {
       !state && dlgRef.current?.close();
     }
   };
+  //push em history
+  useEffect(() => {
+    history.pushState(
+      {},
+      "",
+      `${location.origin}${location.pathname}${location.search}&tips=open`
+    );
+    setTimeout(() => {
+      history.pushState(
+        {},
+        "",
+        `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#")
+      );
+    }, 300);
+    return () => {
+      history.pushState(
+        {},
+        "",
+        `${location.origin}${location.pathname}${location.search}`.replaceAll(
+          "&tips=open",
+          ""
+        )
+      );
+      setTimeout(() => {
+        history.pushState(
+          {},
+          "",
+          `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#")
+        );
+      }, 300);
+    };
+  }, []);
   useEffect(() => {
     try {
       if (!(dlgRef.current instanceof HTMLDialogElement))

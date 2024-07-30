@@ -1,9 +1,9 @@
 import { ErrorBoundary } from "react-error-boundary";
 import { User } from "@/lib/global/declarations/classes";
-import UserProfilePanelWrapper from "../../components/interactive/panel/UserProfilePanelWrapper";
-import TipsBtnWrapper from "../../components/interactive/panel/TipsBtnWrapper";
-import MainFormPanel from "../../components/mainPanel/MainFormPanel";
 import GenericErrorComponent from "../../components/error/GenericErrorComponent";
+import MainFormPanel from "../../components/mainPanel/MainFormPanel";
+import TipsBtnWrapper from "../../components/interactive/panel/TipsBtnWrapper";
+import UserProfilePanelWrapper from "../../components/interactive/panel/UserProfilePanelWrapper";
 
 export const fillScheduleState = { acc: 0 };
 export const formData: { [key: string]: string } = {};

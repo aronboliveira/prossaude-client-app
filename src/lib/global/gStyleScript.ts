@@ -1,3 +1,4 @@
+import { parseNotNaN } from "./gModel";
 import { targEl, entryEl } from "./declarations/types";
 import {
   extLine,
@@ -6,7 +7,6 @@ import {
   multipleElementsNotFound,
   inputNotFound,
 } from "./handlers/errorHandler";
-import { parseNotNaN } from "./gModel";
 
 export function dinamicGridAdjust(gridDivs: Array<targEl>): void {
   if (
@@ -829,23 +829,22 @@ export function strikeNulls(els: Array<targEl>): void {
       if (
         el instanceof HTMLInputElement ||
         el instanceof HTMLSelectElement ||
-        el instanceof HTMLSelectElement
+        el instanceof HTMLTextAreaElement
       ) {
         if (
           /nul[ol]/gi.test(el.value) ||
           /[ui]ndefin[ei]d/gi.test(el.value) ||
           /NaN/g.test(el.value)
-        ) {
+        )
           el.style.textDecoration = "line-through";
-        }
-      } else if (el instanceof HTMLElement && el.textContent) {
+      } else if (el instanceof HTMLElement) {
         if (
-          /nul[ol]/gi.test(el.textContent) ||
-          /[ui]ndefin[ei]d/gi.test(el.textContent) ||
-          /NaN/g.test(el.textContent)
-        ) {
+          el.textContent &&
+          (/nul[ol]/gi.test(el.textContent) ||
+            /[ui]ndefin[ei]d/gi.test(el.textContent) ||
+            /NaN/g.test(el.textContent))
+        )
           el.style.textDecoration = "line-through";
-        }
       } else
         elementNotFound(
           el,

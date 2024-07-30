@@ -1,14 +1,12 @@
 "use client";
-
 import { DlgProps } from "@/lib/global/declarations/interfaces";
-import { nullishDlg } from "@/lib/global/declarations/types";
-import { isClickOutside } from "@/lib/global/gStyleScript";
+import { ErrorBoundary } from "react-error-boundary";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
+import { isClickOutside } from "@/lib/global/gStyleScript";
+import { nullishDlg } from "@/lib/global/declarations/types";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useEffect, useRef } from "react";
-import { ErrorBoundary } from "react-error-boundary";
 import GenericErrorComponent from "../../error/GenericErrorComponent";
-
 export default function AGDeclaration({
   state,
   dispatch,
@@ -20,6 +18,38 @@ export default function AGDeclaration({
       !state && mainRef.current?.close();
     }
   };
+  //push em history
+  useEffect(() => {
+    history.pushState(
+      {},
+      "",
+      `${location.origin}${location.pathname}${location.search}&conform=open`
+    );
+    setTimeout(() => {
+      history.pushState(
+        {},
+        "",
+        `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#")
+      );
+    }, 300);
+    return () => {
+      history.pushState(
+        {},
+        "",
+        `${location.origin}${location.pathname}${location.search}`.replaceAll(
+          "&conform=open",
+          ""
+        )
+      );
+      setTimeout(() => {
+        history.pushState(
+          {},
+          "",
+          `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#")
+        );
+      }, 300);
+    };
+  }, []);
   useEffect(() => {
     try {
       if (!(mainRef.current instanceof HTMLElement))

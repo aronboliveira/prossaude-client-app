@@ -1,16 +1,26 @@
+import { DataProvider } from "@/lib/locals/panelPage/declarations/classesCons";
+import { ErrorBoundary } from "react-error-boundary";
+import { GlobalFormProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
+import { addListenerExportBtn } from "@/lib/global/gController";
+import { clearPhDates, normalizeSizeSb } from "@/lib/global/gStyleScript";
+import { globalDataProvider, panelRoots } from "../defs/client/SelectPanel";
+import { handleClientPermissions } from "@/lib/locals/panelPage/handlers/consHandlerUsers";
+import { handleSubmit } from "@/pages/api/ts/handlers";
+import { panelFormsVariables } from "../panelFormsData";
+import { useEffect, useRef, useState, useCallback } from "react";
+import GenericErrorComponent from "../../error/GenericErrorComponent";
+import ReseterBtn from "../defs/ReseterBtn";
 import {
   nullishBtn,
   nullishForm,
   nullishInp,
 } from "@/lib/global/declarations/types";
-import { addListenerExportBtn } from "@/lib/global/gController";
 import {
   addEmailExtension,
   autoCapitalizeInputs,
   formatCPF,
   formatTel,
 } from "@/lib/global/gModel";
-import { clearPhDates, normalizeSizeSb } from "@/lib/global/gStyleScript";
 import {
   elementNotFound,
   elementNotPopulated,
@@ -23,16 +33,6 @@ import {
   validateForm,
   syncAriaStates,
 } from "@/lib/global/handlers/gHandlers";
-import { DataProvider } from "@/lib/locals/panelPage/declarations/classesCons";
-import { GlobalFormProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
-import { useEffect, useRef, useState, useCallback } from "react";
-import { handleClientPermissions } from "@/lib/locals/panelPage/handlers/consHandlerUsers";
-import { panelFormsVariables } from "../panelFormsData";
-import { ErrorBoundary } from "react-error-boundary";
-import GenericErrorComponent from "../../error/GenericErrorComponent";
-import ReseterBtn from "../defs/ReseterBtn";
-import { globalDataProvider, panelRoots } from "../defs/client/SelectPanel";
-import { handleSubmit } from "@/pages/api/ts/handlers";
 
 export default function ProfForm({
   mainRoot,

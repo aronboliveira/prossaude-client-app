@@ -1,11 +1,11 @@
-import { nullishDlg } from "@/lib/global/declarations/types";
-import { isClickOutside } from "@/lib/global/gStyleScript";
-import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
-import { ExcludeDlgProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
-import { useEffect, useRef } from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
+import { ExcludeDlgProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import { handleDelete } from "@/pages/api/ts/handlers";
+import { isClickOutside } from "@/lib/global/gStyleScript";
+import { nullishDlg } from "@/lib/global/declarations/types";
+import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
+import { useEffect, useRef } from "react";
+import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
 
 export default function ExcludeDlg({
   route,
@@ -31,37 +31,30 @@ export default function ExcludeDlg({
       ...excludeDlgRef.current!.querySelectorAll("*"),
       excludeDlgRef.current!,
     ]);
-    excludeDlgRef.current!.addEventListener(
-      "click",
-      click => {
-        if (
-          isClickOutside(click, excludeDlgRef.current!).some(
-            point => point === true
-          )
-        ) {
-          excludeDlgRef.current!.close();
-          toggleClose();
-        }
-      },
-      true
-    );
     const handleKeyDown = (press: KeyboardEvent) => {
-      if (press.key === "Escape") {
-        toggleClose();
-      }
+      press.key === "Escape" && toggleClose();
     };
-    document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
+    addEventListener("keydown", handleKeyDown);
+    return () => removeEventListener("keydown", handleKeyDown);
   }, [excludeDlgRef]);
   return (
     <>
       {shouldDisplayExcludeDlg && (
         <dialog
           role="alertdialog"
+          id="excludeAlertDlg"
           ref={excludeDlgRef}
           className="modal-content modal-content-fit"
+          onClick={click => {
+            if (
+              isClickOutside(click, excludeDlgRef.current!).some(
+                point => point === true
+              )
+            ) {
+              excludeDlgRef.current!.close();
+              toggleClose();
+            }
+          }}
         >
           <ErrorBoundary
             FallbackComponent={() => (

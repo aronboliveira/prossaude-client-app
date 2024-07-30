@@ -1,4 +1,5 @@
 import { parseNotNaN } from "../../global/gModel";
+import { targEl } from "../../global/declarations/types";
 import {
   extLine,
   elementNotPopulated,
@@ -11,7 +12,6 @@ import {
   strikeNulls,
   addListenerForValidities,
 } from "../../global/gStyleScript";
-import { targEl } from "../../global/declarations/types";
 import {
   convertWeekdaysToMonthdays,
   convertMonthdaysToWeekdays,

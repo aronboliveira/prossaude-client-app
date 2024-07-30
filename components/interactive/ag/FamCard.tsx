@@ -1,7 +1,5 @@
 "use client";
-
 import { handleDivAddShow } from "@/pages/ag";
-
 export default function FamCard(): JSX.Element {
   return (
     <input

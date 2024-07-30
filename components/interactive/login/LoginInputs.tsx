@@ -1,7 +1,9 @@
 "use client";
-
-import { useEffect, useRef } from "react";
+import { basePath } from "../../../src/pages";
 import { clearDefInvalidMsg, resetPhs } from "@/lib/global/gStyleScript";
+import { handleLogin } from "@/pages/api/ts/handlers";
+import { nullishAnchor } from "@/lib/global/declarations/types";
+import { useEffect, useRef } from "react";
 import {
   elementNotFound,
   extLine,
@@ -13,9 +15,6 @@ import {
   callbackSubmitBtn,
 } from "@/lib/locals/loginPage/loginController";
 // import { useRouter } from "next/router";
-import { basePath } from "../../../src/pages";
-import { nullishAnchor } from "@/lib/global/declarations/types";
-import { handleLogin } from "@/pages/api/ts/handlers";
 
 export default function LoginInputs(): JSX.Element {
   // const router = useRouter();

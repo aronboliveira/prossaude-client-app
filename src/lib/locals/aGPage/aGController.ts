@@ -1,6 +1,7 @@
+import type { targEl } from "../../global/declarations/types";
+import * as AGHandlers from "./aGHandlers";
 //nesse file ocorrem principalmente as adições de listeners, sincronização das chamadas de funções para manipulação de informação/layout e validação dos elementos no DOM
 
-import * as AGHandlers from "./aGHandlers";
 import {
   formatCEP,
   formatCPF,
@@ -13,7 +14,6 @@ import {
   inputNotFound,
   multipleElementsNotFound,
 } from "../../global/handlers/errorHandler";
-import type { targEl } from "../../global/declarations/types";
 
 export function addListenerTelInputs(): Element[] {
   const telInputs = document.querySelectorAll('input[type="text"][id^="tel"]');
