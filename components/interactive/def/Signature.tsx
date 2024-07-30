@@ -2,7 +2,6 @@ import { changeToAstDigit } from "@/lib/global/handlers/gHandlers";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { nullishCanvas } from "@/lib/global/declarations/types";
 import { useEffect, useState, useRef } from "react";
-"use client";
 
 
 let ctx: CanvasRenderingContext2D | null = null;

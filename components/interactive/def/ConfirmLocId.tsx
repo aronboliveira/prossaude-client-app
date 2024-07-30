@@ -1,7 +1,6 @@
 import { handleEventReq } from "@/lib/global/handlers/gHandlers";
 import { nullishInp } from "@/lib/global/declarations/types";
 import { useEffect, useRef, useState } from "react";
-"use client";
 
 
 export default function ConfirmLocId() {

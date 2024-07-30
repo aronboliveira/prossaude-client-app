@@ -2,7 +2,6 @@ import { TdProps } from "@/lib/global/declarations/interfaces";
 import { handleCallbackWHS, tabProps } from "@/pages/edfis";
 import { handleIndEv } from "../../TabIndPerc";
 import { textTransformPascal } from "@/lib/global/gModel";
-"use client";
 
 import {
   handleCondtReq,

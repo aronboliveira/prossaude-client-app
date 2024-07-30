@@ -4,7 +4,6 @@ import { nullishFs } from "@/lib/global/declarations/types";
 import { switchRowComorb } from "@/lib/locals/edFisNutPage/edFisNutHandler";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useEffect, useReducer, useRef, useState } from "react";
-"use client";
 
 
 export default function TabComorb(): JSX.Element {

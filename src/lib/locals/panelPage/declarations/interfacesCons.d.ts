@@ -1,4 +1,7 @@
 import { DlgProps } from "@/lib/global/declarations/interfaces";
+import { MutableRefObject, Dispatch, SetStateAction, Component } from "react";
+import { NextRouter } from "next/router";
+import { Root } from "react-dom/client";
 import { aptTypes, formCases, looseNum } from "@/lib/global/declarations/types";
 import {
   nullishForm,
@@ -8,9 +11,6 @@ import {
   voidVal,
   nullishBtn,
 } from "@glSrc/types";
-import { NextRouter } from "next/router";
-import { MutableRefObject, Dispatch, SetStateAction, Component } from "react";
-import { Root } from "react-dom/client";
 
 export interface FormData {
   [key: string]: any;

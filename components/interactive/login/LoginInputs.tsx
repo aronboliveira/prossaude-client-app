@@ -3,7 +3,6 @@ import { clearDefInvalidMsg, resetPhs } from "@/lib/global/gStyleScript";
 import { handleLogin } from "@/pages/api/ts/handlers";
 import { nullishAnchor } from "@/lib/global/declarations/types";
 import { useEffect, useRef } from "react";
-"use client";
 
 import {
   elementNotFound,

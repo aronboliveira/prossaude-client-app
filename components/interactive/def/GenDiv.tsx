@@ -1,7 +1,6 @@
 import { fluxGen } from "@/lib/global/gModel";
 import { person } from "@/pages/edfis";
 import { useEffect } from "react";
-"use client";
 
 import {
   elementNotFound,

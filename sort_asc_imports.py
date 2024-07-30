@@ -16,6 +16,9 @@ def sort_asc_imports(path):
   no_def_imps = [];
   def_imps = [];
   alias_imps = [];
+  content = re.sub(r'["\']{1,}use client["\']{1,};\n?', '', content)
+  use_client_match = re.search(r'["\']{1,}use client["\']{1,};', content)
+  use_client_directive = use_client_match.group(0) + '\n' if use_client_match else ''
   for imp in imports:
     if re.search(r'^import\s+\{', imp) and re.search(r'\s*from\s+', imp):
       no_def_imps.append(imp)
@@ -25,7 +28,7 @@ def sort_asc_imports(path):
       def_imps.append(imp)
   sorted_imps = "".join(sorted(no_def_imps, key=get_first_destructured) + sorted(def_imps, key=lambda imp: re.search(r"import\s+(\S+)", imp).group(1)) + sorted(alias_imps, key=lambda imp: re.search(r"import\s+\*\s+as\s+(\S+)", imp).group(1)))
   with open(path, 'w',encoding='utf-8') as file:
-			file.write(sorted_imps + re.sub(r'^(import\s.*?;\n)+', '', content, flags=re.MULTILINE))
+			file.write(use_client_directive + sorted_imps + re.sub(r'^(import\s.*?;\n)+', '', content, flags=re.MULTILINE))
 
 if __name__ == '__main__':
 	walk_dir(input('Enter the directory path:'))

@@ -1,5 +1,8 @@
-//nesse file estão presentes principalmente as funções relacionadas à exigência de modelo textual e de visualização
+import { Person } from "../../global/declarations/classes";
+import { entryEl, targEl } from "../../global/declarations/types";
 import { filterIdsByGender } from "../../global/gModel";
+import { handleEventReq } from "@/lib/global/handlers/gHandlers";
+//nesse file estão presentes principalmente as funções relacionadas à exigência de modelo textual e de visualização
 import {
   extLine,
   elementNotFound,
@@ -7,9 +10,6 @@ import {
   multipleElementsNotFound,
   stringError,
 } from "../../global/handlers/errorHandler";
-import { Person } from "../../global/declarations/classes";
-import { entryEl, targEl } from "../../global/declarations/types";
-import { handleEventReq } from "@/lib/global/handlers/gHandlers";
 
 export function checkInnerColGroups(
   parentEl: targEl,

@@ -1,5 +1,4 @@
 import { addDblQuotes } from "@/lib/locals/aGPage/aGModel";
-"use client";
 
 
 export default function QxPrinc(): JSX.Element {

@@ -2,7 +2,6 @@ import { clearPhDates } from "@/lib/global/gStyleScript";
 import { inputNotFound } from "@/lib/global/handlers/errorHandler";
 import { nullishInp } from "@/lib/global/declarations/types";
 import { useEffect, useRef } from "react";
-"use client";
 
 export default function HeaderDate(): JSX.Element {
   const dateRef = useRef<nullishInp>(null);

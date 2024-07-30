@@ -20,7 +20,6 @@ import RemoveStudForm from "../../studs/RemoveStudForm";
 import ScheduleForm from "../../schedule/ScheduleForm";
 import StudentForm from "../../studs/StudentForm";
 import Unauthorized from "../Unauthorized";
-"use client";
 
 import {
   elementNotFound,

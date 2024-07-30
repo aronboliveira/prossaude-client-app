@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import GenericErrorComponent from "../../error/GenericErrorComponent";
 import PanelTips from "./PanelTips";
 import TipsBtn from "../def/TipsBtn";
-"use client";
 
 
 export default function TipsBtnWrapper(): JSX.Element {

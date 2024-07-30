@@ -1,3 +1,7 @@
+import { MutableRefObject } from "react";
+import { nullishDlg, targEl } from "../../../global/declarations/types";
+import { parseNotNaN } from "../../../global/gModel";
+import { switchBtnBS } from "../../../global/gStyleScript";
 import {
   multipleElementsNotFound,
   extLine,
@@ -5,10 +9,6 @@ import {
   elementNotFound,
   stringError,
 } from "../../../global/handlers/errorHandler";
-import { nullishDlg, targEl } from "../../../global/declarations/types";
-import { switchBtnBS } from "../../../global/gStyleScript";
-import { parseNotNaN } from "../../../global/gModel";
-import { MutableRefObject } from "react";
 
 //nesse arquivo estão as funções para handling de casos dos modais de listas tabeladas
 

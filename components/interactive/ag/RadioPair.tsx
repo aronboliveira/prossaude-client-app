@@ -3,7 +3,6 @@ import { nullishSpan } from "@/lib/global/declarations/types";
 import { opRadioHandler } from "@/lib/global/handlers/gHandlers";
 import { textTransformPascal } from "@/lib/global/gModel";
 import { useEffect, useState, useRef } from "react";
-"use client";
 
 
 export default function RadioPair({

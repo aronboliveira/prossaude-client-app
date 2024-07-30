@@ -3,7 +3,6 @@ import { handleEventReq } from "@/lib/global/handlers/gHandlers";
 import { parseNotNaN } from "@/lib/global/gModel";
 import { switchRequiredCols } from "@/lib/locals/edFisNutPage/edFisNutHandler";
 import { tabProps } from "@/pages/edfis";
-"use client";
 
 import {
   extLine,

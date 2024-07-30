@@ -1,5 +1,4 @@
 import { callbackAtvLvlElementNaf, person, tabProps } from "@/pages/edfis";
-"use client";
 
 
 export default function NafType(): JSX.Element {

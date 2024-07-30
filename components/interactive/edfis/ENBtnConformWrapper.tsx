@@ -3,7 +3,6 @@ import { useState } from "react";
 import BtnConform from "../def/BtnConform";
 import ENDeclaration from "./ENDeclaration";
 import GenericErrorComponent from "../../error/GenericErrorComponent";
-"use client";
 
 
 export default function ENBtnConformWrapper(): JSX.Element {

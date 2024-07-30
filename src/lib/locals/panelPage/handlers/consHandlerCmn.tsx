@@ -1,5 +1,11 @@
-import { isValidElement, Fragment, Dispatch, SetStateAction } from "react";
 import { Root, createRoot } from "react-dom/client";
+import { clearPhDates } from "../../../global/gStyleScript";
+import { entryEl, targEl, voidVal } from "../../../global/declarations/types";
+import { handleClientPermissions } from "./consHandlerUsers";
+import { isValidElement, Fragment, Dispatch, SetStateAction } from "react";
+import { parseNotNaN, textTransformPascal } from "../../../global/gModel";
+import { sessionScheduleState } from "../../../../../components/panelForms/panelFormsData";
+import ProviderAptDatList from "../../../../../components/lists/ProviderAptDatList";
 import {
   multipleElementsNotFound,
   extLine,
@@ -10,16 +16,10 @@ import {
   stringError,
   typeError,
 } from "../../../global/handlers/errorHandler";
-import { entryEl, targEl, voidVal } from "../../../global/declarations/types";
-import { parseNotNaN, textTransformPascal } from "../../../global/gModel";
-import { clearPhDates } from "../../../global/gStyleScript";
-import { handleClientPermissions } from "./consHandlerUsers";
 import {
   providerFormData,
   consVariablesData,
 } from "../../../../../components/consRegst/consVariables";
-import { sessionScheduleState } from "../../../../../components/panelForms/panelFormsData";
-import ProviderAptDatList from "../../../../../components/lists/ProviderAptDatList";
 
 //nesse arquivo estão as funções para handling de casos comuns entre os components
 

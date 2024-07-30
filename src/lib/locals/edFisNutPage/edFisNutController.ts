@@ -1,9 +1,9 @@
-//nesse file ocorrem principalmente as adições de listeners, sincronização das chamadas de funções para manipulação de informação/layout e validação dos elementos no DOM
-import * as EdFisNutModel from "./edFisNutModel";
-import * as EdFisNutHandler from "./edFisNutHandler";
 import { highlightChange } from "../../global/gStyleScript";
 import { parseNotNaN } from "../../global/gModel";
 import { updateSimpleProperty } from "../../global/handlers/gHandlers";
+import * as EdFisNutHandler from "./edFisNutHandler";
+import * as EdFisNutModel from "./edFisNutModel";
+//nesse file ocorrem principalmente as adições de listeners, sincronização das chamadas de funções para manipulação de informação/layout e validação dos elementos no DOM
 import {
   extLine,
   elementNotFound,

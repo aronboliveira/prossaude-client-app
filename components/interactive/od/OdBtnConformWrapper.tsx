@@ -3,7 +3,6 @@ import { useState } from "react";
 import BtnConform from "../def/BtnConform";
 import GenericErrorComponent from "../../error/GenericErrorComponent";
 import OdDeclaration from "./OdDeclaration";
-"use client";
 
 
 export default function OdBtnConformWrapper(): JSX.Element {

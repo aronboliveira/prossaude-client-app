@@ -1,5 +1,4 @@
 import { handleDivAddShow } from "@/pages/ag";
-"use client";
 
 
 export default function FamPulm(): JSX.Element {

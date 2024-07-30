@@ -1,3 +1,4 @@
+import { entryEl, targEl } from "../../../global/declarations/types";
 //nesse arquivo estarão as funções de gerenciamento de usuário
 
 import {
@@ -5,7 +6,6 @@ import {
   extLine,
   typeError,
 } from "../../../global/handlers/errorHandler";
-import { entryEl, targEl } from "../../../global/declarations/types";
 
 export function handleClientPermissions(
   userClass: string = "estudante",

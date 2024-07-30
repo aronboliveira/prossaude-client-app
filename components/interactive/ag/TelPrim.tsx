@@ -1,6 +1,5 @@
 import { formatTel } from "@/lib/global/gModel";
 import { handleEventReq } from "@/lib/global/handlers/gHandlers";
-"use client";
 
 
 export default function TelPrim(): JSX.Element {

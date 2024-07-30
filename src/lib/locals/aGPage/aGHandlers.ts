@@ -1,14 +1,14 @@
+import { autoCapitalizeInputs, checkAutoCorrect } from "../../global/gModel";
+import { targEl, targEv } from "../../global/declarations/types";
+import { useCurrentDate } from "../../global/handlers/gHandlers";
 //nesse file estão presentes principalmente as funções de manipulação dinâmica de texto e layout
 
-import { autoCapitalizeInputs, checkAutoCorrect } from "../../global/gModel";
-import { useCurrentDate } from "../../global/handlers/gHandlers";
 import {
   extLine,
   elementNotFound,
   inputNotFound,
   multipleElementsNotFound,
 } from "../../global/handlers/errorHandler";
-import { targEl, targEv } from "../../global/declarations/types";
 
 export function searchCEPXML(cepElement: targEl): number {
   let initTime = Date.now(),

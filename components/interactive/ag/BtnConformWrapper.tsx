@@ -1,7 +1,6 @@
 import { useState } from "react";
 import AGDeclaration from "./AGDeclaration";
 import BtnConform from "../def/BtnConform";
-"use client";
 
 
 export default function BtnConformWrapper(): JSX.Element {

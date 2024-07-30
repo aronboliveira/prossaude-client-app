@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-"use client";
 
 
 export default function Uf(): JSX.Element {

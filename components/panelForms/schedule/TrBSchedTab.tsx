@@ -1,6 +1,5 @@
 import { HrRowProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import TdBSchedTab from "./TdBSchedTab";
-"use client";
 
 
 export default function TrBSchedTab({

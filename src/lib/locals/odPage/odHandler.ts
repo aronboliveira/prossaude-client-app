@@ -1,6 +1,6 @@
+import { autoCapitalizeInputs, checkAutoCorrect } from "../../global/gModel";
 //nesse file estão presentes principalmente as funções de manipulação dinâmica de texto e layout
 
-import { autoCapitalizeInputs, checkAutoCorrect } from "../../global/gModel";
 import {
   searchNextSiblings,
   searchPreviousSiblings,

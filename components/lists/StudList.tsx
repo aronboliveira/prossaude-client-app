@@ -10,7 +10,6 @@ import { useRef, useEffect } from "react";
 import GenericErrorComponent from "../error/GenericErrorComponent";
 import Spinner from "../icons/Spinner";
 import StudRow from "../panelForms/studs/StudRow";
-"use client";
 
 import {
   GlobalFormProps,

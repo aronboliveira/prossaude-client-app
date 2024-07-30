@@ -1,7 +1,6 @@
 import { TabBtnProps } from "@/lib/global/declarations/interfaces";
 import { handleIndEv } from "../../TabIndPerc";
 import { textTransformPascal } from "@/lib/global/gModel";
-"use client";
 
 
 export default function TabBtnInd({

@@ -4,7 +4,6 @@ import { searchNextSiblings } from "@/lib/global/handlers/gHandlers";
 import { useState } from "react";
 import GenericErrorComponent from "../../error/GenericErrorComponent";
 import InspDlg from "./InspDlg";
-"use client";
 
 import {
   showInspDialogs,

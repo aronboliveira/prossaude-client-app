@@ -2,7 +2,6 @@ import { BtnAddPacPros } from "@/lib/locals/panelPage/declarations/interfacesCon
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useEffect, useState } from "react";
 import FormDlg from "./FormDlg";
-"use client";
 
 
 export default function BtnAddPac({

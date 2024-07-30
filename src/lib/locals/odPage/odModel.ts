@@ -1,3 +1,4 @@
+import { targEl } from "../../global/declarations/types";
 //nesse file estão presentes principalmente as funções relacionadas à exigência de modelo textual e de visualização
 
 import {
@@ -6,7 +7,6 @@ import {
   inputNotFound,
   elementNotPopulated,
 } from "../../global/handlers/errorHandler";
-import { targEl } from "../../global/declarations/types";
 
 export function resetAvDentValue(targInp: targEl): boolean {
   let isValuePreDef = false;
