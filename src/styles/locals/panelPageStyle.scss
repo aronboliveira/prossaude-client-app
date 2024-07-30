@@ -62,6 +62,15 @@ body {
     }
   }
 
+  .btn {
+    &.btn-close {
+      &:not(.reduced-btn-close) {
+        min-width: 1rem;
+        min-height: 1rem;
+      }
+    }
+  }
+
   .btnAffectRegst {
     &:hover {
       &:not(.tipBtn) {
@@ -74,6 +83,7 @@ body {
       display: block;
       height: fit-content;
       font-size: 0.875em;
+      width: 100%;
     }
   }
 
@@ -133,6 +143,15 @@ body {
     text-align: center;
   }
 
+  [for*="newValueOpt"],
+  #btnConfirmFieldOpt {
+    margin-bottom: 1rem;
+  }
+
+  #autofillDivCons {
+    padding-right: 0;
+  }
+
   #btnExport {
     width: 50%;
   }
@@ -173,9 +192,27 @@ body {
   #sectStudsTab {
     width: unset !important;
     min-width: unset !important;
-    .btn-close {
-      width: 0 !important;
+    height: 100% !important;
+  }
+
+  #formHSchedSect,
+  #coordPanelSelect {
+    padding-right: 0.5rem;
+  }
+
+  #formSched {
+    #btnExport {
+      width: 100%;
     }
+  }
+
+  #headFieldsHead {
+    margin-bottom: 0.5rem;
+  }
+
+  #pacDiv {
+    min-width: 0 !important;
+    min-height: 0 !important;
   }
 
   #profileIconImg {
@@ -184,6 +221,22 @@ body {
 
   #tipsBtn {
     transform: translate(0, -0.9rem);
+  }
+
+  #titlePanelSelect {
+    margin-bottom: 0.3rem;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .panelBody {
+    #confirmDayMainDiv {
+      > div {
+        &:has(#labConfirmDay) {
+          transform: translate(0, 0.3rem);
+        }
+      }
+    }
   }
 }
 
