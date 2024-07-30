@@ -42,43 +42,63 @@ export default function SelectPanel({
   const [mounted, setMounted] = useState<boolean>(false);
   const formRootRef = useRef<nullishDiv>(null);
   const context = useContext<AppRootContextType>(AppRootContext);
-  const renderSelectPanel = (): JSX.Element => {
-    switch (selectedOption) {
-      case "registStud":
-        return userClass === "coordenador" || userClass === "supervisor" ? (
-          <StudentForm userClass={userClass} />
-        ) : (
-          <Unauthorized />
-        );
-      case "registProf":
-        return userClass === "coordenador" ? (
-          <ProfForm userClass={userClass} />
-        ) : (
-          <Unauthorized />
-        );
-      case "removeStud":
-        return userClass === "coordenador" || userClass === "supervisor" ? (
-          <RemoveStudForm userClass={userClass} />
-        ) : (
-          <Unauthorized />
-        );
-      case "removeProf":
-        return userClass === "coordenador" || userClass === "supervisor" ? (
-          <RemoveProfForm userClass={userClass} />
-        ) : (
-          <Unauthorized />
-        );
-      case "pacList":
-        return <PacTabForm userClass={userClass} />;
-      case "agenda":
-        return <ScheduleForm context={false} userClass={userClass} />;
-      default:
-        stringError(
-          selectedOption,
-          "selectedOption in renderSelectedForm()",
+  const renderSelectPanel = () => {
+    const defJSX = (() => {
+      switch (selectedOption) {
+        case "registStud":
+          return userClass === "coordenador" || userClass === "supervisor" ? (
+            <StudentForm userClass={userClass} />
+          ) : (
+            <Unauthorized />
+          );
+        case "registProf":
+          return userClass === "coordenador" ? (
+            <ProfForm userClass={userClass} />
+          ) : (
+            <Unauthorized />
+          );
+        case "removeStud":
+          return userClass === "coordenador" || userClass === "supervisor" ? (
+            <RemoveStudForm userClass={userClass} />
+          ) : (
+            <Unauthorized />
+          );
+        case "removeProf":
+          return userClass === "coordenador" || userClass === "supervisor" ? (
+            <RemoveProfForm userClass={userClass} />
+          ) : (
+            <Unauthorized />
+          );
+        case "pacList":
+          return <PacTabForm userClass={userClass} />;
+        case "agenda":
+          return <ScheduleForm context={false} userClass={userClass} />;
+        default:
+          stringError(
+            selectedOption,
+            "selectedOption in renderSelectedForm()",
+            extLine(new Error())
+          );
+          return <DefaultForm userClass={userClass} />;
+      }
+    })();
+    try {
+      const formRoots = document.getElementById("formRoot");
+      if (!(formRoots instanceof HTMLElement))
+        throw elementNotFound(
+          formRoots,
+          `Validation of Form Roots Element in Schedule`,
           extLine(new Error())
         );
-        return <DefaultForm userClass={userClass} />;
+      if (!context.roots.formRoot)
+        context.roots.formRoot = createRoot(formRoots);
+      context.roots.formRoot.render(defJSX);
+    } catch (e) {
+      console.error(
+        `Error executing procedure fro rendering on formRoot:\n${
+          (e as Error).message
+        }`
+      );
     }
   };
   const handlePanelPath = (
