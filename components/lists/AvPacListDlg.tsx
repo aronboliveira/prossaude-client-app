@@ -2,13 +2,12 @@
 import { AvPacListDlgProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import { ErrorBoundary } from "react-error-boundary";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
-import { equalizeTabCells, isClickOutside } from "@/lib/global/gStyleScript";
-import { nullishDlg, nullishTab } from "@/lib/global/declarations/types";
+import { isClickOutside } from "@/lib/global/gStyleScript";
+import { nullishDlg } from "@/lib/global/declarations/types";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useEffect, useRef, useState } from "react";
 import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
 import PacList from "./PacList";
-
 
 export default function AvPacListDlg({
   dispatch,
@@ -18,7 +17,6 @@ export default function AvPacListDlg({
 }: AvPacListDlgProps): JSX.Element {
   const [shouldDisplayRowData, setDisplayRowData] = useState<boolean>(false);
   const dialogRef = useRef<nullishDlg>(null);
-  const tabPacRef = useRef<nullishTab>(null);
   //push em history
   useEffect(() => {
     !/av-pac=open/gi.test(location.search) &&
@@ -52,6 +50,7 @@ export default function AvPacListDlg({
       }, 300);
     };
   }, []);
+  //listeners para dlg
   useEffect(() => {
     if (dialogRef?.current instanceof HTMLDialogElement) {
       dialogRef.current.showModal();
@@ -71,18 +70,6 @@ export default function AvPacListDlg({
         extLine(new Error())
       );
   }, [dialogRef]);
-  useEffect(() => {
-    if (tabPacRef?.current instanceof HTMLTableElement)
-      equalizeTabCells(tabPacRef.current);
-    else
-      elementNotFound(
-        tabPacRef.current,
-        `tabPacRef id ${
-          (tabPacRef?.current as any)?.id || "UNIDENTIFIED"
-        } in useEffect() for tableRef`,
-        extLine(new Error())
-      );
-  }, [dialogRef, tabPacRef]);
   return (
     <>
       {state && (
@@ -118,6 +105,8 @@ export default function AvPacListDlg({
               shouldDisplayRowData={shouldDisplayRowData}
               shouldShowAlocBtn={shouldShowAlocBtn}
               userClass={userClass}
+              dispatch={dispatch}
+              state={state}
             />
           </ErrorBoundary>
         </dialog>

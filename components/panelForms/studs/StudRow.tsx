@@ -34,6 +34,7 @@ export default function StudRow({
             data-title={`cpf-stud-row${nRow}`}
             data-row={nRow}
             data-col="1"
+            data-aloc="cpf-stud"
           >
             {stud.cpf || "Não fornecido"}
           </output>
@@ -47,6 +48,7 @@ export default function StudRow({
             data-title={`dre-stud-row${nRow}`}
             data-row={nRow}
             data-col="2"
+            data-aloc="dre-stud"
           >
             {stud.dre || "Não fornecido"}
           </output>
@@ -63,6 +65,7 @@ export default function StudRow({
           data-title={`name-stud-row${nRow}`}
           data-row={nRow}
           data-col={userClass === "coordenador" ? "3" : "1"}
+          data-aloc="name-stud"
         >
           {stud.name || "Anônimo"}
         </output>
@@ -78,6 +81,7 @@ export default function StudRow({
           data-title={`email-stud-row${nRow}`}
           data-row={nRow}
           data-col={userClass === "coordenador" ? "4" : "2"}
+          data-aloc="email-stud"
         >
           <address
             data-row={nRow}
@@ -107,6 +111,7 @@ export default function StudRow({
           data-title={`email-stud-row${nRow}`}
           data-row={nRow}
           data-col={userClass === "coordenador" ? "5" : "3"}
+          data-aloc="tel-stud"
         >
           {`${stud.tel || "Não fornecido"}`}
         </output>
@@ -122,6 +127,7 @@ export default function StudRow({
           data-title={`area-stud-row${nRow}`}
           data-row={nRow}
           data-col={userClass === "coordenador" ? "6" : "4"}
+          data-aloc="area-stud"
         >
           {`${stud.area || "Não definido"}`}
         </output>
@@ -137,6 +143,7 @@ export default function StudRow({
           data-title={`day-stud-row${nRow}`}
           data-row={nRow}
           data-col={userClass === "coordenador" ? "7" : "5"}
+          data-aloc="day-stud"
         >
           {`${stud.day || "Não definido"}`}
         </output>
@@ -152,6 +159,7 @@ export default function StudRow({
           data-title={`interv-stud-row${nRow}`}
           data-row={nRow}
           data-col={userClass === "coordenador" ? "8" : "6"}
+          data-aloc="interv-stud"
         >
           {`${dateISOtoBRL(stud.start_day) || "Não definido"} — ${
             dateISOtoBRL(stud.end_day) || "Não definido"
@@ -199,7 +207,7 @@ export default function StudRow({
           data-col={userClass === "coordenador" ? "9" : "7"}
         >
           <button
-            className="btnAlocStud btn btn-success widFull"
+            className="btnAloc btnAlocStud btn btn-success widFull"
             id={`btnAlocStud-row${nRow}`}
             data-row={nRow}
             data-col={userClass === "coordenador" ? "9" : "7"}

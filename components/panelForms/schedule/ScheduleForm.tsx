@@ -8,14 +8,11 @@ import { globalDataProvider, panelRoots } from "../defs/client/SelectPanel";
 import { handleClientPermissions } from "../../../src/lib/locals/panelPage/handlers/consHandlerUsers";
 import { handleSubmit } from "@/pages/api/ts/handlers";
 import { useState, useRef, useEffect, useCallback, JSX } from "react";
-import BtnAddPac from "../../consRegst/BtnAddPac";
 import GenericErrorComponent from "../../error/GenericErrorComponent";
 import RegstConsBtn from "./RegstConsBtn";
 import ReseterBtn from "../defs/ReseterBtn";
 import ThDate from "./ThDate";
 import TrBSchedTab from "./TrBSchedTab";
-
-
 import {
   clearPhDates,
   equalizeFlexSibilings,
@@ -55,6 +52,7 @@ import {
   panelFormsVariables,
   sessionScheduleState,
 } from "../panelFormsData";
+import FormDlg from "../../consRegst/FormDlg";
 
 export const scheduleProps: { autoSaving: boolean } = {
   autoSaving: true,
@@ -63,7 +61,6 @@ export const scheduleProps: { autoSaving: boolean } = {
 export default function ScheduleForm({
   mainRoot,
   userClass = "estudante",
-  context = false,
 }: ScheduleFormProps): JSX.Element {
   const cols = [1, 2, 3, 4, 5, 6, 7, 8, 9];
   const hours: validSchedHours[] = [18, 19, 20, 21];
@@ -87,6 +84,8 @@ export default function ScheduleForm({
   const workingDefinitionsRef = useRef<HTMLDivElement | null>(null);
   const monthRef = useRef<nullishSel>(null);
   const btnExportSchedRef = useRef<nullishBtn>(null);
+  const [pressState, setTogglePress] = useState<boolean>(false);
+  const toggleForm = (): void => setTogglePress(() => !pressState);
   const formCallback = useCallback((form: nullishForm) => {
     if (form instanceof HTMLFormElement) {
       //adição de listeners para confirmação de agendamentos
@@ -277,6 +276,9 @@ export default function ScheduleForm({
       }, 200);
     addEventListener("resize", handleResize);
     return () => removeEventListener("resize", handleResize);
+  }, []);
+  useEffect(() => {
+    /new-cons=open/gi.test(location.search) && setTogglePress(true);
   }, []);
   useEffect(() => {
     if (formRef?.current instanceof HTMLElement) {
@@ -626,7 +628,15 @@ export default function ScheduleForm({
               <h1 id="hSched" className="wsBs bolded">
                 <strong>Atendimento Diário</strong>
               </h1>
-              <BtnAddPac context={context} userClass={userClass} />
+              <button
+                type="button"
+                className="btn btn-success widFull900Q widQ460MinFull htMaxBSControl forceInvert bolded"
+                id="addAppointBtn"
+                onClick={toggleForm}
+                title="Preencha um formulário para gerar a ficha de uma nova consulta"
+              >
+                Adicionar Consulta
+              </button>
             </section>
             <small role="textbox">
               <em className="wsBs">
@@ -1111,6 +1121,13 @@ export default function ScheduleForm({
             </div>
           </form>
           <footer className="d-no" id="scheduleFooter"></footer>
+          <div>
+            {pressState ? (
+              <FormDlg onClose={toggleForm} userClass={userClass} />
+            ) : (
+              <></>
+            )}
+          </div>
         </div>
       )}
     </ErrorBoundary>

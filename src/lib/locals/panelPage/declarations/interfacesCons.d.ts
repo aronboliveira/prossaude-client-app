@@ -76,6 +76,10 @@ export interface FillerProps {
 
 export interface AvStudListDlgProps extends FillerProps, DlgProps {}
 
+export interface StudListProps extends GlobalFormProps, Partial<DlgProps> {
+  mainDlgRef: MutableRefObject<nullishDlg>;
+}
+
 export interface AvProfListDlgProps extends DlgProps, GlobalFormProps {
   mainDlgRef: MutableRefObject<nullishDlg>;
   btnProf: HTMLButtonElement | null;
@@ -89,13 +93,15 @@ export interface AvPacListDlgProps extends DlgProps, GlobalFormProps {
 export interface PacListProps
   extends Omit<
       AvPacListDlgProps,
-      "mainDlgRef" | "onClick" | "shouldDisplayPacList" | "dispatch" | "state"
+      "mainDlgRef" | "onClick" | "shouldDisplayPacList"
     >,
     Partial<Pick<AvPacListDlgProps, "onClick" | "shouldDisplayPacList">> {
   setDisplayRowData: Dispatch<SetStateAction<boolean>>;
   shouldDisplayRowData: boolean;
   shouldShowAlocBtn: boolean;
   mainDlgRef?: MutableRefObject<nullishDlg>;
+  dispatch?: Dispatch<SetStateAction<boolean>>;
+  state?: boolean;
 }
 
 export interface PrevConsListProps {

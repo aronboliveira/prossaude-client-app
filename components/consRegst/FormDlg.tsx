@@ -15,7 +15,7 @@ import { providerFormData } from "./consVariables";
 import AvPacListDlg from "../lists/AvPacListDlg";
 import AvProfListDlg from "../lists/AvProfListDlg";
 import DREFiller from "./DREFiller";
-import ErrorFallbackDlg from "../error/ErrorFallbackDlg"; 
+import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
 import {
   useEffect,
   useRef,
@@ -51,7 +51,11 @@ import {
   handleCondtReq,
   validateForm,
   syncAriaStates,
-} from "@/lib/global/handlers/gHandlers"; let accFormData = 0;
+} from "@/lib/global/handlers/gHandlers";
+import ListFirstNameCons from "./ListFirstNameCons";
+import ListCPFPacCons from "./ListCPFPacCons";
+import OptGrpUsers from "./OptGrpUsers";
+let accFormData = 0;
 export default function FormDlg({
   onClose,
   userClass = "estudante",
@@ -461,7 +465,8 @@ export default function FormDlg({
             className="flexWC"
             id="bodyRegsPac"
             name="cons_form"
-            action="submit_cons_form"
+            action="#"
+            // "submit_cons_form"
             encType="application/x-www-form-urlencoded"
             method="post"
           >
@@ -504,11 +509,7 @@ export default function FormDlg({
                         enableCPFBtn(ev.currentTarget, ev.currentTarget.value);
                       }}
                     />
-                    <datalist id="listCPFPacCons">
-                      <option value="123.456.789-10">José</option>
-                      <option value="898.320.932-56">Maria</option>
-                      <option value="329.139.032-55">Pedro</option>
-                    </datalist>
+                    <ListCPFPacCons />
                     <span className="hovBlock">
                       <button
                         type="button"
@@ -715,11 +716,7 @@ export default function FormDlg({
                         }
                       }}
                     />
-                    <datalist id="listFirstNameCons">
-                      <option value="José"></option>
-                      <option value="Maria"></option>
-                      <option value="Pedro"></option>
-                    </datalist>
+                    <ListFirstNameCons />
                     <button
                       type="button"
                       id="btnShowAvStuds"
@@ -975,21 +972,12 @@ export default function FormDlg({
                       }}
                     />
                     <datalist id="avStuds">
-                      REGISTO DE ESTUDANTES
-                      <optgroup label="Odontologia">
-                        <option value="Maria Eduarda Augusta">
-                          Odontologia
-                        </option>
-                        <option value="Josefina Guedes Pereira">
-                          Odontologia
-                        </option>
-                      </optgroup>
-                      <optgroup label="Educação Física & Nutrição">
-                        <option value="Augusto Duarte Fonseca">
-                          Educação Física
-                        </option>
-                      </optgroup>
-                      <optgroup label="Psiquiatria e Psicologia"></optgroup>
+                      <span>Registro de Estudantes</span>
+                      <OptGrpUsers grp="studs" area="Odontologia" />
+                      <OptGrpUsers grp="studs" area="Educação Física" />
+                      <OptGrpUsers grp="studs" area="Nutrição" />
+                      <OptGrpUsers grp="studs" area="Medicina" />
+                      <OptGrpUsers grp="studs" area="Psicologia" />
                     </datalist>
                     <button
                       type="button"
@@ -1038,17 +1026,12 @@ export default function FormDlg({
                       }}
                     />
                     <datalist id="avProfs">
-                      REGISTO DE PROFISSIONAIS:
-                      <optgroup label="Odontologia">
-                        <option value="Ângela Celeste Barreto de Azevedo">
-                          Odontologia
-                        </option>
-                      </optgroup>
-                      <optgroup label="Educação Física"></optgroup>
-                      <optgroup label="Nutrição">
-                        <option value="Aline Martinez">Nutrição</option>
-                      </optgroup>
-                      <optgroup label="Psiquiatria e Psicologia"></optgroup>
+                      <span>Registro de Profissionais</span>
+                      <OptGrpUsers grp="profs" area="Odontologia" />
+                      <OptGrpUsers grp="profs" area="Educação Física" />
+                      <OptGrpUsers grp="profs" area="Nutrição" />
+                      <OptGrpUsers grp="profs" area="Medicina" />
+                      <OptGrpUsers grp="profs" area="Psicologia" />
                     </datalist>
                     <button
                       type="button"
@@ -1120,13 +1103,15 @@ export default function FormDlg({
                 id="divSubmitPac"
               >
                 <button
-                  type="submit"
+                  type="button"
+                  // "submit"
                   id="submitPacBtn"
                   className="btn btn-success widFull"
                   ref={submitRef}
                   onClick={ev => {
+                    const UNDER_TEST = true;
                     validateForm(ev, ev.currentTarget).then(validation => {
-                      if (validation[0]) {
+                      if (UNDER_TEST) {
                         //acumulador é alinhado com o de contexto dos diálogos de consulta no handler comum
                         accFormData =
                           document.querySelectorAll(".appointmentBtn").length +
@@ -1139,7 +1124,23 @@ export default function FormDlg({
                         );
                         handleSubmit("cons", validation[2], true);
                         onClose();
-                      } else ev.preventDefault();
+                      } else {
+                        if (validation[0]) {
+                          //acumulador é alinhado com o de contexto dos diálogos de consulta no handler comum
+                          accFormData =
+                            document.querySelectorAll(".appointmentBtn")
+                              .length + 1;
+                          providerFormData[accFormData] = generateSchedPacData(
+                            dlgRef.current ?? ev.currentTarget.closest("dialog")
+                          );
+                          generateSchedBtn(
+                            dlgRef.current ??
+                              ev.currentTarget.closest("dialog")!
+                          );
+                          handleSubmit("cons", validation[2], true);
+                          onClose();
+                        } else ev.preventDefault();
+                      }
                     });
                   }}
                 >

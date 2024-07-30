@@ -8,8 +8,6 @@ import AlterFieldList from "../../lists/AlterFieldList";
 import FormExcludeBtn from "../defs/FormExcludeBtn";
 import PrevConsList from "../../lists/PrevConsList";
 
-
-
 export default function PacRow({
   tabRef,
   pac = {
@@ -71,7 +69,7 @@ export default function PacRow({
             data-title={`UnfilledText Paciente Linha ${nRow} (${
               pac.name || "Anônimo"
             })`}
-            data-aloc={`UnfilledText-pac`}
+            data-aloc={`cpf-pac`}
             data-row={nRow}
             data-col={1}
           >
@@ -108,7 +106,7 @@ export default function PacRow({
           data-title={`UnfilledText Paciente Linha ${nRow} (${
             pac.name || "Anônimo"
           })`}
-          data-aloc={`UnfilledText-pac`}
+          data-aloc={`email-pac`}
           data-row={nRow}
           data-col={userClass === "coordenador" ? 3 : 2}
         >
@@ -252,7 +250,7 @@ export default function PacRow({
             data-title={`Status de Paciente Linha ${nRow} (${
               pac.name || "Anônimo"
             })`}
-            data-aloc={`UnfilledText-pac`}
+            data-aloc={`status-pac`}
             data-row={nRow}
             data-col={userClass === "coordenador" ? 8 : 7}
           >
@@ -328,7 +326,7 @@ export default function PacRow({
           <div role="group" className="widFull flexAlItCt flexJC">
             <button
               type="button"
-              className="btnAlocPac btn btn-success widFull flexJC flexAlItCt wsNoW opaquelightEl"
+              className="btnAloc btnAlocPac btn btn-success widFull flexJC flexAlItCt wsNoW opaquelightEl"
               id={`btnAlocPac${nRow}`}
               ref={alocBtnRef}
             >

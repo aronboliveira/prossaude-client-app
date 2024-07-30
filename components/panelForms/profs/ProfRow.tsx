@@ -33,6 +33,7 @@ export default function ProfRow({
             className={`outputAvProf outputAvProf${nRow - 1}`}
             id={`outpCPFProf-row${nRow}`}
             data-title={`Identificador ${nRow}`}
+            data-aloc="cpf-prof"
           >
             {prof.idf || "Não fornecido"}
           </output>
@@ -47,6 +48,7 @@ export default function ProfRow({
           className={`outputAvProf outputAvProf${nRow - 1}`}
           id={`outpNameProf-row${nRow}`}
           data-title={`Nome do Profissional ${nRow}`}
+          data-aloc="name-prof"
         >
           {prof.name || "Anônimo"}
         </output>
@@ -63,6 +65,7 @@ export default function ProfRow({
             data-title={`Externo ${nRow}`}
             data-row={nRow}
             data-col={userClass === "coordenador" ? "3" : "2"}
+            data-aloc="external-prof"
           >
             {external ? "Externo" : "Interno"}
           </output>
@@ -79,6 +82,7 @@ export default function ProfRow({
           className={`outputAvProf outputAvProf outputAvProf${nRow - 1}`}
           id={`outpEmailProf-row${nRow}`}
           data-title={`Email ${nRow}`}
+          data-aloc="email-prof"
           data-row={nRow}
           data-col={
             userClass === "coordenador"
@@ -134,6 +138,7 @@ export default function ProfRow({
           className={`outputAv outputAvProf outputAvProf${nRow - 1}`}
           id={`outpTelProf-row${nRow}`}
           data-title={`Telefone ${nRow}`}
+          data-aloc="tel-prof"
           data-row={nRow}
           data-col={
             userClass === "coordenador"
@@ -159,6 +164,7 @@ export default function ProfRow({
           className={`outputAvProf outputAvProf${nRow - 1}`}
           id={`outpAreaProf-row${nRow}`}
           data-title={`Área de atuação${nRow}`}
+          data-aloc="area-prof"
           data-row={nRow}
           data-col={
             userClass === "coordenador"
@@ -184,6 +190,7 @@ export default function ProfRow({
           className={`outputAvProf outputAvProf${nRow - 1}`}
           id={`outpDayProf-row${nRow}`}
           data-title={`Dia de atividade${nRow}`}
+          data-aloc="day-prof"
           data-row={nRow}
           data-col={
             userClass === "coordenador"
@@ -209,6 +216,7 @@ export default function ProfRow({
           className={`outputAvProf outputAvProf outputAvProf${nRow - 1}`}
           id={`outpIntervProf-row${nRow}`}
           data-title={`Intervalo de Atividade ${nRow}`}
+          data-aloc="interv-prof"
           data-row={nRow}
           data-col={
             userClass === "coordenador"
@@ -261,7 +269,7 @@ export default function ProfRow({
           data-col={userClass === "coordenador" ? "9" : "8"}
         >
           <button
-            className="btnAlocProf btn btn-success widFull"
+            className="btnAloc btnAlocProf btn btn-success widFull"
             id={`btnAlocProf-row${nRow}`}
           >
             <span role="textbox">Alocar</span>

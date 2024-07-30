@@ -31,37 +31,30 @@ export default function ExcludeDlg({
       ...excludeDlgRef.current!.querySelectorAll("*"),
       excludeDlgRef.current!,
     ]);
-    excludeDlgRef.current!.addEventListener(
-      "click",
-      click => {
-        if (
-          isClickOutside(click, excludeDlgRef.current!).some(
-            point => point === true
-          )
-        ) {
-          excludeDlgRef.current!.close();
-          toggleClose();
-        }
-      },
-      true
-    );
     const handleKeyDown = (press: KeyboardEvent) => {
-      if (press.key === "Escape") {
-        toggleClose();
-      }
+      press.key === "Escape" && toggleClose();
     };
-    document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
+    addEventListener("keydown", handleKeyDown);
+    return () => removeEventListener("keydown", handleKeyDown);
   }, [excludeDlgRef]);
   return (
     <>
       {shouldDisplayExcludeDlg && (
         <dialog
           role="alertdialog"
+          id="excludeAlertDlg"
           ref={excludeDlgRef}
           className="modal-content modal-content-fit"
+          onClick={click => {
+            if (
+              isClickOutside(click, excludeDlgRef.current!).some(
+                point => point === true
+              )
+            ) {
+              excludeDlgRef.current!.close();
+              toggleClose();
+            }
+          }}
         >
           <ErrorBoundary
             FallbackComponent={() => (
