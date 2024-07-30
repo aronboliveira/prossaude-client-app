@@ -4,6 +4,7 @@ import { orderLabels } from "@/lib/locals/odPage/odModel";
 import { qrProps } from "@/lib/global/declarations/interfaces";
 import { useEffect, useRef } from "react";
 import InpAvDent from "./InpAvDent";
+"use client";
 
 import {
   dragEnd,

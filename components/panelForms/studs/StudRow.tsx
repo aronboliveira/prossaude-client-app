@@ -180,9 +180,10 @@ export default function StudRow({
             </button>
             {shouldShowAlterDlg && (
               <AlterFieldList
-                setDisplayRowData={setAlterDlg}
+                dispatch={setAlterDlg}
                 tabRef={tabRef}
-                shouldDisplayRowData={shouldShowAlterDlg}
+                state={shouldShowAlterDlg}
+                name={stud.name}
               />
             )}
           </td>

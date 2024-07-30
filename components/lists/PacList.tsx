@@ -10,6 +10,7 @@ import { useEffect, useRef, useCallback, MutableRefObject } from "react";
 import GenericErrorComponent from "../error/GenericErrorComponent";
 import PacRow from "../panelForms/pacs/PacRow";
 import Spinner from "../icons/Spinner";
+("use client");
 
 import {
   nullishBtn,
@@ -28,11 +29,9 @@ import {
 } from "@/lib/locals/panelPage/handlers/consHandlerList";
 
 export default function PacList({
-  setDisplayRowData,
-  shouldDisplayRowData,
-  dispatch,
   shouldShowAlocBtn = true,
-  state = true,
+  shouldDisplayRowData,
+  setDisplayRowData,
   userClass = "estudante",
 }: PacListProps): JSX.Element {
   const pacs: PacInfo[] = [];
@@ -47,8 +46,8 @@ export default function PacList({
         ancestral,
         ancestral,
         "Pac",
-        state,
-        dispatch,
+        shouldDisplayRowData,
+        setDisplayRowData,
         userClass
       );
     },

@@ -1,4 +1,5 @@
 import { handleEventReq } from "@/lib/global/handlers/gHandlers";
+"use client";
 
 
 export default function City(): JSX.Element {

@@ -1,4 +1,5 @@
 import { handleDivAddShow } from "@/pages/ag";
+"use client";
 
 
 export default function FamDislip(): JSX.Element {

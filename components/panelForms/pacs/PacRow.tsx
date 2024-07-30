@@ -6,6 +6,7 @@ import { useState, useRef } from "react";
 import AlterFieldList from "../../lists/AlterFieldList";
 import FormExcludeBtn from "../defs/FormExcludeBtn";
 import PrevConsList from "../../lists/PrevConsList";
+"use client";
 
 
 export default function PacRow({

@@ -3,6 +3,7 @@ import { useState } from "react";
 import ENTips from "./ENTips";
 import GenericErrorComponent from "../../error/GenericErrorComponent";
 import TipsBtn from "../def/TipsBtn";
+"use client";
 
 
 export default function ENTipsBtnWrapper(): JSX.Element {

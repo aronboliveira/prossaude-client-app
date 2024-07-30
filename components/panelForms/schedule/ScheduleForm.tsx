@@ -13,6 +13,7 @@ import RegstConsBtn from "./RegstConsBtn";
 import ReseterBtn from "../defs/ReseterBtn";
 import ThDate from "./ThDate";
 import TrBSchedTab from "./TrBSchedTab";
+"use client";
 
 import {
   clearPhDates,

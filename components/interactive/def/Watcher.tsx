@@ -4,6 +4,7 @@ import { handleLinkChanges } from "@/lib/global/handlers/gRoutingHandlers";
 import { odProps } from "@/pages/od";
 import { pageCases, targEl } from "@/lib/global/declarations/types";
 import { useEffect } from "react";
+"use client";
 
 import {
   addListenerExportBtn,

@@ -2,6 +2,7 @@ import { PayloadCounterAction } from "@/lib/global/declarations/interfaces";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { nullishDiv } from "@/lib/global/declarations/types";
 import { useEffect, useReducer, useRef } from "react";
+"use client";
 
 import {
   handleEventReq,

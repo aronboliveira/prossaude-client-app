@@ -1,5 +1,6 @@
 import { switchAutoFill } from "@/lib/locals/edFisNutPage/edFisNutHandler";
 import { tabProps } from "@/pages/edfis";
+"use client";
 
 
 export default function SwitchDiv({

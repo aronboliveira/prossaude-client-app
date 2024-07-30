@@ -7,6 +7,7 @@ import { useEffect, useContext } from "react";
 import { useRouter } from "next/router";
 import GenericErrorComponent from "../../error/GenericErrorComponent";
 import UserProfilePanel from "../../user/UserProfilePanel";
+"use client";
 
 
 export default function UserProfilePanelWrapper({

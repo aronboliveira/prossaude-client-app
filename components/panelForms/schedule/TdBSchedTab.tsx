@@ -1,5 +1,6 @@
 import { HrCelProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import EraseAptBtn from "./EraseAptBtn";
+"use client";
 
 
 export default function TdBSchedTab({

@@ -8,6 +8,7 @@ import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useEffect, useRef, useCallback, MutableRefObject } from "react";
 import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
 import StudList from "./StudList";
+"use client";
 
 import {
   addListenerAlocation,

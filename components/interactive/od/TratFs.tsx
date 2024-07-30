@@ -1,6 +1,7 @@
 import { CounterAction } from "@/lib/global/declarations/interfaces";
 import { addSubDivTrat } from "@/lib/locals/odPage/odHandler";
 import { useEffect, useReducer, useRef } from "react";
+"use client";
 
 import {
   nullishBtn,

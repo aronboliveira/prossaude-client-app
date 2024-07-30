@@ -3,6 +3,7 @@ import { useState } from "react";
 import AGTips from "./AGTips";
 import GenericErrorComponent from "../../error/GenericErrorComponent";
 import TipsBtn from "../def/TipsBtn";
+"use client";
 
 
 export default function AgTipsBtnWrapper(): JSX.Element {

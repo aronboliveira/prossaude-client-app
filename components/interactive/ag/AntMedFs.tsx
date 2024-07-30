@@ -5,6 +5,7 @@ import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { nullishFs } from "@/lib/global/declarations/types";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useEffect, useReducer, useRef } from "react";
+"use client";
 
 
 export default function AntMedFs(): JSX.Element {

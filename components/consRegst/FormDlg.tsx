@@ -15,6 +15,7 @@ import AvPacListDlg from "../lists/AvPacListDlg";
 import AvProfListDlg from "../lists/AvProfListDlg";
 import DREFiller from "./DREFiller";
 import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
+"use client";
 
 import {
   useEffect,

@@ -3,6 +3,7 @@ import { handleLinkChanges } from "@/lib/global/handlers/gRoutingHandlers";
 import { parseNotNaN } from "@/lib/global/gModel";
 import { person, tabProps } from "@/pages/edfis";
 import { useEffect, useState } from "react";
+"use client";
 
 import {
   addListenerExportBtn,

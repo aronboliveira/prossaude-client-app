@@ -3,6 +3,7 @@ import { useState } from "react";
 import GenericErrorComponent from "../../error/GenericErrorComponent";
 import OdTips from "./OdTips";
 import TipsBtn from "../def/TipsBtn";
+"use client";
 
 
 export default function OdTipsBtnWrapper(): JSX.Element {

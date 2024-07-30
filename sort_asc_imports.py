@@ -27,9 +27,7 @@ def sort_asc_imports(path):
       alias_imps.append(imp)
     elif re.search(r'^import\s+', imp) and re.search(r'\s*from\s+', imp):
       def_imps.append(imp)
-    elif re.search(r'^import\s+', imp) and re.search(r'.scss'):
-      styles_imps.append(imp)
-    elif re.search(r'^import\s+', imp) and re.search(r'.css'):
+    elif re.search(r'^import\s+', imp) and re.search(r'.s?css'):
       styles_imps.append(imp)
   sorted_imps = "".join(sorted(no_def_imps, key=get_first_destructured) + sorted(def_imps, key=lambda imp: re.search(r"import\s+(\S+)", imp).group(1)) + sorted(alias_imps, key=lambda imp: re.search(r"import\s+\*\s+as\s+(\S+)", imp).group(1)))
   with open(path, 'w',encoding='utf-8') as file:

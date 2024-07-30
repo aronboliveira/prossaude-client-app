@@ -1,6 +1,7 @@
 import { formatCEP } from "@/lib/global/gModel";
 import { handleEventReq } from "@/lib/global/handlers/gHandlers";
 import { useEffect } from "react";
+"use client";
 
 import {
   elementNotFound,

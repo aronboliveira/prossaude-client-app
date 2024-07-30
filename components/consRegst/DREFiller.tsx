@@ -5,6 +5,7 @@ import { globalDataProvider } from "../panelForms/defs/client/SelectPanel";
 import { nullishBtn } from "@/lib/global/declarations/types";
 import { useEffect, useRef, useState } from "react";
 import AvStudListDlg from "../lists/AvStudListDlg";
+"use client";
 
 import {
   handleCondtReq,

@@ -1,4 +1,5 @@
 import { callbackAtvLvlElementNaf, person, tabProps } from "@/pages/edfis";
+"use client";
 
 
 export default function FormCalcTmbType(): JSX.Element {

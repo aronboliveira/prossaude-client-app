@@ -8,6 +8,7 @@ import { useEffect, useRef } from "react";
 import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
 import GenericErrorComponent from "../error/GenericErrorComponent";
 import PrevConsRow from "./PrevConsRow";
+"use client";
 
 
 export default function PrevConsList({

@@ -7,7 +7,7 @@ import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useEffect, useRef, useState } from "react";
 import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
 import PacList from "./PacList";
-
+("use client");
 
 export default function AvPacListDlg({
   dispatch,
@@ -114,8 +114,6 @@ export default function AvPacListDlg({
             <PacList
               setDisplayRowData={setDisplayRowData}
               shouldDisplayRowData={shouldDisplayRowData}
-              state={state}
-              dispatch={dispatch}
               shouldShowAlocBtn={shouldShowAlocBtn}
               userClass={userClass}
             />

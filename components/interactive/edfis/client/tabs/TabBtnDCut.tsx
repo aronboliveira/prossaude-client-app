@@ -1,4 +1,5 @@
 import { handleSumClick } from "../../TabDCut";
+"use client";
 
 
 export default function TabBtnDCut({ nCol }: { nCol: number }): JSX.Element {

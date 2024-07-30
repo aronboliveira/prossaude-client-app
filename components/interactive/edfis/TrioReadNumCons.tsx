@@ -4,6 +4,7 @@ import { parseNotNaN } from "@/lib/global/gModel";
 import { switchNumConsTitles } from "@/lib/locals/edFisNutPage/edFisNutHandler";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useEffect, useRef } from "react";
+"use client";
 
 import {
   elementNotFound,

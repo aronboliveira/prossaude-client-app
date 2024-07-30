@@ -9,6 +9,7 @@ import { targEl } from "@/lib/global/declarations/types";
 import { useEffect, useContext } from "react";
 import { useRouter } from "next/router";
 import UserProfilePanel from "../../user/UserProfilePanel";
+"use client";
 
 
 let baseRootUser: targEl;

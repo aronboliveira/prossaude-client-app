@@ -3,6 +3,7 @@ import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { isClickOutside } from "@/lib/global/gStyleScript";
 import { nullishDlg } from "@/lib/global/declarations/types";
 import { useRef, useEffect } from "react";
+"use client";
 
 
 export default function PanelTips({ state, dispatch }: DlgProps): JSX.Element {

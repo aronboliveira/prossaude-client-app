@@ -242,9 +242,10 @@ export default function ProfRow({
             </button>
             {shouldShowAlterDlg && (
               <AlterFieldList
-                setDisplayRowData={setAlterDlg}
+                dispatch={setAlterDlg}
                 tabRef={tabRef}
-                shouldDisplayRowData={shouldShowAlterDlg}
+                state={shouldShowAlterDlg}
+                name={prof.name}
               />
             )}
           </td>
