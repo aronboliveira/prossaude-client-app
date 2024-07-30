@@ -1,9 +1,9 @@
-import { ErrorBoundary } from "react-error-boundary";
-import LoginPage from "./login";
-import { useContext, useEffect } from "react";
 import { AppRootContext } from "./_app";
+import { ErrorBoundary } from "react-error-boundary";
 import { createRoot } from "react-dom/client";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
+import { useContext, useEffect } from "react";
+import LoginPage from "./login";
 
 export const basePath = {
   path: "",

@@ -1,3 +1,4 @@
+import { NextRouter } from "next/router";
 import {
   rMouseEvent,
   targEl,
@@ -9,7 +10,6 @@ import {
   ProfInfo,
   StudInfo,
 } from "@/lib/locals/panelPage/declarations/interfacesCons";
-import { NextRouter } from "next/router";
 
 export async function handleLogin(
   ev: rMouseEvent,

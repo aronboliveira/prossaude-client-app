@@ -1,5 +1,49 @@
+import { ENTabsProps } from "@/lib/global/declarations/interfaces";
 import { ErrorBoundary } from "react-error-boundary";
+import { Person } from "@/lib/global/declarations/classes";
+import { changeTabDCutLayout } from "@/lib/locals/edFisNutPage/edFisNutModel";
+import { defaultResult } from "@/lib/locals/edFisNutPage/edFisNutController";
+import { handleSubmit } from "./api/ts/handlers";
 import { memo } from "react";
+import { parseNotNaN } from "@/lib/global/gModel";
+import { validateForm } from "@/lib/global/handlers/gHandlers";
+import AgeElement from "../../components/interactive/edfis/defaulted/AgeElement";
+import ConfirmDate from "../../components/interactive/def/ConfirmDate";
+import ConfirmLocId from "../../components/interactive/def/ConfirmLocId";
+import Declaration from "../../components/interactive/def/Declaration";
+import DivRot from "../../components/interactive/edfis/DivRot";
+import ENBtnConformWrapper from "../../components/interactive/edfis/ENBtnConformWrapper";
+import ENTipsBtnWrapper from "../../components/interactive/edfis/ENTipsBtnWrapper";
+import FormCalcTmbType from "../../components/interactive/edfis/client/FormCalcTmbType";
+import GenDiv from "../../components/interactive/def/GenDiv";
+import GenericErrorComponent from "../../components/error/GenericErrorComponent";
+import GordCorpLvl from "../../components/interactive/edfis/client/GordCorpLvl";
+import HeaderDate from "../../components/interactive/def/HeaderDate";
+import InpCorUr from "../../components/interactive/edfis/client/InpCorUr";
+import InpDiur from "../../components/interactive/edfis/client/InpDiur";
+import LockTabInd from "../../components/interactive/edfis/tabs/LobTackInd";
+import NafType from "../../components/interactive/edfis/client/NafType";
+import Name from "../../components/interactive/def/Name";
+import OpProtUr from "../../components/interactive/edfis/OpProtUr";
+import ProtUrLvl from "../../components/interactive/edfis/client/ProtUrLvl";
+import Protocolo from "../../components/interactive/edfis/client/Protocolo";
+import SectConfirmBtns from "../../components/interactive/def/SectConfirmBtns";
+import SelFactorAtleta from "../../components/interactive/edfis/client/SelFactorAtleta";
+import SelectLvlAtFis from "../../components/interactive/edfis/client/SelectLvlAtFis";
+import SelectNumCons from "../../components/interactive/edfis/client/SelectNumCons";
+import Signature from "../../components/interactive/def/Signature";
+import SocialName from "../../components/interactive/def/SocialName";
+import SwitchDiv from "../../components/interactive/def/SwitchDiv";
+import TabAtFirsProp from "../../components/interactive/edfis/TabAtFisProp";
+import TabAtFirsRot from "../../components/interactive/edfis/TabAtFisRot";
+import TabComorb from "../../components/interactive/edfis/TabComorb";
+import TabDCut from "../../components/interactive/edfis/TabDCut";
+import TabIndPerc from "../../components/interactive/edfis/TabIndPerc";
+import TabMedAnt from "../../components/interactive/edfis/TabMedAnt";
+import TabProgSVi from "../../components/interactive/edfis/TabProgSVi";
+import TextBodyType from "../../components/interactive/edfis/client/TextBodyType";
+import TrioReadNumCons from "../../components/interactive/edfis/TrioReadNumCons";
+import WatcherEN from "../../components/interactive/def/WatcherEN";
 import {
   elementNotFound,
   extLine,
@@ -15,9 +59,6 @@ import {
   entryEl,
   targEl,
 } from "@/lib/global/declarations/types";
-import { defaultResult } from "@/lib/locals/edFisNutPage/edFisNutController";
-import { parseNotNaN } from "@/lib/global/gModel";
-import { Person } from "@/lib/global/declarations/classes";
 import {
   defineTargInps,
   fluxFormIMC,
@@ -30,47 +71,6 @@ import {
   updatePGC,
   validateEvResultNum,
 } from "@/lib/locals/edFisNutPage/edFisNutHandler";
-import { ENTabsProps } from "@/lib/global/declarations/interfaces";
-import TrioReadNumCons from "../../components/interactive/edfis/TrioReadNumCons";
-import TabAtFirsRot from "../../components/interactive/edfis/TabAtFisRot";
-import TabAtFirsProp from "../../components/interactive/edfis/TabAtFisProp";
-import TabComorb from "../../components/interactive/edfis/TabComorb";
-import TabIndPerc from "../../components/interactive/edfis/TabIndPerc";
-import TabDCut from "../../components/interactive/edfis/TabDCut";
-import TabProgSVi from "../../components/interactive/edfis/TabProgSVi";
-import TabMedAnt from "../../components/interactive/edfis/TabMedAnt";
-import { changeTabDCutLayout } from "@/lib/locals/edFisNutPage/edFisNutModel";
-import AgeElement from "../../components/interactive/edfis/defaulted/AgeElement";
-import ConfirmLocId from "../../components/interactive/def/ConfirmLocId";
-import Signature from "../../components/interactive/def/Signature";
-import Name from "../../components/interactive/def/Name";
-import SocialName from "../../components/interactive/def/SocialName";
-import GenDiv from "../../components/interactive/def/GenDiv";
-import HeaderDate from "../../components/interactive/def/HeaderDate";
-import ConfirmDate from "../../components/interactive/def/ConfirmDate";
-import SectConfirmBtns from "../../components/interactive/def/SectConfirmBtns";
-import Declaration from "../../components/interactive/def/Declaration";
-import ENTipsBtnWrapper from "../../components/interactive/edfis/ENTipsBtnWrapper";
-import ENBtnConformWrapper from "../../components/interactive/edfis/ENBtnConformWrapper";
-import GenericErrorComponent from "../../components/error/GenericErrorComponent";
-import SwitchDiv from "../../components/interactive/def/SwitchDiv";
-import DivRot from "../../components/interactive/edfis/DivRot";
-import InpCorUr from "../../components/interactive/edfis/client/InpCorUr";
-import InpDiur from "../../components/interactive/edfis/client/InpDiur";
-import ProtUrLvl from "../../components/interactive/edfis/client/ProtUrLvl";
-import SelectLvlAtFis from "../../components/interactive/edfis/client/SelectLvlAtFis";
-import SelectNumCons from "../../components/interactive/edfis/client/SelectNumCons";
-import TextBodyType from "../../components/interactive/edfis/client/TextBodyType";
-import GordCorpLvl from "../../components/interactive/edfis/client/GordCorpLvl";
-import NafType from "../../components/interactive/edfis/client/NafType";
-import FormCalcTmbType from "../../components/interactive/edfis/client/FormCalcTmbType";
-import SelFactorAtleta from "../../components/interactive/edfis/client/SelFactorAtleta";
-import Protocolo from "../../components/interactive/edfis/client/Protocolo";
-import WatcherEN from "../../components/interactive/def/WatcherEN";
-import OpProtUr from "../../components/interactive/edfis/OpProtUr";
-import LockTabInd from "../../components/interactive/edfis/tabs/LobTackInd";
-import { validateForm } from "@/lib/global/handlers/gHandlers";
-import { handleSubmit } from "./api/ts/handlers";
 
 export const tabProps: ENTabsProps = {
   edIsAutoCorrectOn: true,
