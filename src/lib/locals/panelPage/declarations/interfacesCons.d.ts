@@ -1,5 +1,10 @@
 import { DlgProps } from "@/lib/global/declarations/interfaces";
-import { aptTypes, formCases, looseNum } from "@/lib/global/declarations/types";
+import {
+  aptTypes,
+  formCases,
+  looseNum,
+  panelOpts,
+} from "@/lib/global/declarations/types";
 import {
   nullishForm,
   nullishDlg,
@@ -30,7 +35,7 @@ export interface GlobalFormProps {
 }
 
 export interface MainPanelProps extends GlobalFormProps {
-  defOp: string;
+  defOp: panelOpts;
 }
 
 export interface ScheduleFormProps extends GlobalFormProps {

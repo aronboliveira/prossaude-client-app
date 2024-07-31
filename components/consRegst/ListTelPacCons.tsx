@@ -78,7 +78,14 @@ export default function ListTelPacCons(): JSX.Element {
                 if (!dlRef.current.querySelector("option"))
                   panelRoots[`${dlRef.current.id}`]?.render(
                     pacs.map((pac, i) => (
-                      <option value={pac.tel} key={`tel-pac__${i}`}>
+                      <option
+                        value={
+                          /\s/g.test(pac.tel.trim())
+                            ? pac.tel.trim().slice(pac.tel.lastIndexOf(" "))
+                            : pac.tel.trim()
+                        }
+                        key={`tel-pac__${i}`}
+                      >
                         {pac.name}
                       </option>
                     ))
@@ -95,7 +102,14 @@ export default function ListTelPacCons(): JSX.Element {
           if (!dlRef.current.querySelector("tr"))
             panelRoots[`${dlRef.current.id}`]?.render(
               pacs.map((pac, i) => (
-                <option value={pac.tel} key={`tel-pac__${i}`}>
+                <option
+                  value={
+                    /\s/g.test(pac.tel.trim())
+                      ? pac.tel.trim().slice(pac.tel.lastIndexOf(" ") + 1)
+                      : pac.tel.trim()
+                  }
+                  key={`tel-pac__${i}`}
+                >
                   {pac.name}
                 </option>
               ))

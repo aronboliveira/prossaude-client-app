@@ -233,7 +233,7 @@ body {
     #confirmDayMainDiv {
       > div {
         &:has(#labConfirmDay) {
-          transform: translate(0, 0.3rem);
+          transform: translate(0, 0);
         }
       }
     }
