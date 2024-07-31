@@ -174,3 +174,10 @@ export type validAreas =
   | "Coordenação"
   | "Psicologia"
   | "Medicina";
+export type panelOpts =
+  | "registStud"
+  | "registProf"
+  | "removeStud"
+  | "removeProf"
+  | "pacList"
+  | "agenda";

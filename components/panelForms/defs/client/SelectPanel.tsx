@@ -8,7 +8,11 @@ import { Root } from "react-dom/client";
 import { camelToKebab, kebabToCamel } from "@/lib/global/gModel";
 import { createRoot } from "react-dom/client";
 import { handleLinkChanges } from "@/lib/global/handlers/gRoutingHandlers";
-import { nullishDiv, voidVal } from "@/lib/global/declarations/types";
+import {
+  nullishDiv,
+  panelOpts,
+  voidVal,
+} from "@/lib/global/declarations/types";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useState, useRef, useEffect, useContext } from "react";
 import DefaultForm from "../DefaultForm";
@@ -42,20 +46,21 @@ export default function SelectPanel({
   const [mounted, setMounted] = useState<boolean>(false);
   const formRootRef = useRef<nullishDiv>(null);
   const context = useContext<AppRootContextType>(AppRootContext);
-  const renderSelectPanel = () => {
+  const renderSelectPanel = (opt: panelOpts) => {
     try {
-      const formRoots = document.getElementById("formRoot");
-      if (!(formRoots instanceof HTMLElement))
+      const formRoot = document.getElementById("formRoot");
+      if (!(formRoot instanceof HTMLElement))
         throw elementNotFound(
-          formRoots,
+          formRoot,
           `Validation of Form Roots Element in Schedule`,
           extLine(new Error())
         );
       if (!context.roots.formRoot)
-        context.roots.formRoot = createRoot(formRoots);
+        context.roots.formRoot = createRoot(formRoot);
       context.roots.formRoot.render(
-        (() => {
-          switch (selectedOption) {
+        ((opt: panelOpts) => {
+          console.log(`Rendering for ${opt}...`);
+          switch (opt) {
             case "registStud":
               return userClass === "coordenador" ||
                 userClass === "supervisor" ? (
@@ -89,13 +94,13 @@ export default function SelectPanel({
               return <ScheduleForm context={false} userClass={userClass} />;
             default:
               stringError(
-                selectedOption,
-                "selectedOption in renderSelectedForm()",
+                opt,
+                "opt in renderSelectedForm()",
                 extLine(new Error())
               );
               return <DefaultForm userClass={userClass} />;
           }
-        })()
+        })(opt)
       );
     } catch (e) {
       console.error(
@@ -290,7 +295,7 @@ export default function SelectPanel({
           onChange={change => {
             setSelectedOption(change.target.value);
             handlePanelPath(change.target.value);
-            renderSelectPanel();
+            renderSelectPanel(change.target.value as panelOpts);
           }}
           autoFocus
           required
@@ -321,50 +326,7 @@ export default function SelectPanel({
           FallbackComponent={() => (
             <GenericErrorComponent message="Error rendering Selected Form for Panel" />
           )}
-        >
-          {(() => {
-            switch (selectedOption) {
-              case "registStud":
-                return userClass === "coordenador" ||
-                  userClass === "supervisor" ? (
-                  <StudentForm userClass={userClass} />
-                ) : (
-                  <Unauthorized />
-                );
-              case "registProf":
-                return userClass === "coordenador" ? (
-                  <ProfForm userClass={userClass} />
-                ) : (
-                  <Unauthorized />
-                );
-              case "removeStud":
-                return userClass === "coordenador" ||
-                  userClass === "supervisor" ? (
-                  <RemoveStudForm userClass={userClass} />
-                ) : (
-                  <Unauthorized />
-                );
-              case "removeProf":
-                return userClass === "coordenador" ||
-                  userClass === "supervisor" ? (
-                  <RemoveProfForm userClass={userClass} />
-                ) : (
-                  <Unauthorized />
-                );
-              case "pacList":
-                return <PacTabForm userClass={userClass} />;
-              case "agenda":
-                return <ScheduleForm context={false} userClass={userClass} />;
-              default:
-                stringError(
-                  selectedOption,
-                  "selectedOption in renderSelectedForm()",
-                  extLine(new Error())
-                );
-                return <DefaultForm userClass={userClass} />;
-            }
-          })()}
-        </ErrorBoundary>
+        ></ErrorBoundary>
       </div>
     </ErrorBoundary>
   );
