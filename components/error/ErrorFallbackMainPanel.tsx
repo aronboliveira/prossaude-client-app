@@ -1,6 +1,6 @@
 import { ErrorBoundary } from "react-error-boundary";
 import { ErrorFallbackMainPanelProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
-import { nullishSel } from "@/lib/global/declarations/types";
+import { nullishSel, panelOpts } from "@/lib/global/declarations/types";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useEffect, useRef, useState } from "react";
 import MainFormPanel from "../mainPanel/MainFormPanel";
@@ -32,9 +32,9 @@ export default function ErrorFallbackMainPanel(
         ref={selectRef}
         onChange={() => {
           setPanelValue(
-            selectRef.current?.value ||
+            (selectRef.current?.value as panelOpts) ||
               (document.getElementById("coordPanelSelect") as HTMLSelectElement)
-                .value!
+                .value
           );
           props.mainRoot.render(
             <ErrorBoundary
@@ -58,7 +58,7 @@ export default function ErrorFallbackMainPanel(
                 mainRoot={props.mainRoot}
                 userClass={props.userClass}
                 defOp={
-                  selectRef.current?.value ||
+                  (selectRef.current?.value as panelOpts) ||
                   (
                     document.getElementById(
                       "coordPanelSelect"
