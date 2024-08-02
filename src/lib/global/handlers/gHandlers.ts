@@ -1036,7 +1036,8 @@ export function toggleConformDlg(): void {
 const borderColors: { [k: string]: string } = {};
 export async function validateForm(
   ev: FormEvent | SubmitEvent | rMouseEvent | HTMLFormElement,
-  scope: HTMLElement | Document = document
+  scope: HTMLElement | Document = document,
+  submit: boolean = true
 ): Promise<[boolean, string[], Array<[string, string | File]>]> {
   let targ;
   if (!(ev instanceof HTMLFormElement || "currentTarget" in ev))
@@ -1568,7 +1569,7 @@ export async function validateForm(
   if (form instanceof HTMLFormElement) {
     if (formValidated && form.checkValidity()) {
       form.noValidate = false;
-      form.submit();
+      submit && form.submit();
     } else form.noValidate = true;
   }
   return [

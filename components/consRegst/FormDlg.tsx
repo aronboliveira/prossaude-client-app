@@ -467,10 +467,10 @@ export default function FormDlg({
             className="flexWC"
             id="bodyRegsPac"
             name="cons_form"
-            // action="#"
-            // "submit_cons_form"
-            encType="application/x-www-form-urlencoded"
+            action="submit_cons_form"
             method="post"
+            encType="application/x-www-form-urlencoded"
+            onSubmit={ev => ev.preventDefault()}
           >
             <section className="flexWC" id="inpsRegsPacSec">
               <div role="group" className="flexWR" id="cpfPacDiv">
@@ -1194,22 +1194,9 @@ export default function FormDlg({
                   ref={submitRef}
                   onClick={ev => {
                     const UNDER_TEST = true;
-                    validateForm(ev, ev.currentTarget).then(validation => {
-                      if (UNDER_TEST) {
-                        //acumulador é alinhado com o de contexto dos diálogos de consulta no handler comum
-                        accFormData =
-                          document.querySelectorAll(".appointmentBtn").length +
-                          1;
-                        providerFormData[accFormData] = generateSchedPacData(
-                          dlgRef.current ?? ev.currentTarget.closest("dialog")
-                        );
-                        generateSchedBtn(
-                          dlgRef.current ?? ev.currentTarget.closest("dialog")!
-                        );
-                        // handleSubmit("cons", validation[2], true);
-                        onClose();
-                      } else {
-                        if (validation[0]) {
+                    validateForm(ev, ev.currentTarget, false).then(
+                      validation => {
+                        if (UNDER_TEST) {
                           //acumulador é alinhado com o de contexto dos diálogos de consulta no handler comum
                           accFormData =
                             document.querySelectorAll(".appointmentBtn")
@@ -1221,11 +1208,29 @@ export default function FormDlg({
                             dlgRef.current ??
                               ev.currentTarget.closest("dialog")!
                           );
-                          handleSubmit("cons", validation[2], true);
+                          // handleSubmit("cons", validation[2], true);
                           onClose();
-                        } else ev.preventDefault();
+                        } else {
+                          if (validation[0]) {
+                            //acumulador é alinhado com o de contexto dos diálogos de consulta no handler comum
+                            accFormData =
+                              document.querySelectorAll(".appointmentBtn")
+                                .length + 1;
+                            providerFormData[accFormData] =
+                              generateSchedPacData(
+                                dlgRef.current ??
+                                  ev.currentTarget.closest("dialog")
+                              );
+                            generateSchedBtn(
+                              dlgRef.current ??
+                                ev.currentTarget.closest("dialog")!
+                            );
+                            handleSubmit("cons", validation[2], true);
+                            onClose();
+                          } else ev.preventDefault();
+                        }
                       }
-                    });
+                    );
                   }}
                 >
                   <small role="textbox">
