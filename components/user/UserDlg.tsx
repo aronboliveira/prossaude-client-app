@@ -119,14 +119,12 @@ export default function UserDlg({
           </div>
           <div id="logoutDivDlg" className="flexJSt cGap1v noInvert">
             <span className="bolded mg-04t noInvert">Logout</span>
-            {/* //TODO TEM QUE INSERIR ROTA AQUI PRA VOLTAR PRO LOGIN */}
             <button
               type="button"
               className="transparent-el-bg noInvert"
               id="logoutBtnDlg"
               style={{ position: "relative" }}
             >
-              {/* //TODO REFERENCIAR AQUI A URL PARA VOLTAR PARA O LOGIN */}
               <a
                 id="logoutAnchorDlg"
                 target="_self"

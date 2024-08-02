@@ -61,8 +61,12 @@ export default function PanelPage({ data }: { data: any }): JSX.Element {
           <div
             role="group"
             className="flexNoW flexNoWC600Q flexAlItCt cGap1v flexAlItSt600Q form-control contFitW"
+            id="wrapperUserInfo"
           >
-            <section className="form-control noMargin widThird flexNoW rGap2v flexBasis25 mg-0bQ460 widMinFit mg-0b600Q noInvert">
+            <section
+              className="form-control noMargin widThird flexNoW rGap2v flexBasis25 mg-0bQ460 widMinFit mg-0b600Q noInvert"
+              id="sectUserInfo"
+            >
               <div
                 role="group"
                 className="widFull flexNoW cGap2v rGap1v flexQ460NoWC wsNoW"
