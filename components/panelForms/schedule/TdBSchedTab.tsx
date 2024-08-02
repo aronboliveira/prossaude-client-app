@@ -2,8 +2,6 @@
 import { HrCelProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import EraseAptBtn from "./EraseAptBtn";
 
-
-
 export default function TdBSchedTab({
   userClass,
   mainRoot,
@@ -65,7 +63,7 @@ export default function TdBSchedTab({
         data-col={nCol}
       >
         <input
-          className={`transparent-el slotableDay opaque-bluish wid100 form-control inp${nHr}-00 inp-text-${nHr}-00`}
+          className={`transparent-el lcPersist slotableDay opaque-bluish wid100 form-control inp${nHr}-00 inp-text-${nHr}-00`}
           placeholder="Horário Livre"
           id={`_${nHr}-00_${nCol}`}
           name={`date_${nHr}-00_${nCol}`}

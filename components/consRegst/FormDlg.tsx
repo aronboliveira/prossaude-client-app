@@ -467,7 +467,7 @@ export default function FormDlg({
             className="flexWC"
             id="bodyRegsPac"
             name="cons_form"
-            action="#"
+            // action="#"
             // "submit_cons_form"
             encType="application/x-www-form-urlencoded"
             method="post"
@@ -1206,7 +1206,7 @@ export default function FormDlg({
                         generateSchedBtn(
                           dlgRef.current ?? ev.currentTarget.closest("dialog")!
                         );
-                        handleSubmit("cons", validation[2], true);
+                        // handleSubmit("cons", validation[2], true);
                         onClose();
                       } else {
                         if (validation[0]) {
