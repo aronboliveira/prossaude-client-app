@@ -131,6 +131,11 @@ $swhite: rgba(255, 255, 255, 0.9);
       padding-inline-start: 2px;
       padding-inline-end: 2px;
     }
+    td {
+      &:has(.tabInpProgSomaDCut) {
+        min-width: 15rem;
+      }
+    }
   }
 
   .btn {
@@ -791,6 +796,38 @@ $swhite: rgba(255, 255, 255, 0.9);
     }
     #protUrDiv {
       width: 75%;
+    }
+  }
+}
+
+@media screen and (max-width: 460px) {
+  .edfisNutBody {
+    div {
+      &.divLab {
+        &:has(#nafType),
+        &:has(#textBodytype) {
+          margin-bottom: 1rem;
+        }
+      }
+    }
+    .divProgCons {
+      align-items: flex-start;
+    }
+    .inpAlimRot,
+    .inpRefDia,
+    .inpUrDia,
+    #inpElimEvDiaMax {
+      min-width: unset;
+    }
+    #inpDiur {
+      min-width: calc(0.4rem + 48.5vw - 18.87vw + 5rem);
+    }
+    #selectLvlAtFis {
+      max-width: 72.5vw;
+      margin-left: 0;
+    }
+    #trioReadNumCons {
+      max-width: 63vw;
     }
   }
 }

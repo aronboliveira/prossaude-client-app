@@ -14,6 +14,7 @@ import {
   callbackShowPw,
   callbackSubmitBtn,
 } from "@/lib/locals/loginPage/loginController";
+// import { addButtonClickAnimationListeners } from "@/lib/global/handlers/gRoutingHandlers";
 // import { useRouter } from "next/router";
 
 export default function LoginInputs(): JSX.Element {
@@ -56,6 +57,7 @@ export default function LoginInputs(): JSX.Element {
       user: "Nome de Usuário",
       pw: "Senha",
     });
+    // addButtonClickAnimationListeners();
   }, []);
   return (
     <section id="inputCont">
