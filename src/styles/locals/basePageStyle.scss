@@ -70,6 +70,12 @@
     background-repeat: no-repeat;
     background-position: center center;
     background-size: 60%;
+    &:hover {
+      transform: translate(0, 0.1rem);
+    }
+    &:active {
+      transform: translate(0, 0.2rem);
+    }
   }
 
   .btn {
@@ -195,14 +201,26 @@
   #panelBtn {
     box-shadow: 0.2vh 0.2vh 0.2vh rgba(133, 128, 128, 0.671);
     transform: scale(1.2);
+    &:hover {
+      transform: scale(1.2) translate(0, 0.1rem);
+    }
+    &:active {
+      transform: scale(1.2) translate(0, 0.2rem);
+    }
   }
 }
 
 @media screen and (max-width: 1420px) {
   #ag_but_sec {
-    transform: translateY(-0.3rem);
+    transform: translate(0, -0.3rem);
     + * {
       transform: translateY(-0.3rem);
+    }
+    &:hover {
+      transform: translate(0, -0.2rem);
+    }
+    &:active {
+      transform: translate(0, -0.1rem);
     }
   }
 }
@@ -533,6 +551,12 @@
     }
     #panelBtn {
       transform: scale(1.1) translate(-1vw, 0);
+      &:hover {
+        transform: scale(1.1) translate(-1vw, 0.1rem);
+      }
+      &:active {
+        transform: scale(1.1) translate(-1vw, 0.2rem);
+      }
     }
   }
 }
@@ -557,6 +581,12 @@
     }
     #panelBtn {
       transform: scale(1.1) translate(-1vw, 0);
+      &:hover {
+        transform: scale(1.1) translate(-1vw, 0.1rem);
+      }
+      &:active {
+        transform: scale(1.1) translate(-1vw, 0.2rem);
+      }
     }
   }
 }
@@ -581,6 +611,12 @@
     }
     #panelBtn {
       transform: scale(1.1) translate(-1vw, 0);
+      &:hover {
+        transform: scale(1.1) translate(-1vw, 0.1rem);
+      }
+      &:active {
+        transform: scale(1.1) translate(-1vw, 0.2rem);
+      }
     }
   }
 }
@@ -617,6 +653,12 @@
     }
     #panelBtn {
       transform: scale(1.1) translate(-2.15vw, 0);
+      &:hover {
+        transform: scale(1.1) translate(-1vw, 0.1rem);
+      }
+      &:active {
+        transform: scale(1.1) translate(-1vw, 0.2rem);
+      }
     }
     #panelSect {
       padding-top: 0;

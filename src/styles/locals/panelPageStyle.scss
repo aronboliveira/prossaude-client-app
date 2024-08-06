@@ -148,6 +148,18 @@ body {
     margin-bottom: 1rem;
   }
 
+  #addAppointBtn,
+  #regstDaySubDiv {
+    &:enabled {
+      &:hover {
+        transform: translate(0, 0.1rem);
+      }
+      &:active {
+        transform: translate(0, 0.2rem);
+      }
+    }
+  }
+
   #autofillDivCons {
     padding-right: 0;
   }

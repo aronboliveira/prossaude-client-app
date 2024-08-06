@@ -2058,6 +2058,23 @@ td,
 
 #btnConform {
   margin: 2vh 0;
+  &:hover {
+    transform: translate(0, 0.1rem)
+  }
+  &:active {
+    transform: translate(0, 0.2rem);
+  }
+}
+
+#btnConform,
+#confirmAstDigtBtn,
+#resetAstBtn {
+  &:hover {
+    transform: translate(0, 0.1rem)
+  }
+  &:active {
+    transform: translate(0, 0.2rem);
+  }
 }
 
 #cepId {
