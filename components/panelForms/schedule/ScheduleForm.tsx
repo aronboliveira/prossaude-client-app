@@ -1,5 +1,5 @@
 "use client";
-import { DataProvider } from "../../../src/lib/locals/panelPage/declarations/classesCons";
+// import { DataProvider } from "../../../src/lib/locals/panelPage/declarations/classesCons";
 import { ErrorBoundary } from "react-error-boundary";
 import { ScheduleFormProps } from "../../../src/lib/locals/panelPage/declarations/interfacesCons";
 import { addListenerExportBtn } from "../../../src/lib/global/gController";
@@ -288,16 +288,12 @@ export default function ScheduleForm({
         ...formRef.current!.querySelectorAll("*"),
         formRef.current,
       ]);
-      const scheduleDataProvider = new DataProvider(
-        DataProvider.persistSessionEntries(formRef.current)
-      );
+      // const scheduleDataProvider = new DataProvider(
+      //   DataProvider.persistSessionEntries(formRef.current)
+      // );
       globalDataProvider &&
-        globalDataProvider.initPersist(
-          formRef.current,
-          scheduleDataProvider,
-          globalDataProvider
-        );
-      const saveInterv = setInterval(async () => {
+        globalDataProvider.initPersist(formRef.current, globalDataProvider);
+      const saveInterv = setInterval(() => {
         try {
           if (!(formRef.current instanceof HTMLFormElement))
             throw elementNotFound(

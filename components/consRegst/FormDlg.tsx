@@ -1,6 +1,6 @@
 ("use client");
 import { ConsDlgProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
-import { DataProvider } from "@/lib/locals/panelPage/declarations/classesCons";
+// import { DataProvider } from "@/lib/locals/panelPage/declarations/classesCons";
 import { ErrorBoundary } from "react-error-boundary";
 import { addListenerAvMembers } from "@/lib/locals/panelPage/handlers/consHandlerList";
 import { addListenerExportBtn } from "@/lib/global/gController";
@@ -317,13 +317,13 @@ export default function FormDlg({
         });
       }, 300);
       //armazenamento local
-      const consDataProvider = new DataProvider(
-        DataProvider.persistSessionEntries(dlgRef.current)
-      );
+      // const consDataProvider = new DataProvider(
+      //   DataProvider.persistSessionEntries(dlgRef.current)
+      // );
       globalDataProvider &&
         globalDataProvider.initPersist(
           dlgRef.current,
-          consDataProvider,
+          // consDataProvider,
           globalDataProvider
         );
       //remodela datalistas com base em membros disponíveis para tipo de consulta
