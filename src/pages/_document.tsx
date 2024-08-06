@@ -31,7 +31,10 @@ export default function MyDocument() {
           href="img/apple-touch-icon-ipad-retina-152x152-precomposed.png"
         />
         <link rel="icon" href="/favicon_g.ico" id="faviconpross" />
-        <link rel="canonical" href="https://prossaude-client.netlify.app/" />
+        <link
+          rel="canonical nofollow noreferrer"
+          href="https://prossaude-client.netlify.app/"
+        />
         <title>Login — PROSSaúde</title>
         <meta
           name="description"

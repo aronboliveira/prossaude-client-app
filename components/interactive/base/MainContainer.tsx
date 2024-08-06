@@ -242,6 +242,7 @@ export default function MainContainer(): JSX.Element {
               id="ag_but"
               target="_self"
               href="/ag"
+              rel="nofollow"
               onClick={() => nextRouter.push("/ag")}
             >
               <img
@@ -257,6 +258,7 @@ export default function MainContainer(): JSX.Element {
               id="ag_but_sec"
               target="_self"
               href="/ag"
+              rel="nofollow"
               onClick={() => nextRouter.push("/ag")}
             >
               Anamnese Geral, Medicina & Saúde Mental
@@ -274,6 +276,7 @@ export default function MainContainer(): JSX.Element {
               id="ef_but"
               target="_self"
               href="/edfis"
+              rel="nofollow"
               onClick={() => nextRouter.push("/edfis")}
             >
               <img
@@ -289,6 +292,7 @@ export default function MainContainer(): JSX.Element {
               id="ef_but_sec"
               target="_self"
               href="/edfis"
+              rel="nofollow"
               onClick={() => nextRouter.push("/edfis")}
             >
               Educação Física
@@ -307,6 +311,7 @@ export default function MainContainer(): JSX.Element {
               id="nut_but"
               target="_self"
               href="/edfis"
+              rel="nofollow"
               onClick={() => nextRouter.push("/edfis")}
             >
               <img
@@ -322,6 +327,7 @@ export default function MainContainer(): JSX.Element {
               target="_self"
               id="nut_but_sec"
               href="/edfis"
+              rel="nofollow"
               onClick={() => nextRouter.push("/edfis")}
             >
               Nutrição
@@ -340,6 +346,7 @@ export default function MainContainer(): JSX.Element {
               id="od_but"
               target="_self"
               href="/od"
+              rel="nofollow"
               onClick={() => nextRouter.push("/od")}
             >
               <img
@@ -355,6 +362,7 @@ export default function MainContainer(): JSX.Element {
               id="od_but_sec"
               target="_self"
               href="/od"
+              rel="nofollow"
               onClick={() => nextRouter.push("/od")}
             >
               Odontologia
@@ -375,6 +383,7 @@ export default function MainContainer(): JSX.Element {
             href="/panel"
             id="panelAnchor"
             target="_self"
+            rel="nofollow"
             style={{ color: "#ffff", fontWeight: "600" }}
           >
             Painel de Trabalho

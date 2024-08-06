@@ -128,6 +128,7 @@ export default function UserDlg({
               <a
                 id="logoutAnchorDlg"
                 target="_self"
+                rel="nofollow"
                 href={`${
                   basePath || location.href.replace(location.pathname, "")
                 }/login`}

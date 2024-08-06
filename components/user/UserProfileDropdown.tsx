@@ -120,6 +120,7 @@ export default function UserProfileDropdown({
             <a
               id="logoutAnchor"
               target="_self"
+              rel="nofollow"
               style={{
                 zIndex: "10",
                 position: "absolute",

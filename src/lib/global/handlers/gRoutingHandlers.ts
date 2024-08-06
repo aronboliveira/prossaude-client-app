@@ -127,7 +127,7 @@ export function handleLinkChanges(
                 `beforebegin`,
                 `
                 <link rel="icon" href="/favicon_g.ico" id="faviconpross" />
-                <link rel="canonical" href="https://prossaude-client.netlify.app/" />
+                <link rel="canonical nofollow noreferrer" href="https://prossaude-client.netlify.app/" />
                 <link
                 rel="apple-touch-icon"
                 href="img/apple-touch-icon-iphone-60x60-precomposed.png"
@@ -181,7 +181,7 @@ export function handleLinkChanges(
                 `beforebegin`,
                 `
                 <link rel="icon" href="/favicon_g.ico" id="faviconpross" />
-                <link rel="canonical" href="https://prossaude-client.netlify.app/" />
+                <link rel="canonical nofollow noreferrer" href="https://prossaude-client.netlify.app/" />
                 <link
                 rel="apple-touch-icon"
                 href="img/apple-touch-icon-iphone-60x60-precomposed.png"
@@ -234,7 +234,7 @@ export function handleLinkChanges(
                 `beforebegin`,
                 `
                 <link rel="icon" href="/favicon_g.ico" id="faviconpross" />
-                <link rel="canonical" href="https://prossaude-client.netlify.app/" />
+                <link rel="canonical nofollow noreferrer" href="https://prossaude-client.netlify.app/" />
                 <link
                 rel="apple-touch-icon"
                 href="img/apple-touch-icon-iphone-60x60-precomposed.png"
@@ -276,7 +276,7 @@ export function handleLinkChanges(
                 `beforebegin`,
                 `
                 <link rel="icon" href="/favicon_nut.ico" id="faviconpross" />
-                <link rel="canonical" href="https://prossaude-client.netlify.app/" />
+                <link rel="canonical nofollow noreferrer" href="https://prossaude-client.netlify.app/" />
                 <link
                 rel="apple-touch-icon"
                 href="img/apple-touch-icon-iphone-60x60-precomposed.png"
@@ -318,7 +318,7 @@ export function handleLinkChanges(
                 `beforebegin`,
                 `
                 <title>Exame Clínico — Odontologia</title>
-                <link rel="canonical" href="https://prossaude-client.netlify.app/" />
+                <link rel="canonical nofollow noreferrer" href="https://prossaude-client.netlify.app/" />
                 <link rel="icon" href="/favicon_od.ico" id="faviconpross" />
                 <link
                 rel="apple-touch-icon"
@@ -360,7 +360,7 @@ export function handleLinkChanges(
                 `beforebegin`,
                 `
                 <title>Painel de Trabalho &#8211 PROSSaúde, UFRJ</title>
-                <link rel="canonical" href="https://prossaude-client.netlify.app/" />
+                <link rel="canonical nofollow noreferrer" href="https://prossaude-client.netlify.app/" />
                 <link rel="icon" href="/favicon_g.ico" id="faviconpross" />
                 <link
                 rel="apple-touch-icon"
