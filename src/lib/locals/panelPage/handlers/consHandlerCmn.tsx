@@ -948,6 +948,7 @@ export function handleDragAptBtn(
                   `tbody for updating session schedule state after dragend`,
                   extLine(new Error())
                 );
+              //atualização no drop (associada com replaceregstslot)
               sessionScheduleState[monthSelector.value] = tbody.innerHTML;
             } catch (e) {
               console.error(`Error updation session schedule state after dragend:
@@ -1164,6 +1165,7 @@ export function replaceRegstSlot(
               `Failed to validate Table Body for Schedule`,
               extLine(new Error())
             );
+          //atualização de state no drop
           fillSchedStateValues(monthSelector.value);
         } catch (e) {
           console.error(

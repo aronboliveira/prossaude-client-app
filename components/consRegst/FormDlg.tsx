@@ -79,7 +79,6 @@ export default function FormDlg({
   const dayRef = useRef<nullishDiv>(null);
   const exportRef = useRef<nullishBtn>(null);
   const submitRef = useRef<nullishBtn>(null);
-  const RegstBtnRef = useRef<nullishBtn>(null);
   const [isDREFillerActive, setDREFiller] = useState<boolean>(false);
   const toggleDREFiller = () => setDREFiller(!isDREFillerActive);
   //display de tabela para pacientes

@@ -96,7 +96,7 @@ export default function PanelPage({ data }: { data: any }): JSX.Element {
 }
 
 export async function getStaticProps() {
-  //conexão com a api para atualizar informações na página em intervalos
+  //todo conexão com a api para atualizar informações na página em intervalos
   try {
     const res = await fetch("/api-path");
     if (!res.ok) throw new Error(`Failed to fetch`);
