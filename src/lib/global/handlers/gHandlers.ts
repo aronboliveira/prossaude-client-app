@@ -1524,6 +1524,15 @@ export async function validateForm(
             entry.type === "file" &&
             entry.files
           ) {
+            //FormData
+            // [family_name, 'de Oliveira']
+
+            // JSON:
+            // {
+            // {family_name: 'de Oliveira'}
+            // }
+
+            // -> {family_name: 'de Oliveira'}
             validEntries.push([
               entry.name || entry.id || entry.dataset.title || entry.tagName,
               entry.files[0],

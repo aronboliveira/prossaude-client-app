@@ -131,9 +131,10 @@ export default function LoginInputs(): JSX.Element {
           id="newAccA"
           className="fade-in-late-element"
           href="#"
+          rel="nofollow noreferrer"
           target="_blank"
         >
-          Criar Conta
+          Esqueci minha senha
         </a>
         <button
           type="submit"

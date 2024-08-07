@@ -2,8 +2,6 @@
 import { HrRowProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import TdBSchedTab from "./TdBSchedTab";
 
-
-
 export default function TrBSchedTab({
   userClass,
   mainRoot,
@@ -15,7 +13,10 @@ export default function TrBSchedTab({
     <tr id={`tr${nHr}`} data-row={nRow}>
       <td className="tabCel" data-col="0" data-row={nRow}>
         <span role="textbox">
-          <strong>{`${nHr}:00`}</strong>
+          <strong
+            className="hour"
+            data-hour={`${nHr}:00`}
+          >{`${nHr}:00`}</strong>
         </span>
       </td>
       {cols.map((nCol, _, arr) =>

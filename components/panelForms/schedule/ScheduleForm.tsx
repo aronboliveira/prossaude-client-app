@@ -89,33 +89,6 @@ export default function ScheduleForm({
   const formCallback = useCallback((form: nullishForm) => {
     if (form instanceof HTMLFormElement) {
       //adição de listeners para confirmação de agendamentos
-      const confirmRegst = document.getElementById("confirmDayInp");
-      if (
-        confirmRegst instanceof HTMLInputElement &&
-        (confirmRegst.type === "checkbox" || confirmRegst.type === "radio")
-      ) {
-        (userClass === "coordenador" || userClass === "supervisor") &&
-          confirmRegst.addEventListener("change", () => {
-            const relAptBtn = document.querySelector("[id*=appointmentBtn]");
-            if (relAptBtn instanceof HTMLElement) {
-              if (confirmRegst.checked) {
-                relAptBtn.classList.remove("btn-info");
-                relAptBtn.classList.add("btn-success");
-              } else {
-                relAptBtn.classList.remove("btn-success");
-                relAptBtn.classList.add("btn-info");
-              }
-            } else
-              console.warn(
-                `No related button for day checkbox id ${confirmRegst.id}`
-              );
-          });
-      } else
-        elementNotFound(
-          confirmRegst,
-          "Check for confirming worked day of appointment",
-          extLine(new Error())
-        );
       const registDayBtn = form.querySelector("#regstDayBtn");
       if (registDayBtn instanceof HTMLButtonElement) {
         registDayBtn.disabled = true;
@@ -145,56 +118,6 @@ export default function ScheduleForm({
         elementNotPopulated(
           dayChecks,
           "Checkboxes for day checks",
-          extLine(new Error())
-        );
-      //adição de listeners para apagar botões na agenda
-      const btnEraseTransfApt = document.getElementById("btnEraseTransfApt");
-      if (btnEraseTransfApt instanceof HTMLButtonElement) {
-        btnEraseTransfApt.addEventListener("click", () => {
-          const transfArea = document.getElementById("transfArea");
-          if (transfArea instanceof HTMLElement) {
-            if (
-              !transfArea.hasChildNodes() ||
-              transfArea.innerHTML === `` ||
-              transfArea.childElementCount === 1 ||
-              !transfArea.querySelector("slot")
-            ) {
-              if (transfArea.querySelector('[id*="appointmentBtn"]')) {
-                transfArea.replaceChild(
-                  Object.assign(document.createElement("slot"), {
-                    id: "replaceSlot",
-                    textContent: "Área de transferência",
-                    className: "opaqueEl",
-                    color: "#0981714d",
-                    title:
-                      "Aqui é incluído o botão de uma consulta recém-criada",
-                  }),
-                  transfArea.querySelector('[id*="appointmentBtn"]')!
-                );
-              } else {
-                elementNotFound(
-                  transfArea,
-                  "Element for appointment transference slot in handleDragAptBtn()",
-                  extLine(new Error())
-                );
-                if (!transfArea.querySelector("slot")) {
-                  transfArea.appendChild(
-                    Object.assign(document.createElement("slot"), {
-                      id: "replaceSlot",
-                      textContent: "Área de transferência",
-                      className: "opaqueEl",
-                      color: "#0981714d",
-                    })
-                  );
-                }
-              }
-            }
-          }
-        });
-      } else
-        elementNotFound(
-          btnEraseTransfApt,
-          "Button for erasing new appointment button in transference",
           extLine(new Error())
         );
       //adição de listeners para exportação de excel
@@ -292,7 +215,11 @@ export default function ScheduleForm({
       //   DataProvider.persistSessionEntries(formRef.current)
       // );
       globalDataProvider &&
-        globalDataProvider.initPersist(formRef.current, globalDataProvider);
+        globalDataProvider.initPersist(
+          formRef.current,
+          globalDataProvider,
+          userClass
+        );
       const saveInterv = setInterval(() => {
         try {
           if (!(formRef.current instanceof HTMLFormElement))
@@ -326,9 +253,6 @@ export default function ScheduleForm({
       workingDefinitionsRef.current.id.match(/working/gi)
     ) {
       //adição de listeners para autoajuste de atributos da agenda
-      const inpDates = Array.from<HTMLInputElement>(
-        formRef.current!.querySelectorAll(".dayTabRef")
-      );
       const toggleAutofillMonth =
         workingDefinitionsRef.current.querySelector("#toggleAutofillMonth") ||
         workingDefinitionsRef.current.querySelector('input[type="checkbox"]');
@@ -337,19 +261,8 @@ export default function ScheduleForm({
         (toggleAutofillMonth.type === "checkbox" ||
           toggleAutofillMonth.type === "radio")
       ) {
-        panelFormsVariables.isAutoFillMonthOn = true;
         toggleAutofillMonth.checked = true;
-        toggleAutofillMonth.addEventListener("change", () => {
-          panelFormsVariables.isAutoFillMonthOn =
-            !panelFormsVariables.isAutoFillMonthOn;
-          if (panelFormsVariables.isAutoFillMonthOn)
-            setListenersForDates(
-              inpDates,
-              document.getElementById("monthSelector"),
-              panelFormsVariables.isAutoFillMonthOn,
-              false
-            );
-        });
+        panelFormsVariables.isAutoFillMonthOn = true;
       } else
         inputNotFound(
           toggleAutofillMonth,
@@ -361,35 +274,13 @@ export default function ScheduleForm({
       if (
         firstOrderWorkDay instanceof HTMLSelectElement ||
         firstOrderWorkDay instanceof HTMLInputElement
-      ) {
+      )
         firstOrderWorkDay.value = "Quarta-feira";
-        userClass === "coordenador" &&
-          firstOrderWorkDay.addEventListener("change", () => {
-            if (panelFormsVariables.isAutoFillMonthOn)
-              setListenersForDates(
-                inpDates,
-                document.getElementById("monthSelector"),
-                panelFormsVariables.isAutoFillMonthOn,
-                false
-              );
-          });
-      }
       if (
         secondOrderWorkDay instanceof HTMLSelectElement ||
         secondOrderWorkDay instanceof HTMLInputElement
-      ) {
+      )
         secondOrderWorkDay.value = "Sexta-feira";
-        userClass === "coordenador" &&
-          secondOrderWorkDay.addEventListener("change", () => {
-            if (panelFormsVariables.isAutoFillMonthOn)
-              setListenersForDates(
-                inpDates,
-                document.getElementById("monthSelector"),
-                panelFormsVariables.isAutoFillMonthOn,
-                false
-              );
-          });
-      }
     } else
       elementNotFound(
         workingDefinitionsRef.current,
@@ -684,6 +575,162 @@ export default function ScheduleForm({
                         id="hourDayInp"
                         title="Selecione aqui o horário na agenda (só funcionará para horários tabelados)"
                         data-title="Horário de trabalho para Inclusão"
+                        onInput={ev => {
+                          try {
+                            const hours = Array.from(
+                              document.querySelectorAll(".hour")
+                            )
+                              .map(hour =>
+                                hour instanceof HTMLElement
+                                  ? hour.dataset.hour || hour.innerText
+                                  : null
+                              )
+                              .filter(
+                                hour => typeof hour === "string"
+                              ) as string[];
+                            if (
+                              !hours.some(
+                                hour => hour === ev.currentTarget.value
+                              )
+                            ) {
+                              ev.currentTarget.style.color = `#c10f0fd8`;
+                              ev.currentTarget.style.borderColor = `#c10f0fd8`;
+                              setTimeout(() => {
+                                const hourInp =
+                                  document.getElementById("hourDayInp");
+                                if (
+                                  hourInp instanceof HTMLInputElement ||
+                                  hourInp instanceof HTMLSelectElement
+                                ) {
+                                  hourInp.style.borderColor = `rgb(179, 205, 242)`;
+                                  const absHours = hours.map(hour =>
+                                    hour.slice(0, 2)
+                                  );
+                                  if (
+                                    absHours.some(
+                                      hour => hourInp.value === hour
+                                    )
+                                  ) {
+                                    const matchHour = absHours.find(
+                                      hour => hourInp.value === hour
+                                    );
+                                    if (matchHour && matchHour.length === 2) {
+                                      hourInp.value = `${matchHour}:00`;
+                                      hourInp.style.color = `rgb(33, 37, 41)`;
+                                    }
+                                  } else if (
+                                    parseInt(hourInp.value.replace(":", "")) >
+                                    (parseInt(hours.at(-1)!.replace(":", "")) ||
+                                      21)
+                                  ) {
+                                    hourInp.value = `${parseInt(
+                                      hours.at(-1)!.slice(0, 2)
+                                    )}:00`;
+                                    hourInp.style.color = `rgb(33, 37, 41)`;
+                                  } else if (
+                                    parseInt(hourInp.value.slice(0, 2)) <
+                                    (parseInt(hours[0].replace(":", "")) || 18)
+                                  ) {
+                                    hourInp.value = `${parseInt(
+                                      hours[0].slice(0, 2)
+                                    )}:00`;
+                                    hourInp.style.color = `rgb(33, 37, 41)`;
+                                  } else
+                                    console.log(
+                                      `Failed at comparing Absolute hours`
+                                    );
+                                }
+                              }, 1000);
+                            } else {
+                              ev.currentTarget.style.color = `rgb(33, 37, 41)`;
+                              ev.currentTarget.style.borderColor = `rgb(179, 205, 242)`;
+                            }
+                          } catch (e) {
+                            console.error(
+                              `Error executing ${ev.type} callback:\n${
+                                (e as Error).message
+                              }`
+                            );
+                          }
+                        }}
+                        onChange={ev => {
+                          try {
+                            const hours = Array.from(
+                              document.querySelectorAll(".hour")
+                            )
+                              .map(hour =>
+                                hour instanceof HTMLElement
+                                  ? hour.dataset.hour || hour.innerText
+                                  : null
+                              )
+                              .filter(
+                                hour => typeof hour === "string"
+                              ) as string[];
+                            if (
+                              !hours.some(
+                                hour => hour === ev.currentTarget.value
+                              )
+                            ) {
+                              ev.currentTarget.style.color = `#c10f0fd8`;
+                              ev.currentTarget.style.borderColor = `#c10f0fd8`;
+                              setTimeout(() => {
+                                const hourInp =
+                                  document.getElementById("hourDayInp");
+                                if (
+                                  hourInp instanceof HTMLInputElement ||
+                                  hourInp instanceof HTMLSelectElement
+                                ) {
+                                  hourInp.style.borderColor = `rgb(179, 205, 242)`;
+                                  const absHours = hours.map(hour =>
+                                    hour.slice(0, 2)
+                                  );
+                                  if (
+                                    absHours.some(
+                                      hour => hourInp.value === hour
+                                    )
+                                  ) {
+                                    const matchHour = absHours.find(
+                                      hour => hourInp.value === hour
+                                    );
+                                    if (matchHour && matchHour.length === 2) {
+                                      hourInp.value = `${matchHour}:00`;
+                                      hourInp.style.color = `rgb(33, 37, 41)`;
+                                    }
+                                  } else if (
+                                    parseInt(hourInp.value.replace(":", "")) >
+                                    (parseInt(hours.at(-1)!.replace(":", "")) ||
+                                      21)
+                                  ) {
+                                    hourInp.value = `${parseInt(
+                                      hours.at(-1)!.slice(0, 2)
+                                    )}:00`;
+                                    hourInp.style.color = `rgb(33, 37, 41)`;
+                                  } else if (
+                                    parseInt(hourInp.value.slice(0, 2)) <
+                                    (parseInt(hours[0].replace(":", "")) || 18)
+                                  ) {
+                                    hourInp.value = `${parseInt(
+                                      hours[0].slice(0, 2)
+                                    )}:00`;
+                                    hourInp.style.color = `rgb(33, 37, 41)`;
+                                  } else
+                                    console.log(
+                                      `Failed at comparing Absolute hours`
+                                    );
+                                }
+                              }, 1000);
+                            } else {
+                              ev.currentTarget.style.color = `rgb(33, 37, 41)`;
+                              ev.currentTarget.style.borderColor = `rgb(179, 205, 242)`;
+                            }
+                          } catch (e) {
+                            console.error(
+                              `Error executing ${ev.type} callback:\n${
+                                (e as Error).message
+                              }`
+                            );
+                          }
+                        }}
                       />
                     </div>
                   </fieldset>
@@ -715,6 +762,54 @@ export default function ScheduleForm({
                             title="Confirme aqui uma consulta referenciada na Área de transferência"
                             data-title="Consulta Confirmada"
                             required
+                            onChange={
+                              userClass === "coordenador" ||
+                              userClass === "supervisor"
+                                ? () => {
+                                    try {
+                                      const confirmRegst =
+                                        document.getElementById(
+                                          "confirmDayInp"
+                                        );
+                                      const relAptBtn = document.querySelector(
+                                        "[id*=appointmentBtn]"
+                                      );
+                                      if (
+                                        !(
+                                          confirmRegst instanceof
+                                            HTMLInputElement &&
+                                          (confirmRegst.type === "checkbox" ||
+                                            confirmRegst.type === "radio")
+                                        )
+                                      )
+                                        throw elementNotFound(
+                                          confirmRegst,
+                                          `Validation of confirmRegst instance`,
+                                          extLine(new Error())
+                                        );
+                                      if (!(relAptBtn instanceof HTMLElement)) {
+                                        console.warn(
+                                          `No related button for day checkbox id ${confirmRegst.id}`
+                                        );
+                                        return;
+                                      }
+                                      if (confirmRegst.checked) {
+                                        relAptBtn.classList.remove("btn-info");
+                                        relAptBtn.classList.add("btn-success");
+                                      } else {
+                                        relAptBtn.classList.remove(
+                                          "btn-success"
+                                        );
+                                        relAptBtn.classList.add("btn-info");
+                                      }
+                                    } catch (e) {
+                                      console.error(
+                                        `Error:${(e as Error).message}`
+                                      );
+                                    }
+                                  }
+                                : () => {}
+                            }
                           />
                         </div>
                       </div>
@@ -752,6 +847,51 @@ export default function ScheduleForm({
                     className="btn btn-close reduced-btn-close"
                     id="btnEraseTransfApt"
                     title="Resetar a Área de transferêrncia"
+                    onClick={() => {
+                      const transfArea = document.getElementById("transfArea");
+                      if (transfArea instanceof HTMLElement) {
+                        if (
+                          !transfArea.hasChildNodes() ||
+                          transfArea.innerHTML === `` ||
+                          transfArea.childElementCount === 1 ||
+                          !transfArea.querySelector("slot")
+                        ) {
+                          if (
+                            transfArea.querySelector('[id*="appointmentBtn"]')
+                          ) {
+                            transfArea.replaceChild(
+                              Object.assign(document.createElement("slot"), {
+                                id: "replaceSlot",
+                                textContent: "Área de transferência",
+                                className: "opaqueEl",
+                                color: "#0981714d",
+                                title:
+                                  "Aqui é incluído o botão de uma consulta recém-criada",
+                              }),
+                              transfArea.querySelector(
+                                '[id*="appointmentBtn"]'
+                              )!
+                            );
+                          } else {
+                            elementNotFound(
+                              transfArea,
+                              "Element for appointment transference slot in handleDragAptBtn()",
+                              extLine(new Error())
+                            );
+                            if (!transfArea.querySelector("slot")) {
+                              transfArea.appendChild(
+                                Object.assign(document.createElement("slot"), {
+                                  id: "replaceSlot",
+                                  textContent: "Área de transferência",
+                                  className: "opaqueEl",
+                                  color: "#0981714d",
+                                })
+                              );
+                            }
+                          }
+                        }
+                      }
+                    }}
                   ></button>
                 </section>
               </section>
@@ -781,6 +921,23 @@ export default function ScheduleForm({
                         className="form-select widMin18CImp widFull900Q widMin75Q460v widQ460FullW lcPersist"
                         title="Selecione aqui o primeiro dia de trabalho na semana ou edite manualmente os rótulos na agenda"
                         data-title="Primeiro dia de trabalho na semana"
+                        onChange={
+                          userClass === "coordenador"
+                            ? () => {
+                                if (panelFormsVariables.isAutoFillMonthOn)
+                                  setListenersForDates(
+                                    Array.from<HTMLInputElement>(
+                                      formRef.current?.querySelectorAll(
+                                        ".dayTabRef"
+                                      ) ?? []
+                                    ),
+                                    document.getElementById("monthSelector"),
+                                    panelFormsVariables.isAutoFillMonthOn,
+                                    false
+                                  );
+                              }
+                            : () => {}
+                        }
                       >
                         <option value="Segunda-feira" data-weekday="1">
                           Segunda-feira
@@ -817,6 +974,23 @@ export default function ScheduleForm({
                         className="form-select widMin18CImp wid90-900Q widQ460FullW lcPersist"
                         title="Selecione aqui o segundo dia de trabalho na semana ou edite manualmente os rótulos na agenda"
                         data-title="Segundo dia de trabalho na semana"
+                        onChange={
+                          userClass === "coordenador"
+                            ? () => {
+                                if (panelFormsVariables.isAutoFillMonthOn)
+                                  setListenersForDates(
+                                    Array.from<HTMLInputElement>(
+                                      formRef.current?.querySelectorAll(
+                                        ".dayTabRef"
+                                      ) ?? []
+                                    ),
+                                    document.getElementById("monthSelector"),
+                                    panelFormsVariables.isAutoFillMonthOn,
+                                    false
+                                  );
+                              }
+                            : () => {}
+                        }
                       >
                         <option value="Segunda-feira" data-weekday="1">
                           Segunda-feira
@@ -1026,6 +1200,21 @@ export default function ScheduleForm({
                         title="Desative ou ative aqui o cálculo automático de datas e títulos"
                         data-title="Auto-ajuste de mês"
                         id="toggleAutofillMonth"
+                        onChange={() => {
+                          panelFormsVariables.isAutoFillMonthOn =
+                            !panelFormsVariables.isAutoFillMonthOn;
+                          if (panelFormsVariables.isAutoFillMonthOn)
+                            setListenersForDates(
+                              Array.from<HTMLInputElement>(
+                                formRef.current?.querySelectorAll(
+                                  ".dayTabRef"
+                                ) ?? []
+                              ),
+                              document.getElementById("monthSelector"),
+                              panelFormsVariables.isAutoFillMonthOn,
+                              false
+                            );
+                        }}
                       />
                       <label
                         className="form-check-label bolded"

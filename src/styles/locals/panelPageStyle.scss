@@ -222,6 +222,10 @@ body {
     margin-bottom: 0.5rem;
   }
 
+  #hourDayInp {
+    transition: color 1s ease-in-out, border 1s ease-in-out;
+  }
+
   #pacDiv {
     min-width: 0 !important;
     min-height: 0 !important;

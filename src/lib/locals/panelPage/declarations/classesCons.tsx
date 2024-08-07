@@ -8,9 +8,11 @@ import {
 import {
   checkConfirmApt,
   handleAptBtnClick,
+  handleScheduleChange,
   replaceBtnSlot,
   verifyAptCheck,
 } from "../handlers/consHandlerCmn";
+import { panelFormsVariables } from "../../../../../components/panelForms/panelFormsData";
 
 const clearFlags: { [k: string]: boolean } = {};
 export class DataProvider {
@@ -30,16 +32,20 @@ export class DataProvider {
       });
     });
   }
-  initPersist(element: HTMLElement, gscopeProvider: DataProvider) {
+  initPersist(
+    element: HTMLElement,
+    gscopeProvider: DataProvider,
+    userClass: string = "student"
+  ) {
     setTimeout(() => {
-      console.log("Initing persistence...");
+      // console.log("Initing persistence...");
       if (sessionStorage[element.id])
-        gscopeProvider.parseSessionStorage(element, element.id);
+        gscopeProvider.parseSessionStorage(element, element.id, userClass);
       else
         setTimeout(
           () =>
             sessionStorage[element.id] &&
-            gscopeProvider.parseSessionStorage(element, element.id),
+            gscopeProvider.parseSessionStorage(element, element.id, userClass),
           300
         );
     }, 100);
@@ -123,7 +129,7 @@ export class DataProvider {
   ): void {
     const persisters = sessionStorage.getItem(scopeRef);
     if (persisters) {
-      console.log("Initi storage parsing...");
+      console.log("Init storage parsing...");
       Object.entries(JSON.parse(persisters)).forEach(entry => {
         const fetchedEl =
           scope.querySelector(`#${entry[0]}`) ||
@@ -206,7 +212,8 @@ export class DataProvider {
   }
   parseSessionStorage(
     scope: HTMLElement | Document = document,
-    scopeRef: string
+    scopeRef: string,
+    userClass: string = "student"
   ): void {
     const persisters =
       sessionStorage.getItem(scopeRef) ||
@@ -239,7 +246,16 @@ export class DataProvider {
             : (fetchedEl.checked = false);
         } else if (fetchedEl instanceof HTMLElement) {
           fetchedEl.innerHTML = entry[1] as string;
-          //TODO NEEDS TO HYDRATE
+          const monthSelector = document.getElementById("monthSelector");
+          (monthSelector instanceof HTMLSelectElement ||
+            monthSelector instanceof HTMLInputElement) &&
+            userClass &&
+            handleScheduleChange(
+              monthSelector,
+              document.getElementById("tbSchedule"),
+              userClass,
+              panelFormsVariables.isAutoFillMonthOn
+            );
           // console.log(
           //   `innerHTML parsed for ${
           //     fetchedEl.id || fetchedEl.className || fetchedEl.tagName
@@ -270,7 +286,7 @@ export class DataProvider {
       ...scope.querySelectorAll(".lcPersist"),
     ];
     const sessionData: { [key: string]: string } = {};
-    console.log("Persisting session entries...");
+    // console.log("Persisting session entries...");
     for (const persister of persisters) {
       if (
         (persister instanceof HTMLInputElement &&
@@ -307,8 +323,8 @@ export class DataProvider {
         // console.log(persister.innerHTML);
       }
     }
-    console.log("Session Storage:");
-    console.log(sessionStorage);
+    // console.log("Session Storage:");
+    // console.log(sessionStorage);
     return sessionData;
   }
   checkForm(elementId: string, storageInterval?: NodeJS.Timer): boolean {
@@ -319,7 +335,7 @@ export class DataProvider {
       clearFlags[`${elementId}`] = false;
       return false;
     }
-    console.log("Form fetch was sucessfull. Checking por persistence...");
+    // console.log("Form fetch was sucessfull. Checking por persistence...");
     return true;
   }
 }

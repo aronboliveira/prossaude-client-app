@@ -1141,6 +1141,38 @@ export function replaceRegstSlot(
           matchedSlot.children[0] ??
           matchedSlot.parentElement!.children[0]
       );
+      setTimeout(() => {
+        try {
+          const monthSelector = document.getElementById("monthSelector");
+          const tb = document.getElementById("tbSchedule");
+          if (
+            !(
+              monthSelector instanceof HTMLSelectElement ||
+              monthSelector instanceof HTMLInputElement
+            )
+          )
+            throw elementNotFound(
+              monthSelector,
+              `Validation of Month Selector instance`,
+              extLine(new Error())
+            );
+          if (!matchedSlot.querySelector("button"))
+            throw new Error(`Failed to validate button nested in matched slot`);
+          if (!(tb instanceof HTMLElement))
+            throw elementNotFound(
+              tb,
+              `Failed to validate Table Body for Schedule`,
+              extLine(new Error())
+            );
+          fillSchedStateValues(monthSelector.value);
+        } catch (e) {
+          console.error(
+            `Error executing procedure for updating state of month:\n${
+              (e as Error).message
+            }`
+          );
+        }
+      }, 200);
       const transfArea = document.getElementById("transfArea");
       if (transfArea instanceof HTMLElement) {
         if (
@@ -1301,7 +1333,7 @@ export function replaceRegstSlot(
         extLine(new Error())
       );
   } catch (e) {
-    console.error(`Error:${(e as Error).message}`);
+    console.error(`Error executing replaceRegstSlot:\n${(e as Error).message}`);
   }
 }
 
@@ -2027,6 +2059,7 @@ export function fillSchedStateValues(month: string) {
         `Table Body for Schedule when initializating state for month ${month}`,
         extLine(new Error())
       );
+    sessionScheduleState[month] = tbodySched.innerHTML;
     const entriesData = [
       ...tbodySched.querySelectorAll("input"),
       ...tbodySched.querySelectorAll("select"),
