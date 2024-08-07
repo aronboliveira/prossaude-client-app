@@ -222,7 +222,8 @@ body {
     margin-bottom: 0.5rem;
   }
 
-  #hourDayInp {
+  #hourDayInp,
+  #consHourDayInp {
     transition: color 1s ease-in-out, border 1s ease-in-out;
   }
 
@@ -353,6 +354,14 @@ body {
       left: 0%;
       border: ridge 0.3rem;
     }
+  }
+}
+
+@media screen and (min-width: 460px) {
+  #consTimeDiv {
+    display: flex;
+    flex-flow: row nowrap;
+    gap: 2%;
   }
 }
 

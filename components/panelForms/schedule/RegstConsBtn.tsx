@@ -41,14 +41,13 @@ export default function RegstConsBtn({
     root = undefined;
   };
   useEffect(() => {
-    if (RegstBtnRef.current instanceof HTMLButtonElement)
-      syncAriaStates([document.getElementById("regstDayBtn")!]);
-    else
-      elementNotFound(
-        RegstBtnRef.current,
-        "Button for Registering new appointment",
-        extLine(new Error())
-      );
+    RegstBtnRef.current instanceof HTMLButtonElement
+      ? syncAriaStates([document.getElementById("regstDayBtn")!])
+      : elementNotFound(
+          RegstBtnRef.current,
+          "Button for Registering new appointment",
+          extLine(new Error())
+        );
   }, [RegstBtnRef]);
   return (
     <>

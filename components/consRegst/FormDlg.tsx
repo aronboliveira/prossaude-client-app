@@ -24,6 +24,7 @@ import {
   MutableRefObject,
 } from "react";
 import {
+  checkRegstBtn,
   createAptBtn,
   generateSchedPacData,
   handleDragAptBtn,
@@ -37,6 +38,7 @@ import {
 } from "@/lib/global/handlers/errorHandler";
 import {
   nullishBtn,
+  nullishDiv,
   nullishDlg,
   nullishInp,
 } from "@/lib/global/declarations/types";
@@ -57,6 +59,7 @@ import ListCPFPacCons from "./ListCPFPacCons";
 import OptGrpUsers from "./OptGrpUsers";
 import ListTelPacCons from "./ListTelPacCons";
 import ListEmailPacCons from "./ListEmailPacCons";
+import FailRegstAlert from "../alerts/FailRegsAlert";
 let accFormData = 0;
 export default function FormDlg({
   onClose,
@@ -72,8 +75,11 @@ export default function FormDlg({
   const switchAFConsRef = useRef<nullishInp>(null);
   const telPacInpRef = useRef<nullishInp>(null);
   const CPFProfBtnRef = useRef<nullishBtn>(null);
+  const hourRef = useRef<nullishInp>(null);
+  const dayRef = useRef<nullishDiv>(null);
   const exportRef = useRef<nullishBtn>(null);
   const submitRef = useRef<nullishBtn>(null);
+  const RegstBtnRef = useRef<nullishBtn>(null);
   const [isDREFillerActive, setDREFiller] = useState<boolean>(false);
   const toggleDREFiller = () => setDREFiller(!isDREFillerActive);
   //display de tabela para pacientes
@@ -243,6 +249,27 @@ export default function FormDlg({
     },
     [dlgRef, submitRef]
   );
+  const [shouldDisplayFailRegstDlg, setDisplayFailRegstDlg] =
+    useState<boolean>(false);
+  const toggleDisplayRegstDlg = (
+    shouldDisplayFailRegstDlg: boolean = true
+  ): void => {
+    if (
+      dlgRef.current instanceof HTMLElement &&
+      !checkRegstBtn(
+        submitRef.current,
+        dlgRef.current,
+        [
+          undefined,
+          shouldDisplayFailRegstDlg,
+          setDisplayFailRegstDlg,
+          "Arraste",
+        ],
+        userClass
+      )
+    )
+      setDisplayFailRegstDlg(!shouldDisplayFailRegstDlg);
+  };
   //push em history
   useEffect(() => {
     !/new-cons=open/g.test(location.search) &&
@@ -378,6 +405,48 @@ export default function FormDlg({
         extLine(new Error())
       );
   }, [switchACConsRef]);
+  useEffect(() => {
+    try {
+      if (!(hourRef.current instanceof HTMLInputElement))
+        throw inputNotFound(
+          hourRef.current,
+          `Validation of Appointment Hour Ref`,
+          extLine(new Error())
+        );
+      hourRef.current.value = "18:00";
+    } catch (e) {
+      console.error(
+        `Error executing useEffect for hourRef:\n${(e as Error).message}`
+      );
+    }
+  }, [hourRef]);
+  useEffect(() => {
+    try {
+      if (!(dayRef.current instanceof HTMLElement)) {
+        throw elementNotFound(
+          dayRef.current,
+          `Validation of Day Reference`,
+          extLine(new Error())
+        );
+      }
+      const changeDaySel = document.getElementById("changeDaySel");
+      if (!(changeDaySel instanceof HTMLElement))
+        throw elementNotFound(
+          changeDaySel,
+          `Validation of Change Day Reference`,
+          extLine(new Error())
+        );
+      dayRef.current.innerHTML = changeDaySel
+        .parentElement!.innerHTML.replaceAll("Dia de Inclusão", "Dia")
+        .replaceAll("changeDaySel", "consChangeDaySel");
+    } catch (e) {
+      console.error(
+        `Error executing useEffect for dayRef:\n${(e as Error).message}`
+      );
+      const timeDiv = document.getElementById("consTimeDiv");
+      if (timeDiv instanceof HTMLElement) timeDiv.style.display = "none";
+    }
+  }, [dayRef]);
   //adicionar listener para exportação de excel
   useEffect(() => {
     if (
@@ -1162,6 +1231,172 @@ export default function FormDlg({
                   data-title="Confirmação do Paciente"
                 />
               </div>
+              <div role="group" id="consTimeDiv">
+                <div id="consDayDiv" ref={dayRef}></div>
+                <div
+                  role="group"
+                  className="widQ460MinFull alSfSt widHalf900Q rGapQ900null"
+                  id="hourDayDiv"
+                >
+                  <label
+                    className="boldLabel mg-09t"
+                    id="labHourDay"
+                    htmlFor="consHourDayInp"
+                  >
+                    Horário:
+                  </label>
+                  <input
+                    type="time"
+                    className="form-control widMin75Q460v ssPersist"
+                    id="consHourDayInp"
+                    title="Selecione aqui o horário na agenda (só funcionará para horários tabelados)"
+                    data-title="Horário de trabalho para Inclusão"
+                    ref={hourRef}
+                    onInput={ev => {
+                      try {
+                        const hours = Array.from(
+                          document.querySelectorAll(".hour")
+                        )
+                          .map(hour =>
+                            hour instanceof HTMLElement
+                              ? hour.dataset.hour || hour.innerText
+                              : null
+                          )
+                          .filter(hour => typeof hour === "string") as string[];
+                        if (
+                          !hours.some(hour => hour === ev.currentTarget.value)
+                        ) {
+                          ev.currentTarget.style.color = `#c10f0fd8`;
+                          ev.currentTarget.style.borderColor = `#c10f0fd8`;
+                          setTimeout(() => {
+                            const hourInp =
+                              document.getElementById("consHourDayInp");
+                            if (
+                              hourInp instanceof HTMLInputElement ||
+                              hourInp instanceof HTMLSelectElement
+                            ) {
+                              hourInp.style.borderColor = `rgb(179, 205, 242)`;
+                              const absHours = hours.map(hour =>
+                                hour.slice(0, 2)
+                              );
+                              if (
+                                absHours.some(hour => hourInp.value === hour)
+                              ) {
+                                const matchHour = absHours.find(
+                                  hour => hourInp.value === hour
+                                );
+                                if (matchHour && matchHour.length === 2) {
+                                  hourInp.value = `${matchHour}:00`;
+                                  hourInp.style.color = `rgb(33, 37, 41)`;
+                                }
+                              } else if (
+                                parseInt(hourInp.value.replace(":", "")) >
+                                (parseInt(hours.at(-1)!.replace(":", "")) || 21)
+                              ) {
+                                hourInp.value = `${parseInt(
+                                  hours.at(-1)!.slice(0, 2)
+                                )}:00`;
+                                hourInp.style.color = `rgb(33, 37, 41)`;
+                              } else if (
+                                parseInt(hourInp.value.slice(0, 2)) <
+                                (parseInt(hours[0].replace(":", "")) || 18)
+                              ) {
+                                hourInp.value = `${parseInt(
+                                  hours[0].slice(0, 2)
+                                )}:00`;
+                                hourInp.style.color = `rgb(33, 37, 41)`;
+                              } else
+                                console.log(
+                                  `Failed at comparing Absolute hours`
+                                );
+                            }
+                          }, 1000);
+                        } else {
+                          ev.currentTarget.style.color = `rgb(33, 37, 41)`;
+                          ev.currentTarget.style.borderColor = `rgb(179, 205, 242)`;
+                        }
+                      } catch (e) {
+                        console.error(
+                          `Error executing ${ev.type} callback:\n${
+                            (e as Error).message
+                          }`
+                        );
+                      }
+                    }}
+                    onChange={ev => {
+                      try {
+                        const hours = Array.from(
+                          document.querySelectorAll(".hour")
+                        )
+                          .map(hour =>
+                            hour instanceof HTMLElement
+                              ? hour.dataset.hour || hour.innerText
+                              : null
+                          )
+                          .filter(hour => typeof hour === "string") as string[];
+                        if (
+                          !hours.some(hour => hour === ev.currentTarget.value)
+                        ) {
+                          ev.currentTarget.style.color = `#c10f0fd8`;
+                          ev.currentTarget.style.borderColor = `#c10f0fd8`;
+                          setTimeout(() => {
+                            const hourInp =
+                              document.getElementById("consHourDayInp");
+                            if (
+                              hourInp instanceof HTMLInputElement ||
+                              hourInp instanceof HTMLSelectElement
+                            ) {
+                              hourInp.style.borderColor = `rgb(179, 205, 242)`;
+                              const absHours = hours.map(hour =>
+                                hour.slice(0, 2)
+                              );
+                              if (
+                                absHours.some(hour => hourInp.value === hour)
+                              ) {
+                                const matchHour = absHours.find(
+                                  hour => hourInp.value === hour
+                                );
+                                if (matchHour && matchHour.length === 2) {
+                                  hourInp.value = `${matchHour}:00`;
+                                  hourInp.style.color = `rgb(33, 37, 41)`;
+                                }
+                              } else if (
+                                parseInt(hourInp.value.replace(":", "")) >
+                                (parseInt(hours.at(-1)!.replace(":", "")) || 21)
+                              ) {
+                                hourInp.value = `${parseInt(
+                                  hours.at(-1)!.slice(0, 2)
+                                )}:00`;
+                                hourInp.style.color = `rgb(33, 37, 41)`;
+                              } else if (
+                                parseInt(hourInp.value.slice(0, 2)) <
+                                (parseInt(hours[0].replace(":", "")) || 18)
+                              ) {
+                                hourInp.value = `${parseInt(
+                                  hours[0].slice(0, 2)
+                                )}:00`;
+                                hourInp.style.color = `rgb(33, 37, 41)`;
+                              } else
+                                console.log(
+                                  `Failed at comparing Absolute hours`
+                                );
+                            }
+                          }, 1000);
+                        } else {
+                          ev.currentTarget.style.color = `rgb(33, 37, 41)`;
+                          ev.currentTarget.style.borderColor = `rgb(179, 205, 242)`;
+                        }
+                      } catch (e) {
+                        console.error(
+                          `Error executing ${ev.type} callback:\n${
+                            (e as Error).message
+                          }`
+                        );
+                      }
+                    }}
+                  />
+                </div>
+              </div>
               <div role="group" className="flexWR gapped1v flexAlItCt noInvert">
                 <label htmlFor="notesCons" className="bolded">
                   Notas:
@@ -1209,6 +1444,7 @@ export default function FormDlg({
                               ev.currentTarget.closest("dialog")!
                           );
                           // handleSubmit("cons", validation[2], true);
+                          toggleDisplayRegstDlg(shouldDisplayFailRegstDlg);
                           onClose();
                         } else {
                           if (validation[0]) {
@@ -1261,6 +1497,14 @@ export default function FormDlg({
           </form>
         </fieldset>
       </ErrorBoundary>
+      {shouldDisplayFailRegstDlg && (
+        <FailRegstAlert
+          setDisplayFailRegstDlg={setDisplayFailRegstDlg}
+          shouldDisplayFailRegstDlg={shouldDisplayFailRegstDlg}
+          root={undefined}
+          secondOp={"Arraste"}
+        />
+      )}
     </dialog>
   );
 }

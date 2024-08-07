@@ -1351,23 +1351,25 @@ export function checkRegstBtn(
   if (regstBtn instanceof HTMLButtonElement) {
     const daySel =
       scope.querySelector("#changeDaySel") ||
+      scope.querySelector("[id$=ChangeDaySel]") ||
       scope.querySelector("#formDayBodySchedSect")?.querySelector("select") ||
       scope.querySelector("select");
-    scope.querySelector('input[type="text"]');
     const hourInp =
       scope.querySelector("#hourDayInp") ||
+      scope.querySelector("[id$=HourDayInp]") ||
       scope
         .querySelector("#formDayBodySchedSect")
         ?.querySelector('input[type="time"]') ||
       scope.querySelector('input[type="time"]');
     const confirmInp =
       scope.querySelector("#confirmDayInp") ||
+      scope.querySelector("#confirmPac") ||
       scope
         .querySelector("#formDayBodySchedSect")
         ?.querySelector('input[type="checkbox"]') ||
       scope.querySelector('input[type="checkbox"]');
     const dayTabRefs =
-      scope.querySelectorAll(".dayTabRef") ||
+      document.querySelectorAll(".dayTabRef") ||
       document.querySelector("table")!.querySelectorAll(".dayTabRef");
     dayTabRefs.length <
       document.querySelector("table")!.querySelectorAll("col").length - 1 &&
@@ -1390,7 +1392,9 @@ export function checkRegstBtn(
       shownDayTabRefs.length > 7
     ) {
       //aqui é a pesquisa pros slots de fato
-      const matchedPhInps = Array.from(scope.querySelectorAll(".slotableDay"));
+      const matchedPhInps = Array.from(
+        document.querySelectorAll(".slotableDay")
+      );
       let matchedPhInp;
       let acc = 0;
       for (const phInp of matchedPhInps) {
@@ -1407,13 +1411,16 @@ export function checkRegstBtn(
         }
       }
       const matchedSlot = matchedPhInp?.parentElement;
-      const newAppointmentBtn = scope.querySelector('[id*="appointmentBtn"]');
+      const newAppointmentBtn = document.querySelector(
+        '[id*="appointmentBtn"]'
+      );
       if (
         matchedPhInp instanceof HTMLElement &&
         matchedSlot instanceof HTMLElement &&
         newAppointmentBtn instanceof HTMLButtonElement
       ) {
         matchedSlot.replaceChild(newAppointmentBtn, matchedPhInp);
+        newAppointmentBtn.style.minWidth = "89%";
         replaceRegstSlot(
           matchedSlot,
           newAppointmentBtn,
