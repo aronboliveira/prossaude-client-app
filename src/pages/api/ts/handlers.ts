@@ -75,6 +75,7 @@ export async function handleLogin(
 export async function handleSubmit(
   apiRoute: formCases,
   formData:
+    | FormData
     | Array<[string, string | File]>
     | { [k: string]: string | File }
     | Map<string, string | File>,

@@ -25,7 +25,7 @@ import FamOnc from "../../components/interactive/ag/FamOnc";
 import FamPulm from "../../components/interactive/ag/FamPulm";
 import GenDiv from "../../components/interactive/def/GenDiv";
 import GenericErrorComponent from "../../components/error/GenericErrorComponent";
-import HASDivAdd from "../../components/interactive/ag/Hist";
+import HASDivAdd from "../../components/interactive/ag/HASDivAdd";
 import HeaderDate from "../../components/interactive/def/HeaderDate";
 import LocComp from "../../components/interactive/ag/LocComp";
 import Nac from "../../components/interactive/ag/Nac";
@@ -90,6 +90,7 @@ export default function AGPage(): JSX.Element {
             method="post"
             target="_top"
             action="submit_ag_form"
+            data-ep="ag"
             encType="multipart/form-data"
             autoComplete="on"
             onSubmit={ev =>
@@ -826,7 +827,11 @@ export default function AGPage(): JSX.Element {
                       {" "}
                       <strong>Nível:</strong>
                       <br role="presentation" />
-                      <span role="list" className="cbDoencaSubt">
+                      <span
+                        role="list"
+                        className="cbDoencaSubt"
+                        id="spanLvlFumo"
+                      >
                         <div role="listitem">
                           <input
                             type="radio"
@@ -835,6 +840,8 @@ export default function AGPage(): JSX.Element {
                             className="radOp radAdd radFumo"
                             data-title="fumo_leve"
                             data-value="leve"
+                            data-group="true"
+                            data-parent="#spanLvlFumo"
                           />{" "}
                           Leve
                         </div>
@@ -846,6 +853,8 @@ export default function AGPage(): JSX.Element {
                             className="radOp radAdd radFumo"
                             data-title="fumo_moderado"
                             data-value="moderado"
+                            data-group="true"
+                            data-parent="#spanLvlFumo"
                           />{" "}
                           Moderado
                         </div>
@@ -857,6 +866,8 @@ export default function AGPage(): JSX.Element {
                             className="radOp radAdd radFumo"
                             data-title="fumo_alto"
                             data-value="alto"
+                            data-group="true"
+                            data-parent="#spanLvlFumo"
                           />{" "}
                           Alto
                         </div>

@@ -10,6 +10,8 @@ export default function HASDivAdd(): JSX.Element {
           id="HASPreId"
           className="cpbOp indivOp opHAS"
           data-title="Pré-hipertensão"
+          data-group="true"
+          data-parent="#divAddPrAlta"
           data-value="pre"
           onKeyDown={keydown => {
             opRadioHandler(
@@ -30,6 +32,8 @@ export default function HASDivAdd(): JSX.Element {
           className="cpbOp indivOp opHAS"
           data-title="Hipertensão Estágio 1"
           data-value="1"
+          data-group="true"
+          data-parent="#divAddPrAlta"
           onKeyDown={keydown => {
             opRadioHandler(
               keydown,
@@ -49,6 +53,8 @@ export default function HASDivAdd(): JSX.Element {
           className="cpbOp indivOp opHAS"
           data-title="Hipertensão Estágio 2"
           data-value="2"
+          data-group="true"
+          data-parent="#divAddPrAlta"
           onKeyDown={keydown => {
             opRadioHandler(
               keydown,
@@ -68,6 +74,8 @@ export default function HASDivAdd(): JSX.Element {
           className="cpbOp indivOp opHAS"
           data-title="Hipertensão Estágio 3"
           data-value="3"
+          data-group="true"
+          data-parent="#divAddPrAlta"
           onKeyDown={keydown => {
             opRadioHandler(
               keydown,
@@ -86,6 +94,8 @@ export default function HASDivAdd(): JSX.Element {
           id="HASPrimId"
           className="cpbOp indivOp opHAS"
           data-title="Hipertensão Primária | Essencial"
+          data-group="true"
+          data-parent="#divAddPrAlta"
           data-value="prim"
           onKeyDown={keydown => {
             opRadioHandler(
@@ -105,6 +115,8 @@ export default function HASDivAdd(): JSX.Element {
           id="HASSecId"
           className="cpbOp indivOp opHAS"
           data-title="Hipertensão Secundária"
+          data-group="true"
+          data-parent="#divAddPrAlta"
           data-value="sec"
           onKeyDown={keydown => {
             opRadioHandler(

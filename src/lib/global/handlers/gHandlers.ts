@@ -1,6 +1,11 @@
 import { FormEvent } from "react";
 import { addCanvasListeners } from "../gController";
-import { autoCapitalizeInputs, parseNotNaN, removeFirstClick } from "../gModel";
+import {
+  autoCapitalizeInputs,
+  parseNotNaN,
+  regularToSnake,
+  removeFirstClick,
+} from "../gModel";
 import { fadeElement, isClickOutside } from "../gStyleScript";
 //nesse file estão presentes principalmente as funções de manipulação dinâmica de texto e layout
 import type {
@@ -8,6 +13,9 @@ import type {
   primitiveType,
   textEl,
   rMouseEvent,
+  nullishForm,
+  nullishHtEl,
+  formCases,
 } from "../declarations/types";
 import {
   extLine,
@@ -17,7 +25,8 @@ import {
   stringError,
   elementNotPopulated,
 } from "./errorHandler";
-
+import { handleSubmit } from "@/pages/api/ts/handlers";
+//function for facilitating conversion of types when passing properties to DOM elements
 export function updateSimpleProperty(el: targEl): primitiveType {
   if (el instanceof HTMLInputElement) {
     if (el.type === "radio" || el.type === "checkbox")
@@ -52,7 +61,7 @@ export function cursorCheckTimer(): number {
   }
   return 0;
 }
-
+//handler for radios with options
 export function opRadioHandler(
   keydown: KeyboardEvent | React.KeyboardEvent,
   radioPairs: targEl[]
@@ -101,7 +110,7 @@ export function opRadioHandler(
     }
   } else console.error(`Error validating KeyboardEvent in opRadioHandler.`);
 }
-
+//handler for contextualized problems, with divAdd
 export function cpbInpHandler(ev: Event, radio: targEl): void {
   if (
     ev instanceof Event &&
@@ -1524,15 +1533,6 @@ export async function validateForm(
             entry.type === "file" &&
             entry.files
           ) {
-            //FormData
-            // [family_name, 'de Oliveira']
-
-            // JSON:
-            // {
-            // {family_name: 'de Oliveira'}
-            // }
-
-            // -> {family_name: 'de Oliveira'}
             validEntries.push([
               entry.name || entry.id || entry.dataset.title || entry.tagName,
               entry.files[0],
@@ -1578,7 +1578,14 @@ export async function validateForm(
   if (form instanceof HTMLFormElement) {
     if (formValidated && form.checkValidity()) {
       form.noValidate = false;
-      submit && form.submit();
+      submit &&
+        submitForm(
+          form,
+          (form.dataset.ep ||
+            form.action
+              .replace("submit_", "")
+              .replace("_form", "")) as formCases
+        );
     } else form.noValidate = true;
   }
   return [
@@ -1586,6 +1593,243 @@ export async function validateForm(
     invalidEntries.map(invalidIdf => `${invalidIdf} \n`),
     validEntries,
   ];
+}
+
+export async function submitForm(form: nullishForm, ep: formCases) {
+  try {
+    if (!(form instanceof HTMLFormElement))
+      throw elementNotFound(
+        form,
+        `Validation of form instance`,
+        extLine(new Error())
+      );
+    if (typeof ep !== "string")
+      throw new Error(`Incorret type for ep argument in submitForm`);
+    const fd = new FormData();
+    [
+      ...form.querySelectorAll("input"),
+      ...form.querySelectorAll("textarea"),
+      ...form.querySelectorAll("select"),
+      ...form.querySelectorAll("canvas"),
+    ]
+      .filter(
+        el =>
+          el instanceof HTMLInputElement &&
+          (el.type === "hidden" ||
+            el.type === "reset" ||
+            el.type === "button" ||
+            el.type === "submit" ||
+            el.type === "image")
+      )
+      .forEach((el, i) => {
+        try {
+          if (el instanceof HTMLCanvasElement) {
+            const idf =
+              el.dataset.name || el.id || el.dataset.title || el.tagName;
+            (async (): Promise<File> => {
+              return new Promise((res, rej) => {
+                el.toBlob(blob => {
+                  blob
+                    ? res(
+                        new File(
+                          [blob],
+                          `${idf}_${
+                            (fd.get("name") &&
+                              regularToSnake(fd.get("name")!.toString())) ||
+                            `${
+                              fd.get("first_name")
+                                ? regularToSnake(
+                                    fd.get("first_name")!.toString()
+                                  )
+                                : ""
+                            }__${
+                              fd.get("additional_name")
+                                ? regularToSnake(
+                                    fd.get("additional_name")!.toString()
+                                  )
+                                : ""
+                            }__${
+                              fd.get("family_name")
+                                ? regularToSnake(
+                                    fd.get("family_name")!.toString()
+                                  )
+                                : ""
+                            }__${new Date().getFullYear()}${
+                              new Date().getMonth() + 1
+                            }${new Date().getDate()}`
+                          }.jpeg`,
+                          { type: "image/jpeg" }
+                        )
+                      )
+                    : rej(new Error(`Failed to extract file.`));
+                });
+              });
+            })().then(file => fd.append(idf, file));
+          } else {
+            if (el.name === "") {
+              console.warn(
+                `Element ${
+                  el.id || el.className || `undefined ${el.tagName}`
+                } has no name prop defined!`
+              );
+              if (el.id === "")
+                console.warn(
+                  `Element ${
+                    el.className || `undefined ${el.tagName}`
+                  } also does not have a id prop defined!`
+                );
+            }
+            const idf =
+              el.name ||
+              el.id ||
+              el.dataset.title ||
+              el.className ||
+              el.tagName;
+            if (el instanceof HTMLInputElement) {
+              //caso de radiopairs
+              if (el.type === "radio") {
+                const appendRad = (el: HTMLInputElement): void => {
+                  el.checked && el.dataset.value && el.dataset.value !== ""
+                    ? fd.append(idf, el.dataset.value)
+                    : fd.append(idf, el.checked.toString());
+                };
+                const checkGroup = (refAncestral: HTMLElement): void => {
+                  let group = refAncestral.querySelectorAll(
+                    'input[type="radio"]'
+                  );
+                  if (group.length === 1) {
+                    const parentOfAncestral = refAncestral.parentElement;
+                    if (parentOfAncestral) {
+                      group = parentOfAncestral.querySelectorAll(
+                        'input[type="radio"]'
+                      );
+                      if (group.length === 1) {
+                        appendRad(el);
+                        return;
+                      } else {
+                        const checked = Array.from(group).find(
+                          rad =>
+                            rad instanceof HTMLInputElement &&
+                            rad.type === "radio" &&
+                            rad.checked
+                        ) as HTMLInputElement;
+                        if (!checked) {
+                          if (fd.get(idf)) return;
+                          fd.append(idf, "false");
+                        }
+                        appendRad(checked);
+                        return;
+                      }
+                    }
+                    appendRad(el);
+                    return;
+                  } else {
+                    const checked = Array.from(group).find(
+                      rad =>
+                        rad instanceof HTMLInputElement &&
+                        rad.type === "radio" &&
+                        rad.checked
+                    ) as HTMLInputElement;
+                    if (!checked) {
+                      if (fd.get(idf)) return;
+                      fd.append(idf, "false");
+                    }
+                    appendRad(checked);
+                  }
+                };
+                const checkParent = (
+                  refAncestral: nullishHtEl,
+                  group: string = 'input[type="radio"]'
+                ): void => {
+                  if (el.dataset.parent && el.dataset.parent !== "") {
+                    refAncestral = document.querySelector(el.dataset.parent);
+                    if (refAncestral) {
+                      checkGroup(refAncestral);
+                      return;
+                    }
+                    console.warn(
+                      `Failed to fetch reference for ancestral using data-parent. Defaulting to parent element`
+                    );
+                    refAncestral = el.parentElement;
+                    if (!refAncestral) {
+                      appendRad(el);
+                      return;
+                    }
+                    let groupQueried = refAncestral.querySelectorAll(group);
+                    if (
+                      groupQueried.length === 0 &&
+                      group !== 'input[type="radio"]' &&
+                      group !== "input[type=radio]"
+                    )
+                      groupQueried = refAncestral.querySelectorAll(
+                        'input[type="radio"]'
+                      );
+                    if (groupQueried.length <= 1 && el.parentElement) {
+                      refAncestral = el.parentElement.parentElement;
+                      if (!refAncestral) {
+                        appendRad(el);
+                        return;
+                      }
+                      checkGroup(refAncestral);
+                      return;
+                    }
+                    checkGroup(refAncestral);
+                    return;
+                  }
+                  if (refAncestral) {
+                    checkGroup(refAncestral);
+                    return;
+                  }
+                  appendRad(el);
+                  return;
+                };
+                const refAncestral = el.parentElement;
+                el.dataset.group && el.dataset.group !== ""
+                  ? checkParent(
+                      refAncestral,
+                      `[data-group="${el.dataset.group}"]`
+                    )
+                  : checkParent(refAncestral);
+                return;
+              }
+              if (el.type === "checkbox") {
+                fd.append(idf, el.checked.toString());
+                return;
+              }
+              if (el.type === "file") {
+                if (!el.multiple) {
+                  fd.append(idf, el.files?.[0] ?? "null");
+                  return;
+                } else {
+                  if (el.files)
+                    for (const file of el.files) fd.append(idf, file);
+                  else fd.append(idf, "null");
+                  return;
+                }
+              }
+            } else if (el instanceof HTMLSelectElement) {
+              if (!el.multiple) {
+                fd.append(idf, el.value);
+                return;
+              } else
+                for (const opt of el.selectedOptions) fd.append(idf, opt.value);
+            } else {
+              fd.append(idf, el.value);
+              return;
+            }
+          }
+        } catch (e) {
+          console.error(
+            `Error executin iteration ${i} for mapping ${
+              form.id || form.className || form.tagName
+            }:\n${(e as Error).message}`
+          );
+        }
+      });
+    handleSubmit(ep, fd, true);
+  } catch (e) {
+    console.error(`Error executing submitForm:\n${(e as Error).message}`);
+  }
 }
 
 export function handleCondtReq(
