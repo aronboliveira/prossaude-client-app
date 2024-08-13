@@ -7,7 +7,6 @@ import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useEffect, useRef } from "react";
 import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
 import MainFormPanel from "../mainPanel/MainFormPanel";
-import { isClickOutside } from "@/lib/global/gStyleScript";
 
 export default function ResetDlg({
   root,
@@ -55,8 +54,10 @@ export default function ResetDlg({
         toggleClose();
       }
     };
-    addEventListener("keydown", handleKeyDown);
-    return () => removeEventListener("keydown", handleKeyDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
   }, [ResetDlgRef]);
   return (
     <>
@@ -65,15 +66,6 @@ export default function ResetDlg({
           role="alertdialog"
           ref={ResetDlgRef}
           className="modal-content modal-content-fit"
-          id="reset-dlg"
-          onClick={ev => {
-            if (
-              isClickOutside(ev, ev.currentTarget).some(coord => coord === true)
-            ) {
-              ev.currentTarget.close();
-              setDisplayResetDlg(!shouldDisplayResetDlg);
-            }
-          }}
         >
           <ErrorBoundary
             FallbackComponent={() => (

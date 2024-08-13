@@ -9,7 +9,6 @@ export default function RadioPairDoces(): JSX.Element {
         id="pbAlmYes"
         className="freqRad freqAlmRad boolOp form-check-input"
         data-title="Doces (Sim)"
-        data-group="true"
         onKeyDown={keydown => {
           opRadioHandler(
             keydown,
@@ -28,7 +27,6 @@ export default function RadioPairDoces(): JSX.Element {
         id="pbAlmNo"
         className="freqRad freqAlmRad boolOp"
         data-title="Doces (Não)"
-        data-group="true"
         onKeyDown={keydown => {
           opRadioHandler(
             keydown,

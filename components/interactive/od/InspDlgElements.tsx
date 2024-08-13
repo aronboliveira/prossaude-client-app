@@ -35,7 +35,6 @@ export default function InspDlgElements({ count, ctx, fullName }: InspProps) {
               className="radOp radYes"
               data-title={`${fullName} (Sim)`}
               data-required="true"
-              data-group="true"
               onClick={showInspSpanSub}
               onDoubleClick={ev => {
                 const validSibling = searchNextSiblings(
@@ -60,7 +59,6 @@ export default function InspDlgElements({ count, ctx, fullName }: InspProps) {
               className="radOp radNo"
               data-title={`${fullName} (Não)`}
               data-required="true"
-              data-group="true"
               onClick={showInspSpanSub}
             />
             <label

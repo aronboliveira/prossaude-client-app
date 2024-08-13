@@ -385,7 +385,7 @@ export function handleLinkChanges(
                 <meta property="og:website:published_time" content="2024-07-02" />
                 <meta property="og:site_name" content="PROSSaúde — Painel de Trabalho" />
                 <meta property="og:url" content="https://prossaude-client.netlify.app/panel/" />
-                <meta property="og:title" content="PROSSaúde — UFRJ — Exame Clínico — Painel de Trabalho" />
+                <meta property="og:title" content="PROSSaúde — UFRJ — Exame Clínico — Formulário de Anamnese Geral" />
                 <meta property="og:description" content="Acesse o link para preencher acessar o painel de trabalho online do Projeto PROSSaúde, UFRJ" />
                 <meta property="og:image" content="https://prossaude-client.netlify.app/img/PROS_Saude_Modelo1-Final.png" />
                 <meta property="og:image:width" content="1200" />
@@ -393,48 +393,6 @@ export function handleLinkChanges(
                 `
               );
             document.body.className = "panelBody";
-            break;
-          }
-          case "recover": {
-            !head.querySelector("title") &&
-              head.firstElementChild!.insertAdjacentHTML(
-                `beforebegin`,
-                `
-              <title>Recuperação de Senha &#8211 PROSSaúde, UFRJ</title>
-              <link rel="canonical nofollow noreferrer" href="https://prossaude-client.netlify.app/recover/" />
-              <link rel="icon" href="/favicon_g.ico" id="faviconpross" />
-              <link
-              rel="apple-touch-icon"
-              href="img/apple-touch-icon-iphone-60x60-precomposed.png"
-              />
-              <link
-                rel="apple-touch-icon"
-                sizes="60x60"
-                href="img/apple-touch-icon-ipad-76x76-precomposed.png"
-              />
-              <link
-                rel="apple-touch-icon"
-                sizes="114x114"
-                href="img/apple-touch-icon-iphone-retina-120x120-precomposed.png"
-              />
-              <link
-                rel="apple-touch-icon"
-                sizes="144x144"
-                href="img/apple-touch-icon-ipad-retina-152x152-precomposed.png"
-              />
-                <meta name="description" content="Este é o painel de trabalho principal para o projeto PROSSaúde — UFRJ" />
-                <meta property="og:type" content="website" />
-                <meta property="og:website:published_time" content="2024-07-02" />
-                <meta property="og:site_name" content="PROSSaúde — Painel de Trabalho" />
-                <meta property="og:url" content="https://prossaude-client.netlify.app/recover/" />
-                <meta property="og:title" content="PROSSaúde — UFRJ — Exame Clínico — Recuperação de Senha" />
-                <meta property="og:description" content="Acesse o link para preencher acessar a página de recuperação de senha do Projeto PROSSaúde, UFRJ" />
-                <meta property="og:image" content="https://prossaude-client.netlify.app/img/PROS_Saude_Modelo1-Final.png" />
-                <meta property="og:image:width" content="1200" />
-                <meta property="og:image:height" content="400" />
-                `
-              );
-            document.body.className = "recoverBody";
             break;
           }
           default:

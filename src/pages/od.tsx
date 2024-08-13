@@ -58,7 +58,6 @@ export default function OdPage(): JSX.Element {
           <form
             name="od_form"
             action="submit_od_form"
-            data-ep="od"
             encType="multipart/form-data"
             method="post"
             target="_top"
