@@ -10,8 +10,6 @@ import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
 import GenericErrorComponent from "../error/GenericErrorComponent";
 import PrevConsRow from "./PrevConsRow";
 
-
-
 export default function PrevConsList({
   dispatch,
   state = true,
@@ -35,7 +33,11 @@ export default function PrevConsList({
       "",
       `${location.origin}${location.pathname}${
         location.search
-      }&prev-cons=open#${name.toLowerCase().replaceAll(" ", "-")}`
+      }&prev-cons=open#${btoa(
+        String.fromCodePoint(
+          ...new TextEncoder().encode(name.toLowerCase().replaceAll(" ", "-"))
+        )
+      )}`
     );
     setTimeout(() => {
       history.pushState(
@@ -50,7 +52,16 @@ export default function PrevConsList({
         "",
         `${location.origin}${location.pathname}${location.search}`
           .replaceAll(`&prev-cons=open`, "")
-          .replaceAll(`#${name.toLowerCase().replaceAll(" ", "-")}`, "")
+          .replaceAll(
+            `#${btoa(
+              String.fromCodePoint(
+                ...new TextEncoder().encode(
+                  name.toLowerCase().replaceAll(" ", "-")
+                )
+              )
+            )}`,
+            ""
+          )
       );
       setTimeout(() => {
         history.pushState(

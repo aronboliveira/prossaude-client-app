@@ -8,7 +8,6 @@ import { useEffect, useRef, useState } from "react";
 import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
 import GenericErrorComponent from "../error/GenericErrorComponent";
 
-
 import {
   elementNotFound,
   extLine,
@@ -94,7 +93,11 @@ export default function AlterFieldList({
       "",
       `${location.origin}${location.pathname}${
         location.search
-      }&alter-dlg=open#${name.replaceAll(" ", "-").toLowerCase()}`
+      }&alter-dlg=open#${btoa(
+        String.fromCodePoint(
+          ...new TextEncoder().encode(name.toLowerCase().replaceAll(" ", "-"))
+        )
+      )}`
     );
     optsRef.current instanceof HTMLSelectElement &&
       handleChange(optsRef.current);
@@ -112,7 +115,16 @@ export default function AlterFieldList({
             "",
             `${location.origin}${location.pathname}${location.search}`
               .replaceAll(`&alter-dlg=open`, "")
-              .replaceAll(`#${name.toLowerCase().replaceAll(" ", "-")}`, "")
+              .replaceAll(
+                `#${btoa(
+                  String.fromCodePoint(
+                    ...new TextEncoder().encode(
+                      name.toLowerCase().replaceAll(" ", "-")
+                    )
+                  )
+                )}`,
+                ""
+              )
               .replaceAll(
                 `${camelToKebab(optsRef.current.value)}${location.hash}`,
                 ""
