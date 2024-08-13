@@ -1,4 +1,3 @@
-import { DataProvider } from "@/lib/locals/panelPage/declarations/classesCons";
 import { ErrorBoundary } from "react-error-boundary";
 import { GlobalFormProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import { addListenerExportBtn } from "@/lib/global/gController";
@@ -55,15 +54,8 @@ export default function StudentForm({
   }, []);
   useEffect(() => {
     if (formRef?.current instanceof HTMLFormElement) {
-      const studDataProvider = new DataProvider(
-        DataProvider.persistSessionEntries(formRef.current)
-      );
       globalDataProvider &&
-        globalDataProvider.initPersist(
-          formRef.current,
-          studDataProvider,
-          globalDataProvider
-        );
+        globalDataProvider.initPersist(formRef.current, globalDataProvider);
       const emailInput = formRef.current.querySelector("#inpEmailStud");
       const nameInput = formRef.current.querySelector("#inpNameStud");
       const dateInputs = Array.from(

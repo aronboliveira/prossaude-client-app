@@ -1,5 +1,4 @@
 ("use client");
-import { DataProvider } from "@/lib/locals/panelPage/declarations/classesCons";
 import { FillerProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import { addListenerAvMembers } from "@/lib/locals/panelPage/handlers/consHandlerList";
 import { globalDataProvider } from "../panelForms/defs/client/SelectPanel";
@@ -25,13 +24,9 @@ export default function DREFiller({
     if (fillerDivRef.current instanceof HTMLDivElement) {
       addListenerAvMembers(forwardedRef || fillerDivRef, false);
       //storage
-      const fillerDataProvider = new DataProvider(
-        DataProvider.persistSessionEntries(fillerDivRef.current)
-      );
       globalDataProvider &&
         globalDataProvider.initPersist(
           fillerDivRef.current,
-          fillerDataProvider,
           globalDataProvider
         );
       //estilo e aria
