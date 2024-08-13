@@ -1,30 +1,23 @@
 import { ErrorBoundary } from "react-error-boundary";
-import { FailedRegstProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import { nullishDlg } from "@/lib/global/declarations/types";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useEffect, useRef } from "react";
 import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
+import { DlgProps } from "@/lib/global/declarations/interfaces";
 import { isClickOutside } from "@/lib/global/gStyleScript";
 
-export default function FailRegstAlert({
-  setDisplayFailRegstDlg,
-  shouldDisplayFailRegstDlg = false,
-  secondOp = "Arraste",
-}: FailedRegstProps): JSX.Element {
+export default function RecoverAlert({
+  dispatch,
+  state = true,
+}: DlgProps): JSX.Element {
   const FailRegstDlgRef = useRef<nullishDlg>(null);
   const toggleClose = () => {
-    setDisplayFailRegstDlg(!shouldDisplayFailRegstDlg);
-    if (
-      !shouldDisplayFailRegstDlg &&
-      FailRegstDlgRef.current instanceof HTMLDialogElement
-    )
+    dispatch(!state);
+    if (!state && FailRegstDlgRef.current instanceof HTMLDialogElement)
       FailRegstDlgRef.current.close();
   };
   useEffect(() => {
-    if (
-      shouldDisplayFailRegstDlg &&
-      FailRegstDlgRef.current instanceof HTMLDialogElement
-    )
+    if (state && FailRegstDlgRef.current instanceof HTMLDialogElement)
       FailRegstDlgRef.current.showModal();
     syncAriaStates([
       ...FailRegstDlgRef.current!.querySelectorAll("*"),
@@ -40,18 +33,18 @@ export default function FailRegstAlert({
   }, [FailRegstDlgRef]);
   return (
     <>
-      {shouldDisplayFailRegstDlg && (
+      {state && (
         <dialog
           role="alertdialog"
           ref={FailRegstDlgRef}
           className="modal-content modal-content-fit wid80"
-          id="alert-dlg"
+          id="recover-alert"
           onClick={ev => {
             if (
               isClickOutside(ev, ev.currentTarget).some(coord => coord === true)
             ) {
               ev.currentTarget.close();
-              setDisplayFailRegstDlg(!shouldDisplayFailRegstDlg);
+              dispatch(!state);
             }
           }}
         >
@@ -71,12 +64,18 @@ export default function FailRegstAlert({
                 role="group"
                 className="flexJtC flexAlItCt flexNoWC wsBs noInvert"
               >
-                <h3 className="wsBs">
-                  Falha na procura de um encaixe correspondente na agenda!{" "}
-                  {`${secondOp} `} ou insira manualmente.
-                </h3>
+                <p>
+                  <b>Solicitação enviada!</b>
+                </p>
+                <p>
+                  Verifique a caixa de entrada do seu e-mail para os próximos
+                  passos.
+                </p>
               </div>
-              <button className="btn btn-danger bolded" onClick={toggleClose}>
+              <button
+                className="btn btn-secondary bolded"
+                onClick={toggleClose}
+              >
                 Fechar
               </button>
             </section>

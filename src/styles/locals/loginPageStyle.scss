@@ -28,6 +28,13 @@
   #bgDiv {
     border: none;
     background-color: rgba(255, 255, 255, 0.97);
+    padding: 0;
+    margin: 0;
+  }
+
+  #recover {
+    font-weight: 600;
+    font-size: 0.9rem;
   }
 
   .userInput,
@@ -261,10 +268,10 @@
       padding-inline: 0;
     }
     #loginBtnCont {
-      width: 65%;
+      width: 70%;
       display: flex;
       flex-flow: row wrap;
-      padding-left: 18vw;
+      padding-left: 14vw;
     }
   }
 }

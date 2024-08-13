@@ -96,7 +96,8 @@ export async function handleSubmit(
         apiRoute === "patients" ||
         apiRoute === "profs" ||
         apiRoute === "studs" ||
-        apiRoute === "schedule"
+        apiRoute === "schedule" ||
+        apiRoute === "recover"
       )
     )
       throw new Error(`Invalidating route for API argumented to handler`);

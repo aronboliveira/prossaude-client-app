@@ -82,7 +82,14 @@ export type nullishDl = HTMLDataListElement | null;
 export type nullishOptGrp = HTMLOptGroupElement | null;
 export type rMouseEvent = MouseEvent | React.MouseEvent;
 export type rDragEvent = DragEvent | React.DragEvent;
-export type pageCases = "login" | "base" | "ag" | "ed" | "od" | "panel";
+export type pageCases =
+  | "login"
+  | "base"
+  | "ag"
+  | "ed"
+  | "od"
+  | "panel"
+  | "recover";
 export type formCases =
   | "schedule"
   | "studs"
@@ -149,7 +156,8 @@ export type pageStyleCases =
   | "AG Page Style"
   | "EN Page Style"
   | "Od Page Style"
-  | "Panel Page Style";
+  | "Panel Page Style"
+  | "Recover Page Style";
 export type validSchedHours = 18 | 19 | 20 | 21;
 export type userClasses = "coordenador" | "supervisor" | "estudante";
 export type personAbrvClasses = "stud" | "prof" | "pac";

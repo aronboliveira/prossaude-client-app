@@ -79,7 +79,8 @@ export default function Watcher({
       document
         .querySelectorAll(".inpAvDent")
         .forEach((inp, i) => handleInpAvDentValue(inp, i));
-    }
+    } else if (routeCase === "recover")
+      handleLinkChanges("recover", "Recover Page Style");
     return () => {
       if (routeCase === "ag") removeEventListener("resize", handleResize);
     };

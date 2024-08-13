@@ -10,6 +10,7 @@ import "../styles/locals/aGPageStyle.scss";
 import "../styles/locals/edFisNutPageStyle.scss";
 import "../styles/locals/odPageStyle.scss";
 import "../styles/locals/panelPageStyle.scss";
+import "../styles/locals/recoverPageStyle.scss";
 
 export const AppRootContext: Context<AppRootContextType> =
   createContext<AppRootContextType>({
