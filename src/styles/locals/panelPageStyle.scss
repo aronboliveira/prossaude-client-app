@@ -1,5 +1,23 @@
 /* Panel Page Style */
 
+@keyframes slideUserInfo {
+  0% {
+    width: 0;
+  }
+  100% {
+    width: 9.857rem;
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
 @supports (scrollbar-width: thin) {
   * {
     &:has(header) {
@@ -45,6 +63,15 @@ body {
     font-weight: initial;
   }
 
+  .appointmentBtn {
+    touch-action: none;
+    @if (box-sizing: "border-box") {
+      max-width: 16.505875rem;
+    } @else {
+      max-width: 20rem;
+    }
+  }
+
   .bi {
     &:not(.btn-close) {
       width: unset;
@@ -84,15 +111,6 @@ body {
       height: fit-content;
       font-size: 0.875em;
       width: 100%;
-    }
-  }
-
-  .appointmentBtn {
-    touch-action: none;
-    @if (box-sizing: "border-box") {
-      max-width: 16.505875rem;
-    } @else {
-      max-width: 20rem;
     }
   }
 
@@ -253,6 +271,10 @@ body {
 
   #wrapperUserInfo {
     margin-left: 2vw;
+    animation: slideUserInfo 1s ease-in;
+    * {
+      animation: fadeIn 2s ease-in;
+    }
   }
 }
 

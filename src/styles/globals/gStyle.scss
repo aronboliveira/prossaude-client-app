@@ -199,6 +199,24 @@ $swhite: #ffffffcc;
   }
 }
 
+@keyframes slidePo {
+  0% {
+    height: 0;
+  }
+  100% {
+    height: 26.45rem;
+  }
+}
+
+@keyframes slideUserInfo {
+  0% {
+    height: 0;
+  }
+  100% {
+    height: 9.857rem;
+  }
+}
+
 @keyframes dropIn {
   0% {
     top: -45%;
@@ -1652,7 +1670,8 @@ td,
 .po {
   display: block;
   position: absolute;
-  transition: opacity 0.5s ease-in-out;
+  transition: opacity 1s ease-in-out, display 1s ease-in-out, height 1s ease-in-out, top 1s ease-in-out;
+  animation: slidePo 1s ease-in-out;
   box-sizing: border-box;
   top: 0;
   left: 0;
@@ -1679,15 +1698,15 @@ td,
   background-color: #fff;
   border: 1px solid #00000033;
   border-radius: 0.3rem;
-}
-
-.po {
   &.lowPo {
     top: 150%;
     left: -17%;
   }
   &.userPo {
     width: 11rem;
+  }
+  * {
+    animation: fadeIn 1.5s ease-in;
   }
 }
 

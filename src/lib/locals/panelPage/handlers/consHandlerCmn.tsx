@@ -1838,7 +1838,7 @@ export function addListenersForSchedTab(
           }`
         );
       }
-    }, 10000);
+    }, 2000);
     const checkInterv = setInterval(interv => {
       try {
         const dayChecks = scope.querySelectorAll('input[class*="apptCheck"]');

@@ -167,6 +167,15 @@ export default function SelectPanel({
         if (!context.roots.formRoot)
           context.roots.formRoot = createRoot(formRoot);
         const kebabSearch = kebabToCamel(location.search);
+        formRoot.style.transition = "";
+        formRoot.style.opacity = "0";
+        setTimeout(() => {
+          const formRoot = document.getElementById("formRoot");
+          if (formRoot instanceof HTMLElement) {
+            formRoot.style.transition = "opacity 0.3s ease-in-out";
+            formRoot.style.opacity = "1";
+          }
+        }, 300);
         if (/registStud/gi.test(kebabSearch)) {
           context.roots.formRoot.render(
             userClass === "coordenador" || userClass === "supervisor" ? (
@@ -296,6 +305,18 @@ export default function SelectPanel({
             setSelectedOption(change.target.value);
             handlePanelPath(change.target.value);
             renderSelectPanel(change.target.value as panelOpts);
+            const formRoot = document.getElementById("formRoot");
+            if (formRoot instanceof HTMLElement) {
+              formRoot.style.transition = "";
+              formRoot.style.opacity = "0";
+            }
+            setTimeout(() => {
+              const formRoot = document.getElementById("formRoot");
+              if (formRoot instanceof HTMLElement) {
+                formRoot.style.transition = "opacity 0.3s ease-in-out";
+                formRoot.style.opacity = "1";
+              }
+            }, 300);
           }}
           autoFocus
           required
