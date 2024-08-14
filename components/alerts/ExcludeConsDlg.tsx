@@ -53,10 +53,8 @@ export default function ExcludeConsDlg({
         toggleClose();
       }
     };
-    document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
+    addEventListener("keydown", handleKeyDown);
+    return () => removeEventListener("keydown", handleKeyDown);
   }, [excludeDlgRef]);
   useEffect(() => {
     try {
@@ -82,6 +80,15 @@ export default function ExcludeConsDlg({
           role="alertdialog"
           ref={excludeDlgRef}
           className="modal-content modal-content-fit"
+          id="exclude-cons-dlg"
+          onClick={ev => {
+            if (
+              isClickOutside(ev, ev.currentTarget).some(coord => coord === true)
+            ) {
+              ev.currentTarget.close();
+              setDisplayExcludeDlg(!shouldDisplayExcludeDlg);
+            }
+          }}
         >
           <ErrorBoundary
             FallbackComponent={() => (

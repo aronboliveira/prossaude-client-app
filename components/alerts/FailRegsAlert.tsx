@@ -4,6 +4,7 @@ import { nullishDlg } from "@/lib/global/declarations/types";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useEffect, useRef } from "react";
 import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
+import { isClickOutside } from "@/lib/global/gStyleScript";
 
 export default function FailRegstAlert({
   setDisplayFailRegstDlg,
@@ -34,10 +35,8 @@ export default function FailRegstAlert({
         toggleClose();
       }
     };
-    document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
+    addEventListener("keydown", handleKeyDown);
+    return () => removeEventListener("keydown", handleKeyDown);
   }, [FailRegstDlgRef]);
   return (
     <>
@@ -46,6 +45,15 @@ export default function FailRegstAlert({
           role="alertdialog"
           ref={FailRegstDlgRef}
           className="modal-content modal-content-fit wid80"
+          id="alert-dlg"
+          onClick={ev => {
+            if (
+              isClickOutside(ev, ev.currentTarget).some(coord => coord === true)
+            ) {
+              ev.currentTarget.close();
+              setDisplayFailRegstDlg(!shouldDisplayFailRegstDlg);
+            }
+          }}
         >
           <ErrorBoundary
             FallbackComponent={() => (

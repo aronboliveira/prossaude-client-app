@@ -75,6 +75,7 @@ export async function handleLogin(
 export async function handleSubmit(
   apiRoute: formCases,
   formData:
+    | FormData
     | Array<[string, string | File]>
     | { [k: string]: string | File }
     | Map<string, string | File>,
@@ -95,7 +96,8 @@ export async function handleSubmit(
         apiRoute === "patients" ||
         apiRoute === "profs" ||
         apiRoute === "studs" ||
-        apiRoute === "schedule"
+        apiRoute === "schedule" ||
+        apiRoute === "recover"
       )
     )
       throw new Error(`Invalidating route for API argumented to handler`);

@@ -136,6 +136,7 @@ export default function Signature(): JSX.Element {
           onTouchStart={startDrawingTouch}
           onTouchMove={drawTouch}
           onTouchEnd={stopDrawing}
+          data-name="signature"
         ></canvas>
         <button
           type="button"

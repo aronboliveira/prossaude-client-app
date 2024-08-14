@@ -1,5 +1,4 @@
 "use client";
-// import { DataProvider } from "../../../src/lib/locals/panelPage/declarations/classesCons";
 import { ErrorBoundary } from "react-error-boundary";
 import { ScheduleFormProps } from "../../../src/lib/locals/panelPage/declarations/interfacesCons";
 import { addListenerExportBtn } from "../../../src/lib/global/gController";

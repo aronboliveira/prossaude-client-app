@@ -14,11 +14,8 @@ import {
   callbackShowPw,
   callbackSubmitBtn,
 } from "@/lib/locals/loginPage/loginController";
-// import { addButtonClickAnimationListeners } from "@/lib/global/handlers/gRoutingHandlers";
-// import { useRouter } from "next/router";
 
 export default function LoginInputs(): JSX.Element {
-  // const router = useRouter();
   const anchorRef = useRef<nullishAnchor>(null);
   useEffect(() => {
     try {
@@ -57,7 +54,6 @@ export default function LoginInputs(): JSX.Element {
       user: "Nome de Usuário",
       pw: "Senha",
     });
-    // addButtonClickAnimationListeners();
   }, []);
   return (
     <section id="inputCont">
@@ -128,11 +124,11 @@ export default function LoginInputs(): JSX.Element {
       <small className="customValidityWarn" id="pwWarn" role="textbox"></small>
       <nav id="loginBtnCont">
         <a
-          id="newAccA"
+          id="recover"
           className="fade-in-late-element"
-          href="#"
+          href="/recover"
           rel="nofollow noreferrer"
-          target="_blank"
+          target="_self"
         >
           Esqueci minha senha
         </a>

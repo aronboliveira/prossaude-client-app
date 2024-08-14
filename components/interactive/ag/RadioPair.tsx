@@ -65,6 +65,7 @@ export default function RadioPair({
             className="noInvert radOp radYes form-check-input"
             tabIndex={0}
             data-title={`Sim — ${fullName}`}
+            data-group="true"
             onKeyDown={keydown => {
               opRadioHandler(
                 keydown,
@@ -91,6 +92,7 @@ export default function RadioPair({
             className="noInvert radOp radNo"
             tabIndex={0}
             data-title={`Não — ${fullName}`}
+            data-group="true"
             onKeyDown={keydown => {
               opRadioHandler(
                 keydown,
