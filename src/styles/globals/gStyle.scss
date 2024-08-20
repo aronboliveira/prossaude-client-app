@@ -2198,6 +2198,23 @@ td,
   padding-left: 1rem;
 }
 
+#sectConfirmBut {
+  [type="submit"],
+  .btn-success {
+    background: linear-gradient(to right, #34cf75af, #07bf605f);
+  }
+  [type="reset"],
+  .btn-warning {
+    background: linear-gradient(to right, #ffc80081, #ff992cab);
+  }
+  [type="button"],
+  #btnExport {
+    background: linear-gradient(to right, #85d7e9, #00c8d6);
+    color: #000d;
+    font-weight: 700;
+  }
+}
+
 #sectConfirmCheck {
   hr:last-of-type,
   + hr {

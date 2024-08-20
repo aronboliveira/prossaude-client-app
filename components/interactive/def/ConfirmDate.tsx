@@ -1,4 +1,32 @@
+"use client";
+import { nullishBtn, nullishInp } from "@/lib/global/declarations/types";
+import { useEffect, useRef } from "react";
+import { parseNotNaN } from "@/lib/global/gModel";
 export default function ConfirmDate(): JSX.Element {
+  const dateRef = useRef<nullishInp>(null);
+  const btnRef = useRef<nullishBtn>(null);
+  useEffect(() => {
+    const equalizeBtn = () => {
+      btnRef.current ??= document.getElementById(
+        "headerDatBtn"
+      ) as HTMLButtonElement;
+      dateRef.current ??= document.getElementById(
+        "dateHeader"
+      ) as HTMLInputElement;
+      const dateWidth = parseNotNaN(
+        getComputedStyle(dateRef.current).width.replace("px", "").trim()
+      );
+      const btnWidth = parseNotNaN(
+        getComputedStyle(btnRef.current).width.replace("px", "").trim()
+      );
+      if (dateWidth > btnWidth) btnRef.current.style.width = `${dateWidth}px`;
+      else if (dateWidth < btnWidth)
+        dateRef.current.style.width = `${btnWidth}px`;
+    };
+    equalizeBtn();
+    addEventListener("resize", equalizeBtn);
+    return () => removeEventListener("resize", equalizeBtn);
+  }, []);
   return (
     <label
       htmlFor="confirmDatId"
@@ -18,11 +46,13 @@ export default function ConfirmDate(): JSX.Element {
           className="inpConfirm inpDate form-control noInvert minCurrDate"
           data-title="assinatura_data"
           required
+          ref={dateRef}
         />
         <button
           type="button"
           className="datBtn confirmBtn btn btn-secondary widFull"
           id="confirmDatBtn"
+          ref={btnRef}
         >
           Usar data atual
         </button>
