@@ -68,7 +68,7 @@ export default function MainContainer(): JSX.Element {
         const panelBtn = document.getElementById("panelBtn");
         const panelSect = document.getElementById("panelSect");
         let factor = 1,
-          contFactor = 0.9,
+          contFactor = 1,
           numRows = 1,
           factorRows = 0.5;
         const rows = getComputedStyle(cardsSect).gridTemplateRows;
@@ -83,14 +83,20 @@ export default function MainContainer(): JSX.Element {
         else numRows = Array.from(rows.matchAll(/\s/g)).length + 1 || 1;
         if (panelBtn instanceof HTMLElement) panelBtn.style.width = "23.2rem";
         if (cardsSect instanceof HTMLElement) cardsSect.style.paddingTop = "0";
-        if (panelSect instanceof HTMLElement) {
-          panelSect.style.paddingTop = "0";
-        }
-        if (innerWidth > 520 && innerWidth <= 720) numRows /= 2;
+        if (panelSect instanceof HTMLElement) panelSect.style.paddingTop = "0";
+        if (innerWidth > 520 && innerWidth <= 1025) numRows = 2;
         if (innerWidth <= 1025 && numRows > 1) {
-          factor = 1.075 * numRows * factorRows;
+          factor = 1 * numRows * factorRows;
           contFactor = 1 * numRows * factorRows;
-          if (panelBtn instanceof HTMLElement) panelBtn.style.width = "23.2rem";
+          if (panelSect instanceof HTMLElement) {
+            panelSect.style.paddingTop = "0";
+            panelSect.style.paddingBottom = "0";
+            if (panelBtn instanceof HTMLElement) {
+              panelBtn.style.width = "23.2rem";
+              if (panelBtn.parentElement)
+                panelBtn.parentElement!.style.paddingTop = "1%";
+            }
+          }
         }
         if (
           innerWidth < 930 &&
@@ -101,92 +107,70 @@ export default function MainContainer(): JSX.Element {
           panelSect.style.paddingBottom = "0";
         }
         if (innerWidth <= 850 && numRows > 1) {
-          factor = 1.013 * numRows * factorRows;
           contFactor = 0.94 * numRows * factorRows;
           if (cardsSect instanceof HTMLElement)
             cardsSect.style.paddingTop = "2rem";
           if (panelSect instanceof HTMLElement) {
-            panelSect.style.paddingTop = "4rem";
+            panelSect.style.paddingTop = "3rem";
             panelSect.style.paddingBottom = "0";
           }
         }
-        if (numRows >= 4) {
-          if (innerWidth > 520 && innerWidth <= 750) numRows /= 2;
-          if (innerWidth <= 520) factorRows = 0.25;
-        }
         if (innerWidth <= 750 && numRows > 1) {
-          factor = 1.01 * numRows * factorRows;
-          contFactor = 0.93 * numRows * factorRows;
+          contFactor = 1 * numRows * factorRows;
           if (panelSect instanceof HTMLElement) {
-            panelSect.style.paddingTop = "1rem";
+            panelSect.style.paddingTop = "0";
             panelSect.style.paddingBottom = "3rem";
           }
         }
         if (innerWidth <= 675 && numRows > 1) {
           if (panelSect instanceof HTMLElement) {
-            panelSect.style.paddingTop = "2rem";
-            panelSect.style.paddingBottom = "3rem";
+            panelSect.style.paddingTop = "0.2rem";
           }
         }
         if (innerWidth <= 600 && numRows > 1) {
-          factor = 1.05 * numRows * factorRows;
           contFactor = 0.93 * numRows * factorRows;
         }
         if (innerWidth <= 592 && numRows > 1) {
-          factor = 1.07 * numRows * factorRows;
-          contFactor = 0.95 * numRows * factorRows;
+          factor = 1.04 * numRows * factorRows;
+          contFactor = 1.2 * numRows * factorRows;
           if (panelSect instanceof HTMLElement) {
-            panelSect.style.paddingTop = "0";
-            panelSect.style.paddingBottom = "0";
+            panelSect.style.paddingTop = "2rem";
           }
         }
-        if (innerWidth <= 520 && numRows > 1) {
-          factor = 1.115 * numRows * factorRows;
-          contFactor = 1.045 * numRows * factorRows;
-          if (panelSect instanceof HTMLElement) {
-            panelSect.style.paddingTop = "0";
-            panelSect.style.paddingBottom = "6rem";
-            panelSect.style.marginTop = "0";
-            if (panelBtn instanceof HTMLElement) panelBtn.style.width = "75vw";
-          }
+        if (numRows >= 4 && innerWidth <= 520) {
+          numRows = 4;
+          factorRows = 0.25;
         }
         if (innerWidth <= 520 && numRows > 1) {
-          factor = 1.115 * numRows * factorRows;
-          contFactor = 1.045 * numRows * factorRows;
+          factor = 1.06 * numRows * factorRows;
+          contFactor = 1 * numRows * factorRows;
           if (panelSect instanceof HTMLElement) {
-            panelSect.style.paddingTop = "0";
-            panelSect.style.paddingBottom = "6rem";
+            panelSect.style.paddingBottom = "2rem";
             panelSect.style.marginTop = "0";
             if (panelBtn instanceof HTMLElement) panelBtn.style.width = "75vw";
           }
         }
         if (innerWidth <= 448 && numRows > 1) {
-          factor = 1.132 * numRows * factorRows;
+          factor = 1.083 * numRows * factorRows;
           contFactor = 1.045 * numRows * factorRows;
           if (panelSect instanceof HTMLElement) {
-            panelSect.style.paddingTop = "0";
-            panelSect.style.paddingBottom = "6rem";
-            panelSect.style.marginTop = "0";
-            if (panelBtn instanceof HTMLElement) panelBtn.style.width = "75vw";
+            panelSect.style.paddingTop = "2rem";
+            panelSect.style.paddingBottom = "3rem";
           }
         }
         if (innerWidth <= 415 && numRows > 1) {
-          factor = 1.095 * numRows * factorRows;
+          factor = 1.038 * numRows * factorRows;
           contFactor = 1.01 * numRows * factorRows;
           if (panelSect instanceof HTMLElement) {
-            panelSect.style.paddingTop = "0";
-            panelSect.style.paddingBottom = "6rem";
-            panelSect.style.marginTop = "0";
+            panelSect.style.paddingTop = "2rem";
             if (panelBtn instanceof HTMLElement) panelBtn.style.width = "75vw";
           }
         }
         if (innerWidth <= 325 && numRows > 1) {
-          factor = 1.135 * numRows * factorRows;
-          contFactor = 1.05 * numRows * factorRows;
+          factor = 1.038 * numRows * factorRows;
+          contFactor = 1.01 * numRows * factorRows;
           if (panelSect instanceof HTMLElement) {
-            panelSect.style.paddingTop = "0";
-            panelSect.style.paddingBottom = "6rem";
-            panelSect.style.marginTop = "0";
+            panelSect.style.paddingTop = "3.5rem";
             if (cardsSect instanceof HTMLElement)
               cardsSect.style.paddingTop = "5rem";
             if (panelBtn instanceof HTMLElement) panelBtn.style.width = "75vw";
@@ -195,23 +179,12 @@ export default function MainContainer(): JSX.Element {
         bgDiv.style.height = `${
           parseNotNaN(
             getComputedStyle(mainArticle).height.replace("px", "").trim()
-          ) * factor || 1.856
+          ) * factor || 1
         }px`;
-        bgDiv.style.minHeight = `${
-          parseNotNaN(
-            getComputedStyle(mainArticle).height.replace("px", "").trim()
-          ) * factor || 1.856
-        }px`;
-        if (innerWidth <= 592) bgDiv.style.minHeight = `1212.15px`;
         mainContainer.style.height = `${
           parseNotNaN(
             getComputedStyle(mainArticle).height.replace("px", "").trim()
-          ) * contFactor
-        }px`;
-        mainContainer.style.minHeight = `${
-          parseNotNaN(
-            getComputedStyle(mainArticle).height.replace("px", "").trim()
-          ) * contFactor
+          ) * contFactor || 1
         }px`;
       } catch (e) {
         console.error(
@@ -261,11 +234,10 @@ export default function MainContainer(): JSX.Element {
               rel="nofollow"
               onClick={() => nextRouter.push("/ag")}
             >
-              Anamnese Geral, Medicina & Saúde Mental
+              Geral & Saúde Mental
             </a>
-            <small className="mg-1bv460Q fd3el">
-              Acesse aqui o formulário para Anamnese Geral, Medicina & Saúde
-              Mental
+            <small className="mg-1bv460Q fd3el formDesc">
+              Acesse aqui o formulário para Anamnese Geral e Saúde Mental
             </small>
           </div>
         </div>
