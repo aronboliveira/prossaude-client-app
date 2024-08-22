@@ -13,15 +13,16 @@ import "../styles/locals/odPageStyle.scss";
 import "../styles/locals/panelPageStyle.scss";
 import "../styles/locals/recoverPageStyle.scss";
 import mainStore from "@/redux/mainStore";
-
 export const AppRootContext: Context<AppRootContextType> =
   createContext<AppRootContextType>({
     roots: {
       nextRoot: undefined,
     },
   });
-
-export default function ProSaudeApp({ Component, pageProps }: AppProps) {
+export default function ProSaudeApp({
+  Component,
+  pageProps,
+}: AppProps): JSX.Element {
   return (
     <Provider store={mainStore}>
       <AppRootContext.Provider value={{ roots: { nextRoot: undefined } }}>

@@ -19,7 +19,7 @@ export const defCurrSemester =
 export const defUser = {
   loadedData: {
     id: "",
-    name: "",
+    name: "Anônimo",
     privilege: "student",
     area: "general",
     origin: "general",

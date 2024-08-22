@@ -26,23 +26,26 @@
 .baseBody {
   background-color: #98c3a780;
   margin-top: 0;
+  position: relative;
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
   button {
     cursor: pointer;
   }
-
   button:hover,
   button.card-hborder:hover {
     color: #000;
     background-color: #ffff;
     animation: highlightButton 2s linear infinite;
   }
-
   div {
     &:has(#agAnchoredBtn):not(#bgDiv) {
       max-width: 23vw !important;
     }
   }
-
   footer {
     display: none;
     height: 1vh;
@@ -54,7 +57,6 @@
       rgba(61, 134, 104, 0.429)
     );
   }
-
   section {
     &:has(> #rootUserInfo) {
       background-color: #529b85c6;

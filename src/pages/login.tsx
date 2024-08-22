@@ -1,10 +1,19 @@
 import { ErrorBoundary } from "react-error-boundary";
 import LoginInputs from "../../components/interactive/login/LoginInputs";
 import Watcher from "../../components/interactive/def/Watcher";
+import GenericErrorComponent from "../../components/error/GenericErrorComponent";
 
 export default function LoginPage(): JSX.Element {
   return (
-    <ErrorBoundary FallbackComponent={() => <div>Erro!</div>}>
+    <ErrorBoundary
+      FallbackComponent={() => (
+        <ErrorBoundary
+          FallbackComponent={() => (
+            <GenericErrorComponent message="Error loading Login Page" />
+          )}
+        />
+      )}
+    >
       <div role="group" className="pad1pc" id="bgDiv">
         <main>
           <form

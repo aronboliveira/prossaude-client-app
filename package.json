@@ -25,6 +25,7 @@
     "core-js": "^3.37.1",
     "eslint": "^8.57.0",
     "eslint-config-next": "^14.2.4",
+    "js-cookie": "^3.0.5",
     "jwt-decode": "^4.0.0",
     "next": "14.2.4",
     "node": "^22.3.0",
@@ -38,6 +39,7 @@
     "xlsx-js-style": "^1.2.0"
   },
   "devDependencies": {
+    "@types/js-cookie": "^3.0.6",
     "@types/xlsx": "^0.0.36",
     "@typescript-eslint/eslint-plugin": "^7.13.0",
     "@typescript-eslint/parser": "^7.13.0",

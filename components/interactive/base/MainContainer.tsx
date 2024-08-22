@@ -10,34 +10,27 @@ import { targEl } from "@/lib/global/declarations/types";
 import { useEffect, useContext } from "react";
 import { useRouter } from "next/router";
 import UserProfilePanel from "../../user/UserProfilePanel";
-import { defCurrSemester } from "@/redux/slices/userSlice";
+import { defUser } from "@/redux/slices/userSlice";
 import { useDispatch } from "react-redux";
 import { setFullUser } from "@/redux/slices/userSlice";
-import { ProfessionalTokenPayload } from "@/pages/api/ts/serverInterfaces";
+import { UserState } from "@/pages/api/ts/serverInterfaces";
 let baseRootUser: targEl;
-export const experimentalUser: { loadedData: ProfessionalTokenPayload } = {
-  loadedData: {
-    id: "",
-    name: "João Almeida",
-    privilege: "coordinator",
-    area: "psychology",
-    origin: "psy",
-    activityDay: "quarta-feira",
-    beginningSemester: defCurrSemester,
-    beginningDay: new Date().getDate().toString(),
-    cpf: 0,
-    email: "joaoteste@gmail.com",
-    telephone: "+55 (21) 90000-0000",
-    authorized: true,
-    external: false,
-  },
-};
+export let experimentalUser: UserState = defUser;
 export default function MainContainer(): JSX.Element {
   const context = useContext(AppRootContext);
   const nextRouter = useRouter();
   const dispatch = useDispatch();
   useEffect(() => {
-    //TODO USER TEM QUE VIR DE FETCH POSTERIORMENTE...
+    experimentalUser = localStorage.getItem("activeUser")
+      ? JSON.parse(localStorage.getItem("activeUser")!)
+      : defUser;
+    if (
+      experimentalUser.loadedData.name === "" ||
+      /an[oô]nimo/gi.test(experimentalUser.loadedData.name)
+    )
+      console.warn(
+        `Failed to fetch user from local storage. Default user displayed.`
+      );
     const user = new User({
       name: experimentalUser.loadedData.name,
       privilege: experimentalUser.loadedData.privilege,

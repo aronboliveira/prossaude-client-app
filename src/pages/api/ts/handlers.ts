@@ -14,7 +14,8 @@ import {
   ProfessionalTokenPayload,
   StudentTokenPayload,
 } from "./serverInterfaces";
-
+import Cookies from "js-cookie";
+import { defCurrSemester } from "@/redux/slices/userSlice";
 export function decodeToken(
   token: string,
   UNDER_TEST: boolean = false
@@ -35,7 +36,23 @@ export function decodeToken(
     }
     return {
       ok: true,
-      res: {},
+      res: {
+        loadedData: {
+          id: "",
+          name: "João Almeida",
+          privilege: "coordinator",
+          area: "psychology",
+          origin: "psy",
+          activityDay: "quarta-feira",
+          beginningSemester: defCurrSemester,
+          beginningDay: new Date().getDate().toString(),
+          cpf: 0,
+          email: "joaoteste@gmail.com",
+          telephone: "+55 (21) 90000-0000",
+          authorized: true,
+          external: false,
+        },
+      },
     };
   } catch (e) {
     console.error(`Error executing decodeToken:\n${(e as Error).message}`);
@@ -105,15 +122,52 @@ export async function handleLogin(
       const data = await res.json();
       if (res.status !== 200 && resSpan instanceof HTMLElement) {
         resSpan.innerText = `Failed to validate login: Error code ${res.status}`;
-        console.warn(`Error on processing HTTP Response:\n${data}`);
+        console.warn(`Error on processing HTTP Response:\n`);
+        console.warn(data);
         status = res.status;
         resData = data;
         return;
       }
       console.log(`Fetch was sucessfull: ${res.status}\nJSON Data:`);
       console.log(data);
+      if (!("access" in data)) {
+        if (resSpan)
+          resSpan.innerText = `Failed to validate login: Error processing server response.`;
+        console.warn(`Error on processing JSONified HTTP Response:\n`);
+        console.warn(data);
+        status = res.status;
+        resData = data;
+        return;
+      }
+      Cookies.set("accessToken", data.access, {
+        secure: true,
+        sameSite: "strict",
+        path: "/",
+      });
+      Cookies.set("refreshToken", data.access, {
+        secure: true,
+        sameSite: "strict",
+        path: "/",
+      });
+      const { ok, res: user } = decodeToken(data);
+      if (!ok) {
+        if (resSpan)
+          resSpan.innerText = `Failed to validate login: Error validating token.`;
+        console.warn(`Error processing tokens :\n`);
+        console.warn(user);
+        status = res.status;
+        resData = data;
+        return;
+      }
+      localStorage.setItem("activeUser", JSON.stringify(user));
       exeLogin();
-    } else exeLogin();
+    } else {
+      localStorage.setItem(
+        "activeUser",
+        JSON.stringify(decodeToken("", true).res)
+      );
+      exeLogin();
+    }
   } catch (e) {
     console.error(`Error executing handleFetchStuds:\n${(e as Error).message}`);
     if (resSpan)
