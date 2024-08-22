@@ -14,7 +14,6 @@ import {
   callbackShowPw,
   callbackSubmitBtn,
 } from "@/lib/locals/loginPage/loginController";
-
 export default function LoginInputs(): JSX.Element {
   const anchorRef = useRef<nullishAnchor>(null);
   useEffect(() => {
@@ -138,14 +137,15 @@ export default function LoginInputs(): JSX.Element {
           id="submitBtn"
         >
           <a
+            href={`${basePath.path}/base`}
             ref={anchorRef}
             id="submitLogin"
             rel="nofollow noreferrer"
             target="_self"
-            href={`${basePath.path}/base`}
             style={{ color: "#ffff" }}
             onClick={ev => {
-              let user_name = "";
+              let userName = "";
+              const loginForm = new FormData();
               try {
                 const usernameEl = document.getElementById("user");
                 if (!(usernameEl instanceof HTMLInputElement))
@@ -154,7 +154,7 @@ export default function LoginInputs(): JSX.Element {
                     `Validation of User name element`,
                     extLine(new Error())
                   );
-                user_name = usernameEl.value;
+                userName = usernameEl.value;
               } catch (e) {
                 console.error(
                   `Error executing fetch of user name from element:\n${
@@ -162,6 +162,7 @@ export default function LoginInputs(): JSX.Element {
                   }`
                 );
               }
+              loginForm.append("username", userName);
               let pw = "";
               try {
                 const pwEl = document.getElementById("pw");
@@ -173,9 +174,12 @@ export default function LoginInputs(): JSX.Element {
                   );
                 pw = pwEl.value;
               } catch (e) {
-                console.error(`Error:${(e as Error).message}`);
+                console.error(
+                  `Error reading password value:${(e as Error).message}`
+                );
               }
-              handleLogin(ev, [user_name, pw], true);
+              loginForm.append("password", pw);
+              handleLogin(ev, loginForm, true);
               callbackSubmitBtn(
                 ev.currentTarget.closest("button"),
                 new SubmitEvent("submit", {

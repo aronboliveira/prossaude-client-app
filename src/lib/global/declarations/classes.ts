@@ -6,7 +6,6 @@ export interface UndefinedPerson {
   height: number;
   atvLvl: string;
 }
-
 export class Person {
   gen;
   age;
@@ -328,7 +327,6 @@ export class Person {
     return 0;
   }
 }
-
 export class UniqueMap extends Map {
   set(key: any, value: any) {
     try {
@@ -347,25 +345,40 @@ export class UniqueMap extends Map {
     return this;
   }
 }
-
 export class User {
   readonly #userClass: string;
   readonly #userArea: string;
   readonly #userName: string;
   readonly #userEmail: string;
   readonly #userTel: string;
-  constructor(
-    _userClass: string,
-    _userArea: string,
-    _userName: string,
-    _userEmail?: string,
-    _userTel?: string
-  ) {
-    this.#userClass = _userClass;
-    this.#userArea = _userArea;
-    this.#userName = _userName;
-    this.#userEmail = _userEmail || "Não preenchido";
-    this.#userTel = _userTel || "Não preenchido";
+  constructor({
+    privilege,
+    name,
+    area,
+    email,
+    telephone,
+  }: {
+    name: string;
+    privilege: string;
+    area: string;
+    email?: string;
+    telephone?: string;
+  }) {
+    this.#userName = name;
+    if (privilege === "coordinator") privilege = "Coordenador";
+    if (privilege === "student") privilege = "Estudante";
+    if (privilege === "supervisor") privilege = "Supervisor";
+    this.#userClass = privilege;
+    if (area === "general") area = "Geral";
+    if (area === "medicine") area = "Medicina";
+    if (area === "nutrition") area = "Nutrição";
+    if (area === "physical_education") area = "Educação Física";
+    if (area === "psychology") area = "Psicologia";
+    if (area === "odontology") area = "Odontologia";
+    if (area === "technology") area = "Tecnologia";
+    this.#userArea = area;
+    this.#userEmail = email || "Não preenchido";
+    this.#userTel = telephone || "Não preenchido";
   }
   get userClass(): string {
     return this.#userClass;

@@ -10,6 +10,7 @@ import ContactDlg from "./ContactDlg";
 import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
 import GenericErrorComponent from "../error/GenericErrorComponent";
 import UserPropsDlg from "./UserPropsDlg";
+import Link from "next/link";
 
 export default function UserDlg({
   user,
@@ -125,7 +126,7 @@ export default function UserDlg({
               id="logoutBtnDlg"
               style={{ position: "relative" }}
             >
-              <a
+              <Link
                 id="logoutAnchorDlg"
                 target="_self"
                 rel="nofollow"
@@ -142,7 +143,7 @@ export default function UserDlg({
                 }}
               >
                 LOGIN
-              </a>
+              </Link>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"

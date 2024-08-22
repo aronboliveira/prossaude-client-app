@@ -1,11 +1,16 @@
 import { elementNotFound, extLine } from "./errorHandler";
 import { pageCases, pageStyleCases } from "../declarations/types";
+import { decodeToken } from "@/pages/api/ts/handlers";
 
 export function handleLinkChanges(
   componentCase: pageCases,
   styleFlag: pageStyleCases
 ): void {
   try {
+    if (!decodeToken("", true).ok) {
+      console.warn(`User token invalid. Redirecting to base page`);
+      window.location.replace(window.location.origin);
+    }
     if (typeof componentCase !== "string")
       throw new Error(
         `invalid componentCase argument given to handleLinkChanges`

@@ -10,12 +10,42 @@ import { targEl } from "@/lib/global/declarations/types";
 import { useEffect, useContext } from "react";
 import { useRouter } from "next/router";
 import UserProfilePanel from "../../user/UserProfilePanel";
+import { defCurrSemester } from "@/redux/slices/userSlice";
+import { useDispatch } from "react-redux";
+import { setFullUser } from "@/redux/slices/userSlice";
+import { ProfessionalTokenPayload } from "@/pages/api/ts/serverInterfaces";
 let baseRootUser: targEl;
+export const experimentalUser: { loadedData: ProfessionalTokenPayload } = {
+  loadedData: {
+    id: "",
+    name: "João Almeida",
+    privilege: "coordinator",
+    area: "psychology",
+    origin: "psy",
+    activityDay: "quarta-feira",
+    beginningSemester: defCurrSemester,
+    beginningDay: new Date().getDate().toString(),
+    cpf: 0,
+    email: "joaoteste@gmail.com",
+    telephone: "+55 (21) 90000-0000",
+    authorized: true,
+    external: false,
+  },
+};
 export default function MainContainer(): JSX.Element {
   const context = useContext(AppRootContext);
   const nextRouter = useRouter();
+  const dispatch = useDispatch();
   useEffect(() => {
-    const user = new User("Coordenador", "psicologia", "João Almeida");
+    //TODO USER TEM QUE VIR DE FETCH POSTERIORMENTE...
+    const user = new User({
+      name: experimentalUser.loadedData.name,
+      privilege: experimentalUser.loadedData.privilege,
+      area: experimentalUser.loadedData.area,
+      email: experimentalUser.loadedData.email,
+      telephone: experimentalUser.loadedData.telephone,
+    });
+    dispatch(setFullUser({ v: { loadedData: experimentalUser.loadedData } }));
     baseRootUser = document.getElementById("rootUserInfo");
     baseRootUser instanceof HTMLElement && !context.roots.baseRootedUser
       ? (context.roots.baseRootedUser = createRoot(baseRootUser))

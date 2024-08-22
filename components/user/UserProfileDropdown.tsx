@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import ContactDlg from "./ContactDlg";
 import UserDlg from "./UserDlg";
 import UserPropsDlg from "./UserPropsDlg";
+import Link from "next/link";
 
 export default function UserProfileDropdown({
   user,
@@ -117,7 +118,7 @@ export default function UserProfileDropdown({
             id="logoutBtn"
             style={{ position: "relative" }}
           >
-            <a
+            <Link
               id="logoutAnchor"
               target="_self"
               rel="nofollow"
@@ -128,12 +129,11 @@ export default function UserProfileDropdown({
               }}
               href={`${location.href.replace(location.pathname, "")}/login`}
               onClick={() => {
-                console.log("clicado");
                 router.push("/login");
               }}
             >
               LOGIN
-            </a>
+            </Link>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"

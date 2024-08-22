@@ -1,7 +1,7 @@
+import { jwtDecode } from "jwt-decode";
 import { NextRouter } from "next/router";
 import {
   rMouseEvent,
-  targEl,
   formCases,
   fetchSuffixes,
 } from "@/lib/global/declarations/types";
@@ -10,13 +10,52 @@ import {
   ProfInfo,
   StudInfo,
 } from "@/lib/locals/panelPage/declarations/interfacesCons";
+import {
+  ProfessionalTokenPayload,
+  StudentTokenPayload,
+} from "./serverInterfaces";
+
+export function decodeToken(
+  token: string,
+  UNDER_TEST: boolean = false
+): {
+  ok: boolean;
+  res: Object;
+} {
+  try {
+    if (!UNDER_TEST) {
+      const decoded = jwtDecode<StudentTokenPayload | ProfessionalTokenPayload>(
+        token
+      );
+      //TODO DEFINIR AQUI LÓGICA DE VALIDAÇÃO DO TOKEN DECODIFICADO
+      return {
+        ok: true,
+        res: decoded,
+      };
+    }
+    return {
+      ok: true,
+      res: {},
+    };
+  } catch (e) {
+    console.error(`Error executing decodeToken:\n${(e as Error).message}`);
+    return {
+      ok: false,
+      res: {},
+    };
+  }
+}
 
 export async function handleLogin(
   ev: rMouseEvent,
-  userData: [string, string],
+  userData: FormData | [string, string],
   UNDER_TEST: boolean = true,
   router?: NextRouter
 ): Promise<void> {
+  let status = 404,
+    resData;
+  const resSpan =
+    document.getElementById("res-span") || document.getElementById("pwWarn");
   try {
     if (typeof ev !== "object") throw new Error(`Error validating typeof ev`);
     if (typeof UNDER_TEST !== "boolean")
@@ -27,21 +66,21 @@ export async function handleLogin(
       ev.currentTarget.querySelector("a")
         ? ev.currentTarget.querySelector("a")!
         : ev.currentTarget;
-    const exeLogin = (alert: targEl): void => {
+    const exeLogin = (): void => {
       if (
         typeof router === "object" &&
         "beforePopState" in router &&
         "push" in router
       ) {
         router.beforePopState(() => {
-          if (alert instanceof HTMLElement) alert.innerText = "Logging in...";
+          if (resSpan) resSpan.innerText = "Logging in...";
           return true;
         });
         targ instanceof HTMLAnchorElement
           ? router.push(targ.href)
           : router.push("/base");
       } else {
-        if (alert instanceof HTMLElement) alert.innerText = "Logging in...";
+        if (resSpan) resSpan.innerText = "Logging in...";
         targ instanceof HTMLAnchorElement
           ? (location.href = targ.href)
           : (location.href = "/base");
@@ -53,22 +92,33 @@ export async function handleLogin(
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(userData.map(entry => [entry[0], entry[1]])),
+        body: JSON.stringify(
+          Array.isArray(userData)
+            ? userData.map(entry => [entry[0], entry[1]])
+            : userData.entries()
+        ),
       });
-      if (!res.ok) throw new Error(`Error validating user from API`);
+      if (!res.ok) {
+        status = res.status;
+        throw new Error(`Error validating user from API`);
+      }
       const data = await res.json();
-      console.log(data);
-      const resSpan =
-        document.getElementById("res-span") ||
-        document.getElementById("pwWarn");
       if (res.status !== 200 && resSpan instanceof HTMLElement) {
-        resSpan.innerText = data.message;
+        resSpan.innerText = `Failed to validate login: Error code ${res.status}`;
+        console.warn(`Error on processing HTTP Response:\n${data}`);
+        status = res.status;
+        resData = data;
         return;
       }
-      exeLogin(resSpan);
-    } else exeLogin(document.getElementById("pwWarn"));
+      console.log(`Fetch was sucessfull: ${res.status}\nJSON Data:`);
+      console.log(data);
+      exeLogin();
+    } else exeLogin();
   } catch (e) {
     console.error(`Error executing handleFetchStuds:\n${(e as Error).message}`);
+    if (resSpan)
+      resSpan.innerText = `Failed to validate login: Error code ${status}`;
+    console.warn(`Error on processing HTTP Response:\n${resData}`);
   }
 }
 
