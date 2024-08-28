@@ -31,8 +31,6 @@ export default function ResetDlg({
     document.querySelector("form")!.reset();
     root.render(
       <MainFormPanel
-        mainRoot={root}
-        userClass={"coordenador"}
         defOp={
           ((document.getElementById("coordPanelSelect") as HTMLSelectElement)
             ?.value as panelOpts) || "agenda"

@@ -31,13 +31,16 @@ export default function MainContainer(): JSX.Element {
       console.warn(
         `Failed to fetch user from local storage. Default user displayed.`
       );
-    const user = new User({
-      name: experimentalUser.loadedData.name,
-      privilege: experimentalUser.loadedData.privilege,
-      area: experimentalUser.loadedData.area,
-      email: experimentalUser.loadedData.email,
-      telephone: experimentalUser.loadedData.telephone,
-    });
+    const user = Object.freeze(
+      new User({
+        name: experimentalUser.loadedData.name,
+        privilege: experimentalUser.loadedData.privilege,
+        area: experimentalUser.loadedData.area,
+        email: experimentalUser.loadedData.email,
+        telephone: experimentalUser.loadedData.telephone,
+      })
+    );
+    localStorage.setItem("activeUser", JSON.stringify(user));
     dispatch(setFullUser({ v: { loadedData: experimentalUser.loadedData } }));
     baseRootUser = document.getElementById("rootUserInfo");
     baseRootUser instanceof HTMLElement && !context.roots.baseRootedUser

@@ -1,4 +1,4 @@
-("use client");
+"use client";
 import { AppRootContext } from "@/pages/_app";
 import { AppRootContextType } from "@/lib/global/declarations/interfaces";
 import { DataProvider } from "@/lib/locals/panelPage/declarations/classesCons";
@@ -25,23 +25,24 @@ import RemoveStudForm from "../../studs/RemoveStudForm";
 import ScheduleForm from "../../schedule/ScheduleForm";
 import StudentForm from "../../studs/StudentForm";
 import Unauthorized from "../Unauthorized";
-
 import {
   elementNotFound,
   extLine,
   inputNotFound,
   stringError,
 } from "@/lib/global/handlers/errorHandler";
-
+import { defUser } from "@/redux/slices/userSlice";
 export let globalDataProvider: DataProvider | voidVal = undefined;
 export const panelRoots: { [k: string]: Root | undefined } = {
   mainRoot: undefined,
 };
-
 export default function SelectPanel({
-  userClass = "estudante",
   defOp = "agenda",
 }: MainPanelProps): JSX.Element {
+  const user = localStorage.getItem("activeUser")
+    ? JSON.parse(localStorage.getItem("activeUser")!)
+    : defUser;
+  const userClass = user.userClass;
   const [selectedOption, setSelectedOption] = useState<string>(defOp);
   const [mounted, setMounted] = useState<boolean>(false);
   const formRootRef = useRef<nullishDiv>(null);

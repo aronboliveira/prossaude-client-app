@@ -41,7 +41,6 @@ export default function ErrorFallbackMainPanel(
               FallbackComponent={() => (
                 <ErrorFallbackMainPanel
                   mainRoot={props.mainRoot}
-                  userClass={props.userClass}
                   tryAcc={mainPanelVariables.tryAcc}
                   renderError={props.renderError}
                   resetErrorBoundary={() =>
@@ -55,8 +54,6 @@ export default function ErrorFallbackMainPanel(
               )}
             >
               <MainFormPanel
-                mainRoot={props.mainRoot}
-                userClass={props.userClass}
                 defOp={
                   (selectRef.current?.value as panelOpts) ||
                   (
@@ -101,7 +98,7 @@ export default function ErrorFallbackMainPanel(
         onClick={() => {
           props.resetErrorBoundary(
             props.mainRoot,
-            props.userClass,
+            "student",
             mainPanelVariables.tryAcc
           );
           mainPanelVariables.tryAcc++;

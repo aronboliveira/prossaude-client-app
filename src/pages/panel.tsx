@@ -1,5 +1,4 @@
 import { ErrorBoundary } from "react-error-boundary";
-import { User } from "@/lib/global/declarations/classes";
 import GenericErrorComponent from "../../components/error/GenericErrorComponent";
 import MainFormPanel from "../../components/mainPanel/MainFormPanel";
 import TipsBtnWrapper from "../../components/interactive/panel/TipsBtnWrapper";
@@ -7,37 +6,6 @@ import UserProfilePanelWrapper from "../../components/interactive/panel/UserProf
 
 export const fillScheduleState = { acc: 0 };
 export const formData: { [key: string]: string } = {};
-export const user = await (async () => {
-  let userName = "João Almeida",
-    userArea = "psicologia",
-    userClass = "coordenador",
-    userEmail = "almeida.joao@gmail.com",
-    userTel = "+55 21 99988-7766";
-  try {
-    const res = await fetch("/user.json", {
-      method: "GET",
-    });
-    if (!res.ok) throw new Error(`Failed to get proper response from server.`);
-    const fetchedUser = await res.json();
-    if (!fetchedUser) throw new Error(`Failed to parse fetched data.`);
-    return Object.freeze(
-      new User(
-        fetchedUser._class,
-        fetchedUser._area,
-        fetchedUser._name,
-        fetchedUser._email,
-        fetchedUser._tel
-      )
-    );
-  } catch (err) {
-    console.error(`FETCH ERROR:
-    ${(err as Error).message}`);
-    return Object.freeze(
-      new User(userClass, userArea, userName, userEmail, userTel)
-    );
-  }
-})();
-
 export default function PanelPage({ data }: { data: any }): JSX.Element {
   console.log(!data && "No fetched static data");
   return (
@@ -72,7 +40,7 @@ export default function PanelPage({ data }: { data: any }): JSX.Element {
                 className="widFull flexNoW cGap2v rGap1v flexQ460NoWC wsNoW"
                 id="rootUserInfo"
               >
-                <UserProfilePanelWrapper user={user} />
+                <UserProfilePanelWrapper />
               </div>
             </section>
           </div>
@@ -81,7 +49,7 @@ export default function PanelPage({ data }: { data: any }): JSX.Element {
         <main>
           <section className="flexColumn" id="registSect">
             <div role="group" id="panelDiv">
-              <MainFormPanel userClass={user.userClass} defOp={"agenda"} />
+              <MainFormPanel defOp={"agenda"} />
               <div role="group" id="pacDiv" className="form-padded"></div>
             </div>
           </section>

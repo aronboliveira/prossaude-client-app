@@ -4,7 +4,6 @@ import GenericErrorComponent from "../error/GenericErrorComponent";
 import SelectPanel from "../panelForms/defs/client/SelectPanel";
 
 export default function MainFormPanel({
-  userClass = "estudante",
   defOp = "agenda",
 }: MainPanelProps): JSX.Element {
   return (
@@ -15,7 +14,7 @@ export default function MainFormPanel({
     >
       <div role="group" id="formSelDiv" className="form-padded--nosb">
         <div role="group" id="formPanelDiv">
-          <SelectPanel userClass={userClass} defOp={defOp} />
+          <SelectPanel defOp={defOp} />
         </div>
       </div>
     </ErrorBoundary>

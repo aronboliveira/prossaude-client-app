@@ -34,7 +34,7 @@ export interface GlobalFormProps {
   mainRoot?: Root;
 }
 
-export interface MainPanelProps extends GlobalFormProps {
+export interface MainPanelProps {
   defOp: panelOpts;
 }
 

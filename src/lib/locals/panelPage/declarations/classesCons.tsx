@@ -1,4 +1,3 @@
-import { user } from "@/pages/panel";
 import {
   elementNotFound,
   extLine,
@@ -13,6 +12,7 @@ import {
   verifyAptCheck,
 } from "../handlers/consHandlerCmn";
 import { panelFormsVariables } from "../../../../../components/panelForms/panelFormsData";
+import { defUser } from "@/redux/slices/userSlice";
 
 const clearFlags: { [k: string]: boolean } = {};
 export class DataProvider {
@@ -169,6 +169,9 @@ export class DataProvider {
                 handleAptBtnClick(ev as MouseEvent, user.userClass)
               );
             }
+            const user = localStorage.getItem("activeUser")
+              ? JSON.parse(localStorage.getItem("activeUser")!)
+              : defUser;
             if (
               user.userClass === "coordenador" ||
               user.userClass === "supervisor"
