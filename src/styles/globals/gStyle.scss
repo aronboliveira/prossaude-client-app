@@ -2278,6 +2278,10 @@ td,
 
 #userWarn {
   padding-top: 0.4rem;
+  width: 80%;
+  transform: translate(-5vw, 0.3vw);
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 @media screen and (max-width: 1350px) {
@@ -2958,6 +2962,14 @@ $baseMax750InpWidth: 85vw;
   #resetFormBtn,
   #btnExport {
     width: 100%;
+  }
+
+  #userWarn {
+    padding-left: 0.2rem;
+    width: 70%;
+    transform: translate(0, 0.3vw);
+    text-overflow: ellipsis;
+    overflow: hidden;
   }
 }
 

@@ -84,23 +84,50 @@ export async function handleLogin(
         ? ev.currentTarget.querySelector("a")!
         : ev.currentTarget;
     const exeLogin = (): void => {
+      const spin = (resSpan: HTMLElement): void => {
+        resSpan.innerHTML = `
+        <div class="spinner-border text-info" role="status">
+          <span class="visually-hidden">Logging in...</span>
+        </div>
+        `;
+        const form = resSpan.closest("form");
+        if (form instanceof HTMLElement) {
+          form.style.opacity = "0.3";
+          form.style.filter = "grayscale(40%)";
+        }
+        if (innerWidth <= 460) {
+          resSpan.style.position = "fixed";
+          resSpan.style.top = "35vh";
+          resSpan.style.left = "35vw";
+          resSpan.style.transform = "scale(5)";
+        } else {
+          resSpan.style.position = "fixed";
+          resSpan.style.top = "33vh";
+          resSpan.style.left = "50vw";
+          resSpan.style.transform = "scale(9)";
+        }
+      };
       if (
         typeof router === "object" &&
         "beforePopState" in router &&
         "push" in router
       ) {
         router.beforePopState(() => {
-          if (resSpan) resSpan.innerText = "Logging in...";
+          resSpan && spin(resSpan);
           return true;
         });
-        targ instanceof HTMLAnchorElement
-          ? router.push(targ.href)
-          : router.push("/base");
+        setTimeout(() => {
+          targ instanceof HTMLAnchorElement
+            ? router.push(targ.href)
+            : router.push("/base");
+        }, 1000);
       } else {
-        if (resSpan) resSpan.innerText = "Logging in...";
-        targ instanceof HTMLAnchorElement
-          ? (location.href = targ.href)
-          : (location.href = "/base");
+        resSpan && spin(resSpan);
+        setTimeout(() => {
+          targ instanceof HTMLAnchorElement
+            ? (location.href = targ.href)
+            : (location.href = "/base");
+        }, 1000);
       }
     };
     if (!UNDER_TEST) {

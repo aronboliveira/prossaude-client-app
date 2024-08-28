@@ -1,60 +1,78 @@
+"use client";
 import { NextRouter } from "next/router";
-import { UserProfile } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useEffect, useRef, useState } from "react";
 import UserProfileDropdown from "./UserProfileDropdown";
-
+import { defUser } from "@/redux/slices/userSlice";
+import { UserState } from "@/pages/api/ts/serverInterfaces";
+import { User } from "@/lib/global/declarations/classes";
 export default function UserProfilePanel({
-  user,
   router,
 }: {
-  user: UserProfile;
   router: NextRouter;
 }): JSX.Element {
   const userPanelRef = useRef<HTMLSpanElement | null>(null);
   const [shouldShowDropdown, setDropdown] = useState<boolean>(false);
+  const [userName, setName] = useState<string>("Geral");
+  const [imageSrc, setSrc] = useState<string>("../img/PROS_icon.png");
+  const [user, setUser] = useState<UserState>(defUser);
+  useEffect(() => {
+    setUser(
+      localStorage.getItem("activeUser")
+        ? JSON.parse(localStorage.getItem("activeUser")!)
+        : defUser.loadedData
+    );
+  }, []);
   useEffect(() => {
     if (userPanelRef.current instanceof HTMLElement) {
       syncAriaStates([
         ...userPanelRef.current.querySelectorAll("*"),
         userPanelRef.current,
       ]);
+      const loadedUser = Object.freeze(
+        new User({
+          name: user.loadedData.name,
+          privilege: user.loadedData.privilege,
+          area: user.loadedData.area,
+          email: user.loadedData.email,
+          telephone: user.loadedData.telephone,
+        })
+      );
+      const area = /psi/gi.test(loadedUser.userArea)
+        ? "psi"
+        : loadedUser.userArea;
+      setName(user.loadedData.name);
+      switch (area) {
+        case "odontologia":
+          setSrc("../img/pros-od-icon.png");
+          break;
+        case "educação física":
+          setSrc("../img/pros_edfis_icon.png");
+          break;
+        case "nutrição":
+          setSrc("../img/pros_nut_icon.png");
+          break;
+        case "psi":
+          setSrc("../img/icon-psy.png");
+          break;
+        default:
+          setSrc("../img/PROS_icon.png");
+      }
     } else
       elementNotFound(
         userPanelRef.current,
         "JSX for user panel",
         extLine(new Error())
       );
-  }, [userPanelRef]);
-  const toggleUserDropdown = (): void => {
-    setDropdown(!shouldShowDropdown);
-  };
-  const area = /psi/gi.test(user.userArea) ? "psi" : user.userArea;
-  let imageSrc = "../img/PROS_icon.png";
-  switch (area) {
-    case "odontologia":
-      imageSrc = "../img/pros-od-icon.png";
-      break;
-    case "educação física":
-      imageSrc = "../img/pros_edfis_icon.png";
-      break;
-    case "nutrição":
-      imageSrc = "../img/pros_nut_icon.png";
-      break;
-    case "psi":
-      imageSrc = "../img/icon-psy.png";
-      break;
-    default:
-      imageSrc = "../img/PROS_icon.png";
-  }
+  }, [user]);
   return (
     <span
       className="posRl flexNoW flexNoW900Q cGap0-5v rGap1v900Q contFitW noInvert"
       ref={userPanelRef}
     >
       <output id="nameLogin" data-title="Usuário ativo">
-        {`${user.userName}`}
+        {userName}
       </output>
       <span id="contProfileImg" className="profileIcon">
         <img
@@ -65,7 +83,7 @@ export default function UserProfilePanel({
           data-toggle="popover"
           title="Informações de Usuário"
           data-placement="bottom"
-          onClick={toggleUserDropdown}
+          onClick={() => setDropdown(!shouldShowDropdown)}
           alt="User img"
         />
       </span>

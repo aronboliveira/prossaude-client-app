@@ -12,8 +12,8 @@ import { useRouter } from "next/router";
 import UserProfilePanel from "../../user/UserProfilePanel";
 import { defUser } from "@/redux/slices/userSlice";
 import { useDispatch } from "react-redux";
-import { setFullUser } from "@/redux/slices/userSlice";
 import { UserState } from "@/pages/api/ts/serverInterfaces";
+import { setUser } from "@/redux/slices/activeUserSlice";
 let baseRootUser: targEl;
 export let experimentalUser: UserState = defUser;
 export default function MainContainer(): JSX.Element {
@@ -25,8 +25,9 @@ export default function MainContainer(): JSX.Element {
       ? JSON.parse(localStorage.getItem("activeUser")!)
       : defUser;
     if (
-      experimentalUser.loadedData.name === "" ||
-      /an[oô]nimo/gi.test(experimentalUser.loadedData.name)
+      experimentalUser?.loadedData &&
+      (experimentalUser.loadedData.name === "" ||
+        /an[oô]nimo/gi.test(experimentalUser.loadedData.name))
     )
       console.warn(
         `Failed to fetch user from local storage. Default user displayed.`
@@ -40,8 +41,9 @@ export default function MainContainer(): JSX.Element {
         telephone: experimentalUser.loadedData.telephone,
       })
     );
-    localStorage.setItem("activeUser", JSON.stringify(user));
-    dispatch(setFullUser({ v: { loadedData: experimentalUser.loadedData } }));
+    console.log(user);
+    localStorage.setItem("activeUser", JSON.stringify(experimentalUser));
+    dispatch(setUser(user));
     baseRootUser = document.getElementById("rootUserInfo");
     baseRootUser instanceof HTMLElement && !context.roots.baseRootedUser
       ? (context.roots.baseRootedUser = createRoot(baseRootUser))
@@ -56,7 +58,7 @@ export default function MainContainer(): JSX.Element {
         }, 2000);
     typeof context.roots.baseRootedUser === "object"
       ? context.roots.baseRootedUser.render(
-          <UserProfilePanel user={user} router={nextRouter} />
+          <UserProfilePanel router={nextRouter} />
         )
       : elementNotFound(
           `${JSON.stringify(context.roots.baseRootedUser)}`,

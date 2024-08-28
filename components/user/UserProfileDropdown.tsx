@@ -3,15 +3,13 @@ import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useEffect, useRef, useState } from "react";
 import ContactDlg from "./ContactDlg";
-import UserDlg from "./UserDlg";
 import UserPropsDlg from "./UserPropsDlg";
 import Link from "next/link";
-
+import { User } from "@/lib/global/declarations/classes";
+import { UserState } from "@/pages/api/ts/serverInterfaces";
 export default function UserProfileDropdown({
   user,
   router,
-  setDropdown,
-  shouldShowDropdown = false,
 }: UserProfileDropdownProps): JSX.Element {
   const poRef = useRef<HTMLDivElement | null>(null);
   const [shouldDisplayContact, setContact] = useState<boolean>(false);
@@ -23,13 +21,39 @@ export default function UserProfileDropdown({
     setPropDlg(!shouldDisplayPropDlg);
   };
   const [shouldDisplayUserDlg, setUserDlg] = useState<boolean>(false);
-  const callLogout = () => {
-    //
-  };
+  const [_, setUser] = useState<Readonly<User> | UserState | null>(user);
+  const [userClass, setClass] = useState<string>(user.loadedData.privilege);
+  const [userArea, setArea] = useState<string>(user.loadedData.area);
+  const [userEmail, setEmail] = useState<string>(user.loadedData.email);
+  const [userTel, setTel] = useState<string>(user.loadedData.telephone);
   useEffect(() => {
-    if (poRef.current instanceof HTMLElement)
+    if (poRef.current instanceof HTMLElement) {
       syncAriaStates([...poRef.current.querySelectorAll("*"), poRef.current]);
-    else
+      const loadedUser = Object.freeze(
+        new User({
+          name: user.loadedData.name,
+          privilege: user.loadedData.privilege,
+          area: user.loadedData.area,
+          email: user.loadedData.email,
+          telephone: user.loadedData.telephone,
+        })
+      );
+      console.log("USER CARREGADO");
+      console.log(loadedUser);
+      setUser(loadedUser);
+      setClass(
+        `${loadedUser.userClass
+          .slice(0, 1)
+          .toUpperCase()}${loadedUser.userClass.slice(1)}`
+      );
+      setArea(
+        `${loadedUser.userArea
+          .slice(0, 1)
+          .toUpperCase()}${loadedUser.userArea.slice(1)}`
+      );
+      setEmail(loadedUser.userEmail);
+      setTel(loadedUser.userTel);
+    } else
       elementNotFound(
         poRef.current,
         "Popover for user panel",
@@ -69,19 +93,14 @@ export default function UserProfileDropdown({
         <dl className="mg-0b">
           <dt>Classe:</dt>
           <dd id="classLogin" data-title="Classe de Usuário ativo">
-            {`${user.userClass.slice(0, 1).toUpperCase()}${user.userClass.slice(
-              1
-            )}
-          `}
+            {userClass}
           </dd>
           <dt>Área:</dt>
-          <dd>{`${user.userArea.slice(0, 1).toUpperCase()}${user.userArea.slice(
-            1
-          )}`}</dd>
+          <dd>{userArea}</dd>
           <dt>E-mail:</dt>
-          <dd>{`${user.userEmail}`}</dd>
+          <dd>{userEmail}</dd>
           <dt>Telefone:</dt>
-          <dd>{`${user.userTel}`}</dd>
+          <dd>{userTel}</dd>
         </dl>
         <div id="alterUserPropDiv" className="flexJSt cGap1v mg-1-3b">
           <span className="bolded mg-04t">Alteração</span>
@@ -173,21 +192,6 @@ export default function UserProfileDropdown({
         <ContactDlg
           setContact={setContact}
           shouldDisplayContact={shouldDisplayContact}
-        />
-      )}
-      {shouldDisplayUserDlg && (
-        <UserDlg
-          user={user}
-          setDropdown={setDropdown}
-          setPropDlg={setPropDlg}
-          setContact={setContact}
-          setUserDlg={setUserDlg}
-          shouldShowDropdown={shouldShowDropdown}
-          shouldDisplayContact={shouldDisplayContact}
-          shouldDisplayPropDlg={shouldDisplayPropDlg}
-          shouldDisplayUserDlg={shouldDisplayUserDlg}
-          callLogout={callLogout}
-          router={router}
         />
       )}
     </div>

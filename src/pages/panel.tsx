@@ -3,7 +3,6 @@ import GenericErrorComponent from "../../components/error/GenericErrorComponent"
 import MainFormPanel from "../../components/mainPanel/MainFormPanel";
 import TipsBtnWrapper from "../../components/interactive/panel/TipsBtnWrapper";
 import UserProfilePanelWrapper from "../../components/interactive/panel/UserProfilePanelWrapper";
-
 export const fillScheduleState = { acc: 0 };
 export const formData: { [key: string]: string } = {};
 export default function PanelPage({ data }: { data: any }): JSX.Element {
@@ -64,7 +63,6 @@ export default function PanelPage({ data }: { data: any }): JSX.Element {
 }
 
 export async function getStaticProps() {
-  //todo conexão com a api para atualizar informações na página em intervalos
   try {
     const res = await fetch("/api-path");
     if (!res.ok) throw new Error(`Failed to fetch`);

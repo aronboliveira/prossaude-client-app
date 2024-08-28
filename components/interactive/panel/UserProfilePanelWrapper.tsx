@@ -7,11 +7,7 @@ import { useEffect, useContext } from "react";
 import { useRouter } from "next/router";
 import GenericErrorComponent from "../../error/GenericErrorComponent";
 import UserProfilePanel from "../../user/UserProfilePanel";
-import { defUser } from "@/redux/slices/userSlice";
 export default function UserProfilePanelWrapper(): JSX.Element {
-  const user = localStorage.getItem("activeUser")
-    ? JSON.parse(localStorage.getItem("activeUser")!)
-    : defUser;
   const nextRouter = useRouter();
   const context = useContext(AppRootContext);
   useEffect(() => {
@@ -20,9 +16,7 @@ export default function UserProfilePanelWrapper(): JSX.Element {
       if (!context.roots.userRoot)
         context.roots.userRoot = createRoot(profileSpan);
       if (!profileSpan.hasChildNodes())
-        context.roots.userRoot.render(
-          <UserProfilePanel user={user} router={nextRouter} />
-        );
+        context.roots.userRoot.render(<UserProfilePanel router={nextRouter} />);
       setTimeout(() => {
         if (!profileSpan.querySelector("img"))
           context.roots.userRoot.render(
@@ -45,7 +39,7 @@ export default function UserProfilePanelWrapper(): JSX.Element {
         <GenericErrorComponent message="Error loading User Panel" />
       )}
     >
-      <UserProfilePanel user={user} router={nextRouter} />
+      <UserProfilePanel router={nextRouter} />
     </ErrorBoundary>
   );
 }

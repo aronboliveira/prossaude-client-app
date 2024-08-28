@@ -181,7 +181,7 @@ export function callbackSubmitBtn() {
       /\s/g.test(userInp.value) ||
       !userInp.checkValidity()
     ) {
-      userInp.placeholder = "Usuário inválida";
+      userInp.placeholder = "Usuário inválido";
       highlightChange(userInp);
       let message = "";
       if (userInp.value.length < 5)
@@ -195,14 +195,13 @@ export function callbackSubmitBtn() {
       if (v.patternMismatch) message += "Padrão solicitado não cumprido\n";
       if (v.tooShort || v.valueMissing)
         message += "Entrada com falta de caracteres\n";
-      if (v.tooLong)
-        userInp.placeholder += "Entrada com excesso de caracteres\n";
+      if (v.tooLong) message += "Entrada com excesso de caracteres\n";
       userInp.setCustomValidity(message);
       fillCustomValidityWarn(userInp.id ?? "", message);
+      console.warn(message);
       setTimeout(() => (userInp.placeholder = "Nome de Usuário"), 5000);
       return false;
     }
-    pwInp.setCustomValidity("");
     checkPasswordPattern(pwInp);
     highlightChange(pwInp.parentElement);
     const pw = pwInp.value;
@@ -245,6 +244,7 @@ export function callbackSubmitBtn() {
         userInp.placeholder += "Entrada com excesso de caracteres\n";
       pwInp.setCustomValidity(message);
       fillCustomValidityWarn(pwInp.id ?? "", message);
+      console.warn(message);
       return false;
     }
     return true;

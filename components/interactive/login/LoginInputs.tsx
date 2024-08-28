@@ -207,10 +207,12 @@ export default function LoginInputs(): JSX.Element {
                 return;
               }
               callbackSubmitBtn();
+              setTimeout(() => {
+                handleLogin(ev, loginForm, true);
+              }, 300);
               alert(
                 "This is a client only, static, test execution. The login will be forwarded regardless of the form validity."
               );
-              setTimeout(() => handleLogin(ev, loginForm, true), 3000);
             }}
           >
             Avançar

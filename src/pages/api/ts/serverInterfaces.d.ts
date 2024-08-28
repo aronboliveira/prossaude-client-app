@@ -80,3 +80,26 @@ export interface UserBooleanAction {
     v: boolean;
   };
 }
+interface LoadedUserState {
+  user: User | null;
+}
+export type mainStore = EnhancedStore<
+  {
+    userSlice: UserState;
+  },
+  UnknownAction,
+  Tuple<
+    [
+      StoreEnhancer<{
+        dispatch: ThunkDispatch<
+          {
+            userSlice: UserState;
+          },
+          undefined,
+          UnknownAction
+        >;
+      }>,
+      StoreEnhancer
+    ]
+  >
+>;

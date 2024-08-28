@@ -39,11 +39,8 @@ export const panelRoots: { [k: string]: Root | undefined } = {
 export default function SelectPanel({
   defOp = "agenda",
 }: MainPanelProps): JSX.Element {
-  const user = localStorage.getItem("activeUser")
-    ? JSON.parse(localStorage.getItem("activeUser")!)
-    : defUser;
-  const userClass = user.userClass;
   const [selectedOption, setSelectedOption] = useState<string>(defOp);
+  const [userClass, setClass] = useState<string>("coordenador");
   const [mounted, setMounted] = useState<boolean>(false);
   const formRootRef = useRef<nullishDiv>(null);
   const context = useContext<AppRootContextType>(AppRootContext);
@@ -137,12 +134,23 @@ export default function SelectPanel({
       );
     }, 300);
   };
-  useEffect(() => setMounted(true), []);
+  console.log("USER CLASS LOADED");
+  console.log(userClass);
+  useEffect(() => {
+    const privilege = localStorage.getItem("activeUser")
+      ? JSON.parse(localStorage.getItem("activeUser")!).loadedData?.privilege
+      : defUser.loadedData.privilege;
+    let translatedPrivilege = "estudante";
+    if (privilege === "coordinator") translatedPrivilege = "coordenador";
+    else translatedPrivilege = privilege;
+    setClass(translatedPrivilege);
+    setMounted(true);
+  }, []);
   useEffect(() => {
     globalDataProvider = new DataProvider(sessionStorage);
     handleLinkChanges("panel", "Panel Page Style");
     handlePanelPath(defOp);
-  }, []);
+  }, [userClass]);
   useEffect(() => {
     setTimeout(() => {
       try {
@@ -236,7 +244,7 @@ export default function SelectPanel({
         );
       }
     }, 500);
-  }, []);
+  }, [userClass]);
   //validating DOM structure using Main Select and parent for reference
   useEffect(() => {
     setTimeout(() => {

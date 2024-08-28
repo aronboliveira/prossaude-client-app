@@ -5,6 +5,7 @@ import {
   looseNum,
   panelOpts,
 } from "@/lib/global/declarations/types";
+import { UserState } from "@/pages/api/ts/serverInterfaces";
 import {
   nullishForm,
   nullishDlg,

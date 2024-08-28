@@ -1,6 +1,4 @@
-import App from "next/app";
-import type { AppContext, AppProps } from "next/app";
-import { ProSaudeAppProps } from "@/lib/global/declarations/interfaces";
+import type { AppProps } from "next/app";
 import { Context, createContext } from "react";
 import { AppRootContextType } from "@/lib/global/declarations/interfaces";
 import { Provider } from "react-redux";
@@ -31,8 +29,3 @@ export default function ProSaudeApp({
     </Provider>
   );
 }
-ProSaudeApp.getInitialProps = async (
-  ctx: AppContext
-): Promise<ProSaudeAppProps> => {
-  return { ...(await App.getInitialProps(ctx)) };
-};
