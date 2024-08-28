@@ -13,6 +13,7 @@ import {
 import {
   callbackShowPw,
   callbackSubmitBtn,
+  evaluateClickMovements,
 } from "@/lib/locals/loginPage/loginController";
 export default function LoginInputs(): JSX.Element {
   const anchorRef = useRef<nullishAnchor>(null);
@@ -94,8 +95,8 @@ export default function LoginInputs(): JSX.Element {
               autoComplete="password"
               aria-label="senha"
               placeholder="Senha"
-              pattern="^(?=.*[0-9])(?=.*[A-Z])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$"
-              minLength={1}
+              pattern="^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[^a-zA-Z0-9])(?=.{8,})(?:(?!.*\s).)*(?!.*(.).*\1{4,}).*$"
+              minLength={8}
               maxLength={30}
               required
             />
@@ -135,6 +136,7 @@ export default function LoginInputs(): JSX.Element {
           type="submit"
           className="btn btn-primary fade-in-element"
           id="submitBtn"
+          onClick={ev => ev.preventDefault()}
         >
           <a
             href={`${basePath.path}/base`}
@@ -144,8 +146,9 @@ export default function LoginInputs(): JSX.Element {
             target="_self"
             style={{ color: "#ffff" }}
             onClick={ev => {
-              let userName = "";
+              ev.preventDefault();
               const loginForm = new FormData();
+              let userName = "";
               try {
                 const usernameEl = document.getElementById("user");
                 if (!(usernameEl instanceof HTMLInputElement))
@@ -179,16 +182,31 @@ export default function LoginInputs(): JSX.Element {
                 );
               }
               loginForm.append("password", pw);
-              handleLogin(ev, loginForm, true);
-              callbackSubmitBtn(
-                ev.currentTarget.closest("button"),
-                new SubmitEvent("submit", {
-                  submitter: document.getElementById("outerLoginCont"),
-                  bubbles: true,
-                  cancelable: true,
-                  composed: true,
-                })
-              );
+              const [message, suspicious] = evaluateClickMovements(ev);
+              if (suspicious || !callbackSubmitBtn) {
+                alert(message);
+                const parent = ev.currentTarget.parentElement;
+                let parentIdf = "";
+                if (
+                  parent instanceof HTMLButtonElement ||
+                  parent instanceof HTMLInputElement
+                ) {
+                  parent.disabled = true;
+                  parentIdf = parent.id;
+                }
+                setTimeout(() => {
+                  const parent =
+                    ev.currentTarget?.parentElement ||
+                    document.getElementById(parentIdf);
+                  if (
+                    parent instanceof HTMLButtonElement ||
+                    parent instanceof HTMLInputElement
+                  )
+                    parent.disabled = false;
+                }, 3000);
+                return;
+              }
+              callbackSubmitBtn() && handleLogin(ev, loginForm, true);
             }}
           >
             Avançar
