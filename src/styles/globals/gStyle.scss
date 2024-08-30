@@ -2078,6 +2078,7 @@ td,
 
 #btnConform {
   margin: 2vh 0;
+  max-width: 20rem;
   &:hover {
     transform: translate(0, 0.1rem)
   }
@@ -2718,6 +2719,7 @@ $baseMax750InpWidth: 85vw;
   #tipsDlg {
     min-width: 80vw;
     overflow: auto;
+    padding-inline: 1rem;
   }
 }
 
@@ -2939,6 +2941,10 @@ $baseMax750InpWidth: 85vw;
     padding-left: 3.2rem;
   }
 
+  #bgDiv {
+    padding-top: 0.5rem;
+  }
+
   #dateHeader {
     min-width: 17ch;
   }
@@ -2956,6 +2962,10 @@ $baseMax750InpWidth: 85vw;
         margin-left: 0.5rem;
       }
     }
+  }
+
+  #sectConfirmBut {
+    min-width: 90vw;
   }
 
   #submitFormButId,

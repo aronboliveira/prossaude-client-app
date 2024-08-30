@@ -46,7 +46,9 @@ $swhite: rgba(255, 255, 255, 0.9);
     &:not(#fsProgConsId) {
       + hr,
       > hr {
-        min-width: 97vw;
+        max-width: 93vw;
+        min-width: 93vw;
+        width: 93vw;
       }
     }
   }
@@ -103,6 +105,10 @@ $swhite: rgba(255, 255, 255, 0.9);
     }
     &[for="inpElimUrCor"] {
       width: max-content;
+    }
+    &[for="genFisAlinId"] {
+      padding-left: 0;
+      padding-top: 0;
     }
   }
 
@@ -338,6 +344,8 @@ $swhite: rgba(255, 255, 255, 0.9);
     &.divRot {
       + hr {
         margin-block: 1.5rem;
+        margin-left: 0.5rem;
+        width: 93vw;
       }
     }
   }
@@ -383,6 +391,10 @@ $swhite: rgba(255, 255, 255, 0.9);
     &.divTab {
       resize: none;
       overflow: visible;
+    }
+    ~ hr {
+      width: 93vw;
+      margin-left: 0.5rem;
     }
   }
 
@@ -450,6 +462,10 @@ $swhite: rgba(255, 255, 255, 0.9);
     margin-right: 0.25rem;
   }
 
+  #divAddProtUr {
+    margin-top: 0.1rem;
+  }
+
   #divAtFisRot {
     .bi {
       &.bi-plus {
@@ -463,12 +479,29 @@ $swhite: rgba(255, 255, 255, 0.9);
 
   #divConfirm {
     + hr {
-      min-width: 97vw;
+      min-width: 93vw;
     }
   }
 
   #divLvlAtFis {
     margin-bottom: 2vh;
+  }
+
+  #divProgCons {
+    align-items: start;
+  }
+
+  #divProgSels,
+  #divTabDobrCut,
+  #divTabMedAnt,
+  #divTabSVi,
+  #fsHabRotId,
+  div:has(#tabAtFisRot) {
+    ~ hr {
+      width: 93vw;
+      margin-left: 0.5rem;
+      opacity: 0.25;
+    }
   }
 
   $inpProgWidFixReg: 14.8rem;
@@ -516,6 +549,7 @@ $swhite: rgba(255, 255, 255, 0.9);
 
   #labProtUrLvl {
     width: 21ch;
+    margin-top: 0.3rem;
     #protUrLvl {
       min-width: 10ch;
     }
@@ -793,6 +827,7 @@ $swhite: rgba(255, 255, 255, 0.9);
       flex-direction: column;
       align-items: flex-start;
       justify-items: left;
+      padding-left: 0.5rem;
     }
     #protUrDiv {
       width: 75%;

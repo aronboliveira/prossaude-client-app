@@ -330,6 +330,13 @@
     }
   }
 
+  #divAddFamDiab {
+    .divAntFamCheck {
+      width: 99%;
+      margin-left: 0.1rem;
+    }
+  }
+
   #divAddGrv {
     input {
       @include formCheckOpaque;

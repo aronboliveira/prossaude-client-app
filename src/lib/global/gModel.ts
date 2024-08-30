@@ -75,12 +75,15 @@ export function parseNotNaN(
   fixed: number = 4
 ): number {
   let returnVal = 0;
-  if (
-    typeof iniVal === `string` &&
-    typeof context === `string` &&
-    typeof def === `number` &&
-    typeof fixed === `number`
-  ) {
+  try {
+    if (typeof iniVal !== "string")
+      throw new Error("Failed to validate argument: iniVal must be a string.");
+    if (typeof context !== "string")
+      throw new Error("Failed to validate argument: context must be a string.");
+    if (typeof def !== "number")
+      throw new Error("Failed to validate argument: def must be a number.");
+    if (typeof fixed !== "number")
+      throw new Error("Failed to validate argument: fixed must be a number.");
     switch (context) {
       case "int":
         returnVal = parseInt(iniVal, 10) || def;
@@ -96,17 +99,13 @@ export function parseNotNaN(
         if (!Number.isFinite(returnVal) || isNaN(returnVal)) returnVal = def;
         break;
       default:
-        stringError("argumento de contexto", "context", extLine(new Error()));
+        throw new Error(`Context of parsing invalid.`);
     }
-  } else
-    multipleElementsNotFound(
-      extLine(new Error()),
-      `argumentos para parseNotNaN`,
-      iniVal,
-      context,
-      def
-    );
-  return returnVal || 0;
+    return returnVal || 0;
+  } catch (e) {
+    console.error(`Error executing parseNotNaN:\n${(e as Error).message}`);
+    return returnVal || 0;
+  }
 }
 
 export function formatCEP(CEPInp: targEl): string {
@@ -1347,7 +1346,7 @@ export function kebabToCamel(str: string): string {
 export function regularToSnake(str: string): string {
   return str
     .trim()
-    .replace(/([a-z])([A-Z])/g, '$1-$2')
-    .replace(/[\s_]+/g, '-')
+    .replace(/([a-z])([A-Z])/g, "$1-$2")
+    .replace(/[\s_]+/g, "-")
     .toLowerCase();
 }

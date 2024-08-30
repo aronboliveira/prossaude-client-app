@@ -462,10 +462,14 @@ export default function EdFisNutPage(): JSX.Element {
                 <hr />
                 <TabIndPerc />
                 <br role="presentation" />
-                <hr />
+                <hr
+                  style={{
+                    opacity: 0.15,
+                    marginLeft: "0.5rem",
+                  }}
+                />
               </fieldset>
             </fieldset>
-            <hr />
             <fieldset
               name="fsConfirmName"
               id="fsConfirmId"

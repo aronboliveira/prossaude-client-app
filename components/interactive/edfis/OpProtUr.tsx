@@ -30,10 +30,11 @@ export default function OpProtUr({
     >
       <input
         type="radio"
-        name={`protur_${ctx.toLowerCase()}`}
+        name={`protur_lvl`}
         id={`protUr${textTransformPascal(ctx)}Id`}
         className="cpbOp opProtUr noInvert"
         data-title={`Proteinúria ${fullName}`}
+        data-value={`protur_${ctx.toLowerCase()}`}
       />
       <span>{fullName}</span>
     </ErrorBoundary>

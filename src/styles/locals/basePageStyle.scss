@@ -569,6 +569,11 @@
 
 @media (max-width: 460px) {
   .baseBody {
+    div {
+      #bgDiv {
+        min-height: 125.625rem;
+      }
+    }
     .header-main-text {
       margin-left: 0;
       margin-right: 1rem;
