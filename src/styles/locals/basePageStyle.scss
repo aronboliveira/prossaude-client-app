@@ -53,8 +53,8 @@
     border-block: 6px ridge #87878773;
     background: linear-gradient(
       to right,
-      rgba(104, 146, 131, 0.446),
-      rgba(61, 134, 104, 0.429)
+      rgba(104, 146, 131, 0.1),
+      rgba(61, 134, 104, 0.15)
     );
   }
   section {
@@ -176,7 +176,7 @@
 
   .main-article {
     margin: auto;
-    height: 44.7rem;
+    height: 50rem;
     width: 100%;
   }
 
@@ -185,8 +185,8 @@
     height: 100%;
     background: linear-gradient(
       to right,
-      rgba(214, 230, 225, 0.719),
-      rgba(95, 209, 194, 0.429)
+      rgba(214, 230, 225, 0.2),
+      rgba(95, 209, 194, 0.25)
     );
   }
 

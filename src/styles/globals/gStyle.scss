@@ -1705,7 +1705,7 @@ td,
   &.userPo {
     width: 11rem;
   }
-  * {
+  *:not(dialog) {
     animation: fadeIn 1.5s ease-in;
   }
 }
