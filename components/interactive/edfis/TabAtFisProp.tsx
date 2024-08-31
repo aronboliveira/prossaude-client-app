@@ -19,7 +19,7 @@ export default function TabAtFirsProp(): JSX.Element {
         case "INCREMENT":
           return s + 1;
         case "DECREMENT":
-          return s > 2 ? s - 1 : s;
+          return s > 3 ? s - 1 : s;
         default:
           return s;
       }
@@ -138,7 +138,7 @@ export default function TabAtFirsProp(): JSX.Element {
         >
           <tr
             className="tabRowAtFis tabRowAtFisProp"
-            id="tabRowAtFis tabRowAtFisProp1"
+            id="tabRowAtFisProp1"
             itemProp="rowAtFisProp"
           >
             <td
@@ -173,7 +173,7 @@ export default function TabAtFirsProp(): JSX.Element {
           </tr>
           <tr
             className="tabRowAtFis tabRowAtFisProp"
-            id="tabRowAtFis tabRowAtFisPropId2"
+            id="tabRowAtFisPropId2"
             itemProp="rowAtFisProp"
           >
             <td

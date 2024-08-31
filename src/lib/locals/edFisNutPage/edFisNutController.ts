@@ -189,10 +189,7 @@ export function addListenerComorbBtns(
     comorbBtnsArray.forEach(comorbBtn => {
       comorbBtn instanceof HTMLButtonElement
         ? comorbBtn.addEventListener("click", (): number => {
-            rowCountComorb = EdFisNutHandler.switchRowComorb(
-              comorbBtn,
-              rowCountComorb
-            );
+            EdFisNutHandler.switchRowComorb(comorbBtn, rowCountComorb);
             return rowCountComorb;
           })
         : elementNotFound(comorbBtn, "comorbBtn", extLine(new Error()));
@@ -204,43 +201,6 @@ export function addListenerComorbBtns(
       extLine(new Error())
     );
   return [rowCountComorb, comorbBtnsArray];
-}
-
-export function addListenerAtivFisContBtns(
-  rowCountAtivFisRot: number = 3,
-  rowCountAtivFisProp: number = 3
-): [number, number, Element[]] {
-  const ativFisContainerBtnsArray = Array.from(
-    document.getElementsByClassName("countAtFis")
-  );
-  if (ativFisContainerBtnsArray?.length > 0) {
-    ativFisContainerBtnsArray.forEach(ativFisContainerBtn => {
-      ativFisContainerBtn instanceof HTMLButtonElement
-        ? ativFisContainerBtn.addEventListener(
-            "click",
-            (): [number, number] => {
-              [rowCountAtivFisRot, rowCountAtivFisProp] =
-                EdFisNutHandler.switchRowAtivFis(
-                  ativFisContainerBtn,
-                  rowCountAtivFisRot,
-                  rowCountAtivFisProp
-                );
-              return [rowCountAtivFisRot, rowCountAtivFisProp];
-            }
-          )
-        : elementNotFound(
-            ativFisContainerBtn,
-            "ativFisContainerBtn",
-            extLine(new Error())
-          );
-    });
-  } else
-    elementNotPopulated(
-      ativFisContainerBtnsArray,
-      "ativFisContainerBtnsArray",
-      extLine(new Error())
-    );
-  return [rowCountAtivFisRot, rowCountAtivFisProp, ativFisContainerBtnsArray];
 }
 
 export function addListenerInnerTabs(

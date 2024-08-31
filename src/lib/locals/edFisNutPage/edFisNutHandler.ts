@@ -968,29 +968,6 @@ export function defineTargInps(
   return validTargInps as sixTargEl;
 }
 
-export function switchRowAtivFis(
-  container: targEl,
-  rowCountAtivFisRot: number = 3,
-  rowCountAtivFisProp: number = 3
-): [number, number] {
-  if (container instanceof HTMLButtonElement) {
-    if (container.classList.contains("addAtFisRot"))
-      addRowAtivFis(rowCountAtivFisRot);
-    else if (container.classList.contains("removeAtFisRot"))
-      removeRowAtivFis(rowCountAtivFisRot);
-    else if (container.classList.contains("addAtFisProp"))
-      addRowAtivFis(rowCountAtivFisProp, "Prop");
-    else if (container.classList.contains("removeAtFisProp"))
-      removeRowAtivFis(rowCountAtivFisProp, "Prop");
-  } else
-    elementNotFound(
-      container,
-      "container for switcRowAtivFis",
-      extLine(new Error())
-    );
-  return [rowCountAtivFisRot, rowCountAtivFisProp];
-}
-
 export function addRowAtivFis(
   count: number = 3,
   context: string = "Rot"
@@ -1056,51 +1033,25 @@ export function addRowAtivFis(
 }
 
 export function removeRowAtivFis(
-  count: number = 4,
+  count: number = 3,
   context: string = "Rot"
 ): number {
   if (context === "rot") context = "Rot";
   if (context === "prop") context = "Prop";
   const rowToRemove = document.getElementById(
-    `tabRowAtFis${context}Id${count}`
+    `tabRowAtFis${context}Id${count - 1}`
   );
-  if (
-    rowToRemove &&
-    count >= 3 &&
-    rowToRemove.id !== `tabRowAtFis${context}Id2`
-  )
-    rowToRemove.remove();
-  else
-    elementNotFound(
-      rowToRemove,
-      `rowToRemove in removeRowAtivFis\nCount: ${
-        count || "invalidated"
-      }\nrowId: ${
-        rowToRemove?.id ||
-        `${
-          document.getElementById(`tabAtFis${context}`) || "No Table Found"
-        } + ${
-          document
-            .getElementById(`tabAtFis${context}`)
-            ?.children?.namedItem(`tbodyAtFis${context}`) ||
-          "No contexted tbody found"
-        } + ${
-          document
-            .getElementById(`tabAtFis${context}`)
-            ?.children?.namedItem(`tbodyAtFis${context}`)
-            ?.children?.namedItem(`tabRowAtFis${context}Id${count}`) ||
-          `No context row found for ${`tabRowAtFis${context}Id${count}`}`
-        }`
-      }`,
-      extLine(new Error())
-    );
+  console.log(`tabRowAtFis${context}Id${count - 1}`);
+  console.log(count);
+  if (rowToRemove && count >= 3) rowToRemove.remove();
+  else console.warn(`No row to remove detected!`);
   return count;
 }
 
 export function switchRowComorb(
   comorbContainer: targEl,
   rowCountComorb: number = 3
-): number {
+): void {
   const parentTab = document.getElementById("tabComorb");
   if (
     comorbContainer?.tagName === "BUTTON" &&
@@ -1145,19 +1096,14 @@ export function switchRowComorb(
       comorbRowToRemove?.id !== "tabRowComorb2"
     )
       comorbRowToRemove.remove();
-    else
-      elementNotFound(
-        comorbRowToRemove,
-        "comorbRowToRemove in switchRowComorb",
-        extLine(new Error())
-      );
+    else console.warn(`No row to remove detected.`);
+    return;
   } else
     elementNotFound(
       comorbContainer,
       "comorbContainer in switchRowComorb",
       extLine(new Error())
     );
-  return rowCountComorb;
 }
 
 export function switchRequiredCols(

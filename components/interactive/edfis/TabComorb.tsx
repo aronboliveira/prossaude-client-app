@@ -15,9 +15,11 @@ export default function TabComorb(): JSX.Element {
     (s: number, a: CounterAction) => {
       switch (a.type) {
         case "INCREMENT":
+          console.log("State " + (s + 1));
           return s + 1;
         case "DECREMENT":
-          return s > 2 ? s - 1 : s;
+          console.log("State " + (s > 3 ? s - 1 : s));
+          return s > 3 ? s - 1 : s;
         default:
           return s;
       }

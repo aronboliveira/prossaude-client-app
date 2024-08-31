@@ -19,7 +19,7 @@ export default function TabAtFirsRot(): JSX.Element {
         case "INCREMENT":
           return s + 1;
         case "DECREMENT":
-          return s > 2 ? s - 1 : s;
+          return s > 3 ? s - 1 : s;
         default:
           return s;
       }
@@ -138,7 +138,7 @@ export default function TabAtFirsRot(): JSX.Element {
         >
           <tr
             className="tabRowAtFis tabRowAtFisRot"
-            id="tabRowAtFis tabRowAtFisRot1"
+            id="tabRowAtFisRot1"
             itemProp="rowAtFisRot"
           >
             <td
@@ -173,7 +173,7 @@ export default function TabAtFirsRot(): JSX.Element {
           </tr>
           <tr
             className="tabRowAtFis tabRowAtFisRot"
-            id="tabRowAtFis tabRowAtFisRotId2"
+            id="tabRowAtFisRotId2"
             itemProp="rowAtFisRot"
           >
             <td
