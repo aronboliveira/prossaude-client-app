@@ -82,6 +82,9 @@ export default function TrioReadNumCons(): JSX.Element {
               document.getElementById("fsProgConsId")?.querySelectorAll("table")
                 ?.length || 0;
             numTotalTitledColsCons = numTotalTitledColsCons - tabsNum;
+            console.log("Head cels");
+            console.log(numConsTextHeadCels.length);
+            console.log(numConsTextHeadCels);
             numConsTextHeadCels.length === numTotalTitledColsCons
               ? switchNumConsTitles(
                   numConsTextHeadCels,

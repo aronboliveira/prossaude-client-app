@@ -3,7 +3,9 @@ import { ThProps } from "@/lib/global/declarations/interfaces";
 export default function Th({ nRow, nCol, ctx, lab }: ThProps): JSX.Element {
   return (
     <th
-      className={`tabCelProgCons numConsTextHeadCel tabCel${ctx} tabCelRow${ctx}${nRow}`}
+      className={`tabCelProgCons tabCel${ctx} tabCelRow${ctx}${nRow} ${
+        nRow === 1 && nCol > 1 ? "numConsTextHeadCel" : ""
+      }`}
       id={`tabCelRow${ctx}${nRow}_${nCol}`}
       itemProp={`cel${ctx}`}
       data-row={nRow}

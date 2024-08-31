@@ -82,6 +82,7 @@ export default function InpRot(props: InpRotProps): JSX.Element {
       </span>
       <input
         type="number"
+        ref={inpRef}
         minLength={props.minLength ? props.minLength : 1}
         maxLength={props.maxLength}
         min={props.min ? props.min : (() => (props.isMax ? 1 : 0))()}

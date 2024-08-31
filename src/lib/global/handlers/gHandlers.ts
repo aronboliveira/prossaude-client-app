@@ -1686,7 +1686,6 @@ export async function submitForm(form: nullishForm, ep: formCases) {
               el.className ||
               el.tagName;
             if (el instanceof HTMLInputElement) {
-              //caso de radiopairs
               if (el.type === "radio") {
                 const appendRad = (el: HTMLInputElement): void => {
                   el.checked && el.dataset.value && el.dataset.value !== ""

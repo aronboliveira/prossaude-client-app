@@ -43,7 +43,7 @@ import TabMedAnt from "../../components/interactive/edfis/TabMedAnt";
 import TabProgSVi from "../../components/interactive/edfis/TabProgSVi";
 import TextBodyType from "../../components/interactive/edfis/client/TextBodyType";
 import TrioReadNumCons from "../../components/interactive/edfis/TrioReadNumCons";
-import WatcherEN from "../../components/interactive/def/WatcherEN";
+import WatcherEN from "../../components/interactive/edfis/WatcherEN";
 import {
   elementNotFound,
   extLine,
