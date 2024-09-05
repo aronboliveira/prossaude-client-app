@@ -122,7 +122,7 @@ export default function MainContainer(): JSX.Element {
             if (panelBtn instanceof HTMLElement) {
               panelBtn.style.width = "23.2rem";
               if (panelBtn.parentElement)
-                panelBtn.parentElement!.style.paddingTop = "1%";
+                panelBtn.parentElement!.style.paddingTop = "2rem";
             }
           }
         }
@@ -131,7 +131,7 @@ export default function MainContainer(): JSX.Element {
           numRows > 1 &&
           panelSect instanceof HTMLElement
         ) {
-          panelSect.style.paddingTop = "1rem";
+          panelSect.style.paddingTop = "3rem";
           panelSect.style.paddingBottom = "0";
         }
         if (innerWidth <= 850 && numRows > 1) {
@@ -139,30 +139,30 @@ export default function MainContainer(): JSX.Element {
           if (cardsSect instanceof HTMLElement)
             cardsSect.style.paddingTop = "2rem";
           if (panelSect instanceof HTMLElement) {
-            panelSect.style.paddingTop = "3rem";
+            panelSect.style.paddingTop = "4rem";
             panelSect.style.paddingBottom = "0";
           }
         }
         if (innerWidth <= 750 && numRows > 1) {
           contFactor = 1 * numRows * factorRows;
           if (panelSect instanceof HTMLElement) {
-            panelSect.style.paddingTop = "0";
+            panelSect.style.paddingTop = "1rem";
             panelSect.style.paddingBottom = "3rem";
           }
         }
         if (innerWidth <= 675 && numRows > 1) {
           if (panelSect instanceof HTMLElement) {
-            panelSect.style.paddingTop = "0.2rem";
+            panelSect.style.paddingTop = "1rem";
           }
         }
         if (innerWidth <= 600 && numRows > 1) {
           contFactor = 0.93 * numRows * factorRows;
         }
         if (innerWidth <= 592 && numRows > 1) {
-          factor = 1.04 * numRows * factorRows;
+          factor = 1.08 * numRows * factorRows;
           contFactor = 1.2 * numRows * factorRows;
           if (panelSect instanceof HTMLElement) {
-            panelSect.style.paddingTop = "2rem";
+            panelSect.style.paddingTop = "1.5rem";
           }
         }
         if (numRows >= 4 && innerWidth <= 520) {
@@ -183,7 +183,7 @@ export default function MainContainer(): JSX.Element {
           contFactor = 1.045 * numRows * factorRows;
           if (panelSect instanceof HTMLElement) {
             panelSect.style.paddingTop = "2rem";
-            panelSect.style.paddingBottom = "3rem";
+            panelSect.style.paddingBottom = "2rem";
           }
         }
         if (innerWidth <= 415 && numRows > 1) {

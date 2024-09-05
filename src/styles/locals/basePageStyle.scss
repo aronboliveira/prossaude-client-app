@@ -183,11 +183,6 @@
   .main-container {
     grid-template-rows: 88% 5%;
     height: 100%;
-    background: linear-gradient(
-      to right,
-      rgba(214, 230, 225, 0.2),
-      rgba(95, 209, 194, 0.25)
-    );
   }
 
   #bgDiv {
@@ -200,6 +195,8 @@
     min-width: 100vw;
     min-height: 100vh;
     margin: 0;
+    border-radius: 0 !important;
+    padding-top: 0 !important;
   }
 
   #cardsSect {
@@ -209,6 +206,7 @@
   #panelBtn {
     box-shadow: 0.2vh 0.2vh 0.2vh rgba(133, 128, 128, 0.671);
     transform: scale(1.2);
+    padding-bottom: 2.1rem;
     &:hover {
       transform: scale(1.2) translate(0, 0.1rem);
     }
