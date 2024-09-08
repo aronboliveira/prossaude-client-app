@@ -41,11 +41,6 @@
     background-color: #ffff;
     animation: highlightButton 2s linear infinite;
   }
-  div {
-    &:has(#agAnchoredBtn):not(#bgDiv) {
-      max-width: 23vw !important;
-    }
-  }
   footer {
     display: none;
     height: 1vh;
@@ -246,7 +241,7 @@
       .card-hborder {
         &#agAnchoredBtn {
           a {
-            padding-bottom: 0.7rem;
+            padding-bottom: 0.4rem;
           }
         }
         &:has(#odAnchoredBtn) {
