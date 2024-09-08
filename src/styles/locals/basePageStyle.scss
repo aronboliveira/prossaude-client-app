@@ -263,7 +263,7 @@
       grid-template-columns: repeat(4, 24.8%);
       gap: 0.5rem;
       max-width: 98%;
-      padding-inline: 0.3vw 0.5vw;
+      padding-inline: 1.3vw 0.5vw;
       transform: translateY(-2.3rem);
     }
     #panelSect {
@@ -314,6 +314,7 @@
       row-gap: 1rem;
       justify-content: center;
       max-width: 98.5%;
+      padding-inline: 0.3vw 0.5vw;
     }
     #panelBtn {
       min-width: 20vw;

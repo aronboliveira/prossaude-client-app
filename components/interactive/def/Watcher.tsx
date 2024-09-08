@@ -4,7 +4,7 @@ import { extLine, inputNotFound } from "@/lib/global/handlers/errorHandler";
 import { handleLinkChanges } from "@/lib/global/handlers/gRoutingHandlers";
 import { odProps } from "@/pages/od";
 import { pageCases, targEl } from "@/lib/global/declarations/types";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   addListenerExportBtn,
   getGlobalEls,
@@ -19,11 +19,13 @@ import {
   deactTextInput,
   syncAriaStates,
 } from "@/lib/global/handlers/gHandlers";
+import { modelScripts } from "@/lib/global/gModel";
 export default function Watcher({
   routeCase,
 }: {
   routeCase?: pageCases;
 }): JSX.Element {
+  const [handled, setHandle] = useState<boolean>(false);
   useEffect(() => {
     const handleResize = () => {
       equalizeFlexSibilings(document.querySelectorAll("[class*='flexTwin']"), [
@@ -81,10 +83,14 @@ export default function Watcher({
         .forEach((inp, i) => handleInpAvDentValue(inp, i));
     } else if (routeCase === "recover")
       handleLinkChanges("recover", "Recover Page Style");
+    setHandle(true);
     return () => {
       if (routeCase === "ag") removeEventListener("resize", handleResize);
     };
   }, []);
+  useEffect(() => {
+    modelScripts();
+  }, [handled]);
   return (
     <div
       className="watcher"

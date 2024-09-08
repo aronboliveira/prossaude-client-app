@@ -809,7 +809,15 @@ export function syncAriaStates(
     els.forEach(el => {
       if (
         el instanceof HTMLHtmlElement ||
-        (el.parentElement && el.parentElement instanceof HTMLHeadElement)
+        el instanceof HTMLHeadElement ||
+        el instanceof HTMLMetaElement ||
+        el instanceof HTMLLinkElement ||
+        el instanceof HTMLScriptElement ||
+        el.tagName === "NOSCRIPT" ||
+        el instanceof HTMLBaseElement ||
+        el instanceof HTMLStyleElement ||
+        (el.parentElement && el.parentElement instanceof HTMLHeadElement) ||
+        el.classList.contains("watcher")
       )
         return;
       if (el instanceof HTMLElement) {

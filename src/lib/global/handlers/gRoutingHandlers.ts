@@ -1,7 +1,7 @@
 import { elementNotFound, extLine } from "./errorHandler";
 import { pageCases, pageStyleCases } from "../declarations/types";
 import { decodeToken } from "@/pages/api/ts/handlers";
-
+import { pageProps } from "../vars";
 export function handleLinkChanges(
   componentCase: pageCases,
   styleFlag: pageStyleCases
@@ -20,16 +20,6 @@ export function handleLinkChanges(
     const heads = document.querySelectorAll("head");
     if (heads.length > 1)
       for (let i = 0; i < heads.length; i++) i > 0 && heads[i].remove();
-    document.querySelectorAll("meta").forEach(meta => {
-      meta instanceof HTMLMetaElement &&
-        meta.name !== "viewport" &&
-        meta.name !== "next-head-count" &&
-        meta.name !== "theme-color" &&
-        !/x-ua-compatible/gi.test(meta.name) &&
-        !/charset/gi.test(meta.outerHTML) &&
-        !/http-?equiv/gi.test(meta.outerHTML) &&
-        meta.remove();
-    });
     const noscript = document.querySelector("noscript");
     if (
       noscript instanceof HTMLElement &&
@@ -42,41 +32,16 @@ export function handleLinkChanges(
       if (!(head instanceof HTMLHeadElement))
         throw elementNotFound(head, `<head>`, extLine(new Error()));
       if (
-        !document.getElementById("bootstrapLink") &&
-        !Array.from(document.querySelectorAll("link")).some(link => {
-          link.outerHTML && /bootstrap@/gi.test(link.outerHTML);
-        })
-      ) {
-        head.prepend(
-          Object.assign(document.createElement("link"), {
-            href: "https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css",
-            rel: "stylesheet",
-            integrity:
-              "sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN",
-            crossOrigin: "anonymous",
-            id: "bootstrapLink",
-          })
-        );
-      }
-      if (
-        !document.getElementById("charsetMeta") &&
-        !Array.from(document.querySelectorAll("meta")).some(meta => {
-          meta.outerHTML && /utf-8/gi.test(meta.outerHTML!);
-        })
-      ) {
+        !head.querySelector('meta[charset="utf-8"]') &&
+        !head.querySelector('meta[charset="UTF-8"]')
+      )
         head.prepend(
           Object.assign(document.createElement("meta"), {
             charSet: "UTF-8",
             id: "charsetMeta",
           })
         );
-      }
-      if (
-        !document.getElementById("viewportMeta") &&
-        !Array.from(document.querySelectorAll("meta")).some(meta => {
-          meta.outerHTML && /viewport/gi.test(meta.outerHTML!);
-        })
-      ) {
+      if (!head.querySelector('meta[name="viewport"]'))
         head.prepend(
           Object.assign(document.createElement("meta"), {
             name: "viewport",
@@ -85,12 +50,9 @@ export function handleLinkChanges(
             id: "viewportMeta",
           })
         );
-      }
       if (
-        !document.getElementById("edgeMeta") &&
-        !Array.from(document.querySelectorAll("meta")).some(meta => {
-          meta.outerHTML && /x-ua-compatible/gi.test(meta.outerHTML!);
-        })
+        !head.querySelector('meta[content="IE=edge"]') &&
+        !head.querySelector('meta[content="IE=Edge"]')
       ) {
         head.prepend(
           Object.assign(document.createElement("meta"), {
@@ -106,8 +68,13 @@ export function handleLinkChanges(
         head.firstElementChild
       ) {
         for (const title of head.querySelectorAll("title")) title.remove();
-        for (const favicon of head.querySelectorAll('link[rel="icon"]'))
+        for (const favicon of [
+          ...head.querySelectorAll('link[rel="icon"]'),
+          ...head.querySelectorAll('link[rel="apple-touch-icon"]'),
+        ])
           favicon.remove();
+        for (const canonical of head.querySelectorAll('link[rel="canonical"]'))
+          canonical.remove();
         head.querySelectorAll("meta").forEach((meta, m) => {
           try {
             if (
@@ -124,151 +91,141 @@ export function handleLinkChanges(
             );
           }
         });
+        const { base, firstPub, name } = pageProps;
+        let origin = pageProps.origin;
+        origin = location.origin.endsWith("/")
+          ? location.origin.slice(0, -1)
+          : location.origin;
         switch (componentCase) {
           case "login": {
+            const title = "Login — PROSSaúde";
             !head.querySelector("title") &&
               head.firstElementChild!.insertAdjacentHTML(
-                `beforebegin`,
+                `afterend`,
                 `
-                <link rel="icon" href="/favicon_g.ico" id="faviconpross" />
-                <link rel="canonical nofollow noreferrer" href="https://prossaude-client.netlify.app/" />
-                <link
-                rel="apple-touch-icon"
-                href="img/apple-touch-icon-iphone-60x60-precomposed.png"
-              />
-              <link
-                rel="apple-touch-icon"
-                sizes="60x60"
-                href="img/apple-touch-icon-ipad-76x76-precomposed.png"
-              />
-              <link
-                rel="apple-touch-icon"
-                sizes="114x114"
-                href="img/apple-touch-icon-iphone-retina-120x120-precomposed.png"
-              />
-              <link
-                rel="apple-touch-icon"
-                sizes="144x144"
-                href="img/apple-touch-icon-ipad-retina-152x152-precomposed.png"
-              />
-                <title>Login — PROSSaúde</title>
-                <meta name="description" content="Este é uma página para login no sistema do projeto PROSSaúde — UFRJ" />
+                <!-- Start of automatic insertion -->
+                <title>${title}</title>
+                <link rel="canonical" href="${base}/" />
+                <meta name="description" content="Este é uma página para login no sistema do projeto ${name}" />
                 <meta property="og:type" content="website" />
-                <meta property="og:website:published_time" content="2024-07-02" />
-                <meta property="og:site_name" content="Login — PROSSaúde" />
-                <meta property="og:url" content="https://prossaude-client.netlify.app/" />
-                <meta property="og:title" content="PROSSaúde — UFRJ — Login" />
-                <meta property="og:description" content="Acesse o link para fazer o login no sistema online do Projeto PROSSaúde, UFRJ" />
-                <meta property="og:image" content="https://prossaude-client.netlify.app/img/PROS_Saude_Modelo1-Final.png" />
+                <meta property="og:website:published_time" content=${firstPub} />
+                <meta property="og:site_name" content="${name}" />
+                <meta property="og:url" content="${base}/" />
+                <meta property="og:title" content="${title}" />
+                <meta property="og:description" content="Acesse o link para fazer o login no sistema online do Projeto ${name}" />
+                <meta property="og:image" content="${base}/img/PROS_Saude_Modelo1-Final.png" />
                 <meta property="og:image:width" content="1200" />
                 <meta property="og:image:height" content="400" />
                 <meta property="og:image:alt" content="logo" />
+                <link rel="icon" href="${origin}/favicon_g.ico" id="faviconpross" />
+                <link
+                  rel="apple-touch-icon"
+                  href="${origin}/apple-touch-icon-iphone-60x60-precomposed.png"
+                />
+                <link
+                  rel="apple-touch-icon"
+                  sizes="60x60"
+                  href="${origin}/apple-touch-icon-ipad-76x76-precomposed.png"
+                />
+                <link
+                  rel="apple-touch-icon"
+                  sizes="114x114"
+                  href="${origin}/apple-touch-icon-iphone-retina-120x120-precomposed.png"
+                />
+                <link
+                  rel="apple-touch-icon"
+                  sizes="144x144"
+                  href="${origin}/apple-touch-icon-ipad-retina-152x152-precomposed.png"
+                />
+                <!-- End of automatic insertion -->
                 `
               );
             document.body.className = "loginBody";
-            for (const stylesheet of head.querySelectorAll("style")) {
-              if (
-                !/global style/gi.test(stylesheet.innerText) &&
-                !/login page/gi.test(stylesheet.innerText)
-              ) {
-                stylesheet.parentElement!.append(
-                  document.createComment(stylesheet.outerHTML)
-                );
-                stylesheet.remove();
-              }
-            }
             break;
           }
           case "base": {
             !head.querySelector("title") &&
               head.firstElementChild!.insertAdjacentHTML(
-                `beforebegin`,
+                `afterend`,
                 `
-                <link rel="icon" href="/favicon_g.ico" id="faviconpross" />
-                <link rel="canonical nofollow noreferrer" href="https://prossaude-client.netlify.app/" />
-                <link
-                rel="apple-touch-icon"
-                href="img/apple-touch-icon-iphone-60x60-precomposed.png"
-              />
-              <link
-                rel="apple-touch-icon"
-                sizes="60x60"
-                href="img/apple-touch-icon-ipad-76x76-precomposed.png"
-              />
-              <link
-                rel="apple-touch-icon"
-                sizes="114x114"
-                href="img/apple-touch-icon-iphone-retina-120x120-precomposed.png"
-              />
-              <link
-                rel="apple-touch-icon"
-                sizes="144x144"
-                href="img/apple-touch-icon-ipad-retina-152x152-precomposed.png"
-              />
-                <title>Base de Navegação — Pró-Saúde</title>
-                <meta name="description" content="Este é uma página para navegação entre as subpáginas do sistema do projeto PROSSaúde — UFRJ" />
+                <!-- Start of automatic insertion -->
+                <title>Base de Navegação — ${name}</title>
+                <link rel="canonical" href="${base}/base/" />
+                <meta name="description" content="Este é uma página para navegação entre as subpáginas do sistema do projeto ${name}" />
                 <meta property="og:type" content="website" />
-                <meta property="og:website:published_time" content="2024-07-02" />
-                <meta property="og:site_name" content="PROSSaúde — Tela Base de Navegação" />
-                <meta property="og:url" content="https://prossaude-client.netlify.app/base/" />
-                <meta property="og:title" content="PROSSaúde — UFRJ — Tela Base de Navegação — Formulário de Anamnese Geral" />
-                <meta property="og:description" content="Acesse o link para acessar a tela para navegação entre as páginas de preenchimento e trabalho do Projeto PROSSaúde, UFRJ" />
-                <meta property="og:image" content="https://prossaude-client.netlify.app/img/PROS_Saude_Modelo1-Final.png" />
+                <meta property="og:website:published_time" content="${firstPub}" />
+                <meta property="og:site_name" content="${name}" />
+                <meta property="og:url" content="${base}/base/" />
+                <meta property="og:title" content="${name} — Tela Base de Navegação" />
+                <meta property="og:description" content="Acesse o link para acessar a tela para navegação entre as páginas de preenchimento e trabalho do Projeto ${name}" />
+                <meta property="og:image" content="${origin}/img/PROS_Saude_Modelo1-Final.png" />
                 <meta property="og:image:width" content="1200" />
                 <meta property="og:image:height" content="400" />
+                <link rel="icon" href="${origin}/favicon_g.ico" id="faviconpross" />
+                <link
+                  rel="apple-touch-icon"
+                  href="${origin}/img/apple-touch-icon-iphone-60x60-precomposed.png"
+                />
+                <link
+                  rel="apple-touch-icon"
+                  sizes="60x60"
+                  href="${origin}/img/apple-touch-icon-ipad-76x76-precomposed.png"
+                />
+                <link
+                  rel="apple-touch-icon"
+                  sizes="114x114"
+                  href="${origin}/img/apple-touch-icon-iphone-retina-120x120-precomposed.png"
+                />
+                <link
+                  rel="apple-touch-icon"
+                  sizes="144x144"
+                  href="${origin}/img/apple-touch-icon-ipad-retina-152x152-precomposed.png"
+                />
+                <!-- End of automatic insertion -->
               `
               );
             document.body.className = "baseBody";
-            for (const stylesheet of head.querySelectorAll("style")) {
-              if (
-                !/global style/gi.test(stylesheet.innerText) &&
-                !/base page/gi.test(stylesheet.innerText)
-              ) {
-                stylesheet.parentElement!.append(
-                  document.createComment(stylesheet.outerHTML)
-                );
-                stylesheet.remove();
-              }
-            }
             break;
           }
           case "ag": {
             !head.querySelector("title") &&
               head.firstElementChild!.insertAdjacentHTML(
-                `beforebegin`,
+                `afterend`,
                 `
-                <link rel="icon" href="/favicon_g.ico" id="faviconpross" />
-                <link rel="canonical nofollow noreferrer" href="https://prossaude-client.netlify.app/" />
-                <link
-                rel="apple-touch-icon"
-                href="img/apple-touch-icon-iphone-60x60-precomposed.png"
-              />
-              <link
-                rel="apple-touch-icon"
-                sizes="60x60"
-                href="img/apple-touch-icon-ipad-76x76-precomposed.png"
-              />
-              <link
-                rel="apple-touch-icon"
-                sizes="114x114"
-                href="img/apple-touch-icon-iphone-retina-120x120-precomposed.png"
-              />
-              <link
-                rel="apple-touch-icon"
-                sizes="144x144"
-                href="img/apple-touch-icon-ipad-retina-152x152-precomposed.png"
-              />
-                <title>Anamnese Geral &#8211 PROSSaúde, UFRJ</title>
+                <!-- Start of automatic insertion -->
+                <title>Anamnese Geral &#8211 ${name}</title>
+                <link rel="canonical" href="${base}/ag/" />
                 <meta name="description" content="Este é um formulário para a Anamnese Geral do projeto PROSSaúde — UFRJ" />
                 <meta property="og:type" content="website" />
-                <meta property="og:website:published_time" content="2024-07-02" />
-                <meta property="og:site_name" content="PROSSaúde — Anamnese Geral" />
-                <meta property="og:url" content="https://prossaude-client.netlify.app/ag/" />
-                <meta property="og:title" content="PROSSaúde — UFRJ — Exame Clínico — Formulário de Anamnese Geral" />
-                <meta property="og:description" content="Acesse o link para preencher o formulário dos dados para a Anamnese Geral do Projeto PROSSaúde, UFRJ" />
-                <meta property="og:image" content="https://prossaude-client.netlify.app/img/PROS_Saude_Modelo1-Final.png" />
+                <meta property="og:website:published_time" content="${firstPub}" />
+                <meta property="og:site_name" content="${name}" />
+                <meta property="og:url" content="${base}/ag/" />
+                <meta property="og:title" content="Exame Clínico — ${name}" />
+                <meta property="og:description" content="Acesse o link para preencher o formulário dos dados para a Anamnese Geral do Projeto ${name}" />
+                <meta property="og:image" content="${origin}/img/PROS_Saude_Modelo1-Final.png" />
                 <meta property="og:image:width" content="1200" />
                 <meta property="og:image:height" content="400" />
+                <link rel="icon" href="${origin}/favicon_g.ico" id="faviconpross" />
+                <link
+                  rel="apple-touch-icon"
+                  href="${origin}/img/apple-touch-icon-iphone-60x60-precomposed.png"
+                />
+                <link
+                  rel="apple-touch-icon"
+                  sizes="60x60"
+                  href="${origin}/img/apple-touch-icon-ipad-76x76-precomposed.png"
+                />
+                <link
+                  rel="apple-touch-icon"
+                  sizes="114x114"
+                  href="${origin}/img/apple-touch-icon-iphone-retina-120x120-precomposed.png"
+                />
+                <link
+                  rel="apple-touch-icon"
+                  sizes="144x144"
+                  href="${origin}/img/apple-touch-icon-ipad-retina-152x152-precomposed.png"
+                />
+                <!-- End of automatic insertion -->
                 `
               );
             document.body.className = "agBody";
@@ -277,40 +234,42 @@ export function handleLinkChanges(
           case "ed": {
             !head.querySelector("title") &&
               head.firstElementChild!.insertAdjacentHTML(
-                `beforebegin`,
+                `afterend`,
                 `
-                <link rel="icon" href="/favicon_nut.ico" id="faviconpross" />
-                <link rel="canonical nofollow noreferrer" href="https://prossaude-client.netlify.app/" />
-                <link
-                rel="apple-touch-icon"
-                href="img/apple-touch-icon-iphone-60x60-precomposed.png"
-              />
-              <link
-                rel="apple-touch-icon"
-                sizes="60x60"
-                href="img/apple-touch-icon-ipad-76x76-precomposed.png"
-              />
-              <link
-                rel="apple-touch-icon"
-                sizes="114x114"
-                href="img/apple-touch-icon-iphone-retina-120x120-precomposed.png"
-              />
-              <link
-                rel="apple-touch-icon"
-                sizes="144x144"
-                href="img/apple-touch-icon-ipad-retina-152x152-precomposed.png"
-              />
-                <title>Exame Clínico — Educação Física & Nutrição</title>
-                <meta name="description" content="Este é um formulário para o Exame Clínico de Educação Física do projeto PROSSaúde — UFRJ" />
+                <!-- Start of automatic insertion -->
+                <title>Exame Clínico — Educação Física & Nutrição — ${name}</title>
+                <link rel="canonical" href="${base}/edfis/" />
+                <meta name="description" content="Este é um formulário para o Exame Clínico de Educação Física do Projeto ${name}" />
                 <meta property="og:type" content="website" />
-                <meta property="og:website:published_time" content="2024-07-02" />
-                <meta property="og:site_name" content="PROSSaúde — Educação Física &amp; Nutrição" />
-                <meta property="og:url" content="https://prossaude-client.netlify.app/edfis/" />
-                <meta property="og:title" content="PROSSaúde — UFRJ — Exame Clínico — Formulário de Educação Física &amp; Nutrição" />
-                <meta property="og:description" content="Acesse o link para preencher o formulário dos dados para o exame clínico de Educação Física &amp; Nutrição do Projeto PROSSaúde, UFRJ" />
-                <meta property="og:image" content="https://prossaude-client.netlify.app/img/PROS_edfis_icon.png" />
+                <meta property="og:website:published_time" content="${firstPub}" />
+                <meta property="og:site_name" content="${name}" />
+                <meta property="og:url" content="${base}/edfis/" />
+                <meta property="og:title" content="Exame Clínico — Formulário de Educação Física &amp; Nutrição — ${name}" />
+                <meta property="og:description" content="Acesse o link para preencher o formulário dos dados para o exame clínico de Educação Física &amp; Nutrição do Projeto ${name}" />
+                <meta property="og:image" content="${origin}/img/PROS_edfis_icon.png" />
                 <meta property="og:image:width" content="1200" />
                 <meta property="og:image:height" content="400" />
+                <link rel="icon" href="${origin}/favicon_nut.ico" id="faviconpross" />
+                <link
+                  rel="apple-touch-icon"
+                  href="${origin}/img/apple-touch-icon-iphone-60x60-precomposed.png"
+                />
+                <link
+                  rel="apple-touch-icon"
+                  sizes="60x60"
+                  href="${origin}/img/apple-touch-icon-ipad-76x76-precomposed.png"
+                />
+                <link
+                  rel="apple-touch-icon"
+                  sizes="114x114"
+                  href="${origin}/img/apple-touch-icon-iphone-retina-120x120-precomposed.png"
+                />
+                <link
+                  rel="apple-touch-icon"
+                  sizes="144x144"
+                  href="${origin}/img/apple-touch-icon-ipad-retina-152x152-precomposed.png"
+                />
+                <!-- End of automatic insertion -->
                 `
               );
             document.body.className = "edfisNutBody";
@@ -319,40 +278,42 @@ export function handleLinkChanges(
           case "od": {
             !head.querySelector("title") &&
               head.firstElementChild!.insertAdjacentHTML(
-                `beforebegin`,
+                `afterend`,
                 `
+                <!-- Start of automatic insertion -->
                 <title>Exame Clínico — Odontologia</title>
-                <link rel="canonical nofollow noreferrer" href="https://prossaude-client.netlify.app/" />
-                <link rel="icon" href="/favicon_od.ico" id="faviconpross" />
-                <link
-                rel="apple-touch-icon"
-                href="img/apple-touch-icon-iphone-60x60-precomposed.png"
-              />
-              <link
-                rel="apple-touch-icon"
-                sizes="60x60"
-                href="img/apple-touch-icon-ipad-76x76-precomposed.png"
-              />
-              <link
-                rel="apple-touch-icon"
-                sizes="114x114"
-                href="img/apple-touch-icon-iphone-retina-120x120-precomposed.png"
-              />
-              <link
-                rel="apple-touch-icon"
-                sizes="144x144"
-                href="img/apple-touch-icon-ipad-retina-152x152-precomposed.png"
-              />
-                <meta name="description" content="Este é um formulário para o Exame Clínico de Odontologia do projeto PROSSaúde — UFRJ" />
+                <link rel="canonical" href="${base}/od" />
+                <meta name="description" content="Este é um formulário para o Exame Clínico de Odontologia do Projeto ${name}" />
                 <meta property="og:type" content="website" />
-                <meta property="og:website:published_time" content="2024-07-02" />
-                <meta property="og:site_name" content="PROSSaúde — Odontologia" />
-                <meta property="og:url" content="https://prossaude-client.netlify.app/od/" />
-                <meta property="og:title" content="PROSSaúde — UFRJ — Exame Clínico — Formulário de Odontologia" />
-                <meta property="og:description" content="Acesse o link para preencher o formulário dos dados para o exame clínico de Odontologia do Projeto PROSSaúde, UFRJ" />
-                <meta property="og:image" content="https://prossaude-client.netlify.app/img/pros-od-icon.png" />
+                <meta property="og:website:published_time" content="${firstPub}" />
+                <meta property="og:site_name" content="${name}" />
+                <meta property="og:url" content="${base}/od/" />
+                <meta property="og:title" content="Exame Clínico — Formulário de Odontologia — ${name}" />
+                <meta property="og:description" content="Acesse o link para preencher o formulário dos dados para o exame clínico de Odontologia do Projeto ${name}" />
+                <meta property="og:image" content="${base}/img/pros-od-icon.png" />
                 <meta property="og:image:width" content="1200" />
                 <meta property="og:image:height" content="400" />
+                <link rel="icon" href="${origin}/favicon_od.ico" id="faviconpross" />
+                <link
+                  rel="apple-touch-icon"
+                  href="${origin}/img/apple-touch-icon-iphone-60x60-precomposed.png"
+                />
+                <link
+                  rel="apple-touch-icon"
+                  sizes="60x60"
+                  href="${origin}/img/apple-touch-icon-ipad-76x76-precomposed.png"
+                />
+                <link
+                  rel="apple-touch-icon"
+                  sizes="114x114"
+                  href="${origin}/img/apple-touch-icon-iphone-retina-120x120-precomposed.png"
+                />
+                <link
+                  rel="apple-touch-icon"
+                  sizes="144x144"
+                  href="${origin}/img/apple-touch-icon-ipad-retina-152x152-precomposed.png"
+                />
+                <!-- End of automatic insertion -->
               `
               );
             document.body.className = "odBody";
@@ -361,40 +322,42 @@ export function handleLinkChanges(
           case "panel": {
             !head.querySelector("title") &&
               head.firstElementChild!.insertAdjacentHTML(
-                `beforebegin`,
+                `afterend`,
                 `
-                <title>Painel de Trabalho &#8211 PROSSaúde, UFRJ</title>
-                <link rel="canonical nofollow noreferrer" href="https://prossaude-client.netlify.app/" />
-                <link rel="icon" href="/favicon_g.ico" id="faviconpross" />
-                <link
-                rel="apple-touch-icon"
-                href="img/apple-touch-icon-iphone-60x60-precomposed.png"
-              />
-              <link
-                rel="apple-touch-icon"
-                sizes="60x60"
-                href="img/apple-touch-icon-ipad-76x76-precomposed.png"
-              />
-              <link
-                rel="apple-touch-icon"
-                sizes="114x114"
-                href="img/apple-touch-icon-iphone-retina-120x120-precomposed.png"
-              />
-              <link
-                rel="apple-touch-icon"
-                sizes="144x144"
-                href="img/apple-touch-icon-ipad-retina-152x152-precomposed.png"
-              />
-                <meta name="description" content="Este é o painel de trabalho principal para o projeto PROSSaúde — UFRJ" />
+                <!-- Start of automatic insertion -->
+                <title>Painel de Trabalho &#8211 ${name}</title>
+                <link rel="canonical" href="${base}/panel/" />
+                <meta name="description" content="Este é o painel de trabalho principal para o Projeto ${name}" />
                 <meta property="og:type" content="website" />
-                <meta property="og:website:published_time" content="2024-07-02" />
-                <meta property="og:site_name" content="PROSSaúde — Painel de Trabalho" />
-                <meta property="og:url" content="https://prossaude-client.netlify.app/panel/" />
-                <meta property="og:title" content="PROSSaúde — UFRJ — Exame Clínico — Painel de Trabalho" />
-                <meta property="og:description" content="Acesse o link para preencher acessar o painel de trabalho online do Projeto PROSSaúde, UFRJ" />
-                <meta property="og:image" content="https://prossaude-client.netlify.app/img/PROS_Saude_Modelo1-Final.png" />
+                <meta property="og:website:published_time" content="${firstPub}" />
+                <meta property="og:site_name" content="${name}" />
+                <meta property="og:url" content="${base}/panel/" />
+                <meta property="og:title" content="Painel de Trabalho — ${name}" />
+                <meta property="og:description" content="Acesse o link para preencher acessar o painel de trabalho online do Projeto ${name}" />
+                <meta property="og:image" content="${base}/img/PROS_Saude_Modelo1-Final.png" />
                 <meta property="og:image:width" content="1200" />
                 <meta property="og:image:height" content="400" />
+                <link rel="icon" href="${origin}/favicon_g.ico" id="faviconpross" />
+                <link
+                  rel="apple-touch-icon"
+                  href="${origin}/img/apple-touch-icon-iphone-60x60-precomposed.png"
+                />
+                <link
+                  rel="apple-touch-icon"
+                  sizes="60x60"
+                  href="${origin}/img/apple-touch-icon-ipad-76x76-precomposed.png"
+                />
+                <link
+                  rel="apple-touch-icon"
+                  sizes="114x114"
+                  href="${origin}/img/apple-touch-icon-iphone-retina-120x120-precomposed.png"
+                />
+                <link
+                  rel="apple-touch-icon"
+                  sizes="144x144"
+                  href="${origin}/img/apple-touch-icon-ipad-retina-152x152-precomposed.png"
+                />
+                <!-- End of automatic insertion -->
                 `
               );
             document.body.className = "panelBody";
@@ -403,40 +366,42 @@ export function handleLinkChanges(
           case "recover": {
             !head.querySelector("title") &&
               head.firstElementChild!.insertAdjacentHTML(
-                `beforebegin`,
+                `afterend`,
                 `
-              <title>Recuperação de Senha &#8211 PROSSaúde, UFRJ</title>
-              <link rel="canonical nofollow noreferrer" href="https://prossaude-client.netlify.app/recover/" />
-              <link rel="icon" href="/favicon_g.ico" id="faviconpross" />
-              <link
-              rel="apple-touch-icon"
-              href="img/apple-touch-icon-iphone-60x60-precomposed.png"
-              />
-              <link
-                rel="apple-touch-icon"
-                sizes="60x60"
-                href="img/apple-touch-icon-ipad-76x76-precomposed.png"
-              />
-              <link
-                rel="apple-touch-icon"
-                sizes="114x114"
-                href="img/apple-touch-icon-iphone-retina-120x120-precomposed.png"
-              />
-              <link
-                rel="apple-touch-icon"
-                sizes="144x144"
-                href="img/apple-touch-icon-ipad-retina-152x152-precomposed.png"
-              />
-                <meta name="description" content="Este é o painel de trabalho principal para o projeto PROSSaúde — UFRJ" />
+                <!-- Start of automatic insertion -->
+                <title>Recuperação de Senha &#8211 ${name}</title>
+                <meta name="description" content="Este é o painel de trabalho principal para o Projeto ${name}" />
                 <meta property="og:type" content="website" />
-                <meta property="og:website:published_time" content="2024-07-02" />
-                <meta property="og:site_name" content="PROSSaúde — Painel de Trabalho" />
-                <meta property="og:url" content="https://prossaude-client.netlify.app/recover/" />
-                <meta property="og:title" content="PROSSaúde — UFRJ — Exame Clínico — Recuperação de Senha" />
-                <meta property="og:description" content="Acesse o link para preencher acessar a página de recuperação de senha do Projeto PROSSaúde, UFRJ" />
-                <meta property="og:image" content="https://prossaude-client.netlify.app/img/PROS_Saude_Modelo1-Final.png" />
+                <meta property="og:website:published_time" content="${firstPub}" />
+                <meta property="og:site_name" content="${name}" />
+                <meta property="og:url" content="${base}/recover/" />
+                <meta property="og:title" content="Recuperação de Senha — ${name}" />
+                <meta property="og:description" content="Acesse o link para preencher acessar a página de recuperação de senha do Projeto ${name}" />
+                <meta property="og:image" content="${base}/img/PROS_Saude_Modelo1-Final.png" />
                 <meta property="og:image:width" content="1200" />
                 <meta property="og:image:height" content="400" />
+                <link rel="canonical" href="${base}/recover/" />
+                <link rel="icon" href="${origin}/favicon_g.ico" id="faviconpross" />
+                <link
+                rel="apple-touch-icon"
+                href="${origin}/img/apple-touch-icon-iphone-60x60-precomposed.png"
+                />
+                <link
+                  rel="apple-touch-icon"
+                  sizes="60x60"
+                  href="${origin}/img/apple-touch-icon-ipad-76x76-precomposed.png"
+                />
+                <link
+                  rel="apple-touch-icon"
+                  sizes="114x114"
+                  href="${origin}/img/apple-touch-icon-iphone-retina-120x120-precomposed.png"
+                />
+                <link
+                  rel="apple-touch-icon"
+                  sizes="144x144"
+                  href="${origin}/img/apple-touch-icon-ipad-retina-152x152-precomposed.png"
+                />
+                <!-- End of automatic insertion -->
                 `
               );
             document.body.className = "recoverBody";
@@ -445,6 +410,36 @@ export function handleLinkChanges(
           default:
             console.error(`Invalid componentCase. No description appended.`);
             return;
+        }
+        const headElements = head.children;
+        const elementsById = new Map();
+        for (let i = 0; i < headElements.length; i++) {
+          const element = headElements[i];
+          let elementId = element.id;
+          if (!elementId) {
+            if (element instanceof HTMLScriptElement && element.src !== "")
+              elementId = element.src;
+            else if (element instanceof HTMLLinkElement && element.href !== "")
+              elementId = element.href;
+            else if (element instanceof HTMLMetaElement) {
+              if (element.name !== "") elementId = element.name;
+              else if (element.httpEquiv !== "") elementId = element.httpEquiv;
+              else if (element.content !== "") elementId = element.content;
+            }
+          }
+          if (!elementId) continue;
+          if (elementsById.has(elementId)) {
+            const existingElement = elementsById.get(elementId);
+            const currentAttrCount = element.attributes.length;
+            const existingAttrCount = existingElement.attributes.length;
+            if (currentAttrCount > existingAttrCount) {
+              elementsById.set(elementId, element);
+              existingElement.remove();
+            } else if (currentAttrCount === existingAttrCount) {
+              existingElement.remove();
+              elementsById.set(elementId, element);
+            } else element.remove();
+          } else elementsById.set(elementId, element);
         }
       }
     } catch (e) {

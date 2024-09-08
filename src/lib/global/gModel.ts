@@ -1350,3 +1350,122 @@ export function regularToSnake(str: string): string {
     .replace(/[\s_]+/g, "-")
     .toLowerCase();
 }
+
+export function modelScripts(): void {
+  try {
+    document.querySelectorAll("meta").forEach((meta, i) => {
+      try {
+        if (!(meta instanceof HTMLMetaElement)) return;
+        if (meta.id === "") {
+          if (meta.name && meta.name !== "") {
+            meta.id = meta.name.replace(/[\/\-\?\=\+\s\.\<\>\&\^\:~,]/g, "__");
+            return;
+          }
+          if ((meta as any).property && (meta as any).property !== "") {
+            meta.id = (meta as any).property.replace(
+              /[\/\-\?\=\+\s\.\<\>\&\^\:~,]/g,
+              "__"
+            );
+            return;
+          }
+          if (meta.httpEquiv && meta.httpEquiv !== "") {
+            meta.id = meta.httpEquiv.replace(
+              /[\/\-\?\=\+\s\.\<\>\&\^\:~,]/g,
+              "__"
+            );
+            return;
+          }
+          if (meta.content && meta.content !== "") {
+            meta.id = meta.content.replace(
+              /[\/\-\?\=\+\s\.\<\>\&\^\:~,]/g,
+              "__"
+            );
+          }
+        }
+      } catch (e) {
+        console.error(
+          `Error executing iteration ${i} for identifying meta tag:\n${
+            (e as Error).message
+          }`
+        );
+      }
+    });
+    document.querySelectorAll("script").forEach((script, i) => {
+      try {
+        if (!(script instanceof HTMLScriptElement)) return;
+        if (script.type === "" && script.src !== "")
+          script.type = "text/javascript";
+        if (script.id === "" && script.src !== "") {
+          const url = new URL(script.src);
+          script.id = url.pathname.replace(/[\/\-\?\=\+\s\.\<\>\&\^~,]/g, "__");
+        }
+        if (script.crossOrigin === "") script.crossOrigin = "anonymous";
+      } catch (e) {
+        console.error(
+          `Error executing iteration ${i} for <script> tags in modelScripts:\n${
+            (e as Error).message
+          }`
+        );
+      }
+    });
+    document.querySelectorAll("style").forEach((style, i) => {
+      try {
+        if (!(style instanceof HTMLStyleElement)) return;
+        if (style.type !== "") style.type = "";
+        if (style.media === "all") style.media = "";
+        if (style.id === "") {
+          style.id = document.getElementById("__next")
+            ? `next_generated_style_${i}`
+            : `automatically_generated_style_${i}`;
+          style.dataset.group = "automatic_name";
+        }
+      } catch (e) {
+        console.error(
+          `Error executing iteration ${i} for <style> tags in modelScripts:\n${
+            (e as Error).message
+          }`
+        );
+      }
+    });
+    document.querySelectorAll("link").forEach((link, i) => {
+      try {
+        if (!(link instanceof HTMLLinkElement)) return;
+        if (link.id === "" && link.href !== "") {
+          const url = new URL(link.href);
+          link.id = url.pathname.replace(/[\/\-\?\=\+\s\.\<\>\&\^~,]/g, "__");
+        }
+        if (link.rel === "") link.rel = "alternate";
+        if (link.crossOrigin === "") link.crossOrigin = "anonymous";
+      } catch (e) {
+        console.error(
+          `Error executing iteration ${i} for <link> tags in modelScripts:\n${
+            (e as Error).message
+          }`
+        );
+      }
+    });
+    document.querySelectorAll("a").forEach((a, i) => {
+      try {
+        if (!(a instanceof HTMLAnchorElement)) return;
+        if (
+          a.href !== "" &&
+          !(
+            new RegExp(location.hostname, "g").test(a.href) ||
+            /https/.test(a.href)
+          )
+        ) {
+          if (!/noopener/g.test(a.rel)) a.rel += " noopener";
+          if (!/noreferrer/g.test(a.rel)) a.rel += " noreferrer";
+        }
+      } catch (e) {
+        console.error(
+          `Error executing iteration ${i} for <a> tags in modelScripts:\n${
+            (e as Error).message
+          }`
+        );
+      }
+    });
+  } catch (e) {
+    console.error(`Error executing modelScripts:\n${(e as Error).message}`);
+  }
+}
