@@ -37,7 +37,6 @@ export default function MyDocument({ deps }: { deps: any }): JSX.Element {
             "5.5.3"
           }`}
         />
-        <title>{name}</title>
         <link rel="canonical" href={`${base}`} />
         <meta
           name="description"
@@ -123,6 +122,7 @@ export default function MyDocument({ deps }: { deps: any }): JSX.Element {
           type="application/ld+json"
           crossOrigin="anonymous"
           strategy="beforeInteractive"
+          id="ld_json"
           dangerouslySetInnerHTML={{
             __html: `
             "@context": "https://schema.org",
