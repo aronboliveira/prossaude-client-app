@@ -151,6 +151,7 @@ export type validTabLabs =
   | Exclude<IndCases, "BTN">;
 export type TabCelCtxs = "ProgSVi" | "MedAnt" | "DCut" | "IndPerc";
 export type pageStyleCases =
+  | "AG Page Style"
   | "Login Page Style"
   | "Base Page Style"
   | "Base Page Style"
