@@ -153,7 +153,7 @@ export type TabCelCtxs = "ProgSVi" | "MedAnt" | "DCut" | "IndPerc";
 export type pageStyleCases =
   | "Login Page Style"
   | "Base Page Style"
-  | "AG Page Style"
+  | "Base Page Style"
   | "EN Page Style"
   | "Od Page Style"
   | "Panel Page Style"
