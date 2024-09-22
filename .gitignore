@@ -23,6 +23,8 @@ __tests__/
 /build
 /snippets.json
 notes/
+.next/
+.next
 
 # misc
 .DS_Store
