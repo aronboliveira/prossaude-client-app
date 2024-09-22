@@ -1,1 +1,6 @@
-{ "arrowParens": "avoid", "tabWidth": 2 }
+{
+  "arrowParens": "avoid",
+  "tabWidth": 2,
+  "printWidth": 120,
+  "jsxSingleQuote": true
+}

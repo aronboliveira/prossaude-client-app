@@ -1065,9 +1065,10 @@ export async function validateForm(
     ((ev.currentTarget instanceof HTMLButtonElement ||
       ev.currentTarget instanceof HTMLInputElement) &&
       ev.currentTarget.type === "submit")
-  )
+  ) {
     ev.preventDefault();
-  targ = ev.currentTarget;
+    targ = ev.currentTarget;
+  }
   const arrValidity: boolean[] = [];
   const invalidEntries: string[] = [];
   const validEntries: Array<[string, string | File]> = [];
