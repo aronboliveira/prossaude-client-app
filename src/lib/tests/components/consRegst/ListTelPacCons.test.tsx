@@ -1,10 +1,10 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import ListTelPacCons from "../../../../../components/consRegst/ListTelPacCons";
-import { handleFetch } from "@/pages/api/ts/handlers";
+import { handleFetch } from "../../../../pages/api/ts/handlers";
 import { createRoot } from "react-dom/client";
 import { panelRoots } from "../../../../../components/panelForms/defs/client/SelectPanel";
 jest.mock(
-  "@/pages/api/ts/handlers",
+  "../../../../pages/api/ts/handlers",
   (): {
     handleFetch: jest.Mock<any, any, any>;
   } => ({

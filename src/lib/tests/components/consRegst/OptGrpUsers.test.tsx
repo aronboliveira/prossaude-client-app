@@ -5,7 +5,7 @@ import { syncAriaStates } from "../../../../lib/global/handlers/gHandlers";
 import { createRoot } from "react-dom/client";
 import { elementNotFound, extLine } from "../../../../lib/global/handlers/errorHandler";
 import "@testing-library/jest-dom/extend-expect";
-import { formCases, validAreas } from "@/lib/global/declarations/types";
+import { formCases, validAreas } from "../../../../lib/global/declarations/types";
 jest.mock(
   "react-dom/client",
   (): {
