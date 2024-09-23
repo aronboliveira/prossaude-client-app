@@ -1,11 +1,7 @@
 "use client";
 import { ErrorBoundary } from "react-error-boundary";
 import { createRoot } from "react-dom/client";
-import {
-  elementNotFound,
-  extLine,
-  inputNotFound,
-} from "@/lib/global/handlers/errorHandler";
+import { elementNotFound, extLine, inputNotFound } from "@/lib/global/handlers/errorHandler";
 import { equalizeTabCells } from "@/lib/global/gStyleScript";
 import {
   addListenerAlocation,
@@ -21,14 +17,10 @@ import GenericErrorComponent from "../error/GenericErrorComponent";
 import Spinner from "../icons/Spinner";
 import StudRow from "../panelForms/studs/StudRow";
 
-import {
-  StudInfo,
-  StudListProps,
-} from "@/lib/locals/panelPage/declarations/interfacesCons";
+import { StudInfo, StudListProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { strikeEntries } from "@/lib/locals/panelPage/consStyleScript";
 import { handleClientPermissions } from "@/lib/locals/panelPage/handlers/consHandlerUsers";
-
 export default function StudList({
   mainDlgRef,
   dispatch,
@@ -41,11 +33,7 @@ export default function StudList({
   useEffect(() => {
     try {
       if (!(tbodyRef.current instanceof HTMLTableSectionElement))
-        throw elementNotFound(
-          tbodyRef.current,
-          `Validation of Table Body instance`,
-          extLine(new Error())
-        );
+        throw elementNotFound(tbodyRef.current, `Validation of Table Body instance`, extLine(new Error()));
       if (studs.length > 0 && tbodyRef.current.querySelector("tr")) return;
       setTimeout(() => {
         if (studs.length > 0) return;
@@ -67,17 +55,9 @@ export default function StudList({
             });
             try {
               if (!(tabRef.current instanceof HTMLElement))
-                throw elementNotFound(
-                  tabRef.current,
-                  `Validation of Table reference`,
-                  extLine(new Error())
-                );
+                throw elementNotFound(tabRef.current, `Validation of Table reference`, extLine(new Error()));
               if (!(tbodyRef.current instanceof HTMLElement))
-                throw elementNotFound(
-                  tbodyRef.current,
-                  `Validation of Table Body Reference`,
-                  extLine(new Error())
-                );
+                throw elementNotFound(tbodyRef.current, `Validation of Table Body Reference`, extLine(new Error()));
               if (
                 panelRoots[`${tbodyRef.current.id}`] &&
                 !(panelRoots[`${tbodyRef.current.id}`] as any)["_internalRoot"]
@@ -85,11 +65,7 @@ export default function StudList({
                 setTimeout(() => {
                   try {
                     if (!(tabRef.current instanceof HTMLElement))
-                      throw elementNotFound(
-                        tabRef.current,
-                        `Validation of Table reference`,
-                        extLine(new Error())
-                      );
+                      throw elementNotFound(tabRef.current, `Validation of Table reference`, extLine(new Error()));
                     if (!(tbodyRef.current instanceof HTMLElement))
                       throw elementNotFound(
                         tbodyRef.current,
@@ -101,21 +77,18 @@ export default function StudList({
                     delete panelRoots[`${tbodyRef.current.id}`];
                     tbodyRef.current.remove();
                     if (!panelRoots[`${tabRef.current.id}`])
-                      panelRoots[`${tabRef.current.id}`] = createRoot(
-                        tabRef.current
-                      );
+                      panelRoots[`${tabRef.current.id}`] = createRoot(tabRef.current);
                     panelRoots[`${tabRef.current.id}`]?.render(
                       <ErrorBoundary
                         FallbackComponent={() => (
-                          <GenericErrorComponent message="Error reloading replacement for table body" />
+                          <GenericErrorComponent message='Error reloading replacement for table body' />
                         )}
                       >
-                        <caption className="caption-t">
+                        <caption className='caption-t'>
                           <strong>
-                            <small role="textbox" className="noInvert">
-                              <em className="noInvert">
-                                Lista Recuperada da Ficha de Estudantes
-                                registrados. Acesse
+                            <small role='textbox' className='noInvert'>
+                              <em className='noInvert'>
+                                Lista Recuperada da Ficha de Estudantes registrados. Acesse
                                 <samp>
                                   <a> ROTA_PLACEHOLDER </a>
                                 </samp>{" "}
@@ -125,108 +98,70 @@ export default function StudList({
                           </strong>
                         </caption>
                         <colgroup>
-                          <col data-col="1"></col>
-                          <col data-col="2"></col>
-                          <col data-col="3"></col>
-                          <col data-col="4"></col>
-                          <col data-col="5"></col>
-                          <col data-col="6"></col>
-                          <col data-col="7"></col>
-                          {userClass === "coordenador" && (
-                            <col data-col="8"></col>
-                          )}
-                          {userClass === "coordenador" && (
-                            <col data-col="9"></col>
-                          )}
+                          <col data-col='1'></col>
+                          <col data-col='2'></col>
+                          <col data-col='3'></col>
+                          <col data-col='4'></col>
+                          <col data-col='5'></col>
+                          <col data-col='6'></col>
+                          <col data-col='7'></col>
+                          {userClass === "coordenador" && <col data-col='8'></col>}
+                          {userClass === "coordenador" && <col data-col='9'></col>}
                         </colgroup>
-                        <thead className="thead-dark">
-                          <tr id="avStuds-row1" data-row="1">
+                        <thead className='thead-dark'>
+                          <tr id='avStuds-row1' data-row='1'>
                             {userClass === "coordenador" && (
-                              <th scope="col" data-row="1" data-col="1">
+                              <th scope='col' data-row='1' data-col='1'>
                                 CPF
                               </th>
                             )}
                             {userClass === "coordenador" && (
-                              <th scope="col" data-row="1" data-col="2">
+                              <th scope='col' data-row='1' data-col='2'>
                                 DRE
                               </th>
                             )}
-                            <th
-                              scope="col"
-                              data-row="1"
-                              data-col={userClass === "coordenador" ? "3" : "1"}
-                            >
+                            <th scope='col' data-row='1' data-col={userClass === "coordenador" ? "3" : "1"}>
                               Nome
                             </th>
-                            <th
-                              scope="col"
-                              data-row="1"
-                              data-col={userClass === "coordenador" ? "4" : "2"}
-                            >
+                            <th scope='col' data-row='1' data-col={userClass === "coordenador" ? "4" : "2"}>
                               E-mail
                             </th>
-                            <th
-                              scope="col"
-                              data-row="1"
-                              data-col={userClass === "coordenador" ? "5" : "3"}
-                            >
+                            <th scope='col' data-row='1' data-col={userClass === "coordenador" ? "5" : "3"}>
                               Telefone
                             </th>
-                            <th
-                              scope="col"
-                              data-row="1"
-                              data-col={userClass === "coordenador" ? "6" : "4"}
-                            >
+                            <th scope='col' data-row='1' data-col={userClass === "coordenador" ? "6" : "4"}>
                               Curso
                             </th>
-                            <th
-                              scope="col"
-                              data-row="1"
-                              data-col={userClass === "coordenador" ? "7" : "5"}
-                            >
+                            <th scope='col' data-row='1' data-col={userClass === "coordenador" ? "7" : "5"}>
                               Dia De Atividade
                             </th>
-                            <th
-                              scope="col"
-                              data-row="1"
-                              data-col={userClass === "coordenador" ? "8" : "6"}
-                            >
+                            <th scope='col' data-row='1' data-col={userClass === "coordenador" ? "8" : "6"}>
                               Período de Participação
                             </th>
                             <th
-                              className="alocCel"
-                              scope="col"
-                              data-row="1"
+                              className='alocCel'
+                              scope='col'
+                              data-row='1'
                               data-col={userClass === "coordenador" ? "9" : "7"}
                             ></th>
                           </tr>
                         </thead>
-                        <tbody id="avStudsTbody" ref={tbodyRef}>
-                          <span
-                            style={{ margin: "2rem", position: "absolute" }}
-                          >
+                        <tbody id='avStudsTbody' ref={tbodyRef}>
+                          <span style={{ margin: "2rem", position: "absolute" }}>
                             <Spinner
-                              spinnerClass="spinner-border"
-                              spinnerColor="text-info"
-                              message="Loading Students Table..."
+                              spinnerClass='spinner-border'
+                              spinnerColor='text-info'
+                              message='Loading Students Table...'
                             />
                           </span>
                         </tbody>
                       </ErrorBoundary>
                     );
-                    tbodyRef.current = document.getElementById(
-                      "avStudsTbody"
-                    ) as nullishTabSect;
+                    tbodyRef.current = document.getElementById("avStudsTbody") as nullishTabSect;
                     if (!(tbodyRef.current instanceof HTMLElement))
-                      throw elementNotFound(
-                        tbodyRef.current,
-                        `Validation of replaced tbody`,
-                        extLine(new Error())
-                      );
+                      throw elementNotFound(tbodyRef.current, `Validation of replaced tbody`, extLine(new Error()));
                     if (!panelRoots[`${tbodyRef.current.id}`])
-                      panelRoots[`${tbodyRef.current.id}`] = createRoot(
-                        tbodyRef.current
-                      );
+                      panelRoots[`${tbodyRef.current.id}`] = createRoot(tbodyRef.current);
                     if (!tbodyRef.current.querySelector("tr"))
                       panelRoots[`${tbodyRef.current.id}`]?.render(
                         studs.map((stud, i) => (
@@ -247,42 +182,27 @@ export default function StudList({
                       } else
                         elementNotFound(
                           tabRef.current,
-                          `tabRef id ${
-                            (tabRef?.current as any)?.id || "UNIDENTIFIED"
-                          } in useEffect() for tableRef`,
+                          `tabRef id ${(tabRef?.current as any)?.id || "UNIDENTIFIED"} in useEffect() for tableRef`,
                           extLine(new Error())
                         );
                     }, 300);
                   } catch (e) {
                     console.error(
-                      `Error executing scheduled rendering of Table Body Content Replacement:\n${
-                        (e as Error).message
-                      }`
+                      `Error executing scheduled rendering of Table Body Content Replacement:\n${(e as Error).message}`
                     );
                   }
                   if (document) {
                   }
                 }, 1000);
-              } else
-                panelRoots[`${tbodyRef.current.id}`] = createRoot(
-                  tbodyRef.current
-                );
+              } else panelRoots[`${tbodyRef.current.id}`] = createRoot(tbodyRef.current);
               if (!tbodyRef.current.querySelector("tr"))
                 panelRoots[`${tbodyRef.current.id}`]?.render(
                   studs.map((stud, i) => {
-                    return Array.from(
-                      tbodyRef.current?.querySelectorAll("output") ?? []
-                    ).some(
+                    return Array.from(tbodyRef.current?.querySelectorAll("output") ?? []).some(
                       outp => outp.innerText === (stud as StudInfo)["cpf"]
                     ) ||
-                      Array.from(
-                        tbodyRef.current?.querySelectorAll("tr") ?? []
-                      ).some(
-                        tr =>
-                          tr.dataset.key &&
-                          tbodyRef.current?.querySelector(
-                            `tr[data-key=${tr.dataset.key}`
-                          )
+                      Array.from(tbodyRef.current?.querySelectorAll("tr") ?? []).some(
+                        tr => tr.dataset.key && tbodyRef.current?.querySelector(`tr[data-key=${tr.dataset.key}`)
                       ) ? (
                       <></>
                     ) : (
@@ -304,63 +224,44 @@ export default function StudList({
                 } else
                   elementNotFound(
                     tabRef.current,
-                    `tabRef id ${
-                      (tabRef?.current as any)?.id || "UNIDENTIFIED"
-                    } in useEffect() for tableRef`,
+                    `tabRef id ${(tabRef?.current as any)?.id || "UNIDENTIFIED"} in useEffect() for tableRef`,
                     extLine(new Error())
                   );
               }, 300);
               setTimeout(() => {
-                if (
-                  !document.querySelector("tr") &&
-                  document.querySelector("table")
-                ) {
+                if (!document.querySelector("tr") && document.querySelector("table")) {
                   if (!panelRoots[`${document.querySelector("table")!.id}`])
-                    panelRoots[`${document.querySelector("table")!.id}`] =
-                      createRoot(document.querySelector("table")!);
+                    panelRoots[`${document.querySelector("table")!.id}`] = createRoot(document.querySelector("table")!);
                   panelRoots[`${document.querySelector("table")!.id}`]?.render(
-                    <GenericErrorComponent message="Failed to render table" />
+                    <GenericErrorComponent message='Failed to render table' />
                   );
                 }
               }, 5000);
             } catch (e) {
-              console.error(
-                `Error executing rendering of Table Body Content:\n${
-                  (e as Error).message
-                }`
-              );
+              console.error(`Error executing rendering of Table Body Content:\n${(e as Error).message}`);
             }
             const handleAttempt = () => {
               try {
                 if (!(tabRef.current instanceof HTMLElement))
-                  throw elementNotFound(
-                    tabRef.current,
-                    `Validation of Students Table`,
-                    extLine(new Error())
-                  );
+                  throw elementNotFound(tabRef.current, `Validation of Students Table`, extLine(new Error()));
                 dispatch &&
-                  tabRef.current
-                    .querySelectorAll(".btnAloc")
-                    .forEach((btn, i) => {
-                      try {
-                        addListenerAlocation(
-                          btn,
-                          document.getElementById("avStudListDlg") ??
-                            tabRef.current?.closest("dialog"),
-                          mainDlgRef.current,
-                          "Stud",
-                          state,
-                          dispatch,
-                          userClass
-                        );
-                      } catch (e) {
-                        console.error(
-                          `Error executing iteration ${i} for adding listener for alocation:\n${
-                            (e as Error).message
-                          }`
-                        );
-                      }
-                    });
+                  tabRef.current.querySelectorAll(".btnAloc").forEach((btn, i) => {
+                    try {
+                      addListenerAlocation(
+                        btn,
+                        document.getElementById("avStudListDlg") ?? tabRef.current?.closest("dialog"),
+                        mainDlgRef.current,
+                        "Stud",
+                        state,
+                        dispatch,
+                        userClass
+                      );
+                    } catch (e) {
+                      console.error(
+                        `Error executing iteration ${i} for adding listener for alocation:\n${(e as Error).message}`
+                      );
+                    }
+                  });
                 equalizeTabCells(tabRef.current);
                 checkLocalIntervs(tabRef.current);
                 strikeEntries(tabRef.current);
@@ -371,90 +272,49 @@ export default function StudList({
                     tabRef.current,
                     document.getElementById("btnExport")
                   );
-                const typeConsSel =
-                  mainDlgRef.current?.querySelector("#typeConsSel");
+                const typeConsSel = mainDlgRef.current?.querySelector("#typeConsSel");
                 if (!(typeConsSel instanceof HTMLSelectElement))
                   throw inputNotFound(
                     typeConsSel,
-                    `<select> for getting type of appointment for ${
-                      tabRef.current?.id || "UNIDENTIFIED"
-                    }`,
+                    `<select> for getting type of appointment for ${tabRef.current?.id || "UNIDENTIFIED"}`,
                     extLine(new Error())
                   );
-                const [selectedOp] = Array.from(
-                  typeConsSel.querySelectorAll("option")
-                );
+                const [selectedOp] = Array.from(typeConsSel.querySelectorAll("option"));
                 if (!(selectedOp instanceof HTMLOptionElement))
                   throw elementNotFound(
                     selectedOp,
-                    `<option> for getting type of appointment for ${
-                      tabRef.current?.id || "UNIDENTIFIED"
-                    }`,
+                    `<option> for getting type of appointment for ${tabRef.current?.id || "UNIDENTIFIED"}`,
                     extLine(new Error())
                   );
                 const relOptgrp = selectedOp.closest("optgroup");
-                if (
-                  relOptgrp instanceof HTMLOptGroupElement &&
-                  relOptgrp.label !== ""
-                )
-                  filterTabMembers(
-                    tabRef.current,
-                    relOptgrp.label.toLowerCase().trim()
-                  );
+                if (relOptgrp instanceof HTMLOptGroupElement && relOptgrp.label !== "")
+                  filterTabMembers(tabRef.current, relOptgrp.label.toLowerCase().trim());
               } catch (e) {
                 console.error(
-                  `Error executing handleAttempt for filtering of Students Table:\n${
-                    (e as Error).message
-                  }`
+                  `Error executing handleAttempt for filtering of Students Table:\n${(e as Error).message}`
                 );
               }
             };
             setTimeout(() => {
-              !tbodyRef.current?.querySelector("tr")
-                ? setTimeout(() => handleAttempt(), 1800)
-                : handleAttempt();
+              !tbodyRef.current?.querySelector("tr") ? setTimeout(() => handleAttempt(), 1800) : handleAttempt();
             }, 1200);
           })
-          .catch(e =>
-            console.error(`Failed to fetch from Studs Table: ${e.message}`)
-          )
+          .catch(e => console.error(`Failed to fetch from Studs Table: ${e.message}`))
           .finally(() => {
-            setTimeout(
-              () =>
-                syncAriaStates([
-                  ...(tabRef.current?.querySelectorAll("*") ?? []),
-                  tabRef.current!,
-                ]),
-              1200
-            );
-            setTimeout(
-              () =>
-                syncAriaStates([
-                  ...(tabRef.current?.querySelectorAll("*") ?? []),
-                  tabRef.current!,
-                ]),
-              3000
-            );
+            setTimeout(() => syncAriaStates([...(tabRef.current?.querySelectorAll("*") ?? []), tabRef.current!]), 1200);
+            setTimeout(() => syncAriaStates([...(tabRef.current?.querySelectorAll("*") ?? []), tabRef.current!]), 3000);
           });
       }, 300);
     } catch (e) {
-      console.error(
-        `Error executing useEffect for Table Body Reference:\n${
-          (e as Error).message
-        }`
-      );
+      console.error(`Error executing useEffect for Table Body Reference:\n${(e as Error).message}`);
     }
   }, []);
   return (
-    <table
-      className="table table-striped table-responsive table-hover tabProfs"
-      id="avStudsTab"
-      ref={tabRef}
-    >
-      <caption className="caption-t">
+    <table className='table table-striped table-responsive table-hover tabProfs' id='avStudsTab' ref={tabRef}>
+      <caption className='caption-t'>
         <strong>
-          <small role="textbox" className="noInvert">
-            <em className="noInvert">
+          <small role='textbox' className='noInvert'>
+            <em className='noInvert'>
               Lista Recuperada da Ficha de Estudantes registrados. Acesse
               <samp>
                 <a> ROTA_PLACEHOLDER </a>
@@ -465,85 +325,52 @@ export default function StudList({
         </strong>
       </caption>
       <colgroup>
-        <col data-col="1"></col>
-        <col data-col="2"></col>
-        <col data-col="3"></col>
-        <col data-col="4"></col>
-        <col data-col="5"></col>
-        <col data-col="6"></col>
-        <col data-col="7"></col>
-        {userClass === "coordenador" && <col data-col="8"></col>}
-        {userClass === "coordenador" && <col data-col="9"></col>}
+        <col data-col='1'></col>
+        <col data-col='2'></col>
+        <col data-col='3'></col>
+        <col data-col='4'></col>
+        <col data-col='5'></col>
+        <col data-col='6'></col>
+        <col data-col='7'></col>
+        {userClass === "coordenador" && <col data-col='8'></col>}
+        {userClass === "coordenador" && <col data-col='9'></col>}
       </colgroup>
-      <thead className="thead-dark">
-        <tr id="avStuds-row1" data-row="1">
+      <thead className='thead-dark'>
+        <tr id='avStuds-row1' data-row='1'>
           {userClass === "coordenador" && (
-            <th scope="col" data-row="1" data-col="1">
+            <th scope='col' data-row='1' data-col='1'>
               CPF
             </th>
           )}
           {userClass === "coordenador" && (
-            <th scope="col" data-row="1" data-col="2">
+            <th scope='col' data-row='1' data-col='2'>
               DRE
             </th>
           )}
-          <th
-            scope="col"
-            data-row="1"
-            data-col={userClass === "coordenador" ? "3" : "1"}
-          >
+          <th scope='col' data-row='1' data-col={userClass === "coordenador" ? "3" : "1"}>
             Nome
           </th>
-          <th
-            scope="col"
-            data-row="1"
-            data-col={userClass === "coordenador" ? "4" : "2"}
-          >
+          <th scope='col' data-row='1' data-col={userClass === "coordenador" ? "4" : "2"}>
             E-mail
           </th>
-          <th
-            scope="col"
-            data-row="1"
-            data-col={userClass === "coordenador" ? "5" : "3"}
-          >
+          <th scope='col' data-row='1' data-col={userClass === "coordenador" ? "5" : "3"}>
             Telefone
           </th>
-          <th
-            scope="col"
-            data-row="1"
-            data-col={userClass === "coordenador" ? "6" : "4"}
-          >
+          <th scope='col' data-row='1' data-col={userClass === "coordenador" ? "6" : "4"}>
             Curso
           </th>
-          <th
-            scope="col"
-            data-row="1"
-            data-col={userClass === "coordenador" ? "7" : "5"}
-          >
+          <th scope='col' data-row='1' data-col={userClass === "coordenador" ? "7" : "5"}>
             Dia De Atividade
           </th>
-          <th
-            scope="col"
-            data-row="1"
-            data-col={userClass === "coordenador" ? "8" : "6"}
-          >
+          <th scope='col' data-row='1' data-col={userClass === "coordenador" ? "8" : "6"}>
             Período de Participação
           </th>
-          <th
-            className="alocCel"
-            scope="col"
-            data-row="1"
-            data-col={userClass === "coordenador" ? "9" : "7"}
-          ></th>
+          <th className='alocCel' scope='col' data-row='1' data-col={userClass === "coordenador" ? "9" : "7"}></th>
         </tr>
       </thead>
-      <tbody id="avStudsTbody" ref={tbodyRef}>
+      <tbody id='avStudsTbody' ref={tbodyRef}>
         <span style={{ margin: "2rem", position: "absolute" }}>
-          <Spinner
-            spinnerClass="spinner-border"
-            spinnerColor="text-info"
-            message="Loading Students Table..."
-          />
+          <Spinner spinnerClass='spinner-border' spinnerColor='text-info' message='Loading Students Table...' />
         </span>
       </tbody>
     </table>

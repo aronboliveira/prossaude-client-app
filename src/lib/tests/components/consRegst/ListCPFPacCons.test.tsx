@@ -56,7 +56,7 @@ describe("ListCPFPacCons Component", (): void => {
   test("fetches and populates options from handleFetch", async (): Promise<void> => {
     renderComponent();
     await waitFor((): void => {
-      expect(handleFetch).toHaveBeenCalledWith("patients", "_table", true);
+      expect(handleFetch).toHaveBeenCalledWith<Parameters<typeof handleFetch>>("patients", "_table", true);
       const options = screen.getAllByRole<HTMLOptionElement>("option");
       expect(options).toHaveLength(2);
       expect(options[0]).toHaveValue("123");
@@ -68,12 +68,16 @@ describe("ListCPFPacCons Component", (): void => {
   test("throws error when dlRef is not a valid HTMLDataListElement", async (): Promise<void> => {
     renderComponent();
     (document.getElementById as jest.Mock).mockReturnValueOnce(null);
-    expect(elementNotFound).toHaveBeenCalledWith(null, expect.any(String), extLine(expect.any(Error)));
+    expect(elementNotFound).toHaveBeenCalledWith<Parameters<typeof elementNotFound>>(
+      null,
+      expect.any(String),
+      extLine(expect.any(Error))
+    );
   });
   test("handles rendering and re-rendering of the options", async (): Promise<void> => {
     renderComponent();
     await waitFor(() => expect(handleFetch).toHaveBeenCalled());
-    expect(createRoot).toHaveBeenCalledWith(screen.getByRole<HTMLElement>("listbox"));
+    expect(createRoot).toHaveBeenCalledWith<Parameters<typeof createRoot>>(screen.getByRole<HTMLElement>("listbox"));
     await waitFor(() => {
       expect(screen.getAllByRole<HTMLOptionElement>("option")).toHaveLength(2);
     });
@@ -84,7 +88,7 @@ describe("ListCPFPacCons Component", (): void => {
     await waitFor((): void => expect(handleFetch).toHaveBeenCalled());
     await waitFor((): void => {
       expect(syncAriaStates).toHaveBeenCalledTimes(2);
-      expect(syncAriaStates).toHaveBeenCalledWith(expect.any(Array));
+      expect(syncAriaStates).toHaveBeenCalledWith<Parameters<typeof syncAriaStates>>(expect.any(Array));
     });
   });
   test("logs error if fetch fails", async (): Promise<void> => {
@@ -92,7 +96,7 @@ describe("ListCPFPacCons Component", (): void => {
     const consoleErrorSpy = jest.spyOn(console, "error").mockImplementation(() => {});
     renderComponent();
     await waitFor((): void => {
-      expect(consoleErrorSpy).toHaveBeenCalledWith(
+      expect(consoleErrorSpy).toHaveBeenCalledWith<any[]>(
         expect.stringContaining("Failed to fetch from Patients Table for filling First Name DL: Fetch failed")
       );
     });

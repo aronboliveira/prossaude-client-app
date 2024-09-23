@@ -1,4 +1,4 @@
-("use client");
+"use client";
 import { AvStudListDlgProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import { ErrorBoundary } from "react-error-boundary";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
@@ -8,7 +8,6 @@ import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useEffect, useRef } from "react";
 import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
 import StudList from "./StudList";
-
 export default function AvStudListDlg({
   forwardedRef,
   dispatch,
@@ -20,33 +19,18 @@ export default function AvStudListDlg({
   //push em history
   useEffect(() => {
     !/av-stud=open/gi.test(location.search) &&
-      history.pushState(
-        {},
-        "",
-        `${location.origin}${location.pathname}${location.search}&av-stud=open`
-      );
+      history.pushState({}, "", `${location.origin}${location.pathname}${location.search}&av-stud=open`);
     setTimeout(() => {
-      history.pushState(
-        {},
-        "",
-        `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#")
-      );
+      history.pushState({}, "", `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#"));
     }, 300);
     return () => {
       history.pushState(
         {},
         "",
-        `${location.origin}${location.pathname}${location.search}`.replaceAll(
-          "&av-stud=open",
-          ""
-        )
+        `${location.origin}${location.pathname}${location.search}`.replaceAll("&av-stud=open", "")
       );
       setTimeout(() => {
-        history.pushState(
-          {},
-          "",
-          `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#")
-        );
+        history.pushState({}, "", `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#"));
       }, 300);
     };
   }, []);
@@ -54,33 +38,23 @@ export default function AvStudListDlg({
   useEffect(() => {
     if (dialogRef?.current instanceof HTMLDialogElement) {
       dialogRef.current.showModal();
-      syncAriaStates([
-        ...dialogRef.current!.querySelectorAll("*"),
-        dialogRef.current,
-      ]);
+      syncAriaStates([...dialogRef.current!.querySelectorAll("*"), dialogRef.current]);
       const handleKeyDown = (press: KeyboardEvent) => {
         press.key === "Escape" && dispatch(state);
       };
       addEventListener("keydown", handleKeyDown);
       return () => removeEventListener("keydown", handleKeyDown);
-    } else
-      elementNotFound(
-        dialogRef.current,
-        "dialogElement in AvStudListDlg",
-        extLine(new Error())
-      );
+    } else elementNotFound(dialogRef.current, "dialogElement in AvStudListDlg", extLine(new Error()));
   }, [forwardedRef, dialogRef]);
   return (
     <>
       {state && (
         <dialog
-          className="modal-content-stk2"
-          id="avStudListDlg"
+          className='modal-content-stk2'
+          id='avStudListDlg'
           ref={dialogRef}
           onClick={ev => {
-            isClickOutside(ev, ev.currentTarget).some(
-              coord => coord === true
-            ) && dispatch(!state);
+            isClickOutside(ev, ev.currentTarget).some(coord => coord === true) && dispatch(!state);
           }}
         >
           <ErrorBoundary
@@ -91,22 +65,14 @@ export default function AvStudListDlg({
               />
             )}
           >
-            <section className="flexRNoWBetCt" id="headStudList">
-              <h2 className="mg-1b noInvert">
+            <section className='flexRNoWBetCt' id='headStudList'>
+              <h2 className='mg-1b noInvert'>
                 <strong>Estudantes Cadastrados</strong>
               </h2>
-              <button
-                className="btn btn-close forceInvert"
-                onClick={() => dispatch(!state)}
-              ></button>
+              <button className='btn btn-close forceInvert' onClick={() => dispatch(!state)}></button>
             </section>
-            <section className="form-padded" id="sectStudsTab" ref={sectTabRef}>
-              <StudList
-                userClass={userClass}
-                mainDlgRef={forwardedRef}
-                state={state}
-                dispatch={dispatch}
-              />
+            <section className='form-padded' id='sectStudsTab' ref={sectTabRef}>
+              <StudList userClass={userClass} mainDlgRef={forwardedRef} state={state} dispatch={dispatch} />
             </section>
           </ErrorBoundary>
         </dialog>

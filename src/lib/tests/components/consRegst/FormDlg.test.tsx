@@ -130,7 +130,11 @@ describe("FormDlg Component", (): void => {
   });
   test("calls addListenerExportBtn when exportRef and dlgRef are valid", (): void => {
     renderComponent();
-    expect(addListenerExportBtn).toHaveBeenCalledWith("Paciente", expect.anything(), "#firstNamePac");
+    expect(addListenerExportBtn).toHaveBeenCalledWith<Parameters<typeof addListenerExportBtn>>(
+      "Paciente",
+      expect.anything(),
+      "#firstNamePac"
+    );
   });
   test("calls isClickOutside and onClose when clicking outside dialog", (): void => {
     renderComponent();
@@ -144,7 +148,7 @@ describe("FormDlg Component", (): void => {
   });
   test("pushes correct state to history on mount and unmount", (): void => {
     renderComponent();
-    expect(jest.spyOn(window.history, "pushState")).toHaveBeenCalledWith({}, "", expect.any(String));
+    expect(jest.spyOn(window.history, "pushState")).toHaveBeenCalledWith<[{}, string, any]>({}, "", expect.any(String));
   });
   test("handles CPF button click and populates form", (): void => {
     const { container }: { container: HTMLElement } = renderComponent();
@@ -290,10 +294,10 @@ describe("FormDlg Component", (): void => {
     const submitBtn: HTMLButtonElement = screen.getByText("Finalizar");
     const fakeEvent: MouseEvent = new MouseEvent("click");
     fireEvent.click(submitBtn, fakeEvent);
-    expect(validateForm).toHaveBeenCalledWith(fakeEvent, submitBtn, false);
+    expect(validateForm).toHaveBeenCalledWith<Parameters<typeof validateForm>>(fakeEvent, submitBtn, false);
     await validateForm(fakeEvent, submitBtn, false).then(validation => {
       expect(generateSchedPacData).toHaveBeenCalled();
-      expect(handleSubmit).toHaveBeenCalledWith("cons", validation[2], true);
+      expect(handleSubmit).toHaveBeenCalledWith<Parameters<typeof handleSubmit>>("cons", validation[2], true);
       expect(defaultProps.onClose).toHaveBeenCalled();
     });
   });
@@ -312,7 +316,7 @@ describe("FormDlg Component", (): void => {
     renderComponent() && expect(screen.getByText("Gerar Planilha")).toBeInTheDocument());
   test("renders FailRegstAlert when shouldDisplayFailRegstDlg is true", (): void => {
     renderComponent({ shouldDisplayFailRegstDlg: true });
-    expect(FailRegstAlert).toHaveBeenCalledWith(
+    expect(FailRegstAlert).toHaveBeenCalledWith<[any, {}]>(
       expect.objectContaining({
         shouldDisplayFailRegstDlg: true,
         secondOp: "Arraste",

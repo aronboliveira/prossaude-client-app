@@ -1,4 +1,4 @@
-("use client");
+"use client";
 import { AvPacListDlgProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import { ErrorBoundary } from "react-error-boundary";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
@@ -8,7 +8,6 @@ import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useEffect, useRef, useState } from "react";
 import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
 import PacList from "./PacList";
-
 export default function AvPacListDlg({
   dispatch,
   state,
@@ -20,33 +19,18 @@ export default function AvPacListDlg({
   //push em history
   useEffect(() => {
     !/av-pac=open/gi.test(location.search) &&
-      history.pushState(
-        {},
-        "",
-        `${location.origin}${location.pathname}${location.search}&av-pac=open`
-      );
+      history.pushState({}, "", `${location.origin}${location.pathname}${location.search}&av-pac=open`);
     setTimeout(() => {
-      history.pushState(
-        {},
-        "",
-        `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#")
-      );
+      history.pushState({}, "", `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#"));
     }, 300);
     return () => {
       history.pushState(
         {},
         "",
-        `${location.origin}${location.pathname}${location.search}`.replaceAll(
-          "&av-pac=open",
-          ""
-        )
+        `${location.origin}${location.pathname}${location.search}`.replaceAll("&av-pac=open", "")
       );
       setTimeout(() => {
-        history.pushState(
-          {},
-          "",
-          `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#")
-        );
+        history.pushState({}, "", `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#"));
       }, 300);
     };
   }, []);
@@ -54,33 +38,23 @@ export default function AvPacListDlg({
   useEffect(() => {
     if (dialogRef?.current instanceof HTMLDialogElement) {
       dialogRef.current.showModal();
-      syncAriaStates([
-        ...dialogRef.current!.querySelectorAll("*"),
-        dialogRef.current,
-      ]);
+      syncAriaStates([...dialogRef.current!.querySelectorAll("*"), dialogRef.current]);
       const handleKeyDown = (press: KeyboardEvent) => {
         press.key === "Escape" && setDisplayRowData(!shouldDisplayRowData);
       };
       addEventListener("keydown", handleKeyDown);
       return () => removeEventListener("keydown", handleKeyDown);
-    } else
-      elementNotFound(
-        dialogRef.current,
-        "dialogElement in AvStudListDlg",
-        extLine(new Error())
-      );
+    } else elementNotFound(dialogRef.current, "dialogElement in AvStudListDlg", extLine(new Error()));
   }, [dialogRef]);
   return (
     <>
       {state && (
         <dialog
-          className="modal-content-stk2"
-          id="avPacListDlg"
+          className='modal-content-stk2'
+          id='avPacListDlg'
           ref={dialogRef}
           onClick={ev => {
-            isClickOutside(ev, ev.currentTarget).some(
-              coord => coord === true
-            ) && dispatch(!state);
+            isClickOutside(ev, ev.currentTarget).some(coord => coord === true) && dispatch(!state);
           }}
         >
           <ErrorBoundary
@@ -91,14 +65,11 @@ export default function AvPacListDlg({
               />
             )}
           >
-            <section className="flexRNoWBetCt widFull" id="headPacList">
-              <h2 className="mg-1b noInvert">
+            <section className='flexRNoWBetCt widFull' id='headPacList'>
+              <h2 className='mg-1b noInvert'>
                 <strong>Pacientes Cadastrados</strong>
               </h2>
-              <button
-                className="btn btn-close forceInvert"
-                onClick={() => dispatch(!state)}
-              ></button>
+              <button className='btn btn-close forceInvert' onClick={() => dispatch(!state)}></button>
             </section>
             <PacList
               setDisplayRowData={setDisplayRowData}

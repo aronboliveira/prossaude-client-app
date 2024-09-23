@@ -1,11 +1,6 @@
 import { HistoricRowProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import { dateISOtoBRL } from "@/lib/global/gModel";
-
-export default function PrevConsRow({
-  historic,
-  nRow,
-  name = "Anônimo",
-}: HistoricRowProps): JSX.Element {
+export default function PrevConsRow({ historic, nRow, name = "Anônimo" }: HistoricRowProps): JSX.Element {
   const typeFullName = (() => {
     switch (historic.type) {
       case "acompanhamento":
@@ -53,11 +48,9 @@ export default function PrevConsRow({
   })();
   return (
     <tr id={`prevCons-row${nRow}`} data-row={nRow}>
-      <td className="celNamePrevCons" data-row={nRow} data-col={1}>
+      <td className='celNamePrevCons' data-row={nRow} data-col={1}>
         <output
-          className={`outputPrevCons outputPrevConsPac${
-            nRow - 1
-          } outputPrevConsPac${name}`}
+          className={`outputPrevCons outputPrevConsPac${nRow - 1} outputPrevConsPac${name}`}
           id={`outpNamePrevCons-${nRow}`}
           data-title={`Nome de Paciente no Histórico ${nRow}`}
           data-row={nRow}
@@ -66,11 +59,9 @@ export default function PrevConsRow({
           {name}
         </output>
       </td>
-      <td className="celDatePrevCons" data-row={nRow} data-col={2}>
+      <td className='celDatePrevCons' data-row={nRow} data-col={2}>
         <output
-          className={`outputPrevCons outputPrevConsPac${
-            nRow - 1
-          } outputPrevConsPac${name}`}
+          className={`outputPrevCons outputPrevConsPac${nRow - 1} outputPrevConsPac${name}`}
           id={`outpDatePrevCons-${nRow}`}
           data-title={`Data de Consulta no Histórico ${nRow}`}
           data-row={nRow}
@@ -79,7 +70,7 @@ export default function PrevConsRow({
           {dateISOtoBRL(historic.day)}
         </output>
       </td>
-      <td className="celTypePrevCons" data-row={nRow} data-col={3}>
+      <td className='celTypePrevCons' data-row={nRow} data-col={3}>
         <output
           className={`outputPrevCons outputPrevConsPac${nRow} outputPrevConsPac${name}`}
           id={`outpTypePrevCons-${nRow}`}
@@ -90,11 +81,9 @@ export default function PrevConsRow({
           {typeFullName}
         </output>
       </td>
-      <td className="celProfPrevCons" data-row={nRow} data-col={4}>
+      <td className='celProfPrevCons' data-row={nRow} data-col={4}>
         <output
-          className={`outputPrevCons outputPrevConsPac${
-            nRow - 1
-          } outputPrevConsPac${name}`}
+          className={`outputPrevCons outputPrevConsPac${nRow - 1} outputPrevConsPac${name}`}
           id={`outpProfPrevCons-${nRow}`}
           data-title={`Estudante de Consulta no Histórico ${nRow}`}
           data-row={nRow}
@@ -103,11 +92,9 @@ export default function PrevConsRow({
           {historic.prof || "Anônimo"}
         </output>
       </td>
-      <td className="celStudPrevCons" data-row={nRow} data-col={5}>
+      <td className='celStudPrevCons' data-row={nRow} data-col={5}>
         <output
-          className={`outputPrevCons outputPrevConsPac${
-            nRow - 1
-          } outputPrevConsPac${name}`}
+          className={`outputPrevCons outputPrevConsPac${nRow - 1} outputPrevConsPac${name}`}
           id={`outpStudPrevCons-${nRow}`}
           //TODO AQUI TEM QUE SER REPASSADO PELO BANCO ALGUM IDENTIFICADOR...
           data-title={`Estudante de Consulta no Histórico ${nRow}`}
@@ -117,11 +104,9 @@ export default function PrevConsRow({
           {historic.stud || "Anônimo"}
         </output>
       </td>
-      <td className="celNotesPrevCons" data-row={nRow} data-col={6}>
+      <td className='celNotesPrevCons' data-row={nRow} data-col={6}>
         <output
-          className={`outputPrevCons outputPrevConsPac${
-            nRow - 1
-          } outputPrevConsPac${name}`}
+          className={`outputPrevCons outputPrevConsPac${nRow - 1} outputPrevConsPac${name}`}
           id={`outpNotesPrevCons-${nRow}`}
           data-title={`Notas de Consulta no Histórico ${nRow} (${typeFullName})`}
           data-row={nRow}

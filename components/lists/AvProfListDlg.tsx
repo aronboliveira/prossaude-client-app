@@ -1,11 +1,7 @@
-("use client");
+"use client";
 import { ErrorBoundary } from "react-error-boundary";
 import { createRoot } from "react-dom/client";
-import {
-  elementNotFound,
-  extLine,
-  inputNotFound,
-} from "@/lib/global/handlers/errorHandler";
+import { elementNotFound, extLine, inputNotFound } from "@/lib/global/handlers/errorHandler";
 import { equalizeTabCells, isClickOutside } from "@/lib/global/gStyleScript";
 import { handleFetch } from "@/pages/api/ts/handlers";
 import { panelRoots } from "../panelForms/defs/client/SelectPanel";
@@ -16,23 +12,14 @@ import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
 import GenericErrorComponent from "../error/GenericErrorComponent";
 import ProfRow from "../panelForms/profs/ProfRow";
 import Spinner from "../icons/Spinner";
-import {
-  nullishDlg,
-  nullishHtEl,
-  nullishTab,
-  nullishTabSect,
-} from "@/lib/global/declarations/types";
-import {
-  AvProfListDlgProps,
-  ProfInfo,
-} from "@/lib/locals/panelPage/declarations/interfacesCons";
+import { nullishDlg, nullishHtEl, nullishTab, nullishTabSect } from "@/lib/global/declarations/types";
+import { AvProfListDlgProps, ProfInfo } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import {
   addListenerAlocation,
   checkLocalIntervs,
   fillTabAttr,
   filterTabMembers,
 } from "@/lib/locals/panelPage/handlers/consHandlerList";
-
 export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
   const internalProfs: ProfInfo[] = [];
   const externalProfs: ProfInfo[] = [];
@@ -45,33 +32,18 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
   //push em history
   useEffect(() => {
     !/av-prof=open/gi.test(location.search) &&
-      history.pushState(
-        {},
-        "",
-        `${location.origin}${location.pathname}${location.search}&av-prof=open`
-      );
+      history.pushState({}, "", `${location.origin}${location.pathname}${location.search}&av-prof=open`);
     setTimeout(() => {
-      history.pushState(
-        {},
-        "",
-        `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#")
-      );
+      history.pushState({}, "", `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#"));
     }, 300);
     return () => {
       history.pushState(
         {},
         "",
-        `${location.origin}${location.pathname}${location.search}`.replaceAll(
-          "&av-prof=open",
-          ""
-        )
+        `${location.origin}${location.pathname}${location.search}`.replaceAll("&av-prof=open", "")
       );
       setTimeout(() => {
-        history.pushState(
-          {},
-          "",
-          `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#")
-        );
+        history.pushState({}, "", `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#"));
       }, 300);
     };
   }, []);
@@ -84,27 +56,14 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
       };
       addEventListener("keydown", handleKeyDown);
       return () => removeEventListener("keydown", handleKeyDown);
-    } else
-      elementNotFound(
-        dialogRef.current,
-        "dialogElement in AvStudListDlg",
-        extLine(new Error())
-      );
+    } else elementNotFound(dialogRef.current, "dialogElement in AvStudListDlg", extLine(new Error()));
   }, [props.mainDlgRef]);
   useEffect(() => {
     try {
       if (!(tbodyExtRef.current instanceof HTMLTableSectionElement))
-        throw elementNotFound(
-          tbodyExtRef.current,
-          `Validation of Table Body instance`,
-          extLine(new Error())
-        );
+        throw elementNotFound(tbodyExtRef.current, `Validation of Table Body instance`, extLine(new Error()));
       if (!(tbodyIntRef.current instanceof HTMLTableSectionElement))
-        throw elementNotFound(
-          tbodyExtRef.current,
-          `Validation of Table Body instance`,
-          extLine(new Error())
-        );
+        throw elementNotFound(tbodyExtRef.current, `Validation of Table Body instance`, extLine(new Error()));
       if (
         internalProfs.length > 0 &&
         externalProfs.length > 0 &&
@@ -148,34 +107,16 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
             //renderização
             try {
               if (!(tabProfIntRef.current instanceof HTMLElement))
-                throw elementNotFound(
-                  tabProfIntRef.current,
-                  `Validation of Table reference`,
-                  extLine(new Error())
-                );
+                throw elementNotFound(tabProfIntRef.current, `Validation of Table reference`, extLine(new Error()));
               if (!(tabProfIntRef.current instanceof HTMLElement))
-                throw elementNotFound(
-                  tabProfExtRef.current,
-                  `Validation of Table reference`,
-                  extLine(new Error())
-                );
+                throw elementNotFound(tabProfExtRef.current, `Validation of Table reference`, extLine(new Error()));
               if (!(tbodyExtRef.current instanceof HTMLTableSectionElement))
-                throw elementNotFound(
-                  tbodyExtRef.current,
-                  `Validation of Table Body instance`,
-                  extLine(new Error())
-                );
+                throw elementNotFound(tbodyExtRef.current, `Validation of Table Body instance`, extLine(new Error()));
               if (!(tbodyIntRef.current instanceof HTMLTableSectionElement))
-                throw elementNotFound(
-                  tbodyExtRef.current,
-                  `Validation of Table Body instance`,
-                  extLine(new Error())
-                );
+                throw elementNotFound(tbodyExtRef.current, `Validation of Table Body instance`, extLine(new Error()));
               if (
                 panelRoots[`${tbodyIntRef.current.id}`] &&
-                !(panelRoots[`${tbodyIntRef.current.id}`] as any)[
-                  "_internalRoot"
-                ]
+                !(panelRoots[`${tbodyIntRef.current.id}`] as any)["_internalRoot"]
               ) {
                 setTimeout(() => {
                   try {
@@ -196,25 +137,22 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                     delete panelRoots[`${tbodyIntRef.current.id}`];
                     tbodyIntRef.current.remove();
                     if (!panelRoots[`${tabProfIntRef.current.id}`])
-                      panelRoots[`${tabProfIntRef.current.id}`] = createRoot(
-                        tabProfIntRef.current
-                      );
+                      panelRoots[`${tabProfIntRef.current.id}`] = createRoot(tabProfIntRef.current);
                     panelRoots[`${tabProfIntRef.current.id}`]?.render(
                       <ErrorBoundary
                         FallbackComponent={() => (
-                          <GenericErrorComponent message="Error reloading replacement for table body" />
+                          <GenericErrorComponent message='Error reloading replacement for table body' />
                         )}
                       >
-                        <caption className="caption-t">
-                          <hgroup className="noInvert">
-                            <h3 className="noInvert">
+                        <caption className='caption-t'>
+                          <hgroup className='noInvert'>
+                            <h3 className='noInvert'>
                               <strong>Membros Internos</strong>
                             </h3>
                             <strong>
-                              <small role="textbox" className="noInvert">
-                                <em className="noInvert">
-                                  Lista Recuperada da Ficha de Profissionais
-                                  registrados. Acesse
+                              <small role='textbox' className='noInvert'>
+                                <em className='noInvert'>
+                                  Lista Recuperada da Ficha de Profissionais registrados. Acesse
                                   <samp>
                                     {" "}
                                     <a> ROTA_PLACEHOLDER </a>{" "}
@@ -226,114 +164,64 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                           </hgroup>
                         </caption>
                         <colgroup>
-                          <col data-row="1" data-col="1"></col>
-                          <col data-row="1" data-col="2"></col>
-                          <col data-row="1" data-col="3"></col>
-                          <col data-row="1" data-col="4"></col>
-                          <col data-row="1" data-col="5"></col>
-                          <col data-row="1" data-col="6"></col>
-                          <col data-row="1" data-col="7"></col>
-                          {props.userClass === "coordenador" && (
-                            <col data-row="1" data-col="8"></col>
-                          )}
+                          <col data-row='1' data-col='1'></col>
+                          <col data-row='1' data-col='2'></col>
+                          <col data-row='1' data-col='3'></col>
+                          <col data-row='1' data-col='4'></col>
+                          <col data-row='1' data-col='5'></col>
+                          <col data-row='1' data-col='6'></col>
+                          <col data-row='1' data-col='7'></col>
+                          {props.userClass === "coordenador" && <col data-row='1' data-col='8'></col>}
                         </colgroup>
-                        <thead className="thead-dark">
-                          <tr id="avProfsInt-row1" data-row="1">
+                        <thead className='thead-dark'>
+                          <tr id='avProfsInt-row1' data-row='1'>
                             {props.userClass === "coordenador" && (
-                              <th scope="col" data-row="1" data-col="1">
+                              <th scope='col' data-row='1' data-col='1'>
                                 Identificador
                               </th>
                             )}
-                            <th
-                              scope="col"
-                              data-row="1"
-                              data-col={
-                                props.userClass === "coordenador" ? "2" : "1"
-                              }
-                            >
+                            <th scope='col' data-row='1' data-col={props.userClass === "coordenador" ? "2" : "1"}>
                               Nome
                             </th>
-                            <th
-                              scope="col"
-                              data-row="1"
-                              data-col={
-                                props.userClass === "coordenador" ? "3" : "2"
-                              }
-                            >
+                            <th scope='col' data-row='1' data-col={props.userClass === "coordenador" ? "3" : "2"}>
                               E-mail
                             </th>
-                            <th
-                              scope="col"
-                              data-row="1"
-                              data-col={
-                                props.userClass === "coordenador" ? "4" : "3"
-                              }
-                            >
+                            <th scope='col' data-row='1' data-col={props.userClass === "coordenador" ? "4" : "3"}>
                               Telefone
                             </th>
-                            <th
-                              scope="col"
-                              data-row="1"
-                              data-col={
-                                props.userClass === "coordenador" ? "5" : "4"
-                              }
-                            >
+                            <th scope='col' data-row='1' data-col={props.userClass === "coordenador" ? "5" : "4"}>
                               Área de Atuação
                             </th>
-                            <th
-                              scope="col"
-                              data-row="1"
-                              data-col={
-                                props.userClass === "coordenador" ? "6" : "5"
-                              }
-                            >
+                            <th scope='col' data-row='1' data-col={props.userClass === "coordenador" ? "6" : "5"}>
                               Dia de Trablho
                             </th>
-                            <th
-                              scope="col"
-                              data-row="1"
-                              data-col={
-                                props.userClass === "coordenador" ? "7" : "6"
-                              }
-                            >
+                            <th scope='col' data-row='1' data-col={props.userClass === "coordenador" ? "7" : "6"}>
                               Período de Participação
                             </th>
                             <th
-                              className="alocCel"
-                              scope="col"
-                              data-row="1"
-                              data-col={
-                                props.userClass === "coordenador" ? "8" : "7"
-                              }
+                              className='alocCel'
+                              scope='col'
+                              data-row='1'
+                              data-col={props.userClass === "coordenador" ? "8" : "7"}
                             ></th>
                           </tr>
                         </thead>
-                        <tbody id="profsIntTbody" ref={tbodyIntRef}>
-                          <span
-                            style={{ margin: "2rem", position: "absolute" }}
-                          >
+                        <tbody id='profsIntTbody' ref={tbodyIntRef}>
+                          <span style={{ margin: "2rem", position: "absolute" }}>
                             <Spinner
-                              spinnerClass="spinner-border"
-                              spinnerColor="text-info"
-                              message="Loading Internal Professionals Table..."
+                              spinnerClass='spinner-border'
+                              spinnerColor='text-info'
+                              message='Loading Internal Professionals Table...'
                             />
                           </span>
                         </tbody>
                       </ErrorBoundary>
                     );
-                    tbodyIntRef.current = document.getElementById(
-                      "profsIntTbody"
-                    ) as nullishTabSect;
+                    tbodyIntRef.current = document.getElementById("profsIntTbody") as nullishTabSect;
                     if (!(tbodyIntRef.current instanceof HTMLElement))
-                      throw elementNotFound(
-                        tbodyIntRef.current,
-                        `Validation of replaced tbody`,
-                        extLine(new Error())
-                      );
+                      throw elementNotFound(tbodyIntRef.current, `Validation of replaced tbody`, extLine(new Error()));
                     if (!panelRoots[`${tbodyIntRef.current.id}`])
-                      panelRoots[`${tbodyIntRef.current.id}`] = createRoot(
-                        tbodyIntRef.current
-                      );
+                      panelRoots[`${tbodyIntRef.current.id}`] = createRoot(tbodyIntRef.current);
                     if (!tbodyIntRef.current.querySelector("tr"))
                       panelRoots[`${tbodyIntRef.current.id}`]?.render(
                         internalProfs.map((prof, i) => (
@@ -355,42 +243,28 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                         elementNotFound(
                           tabProfIntRef.current,
                           `tabProfIntRef id ${
-                            (tabProfIntRef?.current as any)?.id ||
-                            "UNIDENTIFIED"
+                            (tabProfIntRef?.current as any)?.id || "UNIDENTIFIED"
                           } in useEffect() for tableRef`,
                           extLine(new Error())
                         );
                     }, 300);
                   } catch (e) {
                     console.error(
-                      `Error executing scheduled rendering of Table Body Content Replacement:\n${
-                        (e as Error).message
-                      }`
+                      `Error executing scheduled rendering of Table Body Content Replacement:\n${(e as Error).message}`
                     );
                   }
                   if (document) {
                   }
                 }, 1000);
-              } else
-                panelRoots[`${tbodyIntRef.current.id}`] = createRoot(
-                  tbodyIntRef.current
-                );
+              } else panelRoots[`${tbodyIntRef.current.id}`] = createRoot(tbodyIntRef.current);
               if (!tbodyIntRef.current.querySelector("tr"))
                 panelRoots[`${tbodyIntRef.current.id}`]?.render(
                   internalProfs.map((prof, i) => {
-                    return Array.from(
-                      tbodyIntRef.current?.querySelectorAll("output") ?? []
-                    ).some(
+                    return Array.from(tbodyIntRef.current?.querySelectorAll("output") ?? []).some(
                       outp => outp.innerText === (prof as ProfInfo)["idf"]
                     ) ||
-                      Array.from(
-                        tbodyIntRef.current?.querySelectorAll("tr") ?? []
-                      ).some(
-                        tr =>
-                          tr.dataset.key &&
-                          tbodyIntRef.current?.querySelector(
-                            `tr[data-key=${tr.dataset.key}`
-                          )
+                      Array.from(tbodyIntRef.current?.querySelectorAll("tr") ?? []).some(
+                        tr => tr.dataset.key && tbodyIntRef.current?.querySelector(`tr[data-key=${tr.dataset.key}`)
                       ) ? (
                       <></>
                     ) : (
@@ -419,15 +293,11 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                   );
               }, 300);
               setTimeout(() => {
-                if (
-                  !document.querySelector("tr") &&
-                  document.querySelector("table")
-                ) {
+                if (!document.querySelector("tr") && document.querySelector("table")) {
                   if (!panelRoots[`${document.querySelector("table")!.id}`])
-                    panelRoots[`${document.querySelector("table")!.id}`] =
-                      createRoot(document.querySelector("table")!);
+                    panelRoots[`${document.querySelector("table")!.id}`] = createRoot(document.querySelector("table")!);
                   panelRoots[`${document.querySelector("table")!.id}`]?.render(
-                    <GenericErrorComponent message="Failed to render table" />
+                    <GenericErrorComponent message='Failed to render table' />
                   );
                 }
               }, 5000);
@@ -435,9 +305,7 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
               //
               if (
                 panelRoots[`${tbodyExtRef.current.id}`] &&
-                !(panelRoots[`${tbodyExtRef.current.id}`] as any)[
-                  "_internalRoot"
-                ]
+                !(panelRoots[`${tbodyExtRef.current.id}`] as any)["_internalRoot"]
               ) {
                 setTimeout(() => {
                   try {
@@ -458,25 +326,22 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                     delete panelRoots[`${tbodyExtRef.current.id}`];
                     tbodyExtRef.current.remove();
                     if (!panelRoots[`${tabProfIntRef.current.id}`])
-                      panelRoots[`${tabProfIntRef.current.id}`] = createRoot(
-                        tabProfIntRef.current
-                      );
+                      panelRoots[`${tabProfIntRef.current.id}`] = createRoot(tabProfIntRef.current);
                     panelRoots[`${tabProfIntRef.current.id}`]?.render(
                       <ErrorBoundary
                         FallbackComponent={() => (
-                          <GenericErrorComponent message="Error reloading replacement for table body" />
+                          <GenericErrorComponent message='Error reloading replacement for table body' />
                         )}
                       >
-                        <caption className="caption-t">
-                          <hgroup className="noInvert">
-                            <h3 className="noInvert">
+                        <caption className='caption-t'>
+                          <hgroup className='noInvert'>
+                            <h3 className='noInvert'>
                               <strong>Membros Externos</strong>
                             </h3>
                             <strong>
-                              <small role="textbox" className="noInvert">
-                                <em className="noInvert">
-                                  Lista Recuperada da Ficha de Profissionais
-                                  registrados. Acesse
+                              <small role='textbox' className='noInvert'>
+                                <em className='noInvert'>
+                                  Lista Recuperada da Ficha de Profissionais registrados. Acesse
                                   <samp>
                                     {" "}
                                     <a> ROTA_PLACEHOLDER </a>{" "}
@@ -488,114 +353,64 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                           </hgroup>
                         </caption>
                         <colgroup>
-                          <col data-row="1" data-col="1"></col>
-                          <col data-row="1" data-col="2"></col>
-                          <col data-row="1" data-col="3"></col>
-                          <col data-row="1" data-col="4"></col>
-                          <col data-row="1" data-col="5"></col>
-                          <col data-row="1" data-col="6"></col>
-                          <col data-row="1" data-col="7"></col>
-                          {props.userClass === "coordenador" && (
-                            <col data-row="1" data-col="8"></col>
-                          )}
+                          <col data-row='1' data-col='1'></col>
+                          <col data-row='1' data-col='2'></col>
+                          <col data-row='1' data-col='3'></col>
+                          <col data-row='1' data-col='4'></col>
+                          <col data-row='1' data-col='5'></col>
+                          <col data-row='1' data-col='6'></col>
+                          <col data-row='1' data-col='7'></col>
+                          {props.userClass === "coordenador" && <col data-row='1' data-col='8'></col>}
                         </colgroup>
-                        <thead className="thead-dark">
-                          <tr id="avProfsExt-row1" data-row="1">
+                        <thead className='thead-dark'>
+                          <tr id='avProfsExt-row1' data-row='1'>
                             {props.userClass === "coordenador" && (
-                              <th scope="col" data-row="1" data-col="1">
+                              <th scope='col' data-row='1' data-col='1'>
                                 Identificador
                               </th>
                             )}
-                            <th
-                              scope="col"
-                              data-row="1"
-                              data-col={
-                                props.userClass === "coordenador" ? "2" : "1"
-                              }
-                            >
+                            <th scope='col' data-row='1' data-col={props.userClass === "coordenador" ? "2" : "1"}>
                               Nome
                             </th>
-                            <th
-                              scope="col"
-                              data-row="1"
-                              data-col={
-                                props.userClass === "coordenador" ? "3" : "2"
-                              }
-                            >
+                            <th scope='col' data-row='1' data-col={props.userClass === "coordenador" ? "3" : "2"}>
                               E-mail
                             </th>
-                            <th
-                              scope="col"
-                              data-row="1"
-                              data-col={
-                                props.userClass === "coordenador" ? "4" : "3"
-                              }
-                            >
+                            <th scope='col' data-row='1' data-col={props.userClass === "coordenador" ? "4" : "3"}>
                               Telefone
                             </th>
-                            <th
-                              scope="col"
-                              data-row="1"
-                              data-col={
-                                props.userClass === "coordenador" ? "5" : "4"
-                              }
-                            >
+                            <th scope='col' data-row='1' data-col={props.userClass === "coordenador" ? "5" : "4"}>
                               Área de Atuação
                             </th>
-                            <th
-                              scope="col"
-                              data-row="1"
-                              data-col={
-                                props.userClass === "coordenador" ? "6" : "5"
-                              }
-                            >
+                            <th scope='col' data-row='1' data-col={props.userClass === "coordenador" ? "6" : "5"}>
                               Dia de Trablho
                             </th>
-                            <th
-                              scope="col"
-                              data-row="1"
-                              data-col={
-                                props.userClass === "coordenador" ? "7" : "6"
-                              }
-                            >
+                            <th scope='col' data-row='1' data-col={props.userClass === "coordenador" ? "7" : "6"}>
                               Período de Participação
                             </th>
                             <th
-                              className="alocCel"
-                              scope="col"
-                              data-row="1"
-                              data-col={
-                                props.userClass === "coordenador" ? "8" : "7"
-                              }
+                              className='alocCel'
+                              scope='col'
+                              data-row='1'
+                              data-col={props.userClass === "coordenador" ? "8" : "7"}
                             ></th>
                           </tr>
                         </thead>
-                        <tbody id="profsExtTbody" ref={tbodyExtRef}>
-                          <span
-                            style={{ margin: "2rem", position: "absolute" }}
-                          >
+                        <tbody id='profsExtTbody' ref={tbodyExtRef}>
+                          <span style={{ margin: "2rem", position: "absolute" }}>
                             <Spinner
-                              spinnerClass="spinner-border"
-                              spinnerColor="text-info"
-                              message="Loading External Professionals Table..."
+                              spinnerClass='spinner-border'
+                              spinnerColor='text-info'
+                              message='Loading External Professionals Table...'
                             />
                           </span>
                         </tbody>
                       </ErrorBoundary>
                     );
-                    tbodyExtRef.current = document.getElementById(
-                      "profsExtTbody"
-                    ) as nullishTabSect;
+                    tbodyExtRef.current = document.getElementById("profsExtTbody") as nullishTabSect;
                     if (!(tbodyExtRef.current instanceof HTMLElement))
-                      throw elementNotFound(
-                        tbodyExtRef.current,
-                        `Validation of replaced tbody`,
-                        extLine(new Error())
-                      );
+                      throw elementNotFound(tbodyExtRef.current, `Validation of replaced tbody`, extLine(new Error()));
                     if (!panelRoots[`${tbodyExtRef.current.id}`])
-                      panelRoots[`${tbodyExtRef.current.id}`] = createRoot(
-                        tbodyExtRef.current
-                      );
+                      panelRoots[`${tbodyExtRef.current.id}`] = createRoot(tbodyExtRef.current);
                     if (!tbodyExtRef.current.querySelector("tr"))
                       panelRoots[`${tbodyExtRef.current.id}`]?.render(
                         externalProfs.map((prof, i) => (
@@ -617,42 +432,28 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                         elementNotFound(
                           tabProfIntRef.current,
                           `tabProfIntRef id ${
-                            (tabProfIntRef?.current as any)?.id ||
-                            "UNIDENTIFIED"
+                            (tabProfIntRef?.current as any)?.id || "UNIDENTIFIED"
                           } in useEffect() for tableRef`,
                           extLine(new Error())
                         );
                     }, 300);
                   } catch (e) {
                     console.error(
-                      `Error executing scheduled rendering of Table Body Content Replacement:\n${
-                        (e as Error).message
-                      }`
+                      `Error executing scheduled rendering of Table Body Content Replacement:\n${(e as Error).message}`
                     );
                   }
                   if (document) {
                   }
                 }, 1000);
-              } else
-                panelRoots[`${tbodyExtRef.current.id}`] = createRoot(
-                  tbodyExtRef.current
-                );
+              } else panelRoots[`${tbodyExtRef.current.id}`] = createRoot(tbodyExtRef.current);
               if (!tbodyExtRef.current.querySelector("tr"))
                 panelRoots[`${tbodyExtRef.current.id}`]?.render(
                   externalProfs.map((prof, i) => {
-                    return Array.from(
-                      tbodyExtRef.current?.querySelectorAll("output") ?? []
-                    ).some(
+                    return Array.from(tbodyExtRef.current?.querySelectorAll("output") ?? []).some(
                       outp => outp.innerText === (prof as ProfInfo)["idf"]
                     ) ||
-                      Array.from(
-                        tbodyExtRef.current?.querySelectorAll("tr") ?? []
-                      ).some(
-                        tr =>
-                          tr.dataset.key &&
-                          tbodyExtRef.current?.querySelector(
-                            `tr[data-key=${tr.dataset.key}`
-                          )
+                      Array.from(tbodyExtRef.current?.querySelectorAll("tr") ?? []).some(
+                        tr => tr.dataset.key && tbodyExtRef.current?.querySelector(`tr[data-key=${tr.dataset.key}`)
                       ) ? (
                       <></>
                     ) : (
@@ -681,24 +482,16 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                   );
               }, 300);
               setTimeout(() => {
-                if (
-                  !document.querySelector("tr") &&
-                  document.querySelector("table")
-                ) {
+                if (!document.querySelector("tr") && document.querySelector("table")) {
                   if (!panelRoots[`${document.querySelector("table")!.id}`])
-                    panelRoots[`${document.querySelector("table")!.id}`] =
-                      createRoot(document.querySelector("table")!);
+                    panelRoots[`${document.querySelector("table")!.id}`] = createRoot(document.querySelector("table")!);
                   panelRoots[`${document.querySelector("table")!.id}`]?.render(
-                    <GenericErrorComponent message="Failed to render table" />
+                    <GenericErrorComponent message='Failed to render table' />
                   );
                 }
               }, 5000);
             } catch (e) {
-              console.error(
-                `Error executing rendering of Table Body Content:\n${
-                  (e as Error).message
-                }`
-              );
+              console.error(`Error executing rendering of Table Body Content:\n${(e as Error).message}`);
             }
             //ajustes em tabela de externos
             const handleInternalAttempt = () => {
@@ -714,63 +507,46 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                 fillTabAttr(tabProfExtRef.current);
                 equalizeTabCells(tabProfExtRef.current);
                 props.dispatch &&
-                  tabProfExtRef.current
-                    .querySelectorAll(".btnAloc")
-                    .forEach((btn, i) => {
-                      try {
-                        addListenerAlocation(
-                          btn,
-                          dialogRef.current,
-                          props.mainDlgRef.current,
-                          "Prof",
-                          props.state,
-                          props.dispatch,
-                          props.userClass
-                        );
-                      } catch (e) {
-                        console.error(
-                          `Error executing iteration ${i} for adding alocation listener to external professionals table:\n${
-                            (e as Error).message
-                          }`
-                        );
-                      }
-                    });
-                const typeConsSel =
-                  props.mainDlgRef.current?.querySelector("#typeConsSel");
+                  tabProfExtRef.current.querySelectorAll(".btnAloc").forEach((btn, i) => {
+                    try {
+                      addListenerAlocation(
+                        btn,
+                        dialogRef.current,
+                        props.mainDlgRef.current,
+                        "Prof",
+                        props.state,
+                        props.dispatch,
+                        props.userClass
+                      );
+                    } catch (e) {
+                      console.error(
+                        `Error executing iteration ${i} for adding alocation listener to external professionals table:\n${
+                          (e as Error).message
+                        }`
+                      );
+                    }
+                  });
+                const typeConsSel = props.mainDlgRef.current?.querySelector("#typeConsSel");
                 if (!(typeConsSel instanceof HTMLSelectElement))
                   throw inputNotFound(
                     typeConsSel,
-                    `<select> for getting type of appointment for ${
-                      tabProfExtRef.current?.id || "UNIDENTIFIED"
-                    }`,
+                    `<select> for getting type of appointment for ${tabProfExtRef.current?.id || "UNIDENTIFIED"}`,
                     extLine(new Error())
                   );
-                const [selectedOp] = Array.from(
-                  typeConsSel.querySelectorAll("option")
-                ).filter(opt => opt.selected === true);
+                const [selectedOp] = Array.from(typeConsSel.querySelectorAll("option")).filter(
+                  opt => opt.selected === true
+                );
                 if (!(selectedOp instanceof HTMLOptionElement))
                   throw elementNotFound(
                     selectedOp,
-                    `<option> for getting type of appointment for ${
-                      tabProfExtRef.current?.id || "UNIDENTIFIED"
-                    }`,
+                    `<option> for getting type of appointment for ${tabProfExtRef.current?.id || "UNIDENTIFIED"}`,
                     extLine(new Error())
                   );
                 const relOptgrp = selectedOp.closest("optgroup");
-                if (
-                  relOptgrp instanceof HTMLOptGroupElement &&
-                  relOptgrp.label !== ""
-                )
-                  filterTabMembers(
-                    tabProfExtRef.current,
-                    relOptgrp.label.toLowerCase().trim()
-                  );
+                if (relOptgrp instanceof HTMLOptGroupElement && relOptgrp.label !== "")
+                  filterTabMembers(tabProfExtRef.current, relOptgrp.label.toLowerCase().trim());
               } catch (e) {
-                console.error(
-                  `Error executing styling for External Professionals Tables:\n${
-                    (e as Error).message
-                  }`
-                );
+                console.error(`Error executing styling for External Professionals Tables:\n${(e as Error).message}`);
               }
             };
             //ajustes em tabela de internos
@@ -779,65 +555,50 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                 if (!(tabProfIntRef?.current instanceof HTMLTableElement))
                   throw elementNotFound(
                     tabProfIntRef.current,
-                    `Table id ${
-                      (tabProfIntRef?.current as any)?.id || "UNIDENTIFIED"
-                    }`,
+                    `Table id ${(tabProfIntRef?.current as any)?.id || "UNIDENTIFIED"}`,
                     extLine(new Error())
                   );
                 fillTabAttr(tabProfIntRef.current);
                 equalizeTabCells(tabProfIntRef.current);
                 props.dispatch &&
-                  tabProfIntRef.current
-                    .querySelectorAll(".btnAloc")
-                    .forEach((btn, i) => {
-                      try {
-                        addListenerAlocation(
-                          btn,
-                          dialogRef.current,
-                          props.mainDlgRef.current,
-                          "Prof",
-                          props.state,
-                          props.dispatch,
-                          props.userClass
-                        );
-                      } catch (e) {
-                        console.error(
-                          `Error executing iteration ${i} for adding alocation listener to external professionals table:\n${
-                            (e as Error).message
-                          }`
-                        );
-                      }
-                    });
-                const typeConsSel =
-                  props.mainDlgRef.current?.querySelector("#typeConsSel");
+                  tabProfIntRef.current.querySelectorAll(".btnAloc").forEach((btn, i) => {
+                    try {
+                      addListenerAlocation(
+                        btn,
+                        dialogRef.current,
+                        props.mainDlgRef.current,
+                        "Prof",
+                        props.state,
+                        props.dispatch,
+                        props.userClass
+                      );
+                    } catch (e) {
+                      console.error(
+                        `Error executing iteration ${i} for adding alocation listener to external professionals table:\n${
+                          (e as Error).message
+                        }`
+                      );
+                    }
+                  });
+                const typeConsSel = props.mainDlgRef.current?.querySelector("#typeConsSel");
                 if (!(typeConsSel instanceof HTMLSelectElement))
                   throw inputNotFound(
                     typeConsSel,
-                    `<select> for getting type of appointment for ${
-                      tabProfIntRef.current?.id || "UNIDENTIFIED"
-                    }`,
+                    `<select> for getting type of appointment for ${tabProfIntRef.current?.id || "UNIDENTIFIED"}`,
                     extLine(new Error())
                   );
-                const [selectedOp] = Array.from(
-                  typeConsSel.querySelectorAll("option")
-                ).filter(opt => opt.selected === true);
+                const [selectedOp] = Array.from(typeConsSel.querySelectorAll("option")).filter(
+                  opt => opt.selected === true
+                );
                 if (!(selectedOp instanceof HTMLOptionElement))
                   throw elementNotFound(
                     selectedOp,
-                    `<option> for getting type of appointment for ${
-                      tabProfIntRef.current?.id || "UNIDENTIFIED"
-                    }`,
+                    `<option> for getting type of appointment for ${tabProfIntRef.current?.id || "UNIDENTIFIED"}`,
                     extLine(new Error())
                   );
                 const relOptgrp = selectedOp.closest("optgroup");
-                if (
-                  relOptgrp instanceof HTMLOptGroupElement &&
-                  relOptgrp.label !== ""
-                )
-                  filterTabMembers(
-                    tabProfIntRef.current,
-                    relOptgrp.label.toLowerCase().trim()
-                  );
+                if (relOptgrp instanceof HTMLOptGroupElement && relOptgrp.label !== "")
+                  filterTabMembers(tabProfIntRef.current, relOptgrp.label.toLowerCase().trim());
                 if (!(secttabProfIntRef?.current instanceof HTMLElement))
                   throw elementNotFound(
                     secttabProfIntRef.current,
@@ -847,11 +608,7 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                 checkLocalIntervs(secttabProfIntRef.current);
                 strikeEntries(secttabProfIntRef.current);
               } catch (e) {
-                console.error(
-                  `Error executing styling for Internal Professionals Tables:\n${
-                    (e as Error).message
-                  }`
-                );
+                console.error(`Error executing styling for Internal Professionals Tables:\n${(e as Error).message}`);
               }
             };
             setTimeout(() => {
@@ -863,49 +620,31 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                 : handleExternalAttempt();
             }, 1200);
           })
-          .catch(e =>
-            console.error(
-              `Failed to fetch from Professionals Table: ${e.message}`
-            )
-          )
+          .catch(e => console.error(`Failed to fetch from Professionals Table: ${e.message}`))
           .finally(() => {
             setTimeout(
-              () =>
-                syncAriaStates([
-                  ...(dialogRef.current?.querySelectorAll("*") ?? []),
-                  dialogRef.current!,
-                ]),
+              () => syncAriaStates([...(dialogRef.current?.querySelectorAll("*") ?? []), dialogRef.current!]),
               1200
             );
             setTimeout(
-              () =>
-                syncAriaStates([
-                  ...(dialogRef.current?.querySelectorAll("*") ?? []),
-                  dialogRef.current!,
-                ]),
+              () => syncAriaStates([...(dialogRef.current?.querySelectorAll("*") ?? []), dialogRef.current!]),
               3000
             );
           });
       }, 300);
     } catch (e) {
-      console.error(
-        `Error executing useEffect for Table Body Reference:\n${
-          (e as Error).message
-        }`
-      );
+      console.error(`Error executing useEffect for Table Body Reference:\n${(e as Error).message}`);
     }
   }, []);
   return (
     <>
       {props.state && props.btnProf instanceof HTMLButtonElement && (
         <dialog
-          className="modal-content-stk2"
-          id="avProfListDlg"
+          className='modal-content-stk2'
+          id='avProfListDlg'
           ref={dialogRef}
           onClick={ev => {
-            isClickOutside(ev, ev.currentTarget).some(
-              coord => coord === true
-            ) && props.dispatch(!props.state);
+            isClickOutside(ev, ev.currentTarget).some(coord => coord === true) && props.dispatch(!props.state);
           }}
         >
           <ErrorBoundary
@@ -916,35 +655,27 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
               />
             )}
           >
-            <section className="flexRNoWBetCt widFull" id="headProfList">
-              <h2 className="mg-1b noInvert">
+            <section className='flexRNoWBetCt widFull' id='headProfList'>
+              <h2 className='mg-1b noInvert'>
                 <strong>Profissionais Cadastrados</strong>
               </h2>
-              <button
-                className="btn btn-close forceInvert"
-                onClick={() => props.dispatch(!props.state)}
-              ></button>
+              <button className='btn btn-close forceInvert' onClick={() => props.dispatch(!props.state)}></button>
             </section>
-            <section
-              className="form-padded"
-              id="sectProfsTabs"
-              ref={secttabProfIntRef}
-            >
+            <section className='form-padded' id='sectProfsTabs' ref={secttabProfIntRef}>
               <table
-                className="table table-striped table-responsive table-hover tabProfs"
-                id="avProfsIntTab"
+                className='table table-striped table-responsive table-hover tabProfs'
+                id='avProfsIntTab'
                 ref={tabProfIntRef}
               >
-                <caption className="caption-t">
-                  <hgroup className="noInvert">
-                    <h3 className="noInvert">
+                <caption className='caption-t'>
+                  <hgroup className='noInvert'>
+                    <h3 className='noInvert'>
                       <strong>Membros Internos</strong>
                     </h3>
                     <strong>
-                      <small role="textbox" className="noInvert">
-                        <em className="noInvert">
-                          Lista Recuperada da Ficha de Profissionais
-                          registrados. Acesse
+                      <small role='textbox' className='noInvert'>
+                        <em className='noInvert'>
+                          Lista Recuperada da Ficha de Profissionais registrados. Acesse
                           <samp>
                             {" "}
                             <a> ROTA_PLACEHOLDER </a>{" "}
@@ -956,99 +687,72 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                   </hgroup>
                 </caption>
                 <colgroup>
-                  <col data-row="1" data-col="1"></col>
-                  <col data-row="1" data-col="2"></col>
-                  <col data-row="1" data-col="3"></col>
-                  <col data-row="1" data-col="4"></col>
-                  <col data-row="1" data-col="5"></col>
-                  <col data-row="1" data-col="6"></col>
-                  <col data-row="1" data-col="7"></col>
-                  {props.userClass === "coordenador" && (
-                    <col data-row="1" data-col="8"></col>
-                  )}
+                  <col data-row='1' data-col='1'></col>
+                  <col data-row='1' data-col='2'></col>
+                  <col data-row='1' data-col='3'></col>
+                  <col data-row='1' data-col='4'></col>
+                  <col data-row='1' data-col='5'></col>
+                  <col data-row='1' data-col='6'></col>
+                  <col data-row='1' data-col='7'></col>
+                  {props.userClass === "coordenador" && <col data-row='1' data-col='8'></col>}
                 </colgroup>
-                <thead className="thead-dark">
-                  <tr id="avProfsInt-row1" data-row="1">
+                <thead className='thead-dark'>
+                  <tr id='avProfsInt-row1' data-row='1'>
                     {props.userClass === "coordenador" && (
-                      <th scope="col" data-row="1" data-col="1">
+                      <th scope='col' data-row='1' data-col='1'>
                         Identificador
                       </th>
                     )}
-                    <th
-                      scope="col"
-                      data-row="1"
-                      data-col={props.userClass === "coordenador" ? "2" : "1"}
-                    >
+                    <th scope='col' data-row='1' data-col={props.userClass === "coordenador" ? "2" : "1"}>
                       Nome
                     </th>
-                    <th
-                      scope="col"
-                      data-row="1"
-                      data-col={props.userClass === "coordenador" ? "3" : "2"}
-                    >
+                    <th scope='col' data-row='1' data-col={props.userClass === "coordenador" ? "3" : "2"}>
                       E-mail
                     </th>
-                    <th
-                      scope="col"
-                      data-row="1"
-                      data-col={props.userClass === "coordenador" ? "4" : "3"}
-                    >
+                    <th scope='col' data-row='1' data-col={props.userClass === "coordenador" ? "4" : "3"}>
                       Telefone
                     </th>
-                    <th
-                      scope="col"
-                      data-row="1"
-                      data-col={props.userClass === "coordenador" ? "5" : "4"}
-                    >
+                    <th scope='col' data-row='1' data-col={props.userClass === "coordenador" ? "5" : "4"}>
                       Área de Atuação
                     </th>
-                    <th
-                      scope="col"
-                      data-row="1"
-                      data-col={props.userClass === "coordenador" ? "6" : "5"}
-                    >
+                    <th scope='col' data-row='1' data-col={props.userClass === "coordenador" ? "6" : "5"}>
                       Dia de Trablho
                     </th>
-                    <th
-                      scope="col"
-                      data-row="1"
-                      data-col={props.userClass === "coordenador" ? "7" : "6"}
-                    >
+                    <th scope='col' data-row='1' data-col={props.userClass === "coordenador" ? "7" : "6"}>
                       Período de Participação
                     </th>
                     <th
-                      className="alocCel"
-                      scope="col"
-                      data-row="1"
+                      className='alocCel'
+                      scope='col'
+                      data-row='1'
                       data-col={props.userClass === "coordenador" ? "8" : "7"}
                     ></th>
                   </tr>
                 </thead>
-                <tbody id="profsIntTbody" ref={tbodyIntRef}>
+                <tbody id='profsIntTbody' ref={tbodyIntRef}>
                   <span style={{ margin: "2rem", position: "absolute" }}>
                     <Spinner
-                      spinnerClass="spinner-border"
-                      spinnerColor="text-info"
-                      message="Loading Internal Professionals Table..."
+                      spinnerClass='spinner-border'
+                      spinnerColor='text-info'
+                      message='Loading Internal Professionals Table...'
                     />
                   </span>
                 </tbody>
               </table>
               <table
-                className="table table-striped table-responsive table-hover tabProfs"
-                id="avProfsExtTab"
+                className='table table-striped table-responsive table-hover tabProfs'
+                id='avProfsExtTab'
                 ref={tabProfExtRef}
               >
-                <caption className="caption-t">
-                  <hgroup className="noInvert">
-                    <h3 className="noInvert">
+                <caption className='caption-t'>
+                  <hgroup className='noInvert'>
+                    <h3 className='noInvert'>
                       <strong>Membros Externos</strong>
                     </h3>
                     <strong>
-                      <small role="textbox" className="noInvert">
-                        <em className="noInvert">
-                          Lista Recuperada da Ficha de Profissionais
-                          registrados. Acesse
+                      <small role='textbox' className='noInvert'>
+                        <em className='noInvert'>
+                          Lista Recuperada da Ficha de Profissionais registrados. Acesse
                           <samp>
                             {" "}
                             <a> ROTA_PLACEHOLDER </a>{" "}
@@ -1060,80 +764,54 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                   </hgroup>
                 </caption>
                 <colgroup>
-                  <col data-row="1" data-col="1"></col>
-                  <col data-row="1" data-col="2"></col>
-                  <col data-row="1" data-col="3"></col>
-                  <col data-row="1" data-col="4"></col>
-                  <col data-row="1" data-col="5"></col>
-                  <col data-row="1" data-col="6"></col>
-                  <col data-row="1" data-col="7"></col>
-                  {props.userClass === "coordenador" && (
-                    <col data-row="1" data-col="8"></col>
-                  )}
+                  <col data-row='1' data-col='1'></col>
+                  <col data-row='1' data-col='2'></col>
+                  <col data-row='1' data-col='3'></col>
+                  <col data-row='1' data-col='4'></col>
+                  <col data-row='1' data-col='5'></col>
+                  <col data-row='1' data-col='6'></col>
+                  <col data-row='1' data-col='7'></col>
+                  {props.userClass === "coordenador" && <col data-row='1' data-col='8'></col>}
                 </colgroup>
-                <thead className="thead-dark">
-                  <tr id="avProfsExt-row1" data-row="1">
+                <thead className='thead-dark'>
+                  <tr id='avProfsExt-row1' data-row='1'>
                     {props.userClass === "coordenador" && (
-                      <th scope="col" data-row="1" data-col="1">
+                      <th scope='col' data-row='1' data-col='1'>
                         Identificador
                       </th>
                     )}
-                    <th
-                      scope="col"
-                      data-row="1"
-                      data-col={props.userClass === "coordenador" ? "2" : "1"}
-                    >
+                    <th scope='col' data-row='1' data-col={props.userClass === "coordenador" ? "2" : "1"}>
                       Nome
                     </th>
-                    <th
-                      scope="col"
-                      data-row="1"
-                      data-col={props.userClass === "coordenador" ? "3" : "2"}
-                    >
+                    <th scope='col' data-row='1' data-col={props.userClass === "coordenador" ? "3" : "2"}>
                       E-mail
                     </th>
-                    <th
-                      scope="col"
-                      data-row="1"
-                      data-col={props.userClass === "coordenador" ? "4" : "3"}
-                    >
+                    <th scope='col' data-row='1' data-col={props.userClass === "coordenador" ? "4" : "3"}>
                       Telefone
                     </th>
-                    <th
-                      scope="col"
-                      data-row="1"
-                      data-col={props.userClass === "coordenador" ? "5" : "4"}
-                    >
+                    <th scope='col' data-row='1' data-col={props.userClass === "coordenador" ? "5" : "4"}>
                       Área de Atuação
                     </th>
-                    <th
-                      scope="col"
-                      data-row="1"
-                      data-col={props.userClass === "coordenador" ? "6" : "5"}
-                    >
+                    <th scope='col' data-row='1' data-col={props.userClass === "coordenador" ? "6" : "5"}>
                       Dia de Trablho
                     </th>
-                    <th
-                      scope="col"
-                      data-row="1"
-                      data-col={props.userClass === "coordenador" ? "7" : "6"}
-                    >
+                    <th scope='col' data-row='1' data-col={props.userClass === "coordenador" ? "7" : "6"}>
                       Período de Participação
                     </th>
                     <th
-                      className="alocCel"
-                      scope="col"
-                      data-row="1"
+                      className='alocCel'
+                      scope='col'
+                      data-row='1'
                       data-col={props.userClass === "coordenador" ? "8" : "7"}
                     ></th>
                   </tr>
                 </thead>
-                <tbody id="profsExtTbody" ref={tbodyExtRef}>
+                <tbody id='profsExtTbody' ref={tbodyExtRef}>
                   <span style={{ margin: "2rem", position: "absolute" }}>
                     <Spinner
-                      spinnerClass="spinner-border"
-                      spinnerColor="text-info"
-                      message="Loading External Professionals Table..."
+                      spinnerClass='spinner-border'
+                      spinnerColor='text-info'
+                      message='Loading External Professionals Table...'
                     />
                   </span>
                 </tbody>

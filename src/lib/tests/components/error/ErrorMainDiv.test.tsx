@@ -38,7 +38,7 @@ describe("ErrorMainDiv Component", (): void => {
   });
   test("syncs aria states after rendering", async (): Promise<void> => {
     renderComponent();
-    await waitFor(() => {
+    await waitFor((): void => {
       expect(syncAriaStates).toHaveBeenCalledWith(expect.any(Array));
     });
   });

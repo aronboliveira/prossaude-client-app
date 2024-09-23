@@ -9,7 +9,6 @@ import { useEffect, useRef } from "react";
 import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
 import GenericErrorComponent from "../error/GenericErrorComponent";
 import PrevConsRow from "./PrevConsRow";
-
 export default function PrevConsList({
   dispatch,
   state = true,
@@ -31,20 +30,12 @@ export default function PrevConsList({
     history.pushState(
       {},
       "",
-      `${location.origin}${location.pathname}${
-        location.search
-      }&prev-cons=open#${btoa(
-        String.fromCodePoint(
-          ...new TextEncoder().encode(name.toLowerCase().replaceAll(" ", "-"))
-        )
+      `${location.origin}${location.pathname}${location.search}&prev-cons=open#${btoa(
+        String.fromCodePoint(...new TextEncoder().encode(name.toLowerCase().replaceAll(" ", "-")))
       )}`
     );
     setTimeout(() => {
-      history.pushState(
-        {},
-        "",
-        `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#")
-      );
+      history.pushState({}, "", `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#"));
     }, 300);
     return () => {
       history.pushState(
@@ -53,54 +44,31 @@ export default function PrevConsList({
         `${location.origin}${location.pathname}${location.search}`
           .replaceAll(`&prev-cons=open`, "")
           .replaceAll(
-            `#${btoa(
-              String.fromCodePoint(
-                ...new TextEncoder().encode(
-                  name.toLowerCase().replaceAll(" ", "-")
-                )
-              )
-            )}`,
+            `#${btoa(String.fromCodePoint(...new TextEncoder().encode(name.toLowerCase().replaceAll(" ", "-"))))}`,
             ""
           )
       );
       setTimeout(() => {
-        history.pushState(
-          {},
-          "",
-          `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#")
-        );
+        history.pushState({}, "", `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#"));
       }, 300);
     };
   }, []);
   useEffect(() => {
     if (prevConsDlgRef.current instanceof HTMLDialogElement) {
       prevConsDlgRef.current.showModal();
-      syncAriaStates([
-        ...prevConsDlgRef.current!.querySelectorAll("*"),
-        prevConsDlgRef.current,
-      ]);
+      syncAriaStates([...prevConsDlgRef.current!.querySelectorAll("*"), prevConsDlgRef.current]);
     } else
-      elementNotFound(
-        prevConsDlgRef.current,
-        "Reference for Previous appointments list dialog",
-        extLine(new Error())
-      );
+      elementNotFound(prevConsDlgRef.current, "Reference for Previous appointments list dialog", extLine(new Error()));
   }, [prevConsDlgRef]);
   const togglePrevConsDisplay = (state: boolean = true) => dispatch(!state);
   return (
-    <ErrorBoundary
-      FallbackComponent={() => (
-        <GenericErrorComponent message="Erro carregando modal" />
-      )}
-    >
+    <ErrorBoundary FallbackComponent={() => <GenericErrorComponent message='Erro carregando modal' />}>
       <dialog
-        className="modal-content-stk2"
+        className='modal-content-stk2'
         ref={prevConsDlgRef}
         id={`prev-cons-${name.toLowerCase().replaceAll(" ", "-")}`}
         onClick={ev => {
-          if (
-            isClickOutside(ev, ev.currentTarget).some(coord => coord === true)
-          ) {
+          if (isClickOutside(ev, ev.currentTarget).some(coord => coord === true)) {
             ev.currentTarget.close();
             dispatch(!state);
           }
@@ -114,25 +82,22 @@ export default function PrevConsList({
             />
           )}
         >
-          <section className="flexRNoWBetCt widFull" id="headPrevConsList">
-            <h2 className="mg-1b">
+          <section className='flexRNoWBetCt widFull' id='headPrevConsList'>
+            <h2 className='mg-1b'>
               <strong>Consultas Anteriores</strong>
             </h2>
-            <button
-              className="btn btn-close forceInvert"
-              onClick={() => togglePrevConsDisplay(state)}
-            ></button>
+            <button className='btn btn-close forceInvert' onClick={() => togglePrevConsDisplay(state)}></button>
           </section>
-          <section className="form-padded" id="sectPacsTab">
+          <section className='form-padded' id='sectPacsTab'>
             <table
-              className="table table-striped table-responsive table-hover tabPacs"
-              id="avPacsTab"
+              className='table table-striped table-responsive table-hover tabPacs'
+              id='avPacsTab'
               ref={prevConsTabRef}
             >
-              <caption className="caption-t">
+              <caption className='caption-t'>
                 <strong>
-                  <small role="textbox">
-                    <em className="noInvert">
+                  <small role='textbox'>
+                    <em className='noInvert'>
                       Lista Recuperada da Ficha de Pacientes registrados. Acesse
                       <samp>
                         <a> ROTA_PLACEHOLDER </a>
@@ -150,36 +115,31 @@ export default function PrevConsList({
                 <col data-col={5}></col>
                 <col data-col={6}></col>
               </colgroup>
-              <thead className="thead-dark">
-                <tr id="avPacs-row1" data-row={1}>
-                  <th scope="col" data-row={1} data-col={1}>
+              <thead className='thead-dark'>
+                <tr id='avPacs-row1' data-row={1}>
+                  <th scope='col' data-row={1} data-col={1}>
                     Nome
                   </th>
-                  <th scope="col" data-row={1} data-col={2}>
+                  <th scope='col' data-row={1} data-col={2}>
                     Data
                   </th>
-                  <th scope="col" data-row={1} data-col={3}>
+                  <th scope='col' data-row={1} data-col={3}>
                     Tipo da Consulta
                   </th>
-                  <th scope="col" data-row={1} data-col={4}>
+                  <th scope='col' data-row={1} data-col={4}>
                     Profissional Responsável
                   </th>
-                  <th scope="col" data-row={1} data-col={5}>
+                  <th scope='col' data-row={1} data-col={5}>
                     Estudante Alocado
                   </th>
-                  <th scope="col" data-row={1} data-col={6}>
+                  <th scope='col' data-row={1} data-col={6}>
                     Anotações
                   </th>
                 </tr>
               </thead>
               <tbody>
                 {historic.map((iHist, i) => (
-                  <PrevConsRow
-                    name={name}
-                    nRow={i + 2}
-                    historic={iHist}
-                    key={`i-hist__${i + 2}`}
-                  />
+                  <PrevConsRow name={name} nRow={i + 2} historic={iHist} key={`i-hist__${i + 2}`} />
                 ))}
               </tbody>
             </table>

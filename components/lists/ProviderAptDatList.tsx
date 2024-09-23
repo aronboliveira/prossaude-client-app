@@ -1,17 +1,12 @@
 import { ProviderAptDataListProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import { useState } from "react";
 import AptDataList from "./AptDataList";
-
-export default function ProviderAptDatList({
-  data,
-  btnId,
-  userClass,
-}: ProviderAptDataListProps): JSX.Element {
+export default function ProviderAptDatList({ data, btnId, userClass }: ProviderAptDataListProps): JSX.Element {
   const [shouldDisplayAptList, setDisplayAptList] = useState(true);
   return !shouldDisplayAptList ? (
     <></>
   ) : (
-    <div role="group" className="providerAptDiv">
+    <div role='group' className='providerAptDiv'>
       {shouldDisplayAptList && (
         <AptDataList
           setDisplayAptList={setDisplayAptList}
