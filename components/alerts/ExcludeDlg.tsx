@@ -6,7 +6,6 @@ import { nullishDlg } from "@/lib/global/declarations/types";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useEffect, useRef } from "react";
 import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
-
 export default function ExcludeDlg({
   route,
   setDisplayExcludeDlg,
@@ -15,22 +14,12 @@ export default function ExcludeDlg({
   const excludeDlgRef = useRef<nullishDlg>(null);
   const toggleClose = () => {
     setDisplayExcludeDlg(!shouldDisplayExcludeDlg);
-    if (
-      !shouldDisplayExcludeDlg &&
-      excludeDlgRef.current instanceof HTMLDialogElement
-    )
-      excludeDlgRef.current.close();
+    if (!shouldDisplayExcludeDlg && excludeDlgRef.current instanceof HTMLDialogElement) excludeDlgRef.current.close();
   };
   useEffect(() => {
-    if (
-      shouldDisplayExcludeDlg &&
-      excludeDlgRef.current instanceof HTMLDialogElement
-    )
+    if (shouldDisplayExcludeDlg && excludeDlgRef.current instanceof HTMLDialogElement)
       excludeDlgRef.current.showModal();
-    syncAriaStates([
-      ...excludeDlgRef.current!.querySelectorAll("*"),
-      excludeDlgRef.current!,
-    ]);
+    syncAriaStates([...excludeDlgRef.current!.querySelectorAll("*"), excludeDlgRef.current!]);
     const handleKeyDown = (press: KeyboardEvent) => {
       press.key === "Escape" && toggleClose();
     };
@@ -41,16 +30,12 @@ export default function ExcludeDlg({
     <>
       {shouldDisplayExcludeDlg && (
         <dialog
-          role="alertdialog"
-          id="excludeAlertDlg"
+          role='alertdialog'
+          id='excludeAlertDlg'
           ref={excludeDlgRef}
-          className="modal-content modal-content-fit"
+          className='modal-content modal-content-fit'
           onClick={click => {
-            if (
-              isClickOutside(click, excludeDlgRef.current!).some(
-                point => point === true
-              )
-            ) {
+            if (isClickOutside(click, excludeDlgRef.current!).some(point => point === true)) {
               excludeDlgRef.current!.close();
               toggleClose();
             }
@@ -58,32 +43,20 @@ export default function ExcludeDlg({
         >
           <ErrorBoundary
             FallbackComponent={() => (
-              <ErrorFallbackDlg
-                renderError={new Error(`Erro carregando a janela modal!`)}
-                onClick={toggleClose}
-              />
+              <ErrorFallbackDlg renderError={new Error(`Erro carregando a janela modal!`)} onClick={toggleClose} />
             )}
           >
             <form
-              role="alert"
+              role='alert'
               name={`form_removal_${route}`}
-              className="flexNoWC flexJC rGap2v"
+              className='flexNoWC flexJC rGap2v'
               onSubmit={() => handleDelete(route, true)}
             >
-              <div
-                role="group"
-                className="flexJC flexAlItCt flexNoWC wsBs noInvert"
-              >
+              <div role='group' className='flexJC flexAlItCt flexNoWC wsBs noInvert'>
                 <h3>Confirmar remoção?</h3>
-                <small role="textbox">
-                  Esse processo é parcialmente ou totalmente irreversível!
-                </small>
+                <small role='textbox'>Esse processo é parcialmente ou totalmente irreversível!</small>
               </div>
-              <button
-                type="submit"
-                className="btn btn-warning bolded"
-                onClick={toggleClose}
-              >
+              <button type='submit' className='btn btn-warning bolded' onClick={toggleClose}>
                 Confirmar
               </button>
             </form>

@@ -5,7 +5,6 @@ import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useEffect, useRef } from "react";
 import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
 import { isClickOutside } from "@/lib/global/gStyleScript";
-
 export default function FailRegstAlert({
   setDisplayFailRegstDlg,
   shouldDisplayFailRegstDlg = false,
@@ -14,22 +13,13 @@ export default function FailRegstAlert({
   const FailRegstDlgRef = useRef<nullishDlg>(null);
   const toggleClose = () => {
     setDisplayFailRegstDlg(!shouldDisplayFailRegstDlg);
-    if (
-      !shouldDisplayFailRegstDlg &&
-      FailRegstDlgRef.current instanceof HTMLDialogElement
-    )
+    if (!shouldDisplayFailRegstDlg && FailRegstDlgRef.current instanceof HTMLDialogElement)
       FailRegstDlgRef.current.close();
   };
   useEffect(() => {
-    if (
-      shouldDisplayFailRegstDlg &&
-      FailRegstDlgRef.current instanceof HTMLDialogElement
-    )
+    if (shouldDisplayFailRegstDlg && FailRegstDlgRef.current instanceof HTMLDialogElement)
       FailRegstDlgRef.current.showModal();
-    syncAriaStates([
-      ...FailRegstDlgRef.current!.querySelectorAll("*"),
-      FailRegstDlgRef.current!,
-    ]);
+    syncAriaStates([...FailRegstDlgRef.current!.querySelectorAll("*"), FailRegstDlgRef.current!]);
     const handleKeyDown = (press: KeyboardEvent) => {
       if (press.key === "Escape") {
         toggleClose();
@@ -42,14 +32,12 @@ export default function FailRegstAlert({
     <>
       {shouldDisplayFailRegstDlg && (
         <dialog
-          role="alertdialog"
+          role='alertdialog'
           ref={FailRegstDlgRef}
-          className="modal-content modal-content-fit wid80"
-          id="alert-dlg"
+          className='modal-content modal-content-fit wid80'
+          id='alert-dlg'
           onClick={ev => {
-            if (
-              isClickOutside(ev, ev.currentTarget).some(coord => coord === true)
-            ) {
+            if (isClickOutside(ev, ev.currentTarget).some(coord => coord === true)) {
               ev.currentTarget.close();
               setDisplayFailRegstDlg(!shouldDisplayFailRegstDlg);
             }
@@ -57,26 +45,16 @@ export default function FailRegstAlert({
         >
           <ErrorBoundary
             FallbackComponent={() => (
-              <ErrorFallbackDlg
-                renderError={new Error(`Erro carregando a janela modal!`)}
-                onClick={toggleClose}
-              />
+              <ErrorFallbackDlg renderError={new Error(`Erro carregando a janela modal!`)} onClick={toggleClose} />
             )}
           >
-            <section
-              role="alert"
-              className="flexNoWC flexJtC flexAlItCt rGap2v"
-            >
-              <div
-                role="group"
-                className="flexJtC flexAlItCt flexNoWC wsBs noInvert"
-              >
-                <h3 className="wsBs">
-                  Falha na procura de um encaixe correspondente na agenda!{" "}
-                  {`${secondOp} `} ou insira manualmente.
+            <section role='alert' className='flexNoWC flexJtC flexAlItCt rGap2v'>
+              <div role='group' className='flexJtC flexAlItCt flexNoWC wsBs noInvert'>
+                <h3 className='wsBs'>
+                  Falha na procura de um encaixe correspondente na agenda! {`${secondOp} `} ou insira manualmente.
                 </h3>
               </div>
-              <button className="btn btn-danger bolded" onClick={toggleClose}>
+              <button className='btn btn-danger bolded' onClick={toggleClose}>
                 Fechar
               </button>
             </section>

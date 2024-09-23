@@ -8,7 +8,6 @@ import { useEffect, useRef } from "react";
 import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
 import MainFormPanel from "../mainPanel/MainFormPanel";
 import { isClickOutside } from "@/lib/global/gStyleScript";
-
 export default function ResetDlg({
   root,
   setDisplayResetDlg,
@@ -21,33 +20,19 @@ export default function ResetDlg({
   const ResetDlgRef = useRef<nullishDlg>(null);
   const toggleClose = () => {
     setDisplayResetDlg(!shouldDisplayResetDlg);
-    if (
-      !shouldDisplayResetDlg &&
-      ResetDlgRef.current instanceof HTMLDialogElement
-    )
-      ResetDlgRef.current.close();
+    if (!shouldDisplayResetDlg && ResetDlgRef.current instanceof HTMLDialogElement) ResetDlgRef.current.close();
   };
   const resetForm = () => {
     document.querySelector("form")!.reset();
     root.render(
       <MainFormPanel
-        defOp={
-          ((document.getElementById("coordPanelSelect") as HTMLSelectElement)
-            ?.value as panelOpts) || "agenda"
-        }
+        defOp={((document.getElementById("coordPanelSelect") as HTMLSelectElement)?.value as panelOpts) || "agenda"}
       />
     );
   };
   useEffect(() => {
-    if (
-      shouldDisplayResetDlg &&
-      ResetDlgRef.current instanceof HTMLDialogElement
-    )
-      ResetDlgRef.current.showModal();
-    syncAriaStates([
-      ...ResetDlgRef.current!.querySelectorAll("*"),
-      ResetDlgRef.current!,
-    ]);
+    if (shouldDisplayResetDlg && ResetDlgRef.current instanceof HTMLDialogElement) ResetDlgRef.current.showModal();
+    syncAriaStates([...ResetDlgRef.current!.querySelectorAll("*"), ResetDlgRef.current!]);
     const handleKeyDown = (press: KeyboardEvent) => {
       if (press.key === "Escape") {
         toggleClose();
@@ -60,14 +45,12 @@ export default function ResetDlg({
     <>
       {shouldDisplayResetDlg && (
         <dialog
-          role="alertdialog"
+          role='alertdialog'
           ref={ResetDlgRef}
-          className="modal-content modal-content-fit"
-          id="reset-dlg"
+          className='modal-content modal-content-fit'
+          id='reset-dlg'
           onClick={ev => {
-            if (
-              isClickOutside(ev, ev.currentTarget).some(coord => coord === true)
-            ) {
+            if (isClickOutside(ev, ev.currentTarget).some(coord => coord === true)) {
               ev.currentTarget.close();
               setDisplayResetDlg(!shouldDisplayResetDlg);
             }
@@ -75,33 +58,21 @@ export default function ResetDlg({
         >
           <ErrorBoundary
             FallbackComponent={() => (
-              <ErrorFallbackDlg
-                renderError={new Error(`Erro carregando a janela modal!`)}
-                onClick={toggleClose}
-              />
+              <ErrorFallbackDlg renderError={new Error(`Erro carregando a janela modal!`)} onClick={toggleClose} />
             )}
           >
-            <section role="alert" className="flexNoW">
-              <button
-                className="btn btn-close forceInvert"
-                onClick={toggleClose}
-              ></button>
+            <section role='alert' className='flexNoW'>
+              <button className='btn btn-close forceInvert' onClick={toggleClose}></button>
             </section>
-            <section
-              role="alert"
-              className="flexNoWC flexJtC flexAlItCt rGap2v"
-            >
-              <div
-                role="group"
-                className="flexJtC flexAlItCt flexNoWC wsBs noInvert"
-              >
-                <h3 className="bolded">Confirmar reset?</h3>
-                <small role="textbox" className="bolded txaCt">
+            <section role='alert' className='flexNoWC flexJtC flexAlItCt rGap2v'>
+              <div role='group' className='flexJtC flexAlItCt flexNoWC wsBs noInvert'>
+                <h3 className='bolded'>Confirmar reset?</h3>
+                <small role='textbox' className='bolded txaCt'>
                   Esse processo é totalmente irreversível!
                 </small>
               </div>
               <button
-                className="btn btn-warning bolded"
+                className='btn btn-warning bolded'
                 onClick={() => {
                   toggleClose();
                   resetForm();
