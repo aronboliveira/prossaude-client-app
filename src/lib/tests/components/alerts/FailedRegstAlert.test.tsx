@@ -1,10 +1,10 @@
 import { render, screen, fireEvent, RenderResult } from "@testing-library/react";
 import FailRegstAlert from "../../../../../components/alerts/FailRegsAlert";
-import { FailedRegstProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
+import { FailedRegstProps } from "../../../../lib/locals/panelPage/declarations/interfacesCons";
 import { createRoot } from "react-dom/client";
 import "@testing-library/jest-dom/extend-expect";
 jest.mock(
-  "@/lib/global/gStyleScript",
+  "../../../../lib/global/gStyleScript",
   (): {
     isClickOutside: jest.Mock<boolean[], [MouseEvent, HTMLElement]>;
   } => ({
@@ -12,7 +12,7 @@ jest.mock(
   })
 );
 jest.mock(
-  "@/lib/global/handlers/gHandlers",
+  "../../../../lib/global/handlers/gHandlers",
   (): {
     syncAriaStates: jest.Mock<void, HTMLElement[]>;
   } => ({
@@ -31,15 +31,12 @@ describe("FailRegstAlert Component", (): void => {
   };
   const renderComponent = (
     props = {}
-  ): RenderResult<
-    typeof import("c:/Users/Aron/Desktop/P/HTML/pro-saude-app-netlify/node_modules/@testing-library/dom/types/queries"),
-    HTMLElement,
-    HTMLElement
-  > => render(<FailRegstAlert {...defaultProps} {...props} />);
+  ): RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement> =>
+    render(<FailRegstAlert {...defaultProps} {...props} />);
 
   test("renders the modal dialog when shouldDisplayFailRegstDlg is true", (): void => {
     renderComponent();
-    expect(screen.getByRole<HTMLElement>("alertdialog")).toBeInTheDocument();
+    expect(screen.getByRole<HTMLDialogElement>("alertdialog")).toBeInTheDocument();
     expect(
       screen.getByText<HTMLElement>(
         "Falha na procura de um encaixe correspondente na agenda! Arraste  ou insira manualmente."
@@ -48,29 +45,29 @@ describe("FailRegstAlert Component", (): void => {
   });
   test("does not render the modal dialog when shouldDisplayFailRegstDlg is false", (): void => {
     renderComponent({ shouldDisplayFailRegstDlg: false });
-    expect(screen.queryByRole<HTMLElement>("alertdialog")).not.toBeInTheDocument();
+    expect(screen.queryByRole<HTMLDialogElement>("alertdialog")).not.toBeInTheDocument();
   });
   test("calls setDisplayFailRegstDlg when 'Fechar' button is clicked", (): void => {
     renderComponent();
-    fireEvent.click(screen.getByText<HTMLElement>("Fechar"));
+    fireEvent.click(screen.getByText<HTMLButtonElement>("Fechar"));
     expect(defaultProps.setDisplayFailRegstDlg).toHaveBeenCalledWith<
       Parameters<typeof defaultProps.setDisplayFailRegstDlg>
     >(false);
   });
   test("closes the dialog when clicking outside the modal", (): void => {
     renderComponent();
-    fireEvent.click(screen.getByRole<HTMLElement>("alertdialog"));
+    fireEvent.click(screen.getByRole<HTMLDialogElement>("alertdialog"));
     expect(defaultProps.setDisplayFailRegstDlg).toHaveBeenCalledWith<
       Parameters<typeof defaultProps.setDisplayFailRegstDlg>
     >(false);
   });
   test("syncs aria states on mount", (): void => {
     renderComponent();
-    expect(require("@/lib/global/handlers/gHandlers").syncAriaStates).toHaveBeenCalled();
+    expect(require("../../../../lib/global/handlers/gHandlers").syncAriaStates).toHaveBeenCalled();
   });
 
   test("adds keydown event listener for Escape key to close dialog", (): void => {
-    const { container } = renderComponent();
+    const { container }: { container: HTMLElement } = renderComponent();
     fireEvent.keyDown(container, { key: "Escape" });
     expect(defaultProps.setDisplayFailRegstDlg).toHaveBeenCalledWith<
       Parameters<typeof defaultProps.setDisplayFailRegstDlg>

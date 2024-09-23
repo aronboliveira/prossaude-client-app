@@ -52,15 +52,12 @@ describe("ExcludeConsDlg Component", (): void => {
   };
   const renderComponent = (
     props = {}
-  ): RenderResult<
-    typeof import("c:/Users/Aron/Desktop/P/HTML/pro-saude-app-netlify/node_modules/@testing-library/dom/types/queries"),
-    HTMLElement,
-    HTMLElement
-  > => render(<ExcludeConsDlg {...defaultProps} {...props} />);
+  ): RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement> =>
+    render(<ExcludeConsDlg {...defaultProps} {...props} />);
   test("renders the modal dialog when shouldDisplayExcludeDlg is true", (): void => {
     renderComponent();
-    expect(screen.getByRole<HTMLElement>("alertdialog")).toBeInTheDocument();
-    expect(screen.getByText<HTMLElement>("Confirmar remoção?")).toBeInTheDocument();
+    expect(screen.getByRole<HTMLDialogElement>("alertdialog")).toBeInTheDocument();
+    expect(screen.getByText<HTMLButtonElement>("Confirmar remoção?")).toBeInTheDocument();
     expect(
       screen.getByText<HTMLElement>("Esse processo é parcialmente ou totalmente irreversível!")
     ).toBeInTheDocument();
@@ -71,14 +68,14 @@ describe("ExcludeConsDlg Component", (): void => {
   });
   test("calls setDisplayExcludeDlg when confirm button is clicked", (): void => {
     renderComponent();
-    fireEvent.click(screen.getByText<HTMLElement>("Confirmar"));
+    fireEvent.click(screen.getByText<HTMLButtonElement>("Confirmar"));
     expect(defaultProps.setDisplayExcludeDlg).toHaveBeenCalledWith<
       Parameters<typeof defaultProps.setDisplayExcludeDlg>
     >(false);
   });
   test("calls setDisplayExcludeDlg when clicking outside the modal", (): void => {
     renderComponent();
-    fireEvent.click(screen.getByRole<HTMLElement>("alertdialog"));
+    fireEvent.click(screen.getByRole<HTMLDialogElement>("alertdialog"));
     expect(defaultProps.setDisplayExcludeDlg).toHaveBeenCalledWith<
       Parameters<typeof defaultProps.setDisplayExcludeDlg>
     >(false);
@@ -88,7 +85,7 @@ describe("ExcludeConsDlg Component", (): void => {
     expect(require(`${root}/lib/global/handlers/gHandlers`).syncAriaStates).toHaveBeenCalled();
   });
   test("adds keydown event listener for Escape key to close dialog", (): void => {
-    const { container } = renderComponent();
+    const { container }: { container: HTMLElement } = renderComponent();
     fireEvent.keyDown(container, { key: "Escape" });
     expect(defaultProps.setDisplayExcludeDlg).toHaveBeenCalledWith<
       Parameters<typeof defaultProps.setDisplayExcludeDlg>

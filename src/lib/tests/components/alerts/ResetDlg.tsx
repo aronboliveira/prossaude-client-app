@@ -1,6 +1,6 @@
 import { render, screen, fireEvent, RenderResult } from "@testing-library/react";
 import ResetDlg from "../../../../../components/alerts/ResetDlg";
-import { ResetDlgProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
+import { ResetDlgProps } from "../../../../lib/locals/panelPage/declarations/interfacesCons";
 import { createRoot } from "react-dom/client";
 import MainFormPanel from "../../../../../components/mainPanel/MainFormPanel";
 import "@testing-library/jest-dom/extend-expect";
@@ -25,7 +25,7 @@ jest.mock(
   })
 );
 jest.mock(
-  "@/lib/global/gStyleScript",
+  "../../../../lib/global/gStyleScript",
   (): {
     isClickOutside: jest.Mock<boolean[], [MouseEvent, HTMLElement]>;
   } => ({
@@ -33,7 +33,7 @@ jest.mock(
   })
 );
 jest.mock(
-  "@/lib/global/handlers/gHandlers",
+  "../../../../lib/global/handlers/gHandlers",
   (): {
     syncAriaStates: jest.Mock<void, HTMLElement[]>;
   } => ({
@@ -46,7 +46,7 @@ jest.mock(
 );
 describe("ResetDlg Component", () => {
   const defaultProps: ResetDlgProps = {
-    root: createRoot(screen.getByRole<HTMLElement>("dialog")),
+    root: createRoot(screen.getByRole<HTMLDialogElement>("dialog")),
     setDisplayResetDlg: jest.fn<
       ReturnType<React.Dispatch<React.SetStateAction<boolean>>>,
       Parameters<React.Dispatch<React.SetStateAction<boolean>>>
@@ -56,24 +56,21 @@ describe("ResetDlg Component", () => {
   };
   const renderComponent = (
     props = {}
-  ): RenderResult<
-    typeof import("c:/Users/Aron/Desktop/P/HTML/pro-saude-app-netlify/node_modules/@testing-library/dom/types/queries"),
-    HTMLElement,
-    HTMLElement
-  > => render(<ResetDlg {...defaultProps} {...props} />);
+  ): RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement> =>
+    render(<ResetDlg {...defaultProps} {...props} />);
   test("renders the modal dialog when shouldDisplayResetDlg is true", (): void => {
     renderComponent();
-    expect(screen.getByRole<HTMLElement>("alertdialog")).toBeInTheDocument();
-    expect(screen.getByText<HTMLElement>("Confirmar reset?")).toBeInTheDocument();
+    expect(screen.getByRole<HTMLDialogElement>("alertdialog")).toBeInTheDocument();
+    expect(screen.getByText<HTMLButtonElement>("Confirmar reset?")).toBeInTheDocument();
     expect(screen.getByText<HTMLElement>("Esse processo é totalmente irreversível!")).toBeInTheDocument();
   });
   test("does not render the modal dialog when shouldDisplayResetDlg is false", (): void => {
     renderComponent({ shouldDisplayResetDlg: false });
-    expect(screen.queryByRole<HTMLElement>("alertdialog")).not.toBeInTheDocument();
+    expect(screen.queryByRole<HTMLDialogElement>("alertdialog")).not.toBeInTheDocument();
   });
   test("calls setDisplayResetDlg when 'Confirmar' button is clicked", (): void => {
     renderComponent();
-    fireEvent.click(screen.getByText<HTMLElement>("Confirmar"));
+    fireEvent.click(screen.getByText<HTMLButtonElement>("Confirmar"));
     expect(defaultProps.setDisplayResetDlg).toHaveBeenCalledWith<Parameters<typeof defaultProps.setDisplayResetDlg>>(
       false
     );
@@ -82,10 +79,10 @@ describe("ResetDlg Component", () => {
     renderComponent();
     const form: HTMLFormElement = document.createElement("form");
     document.body.appendChild<HTMLFormElement>(form);
-    fireEvent.click(screen.getByText<HTMLElement>("Confirmar"));
+    fireEvent.click(screen.getByText<HTMLButtonElement>("Confirmar"));
     expect(jest.spyOn(form, "reset").mockImplementation(() => {})).toHaveBeenCalled();
     expect(createRoot).toHaveBeenCalledWith<Parameters<typeof createRoot>>(
-      document.getElementById("formRoot") as HTMLElement
+      document.getElementById("formRoot") as HTMLDivElement
     );
     expect(createRoot(document.createElement("div")).render).toHaveBeenCalledWith<any[]>(
       <MainFormPanel defOp='agenda' />
@@ -93,32 +90,31 @@ describe("ResetDlg Component", () => {
   });
   test("closes the dialog when clicking outside the modal", (): void => {
     renderComponent();
-    fireEvent.click(screen.getByRole<HTMLElement>("alertdialog"));
+    fireEvent.click(screen.getByRole<HTMLDialogElement>("alertdialog"));
     expect(defaultProps.setDisplayResetDlg).toHaveBeenCalledWith<Parameters<typeof defaultProps.setDisplayResetDlg>>(
       false
     );
   });
   test("syncs aria states on mount", (): void => {
     renderComponent();
-    expect(require("@/lib/global/handlers/gHandlers").syncAriaStates).toHaveBeenCalled();
+    expect(require("../../../../lib/global/handlers/gHandlers").syncAriaStates).toHaveBeenCalled();
   });
   test("adds keydown event listener for Escape key to close dialog", (): void => {
-    const { container } = renderComponent();
+    const { container }: { container: HTMLElement } = renderComponent();
     fireEvent.keyDown(container, { key: "Escape" });
     expect(defaultProps.setDisplayResetDlg).toHaveBeenCalledWith<Parameters<typeof defaultProps.setDisplayResetDlg>>(
       false
     );
   });
   test("shows error fallback if an error is thrown", (): void => {
-    const ErrorBoundaryMock = jest.fn<never, []>().mockImplementation(() => {
-      throw new Error("Test Error");
-    });
     jest.mock(
       "react-error-boundary",
       (): {
         ErrorBoundary: jest.Mock<any, any, any>;
       } => ({
-        ErrorBoundary: ErrorBoundaryMock,
+        ErrorBoundary: jest.fn<never, []>().mockImplementation((): never => {
+          throw new Error("Test Error");
+        }),
       })
     );
     renderComponent();
