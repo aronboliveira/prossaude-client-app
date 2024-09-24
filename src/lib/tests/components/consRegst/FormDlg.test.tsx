@@ -148,7 +148,11 @@ describe("FormDlg Component", (): void => {
   });
   test("pushes correct state to history on mount and unmount", (): void => {
     renderComponent();
-    expect(jest.spyOn(window.history, "pushState")).toHaveBeenCalledWith<[{}, string, any]>({}, "", expect.any(String));
+    expect(jest.spyOn<History, "pushState">(window.history, "pushState")).toHaveBeenCalledWith<[{}, string, any]>(
+      {},
+      "",
+      expect.any(String)
+    );
   });
   test("handles CPF button click and populates form", (): void => {
     const { container }: { container: HTMLElement } = renderComponent();
@@ -171,7 +175,7 @@ describe("FormDlg Component", (): void => {
   });
   test("pushes history correctly on mount/unmount", (): void => {
     renderComponent();
-    expect(jest.spyOn(window.history, "pushState")).toHaveBeenCalled();
+    expect(jest.spyOn<History, "pushState">(window.history, "pushState")).toHaveBeenCalled();
   });
   test("scrolls dialog into view", (): void => {
     const { container }: { container: HTMLElement } = renderComponent();

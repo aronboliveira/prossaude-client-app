@@ -4,27 +4,10 @@ import { isClickOutside } from "@/lib/global/gStyleScript";
 import { useEffect, useRef, useState } from "react";
 import { validateForm, syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import GenericErrorComponent from "../error/GenericErrorComponent";
-import {
-  nullishBtn,
-  nullishDlg,
-  nullishInp,
-  nullishSel,
-} from "@/lib/global/declarations/types";
-import {
-  addEmailExtension,
-  autoCapitalizeInputs,
-  formatTel,
-} from "@/lib/global/gModel";
-import {
-  elementNotFound,
-  extLine,
-  multipleElementsNotFound,
-} from "@/lib/global/handlers/errorHandler";
-
-export default function UserPropsDlg({
-  setPropDlg,
-  shouldDisplayPropDlg = true,
-}: UserPropsDlgProps) {
+import { nullishBtn, nullishDlg, nullishInp, nullishSel } from "@/lib/global/declarations/types";
+import { addEmailExtension, autoCapitalizeInputs, formatTel } from "@/lib/global/gModel";
+import { elementNotFound, extLine, multipleElementsNotFound } from "@/lib/global/handlers/errorHandler";
+export default function UserPropsDlg({ setPropDlg, shouldDisplayPropDlg = true }: UserPropsDlgProps) {
   const userPropsDlgRef = useRef<nullishDlg>(null);
   const userPropsBtnRef = useRef<nullishBtn>(null);
   const newUserValueRef = useRef<nullishInp | HTMLSelectElement>(null);
@@ -32,21 +15,14 @@ export default function UserPropsDlg({
   const [, setPropValue] = useState<string>("userName");
   const changeUserProp = (value: string) => {
     if (!newUserValueRef.current)
-      newUserValueRef.current = document.getElementById("userPropsNewValue") as
-        | HTMLSelectElement
-        | HTMLInputElement;
+      newUserValueRef.current = document.getElementById("userPropsNewValue") as HTMLSelectElement | HTMLInputElement;
     if (
       userPropsSelRef.current instanceof HTMLSelectElement &&
-      (newUserValueRef.current instanceof HTMLInputElement ||
-        newUserValueRef.current instanceof HTMLSelectElement)
+      (newUserValueRef.current instanceof HTMLInputElement || newUserValueRef.current instanceof HTMLSelectElement)
     ) {
       setPropValue(value);
       newUserValueRef.current.value = "";
-      const replaceInp = (
-        type: string = "text",
-        placeholder: boolean = true,
-        minText: boolean = true
-      ) => {
+      const replaceInp = (type: string = "text", placeholder: boolean = true, minText: boolean = true) => {
         const newInp = document.createElement("input");
         newInp.classList.add(...["form-control"]);
         Object.assign(newInp, {
@@ -58,10 +34,7 @@ export default function UserPropsDlg({
           newInp.classList.add("minText");
           newInp.minLength = 2;
         }
-        newUserValueRef.current!.parentElement!.replaceChild(
-          newInp,
-          newUserValueRef.current!
-        );
+        newUserValueRef.current!.parentElement!.replaceChild(newInp, newUserValueRef.current!);
         newUserValueRef.current = newInp;
         return newInp;
       };
@@ -69,13 +42,8 @@ export default function UserPropsDlg({
         const newSel = document.createElement("select");
         newSel.classList.add(...["form-select"]);
         newSel.id = "userPropsNewValue";
-        newSel.style.maxWidth = getComputedStyle(
-          newUserValueRef.current!
-        ).width;
-        newUserValueRef.current!.parentElement!.replaceChild(
-          newSel,
-          newUserValueRef.current!
-        );
+        newSel.style.maxWidth = getComputedStyle(newUserValueRef.current!).width;
+        newUserValueRef.current!.parentElement!.replaceChild(newSel, newUserValueRef.current!);
         newUserValueRef.current = newSel;
         return newSel;
       };
@@ -153,102 +121,91 @@ export default function UserPropsDlg({
   useEffect(() => {
     if (userPropsDlgRef.current instanceof HTMLDialogElement) {
       userPropsDlgRef.current.showModal();
-      syncAriaStates([
-        ...userPropsDlgRef.current.querySelectorAll("*"),
-        userPropsDlgRef.current,
-      ]);
+      syncAriaStates([...userPropsDlgRef.current.querySelectorAll("*"), userPropsDlgRef.current]);
       const nameInp = document.getElementById("userPropsNewValue");
       nameInp?.addEventListener("input", () => {
         autoCapitalizeInputs(nameInp);
       });
-    } else
-      elementNotFound(
-        userPropsDlgRef.current,
-        "Dialog for userProps request",
-        extLine(new Error())
-      );
+    } else elementNotFound(userPropsDlgRef.current, "Dialog for userProps request", extLine(new Error()));
   }, [userPropsDlgRef]);
   useEffect(() => {}, [newUserValueRef, userPropsDlgRef]);
   return (
     <ErrorBoundary
       FallbackComponent={() => (
-        <GenericErrorComponent message="Erro carregando modal de alteração de dados de usuário!" />
+        <GenericErrorComponent message='Erro carregando modal de alteração de dados de usuário!' />
       )}
     >
       {shouldDisplayPropDlg && (
         <dialog
           ref={userPropsDlgRef}
-          className="modal-content-fit flexAlItCt flexNoWC"
-          id="alterUsePropDlg"
+          className='modal-content-fit flexAlItCt flexNoWC'
+          id='alterUsePropDlg'
           onClick={ev => {
-            if (
-              isClickOutside(ev, ev.currentTarget).some(coord => coord === true)
-            ) {
+            if (isClickOutside(ev, ev.currentTarget).some(coord => coord === true)) {
               setPropDlg(!shouldDisplayPropDlg);
               ev.currentTarget.closest("dialog")?.close();
             }
           }}
         >
-          <section className="flexNoW cGap2v widFull mg-3b">
-            <h3 className="bolded">Formulário de Alteração</h3>
+          <section className='flexNoW cGap2v widFull mg-3b'>
+            <h3 className='bolded'>Formulário de Alteração</h3>
             <button
-              className="btn btn-close"
+              className='btn btn-close'
               onClick={() => {
                 setPropDlg(!shouldDisplayPropDlg);
-                userPropsDlgRef.current instanceof HTMLDialogElement &&
-                  userPropsDlgRef.current?.close();
+                userPropsDlgRef.current instanceof HTMLDialogElement && userPropsDlgRef.current?.close();
               }}
             ></button>
           </section>
-          <fieldset className="flexNoWC widFull mg-2bv">
-            <label className="bolded" htmlFor="userPropsOps">
+          <fieldset className='flexNoWC widFull mg-2bv'>
+            <label className='bolded' htmlFor='userPropsOps'>
               Opções de Alteração:
             </label>
             <select
-              id="userPropsOps"
-              className="form-select"
+              id='userPropsOps'
+              className='form-select'
               onChange={() => changeUserProp(newUserValueRef.current!.value)}
               ref={userPropsSelRef}
             >
-              <option value="userName">Nome</option>
-              <option value="userClass">Classe</option>
-              <option value="userArea">Área</option>
-              <option value="userEmail">E-mail</option>
-              <option value="userTel">Telefone</option>
+              <option value='userName'>Nome</option>
+              <option value='userClass'>Classe</option>
+              <option value='userArea'>Área</option>
+              <option value='userEmail'>E-mail</option>
+              <option value='userTel'>Telefone</option>
             </select>
           </fieldset>
-          <fieldset className="flexNoWC widFull mg-2bv">
-            <label className="bolded" htmlFor="userPropsNewValue">
+          <fieldset className='flexNoWC widFull mg-2bv'>
+            <label className='bolded' htmlFor='userPropsNewValue'>
               Novo valor:
             </label>
             <input
-              type="text"
-              id="userPropsNewValue"
-              className="form-control minText"
-              placeholder="Insira aqui o novo valor"
-              autoComplete="given-name"
-              autoCapitalize="true"
+              type='text'
+              id='userPropsNewValue'
+              className='form-control minText'
+              placeholder='Insira aqui o novo valor'
+              autoComplete='given-name'
+              autoCapitalize='true'
               minLength={2}
               // @ts-ignore
               ref={newUserValueRef}
             ></input>
           </fieldset>
-          <fieldset className="flexNoWC widFull mg-2bv">
-            <label className="bolded" htmlFor="userPropJust">
+          <fieldset className='flexNoWC widFull mg-2bv'>
+            <label className='bolded' htmlFor='userPropJust'>
               Razão:
             </label>
             <input
-              type="text"
-              id="userPropJust"
-              className="form-control minText"
+              type='text'
+              id='userPropJust'
+              className='form-control minText'
               minLength={2}
-              placeholder="Insira aqui a justificativa"
+              placeholder='Insira aqui a justificativa'
             ></input>
           </fieldset>
           <button
-            type="button"
-            id="submitNewPropBtn"
-            className="btn btn-info widHalf bolded mg-1t"
+            type='button'
+            id='submitNewPropBtn'
+            className='btn btn-info widHalf bolded mg-1t'
             ref={userPropsBtnRef}
             onClick={ev => {
               validateForm(ev, ev.currentTarget.closest("dialog")!).then(

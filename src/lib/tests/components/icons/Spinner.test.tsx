@@ -30,6 +30,6 @@ describe("Spinner Component", (): void => {
   test("renders GenericErrorComponent when error occurs", (): void => {
     renderComponent();
     expect(screen.queryByText("GenericErrorComponent")).not.toBeInTheDocument();
-    jest.spyOn(ErrorBoundary.prototype, "componentDidCatch").mockRestore();
+    jest.spyOn<ErrorBoundary, "componentDidCatch">(ErrorBoundary.prototype, "componentDidCatch").mockRestore();
   });
 });

@@ -6,7 +6,9 @@ jest.mock(
   (): {
     ErrorBoundary: jest.Mock<any, any, any>;
   } => ({
-    ErrorBoundary: jest.fn().mockImplementation(({ children }) => <>{children}</>),
+    ErrorBoundary: jest
+      .fn()
+      .mockImplementation(({ children }: { children: JSX.Element[] }): JSX.Element => <>{children}</>),
   })
 );
 jest.mock(
@@ -16,7 +18,7 @@ jest.mock(
     default: () => JSX.Element;
   } => ({
     __esModule: true,
-    default: () => <div>GenericErrorComponent</div>,
+    default: (): JSX.Element => <div>GenericErrorComponent</div>,
   })
 );
 jest.mock(
@@ -26,7 +28,7 @@ jest.mock(
     default: () => JSX.Element;
   } => ({
     __esModule: true,
-    default: () => (
+    default: (): JSX.Element => (
       <tr>
         <td>PrevConsRow</td>
       </tr>
@@ -35,7 +37,18 @@ jest.mock(
 );
 describe("PrevConsList Component", (): void => {
   const mockDispatch = jest.fn();
-  const defaultProps = {
+  const defaultProps: {
+    dispatch: jest.Mock<any, any, any>;
+    state: boolean;
+    name: string;
+    historic: {
+      type: string;
+      day: string;
+      prof: string;
+      stud: string;
+      notes: string;
+    }[];
+  } = {
     dispatch: mockDispatch,
     state: true,
     name: "John Doe",
@@ -75,10 +88,10 @@ describe("PrevConsList Component", (): void => {
   test("calls dispatch when close button is clicked", async (): Promise<void> => {
     renderComponent();
     fireEvent.click(screen.getByRole<HTMLButtonElement>("button"));
-    expect(mockDispatch).toHaveBeenCalledWith(!defaultProps.state);
+    expect(mockDispatch).toHaveBeenCalledWith<Parameters<typeof mockDispatch>>(!defaultProps.state);
   });
   test("renders GenericErrorComponent on error", async (): Promise<void> => {
-    jest.spyOn(console, "error").mockImplementation((): void => {});
+    jest.spyOn<Console, "error">(console, "error").mockImplementation((): void => {});
     jest.mock(
       "../../../../../components/error/GenericErrorComponent",
       (): {
@@ -86,7 +99,7 @@ describe("PrevConsList Component", (): void => {
         default: () => JSX.Element;
       } => ({
         __esModule: true,
-        default: () => <div>GenericErrorComponent</div>,
+        default: (): JSX.Element => <div>GenericErrorComponent</div>,
       })
     );
     renderComponent();

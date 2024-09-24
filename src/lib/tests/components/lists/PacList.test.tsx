@@ -71,7 +71,9 @@ describe("PacList Component", (): void => {
   });
   test("renders PacList table with fetched data", async (): Promise<void> => {
     renderComponent();
-    await waitFor((): void => expect(handleFetch).toHaveBeenCalledWith("patients", "_table", true));
+    await waitFor((): void =>
+      expect(handleFetch).toHaveBeenCalledWith<Parameters<typeof handleFetch>>("patients", "_table", true)
+    );
     expect(screen.getByText<HTMLElement>(/Pac1/i)).toBeInTheDocument();
     expect(screen.getByText<HTMLElement>(/Pac2/i)).toBeInTheDocument();
   });
@@ -95,6 +97,10 @@ describe("PacList Component", (): void => {
   test("dispatches on Escape keydown event to close the dialog", async () => {
     renderComponent();
     fireEvent.keyDown(document, { key: "Escape" });
-    await waitFor(() => expect(mockSetDisplayRowData).toHaveBeenCalledWith(!defaultProps.shouldDisplayRowData));
+    await waitFor((): void =>
+      expect(mockSetDisplayRowData).toHaveBeenCalledWith<Parameters<typeof mockSetDisplayRowData>>(
+        !defaultProps.shouldDisplayRowData
+      )
+    );
   });
 });

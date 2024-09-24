@@ -80,7 +80,7 @@ describe("ResetDlg Component", () => {
     const form: HTMLFormElement = document.createElement("form");
     document.body.appendChild<HTMLFormElement>(form);
     fireEvent.click(screen.getByText<HTMLButtonElement>("Confirmar"));
-    expect(jest.spyOn(form, "reset").mockImplementation(() => {})).toHaveBeenCalled();
+    expect(jest.spyOn<HTMLFormElement, "reset">(form, "reset").mockImplementation(() => {})).toHaveBeenCalled();
     expect(createRoot).toHaveBeenCalledWith<Parameters<typeof createRoot>>(
       document.getElementById("formRoot") as HTMLDivElement
     );

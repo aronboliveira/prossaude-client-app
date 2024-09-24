@@ -50,7 +50,9 @@ describe("AvStudListDlg Component", (): void => {
   test("handles escape keydown event to close the dialog", async (): Promise<void> => {
     renderComponent();
     fireEvent.keyDown(document, { key: "Escape" });
-    await waitFor((): void => expect(mockDispatch).toHaveBeenCalledWith(defaultProps.state));
+    await waitFor((): void =>
+      expect(mockDispatch).toHaveBeenCalledWith<Parameters<typeof mockDispatch>>(defaultProps.state)
+    );
   });
   test("renders ErrorFallbackDlg on fetch failure", async (): Promise<void> => {
     (handleFetch as jest.Mock).mockRejectedValueOnce(new Error("Failed to fetch"));
@@ -60,7 +62,9 @@ describe("AvStudListDlg Component", (): void => {
   test("dispatches on close button click", async (): Promise<void> => {
     renderComponent();
     fireEvent.click(screen.getByRole<HTMLButtonElement>("button", { name: /close/i }));
-    await waitFor((): void => expect(mockDispatch).toHaveBeenCalledWith(!defaultProps.state));
+    await waitFor((): void =>
+      expect(mockDispatch).toHaveBeenCalledWith<Parameters<typeof mockDispatch>>(!defaultProps.state)
+    );
   });
   test("validates dialog opening and aria states synchronization", async () => {
     renderComponent();

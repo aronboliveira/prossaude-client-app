@@ -1,4 +1,4 @@
-("use client");
+"use client";
 import { useState, useEffect } from "react";
 import AGDeclaration from "./AGDeclaration";
 import BtnConform from "../def/BtnConform";
@@ -10,12 +10,7 @@ export default function BtnConformWrapper(): JSX.Element {
   return (
     <>
       <BtnConform dispatch={setDeclaration} state={shouldShowDeclaration} />
-      {shouldShowDeclaration && (
-        <AGDeclaration
-          state={shouldShowDeclaration}
-          dispatch={setDeclaration}
-        />
-      )}
+      {shouldShowDeclaration && <AGDeclaration state={shouldShowDeclaration} dispatch={setDeclaration} />}
     </>
   );
 }

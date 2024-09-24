@@ -8,11 +8,19 @@ jest.mock(
     default: () => JSX.Element;
   } => ({
     __esModule: true,
-    default: () => <div>AptDataList</div>,
+    default: (): JSX.Element => <div>AptDataList</div>,
   })
 );
 describe("ProviderAptDatList Component", (): void => {
-  const defaultProps = {
+  const defaultProps: {
+    data: {
+      cpf: string;
+      date: string;
+      name: string;
+    };
+    btnId: string;
+    userClass: string;
+  } = {
     data: { cpf: "12345678901", date: "2024-09-25", name: "John Doe" },
     btnId: "testBtnId",
     userClass: "estudante",

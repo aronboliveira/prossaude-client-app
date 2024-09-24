@@ -54,7 +54,11 @@ describe("AlterFieldList Component", (): void => {
   test("calls elementNotFound when alterFieldRef is not found", async (): Promise<void> => {
     (document.getElementById as jest.Mock).mockReturnValueOnce(null);
     renderComponent();
-    expect(elementNotFound).toHaveBeenCalledWith(expect.anything(), expect.any(String), expect.any(String));
+    expect(elementNotFound).toHaveBeenCalledWith<Parameters<typeof elementNotFound>>(
+      expect.anything(),
+      expect.any(String),
+      expect.any(String)
+    );
   });
   test("generates new options dynamically based on headers", async (): Promise<void> => {
     renderComponent();

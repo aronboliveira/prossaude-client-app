@@ -37,7 +37,7 @@ describe("AvPacListDlg Component", () => {
   test("calls dispatch when close button is clicked", async (): Promise<void> => {
     renderComponent();
     fireEvent.click(screen.getByRole<HTMLButtonElement>("button", { name: "" }));
-    expect(mockDispatch).toHaveBeenCalledWith(!defaultProps.state);
+    expect(mockDispatch).toHaveBeenCalledWith<Parameters<typeof mockDispatch>>(!defaultProps.state);
   });
   test("renders the ErrorFallbackDlg when an error occurs", async () => {
     renderComponent();

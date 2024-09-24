@@ -75,7 +75,7 @@ describe("AptDataList Component", (): void => {
     expect(addListenerExportBtn).toHaveBeenCalled();
   });
   test("renders the ErrorFallbackDlg when an error occurs", async () => {
-    jest.spyOn(console, "warn").mockImplementation(() => {});
+    jest.spyOn<Console, "warn">(console, "warn").mockImplementation((): void => {});
     consVariablesData.rootDlg = undefined;
     renderComponent();
     expect(screen.getByText<HTMLDialogElement>(/ErrorFallbackDlg/i)).toBeInTheDocument();

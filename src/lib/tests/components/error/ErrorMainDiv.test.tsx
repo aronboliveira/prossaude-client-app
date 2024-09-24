@@ -39,11 +39,15 @@ describe("ErrorMainDiv Component", (): void => {
   test("syncs aria states after rendering", async (): Promise<void> => {
     renderComponent();
     await waitFor((): void => {
-      expect(syncAriaStates).toHaveBeenCalledWith(expect.any(Array));
+      expect(syncAriaStates).toHaveBeenCalledWith<Parameters<typeof syncAriaStates>>(expect.any(Array));
     });
   });
   test("handles error when mainRef is not valid", async (): Promise<void> => {
     renderComponent();
-    expect(elementNotFound).toHaveBeenCalledWith(expect.anything(), expect.any(String), extLine(expect.any(Error)));
+    expect(elementNotFound).toHaveBeenCalledWith<Parameters<typeof elementNotFound>>(
+      expect.anything(),
+      expect.any(String),
+      extLine(expect.any(Error))
+    );
   });
 });

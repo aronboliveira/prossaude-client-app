@@ -65,7 +65,9 @@ describe("AvProfListDlg useEffect tests", (): void => {
   });
   test("handles rendering of internal and external professionals", async (): Promise<void> => {
     renderComponent();
-    await waitFor(() => expect(handleFetch).toHaveBeenCalledWith("profs", "_table", true));
+    await waitFor((): void =>
+      expect(handleFetch).toHaveBeenCalledWith<Parameters<typeof handleFetch>>("profs", "_table", true)
+    );
     expect(screen.getByText<HTMLElement>(/Prof1/i)).toBeInTheDocument();
     expect(screen.getByText<HTMLElement>(/Prof2/i)).toBeInTheDocument();
   });
@@ -109,6 +111,8 @@ describe("AvProfListDlg useEffect tests", (): void => {
   test("handles Escape keydown to close the dialog", async (): Promise<void> => {
     renderComponent();
     fireEvent.keyDown(document, { key: "Escape" });
-    await waitFor(() => expect(mockDispatch).toHaveBeenCalledWith(!defaultProps.state));
+    await waitFor((): void =>
+      expect(mockDispatch).toHaveBeenCalledWith<Parameters<typeof mockDispatch>>(!defaultProps.state)
+    );
   });
 });

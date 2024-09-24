@@ -6,7 +6,9 @@ jest.mock(
   (): {
     ErrorBoundary: jest.Mock<any, any, any>;
   } => ({
-    ErrorBoundary: jest.fn().mockImplementation(({ children }): JSX.Element => <>{children}</>),
+    ErrorBoundary: jest
+      .fn()
+      .mockImplementation(({ children }: { children: JSX.Element[] }): JSX.Element => <>{children}</>),
   })
 );
 jest.mock(
@@ -92,10 +94,10 @@ describe("StudList Component", (): void => {
   test("handles close event and dispatches state toggle", async (): Promise<void> => {
     renderComponent();
     fireEvent.click(screen.getByRole<HTMLButtonElement>("button"));
-    expect(mockDispatch).toHaveBeenCalledWith(!defaultProps.state);
+    expect(mockDispatch).toHaveBeenCalledWith<Parameters<typeof mockDispatch>>(!defaultProps.state);
   });
   test("handles error and renders error fallback component", async (): Promise<void> => {
-    jest.spyOn(console, "error").mockImplementation((): void => {});
+    jest.spyOn<Console, "error">(console, "error").mockImplementation((): void => {});
     jest.mock(
       "../../../../../components/error/GenericErrorComponent",
       (): {
@@ -120,7 +122,7 @@ describe("StudList Component", (): void => {
     });
   });
   test("handles errors in fetch and displays fallback", async (): Promise<void> => {
-    jest.spyOn(console, "error").mockImplementation((): void => {});
+    jest.spyOn<Console, "error">(console, "error").mockImplementation((): void => {});
     jest.mock(
       "@/pages/api/ts/handlers",
       (): {
@@ -131,7 +133,7 @@ describe("StudList Component", (): void => {
     );
     renderComponent();
     await waitFor((): void => {
-      expect(screen.getByText("GenericErrorComponent")).toBeInTheDocument();
+      expect(screen.getByText<HTMLElement>("GenericErrorComponent")).toBeInTheDocument();
     });
   });
 });

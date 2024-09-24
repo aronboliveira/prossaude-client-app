@@ -93,7 +93,9 @@ describe("ListCPFPacCons Component", (): void => {
   });
   test("logs error if fetch fails", async (): Promise<void> => {
     (handleFetch as jest.Mock).mockRejectedValueOnce(new Error("Fetch failed"));
-    const consoleErrorSpy = jest.spyOn(console, "error").mockImplementation(() => {});
+    const consoleErrorSpy: jest.SpyInstance<void, [message?: any, ...optionalParams: any[]], any> = jest
+      .spyOn(console, "error")
+      .mockImplementation((): void => {});
     renderComponent();
     await waitFor((): void => {
       expect(consoleErrorSpy).toHaveBeenCalledWith<any[]>(

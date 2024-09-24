@@ -25,8 +25,7 @@ describe("PrevConsRow Component", () => {
     expect(screen.getByText<HTMLTableCellElement>("Stud A")).toBeInTheDocument();
     expect(screen.getByText<HTMLTableCellElement>("Notes A")).toBeInTheDocument();
   });
-
-  test("renders fallback for missing values", async () => {
+  test("renders fallback for missing values", async (): Promise<void> => {
     render(
       <PrevConsRow
         {...{

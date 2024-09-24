@@ -54,11 +54,15 @@ describe("ErrorFallbackMainPanel Component", (): void => {
   test("calls resetErrorBoundary on button click", (): void => {
     renderComponent();
     fireEvent.click(screen.getByText<HTMLButtonElement>("Tentar novamente"));
-    expect(mockProps.resetErrorBoundary).toHaveBeenCalledWith(mockMainRoot, "student", mockProps.tryAcc);
+    expect(mockProps.resetErrorBoundary).toHaveBeenCalledWith<Parameters<typeof mockProps.resetErrorBoundary>>(
+      mockMainRoot,
+      "student",
+      mockProps.tryAcc
+    );
   });
   test("changes panel value on selecting new option", (): void => {
     renderComponent();
     fireEvent.change(screen.getByRole<HTMLSelectElement>("combobox"), { target: { value: "agenda" } });
-    expect(mockMainRoot.render).toHaveBeenCalledWith(expect.anything());
+    expect(mockMainRoot.render).toHaveBeenCalledWith<Parameters<typeof mockMainRoot.render>>(expect.anything());
   });
 });
