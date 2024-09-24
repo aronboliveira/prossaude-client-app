@@ -3,19 +3,8 @@ import { TdProps } from "@/lib/global/declarations/interfaces";
 import { handleCallbackWHS, tabProps } from "@/pages/edfis";
 import { handleIndEv } from "../../TabIndPerc";
 import { textTransformPascal } from "@/lib/global/gModel";
-
-
-import {
-  handleCondtReq,
-  handleEventReq,
-} from "@/lib/global/handlers/gHandlers";
-
-export default function TabInpProg({
-  nRow,
-  nCol,
-  ctx,
-  lab,
-}: TdProps): JSX.Element {
+import { handleCondtReq, handleEventReq } from "@/lib/global/handlers/gHandlers";
+export default function TabInpProg({ nRow, nCol, ctx, lab }: TdProps): JSX.Element {
   const pascalLab = textTransformPascal(lab);
   const fullName = (() => {
     switch (lab) {
@@ -88,7 +77,7 @@ export default function TabInpProg({
   }
   return ctx === "IndPerc" ? (
     <input
-      type="number"
+      type='number'
       name={`${lab.toLowerCase()}_${nRow}_${nCol}`}
       id={`inp${pascalLab}${nCol - 1}Cel${nRow}_${nCol}`}
       className={`form-control tabInpProg tabInpProgIndPerc inpInd inp${pascalLab} inpCol${nCol} sevenCharLongNum`}
@@ -98,11 +87,7 @@ export default function TabInpProg({
       data-col={nCol}
       required={nCol === 2 ? true : false}
       onInput={
-        lab === "IMC" ||
-        lab === "MLG" ||
-        lab === "PGC" ||
-        lab === "TMB" ||
-        lab === "GET"
+        lab === "IMC" || lab === "MLG" || lab === "PGC" || lab === "TMB" || lab === "GET"
           ? ev => {
               handleIndEv(ev, lab);
               if (ev.currentTarget.required) handleEventReq(ev.currentTarget);
@@ -147,17 +132,15 @@ export default function TabInpProg({
       if (ctx === "MedAnt") {
         return (
           <input
-            type="number"
+            type='number'
             name={`${lab.toLowerCase()}_${nRow}_${nCol}`}
             className={`form-control tabInpProg tabInpProg${ctx} tabInpProg${lab}${ctx} tabInpRow${ctx}${nRow} float sevenCharLongNum ${
               medAntCase !== "" ? ` inp${medAntCase}` : ""
             }`}
             id={`tabInpRow${ctx}${nRow}_${nCol}`}
             min={nCol === 2 ? "0.05" : "0"}
-            max="65535"
-            data-title={`Medidas Antropométricas ${fullName} (Consulta ${
-              nCol - 1
-            })`}
+            max='65535'
+            data-title={`Medidas Antropométricas ${fullName} (Consulta ${nCol - 1})`}
             data-row={nRow}
             data-col={nCol}
             required={nCol === 2 ? true : false}
@@ -199,13 +182,7 @@ export default function TabInpProg({
                     tabProps.numCol,
                     tabProps.factorAtvLvl,
                     tabProps.factorAtleta,
-                    [
-                      tabProps.IMC,
-                      tabProps.MLG,
-                      tabProps.TMB,
-                      tabProps.GET,
-                      tabProps.PGC,
-                    ],
+                    [tabProps.IMC, tabProps.MLG, tabProps.TMB, tabProps.GET, tabProps.PGC],
                   ],
                 ],
                 ev.currentTarget,
@@ -217,15 +194,13 @@ export default function TabInpProg({
       } else {
         return (
           <input
-            type="number"
+            type='number'
             name={`${lab.toLowerCase()}_${nRow}_${nCol}`}
             className={`form-control tabInpProg tabInpProg${ctx} tabInpProg${lab}${ctx} tabInpRow${ctx}${nRow} float sevenCharLongNum`}
             id={`tabInpRow${ctx}${nRow}_${nCol}`}
             min={nCol === 2 ? "0.05" : "0"}
-            max="65535"
-            data-title={`${
-              ctx === "DCut" ? "Dobras Cutâneas" : "Sinais Vitais"
-            } ${fullName} (Consulta ${nCol - 1})`}
+            max='65535'
+            data-title={`${ctx === "DCut" ? "Dobras Cutâneas" : "Sinais Vitais"} ${fullName} (Consulta ${nCol - 1})`}
             data-row={nRow}
             data-col={nCol}
             required={nCol === 2 ? true : false}

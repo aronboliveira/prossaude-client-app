@@ -1,0 +1,73 @@
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import AntMedFs from "../../../../../../components/interactive/ag/AntMedFs";
+import { syncAriaStates } from "../../../../../lib/global/handlers/gHandlers";
+import { elementNotFound } from "../../../../../lib/global/handlers/errorHandler";
+import { addMedHistHandler } from "../../../../../lib/locals/aGPage/aGHandlers";
+import { clearPhDates } from "../../../../../lib/global/gStyleScript";
+jest.mock(
+  "../../../../../lib/global/handlers/gHandlers",
+  (): {
+    syncAriaStates: jest.Mock<any, any, any>;
+  } => ({
+    syncAriaStates: jest.fn(),
+  })
+);
+jest.mock(
+  "../../../../../lib/global/handlers/errorHandler",
+  (): {
+    elementNotFound: jest.Mock<any, any, any>;
+  } => ({
+    elementNotFound: jest.fn(),
+  })
+);
+jest.mock(
+  "../../../../../lib/locals/aGPage/aGHandlers",
+  (): {
+    addMedHistHandler: jest.Mock<any, any, any>;
+  } => ({
+    addMedHistHandler: jest.fn(),
+  })
+);
+jest.mock(
+  "../../../../../lib/global/gStyleScript",
+  (): {
+    clearPhDates: jest.Mock<any, any, any>;
+  } => ({
+    clearPhDates: jest.fn(),
+  })
+);
+describe("AntMedFs", (): void => {
+  it("renders the fieldset with legend text", (): void => {
+    render(<AntMedFs />);
+    expect(
+      screen.getByText<HTMLElement>("Tratamentos Médicos Atuais e Anteriores e/ou Internações")
+    ).toBeInTheDocument();
+  });
+  it("calls syncAriaStates and clearPhDates on mount", async (): Promise<void> => {
+    render(<AntMedFs />);
+    await waitFor((): void => {
+      expect(syncAriaStates).toHaveBeenCalled();
+      expect(clearPhDates).toHaveBeenCalled();
+    });
+  });
+  it("increments blockCount when the add button is clicked", async (): Promise<void> => {
+    render(<AntMedFs />);
+    fireEvent.click(screen.getByRole<HTMLButtonElement>("button", { name: /addAntMed/i }));
+    await waitFor((): void => {
+      expect(addMedHistHandler).toHaveBeenCalled();
+    });
+  });
+  it("decrements blockCount when the remove button is clicked", async (): Promise<void> => {
+    render(<AntMedFs />);
+    fireEvent.click(screen.getByRole<HTMLButtonElement>("button", { name: /removeAntMed/i }));
+    await waitFor((): void => {
+      expect(addMedHistHandler).toHaveBeenCalled();
+    });
+  });
+  it("calls elementNotFound when mainRef is not an HTMLElement", async (): Promise<void> => {
+    render(<AntMedFs />);
+    await waitFor((): void => {
+      expect(elementNotFound).toHaveBeenCalled();
+    });
+  });
+});

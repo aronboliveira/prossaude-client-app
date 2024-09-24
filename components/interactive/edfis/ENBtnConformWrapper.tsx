@@ -1,4 +1,4 @@
-("use client");
+"use client";
 import { ErrorBoundary } from "react-error-boundary";
 import { useState, useEffect } from "react";
 import BtnConform from "../def/BtnConform";
@@ -10,18 +10,9 @@ export default function ENBtnConformWrapper(): JSX.Element {
     /conform=open/gi.test(location.search) && setDeclaration(true);
   }, []);
   return (
-    <ErrorBoundary
-      FallbackComponent={() => (
-        <GenericErrorComponent message="Error rendering Button for Agreement" />
-      )}
-    >
+    <ErrorBoundary FallbackComponent={() => <GenericErrorComponent message='Error rendering Button for Agreement' />}>
       <BtnConform dispatch={setDeclaration} state={shouldShowDeclaration} />
-      {shouldShowDeclaration && (
-        <ENDeclaration
-          state={shouldShowDeclaration}
-          dispatch={setDeclaration}
-        />
-      )}
+      {shouldShowDeclaration && <ENDeclaration state={shouldShowDeclaration} dispatch={setDeclaration} />}
     </ErrorBoundary>
   );
 }
