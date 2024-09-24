@@ -16,7 +16,7 @@ describe("DDDElementSec Component", (): void => {
   });
   it("calls handleCondtReq on input", async (): Promise<void> => {
     render(<DDDElementSec />);
-    const input = screen.getByLabelText("DDD Secundário") as HTMLInputElement;
+    const input = screen.getByLabelText<HTMLInputElement>("DDD Secundário");
     fireEvent.input(input, { target: { value: "21" } });
     await waitFor((): void => {
       expect(handleCondtReq).toHaveBeenCalledWith<Parameters<typeof handleCondtReq>>(input, {

@@ -18,7 +18,7 @@ describe("FamOnc Component", (): void => {
   });
   it("calls handleDivAddShow on checkbox click", async (): Promise<void> => {
     render(<FamOnc />);
-    const checkbox = screen.getByLabelText("Antecedentes Familiares — Doença(s) Oncológica(s)") as HTMLInputElement;
+    const checkbox = screen.getByLabelText<HTMLInputElement>("Antecedentes Familiares — Doença(s) Oncológica(s)");
     fireEvent.click(checkbox);
     await waitFor((): void => {
       expect(handleDivAddShow).toHaveBeenCalledWith<Parameters<typeof handleDivAddShow>>(checkbox);

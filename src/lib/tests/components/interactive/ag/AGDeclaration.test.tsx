@@ -27,7 +27,7 @@ describe("AGDeclaration", (): void => {
     render(<AGDeclaration {...defaultProps} />);
     expect(screen.getByText<HTMLElement>("TERMOS DE CONCORDÂNCIA")).toBeInTheDocument();
   });
-  it("does not render when state is false", () => {
+  it("does not render when state is false", (): void => {
     render(<AGDeclaration {...defaultProps} state={false} />);
     expect(screen.queryByText<HTMLElement>("TERMOS DE CONCORDÂNCIA")).not.toBeInTheDocument();
   });

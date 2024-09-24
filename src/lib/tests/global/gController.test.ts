@@ -5,227 +5,174 @@ import * as gModel from "../../global/gModel";
 import * as gHandlers from "../../global/handlers/gHandlers";
 import { utils, writeFile } from "xlsx";
 import { WorkBook } from "xlsx-js-style";
-describe("getGlobalEls", () => {
-  let addListenerTextsSpy: jest.SpyInstance;
-  let addListenerRadiosSpy: jest.SpyInstance;
-  let addListenerDateBtnsSpy: jest.SpyInstance;
-  let elementNotPopulatedSpy: jest.SpyInstance;
-  let elementNotFoundSpy: jest.SpyInstance;
-  beforeEach(() => {
-    addListenerTextsSpy = jest
-      .spyOn(gController, "addListenerTexts")
-      .mockImplementation(() => {});
-    addListenerRadiosSpy = jest
-      .spyOn(gController, "addListenerRadios")
-      .mockImplementation(() => {});
-    addListenerDateBtnsSpy = jest
-      .spyOn(gController, "addListenerDateBtns")
-      .mockImplementation(() => {});
+import { Gender, PseudoBool } from "../testVars";
+describe("getGlobalEls", (): void => {
+  let addListenerTextsSpy: jest.SpyInstance,
+    addListenerRadiosSpy: jest.SpyInstance,
+    addListenerDateBtnsSpy: jest.SpyInstance,
+    elementNotPopulatedSpy: jest.SpyInstance,
+    elementNotFoundSpy: jest.SpyInstance;
+  beforeEach((): void => {
+    addListenerTextsSpy = jest.spyOn(gController, "addListenerTexts").mockImplementation((): void => {});
+    addListenerRadiosSpy = jest.spyOn(gController, "addListenerRadios").mockImplementation((): void => {});
+    addListenerDateBtnsSpy = jest.spyOn(gController, "addListenerDateBtns").mockImplementation((): void => {});
     elementNotPopulatedSpy = jest
       .spyOn(errorHandler, "elementNotPopulated")
-      .mockImplementation(() => new Error("Not populated."));
+      .mockImplementation((): Error => new Error("Not populated."));
     elementNotFoundSpy = jest
       .spyOn(errorHandler, "elementNotFound")
-      .mockImplementation(() => new Error("Element not found."));
+      .mockImplementation((): Error => new Error("Element not found."));
     jest.clearAllMocks();
   });
-  it("should call addListenerTexts when textConts are found", () => {
-    document.querySelectorAll = jest
-      .fn()
-      .mockReturnValue([document.createElement("textarea")]);
+  it("should call addListenerTexts when textConts are found", (): void => {
+    document.querySelectorAll = jest.fn().mockReturnValue([document.createElement("textarea")]);
     gController.getGlobalEls(true, "notNum");
     expect(addListenerTextsSpy).toHaveBeenCalled();
     expect(elementNotPopulatedSpy).not.toHaveBeenCalled();
   });
-  it("should call elementNotPopulated when no textConts are found", () => {
+  it("should call elementNotPopulated when no textConts are found", (): void => {
     document.querySelectorAll = jest.fn().mockReturnValue([]);
     gController.getGlobalEls(true, "notNum");
     expect(addListenerTextsSpy).not.toHaveBeenCalled();
-    expect(elementNotPopulatedSpy).toHaveBeenCalledWith(
-      [],
-      "textConts",
-      expect.any(Error)
-    );
+    expect(elementNotPopulatedSpy).toHaveBeenCalledWith([], "textConts", expect.any(Error));
   });
-  it("should call addListenerRadios when radioInps are found", () => {
-    document.querySelectorAll = jest
-      .fn()
-      .mockReturnValueOnce([document.createElement("input")]);
+  it("should call addListenerRadios when radioInps are found", (): void => {
+    document.querySelectorAll = jest.fn().mockReturnValueOnce([document.createElement("input")]);
     gController.getGlobalEls(true, "notNum");
     expect(addListenerRadiosSpy).toHaveBeenCalled();
     expect(elementNotPopulatedSpy).not.toHaveBeenCalled();
   });
-  it("should call elementNotPopulated for radioInps when none are found", () => {
+  it("should call elementNotPopulated for radioInps when none are found", (): void => {
     document.querySelectorAll = jest.fn().mockReturnValue([]);
     gController.getGlobalEls(true, "notNum");
     expect(addListenerRadiosSpy).not.toHaveBeenCalled();
-    expect(elementNotPopulatedSpy).toHaveBeenCalledWith(
-      [],
-      "radioInps",
-      expect.any(Error)
-    );
+    expect(elementNotPopulatedSpy).toHaveBeenCalledWith([], "radioInps", expect.any(Error));
   });
-  it("should call addListenerDateBtns when dateBtns are found", () => {
-    document.querySelectorAll = jest
-      .fn()
-      .mockReturnValueOnce([document.createElement("button")]);
+  it("should call addListenerDateBtns when dateBtns are found", (): void => {
+    document.querySelectorAll = jest.fn().mockReturnValueOnce([document.createElement("button")]);
     gController.getGlobalEls(true, "notNum");
     expect(addListenerDateBtnsSpy).toHaveBeenCalled();
     expect(elementNotPopulatedSpy).not.toHaveBeenCalled();
   });
-  it("should add a click listener to resetFormBtn", () => {
-    document.getElementById = jest
-      .fn()
-      .mockReturnValue(document.createElement("button"));
+  it("should add a click listener to resetFormBtn", (): void => {
+    document.getElementById = jest.fn().mockReturnValue(document.createElement("button"));
     gController.getGlobalEls(true, "notNum");
-    expect(
-      jest.spyOn(document.getElementById("resetFormBtn")!, "addEventListener")
-    ).toHaveBeenCalledWith("click", expect.any(Function));
+    expect(jest.spyOn(document.getElementById("resetFormBtn")!, "addEventListener")).toHaveBeenCalledWith(
+      "click",
+      expect.any(Function)
+    );
     expect(elementNotFoundSpy).not.toHaveBeenCalled();
   });
-  it("should call elementNotFound for resetFormBtn when not found", () => {
+  it("should call elementNotFound for resetFormBtn when not found", (): void => {
     document.getElementById = jest.fn().mockReturnValue(null);
     gController.getGlobalEls(true, "notNum");
-    expect(elementNotFoundSpy).toHaveBeenCalledWith(
-      null,
-      "resetFormBtn",
-      expect.any(Error)
-    );
+    expect(elementNotFoundSpy).toHaveBeenCalledWith(null, "resetFormBtn", expect.any(Error));
   });
-  it('should call addListenerNumInps when context is "num" and numInps are found', () => {
-    document.querySelectorAll = jest
-      .fn()
-      .mockReturnValueOnce([document.createElement("input")]);
+  it('should call addListenerNumInps when context is "num" and numInps are found', (): void => {
+    document.querySelectorAll = jest.fn().mockReturnValueOnce([document.createElement("input")]);
     gController.getGlobalEls(true, "num");
     expect(gController.addListenerNumInps).toHaveBeenCalled();
     expect(elementNotPopulatedSpy).not.toHaveBeenCalled();
   });
-  it('should call elementNotPopulated for numInps when context is "num" and none are found', () => {
+  it('should call elementNotPopulated for numInps when context is "num" and none are found', (): void => {
     document.querySelectorAll = jest.fn().mockReturnValue([]);
     gController.getGlobalEls(true, "num");
     expect(gController.addListenerNumInps).not.toHaveBeenCalled();
-    expect(elementNotPopulatedSpy).toHaveBeenCalledWith(
-      [],
-      "numInps",
-      expect.any(Error)
-    );
+    expect(elementNotPopulatedSpy).toHaveBeenCalledWith([], "numInps", expect.any(Error));
   });
 });
-describe("addListenerTexts", () => {
-  it("should add an input listener to text areas with autocorrect", () => {
+describe("addListenerTexts", (): void => {
+  it("should add an input listener to text areas with autocorrect", (): void => {
     const mockTextArea = document.createElement("textarea");
     mockTextArea.classList.add("autocorrect");
     jest.spyOn(mockTextArea, "addEventListener");
     gController.addListenerTexts([mockTextArea], true);
-    expect(mockTextArea.addEventListener).toHaveBeenCalledWith(
-      "input",
-      expect.any(Function)
+    expect(mockTextArea.addEventListener).toHaveBeenCalledWith("input", expect.any(Function));
+  });
+  it("should log an error when textConts contains non-HTMLElement elements", (): void => {
+    expect(jest.spyOn(console, "error").mockImplementation((): void => {})).toHaveBeenCalledWith(
+      "Erro validando instâncias em textConts"
     );
   });
-  it("should log an error when textConts contains non-HTMLElement elements", () => {
-    expect(
-      jest.spyOn(console, "error").mockImplementation(() => {})
-    ).toHaveBeenCalledWith("Erro validando instâncias em textConts");
-  });
 });
-describe("addListenerNumInps", () => {
+describe("addListenerNumInps", (): void => {
   let inputNotFoundSpy: jest.SpyInstance;
-  beforeEach(() => {
+  beforeEach((): void => {
     inputNotFoundSpy = jest
       .spyOn(errorHandler, "inputNotFound")
-      .mockImplementation(() => new Error("Input nof found."));
-    jest.spyOn(gModel, "numberLimit").mockImplementation(() => {});
+      .mockImplementation((): Error => new Error("Input nof found."));
+    jest.spyOn(gModel, "numberLimit").mockImplementation((): void => {});
     jest.clearAllMocks();
   });
-  it("should add an input listener for number inputs", () => {
+  it("should add an input listener for number inputs", (): void => {
     const mockNumberInput = document.createElement("input");
     mockNumberInput.type = "number";
     jest.spyOn(mockNumberInput, "addEventListener");
     gController.addListenerNumInps([mockNumberInput]);
-    expect(mockNumberInput.addEventListener).toHaveBeenCalledWith(
-      "input",
-      expect.any(Function)
-    );
+    expect(mockNumberInput.addEventListener).toHaveBeenCalledWith("input", expect.any(Function));
     expect(gModel.numberLimit).not.toHaveBeenCalled();
     mockNumberInput.dispatchEvent(new Event("input"));
     expect(gModel.numberLimit).toHaveBeenCalledWith(mockNumberInput);
     expect(inputNotFoundSpy).not.toHaveBeenCalled();
   });
-  it("should call inputNotFound if the element is not an input of type number", () => {
+  it("should call inputNotFound if the element is not an input of type number", (): void => {
     const mockTextInput = document.createElement("input");
     mockTextInput.type = "text";
     gController.addListenerNumInps([mockTextInput]);
     expect(inputNotFoundSpy).toHaveBeenCalledWith(
       mockTextInput,
-      `target numInp id ${JSON.stringify(
-        mockTextInput.id || "UNIDENTIFIED TEXTCONT"
-      )}`,
+      `target numInp id ${JSON.stringify(mockTextInput.id || "UNIDENTIFIED TEXTCONT")}`,
       expect.any(Error)
     );
   });
-  it("should log an error if the array contains invalid elements", () => {
+  it("should log an error if the array contains invalid elements", (): void => {
     gController.addListenerNumInps([null as any]);
-    expect(
-      jest.spyOn(console, "error").mockImplementation(() => {})
-    ).toHaveBeenCalledWith("Erro validando instâncias em numInps");
+    expect(jest.spyOn(console, "error").mockImplementation((): void => {})).toHaveBeenCalledWith(
+      "Erro validando instâncias em numInps"
+    );
   });
 });
-describe("addListenerRadios", () => {
+describe("addListenerRadios", (): void => {
   let inputNotFoundSpy: jest.SpyInstance;
-  beforeEach(() => {
+  beforeEach((): void => {
     inputNotFoundSpy = jest
       .spyOn(errorHandler, "inputNotFound")
-      .mockImplementation(() => new Error("Input not found."));
-    jest.spyOn(gHandlers, "doubleClickHandler").mockImplementation(() => {});
-    jest.spyOn(gHandlers, "cpbInpHandler").mockImplementation(() => {});
-    jest.spyOn(gHandlers, "deactTextInput").mockImplementation(() => {});
+      .mockImplementation((): Error => new Error("Input not found."));
+    jest.spyOn(gHandlers, "doubleClickHandler").mockImplementation((): void => {});
+    jest.spyOn(gHandlers, "cpbInpHandler").mockImplementation((): void => {});
+    jest.spyOn(gHandlers, "deactTextInput").mockImplementation((): void => {});
     jest.clearAllMocks();
   });
-  it("should add a dblclick listener for radio inputs", () => {
+  it("should add a dblclick listener for radio inputs", (): void => {
     const mockRadioInput = document.createElement("input");
     mockRadioInput.type = "radio";
     jest.spyOn(mockRadioInput, "addEventListener");
     gController.addListenerRadios([mockRadioInput], "od");
-    expect(mockRadioInput.addEventListener).toHaveBeenCalledWith(
-      "dblclick",
-      expect.any(Function)
-    );
+    expect(mockRadioInput.addEventListener).toHaveBeenCalledWith("dblclick", expect.any(Function));
     mockRadioInput.dispatchEvent(new Event("dblclick"));
     expect(gHandlers.doubleClickHandler).toHaveBeenCalledWith(mockRadioInput);
     expect(inputNotFoundSpy).not.toHaveBeenCalled();
   });
-  it("should add change and keydown listeners if context is ed", () => {
+  it("should add change and keydown listeners if context is ed", (): void => {
     const mockRadioInput = document.createElement("input");
     mockRadioInput.type = "radio";
     jest.spyOn(mockRadioInput, "addEventListener");
     gController.addListenerRadios([mockRadioInput], "ed");
-    expect(mockRadioInput.addEventListener).toHaveBeenCalledWith(
-      "change",
-      expect.any(Function)
-    );
-    expect(mockRadioInput.addEventListener).toHaveBeenCalledWith(
-      "keydown",
-      expect.any(Function)
-    );
+    expect(mockRadioInput.addEventListener).toHaveBeenCalledWith("change", expect.any(Function));
+    expect(mockRadioInput.addEventListener).toHaveBeenCalledWith("keydown", expect.any(Function));
     mockRadioInput.dispatchEvent(new Event("change"));
-    expect(gHandlers.cpbInpHandler).toHaveBeenCalledWith(
-      expect.anything(),
-      mockRadioInput
-    );
+    expect(gHandlers.cpbInpHandler).toHaveBeenCalledWith(expect.anything(), mockRadioInput);
   });
-  it("should add a change listener and call deactTextInput if context is ag", () => {
+  it("should add a change listener and call deactTextInput if context is ag", (): void => {
     const mockRadioInput = document.createElement("input");
     mockRadioInput.type = "radio";
     jest.spyOn(mockRadioInput, "addEventListener");
     gController.addListenerRadios([mockRadioInput], "ag");
-    expect(mockRadioInput.addEventListener).toHaveBeenCalledWith(
-      "change",
-      expect.any(Function)
-    );
+    expect(mockRadioInput.addEventListener).toHaveBeenCalledWith("change", expect.any(Function));
     mockRadioInput.dispatchEvent(new Event("change"));
     expect(gHandlers.deactTextInput).toHaveBeenCalled();
   });
-  it("should call inputNotFound if the element is not a valid radio input", () => {
+  it("should call inputNotFound if the element is not a valid radio input", (): void => {
     const mockTextInput = document.createElement("input");
     mockTextInput.type = "text";
     gController.addListenerRadios([mockTextInput]);
@@ -235,38 +182,32 @@ describe("addListenerRadios", () => {
       expect.any(Error)
     );
   });
-  it("should log an error if the array contains invalid elements", () => {
+  it("should log an error if the array contains invalid elements", (): void => {
     gController.addListenerRadios([null as any]);
-    expect(
-      jest.spyOn(console, "error").mockImplementation(() => {})
-    ).toHaveBeenCalledWith("Erro validando instâncias em radioInps");
+    expect(jest.spyOn(console, "error").mockImplementation((): void => {})).toHaveBeenCalledWith(
+      "Erro validando instâncias em radioInps"
+    );
   });
 });
-describe("addListenerDateBtns", () => {
+describe("addListenerDateBtns", (): void => {
   let elementNotFoundSpy: jest.SpyInstance;
-  beforeEach(() => {
+  beforeEach((): void => {
     elementNotFoundSpy = jest
       .spyOn(errorHandler, "elementNotFound")
-      .mockImplementation(() => new Error("Element not found."));
-    jest.spyOn(gHandlers, "useCurrentDate").mockImplementation(() => {});
+      .mockImplementation((): Error => new Error("Element not found."));
+    jest.spyOn(gHandlers, "useCurrentDate").mockImplementation((): void => {});
     jest.clearAllMocks();
   });
-  it("should add a click listener for button elements", () => {
+  it("should add a click listener for button elements", (): void => {
     const mockButton = document.createElement("button");
     jest.spyOn(mockButton, "addEventListener");
     gController.addListenerDateBtns([mockButton]);
-    expect(mockButton.addEventListener).toHaveBeenCalledWith(
-      "click",
-      expect.any(Function)
-    );
+    expect(mockButton.addEventListener).toHaveBeenCalledWith("click", expect.any(Function));
     mockButton.dispatchEvent(new Event("click"));
-    expect(gHandlers.useCurrentDate).toHaveBeenCalledWith(
-      expect.anything(),
-      mockButton
-    );
+    expect(gHandlers.useCurrentDate).toHaveBeenCalledWith(expect.anything(), mockButton);
     expect(elementNotFoundSpy).not.toHaveBeenCalled();
   });
-  it("should call elementNotFound if the element is not a button", () => {
+  it("should call elementNotFound if the element is not a button", (): void => {
     const mockTextInput = document.createElement("input");
     gController.addListenerDateBtns([mockTextInput]);
     expect(elementNotFoundSpy).toHaveBeenCalledWith(
@@ -275,26 +216,24 @@ describe("addListenerDateBtns", () => {
       expect.any(Error)
     );
   });
-  it("should log an error if the array contains invalid elements", () => {
+  it("should log an error if the array contains invalid elements", (): void => {
     gController.addListenerDateBtns([null as any]);
-    expect(
-      jest.spyOn(console, "error").mockImplementation(() => {})
-    ).toHaveBeenCalledWith("Erro validando instâncias em dateBtns");
+    expect(jest.spyOn(console, "error").mockImplementation((): void => {})).toHaveBeenCalledWith(
+      "Erro validando instâncias em dateBtns"
+    );
   });
 });
-describe("addListenersGenConts", () => {
+describe("addListenersGenConts", (): void => {
   let fluxGenSpy: jest.SpyInstance;
   let multipleElementsNotFoundSpy: jest.SpyInstance;
-  beforeEach(() => {
-    fluxGenSpy = jest
-      .spyOn(gModel, "fluxGen")
-      .mockImplementation(() => "masculino");
+  beforeEach((): void => {
+    fluxGenSpy = jest.spyOn(gModel, "fluxGen").mockImplementation((): string => "masculino");
     multipleElementsNotFoundSpy = jest
       .spyOn(errorHandler, "multipleElementsNotFound")
-      .mockImplementation(() => new Error(`Multiple elements not found.`));
+      .mockImplementation((): Error => new Error(`Multiple elements not found.`));
     jest.clearAllMocks();
   });
-  it("should add a change listener to gen elements and update genValue", () => {
+  it("should add a change listener to gen elements and update genValue", (): void => {
     const mockElement = document.createElement("input");
     mockElement.value = "feminino";
     const mockBirthRel = document.createElement("input");
@@ -306,53 +245,36 @@ describe("addListenersGenConts", () => {
       .mockReturnValueOnce(mockTrans)
       .mockReturnValueOnce(mockFisAlin);
     mockElement.dispatchEvent(new Event("change"));
-    expect(fluxGenSpy).toHaveBeenCalledWith(
-      [mockElement, mockBirthRel, mockTrans, mockFisAlin],
-      mockElement.value
-    );
-    expect(gController.addListenersGenConts(mockElement, "feminino")).toBe(
-      "masculino"
-    );
+    expect(fluxGenSpy).toHaveBeenCalledWith([mockElement, mockBirthRel, mockTrans, mockFisAlin], mockElement.value);
+    expect(gController.addListenersGenConts(mockElement, "feminino")).toBe<Gender>("masculino");
   });
-  it("should call multipleElementsNotFound if elements are missing", () => {
+  it("should call multipleElementsNotFound if elements are missing", (): void => {
     jest.spyOn(gModel, "checkAllGenConts").mockReturnValue(false);
-    gController.addListenersGenConts(
-      document.createElement("input"),
-      "feminino"
-    );
+    gController.addListenersGenConts(document.createElement("input"), "feminino");
     expect(multipleElementsNotFoundSpy).toHaveBeenCalled();
   });
 });
-describe("addListenerAutocorrectBtns", () => {
+describe("addListenerAutocorrectBtns", (): void => {
   let switchAutocorrectSpy: jest.SpyInstance;
   let elementNotPopulatedSpy: jest.SpyInstance;
-  beforeEach(() => {
-    switchAutocorrectSpy = jest
-      .spyOn(gModel, "switchAutocorrect")
-      .mockImplementation(() => true);
+  beforeEach((): void => {
+    switchAutocorrectSpy = jest.spyOn(gModel, "switchAutocorrect").mockImplementation((): boolean => true);
     elementNotPopulatedSpy = jest
       .spyOn(errorHandler, "elementNotPopulated")
-      .mockImplementation(() => new Error(`Element not populated.`));
+      .mockImplementation((): Error => new Error(`Element not populated.`));
     jest.clearAllMocks();
   });
-  it("should add a click listener for valid buttons and update autocorrect status", () => {
+  it("should add a click listener for valid buttons and update autocorrect status", (): void => {
     const mockButton = document.createElement("button");
     jest.spyOn(mockButton, "addEventListener");
     const result = gController.addListenerAutocorrectBtns([mockButton]);
-    expect(mockButton.addEventListener).toHaveBeenCalledWith(
-      "click",
-      expect.any(Function)
-    );
+    expect(mockButton.addEventListener).toHaveBeenCalledWith("click", expect.any(Function));
     mockButton.dispatchEvent(new Event("click"));
-    expect(switchAutocorrectSpy).toHaveBeenCalledWith(
-      expect.anything(),
-      mockButton,
-      true
-    );
-    expect(result).toBe(true);
+    expect(switchAutocorrectSpy).toHaveBeenCalledWith(expect.anything(), mockButton, true);
+    expect(result).toBe<boolean>(true);
   });
 
-  it("should call elementNotPopulated for invalid elements", () => {
+  it("should call elementNotPopulated for invalid elements", (): void => {
     const mockInput = document.createElement("input");
     mockInput.type = "text";
     gController.addListenerAutocorrectBtns([mockInput]);
@@ -362,37 +284,32 @@ describe("addListenerAutocorrectBtns", () => {
       expect.any(Error)
     );
   });
-  it("should log an error if the array contains invalid elements", () => {
+  it("should log an error if the array contains invalid elements", (): void => {
     gController.addListenerAutocorrectBtns([null as any]);
-    expect(
-      jest.spyOn(console, "error").mockImplementation(() => {})
-    ).toHaveBeenCalledWith("Erro validando instâncias em deactAutocorrectBtns");
+    expect(jest.spyOn(console, "error").mockImplementation((): void => {})).toHaveBeenCalledWith(
+      "Erro validando instâncias em deactAutocorrectBtns"
+    );
   });
 });
-describe("addListenerAstDigitBtns", () => {
+describe("addListenerAstDigitBtns", (): void => {
   let elementNotFoundSpy: jest.SpyInstance;
   let changeToAstDigitSpy: jest.SpyInstance;
-  beforeEach(() => {
+  beforeEach((): void => {
     elementNotFoundSpy = jest
       .spyOn(errorHandler, "elementNotFound")
-      .mockImplementation(() => new Error(`Element not found.`));
-    changeToAstDigitSpy = jest
-      .spyOn(gHandlers, "changeToAstDigit")
-      .mockImplementation(() => {});
+      .mockImplementation((): Error => new Error(`Element not found.`));
+    changeToAstDigitSpy = jest.spyOn(gHandlers, "changeToAstDigit").mockImplementation((): void => {});
     jest.clearAllMocks();
   });
-  it("should add click listeners to valid button elements", () => {
+  it("should add click listeners to valid button elements", (): void => {
     const mockButton = document.createElement("button");
     jest.spyOn(mockButton, "addEventListener");
     gController.addListenerAstDigitBtns([mockButton]);
-    expect(mockButton.addEventListener).toHaveBeenCalledWith(
-      "click",
-      expect.any(Function)
-    );
+    expect(mockButton.addEventListener).toHaveBeenCalledWith("click", expect.any(Function));
     mockButton.dispatchEvent(new Event("click"));
     expect(changeToAstDigitSpy).toHaveBeenCalledWith(mockButton);
   });
-  it("should call elementNotFound for non-button elements", () => {
+  it("should call elementNotFound for non-button elements", (): void => {
     const mockInput = document.createElement("input");
     gController.addListenerAstDigitBtns([mockInput]);
     expect(elementNotFoundSpy).toHaveBeenCalledWith(
@@ -401,40 +318,37 @@ describe("addListenerAstDigitBtns", () => {
       expect.any(Error)
     );
   });
-  it("should log an error if the array contains invalid elements", () => {
+  it("should log an error if the array contains invalid elements", (): void => {
     gController.addListenerAstDigitBtns([null as any]);
-    expect(
-      jest.spyOn(console, "error").mockImplementation(() => {})
-    ).toHaveBeenCalledWith("Erro validando instâncias em astDigtBtns");
+    expect(jest.spyOn(console, "error").mockImplementation((): void => {})).toHaveBeenCalledWith(
+      "Erro validando instâncias em astDigtBtns"
+    );
   });
 });
-describe("addListenerExportBtn", () => {
+describe("addListenerExportBtn", (): void => {
   let elementNotFoundSpy: jest.SpyInstance;
-  beforeEach(() => {
+  beforeEach((): void => {
     elementNotFoundSpy = jest
       .spyOn(errorHandler, "elementNotFound")
-      .mockImplementation(() => new Error(`Element not found.`));
+      .mockImplementation((): Error => new Error(`Element not found.`));
     jest.spyOn(utils, "book_new").mockReturnValue({
       SheetNames: [],
       Sheets: {},
     } as WorkBook);
-    jest.mock("xlsx", () => ({
+    jest.mock("xlsx", (): any => ({
       ...jest.requireActual("xlsx"),
       writeFile: jest.fn(),
     }));
     jest.clearAllMocks();
   });
-  it("should add a click listener to export button", () => {
+  it("should add a click listener to export button", (): void => {
     const mockButton = document.createElement("button");
     jest.spyOn(mockButton, "addEventListener");
     document.querySelector = jest.fn().mockReturnValue(mockButton);
-    expect(mockButton.addEventListener).toHaveBeenCalledWith(
-      "click",
-      expect.any(Function)
-    );
-    expect(gController.addListenerExportBtn()).toBe(mockButton);
+    expect(mockButton.addEventListener).toHaveBeenCalledWith("click", expect.any(Function));
+    expect(gController.addListenerExportBtn()).toBe<HTMLButtonElement>(mockButton);
   });
-  it("should handle spreadsheet creation on click", () => {
+  it("should handle spreadsheet creation on click", (): void => {
     const mockButton = document.createElement("button");
     const mockInput = document.createElement("input");
     mockInput.type = "text";
@@ -444,31 +358,24 @@ describe("addListenerExportBtn", () => {
     document.querySelectorAll = jest.fn().mockReturnValue([mockInput]);
     gController.addListenerExportBtn();
     mockButton.dispatchEvent(new Event("click"));
-    expect(writeFile).toHaveBeenCalledWith(
-      expect.anything(),
-      expect.stringContaining("data_undefinedform_")
-    );
+    expect(writeFile).toHaveBeenCalledWith(expect.anything(), expect.stringContaining("data_undefinedform_"));
   });
-  it("should call elementNotFound when export button is missing", () => {
+  it("should call elementNotFound when export button is missing", (): void => {
     document.querySelector = jest.fn().mockReturnValue(null);
     gController.addListenerExportBtn();
-    expect(elementNotFoundSpy).toHaveBeenCalledWith(
-      null,
-      "argument for addListenerExportBtn()",
-      expect.any(Error)
-    );
+    expect(elementNotFoundSpy).toHaveBeenCalledWith(null, "argument for addListenerExportBtn()", expect.any(Error));
   });
 });
-describe("addResetAstListener", () => {
+describe("addResetAstListener", (): void => {
   let elementNotFoundSpy: jest.SpyInstance;
-  beforeEach(() => {
+  beforeEach((): void => {
     elementNotFoundSpy = jest
       .spyOn(errorHandler, "elementNotFound")
-      .mockImplementation(() => new Error(`Element not found.`));
-    jest.spyOn(gController, "addCanvasListeners").mockImplementation(() => {});
+      .mockImplementation((): Error => new Error(`Element not found.`));
+    jest.spyOn(gController, "addCanvasListeners").mockImplementation((): void => {});
     jest.clearAllMocks();
   });
-  it("should add a click listener to reset button and replace canvas element", () => {
+  it("should add a click listener to reset button and replace canvas element", (): void => {
     const mockResetButton = document.createElement("button");
     const mockDivConfirm = document.createElement("div");
     const mockCanvas = document.createElement("canvas");
@@ -477,15 +384,12 @@ describe("addResetAstListener", () => {
     mockResetButton.closest = jest.fn().mockReturnValue(mockDivConfirm);
     document.getElementById = jest.fn().mockReturnValue(mockResetButton);
     gController.addResetAstListener();
-    expect(mockResetButton.addEventListener).toHaveBeenCalledWith(
-      "click",
-      expect.any(Function)
-    );
+    expect(mockResetButton.addEventListener).toHaveBeenCalledWith("click", expect.any(Function));
     mockResetButton.dispatchEvent(new Event("click"));
     expect(mockDivConfirm.querySelector("#inpAstConfirmId")).toBeTruthy();
     expect(gController.addCanvasListeners).toHaveBeenCalled();
   });
-  it("should replace input element with a new file input", () => {
+  it("should replace input element with a new file input", (): void => {
     const mockResetButton = document.createElement("button");
     const mockDivConfirm = document.createElement("div");
     const mockInput = document.createElement("input");
@@ -497,50 +401,39 @@ describe("addResetAstListener", () => {
     gController.addResetAstListener();
     mockResetButton.dispatchEvent(new Event("click"));
     const newInput = mockDivConfirm.querySelector("#inpAstConfirmId");
-    expect(newInput).toBeInstanceOf(HTMLInputElement);
-    expect(newInput?.id).toBe("inpAstConfirmId");
+    expect(newInput).toBeInstanceOf<{
+      new (): HTMLInputElement;
+      prototype: HTMLInputElement;
+    }>(HTMLInputElement);
+    expect(newInput?.id).toBe<string>("inpAstConfirmId");
   });
-  it("should call elementNotFound if reset button is not found", () => {
+  it("should call elementNotFound if reset button is not found", (): void => {
     document.getElementById = jest.fn().mockReturnValue(null);
     gController.addResetAstListener();
-    expect(elementNotFoundSpy).toHaveBeenCalledWith(
-      null,
-      "Button for reseting signature",
-      expect.any(Error)
-    );
+    expect(elementNotFoundSpy).toHaveBeenCalledWith(null, "Button for reseting signature", expect.any(Error));
   });
 });
-describe("addCustomSbListeners", () => {
+describe("addCustomSbListeners", (): void => {
   let elementNotFoundSpy: jest.SpyInstance;
-  beforeEach(() => {
+  beforeEach((): void => {
     elementNotFoundSpy = jest
       .spyOn(errorHandler, "elementNotFound")
-      .mockImplementation(() => new Error(`Element not found.`));
+      .mockImplementation((): Error => new Error(`Element not found.`));
     jest.clearAllMocks();
   });
-  it("should throw an error if container is not an HTMLElement", () => {
-    gController.addCustomSbListeners(
-      null as any,
-      document.createElement("div")
-    );
-    expect(elementNotFoundSpy).toHaveBeenCalledWith(
-      null,
-      "Main Element for addCustomSbListeners()",
-      expect.any(Error)
-    );
+  it("should throw an error if container is not an HTMLElement", (): void => {
+    gController.addCustomSbListeners(null as any, document.createElement("div"));
+    expect(elementNotFoundSpy).toHaveBeenCalledWith(null, "Main Element for addCustomSbListeners()", expect.any(Error));
   });
-  it("should throw an error if content is not an HTMLElement", () => {
-    gController.addCustomSbListeners(
-      document.createElement("div"),
-      null as any
-    );
+  it("should throw an error if content is not an HTMLElement", (): void => {
+    gController.addCustomSbListeners(document.createElement("div"), null as any);
     expect(elementNotFoundSpy).toHaveBeenCalledWith(
       null,
       "Content Element for addCustomSbListeners()",
       expect.any(Error)
     );
   });
-  it("should correctly create and append the scrollbar and thumb", () => {
+  it("should correctly create and append the scrollbar and thumb", (): void => {
     const mockContainer = document.createElement("div");
     const mockContent = document.createElement("div");
     jest.spyOn(mockContainer, "appendChild");
@@ -550,37 +443,25 @@ describe("addCustomSbListeners", () => {
     expect(scrollbar).not.toBeNull();
     expect(scrollbar?.querySelector(".scroll-thumb")).not.toBeNull();
   });
-  it("should add mouse and resize event listeners", () => {
+  it("should add mouse and resize event listeners", (): void => {
     const mockContainer = document.createElement("div");
-    gController.addCustomSbListeners(
-      mockContainer,
-      document.createElement("div")
-    );
+    gController.addCustomSbListeners(mockContainer, document.createElement("div"));
     const thumb = mockContainer.querySelector(".scroll-thumb");
-    const thumbMouseDownSpy = jest.spyOn(
-      thumb as HTMLElement,
-      "addEventListener"
-    );
+    const thumbMouseDownSpy = jest.spyOn(thumb as HTMLElement, "addEventListener");
     thumb?.dispatchEvent(new MouseEvent("mousedown", { clientY: 50 }));
-    expect(thumbMouseDownSpy).toHaveBeenCalledWith(
-      "mousedown",
-      expect.any(Function)
-    );
-    expect(jest.spyOn(window, "addEventListener")).toHaveBeenCalledWith(
-      "resize",
-      expect.any(Function)
-    );
+    expect(thumbMouseDownSpy).toHaveBeenCalledWith("mousedown", expect.any(Function));
+    expect(jest.spyOn(window, "addEventListener")).toHaveBeenCalledWith("resize", expect.any(Function));
   });
 });
-describe("addCanvasListeners", () => {
+describe("addCanvasListeners", (): void => {
   let elementNotFoundSpy: jest.SpyInstance;
-  beforeEach(() => {
+  beforeEach((): void => {
     elementNotFoundSpy = jest
       .spyOn(errorHandler, "elementNotFound")
-      .mockImplementation(() => new Error(`Element not found.`));
+      .mockImplementation((): Error => new Error(`Element not found.`));
     jest.clearAllMocks();
   });
-  it("should throw an error if canvas is not found", () => {
+  it("should throw an error if canvas is not found", (): void => {
     document.getElementById = jest.fn().mockReturnValue(null);
     gController.addCanvasListeners();
     expect(elementNotFoundSpy).toHaveBeenCalledWith(
@@ -589,7 +470,7 @@ describe("addCanvasListeners", () => {
       expect.any(Error)
     );
   });
-  it("should initialize canvas and set drawing listeners", () => {
+  it("should initialize canvas and set drawing listeners", (): void => {
     const mockCanvas = document.createElement("canvas");
     const mockContext = {
       fillRect: jest.fn(),
@@ -601,10 +482,10 @@ describe("addCanvasListeners", () => {
     document.getElementById = jest.fn().mockReturnValue(mockCanvas);
     jest.spyOn(mockCanvas, "getContext").mockReturnValue(mockContext);
     gController.addCanvasListeners();
-    expect(mockCanvas.width).toBe(innerWidth);
+    expect(mockCanvas.width).toBe<number>(innerWidth);
     expect(mockContext.fillRect).toHaveBeenCalled();
   });
-  it("should call draw function on mousedown and mousemove", () => {
+  it("should call draw function on mousedown and mousemove", (): void => {
     const mockCanvas = document.createElement("canvas");
     const mockContext = {
       fillRect: jest.fn(),
@@ -616,16 +497,12 @@ describe("addCanvasListeners", () => {
     document.getElementById = jest.fn().mockReturnValue(mockCanvas);
     jest.spyOn(mockCanvas, "getContext").mockReturnValue(mockContext);
     gController.addCanvasListeners();
-    mockCanvas.dispatchEvent(
-      new MouseEvent("mousedown", { clientX: 50, clientY: 50 })
-    );
-    mockCanvas.dispatchEvent(
-      new MouseEvent("mousemove", { clientX: 60, clientY: 60 })
-    );
+    mockCanvas.dispatchEvent(new MouseEvent("mousedown", { clientX: 50, clientY: 50 }));
+    mockCanvas.dispatchEvent(new MouseEvent("mousemove", { clientX: 60, clientY: 60 }));
     expect(mockContext.lineTo).toHaveBeenCalledWith(50, expect.any(Number));
     expect(mockContext.stroke).toHaveBeenCalled();
   });
-  it("should stop drawing on mouseup", () => {
+  it("should stop drawing on mouseup", (): void => {
     const mockCanvas = document.createElement("canvas");
     const mockContext = {
       fillRect: jest.fn(),
@@ -637,23 +514,21 @@ describe("addCanvasListeners", () => {
     document.getElementById = jest.fn().mockReturnValue(mockCanvas);
     jest.spyOn(mockCanvas, "getContext").mockReturnValue(mockContext);
     gController.addCanvasListeners();
-    mockCanvas.dispatchEvent(
-      new MouseEvent("mousedown", { clientX: 50, clientY: 50 })
-    );
+    mockCanvas.dispatchEvent(new MouseEvent("mousedown", { clientX: 50, clientY: 50 }));
     mockCanvas.dispatchEvent(new MouseEvent("mouseup"));
     expect(mockContext.beginPath).toHaveBeenCalledTimes(2);
   });
 });
-describe("watchLabels", () => {
-  it("should set data-watched attribute to labels", () => {
+describe("watchLabels", (): void => {
+  it("should set data-watched attribute to labels", (): void => {
     const mockLabel = document.createElement("label");
     document.body.appendChild(mockLabel);
     gController.watchLabels();
     setTimeout(() => {
-      expect(mockLabel.dataset.watched).toBe("true");
+      expect(mockLabel.dataset.watched).toBe<PseudoBool>("true");
     }, 3000);
   });
-  it("should correctly assign ids to inputs and link them with labels", () => {
+  it("should correctly assign ids to inputs and link them with labels", (): void => {
     const mockLabel = document.createElement("label");
     const mockInput = document.createElement("input");
     mockLabel.appendChild(mockInput);
@@ -661,10 +536,10 @@ describe("watchLabels", () => {
     gController.watchLabels();
     setTimeout(() => {
       expect(mockInput.id).toBeTruthy();
-      expect(mockLabel.htmlFor).toBe(mockInput.id);
+      expect(mockLabel.htmlFor).toBe<string>(mockInput.id);
     }, 3000);
   });
-  it("should assign ids even if input is sibling of label", () => {
+  it("should assign ids even if input is sibling of label", (): void => {
     const mockLabel = document.createElement("label");
     const mockInput = document.createElement("input");
     mockLabel.insertAdjacentElement("afterend", mockInput);
@@ -672,7 +547,7 @@ describe("watchLabels", () => {
     gController.watchLabels();
     setTimeout(() => {
       expect(mockInput.id).toBeTruthy();
-      expect(mockLabel.htmlFor).toBe(mockInput.id);
+      expect(mockLabel.htmlFor).toBe<string>(mockInput.id);
     }, 3000);
   });
 });

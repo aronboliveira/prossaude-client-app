@@ -1,70 +1,70 @@
 //v1.0.0
 import { resetAvDentValue, orderLabels } from "../../../locals/odPage/odModel";
-import {
-  inputNotFound,
-  elementNotFound,
-  elementNotPopulated,
-} from "../../../global/handlers/errorHandler";
-jest.mock("../../../global/handlers/errorHandler", () => ({
-  extLine: jest.fn(),
-  inputNotFound: jest.fn(),
-  elementNotFound: jest.fn(),
-  elementNotPopulated: jest.fn(),
-}));
-describe("resetAvDentValue", () => {
-  beforeEach(() => {
+import { inputNotFound, elementNotFound, elementNotPopulated } from "../../../global/handlers/errorHandler";
+jest.mock(
+  "../../../global/handlers/errorHandler",
+  (): {
+    extLine: jest.Mock<any, any, any>;
+    inputNotFound: jest.Mock<any, any, any>;
+    elementNotFound: jest.Mock<any, any, any>;
+    elementNotPopulated: jest.Mock<any, any, any>;
+  } => ({
+    extLine: jest.fn(),
+    inputNotFound: jest.fn(),
+    elementNotFound: jest.fn(),
+    elementNotPopulated: jest.fn(),
+  })
+);
+describe("resetAvDentValue", (): void => {
+  beforeEach((): void => {
     document.body.innerHTML = "";
   });
-  test("should reset the value and set placeholder for predefined value", () => {
+  test("should reset the value and set placeholder for predefined value", (): void => {
     document.body.innerHTML = `
       <input type="text" class="inpAvDent" value="predefinedValue">
       <option class="elemOp" value="predefinedValue"></option>
     `;
     const input = document.querySelector(".inpAvDent") as HTMLInputElement;
-    expect(resetAvDentValue(input)).toBe(true);
+    expect(resetAvDentValue(input)).toBe<boolean>(true);
     setTimeout(() => {
-      expect(input.value).toBe("");
-      expect(input.getAttribute("placeholder")).toBe("Apagado");
-      expect(input.classList.contains("placeholder-hidden")).toBe(true);
+      expect(input.value).toBe<string>("");
+      expect(input.getAttribute("placeholder")).toBe<string>("Apagado");
+      expect(input.classList.contains("placeholder-hidden")).toBe<boolean>(true);
     }, 150);
   });
-  test("should not reset for non-predefined value", () => {
+  test("should not reset for non-predefined value", (): void => {
     document.body.innerHTML = `
       <input type="text" class="inpAvDent" value="nonPredefinedValue">
       <option class="elemOp" value="predefinedValue"></option>
     `;
     const input = document.querySelector(".inpAvDent") as HTMLInputElement;
-    expect(resetAvDentValue(input)).toBe(false);
-    expect(input.value).toBe("nonPredefinedValue");
+    expect(resetAvDentValue(input)).toBe<boolean>(false);
+    expect(input.value).toBe<string>("nonPredefinedValue");
   });
-  test("should call inputNotFound if targInp is not an input, select, or textarea", () => {
+  test("should call inputNotFound if targInp is not an input, select, or textarea", (): void => {
     const div = document.createElement("div");
     resetAvDentValue(div);
-    expect(inputNotFound).toHaveBeenCalledWith(
-      div,
-      "targInp",
-      expect.anything()
-    );
+    expect(inputNotFound).toHaveBeenCalledWith<Parameters<typeof inputNotFound>>(div, "targInp", expect.anything());
   });
-  test("should call inputNotFound if dlOptionsArray contains invalid elements", () => {
+  test("should call inputNotFound if dlOptionsArray contains invalid elements", (): void => {
     document.body.innerHTML = `
       <input type="text" class="inpAvDent" value="predefinedValue">
       <div class="elemOp"></div>
     `;
     const input = document.querySelector(".inpAvDent") as HTMLInputElement;
     resetAvDentValue(input);
-    expect(inputNotFound).toHaveBeenCalledWith(
+    expect(inputNotFound).toHaveBeenCalledWith<Parameters<typeof inputNotFound>>(
       expect.anything(),
       "UNDEFINED ID DLOPTION",
       expect.anything()
     );
   });
 });
-describe("orderLabels", () => {
-  beforeEach(() => {
+describe("orderLabels", (): void => {
+  beforeEach((): void => {
     document.body.innerHTML = "";
   });
-  test("should set correct order for label elements", () => {
+  test("should set correct order for label elements", (): void => {
     document.body.innerHTML = `
       <div class="subDiv">
         <label class="labelAvDent" id="label1"></label>
@@ -75,12 +75,11 @@ describe("orderLabels", () => {
     const subDiv = document.querySelector(".subDiv") as HTMLElement;
     orderLabels(subDiv);
     const labels = document.querySelectorAll(".labelAvDent");
-    labels.forEach((label, i) => {
-      label instanceof HTMLElement &&
-        expect(label.style.getPropertyValue("order")).toBe((i + 1).toString());
+    labels.forEach((label, i): void => {
+      label instanceof HTMLElement && expect(label.style.getPropertyValue("order")).toBe<string>((i + 1).toString());
     });
   });
-  test("should call elementNotPopulated when labsNList is empty or invalid", () => {
+  test("should call elementNotPopulated when labsNList is empty or invalid", (): void => {
     document.body.innerHTML = `
       <div class="subDiv">
         <label class="labelAvDent" id="label1"></label>
@@ -88,16 +87,16 @@ describe("orderLabels", () => {
     `;
     document.getElementById("label1")?.removeAttribute("id");
     orderLabels(document.querySelector(".subDiv") as HTMLElement);
-    expect(elementNotPopulated).toHaveBeenCalledWith(
+    expect(elementNotPopulated).toHaveBeenCalledWith<Parameters<typeof elementNotPopulated>>(
       expect.anything(),
       "labsNList in orderLabels",
       expect.anything()
     );
   });
-  test("should call elementNotFound when subDiv is not an HTMLElement", () => {
+  test("should call elementNotFound when subDiv is not an HTMLElement", (): void => {
     const div = document.createElement("input");
     orderLabels(div);
-    expect(elementNotFound).toHaveBeenCalledWith(
+    expect(elementNotFound).toHaveBeenCalledWith<Parameters<typeof elementNotFound>>(
       div,
       "subDiv in orderLabels",
       expect.anything()

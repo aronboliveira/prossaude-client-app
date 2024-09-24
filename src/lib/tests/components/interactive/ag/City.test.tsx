@@ -10,7 +10,7 @@ jest.mock(
   })
 );
 describe("City Component", (): void => {
-  it("renders the city input field", () => {
+  it("renders the city input field", (): void => {
     render(<City />);
     expect(screen.getByLabelText<HTMLInputElement>("Cidade")).toBeInTheDocument();
   });

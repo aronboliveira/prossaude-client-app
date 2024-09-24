@@ -65,7 +65,7 @@ describe("AlterFieldList Component", (): void => {
     const select = screen.getByRole<HTMLSelectElement>("combobox");
     expect(select).toBeInTheDocument();
     fireEvent.change(select, { target: { value: "nome" } });
-    expect(select.value).toBe("nome");
+    expect(select.value).toBe<string>("nome");
   });
   test("renders ErrorFallbackDlg when error occurs", (): void => {
     renderComponent();

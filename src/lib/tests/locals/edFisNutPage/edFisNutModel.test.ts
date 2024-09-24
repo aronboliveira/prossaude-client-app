@@ -8,13 +8,14 @@ import {
   alertPGCRounding,
 } from "../../../locals/edFisNutPage/edFisNutModel";
 import { Person } from "../../../global/declarations/classes";
-describe("checkInnerColGroups", () => {
+import { ErrorHandler, Protocol } from "../../testVars";
+describe("checkInnerColGroups", (): void => {
   let parentEl: HTMLElement;
-  beforeEach(() => {
+  beforeEach((): void => {
     parentEl = document.createElement("div");
     jest.clearAllMocks();
   });
-  it("should return the correct count and similarity flag when colgroups are valid and similar", () => {
+  it("should return the correct count and similarity flag when colgroups are valid and similar", (): void => {
     const colgroup1 = document.createElement("colgroup");
     const colgroup2 = document.createElement("colgroup");
     const col1 = document.createElement("col");
@@ -24,23 +25,23 @@ describe("checkInnerColGroups", () => {
     parentEl.appendChild(colgroup1);
     parentEl.appendChild(colgroup2);
     const [count, areSimilar] = checkInnerColGroups(parentEl);
-    expect(count).toBe(2);
-    expect(areSimilar).toBe(true);
+    expect(count).toBe<number>(2);
+    expect(areSimilar).toBe<boolean>(true);
   });
-  it("should call multipleElementsNotFound when no colgroups are found", () => {
-    const mockMultipleElementsNotFound = jest.spyOn(
+  it("should call multipleElementsNotFound when no colgroups are found", (): void => {
+    const mockMultipleElementsNotFound = jest.spyOn<any, ErrorHandler>(
       require("../../../global/handlers/errorHandler"),
       "multipleElementsNotFound"
     );
     checkInnerColGroups(parentEl);
     expect(mockMultipleElementsNotFound).toHaveBeenCalled();
   });
-  it("should call elementNotFound when a child is not an HTMLTableColElement", () => {
+  it("should call elementNotFound when a child is not an HTMLTableColElement", (): void => {
     const colgroup = document.createElement("colgroup");
     const div = document.createElement("div");
     colgroup.appendChild(div);
     parentEl.appendChild(colgroup);
-    const mockElementNotFound = jest.spyOn(
+    const mockElementNotFound = jest.spyOn<any, ErrorHandler>(
       require("../../../global/handlers/errorHandler"),
       "elementNotFound"
     );
@@ -48,14 +49,14 @@ describe("checkInnerColGroups", () => {
     expect(mockElementNotFound).toHaveBeenCalled();
   });
 });
-describe("checkTabRowsIds", () => {
+describe("checkTabRowsIds", (): void => {
   let tab: HTMLTableElement;
-  beforeEach(() => {
+  beforeEach((): void => {
     tab = document.createElement("table");
     tab.id = "tabDCut";
     jest.clearAllMocks();
   });
-  it("should return an array of ids from valid rows", () => {
+  it("should return an array of ids from valid rows", (): void => {
     const row1 = document.createElement("tr");
     row1.classList.add("tabRowDCutMed");
     row1.id = "row123";
@@ -64,78 +65,69 @@ describe("checkTabRowsIds", () => {
     row2.id = "row456";
     tab.appendChild(row1);
     tab.appendChild(row2);
-    expect(checkTabRowsIds(tab)).toEqual(["123", "456"]);
+    expect(checkTabRowsIds(tab)).toEqual<[string, string]>(["123", "456"]);
   });
-  it("should call stringError when row id does not match", () => {
+  it("should call stringError when row id does not match", (): void => {
     const row = document.createElement("tr");
     row.classList.add("tabRowDCutMed");
     row.id = "invalidRow";
     tab.appendChild(row);
     checkTabRowsIds(tab);
     expect(
-      jest.spyOn(
-        require("../../../global/handlers/errorHandler"),
-        "stringError"
-      )
+      jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "stringError")
     ).toHaveBeenCalled();
   });
-  it("should call elementNotFound when the table is invalid", () => {
+  it("should call elementNotFound when the table is invalid", (): void => {
     checkTabRowsIds(document.createElement("div") as any);
     expect(
-      jest.spyOn(
-        require("../../../global/handlers/errorHandler"),
-        "elementNotFound"
-      )
+      jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "elementNotFound")
     ).toHaveBeenCalled();
   });
 });
-describe("changeTabDCutLayout", () => {
+describe("changeTabDCutLayout", (): void => {
   let protocolo: HTMLSelectElement;
   let tabDC: HTMLTableElement;
   let bodyType: HTMLSelectElement;
-  beforeEach(() => {
+  beforeEach((): void => {
     protocolo = document.createElement("select");
     tabDC = document.createElement("table");
     bodyType = document.createElement("select");
     jest.clearAllMocks();
   });
-  it("should return 'pollock7' when protocolo matches 'pollock7'", () => {
+  it("should return 'pollock7' when protocolo matches 'pollock7'", (): void => {
     protocolo.value = "pollock7";
-    expect(changeTabDCutLayout(protocolo, tabDC, bodyType)).toBe("pollock7");
+    expect(changeTabDCutLayout(protocolo, tabDC, bodyType)).toBe<Protocol>("pollock7");
   });
-  it("should return 'pollock3' when protocolo matches 'pollock3'", () => {
+  it("should return 'pollock3' when protocolo matches 'pollock3'", (): void => {
     protocolo.value = "pollock3";
-    expect(changeTabDCutLayout(protocolo, tabDC, bodyType)).toBe("pollock3");
+    expect(changeTabDCutLayout(protocolo, tabDC, bodyType)).toBe<Protocol>("pollock3");
   });
-  it("should call elementNotFound when elements are invalid", () => {
+  it("should call elementNotFound when elements are invalid", (): void => {
     changeTabDCutLayout(null as any, null as any, null as any);
     expect(
-      jest.spyOn(
-        require("../../global/handlers/errorHandler"),
-        "elementNotFound"
-      )
+      jest.spyOn<any, ErrorHandler>(require("../../global/handlers/errorHandler"), "elementNotFound")
     ).toHaveBeenCalled();
   });
-  it("should call stringError when invalid body type is provided", () => {
+  it("should call stringError when invalid body type is provided", (): void => {
     protocolo.value = "pollock3";
     bodyType.value = "invalidType";
     changeTabDCutLayout(protocolo, tabDC, bodyType);
     expect(
-      jest.spyOn(require("../../global/handlers/errorHandler"), "stringError")
+      jest.spyOn<any, ErrorHandler>(require("../../global/handlers/errorHandler"), "stringError")
     ).toHaveBeenCalled();
   });
 });
-describe("defineHiddenRows", () => {
+describe("defineHiddenRows", (): void => {
   let tabDC: HTMLTableElement;
   let arrayTabIds: string[];
   let genderedIds: string[];
-  beforeEach(() => {
+  beforeEach((): void => {
     tabDC = document.createElement("table");
     arrayTabIds = ["123", "456"];
     genderedIds = ["123", "456"];
     jest.clearAllMocks();
   });
-  it("should correctly update hidden and required attributes for matched rows", () => {
+  it("should correctly update hidden and required attributes for matched rows", (): void => {
     const row1 = document.createElement("tr");
     row1.id = "row123";
     row1.classList.add("tabRowDCutMed");
@@ -149,36 +141,33 @@ describe("defineHiddenRows", () => {
     tabDC.appendChild(row1);
     tabDC.appendChild(row2);
     defineHiddenRows(tabDC, arrayTabIds, genderedIds);
-    expect(row1.hidden).toBe(false);
-    expect(row2.hidden).toBe(false);
-    expect(input1.required).toBe(true);
-    expect(input2.required).toBe(true);
+    expect(row1.hidden).toBe<boolean>(false);
+    expect(row2.hidden).toBe<boolean>(false);
+    expect(input1.required).toBe<boolean>(true);
+    expect(input2.required).toBe<boolean>(true);
   });
-  it("should call multipleElementsNotFound when input is invalid", () => {
+  it("should call multipleElementsNotFound when input is invalid", (): void => {
     defineHiddenRows(null as any, [], [], "invalid");
     expect(
-      jest.spyOn(
-        require("../../../global/handlers/errorHandler"),
-        "multipleElementsNotFound"
-      )
+      jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "multipleElementsNotFound")
     ).toHaveBeenCalled();
   });
 });
-describe("evaluatePGCDecay", () => {
+describe("evaluatePGCDecay", (): void => {
   let person: Person;
   let targInpPGC: HTMLInputElement;
-  beforeEach(() => {
+  beforeEach((): void => {
     person = new Person("male", 30, 80, 180, 100, "1.2");
     targInpPGC = document.createElement("input");
     jest.clearAllMocks();
   });
-  it("should return true and correct PGC value when decay point is found", () => {
+  it("should return true and correct PGC value when decay point is found", (): void => {
     const [foundDecayPoint, PGC] = evaluatePGCDecay(person, targInpPGC, 25);
-    expect(foundDecayPoint).toBe(true);
+    expect(foundDecayPoint).toBe<boolean>(true);
     expect(PGC).toBeGreaterThan(0);
   });
-  it("should call multipleElementsNotFound when invalid arguments are provided", () => {
-    const mockMultipleElementsNotFound = jest.spyOn(
+  it("should call multipleElementsNotFound when invalid arguments are provided", (): void => {
+    const mockMultipleElementsNotFound = jest.spyOn<any, ErrorHandler>(
       require("../../../global/handlers/errorHandler"),
       "multipleElementsNotFound"
     );
@@ -186,37 +175,31 @@ describe("evaluatePGCDecay", () => {
     expect(mockMultipleElementsNotFound).toHaveBeenCalled();
   });
 });
-describe("alertPGCRounding", () => {
+describe("alertPGCRounding", (): void => {
   let targInpPGC: HTMLInputElement;
-  beforeEach(() => {
+  beforeEach((): void => {
     targInpPGC = document.createElement("input");
     targInpPGC.id = "pgcInput";
     jest.clearAllMocks();
   });
-  it("should hide the alert icon when it is visible", () => {
+  it("should hide the alert icon when it is visible", (): void => {
     const spanRoundingAlertIcon = document.createElement("span");
     spanRoundingAlertIcon.id = "alert_pgcInput";
     spanRoundingAlertIcon.hidden = false;
     document.body.appendChild(spanRoundingAlertIcon);
     alertPGCRounding(targInpPGC);
-    expect(spanRoundingAlertIcon.hidden).toBe(true);
+    expect(spanRoundingAlertIcon.hidden).toBe<boolean>(true);
   });
-  it("should call elementNotFound when the alert icon is not found", () => {
+  it("should call elementNotFound when the alert icon is not found", (): void => {
     alertPGCRounding(targInpPGC);
     expect(
-      jest.spyOn(
-        require("../../../global/handlers/errorHandler"),
-        "elementNotFound"
-      )
+      jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "elementNotFound")
     ).toHaveBeenCalled();
   });
-  it("should call inputNotFound when targInpPGC is not an input element", () => {
+  it("should call inputNotFound when targInpPGC is not an input element", (): void => {
     alertPGCRounding(null as any);
     expect(
-      jest.spyOn(
-        require("../../../global/handlers/errorHandler"),
-        "inputNotFound"
-      )
+      jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "inputNotFound")
     ).toHaveBeenCalled();
   });
 });

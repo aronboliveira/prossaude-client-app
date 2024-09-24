@@ -17,7 +17,7 @@ describe("Spinner Component", (): void => {
     renderComponent();
     expect(screen.getByRole<HTMLElement>("status")).toBeInTheDocument();
     expect(screen.getByText<HTMLSpanElement>("Loading...")).toBeInTheDocument();
-    expect(screen.getByText<HTMLSpanElement>("Loading...").className).toContain("visually-hidden");
+    expect(screen.getByText<HTMLSpanElement>("Loading...").className).toContain<string>("visually-hidden");
   });
   test("renders spinner with custom values", (): void => {
     const customClass = "custom-spinner";

@@ -66,7 +66,7 @@ describe("AvStudListDlg Component", (): void => {
       expect(mockDispatch).toHaveBeenCalledWith<Parameters<typeof mockDispatch>>(!defaultProps.state)
     );
   });
-  test("validates dialog opening and aria states synchronization", async () => {
+  test("validates dialog opening and aria states synchronization", async (): Promise<void> => {
     renderComponent();
     await waitFor((): void => {
       expect(screen.getByRole<HTMLDialogElement>("dialog")).toBeInTheDocument();

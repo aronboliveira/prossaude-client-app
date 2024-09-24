@@ -6,6 +6,7 @@ import { createRoot } from "react-dom/client";
 import { elementNotFound, extLine } from "../../../../lib/global/handlers/errorHandler";
 import "@testing-library/jest-dom/extend-expect";
 import { formCases, validAreas } from "../../../../lib/global/declarations/types";
+import { ConsoleMethod } from "../../testVars";
 jest.mock(
   "react-dom/client",
   (): {
@@ -96,7 +97,7 @@ describe("OptGrpUsers Component", (): void => {
   test("logs error if fetch fails", async (): Promise<void> => {
     (handleFetch as jest.Mock).mockRejectedValueOnce(new Error("Fetch failed"));
     const consoleErrorSpy: jest.SpyInstance<void, [message?: any, ...optionalParams: any[]], any> = jest
-      .spyOn(console, "error")
+      .spyOn<Console, ConsoleMethod>(console, "error")
       .mockImplementation((): void => {});
     renderComponent("profs", "Odontologia");
     await waitFor((): void => {

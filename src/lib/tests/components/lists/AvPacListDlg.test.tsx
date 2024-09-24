@@ -9,7 +9,7 @@ jest.mock(
   "../../../../../components/consRegst/PacList",
   (): (() => JSX.Element) => (): JSX.Element => <div>PacList</div>
 );
-describe("AvPacListDlg Component", () => {
+describe("AvPacListDlg Component", (): void => {
   const mockDispatch: jest.Mock<any, any, any> = jest.fn();
   const defaultProps = {
     dispatch: mockDispatch,
@@ -39,7 +39,7 @@ describe("AvPacListDlg Component", () => {
     fireEvent.click(screen.getByRole<HTMLButtonElement>("button", { name: "" }));
     expect(mockDispatch).toHaveBeenCalledWith<Parameters<typeof mockDispatch>>(!defaultProps.state);
   });
-  test("renders the ErrorFallbackDlg when an error occurs", async () => {
+  test("renders the ErrorFallbackDlg when an error occurs", async (): Promise<void> => {
     renderComponent();
     expect(screen.getByText<HTMLDialogElement>(/ErrorFallbackDlg/i)).toBeInTheDocument();
   });

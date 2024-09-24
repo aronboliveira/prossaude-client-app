@@ -53,7 +53,7 @@ describe("<ListTelPacCons />", (): void => {
     await waitFor((): void => expect(screen.queryByRole("listbox")).not.toBeInTheDocument());
     expect(createRoot).not.toHaveBeenCalled();
   });
-  test("syncs aria states after fetch", async () => {
+  test("syncs aria states after fetch", async (): Promise<void> => {
     (handleFetch as jest.Mock).mockResolvedValue(mockPacs);
     render(<ListTelPacCons />);
     await waitFor(() => expect(screen.getByDisplayValue<HTMLInputElement>(mockPacs[0].tel.trim())).toBeInTheDocument());
@@ -63,14 +63,14 @@ describe("<ListTelPacCons />", (): void => {
       });
     });
   });
-  test("renders options correctly in datalist", async () => {
+  test("renders options correctly in datalist", async (): Promise<void> => {
     (handleFetch as jest.Mock).mockResolvedValue(mockPacs);
     render(<ListTelPacCons />);
     await waitFor(() =>
       mockPacs.forEach((pac): void => expect(screen.getByText<HTMLInputElement>(pac.name)).toBeInTheDocument())
     );
   });
-  test("unmounts panelRoot if it already exists", async () => {
+  test("unmounts panelRoot if it already exists", async (): Promise<void> => {
     (handleFetch as jest.Mock).mockResolvedValue(mockPacs);
     panelRoots["listTelPacCons"] = { unmount: jest.fn(), render: jest.fn() };
     render(<ListTelPacCons />);

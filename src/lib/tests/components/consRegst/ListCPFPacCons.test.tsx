@@ -5,6 +5,7 @@ import { syncAriaStates } from "../../../../lib/global/handlers/gHandlers";
 import { createRoot } from "react-dom/client";
 import { elementNotFound, extLine } from "../../../../lib/global/handlers/errorHandler";
 import "@testing-library/jest-dom/extend-expect";
+import { ConsoleMethod } from "../../testVars";
 jest.mock(
   "react-dom/client",
   (): {
@@ -94,7 +95,7 @@ describe("ListCPFPacCons Component", (): void => {
   test("logs error if fetch fails", async (): Promise<void> => {
     (handleFetch as jest.Mock).mockRejectedValueOnce(new Error("Fetch failed"));
     const consoleErrorSpy: jest.SpyInstance<void, [message?: any, ...optionalParams: any[]], any> = jest
-      .spyOn(console, "error")
+      .spyOn<Console, ConsoleMethod>(console, "error")
       .mockImplementation((): void => {});
     renderComponent();
     await waitFor((): void => {

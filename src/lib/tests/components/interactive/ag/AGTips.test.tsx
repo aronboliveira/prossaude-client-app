@@ -21,7 +21,7 @@ describe("AGTips", (): void => {
     render(<AGTips {...defaultProps} />);
     expect(screen.getByText<HTMLElement>("Manual para controle de formulário")).toBeInTheDocument();
   });
-  it("does not render when state is false", () => {
+  it("does not render when state is false", (): void => {
     render(<AGTips {...defaultProps} state={false} />);
     expect(screen.queryByText<HTMLElement>("Manual para controle de formulário")).not.toBeInTheDocument();
   });

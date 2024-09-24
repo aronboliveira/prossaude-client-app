@@ -5,6 +5,7 @@ import { syncAriaStates } from "../../../../lib/global/handlers/gHandlers";
 import { createRoot } from "react-dom/client";
 import { elementNotFound, extLine } from "../../../../lib/global/handlers/errorHandler";
 import "@testing-library/jest-dom/extend-expect";
+import { ConsoleMethod } from "../../testVars";
 jest.mock(
   "react-dom/client",
   (): {
@@ -101,7 +102,7 @@ describe("ListFirstNameCons Component", (): void => {
   });
   test("logs error if fetch fails", async (): Promise<void> => {
     (handleFetch as jest.Mock).mockRejectedValueOnce(new Error("Fetch failed"));
-    const consoleErrorSpy = jest.spyOn(console, "error").mockImplementation((): void => {});
+    const consoleErrorSpy = jest.spyOn<Console, ConsoleMethod>(console, "error").mockImplementation((): void => {});
     renderComponent();
     await waitFor((): void => {
       expect(consoleErrorSpy).toHaveBeenCalledWith<[any]>(

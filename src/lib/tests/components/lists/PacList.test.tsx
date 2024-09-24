@@ -94,7 +94,7 @@ describe("PacList Component", (): void => {
       expect(table.querySelectorAll<HTMLTableCellElement>("th")).toHaveLength(12);
     });
   });
-  test("dispatches on Escape keydown event to close the dialog", async () => {
+  test("dispatches on Escape keydown event to close the dialog", async (): Promise<void> => {
     renderComponent();
     fireEvent.keyDown(document, { key: "Escape" });
     await waitFor((): void =>

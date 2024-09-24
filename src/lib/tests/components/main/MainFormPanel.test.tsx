@@ -38,7 +38,7 @@ describe("MainFormPanel", (): void => {
     expect(await screen.findByText<HTMLElement>("Error rendering shell for Panel")).toBeInTheDocument();
   });
 });
-describe("resetErrorBoundary", () => {
+describe("resetErrorBoundary", (): void => {
   const ResetComponent = jest.fn(({ props }: any): JSX.Element => <div {...props} />);
   const props = { mainRoot: { render: jest.fn() } };
   beforeEach((): void => {
@@ -47,7 +47,7 @@ describe("resetErrorBoundary", () => {
   it("renders the ResetComponent when tryAcc is less than 2", (): void => {
     resetErrorBoundary(ResetComponent, props);
     expect(props.mainRoot.render).toHaveBeenCalledWith<[any]>(<ResetComponent props={props} />);
-    expect(mainPanelVariables.tryAcc).toBe(1);
+    expect(mainPanelVariables.tryAcc).toBe<number>(1);
   });
   it("reloads the page when tryAcc is 2 or more", (): void => {
     mainPanelVariables.tryAcc = 2;
@@ -55,6 +55,6 @@ describe("resetErrorBoundary", () => {
     expect(
       jest.spyOn<Location, "reload">(window.location, "reload").mockImplementation((): void => {})
     ).toHaveBeenCalled();
-    expect(mainPanelVariables.tryAcc).toBe(0);
+    expect(mainPanelVariables.tryAcc).toBe<number>(0);
   });
 });

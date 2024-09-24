@@ -11,27 +11,50 @@ import {
   multipleElementsNotFound,
 } from "../../../global/handlers/errorHandler";
 import { strikeNulls } from "../../../global/gStyleScript";
-jest.mock("../../../global/handlers/errorHandler", () => ({
-  extLine: jest.fn(),
-  elementNotFound: jest.fn(),
-  elementNotPopulated: jest.fn(),
-  inputNotFound: jest.fn(),
-  multipleElementsNotFound: jest.fn(),
-}));
-jest.mock("../../../global/gStyleScript", () => ({
-  strikeNulls: jest.fn(),
-  highlightChange: jest.fn(),
-}));
-jest.mock("./handlers/consHandlerCmn", () => ({
-  convertWeekdaysToMonthdays: jest.fn(),
-  correlateAptMonthDays: jest.fn(),
-  correlateWorkingDays: jest.fn(),
-}));
-describe("strikeEntries", () => {
-  beforeEach(() => {
+import { CSSDisplay, ISODate } from "../../testVars";
+jest.mock(
+  "../../../global/handlers/errorHandler",
+  (): {
+    extLine: jest.Mock<any, any, any>;
+    elementNotFound: jest.Mock<any, any, any>;
+    elementNotPopulated: jest.Mock<any, any, any>;
+    inputNotFound: jest.Mock<any, any, any>;
+    multipleElementsNotFound: jest.Mock<any, any, any>;
+  } => ({
+    extLine: jest.fn(),
+    elementNotFound: jest.fn(),
+    elementNotPopulated: jest.fn(),
+    inputNotFound: jest.fn(),
+    multipleElementsNotFound: jest.fn(),
+  })
+);
+jest.mock(
+  "../../../global/gStyleScript",
+  (): {
+    strikeNulls: jest.Mock<any, any, any>;
+    highlightChange: jest.Mock<any, any, any>;
+  } => ({
+    strikeNulls: jest.fn(),
+    highlightChange: jest.fn(),
+  })
+);
+jest.mock(
+  "./handlers/consHandlerCmn",
+  (): {
+    convertWeekdaysToMonthdays: jest.Mock<any, any, any>;
+    correlateAptMonthDays: jest.Mock<any, any, any>;
+    correlateWorkingDays: jest.Mock<any, any, any>;
+  } => ({
+    convertWeekdaysToMonthdays: jest.fn(),
+    correlateAptMonthDays: jest.fn(),
+    correlateWorkingDays: jest.fn(),
+  })
+);
+describe("strikeEntries", (): void => {
+  beforeEach((): void => {
     document.body.innerHTML = "";
   });
-  test("should call strikeNulls with found elements", () => {
+  test("should call strikeNulls with found elements", (): void => {
     document.body.innerHTML = `
       <div id="main">
         <input />
@@ -41,23 +64,23 @@ describe("strikeEntries", () => {
       </div>
     `;
     strikeEntries(document.getElementById("main") as HTMLElement);
-    expect(strikeNulls).toHaveBeenCalledWith(expect.any(Array));
+    expect(strikeNulls).toHaveBeenCalledWith<Parameters<typeof strikeNulls>>(expect.any(Array));
   });
-  test("should call elementNotPopulated when no elements found", () => {
+  test("should call elementNotPopulated when no elements found", (): void => {
     document.body.innerHTML = `<div id="main"></div>`;
     strikeEntries(document.getElementById("main") as HTMLElement);
-    expect(elementNotPopulated).toHaveBeenCalledWith(
+    expect(elementNotPopulated).toHaveBeenCalledWith<Parameters<typeof elementNotPopulated>>(
       [],
       "inAndOutEls in useEffect() for sectTabRef",
       expect.anything()
     );
   });
 });
-describe("setListenersForDates", () => {
-  beforeEach(() => {
+describe("setListenersForDates", (): void => {
+  beforeEach((): void => {
     document.body.innerHTML = "";
   });
-  test("should set date inputs with month and year when valid inputs are provided", async () => {
+  test("should set date inputs with month and year when valid inputs are provided", async (): Promise<void> => {
     document.body.innerHTML = `
       <input type="date" class="dateInp" />
       <select id="monthStateSelector">
@@ -66,48 +89,42 @@ describe("setListenersForDates", () => {
       </select>
     `;
     const [pattern, handler] = await setListenersForDates(
-      Array.from(
-        document.querySelectorAll(".dateInp")
-      ) as Array<HTMLInputElement>,
+      Array.from(document.querySelectorAll(".dateInp")) as Array<HTMLInputElement>,
       document.getElementById("monthStateSelector") as HTMLSelectElement
     );
-    expect(pattern).toEqual(expect.any(RegExp));
-    expect(handler).toBeInstanceOf(Function);
+    expect(pattern).toEqual<any>(expect.any(RegExp));
+    expect(handler).toBeInstanceOf<FunctionConstructor>(Function);
   });
-  test("should call inputNotFound when monthStateSelector is invalid", async () => {
+  test("should call inputNotFound when monthStateSelector is invalid", async (): Promise<void> => {
     document.body.innerHTML = `
       <input type="date" class="dateInp" />
       <input id="monthStateSelector" type="text" value="invalid" />
     `;
-    const monthStateSelector = document.getElementById(
-      "monthStateSelector"
-    ) as HTMLInputElement;
+    const monthStateSelector = document.getElementById("monthStateSelector") as HTMLInputElement;
     await setListenersForDates(
-      Array.from(
-        document.querySelectorAll(".dateInp")
-      ) as Array<HTMLInputElement>,
+      Array.from(document.querySelectorAll(".dateInp")) as Array<HTMLInputElement>,
       monthStateSelector
     );
-    expect(elementNotFound).toHaveBeenCalledWith(
+    expect(elementNotFound).toHaveBeenCalledWith<Parameters<typeof elementNotFound>>(
       monthStateSelector,
       "monthStateSelector in setListenerForDates()",
       expect.anything()
     );
   });
-  test("should call elementNotPopulated when dateInps is empty", async () => {
+  test("should call elementNotPopulated when dateInps is empty", async (): Promise<void> => {
     await setListenersForDates([], document.createElement("select"));
-    expect(elementNotPopulated).toHaveBeenCalledWith(
+    expect(elementNotPopulated).toHaveBeenCalledWith<Parameters<typeof elementNotPopulated>>(
       [],
       "argument for setListenerForDates()",
       expect.anything()
     );
   });
 });
-describe("hideLastDay", () => {
-  beforeEach(() => {
+describe("hideLastDay", (): void => {
+  beforeEach((): void => {
     document.body.innerHTML = "";
   });
-  test("should hide the last day when elements are hidden", () => {
+  test("should hide the last day when elements are hidden", (): void => {
     document.body.innerHTML = `
       <div class="lastConsDayCont" style="display: none;"></div>
       <select id="daySel">
@@ -117,11 +134,11 @@ describe("hideLastDay", () => {
     const daySel = document.getElementById("daySel") as HTMLSelectElement;
     hideLastDay(daySel);
     if (daySel?.lastElementChild instanceof HTMLElement) {
-      expect(daySel.lastElementChild.hidden).toBe(true);
-      expect(daySel.lastElementChild.style.display).toBe("none");
+      expect(daySel.lastElementChild.hidden).toBe<boolean>(true);
+      expect(daySel.lastElementChild.style.display).toBe<CSSDisplay>("none");
     } else console.error(`Last Element Child of daySel is not an HTMLElement.`);
   });
-  test("should do nothing if no elements are hidden", () => {
+  test("should do nothing if no elements are hidden", (): void => {
     document.body.innerHTML = `
       <div class="lastConsDayCont"></div>
       <select id="daySel">
@@ -131,15 +148,15 @@ describe("hideLastDay", () => {
     const daySel = document.getElementById("daySel") as HTMLSelectElement;
     hideLastDay(daySel);
     daySel?.lastElementChild instanceof HTMLElement
-      ? expect(daySel.lastElementChild!.hidden).toBe(false)
+      ? expect(daySel.lastElementChild!.hidden).toBe<boolean>(false)
       : console.error(`Last Element Child of daySel is not an HTMLElement.`);
   });
 });
-describe("correlateDayOpts", () => {
-  beforeEach(() => {
+describe("correlateDayOpts", (): void => {
+  beforeEach((): void => {
     document.body.innerHTML = "";
   });
-  test("should add new option to the date select if new date input value is not in options", () => {
+  test("should add new option to the date select if new date input value is not in options", (): void => {
     document.body.innerHTML = `
       <input type="date" class="dateInp" value="2024-09-09" />
       <select id="dateSel">
@@ -148,40 +165,33 @@ describe("correlateDayOpts", () => {
     `;
     const dateSel = document.getElementById("dateSel") as HTMLSelectElement;
     correlateDayOpts(
-      Array.from(
-        document.querySelectorAll(".dateInp")
-      ) as Array<HTMLInputElement>,
+      Array.from(document.querySelectorAll(".dateInp")) as Array<HTMLInputElement>,
       dateSel,
       "coordenador"
     );
     expect(dateSel.options).toHaveLength(2);
-    expect(dateSel.options[1].value).toBe("2024-09-09");
+    expect(dateSel.options[1].value).toBe<ISODate>("2024-09-09");
   });
-  test("should call inputNotFound if dateInp is invalid", () => {
+  test("should call inputNotFound if dateInp is invalid", (): void => {
     document.body.innerHTML = `
       <div class="dateInp"></div>
       <select id="dateSel"></select>
     `;
-    const dateInps = Array.from(
-      document.querySelectorAll(".dateInp")
-    ) as Array<HTMLElement>;
+    const dateInps = Array.from(document.querySelectorAll(".dateInp")) as Array<HTMLElement>;
     const dateSel = document.getElementById("dateSel") as HTMLSelectElement;
     correlateDayOpts(dateInps, dateSel, "coordenador");
-    expect(inputNotFound).toHaveBeenCalledWith(
+    expect(inputNotFound).toHaveBeenCalledWith<Parameters<typeof inputNotFound>>(
       dateInps[0],
       "dateInp id UNIDENTIFIED",
       expect.anything()
     );
   });
-  test("should call multipleElementsNotFound if dateInps or dateSel are invalid", () => {
+  test("should call multipleElementsNotFound if dateInps or dateSel are invalid", (): void => {
     document.body.innerHTML = `
       <select id="dateSel"></select>
     `;
-    correlateDayOpts(
-      [],
-      document.getElementById("dateSel") as HTMLSelectElement
-    );
-    expect(multipleElementsNotFound).toHaveBeenCalledWith(
+    correlateDayOpts([], document.getElementById("dateSel") as HTMLSelectElement);
+    expect(multipleElementsNotFound).toHaveBeenCalledWith<Parameters<typeof multipleElementsNotFound>>(
       expect.anything(),
       "arguments for correlateDayOpts",
       expect.anything(),

@@ -16,7 +16,7 @@ describe("FamDislip Component", (): void => {
   });
   it("calls handleDivAddShow on checkbox click", async (): Promise<void> => {
     render(<FamDislip />);
-    const checkbox = screen.getByLabelText("Antecedentes Familiares — Dislipidemia") as HTMLInputElement;
+    const checkbox = screen.getByLabelText<HTMLInputElement>("Antecedentes Familiares — Dislipidemia");
     fireEvent.click(checkbox);
     await waitFor((): void => {
       expect(handleDivAddShow).toHaveBeenCalledWith<Parameters<typeof handleDivAddShow>>(checkbox);

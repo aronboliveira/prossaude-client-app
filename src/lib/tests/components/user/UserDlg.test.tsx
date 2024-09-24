@@ -38,22 +38,22 @@ describe("UserDlg", (): void => {
     callLogout: jest.fn(),
     router: mockRouter as NextRouter,
   };
-  it("renders user details", () => {
+  it("renders user details", (): void => {
     render(<UserDlg {...defaultProps} />);
     expect(screen.getByText<HTMLElement>("Coordenador")).toBeInTheDocument();
     expect(screen.getByText<HTMLElement>("Nutrição")).toBeInTheDocument();
     expect(screen.getByText<HTMLElement>("test@test.com")).toBeInTheDocument();
     expect(screen.getByText<HTMLElement>("123456789")).toBeInTheDocument();
   });
-  it("opens the user properties dialog on button click", () => {
+  it("opens the user properties dialog on button click", (): void => {
     render(<UserDlg {...defaultProps} />);
     fireEvent.click(screen.getByRole<HTMLButtonElement>("button", { name: /alteração/i }));
     expect(defaultProps.setPropDlg).toHaveBeenCalledWith<Parameters<typeof defaultProps.setPropDlg>>(true);
   });
-  it("calls router push on logout", () => {
+  it("calls router push on logout", (): void => {
     render(<UserDlg {...defaultProps} />);
     const link = screen.getByRole<HTMLAnchorElement>("link", { name: /login/i });
     fireEvent.click(link);
-    expect(defaultProps.router.push).toHaveBeenCalledWith("/login");
+    expect(defaultProps.router.push).toHaveBeenCalledWith<[string]>("/login");
   });
 });

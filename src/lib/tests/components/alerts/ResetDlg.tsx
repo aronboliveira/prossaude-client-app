@@ -44,7 +44,7 @@ jest.mock(
   "../../components/mainPanel/MainFormPanel",
   (): (() => JSX.Element) => (): JSX.Element => <div>MainFormPanel</div>
 );
-describe("ResetDlg Component", () => {
+describe("ResetDlg Component", (): void => {
   const defaultProps: ResetDlgProps = {
     root: createRoot(screen.getByRole<HTMLDialogElement>("dialog")),
     setDisplayResetDlg: jest.fn<
@@ -80,7 +80,7 @@ describe("ResetDlg Component", () => {
     const form: HTMLFormElement = document.createElement("form");
     document.body.appendChild<HTMLFormElement>(form);
     fireEvent.click(screen.getByText<HTMLButtonElement>("Confirmar"));
-    expect(jest.spyOn<HTMLFormElement, "reset">(form, "reset").mockImplementation(() => {})).toHaveBeenCalled();
+    expect(jest.spyOn<HTMLFormElement, "reset">(form, "reset").mockImplementation((): void => {})).toHaveBeenCalled();
     expect(createRoot).toHaveBeenCalledWith<Parameters<typeof createRoot>>(
       document.getElementById("formRoot") as HTMLDivElement
     );

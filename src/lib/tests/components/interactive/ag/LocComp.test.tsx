@@ -16,7 +16,7 @@ describe("LocComp", (): void => {
     const input = screen.getByRole<HTMLElement>("spinbutton");
     expect(input).toBeInTheDocument();
   });
-  it("calls handleCondtReq on input", () => {
+  it("calls handleCondtReq on input", (): void => {
     render(<LocComp />);
     const input = screen.getByRole<HTMLElement>("spinbutton");
     userEvent.type(input, "5");

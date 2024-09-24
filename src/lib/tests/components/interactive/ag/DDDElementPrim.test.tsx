@@ -16,7 +16,7 @@ describe("DDDElementPrim Component", (): void => {
   });
   it("calls handleEventReq on input", async (): Promise<void> => {
     render(<DDDElementPrim />);
-    const input = screen.getByLabelText("DDD Primário") as HTMLInputElement;
+    const input = screen.getByLabelText<HTMLInputElement>("DDD Primário");
     fireEvent.input(input, { target: { value: "11" } });
     await waitFor((): void => {
       expect(handleEventReq).toHaveBeenCalledWith<Parameters<typeof handleEventReq>>(input);

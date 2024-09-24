@@ -27,7 +27,7 @@ jest.mock(
 describe("MainContainer Component", (): void => {
   const mockDispatch: jest.Mock<any, any, any> = jest.fn();
   const mockRouter = { push: jest.fn() };
-  beforeEach(() => {
+  beforeEach((): void => {
     (useRouter as jest.Mock).mockReturnValue(mockRouter);
     (useDispatch as unknown as jest.Mock).mockReturnValue(mockDispatch);
     localStorage.clear();

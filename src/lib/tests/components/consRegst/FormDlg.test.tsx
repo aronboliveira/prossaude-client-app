@@ -12,6 +12,7 @@ import { validateForm } from "../../../../lib/global/handlers/gHandlers";
 import { handleSubmit } from "../../../../pages/api/ts/handlers";
 import FailRegstAlert from "../../../../../components/alerts/FailRegsAlert";
 import "@testing-library/jest-dom/extend-expect";
+import { CSSColor } from "../../testVars";
 jest.mock(
   "../../../../lib/locals/panelPage/handlers/consHandlerList",
   (): {
@@ -166,7 +167,7 @@ describe("FormDlg Component", (): void => {
   });
   test("handles registration button click and validation", (): void => {
     renderComponent();
-    fireEvent.click(screen.getByText("Submit"));
+    fireEvent.click(screen.getByText<HTMLButtonElement>("Submit"));
     expect(checkRegstBtn).toHaveBeenCalled();
   });
   test("calls syncAriaStates on dialog initialization", (): void => {
@@ -207,46 +208,51 @@ describe("FormDlg Component", (): void => {
   });
   test("calls onClose when close button is clicked", (): void => {
     renderComponent();
-    fireEvent.click(screen.getByRole("button", { name: /close/i }));
+    fireEvent.click(screen.getByRole<HTMLButtonElement>("button", { name: /close/i }));
     expect(defaultProps.onClose).toHaveBeenCalled();
   });
   test("renders CPF input and triggers appropriate handlers", (): void => {
     renderComponent();
-    fireEvent.input(screen.getByPlaceholderText("Preencha com o CPF"), { target: { value: "123.456.789-12" } });
+    fireEvent.input(screen.getByPlaceholderText<HTMLInputElement>("Preencha com o CPF"), {
+      target: { value: "123.456.789-12" },
+    });
     expect(formatCPF).toHaveBeenCalled();
     expect(handleCondtReq).toHaveBeenCalled();
     expect(enableCPFBtn).toHaveBeenCalled();
   });
   test("renders 'Preencher Dados com CPF' button and calls handleCPFBtnClick", (): void => {
     renderComponent();
-    fireEvent.click(screen.getByText("Preencher Dados com CPF"));
+    fireEvent.click(screen.getByText<HTMLInputElement>("Preencher Dados com CPF"));
     expect(jest.fn()).toHaveBeenCalled();
   });
   test("renders first name input and handles input with auto-capitalization", (): void => {
     renderComponent();
-    fireEvent.input(screen.getByPlaceholderText("Preencha com o Primeiro Nome do Paciente"), {
+    fireEvent.input(screen.getByPlaceholderText<HTMLInputElement>("Preencha com o Primeiro Nome do Paciente"), {
       target: { value: "jose" },
     });
     expect(handleCondtReq).toHaveBeenCalled();
   });
   test("renders family name input and applies autocorrect", (): void => {
     renderComponent();
-    fireEvent.input(screen.getByPlaceholderText("Preencha com Sobrenome(s) do Paciente"), {
+    fireEvent.input(screen.getByPlaceholderText<HTMLInputElement>("Preencha com Sobrenome(s) do Paciente"), {
       target: { value: "silva" },
     });
     expect(handleCondtReq).toHaveBeenCalled();
   });
   test("renders telephone input and triggers appropriate handlers", (): void => {
     renderComponent();
-    fireEvent.input(screen.getByPlaceholderText("Preencha com o Telefone (sem código nacional e DDD) de Contato"), {
-      target: { value: "98765-4321" },
-    });
+    fireEvent.input(
+      screen.getByPlaceholderText<HTMLInputElement>("Preencha com o Telefone (sem código nacional e DDD) de Contato"),
+      {
+        target: { value: "98765-4321" },
+      }
+    );
     expect(formatTel).toHaveBeenCalled();
     expect(handleCondtReq).toHaveBeenCalled();
   });
   test("renders email input and triggers email extension handler", (): void => {
     renderComponent();
-    fireEvent.input(screen.getByPlaceholderText("Preencha com o E-mail do Paciente"), {
+    fireEvent.input(screen.getByPlaceholderText<HTMLInputElement>("Preencha com o E-mail do Paciente"), {
       target: { value: "email@example.com" },
     });
     expect(addEmailExtension).toHaveBeenCalled();
@@ -254,48 +260,54 @@ describe("FormDlg Component", (): void => {
   });
   test("renders 'Paciente Confirmado' checkbox", (): void => {
     renderComponent();
-    const confirmCheckbox: HTMLElement = screen.getByLabelText("Paciente Confirmado:");
+    const confirmCheckbox: HTMLElement = screen.getByLabelText<HTMLInputElement>("Paciente Confirmado:");
     expect(confirmCheckbox).toBeInTheDocument();
     fireEvent.click(confirmCheckbox);
     expect(confirmCheckbox).toBeChecked();
   });
   test("renders 'Status do Paciente' select and its options", (): void => {
     renderComponent();
-    expect(screen.getByLabelText("Status do Paciente:")).toBeInTheDocument();
-    expect(screen.getByText("Em Avaliação Inicial")).toBeInTheDocument();
-    expect(screen.getByText("Em Tratamento Geral")).toBeInTheDocument();
+    expect(screen.getByLabelText<HTMLSelectElement>("Status do Paciente:")).toBeInTheDocument();
+    expect(screen.getByText<HTMLOptionElement>("Em Avaliação Inicial")).toBeInTheDocument();
+    expect(screen.getByText<HTMLOptionElement>("Em Tratamento Geral")).toBeInTheDocument();
   });
   test("renders 'Tipo da Consulta' select and its options", (): void => {
     renderComponent();
-    expect(screen.getByLabelText("Tipo da Consulta:")).toBeInTheDocument();
-    expect(screen.getByText("Anamnese e Exame Clínico")).toBeInTheDocument();
-    expect(screen.getByText("Acompanhamento Geral")).toBeInTheDocument();
+    expect(screen.getByLabelText<HTMLSelectElement>("Tipo da Consulta:")).toBeInTheDocument();
+    expect(screen.getByText<HTMLOptionElement>("Anamnese e Exame Clínico")).toBeInTheDocument();
+    expect(screen.getByText<HTMLOptionElement>("Acompanhamento Geral")).toBeInTheDocument();
   });
   test("renders 'Estudante alocado' input and button", (): void => {
     renderComponent();
-    expect(screen.getByPlaceholderText("Preencha com o Nome do Estudante alocado")).toBeInTheDocument();
-    expect(screen.getByText("Capturar por Identificadores")).toBeInTheDocument();
+    expect(
+      screen.getByPlaceholderText<HTMLInputElement>("Preencha com o Nome do Estudante alocado")
+    ).toBeInTheDocument();
+    expect(screen.getByText<HTMLButtonElement>("Capturar por Identificadores")).toBeInTheDocument();
   });
   test("renders 'Professor ou Profissional Responsável' input", (): void => {
     renderComponent();
-    expect(screen.getByPlaceholderText("Preencha com o Nome do Profissional Responsável alocado")).toBeInTheDocument();
+    expect(
+      screen.getByPlaceholderText<HTMLInputElement>("Preencha com o Nome do Profissional Responsável alocado")
+    ).toBeInTheDocument();
   });
   test("renders 'Notas' textarea", (): void => {
     renderComponent();
-    expect(screen.getByPlaceholderText("Insira aqui observações adicionais sobre a consulta")).toBeInTheDocument();
+    expect(
+      screen.getByPlaceholderText<HTMLInputElement>("Insira aqui observações adicionais sobre a consulta")
+    ).toBeInTheDocument();
   });
   test("renders time input and applies hour validation logic", (): void => {
     renderComponent();
     const timeInput = screen.getByTitle("Selecione aqui o horário na agenda (só funcionará para horários tabelados)");
     fireEvent.input(timeInput, { target: { value: "18:00" } });
     expect(timeInput).toHaveValue("18:00");
-    expect(timeInput.style.color).toBe("rgb(33, 37, 41)");
+    expect(timeInput.style.color).toBe<CSSColor>("rgb(33, 37, 41)");
   });
   test("renders 'Finalizar' button", (): void =>
     renderComponent() && expect(screen.getByText<HTMLButtonElement>("Finalizar")).toBeInTheDocument());
   test("calls validateForm and handleSubmit on 'Finalizar' button click", async (): Promise<void> => {
     renderComponent();
-    const submitBtn: HTMLButtonElement = screen.getByText("Finalizar");
+    const submitBtn: HTMLButtonElement = screen.getByText<HTMLButtonElement>("Finalizar");
     const fakeEvent: MouseEvent = new MouseEvent("click");
     fireEvent.click(submitBtn, fakeEvent);
     expect(validateForm).toHaveBeenCalledWith<Parameters<typeof validateForm>>(fakeEvent, submitBtn, false);
@@ -308,16 +320,16 @@ describe("FormDlg Component", (): void => {
   test("prevents form submission when validation fails", async (): Promise<void> => {
     (validateForm as jest.Mock).mockResolvedValueOnce([false, null, {}]);
     renderComponent();
-    const submitBtn: HTMLButtonElement = screen.getByText("Finalizar");
+    const submitBtn: HTMLButtonElement = screen.getByText<HTMLButtonElement>("Finalizar");
     const fakeEvent: MouseEvent = new MouseEvent("click");
     fireEvent.click(submitBtn, fakeEvent);
-    await validateForm(fakeEvent, submitBtn, false).then(validation => {
-      expect(validation[0]).toBe(false);
+    await validateForm(fakeEvent, submitBtn, false).then((validation): void => {
+      expect(validation[0]).toBe<boolean>(false);
       expect(handleSubmit).not.toHaveBeenCalled();
     });
   });
   test("renders 'Gerar Planilha' button", (): void =>
-    renderComponent() && expect(screen.getByText("Gerar Planilha")).toBeInTheDocument());
+    renderComponent() && expect(screen.getByText<HTMLButtonElement>("Gerar Planilha")).toBeInTheDocument());
   test("renders FailRegstAlert when shouldDisplayFailRegstDlg is true", (): void => {
     renderComponent({ shouldDisplayFailRegstDlg: true });
     expect(FailRegstAlert).toHaveBeenCalledWith<[any, {}]>(
@@ -330,7 +342,7 @@ describe("FormDlg Component", (): void => {
   });
   test("handles export button click", (): void => {
     renderComponent();
-    const exportBtn: HTMLButtonElement = screen.getByText("Gerar Planilha");
+    const exportBtn: HTMLButtonElement = screen.getByText<HTMLButtonElement>("Gerar Planilha");
     fireEvent.click(exportBtn);
     expect(exportBtn).toBeInTheDocument();
   });

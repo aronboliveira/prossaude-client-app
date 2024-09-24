@@ -25,7 +25,7 @@ describe("Email Component", (): void => {
   });
   it("calls addEmailExtension and handleCondtReq on input", async (): Promise<void> => {
     render(<Email />);
-    const input = screen.getByLabelText("E-mail Primário") as HTMLInputElement;
+    const input = screen.getByLabelText<HTMLInputElement>("E-mail Primário");
     fireEvent.input(input, { target: { value: "test@example.com" } });
     await waitFor((): void => {
       expect(addEmailExtension).toHaveBeenCalledWith<Parameters<typeof addEmailExtension>>(input);

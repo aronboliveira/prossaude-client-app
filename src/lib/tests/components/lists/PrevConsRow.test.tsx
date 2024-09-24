@@ -1,7 +1,7 @@
 import { RenderResult, render, screen } from "@testing-library/react";
 import PrevConsRow from "../../../../../components/lists/PrevConsRow";
 import "@testing-library/jest-dom/extend-expect";
-describe("PrevConsRow Component", () => {
+describe("PrevConsRow Component", (): void => {
   const renderComponent = (): RenderResult<
     typeof import("@testing-library/dom/types/queries"),
     HTMLElement,

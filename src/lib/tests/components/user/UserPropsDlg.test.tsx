@@ -29,7 +29,7 @@ describe("UserPropsDlg", (): void => {
     setPropDlg: jest.fn(),
     shouldDisplayPropDlg: true,
   };
-  it("renders the UserPropsDlg component", () => {
+  it("renders the UserPropsDlg component", (): void => {
     render(<UserPropsDlg {...defaultProps} />);
     expect(screen.getByText<HTMLFormElement>("Formulário de Alteração")).toBeInTheDocument();
   });

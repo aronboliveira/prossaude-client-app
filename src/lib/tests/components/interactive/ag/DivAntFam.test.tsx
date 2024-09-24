@@ -12,8 +12,8 @@ jest.mock(
 describe("DivAntFam Component", (): void => {
   it("renders family members checkboxes with transformed names", (): void => {
     render(<DivAntFam name='family_test' fullName='Test Family' />);
-    expect(screen.getByLabelText("Mãe — Test Family")).toBeInTheDocument();
-    expect(screen.getByLabelText("Pai — Test Family")).toBeInTheDocument();
+    expect(screen.getByLabelText<HTMLInputElement>("Mãe — Test Family")).toBeInTheDocument();
+    expect(screen.getByLabelText<HTMLInputElement>("Pai — Test Family")).toBeInTheDocument();
   });
   it("uses PascalCase for transformed name", (): void => {
     render(<DivAntFam name='family_test' />);

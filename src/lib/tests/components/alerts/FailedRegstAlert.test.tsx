@@ -80,7 +80,7 @@ describe("FailRegstAlert Component", (): void => {
       (): {
         ErrorBoundary: jest.Mock<any, any, any>;
       } => ({
-        ErrorBoundary: jest.fn<never, []>().mockImplementation(() => {
+        ErrorBoundary: jest.fn<never, []>().mockImplementation((): never => {
           throw new Error("Test Error");
         }),
       })

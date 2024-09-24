@@ -1,7 +1,7 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import ContactDlg from "../../../../../components/user/ContactDlg";
-describe("ContactDlg", () => {
-  it("renders the contact dialog", () => {
+describe("ContactDlg", (): void => {
+  it("renders the contact dialog", (): void => {
     render(<ContactDlg setContact={jest.fn()} shouldDisplayContact={true} />);
     expect(screen.getByText<HTMLFormElement>("Formulário de Contato")).toBeInTheDocument();
   });

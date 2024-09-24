@@ -5,10 +5,7 @@ export type looseNum = string | number;
 export type primitiveType = looseNum | boolean | voidVal;
 export type textEl = HTMLInputElement | HTMLTextAreaElement;
 export type entryEl = textEl | HTMLSelectElement;
-export type elCollection =
-  | Element[]
-  | NodeListOf<Element>
-  | HTMLCollectionOf<Element>;
+export type elCollection = Element[] | NodeListOf<Element> | HTMLCollectionOf<Element>;
 //targets
 export type targNum = number | voidVal;
 export type targStr = string | voidVal;
@@ -30,29 +27,14 @@ export type trioTargEl = [targEl, targEl, targEl];
 export type sixTargEl = [targEl, targEl, targEl, targEl, targEl, targEl];
 export type fiveNums = [number, number, number, number, number];
 export type contextAutofill = [targEl, targEl, targEl, targEl[]];
-export type contextAutofillNums = [
-  number,
-  number,
-  string,
-  [number, number, number, number, number]
-];
+export type contextAutofillNums = [number, number, string, [number, number, number, number, number]];
 export type autofillResult = [number, number[], number[], targEl[]];
 export type btnFillResult = [number[], number[], targEl[]];
 export type btnContext = [[number, string, fiveNums], contextAutofill];
 //errors
 export type errorHandleElType = Element | EventTarget | string | voidVal;
-export type errorHandleArrayType =
-  | (Element | primitiveType)[]
-  | NodeList
-  | HTMLCollection
-  | string
-  | voidVal;
-export type errorHandleSpreadType = (
-  | Element
-  | EventTarget
-  | primitiveType
-  | voidVal
-)[];
+export type errorHandleArrayType = (Element | primitiveType)[] | NodeList | HTMLCollection | string | voidVal;
+export type errorHandleSpreadType = (Element | EventTarget | primitiveType | voidVal)[];
 export type errorLineExp = targStr | (() => string | undefined);
 
 export interface objInnerTabs {
@@ -82,21 +64,8 @@ export type nullishDl = HTMLDataListElement | null;
 export type nullishOptGrp = HTMLOptGroupElement | null;
 export type rMouseEvent = MouseEvent | React.MouseEvent;
 export type rDragEvent = DragEvent | React.DragEvent;
-export type pageCases =
-  | "login"
-  | "base"
-  | "ag"
-  | "ed"
-  | "od"
-  | "panel"
-  | "recover";
-export type formCases =
-  | "schedule"
-  | "studs"
-  | "profs"
-  | "patients"
-  | "cons"
-  | pageCases;
+export type pageCases = "login" | "base" | "ag" | "ed" | "od" | "panel" | "recover";
+export type formCases = "schedule" | "studs" | "profs" | "patients" | "cons" | pageCases;
 export type fetchSuffixes = "_table" | "_form";
 export type pacStatus =
   | "avaliacao"
@@ -110,14 +79,7 @@ export type pacStatus =
   | "altaEducacaoFisicaNutricao"
   | "altaOdontologiaEducacaoFisicaNutricao";
 export type quadrCases = "SupDir" | "SupEsq" | "InfDir" | "InfEsq";
-export type ctxRot =
-  | "RefDia"
-  | "RefCompDia"
-  | "AguaDia"
-  | "UrDia"
-  | "UrInterv"
-  | "EvDia"
-  | "EvInterv";
+export type ctxRot = "RefDia" | "RefCompDia" | "AguaDia" | "UrDia" | "UrInterv" | "EvDia" | "EvInterv";
 export type mainContextRot =
   | "Diário"
   | "Refeições Diárias"
@@ -182,11 +144,6 @@ export type validAreas =
   | "Nutrição"
   | "Coordenação"
   | "Psicologia"
-  | "Medicina";
-export type panelOpts =
-  | "registStud"
-  | "registProf"
-  | "removeStud"
-  | "removeProf"
-  | "pacList"
-  | "agenda";
+  | "Medicina"
+  | "Tecnologia";
+export type panelOpts = "registStud" | "registProf" | "removeStud" | "removeProf" | "pacList" | "agenda";

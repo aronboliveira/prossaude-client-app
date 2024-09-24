@@ -24,7 +24,7 @@ describe("HASDivAdd Component", (): void => {
   });
   it("calls opRadioHandler on radio input keydown", async (): Promise<void> => {
     render(<HASDivAdd />);
-    const radioInput = screen.getByLabelText("Pré-hipertensão") as HTMLInputElement;
+    const radioInput = screen.getByLabelText<HTMLInputElement>("Pré-hipertensão");
     fireEvent.keyDown(radioInput, { key: "Enter" });
     await waitFor((): void => {
       expect(opRadioHandler).toHaveBeenCalled();

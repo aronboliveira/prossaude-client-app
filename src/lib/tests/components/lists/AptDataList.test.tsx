@@ -74,7 +74,7 @@ describe("AptDataList Component", (): void => {
     fireEvent.click(screen.getByRole<HTMLButtonElement>("button", { name: /Gerar Planilha/i }));
     expect(addListenerExportBtn).toHaveBeenCalled();
   });
-  test("renders the ErrorFallbackDlg when an error occurs", async () => {
+  test("renders the ErrorFallbackDlg when an error occurs", async (): Promise<void> => {
     jest.spyOn<Console, "warn">(console, "warn").mockImplementation((): void => {});
     consVariablesData.rootDlg = undefined;
     renderComponent();
