@@ -5,12 +5,7 @@ import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useEffect, useRef, useState } from "react";
 import ExcludeDlg from "../../alerts/ExcludeDlg";
 import GenericErrorComponent from "../../error/GenericErrorComponent";
-
-export default function FormExcludeBtn({
-  context = "Stud",
-}: {
-  context: string;
-}): JSX.Element {
+export default function FormExcludeBtn({ context = "Stud" }: { context: string }): JSX.Element {
   const [shouldDisplayExcludeDlg, setDisplayExcludeDlg] = useState(false);
   const toggleDisplayExcludeDlg = (shouldDisplayExcludeDlg: boolean = true) => {
     setDisplayExcludeDlg(!shouldDisplayExcludeDlg);
@@ -18,31 +13,19 @@ export default function FormExcludeBtn({
   const excludeBtnRef = useRef<nullishBtn>(null);
   useEffect(() => {
     if (excludeBtnRef.current instanceof HTMLButtonElement)
-      syncAriaStates([
-        ...excludeBtnRef.current!.querySelectorAll("*"),
-        excludeBtnRef.current,
-      ]);
-    else
-      elementNotFound(
-        excludeBtnRef.current,
-        "Button for Excluding Member",
-        extLine(new Error())
-      );
+      syncAriaStates([...excludeBtnRef.current!.querySelectorAll("*"), excludeBtnRef.current]);
+    else elementNotFound(excludeBtnRef.current, "Button for Excluding Member", extLine(new Error()));
   }, [excludeBtnRef]);
   return (
-    <ErrorBoundary
-      FallbackComponent={() => (
-        <GenericErrorComponent message="Error carregando botão de exclusão" />
-      )}
-    >
+    <ErrorBoundary FallbackComponent={() => <GenericErrorComponent message='Error carregando botão de exclusão' />}>
       <button
-        type="button"
+        type='button'
         id={`btnExclude${context}`}
-        className="btn btn-danger opaqueEl btnAffectRegst btnExcRegst widFull"
+        className='btn btn-danger opaqueEl btnAffectRegst btnExcRegst widFull'
         ref={excludeBtnRef}
         onClick={() => toggleDisplayExcludeDlg(shouldDisplayExcludeDlg)}
       >
-        <small role="textbox" className="bolded">
+        <small role='textbox' className='bolded'>
           Excluir
         </small>
       </button>

@@ -1,4 +1,4 @@
-("use client");
+"use client";
 import { ErrorBoundary } from "react-error-boundary";
 import { useState, useEffect } from "react";
 import GenericErrorComponent from "../../error/GenericErrorComponent";
@@ -10,11 +10,7 @@ export default function OdTipsBtnWrapper(): JSX.Element {
     /tips=open/gi.test(location.search) && setTips(true);
   }, []);
   return (
-    <ErrorBoundary
-      FallbackComponent={() => (
-        <GenericErrorComponent message="Error Loading Tips Button" />
-      )}
-    >
+    <ErrorBoundary FallbackComponent={() => <GenericErrorComponent message='Error Loading Tips Button' />}>
       <TipsBtn dispatch={setTips} state={shouldShowTips} />
       {shouldShowTips && <OdTips state={shouldShowTips} dispatch={setTips} />}
     </ErrorBoundary>

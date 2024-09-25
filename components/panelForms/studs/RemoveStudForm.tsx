@@ -15,7 +15,6 @@ import StudRow from "./StudRow";
 import { nullishBtn, nullishForm, nullishTab, nullishTabSect } from "@/lib/global/declarations/types";
 import { GlobalFormProps, StudInfo } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import { strikeEntries } from "@/lib/locals/panelPage/consStyleScript";
-
 export default function RemoveStudForm({ userClass = "estudante" }: GlobalFormProps): JSX.Element {
   const studs: StudInfo[] = [];
   const formRef = useRef<nullishForm>(null);

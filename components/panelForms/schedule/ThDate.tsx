@@ -1,13 +1,5 @@
 "use client";
-
-
-export default function ThDate({
-  nCol = NaN,
-  last = false,
-}: {
-  nCol: number;
-  last?: boolean;
-}): JSX.Element {
+export default function ThDate({ nCol = NaN, last = false }: { nCol: number; last?: boolean }): JSX.Element {
   const fullName = (() => {
     switch (nCol) {
       case 1:
@@ -35,33 +27,25 @@ export default function ThDate({
     }
   })();
   return (
-    <th
-      className={last ? `tabCel lastConsDayCont` : ""}
-      scope="col"
-      data-row="1"
-      data-col={nCol}
-    >
+    <th className={last ? `tabCel lastConsDayCont` : ""} scope='col' data-row='1' data-col={nCol}>
       <label
-        className="consWeekday"
-        htmlFor="order_dayfInp"
+        className='consWeekday'
+        htmlFor='order_dayfInp'
         contentEditable={true}
-        data-row="1"
+        data-row='1'
         data-col={nCol}
       ></label>
-      <div role="group" className="flexAlItCt">
+      <div role='group' className='flexAlItCt'>
         <input
-          type="date"
-          className="form-control dayTabRef lcPersist noInvert flScape90"
-          id="order_dayfInp"
+          type='date'
+          className='form-control dayTabRef lcPersist noInvert flScape90'
+          id='order_dayfInp'
           name={`date_h_1_${nCol}`}
           data-title={`${fullName} dia do mês`}
-          data-row="1"
+          data-row='1'
           data-col={nCol}
         />
-        <span
-          role="textbox"
-          className="alertSpan flexBasis10 widMax10C widMin3C"
-        ></span>
+        <span role='textbox' className='alertSpan flexBasis10 widMax10C widMin3C'></span>
       </div>
     </th>
   );

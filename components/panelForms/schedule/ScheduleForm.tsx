@@ -37,11 +37,9 @@ import {
 import { syncAriaStates, validateForm } from "../../../src/lib/global/handlers/gHandlers";
 import { scheduleReset, panelFormsVariables, sessionScheduleState } from "../panelFormsData";
 import FormDlg from "../../consRegst/FormDlg";
-
 export const scheduleProps: { autoSaving: boolean } = {
   autoSaving: true,
 };
-
 export default function ScheduleForm({ mainRoot, userClass = "estudante" }: ScheduleFormProps): JSX.Element {
   const cols = [1, 2, 3, 4, 5, 6, 7, 8, 9];
   const hours: validSchedHours[] = [18, 19, 20, 21];

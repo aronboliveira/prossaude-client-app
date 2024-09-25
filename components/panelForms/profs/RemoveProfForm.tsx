@@ -15,7 +15,6 @@ import Spinner from "../../icons/Spinner";
 import { nullishBtn, nullishForm, nullishTab, nullishTabSect } from "@/lib/global/declarations/types";
 import { GlobalFormProps, ProfInfo } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import { strikeEntries } from "@/lib/locals/panelPage/consStyleScript";
-
 export default function RemoveProfForm({ userClass = "estudante" }: GlobalFormProps): JSX.Element {
   const profs: ProfInfo[] = [];
   const formRef = useRef<nullishForm>(null);

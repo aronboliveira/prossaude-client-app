@@ -6,7 +6,6 @@ import { nullishBtn, nullishForm } from "@/lib/global/declarations/types";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useEffect, useRef, useState, useCallback } from "react";
 import PacList from "../../lists/PacList";
-
 export default function PacTabForm({ userClass = "estudante" }: GlobalFormProps): JSX.Element {
   const [shouldDisplayRowData, setDisplayRowData] = useState<boolean>(false);
   const formRef = useRef<nullishForm>(null);

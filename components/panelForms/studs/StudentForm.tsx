@@ -13,7 +13,6 @@ import { nullishBtn, nullishForm, nullishInp } from "@/lib/global/declarations/t
 import { addEmailExtension, autoCapitalizeInputs, formatCPF, formatTel } from "@/lib/global/gModel";
 import { elementNotFound, elementNotPopulated, extLine, inputNotFound } from "@/lib/global/handlers/errorHandler";
 import { handleCondtReq, handleEventReq, validateForm, syncAriaStates } from "@/lib/global/handlers/gHandlers";
-
 export default function StudentForm({ mainRoot, userClass = "estudante" }: GlobalFormProps): JSX.Element {
   const [showForm] = useState<boolean>(true);
   const formRef = useRef<nullishForm>(null);

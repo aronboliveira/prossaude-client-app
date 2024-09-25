@@ -1,15 +1,7 @@
 "use client";
 import { HrCelProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import EraseAptBtn from "./EraseAptBtn";
-
-export default function TdBSchedTab({
-  userClass,
-  mainRoot,
-  nHr,
-  nRow,
-  nCol,
-  last = false,
-}: HrCelProps): JSX.Element {
+export default function TdBSchedTab({ userClass, mainRoot, nHr, nRow, nCol, last = false }: HrCelProps): JSX.Element {
   const dayOrder = (() => {
     switch (nCol) {
       case 1:
@@ -51,11 +43,7 @@ export default function TdBSchedTab({
     }
   })();
   return (
-    <td
-      className={`tabCel${last ? " lastConsDayCont" : ""}`}
-      data-col={nCol}
-      data-row={nRow}
-    >
+    <td className={`tabCel${last ? " lastConsDayCont" : ""}`} data-col={nCol} data-row={nRow}>
       <slot
         className={`consSlot lcPersist htFull wid90 flexNoW cGap2v slot${nHr}`}
         id={`slot_${nHr}-00_${nCol}`}
@@ -64,20 +52,20 @@ export default function TdBSchedTab({
       >
         <input
           className={`transparent-el lcPersist slotableDay opaque-bluish wid100 form-control inp${nHr}-00 inp-text-${nHr}-00`}
-          placeholder="Horário Livre"
+          placeholder='Horário Livre'
           id={`_${nHr}-00_${nCol}`}
           name={`date_${nHr}-00_${nCol}`}
           data-title={`${hourOrder} Horário, ${dayOrder} dia`}
           data-row={nRow}
           data-col={nCol}
         />
-        <div role="group" className="flexNoWC flexAlItCt">
+        <div role='group' className='flexNoWC flexAlItCt'>
           <input
-            type="checkbox"
+            type='checkbox'
             className={`form-check-input apptCheck redMg checkGreen invtSignal dkGreen lcPersist inp${nHr}-00 inp-cb-${nHr}-00`}
             id={`check_${nHr}-00_${nCol}`}
             name={`date_conf_${nHr}-00_${nCol}`}
-            title="Confirme aqui o agendamento relativo"
+            title='Confirme aqui o agendamento relativo'
             data-title={`Confirmação do ${hourOrder} Horário, ${dayOrder} dia`}
             data-row={nRow}
             data-col={nCol}

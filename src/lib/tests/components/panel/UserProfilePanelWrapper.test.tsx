@@ -74,7 +74,7 @@ describe("UserProfilePanelWrapper Component", (): void => {
       </AppRootContext.Provider>
     ) as RenderResult;
     (await waitFor(
-      (): void => expect(mockUserRoot.render as jest.Mock).toHaveBeenCalledWith(expect.anything()) as void,
+      (): void => expect(mockUserRoot.render as jest.Mock).toHaveBeenCalledWith<[any]>(expect.anything()) as void,
       {
         timeout: 2000,
       }
