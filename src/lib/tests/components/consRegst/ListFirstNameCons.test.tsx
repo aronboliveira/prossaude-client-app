@@ -53,53 +53,63 @@ describe("ListFirstNameCons Component", (): void => {
     render(<ListFirstNameCons first={first} />);
   test("renders the datalist component", (): void => {
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
-    expect(screen.getByRole<HTMLElement>("listbox")).toBeInTheDocument() as void;
+    (
+      expect(screen.getByRole<HTMLElement>("listbox")) as jest.JestMatchers<jest.SpyInstance>
+    ).toBeInTheDocument() as void;
   }) as void;
   test("fetches and populates options with first names from handleFetch", async (): Promise<void> => {
     renderComponent(true) as RenderResult;
     (await waitFor((): void => {
-      expect(handleFetch).toHaveBeenCalledWith<Parameters<typeof handleFetch>>("patients", "_table", true) as void;
+      (expect(handleFetch) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalledWith<Parameters<typeof handleFetch>>(
+        "patients",
+        "_table",
+        true
+      ) as void;
       const options = screen.getAllByRole<HTMLOptionElement>("option");
-      expect(options).toHaveLength(2);
-      expect(options[0]).toHaveValue("John") as void;
-      expect(options[1]).toHaveValue("Jane") as void;
+      (expect(options) as jest.JestMatchers<jest.SpyInstance>).toHaveLength(2);
+      (expect(options[0]) as jest.JestMatchers<jest.SpyInstance>).toHaveValue("John") as void;
+      (expect(options[1]) as jest.JestMatchers<jest.SpyInstance>).toHaveValue("Jane") as void;
     })) as void;
   }) as void;
   test("fetches and populates options with family names from handleFetch", async (): Promise<void> => {
     renderComponent(false) as RenderResult;
     (await waitFor((): void => {
-      expect(handleFetch).toHaveBeenCalledWith<Parameters<typeof handleFetch>>("patients", "_table", true) as void;
+      (expect(handleFetch) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalledWith<Parameters<typeof handleFetch>>(
+        "patients",
+        "_table",
+        true
+      ) as void;
       const options = screen.getAllByRole<HTMLOptionElement>("option");
-      expect(options).toHaveLength(2);
-      expect(options[0]).toHaveValue("Doe") as void;
-      expect(options[1]).toHaveValue("Doe") as void;
+      (expect(options) as jest.JestMatchers<jest.SpyInstance>).toHaveLength(2);
+      (expect(options[0]) as jest.JestMatchers<jest.SpyInstance>).toHaveValue("Doe") as void;
+      (expect(options[1]) as jest.JestMatchers<jest.SpyInstance>).toHaveValue("Doe") as void;
     })) as void;
   }) as void;
   test("throws error when dlRef is not a valid HTMLDataListElement", async (): Promise<void> => {
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
     (document.getElementById as jest.Mock).mockReturnValueOnce(null) as jest.Mock;
-    expect(elementNotFound).toHaveBeenCalledWith<Parameters<typeof elementNotFound>>(
-      null,
-      expect.any(String),
-      extLine(expect.any(Error) as any)
-    );
+    (expect(elementNotFound) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalledWith<
+      Parameters<typeof elementNotFound>
+    >(null, expect.any(String), extLine(expect.any(Error) as any));
   }) as void;
   test("handles rendering and re-rendering of the options", async (): Promise<void> => {
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
-    await waitFor((): void => expect(handleFetch).toHaveBeenCalled() as void);
-    expect(createRoot).toHaveBeenCalledWith<Parameters<typeof createRoot>>(
+    await waitFor((): void => (expect(handleFetch) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalled() as void);
+    (expect(createRoot) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalledWith<Parameters<typeof createRoot>>(
       screen.getByRole<HTMLElement>("listbox")
     ) as void;
     (await waitFor((): void => {
-      expect(screen.getAllByRole<HTMLOptionElement>("option")).toHaveLength(2);
+      (expect(screen.getAllByRole<HTMLOptionElement>("option")) as jest.JestMatchers<jest.SpyInstance>).toHaveLength(2);
     })) as void;
   }) as void;
   test("syncs aria states after fetching and rendering", async (): Promise<void> => {
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
-    await waitFor((): void => expect(handleFetch).toHaveBeenCalled() as void);
+    await waitFor((): void => (expect(handleFetch) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalled() as void);
     (await waitFor((): void => {
-      expect(syncAriaStates).toHaveBeenCalledTimes(2) as void;
-      expect(syncAriaStates).toHaveBeenCalledWith<Parameters<typeof syncAriaStates>>(expect.any(Array)) as void;
+      (expect(syncAriaStates) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalledTimes(2) as void;
+      (expect(syncAriaStates) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalledWith<
+        Parameters<typeof syncAriaStates>
+      >(expect.any(Array)) as void;
     })) as void;
   }) as void;
   test("logs error if fetch fails", async (): Promise<void> => {
@@ -109,7 +119,7 @@ describe("ListFirstNameCons Component", (): void => {
       .mockImplementation((): void => {}) as jest.SpyInstance;
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
     (await waitFor((): void => {
-      expect(consoleErrorSpy).toHaveBeenCalledWith<[any]>(
+      (expect(consoleErrorSpy) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalledWith<[any]>(
         expect.stringContaining("Failed to fetch from Patients Table for filling First Name DL: Fetch failed")
       );
     })) as void;

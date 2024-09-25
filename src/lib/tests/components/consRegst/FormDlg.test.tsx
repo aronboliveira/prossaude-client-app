@@ -337,8 +337,10 @@ describe("FormDlg Component", (): void => {
   }) as void;
   test("renders 'Estudante alocado' input and button", (): void => {
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
-    expect(
-      screen.getByPlaceholderText<HTMLInputElement>("Preencha com o Nome do Estudante alocado")
+    (
+      expect(
+        screen.getByPlaceholderText<HTMLInputElement>("Preencha com o Nome do Estudante alocado")
+      ) as jest.JestMatchers<jest.SpyInstance>
     ).toBeInTheDocument() as void;
     (
       expect(screen.getByText<HTMLButtonElement>("Capturar por Identificadores")) as jest.JestMatchers<jest.SpyInstance>
@@ -346,14 +348,18 @@ describe("FormDlg Component", (): void => {
   }) as void;
   test("renders 'Professor ou Profissional Responsável' input", (): void => {
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
-    expect(
-      screen.getByPlaceholderText<HTMLInputElement>("Preencha com o Nome do Profissional Responsável alocado")
+    (
+      expect(
+        screen.getByPlaceholderText<HTMLInputElement>("Preencha com o Nome do Profissional Responsável alocado")
+      ) as jest.JestMatchers<jest.SpyInstance>
     ).toBeInTheDocument() as void;
   }) as void;
   test("renders 'Notas' textarea", (): void => {
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
-    expect(
-      screen.getByPlaceholderText<HTMLInputElement>("Insira aqui observações adicionais sobre a consulta")
+    (
+      expect(
+        screen.getByPlaceholderText<HTMLInputElement>("Insira aqui observações adicionais sobre a consulta")
+      ) as jest.JestMatchers<jest.SpyInstance>
     ).toBeInTheDocument() as void;
   }) as void;
   test("renders time input and applies hour validation logic", (): void => {

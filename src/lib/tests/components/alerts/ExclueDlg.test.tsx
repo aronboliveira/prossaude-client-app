@@ -49,8 +49,10 @@ describe("ExcludeDlg Component", (): void => {
     (
       expect(screen.getByText<HTMLButtonElement>("Confirmar remoção?")) as jest.JestMatchers<jest.SpyInstance>
     ).toBeInTheDocument() as void;
-    expect(
-      screen.getByText<HTMLElement>("Esse processo é parcialmente ou totalmente irreversível!")
+    (
+      expect(
+        screen.getByText<HTMLElement>("Esse processo é parcialmente ou totalmente irreversível!")
+      ) as jest.JestMatchers<jest.SpyInstance>
     ).toBeInTheDocument() as void;
   }) as void;
 

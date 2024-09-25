@@ -1,4 +1,4 @@
-("use client");
+"use client";
 import { ErrorBoundary } from "react-error-boundary";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useState, useEffect } from "react";
@@ -12,15 +12,9 @@ export default function TipsBtnWrapper(): JSX.Element {
     /tips=open/gi.test(location.search) && setTips(true);
   }, []);
   return (
-    <ErrorBoundary
-      FallbackComponent={() => (
-        <GenericErrorComponent message="Failed to Load Tips Btn" />
-      )}
-    >
+    <ErrorBoundary FallbackComponent={() => <GenericErrorComponent message='Failed to Load Tips Btn' />}>
       <TipsBtn dispatch={setTips} state={shouldShowTips} />
-      {shouldShowTips && (
-        <PanelTips state={shouldShowTips} dispatch={setTips} />
-      )}
+      {shouldShowTips && <PanelTips state={shouldShowTips} dispatch={setTips} />}
     </ErrorBoundary>
   );
 }

@@ -40,10 +40,15 @@ describe("<ListTelPacCons />", (): void => {
   test("renders datalist and fetches patient data", async (): Promise<void> => {
     (handleFetch as jest.Mock).mockResolvedValue(mockPacs) as jest.Mock;
     render(<ListTelPacCons />);
-    expect(screen.getByRole<HTMLElement>("listbox")).toBeInTheDocument() as void;
+    (
+      expect(screen.getByRole<HTMLElement>("listbox")) as jest.JestMatchers<jest.SpyInstance>
+    ).toBeInTheDocument() as void;
     await waitFor((): void =>
       mockPacs.forEach(
-        (pac): void => expect(screen.getByDisplayValue<HTMLInputElement>(pac.tel.trim())).toBeInTheDocument() as void
+        (pac): void =>
+          (
+            expect(screen.getByDisplayValue<HTMLInputElement>(pac.tel.trim())) as jest.JestMatchers<jest.SpyInstance>
+          ).toBeInTheDocument() as void
       )
     );
   }) as void;
@@ -56,7 +61,7 @@ describe("<ListTelPacCons />", (): void => {
           expect(screen.queryByRole<HTMLSelectElement>("listbox")) as jest.JestMatchers<jest.SpyInstance>
         ).not.toBeInTheDocument() as void
     );
-    expect(createRoot).not.toHaveBeenCalled() as void;
+    (expect(createRoot) as jest.JestMatchers<jest.SpyInstance>).not.toHaveBeenCalled() as void;
   }) as void;
   test("syncs aria states after fetch", async (): Promise<void> => {
     (handleFetch as jest.Mock).mockResolvedValue(mockPacs) as jest.Mock;

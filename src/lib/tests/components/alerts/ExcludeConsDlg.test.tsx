@@ -62,8 +62,10 @@ describe("ExcludeConsDlg Component", (): void => {
     (
       expect(screen.getByText<HTMLButtonElement>("Confirmar remoção?")) as jest.JestMatchers<jest.SpyInstance>
     ).toBeInTheDocument() as void;
-    expect(
-      screen.getByText<HTMLElement>("Esse processo é parcialmente ou totalmente irreversível!")
+    (
+      expect(
+        screen.getByText<HTMLElement>("Esse processo é parcialmente ou totalmente irreversível!")
+      ) as jest.JestMatchers<jest.SpyInstance>
     ).toBeInTheDocument() as void;
   }) as void;
   test("does not render the modal dialog when shouldDisplayExcludeDlg is false", (): void => {

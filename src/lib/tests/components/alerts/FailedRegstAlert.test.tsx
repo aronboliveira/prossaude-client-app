@@ -39,10 +39,12 @@ describe("FailRegstAlert Component", (): void => {
     (
       expect(screen.getByRole<HTMLDialogElement>("alertdialog")) as jest.JestMatchers<jest.SpyInstance>
     ).toBeInTheDocument() as void;
-    expect(
-      screen.getByText<HTMLElement>(
-        "Falha na procura de um encaixe correspondente na agenda! Arraste  ou insira manualmente."
-      )
+    (
+      expect(
+        screen.getByText<HTMLElement>(
+          "Falha na procura de um encaixe correspondente na agenda! Arraste  ou insira manualmente."
+        )
+      ) as jest.JestMatchers<jest.SpyInstance>
     ).toBeInTheDocument() as void;
   }) as void;
   test("does not render the modal dialog when shouldDisplayFailRegstDlg is false", (): void => {
