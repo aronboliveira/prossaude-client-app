@@ -7,21 +7,25 @@ jest.mock(
   (): {
     handleCondtReq: jest.Mock<any, any, any>;
   } => ({
-    handleCondtReq: jest.fn(),
+    handleCondtReq: jest.fn() as jest.Mock,
   })
 ) as typeof jest;
 describe("StreetNum", (): void => {
   it("renders a number input for street number", (): void => {
     render(<StreetNum />);
-    expect(screen.getByRole<HTMLElement>("spinbutton")).toBeInTheDocument() as void;
-  });
+    (
+      expect(screen.getByRole<HTMLElement>("spinbutton")) as jest.JestMatchers<jest.SpyInstance>
+    ).toBeInTheDocument() as void;
+  }) as void;
   it("calls handleCondtReq on input", (): void => {
     render(<StreetNum />);
     const input = screen.getByRole<HTMLElement>("spinbutton");
     userEvent.type(input, "123");
-    expect(handleCondtReq).toHaveBeenCalledWith<Parameters<typeof handleCondtReq>>(input, {
+    (expect(handleCondtReq) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalledWith<
+      Parameters<typeof handleCondtReq>
+    >(input, {
       min: 1,
       minNum: 0,
-    });
-  });
-});
+    }) as void;
+  }) as void;
+}) as void;

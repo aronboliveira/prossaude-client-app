@@ -10,7 +10,7 @@ jest.mock(
   (): (() => JSX.Element) => (): JSX.Element => <div>PacList</div>
 ) as typeof jest;
 describe("AvPacListDlg Component", (): void => {
-  const mockDispatch: jest.Mock<any, any, any> = jest.fn();
+  const mockDispatch: jest.Mock<any, any, any> = jest.fn() as jest.Mock;
   const defaultProps: {
     dispatch: jest.Mock<any, any, any>;
     state: boolean;
@@ -41,14 +41,14 @@ describe("AvPacListDlg Component", (): void => {
   test("renders PacList component", async (): Promise<void> => {
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
     expect(screen.getByText<HTMLElement>(/PacList/i)).toBeInTheDocument() as void;
-  });
+  }) as void;
   test("calls dispatch when close button is clicked", async (): Promise<void> => {
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
-    fireEvent.click(screen.getByRole<HTMLButtonElement>("button", { name: "" }));
+    fireEvent.click(screen.getByRole<HTMLButtonElement>("button", { name: "" })) as boolean;
     expect(mockDispatch).toHaveBeenCalledWith<Parameters<typeof mockDispatch>>(!defaultProps.state) as void;
-  });
+  }) as void;
   test("renders the ErrorFallbackDlg when an error occurs", async (): Promise<void> => {
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
     expect(screen.getByText<HTMLDialogElement>(/ErrorFallbackDlg/i)).toBeInTheDocument() as void;
-  });
-});
+  }) as void;
+}) as void;

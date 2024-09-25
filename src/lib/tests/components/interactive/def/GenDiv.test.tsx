@@ -10,7 +10,7 @@ describe("GenDiv Component", (): void => {
   it("updates the selected option and triggers fluxGen when flux is true", (): void => {
     render(<GenDiv flux={true} />);
     const select = screen.getByRole<HTMLSelectElement>("combobox", { name: /gênero/i });
-    fireEvent.change(select, { target: { value: "feminino" } });
+    fireEvent.change(select, { target: { value: "feminino" } }) as boolean;
     expect(select).toHaveValue("feminino");
     expect(
       screen.getByRole<HTMLSelectElement>("combobox", { name: /estágio da transição hormonal/i })

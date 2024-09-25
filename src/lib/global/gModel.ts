@@ -12,48 +12,29 @@ import {
 } from "./handlers/errorHandler";
 
 export function numberLimit(inpEl: targEl): void {
-  if (
-    inpEl instanceof HTMLInputElement ||
-    inpEl instanceof HTMLTextAreaElement ||
-    inpEl instanceof HTMLSelectElement
-  ) {
+  if (inpEl instanceof HTMLInputElement || inpEl instanceof HTMLTextAreaElement || inpEl instanceof HTMLSelectElement) {
     const isAtivFis = inpEl.classList.contains("inpAtivFis");
     const isAlimRot = inpEl.classList.contains("inpAlimRot");
     const isDDD = inpEl.classList.contains("inpDDD");
     const isFreq = inpEl.classList.contains("freqInpList");
     if (
-      (isAtivFis ||
-        isAlimRot ||
-        inpEl.classList.contains("inpLocNum") ||
-        isDDD ||
-        isFreq) &&
+      (isAtivFis || isAlimRot || inpEl.classList.contains("inpLocNum") || isDDD || isFreq) &&
       !inpEl.classList.contains("float")
     ) {
       if (inpEl.value?.match(/[=.,;~/|"!@#$%&*¬°ªº§¹²³£¢(){}[\]]/g)) {
         const wrongMatchIndex = inpEl.value.indexOf(
           inpEl.value.match(/[=.,;~/|"!@#$%&*¬°ªº§¹²³£¢(){}[\]]/g)?.[0] ?? ""
         );
-        inpEl.value =
-          inpEl.value.slice(0, wrongMatchIndex ?? 0) +
-          inpEl.value.slice(wrongMatchIndex + 1 ?? 0);
+        inpEl.value = inpEl.value.slice(0, wrongMatchIndex ?? 0) + inpEl.value.slice(wrongMatchIndex + 1 ?? 0);
       }
       if (parseInt(inpEl.value) < 1 && inpEl.id?.endsWith("Max")) {
         const inpValueArray = Array.from(inpEl.value);
         inpValueArray?.splice(0, 1, "1");
         inpEl.value = inpValueArray?.toString();
       }
-      if (
-        (isAtivFis || isAlimRot || isDDD || isFreq) &&
-        inpEl.value?.length > 2
-      )
-        inpEl.value = inpEl.value.slice(0, 2);
+      if ((isAtivFis || isAlimRot || isDDD || isFreq) && inpEl.value?.length > 2) inpEl.value = inpEl.value.slice(0, 2);
     }
-  } else
-    elementNotFound(
-      inpEl,
-      `inpEl id ${inpEl?.id || "UNDEFINED ID"} in numberLimit`,
-      extLine(new Error())
-    );
+  } else elementNotFound(inpEl, `inpEl id ${inpEl?.id || "UNDEFINED ID"} in numberLimit`, extLine(new Error()));
 }
 
 export function normalizeNegatives(tabInp: Element): string {
@@ -68,31 +49,17 @@ export function normalizeNegatives(tabInp: Element): string {
   return parsedInpValue.toString() ?? "";
 }
 
-export function parseNotNaN(
-  iniVal: string,
-  def: number = 0,
-  context: string = "int",
-  fixed: number = 4
-): number {
+export function parseNotNaN(iniVal: string, def: number = 0, context: string = "int", fixed: number = 4): number {
   let returnVal = 0;
   try {
-    if (typeof iniVal !== "string")
-      throw new Error("Failed to validate argument: iniVal must be a string.");
-    if (typeof context !== "string")
-      throw new Error("Failed to validate argument: context must be a string.");
-    if (typeof def !== "number")
-      throw new Error("Failed to validate argument: def must be a number.");
-    if (typeof fixed !== "number")
-      throw new Error("Failed to validate argument: fixed must be a number.");
+    if (typeof iniVal !== "string") throw new Error("Failed to validate argument: iniVal must be a string.");
+    if (typeof context !== "string") throw new Error("Failed to validate argument: context must be a string.");
+    if (typeof def !== "number") throw new Error("Failed to validate argument: def must be a number.");
+    if (typeof fixed !== "number") throw new Error("Failed to validate argument: fixed must be a number.");
     switch (context) {
       case "int":
         returnVal = parseInt(iniVal, 10) || def;
-        if (
-          !Number.isFinite(returnVal) ||
-          Number.isNaN(returnVal) ||
-          isNaN(returnVal)
-        )
-          returnVal = def;
+        if (!Number.isFinite(returnVal) || Number.isNaN(returnVal) || isNaN(returnVal)) returnVal = def;
         break;
       case "float":
         returnVal = parseFloat(parseFloat(iniVal).toFixed(fixed)) || def;
@@ -109,34 +76,21 @@ export function parseNotNaN(
 }
 
 export function formatCEP(CEPInp: targEl): string {
-  if (
-    CEPInp instanceof HTMLInputElement ||
-    CEPInp instanceof HTMLTextAreaElement
-  ) {
+  if (CEPInp instanceof HTMLInputElement || CEPInp instanceof HTMLTextAreaElement) {
     CEPInp.value.replaceAll(/[^0-9]/g, "");
-    if (
-      CEPInp.value.length >= 5 &&
-      CEPInp.value.match(/[0-9]{5,}[^-][0-9]{1,3}/)
-    )
+    if (CEPInp.value.length >= 5 && CEPInp.value.match(/[0-9]{5,}[^-][0-9]{1,3}/))
       CEPInp.value = `${CEPInp.value.slice(0, 5)}-${CEPInp.value.slice(5, 9)}`;
   } else inputNotFound(CEPInp, "CEPInp in formatCEP()", extLine(new Error()));
   return (CEPInp as entryEl)?.value ?? "";
 }
 
 export function formatCPF(CPFInp: targEl): string {
-  if (
-    CPFInp instanceof HTMLInputElement ||
-    CPFInp instanceof HTMLTextAreaElement
-  ) {
+  if (CPFInp instanceof HTMLInputElement || CPFInp instanceof HTMLTextAreaElement) {
     CPFInp.value = CPFInp.value
       .replaceAll(/[^0-9.-]/g, "")
       .replaceAll(/[-]{2,}/g, "-")
       .replaceAll(/\.{2,}/g, ".");
-    if (
-      CPFInp.value.length === 4 &&
-      !CPFInp.value.match(/^[0-9]{3,}\.$/) &&
-      CPFInp.value.match(/^[0-9]{4,}$/)
-    ) {
+    if (CPFInp.value.length === 4 && !CPFInp.value.match(/^[0-9]{3,}\.$/) && CPFInp.value.match(/^[0-9]{4,}$/)) {
       const _1checkCPF = CPFInp.value;
       CPFInp.value = `${_1checkCPF.slice(0, 3)}.${_1checkCPF.slice(3, 4)}`;
     }
@@ -151,25 +105,17 @@ export function formatCPF(CPFInp: targEl): string {
       !CPFInp.value.match(/^[0-9]{3,}\.[0-9]{3,}\.[0-9]{3,}[-]}$/) &&
       CPFInp.value.match(/^[0-9]{3,}\.[0-9]{3,}\.[0-9]{4,}$/)
     ) {
-      CPFInp.value = `${CPFInp.value.slice(0, 11)}-${CPFInp.value.slice(
-        11,
-        12
-      )}`;
+      CPFInp.value = `${CPFInp.value.slice(0, 11)}-${CPFInp.value.slice(11, 12)}`;
     }
     CPFInp.value.length > 14 &&
-      (CPFInp.value = CPFInp.value.substring(0, 14))
-        .replaceAll(/[-]{2,}/g, "-")
-        .replaceAll(/\.{2,}/g, ".");
+      (CPFInp.value = CPFInp.value.substring(0, 14)).replaceAll(/[-]{2,}/g, "-").replaceAll(/\.{2,}/g, ".");
   } else inputNotFound(CPFInp, "CPFInp in formatCPF()", extLine(new Error()));
   return (CPFInp as entryEl)?.value ?? "";
 }
 
 export function formatTel(telInp: targEl, full: boolean = false): string {
   let numOnly = "";
-  if (
-    telInp instanceof HTMLInputElement ||
-    telInp instanceof HTMLTextAreaElement
-  ) {
+  if (telInp instanceof HTMLInputElement || telInp instanceof HTMLTextAreaElement) {
     if (full === true) {
       if (telInp.value.length === 1) {
         telInp.value = `(${telInp.value}`;
@@ -181,15 +127,9 @@ export function formatTel(telInp: targEl, full: boolean = false): string {
       }
       if (
         (telInp.value.length === 10 &&
-          telInp.value.slice(
-            telInp.value.indexOf(" ") + 1,
-            telInp.value.indexOf(" ") + 2
-          ) === "9") ||
+          telInp.value.slice(telInp.value.indexOf(" ") + 1, telInp.value.indexOf(" ") + 2) === "9") ||
         (telInp.value.length === 9 &&
-          telInp.value.slice(
-            telInp.value.indexOf(" ") + 1,
-            telInp.value.indexOf(" ") + 2
-          ) !== "9")
+          telInp.value.slice(telInp.value.indexOf(" ") + 1, telInp.value.indexOf(" ") + 2) !== "9")
       ) {
         telInp.value = `${telInp.value.slice(0, telInp.value.length)}-`;
         return telInp.value;
@@ -199,23 +139,16 @@ export function formatTel(telInp: targEl, full: boolean = false): string {
         return telInp.value;
       }
     } else {
-      numOnly = (telInp.value?.replace(/[^0-9-]/g, "") || numOnly).replace(
-        /\d+/g,
-        matchTel => {
-          if (matchTel.length === 9) {
-            return matchTel[0] === "9"
-              ? `${matchTel.slice(0, 5)}-${matchTel.slice(5, 9)}`
-              : `${matchTel.slice(0, 4)}-${matchTel.slice(4, 8)}`;
-          } else if (matchTel?.length > 9) return `${matchTel.slice(0, 8)}`;
-          return matchTel;
-        }
-      );
+      numOnly = (telInp.value?.replace(/[^0-9-]/g, "") || numOnly).replace(/\d+/g, matchTel => {
+        if (matchTel.length === 9) {
+          return matchTel[0] === "9"
+            ? `${matchTel.slice(0, 5)}-${matchTel.slice(5, 9)}`
+            : `${matchTel.slice(0, 4)}-${matchTel.slice(4, 8)}`;
+        } else if (matchTel?.length > 9) return `${matchTel.slice(0, 8)}`;
+        return matchTel;
+      });
       telInp.value = numOnly;
-      if (
-        !/^9/.test(telInp.value) &&
-        !/-/g.test(telInp.value) &&
-        telInp.value.length === 4
-      )
+      if (!/^9/.test(telInp.value) && !/-/g.test(telInp.value) && telInp.value.length === 4)
         telInp.value = `${telInp.value.slice(0, 4)}-${telInp.value.slice(4)}`;
       return telInp.value;
     }
@@ -225,10 +158,7 @@ export function formatTel(telInp: targEl, full: boolean = false): string {
 
 export function addEmailExtension(emailInp: targEl): string {
   let emailValue = "";
-  if (
-    emailInp instanceof HTMLInputElement ||
-    emailInp instanceof HTMLTextAreaElement
-  ) {
+  if (emailInp instanceof HTMLInputElement || emailInp instanceof HTMLTextAreaElement) {
     if (emailInp.value === "") {
       emailInp.value = "@.";
       emailInp.type !== "email" && emailInp.setSelectionRange(0, 0);
@@ -237,12 +167,7 @@ export function addEmailExtension(emailInp: targEl): string {
       emailInp.type !== "email" && emailInp.setSelectionRange(0, 0);
     }
     emailValue = emailInp.value;
-  } else
-    inputNotFound(
-      emailInp,
-      `${emailInp?.id || "UNDEFINED ID EMAIL CONTAINER"}`,
-      extLine(new Error())
-    );
+  } else inputNotFound(emailInp, `${emailInp?.id || "UNDEFINED ID EMAIL CONTAINER"}`, extLine(new Error()));
   return emailValue;
 }
 
@@ -253,38 +178,24 @@ export function removeFirstClick(el: targEl): number {
     setInterval(() => {
       cursorPosition = cursorCheckTimer() ?? 0;
     }, 3000);
-  } else
-    elementNotFound(
-      el,
-      "argument for removeFirstClick()",
-      extLine(new Error())
-    );
+  } else elementNotFound(el, "argument for removeFirstClick()", extLine(new Error()));
   return cursorPosition ?? 0;
 }
 
 export function checkAutoCorrect(deactAutocorrectBtn: targEl): boolean {
   let isAutocorrectOn = true;
   if (deactAutocorrectBtn instanceof HTMLButtonElement) {
-    deactAutocorrectBtn.textContent?.match(/Ativar/)
-      ? (isAutocorrectOn = false)
-      : (isAutocorrectOn = true);
+    deactAutocorrectBtn.textContent?.match(/Ativar/) ? (isAutocorrectOn = false) : (isAutocorrectOn = true);
   } else if (
     deactAutocorrectBtn instanceof HTMLInputElement &&
-    (deactAutocorrectBtn.type === "checkbox" ||
-      deactAutocorrectBtn.type === "radio")
+    (deactAutocorrectBtn.type === "checkbox" || deactAutocorrectBtn.type === "radio")
   ) {
-    deactAutocorrectBtn.checked
-      ? (isAutocorrectOn = true)
-      : (isAutocorrectOn = false);
+    deactAutocorrectBtn.checked ? (isAutocorrectOn = true) : (isAutocorrectOn = false);
   }
   return isAutocorrectOn;
 }
 
-export function switchAutocorrect(
-  click: Event,
-  deactAutocorrectBtn: targEl,
-  isAutocorrectOn: boolean = true
-): boolean {
+export function switchAutocorrect(click: Event, deactAutocorrectBtn: targEl, isAutocorrectOn: boolean = true): boolean {
   if (click?.target === deactAutocorrectBtn)
     if (deactAutocorrectBtn instanceof HTMLButtonElement) {
       isAutocorrectOn = !isAutocorrectOn; //if-if não funciona aqui
@@ -293,16 +204,10 @@ export function switchAutocorrect(
         : (deactAutocorrectBtn.textContent = "Ativar Autocorreção");
     } else if (
       deactAutocorrectBtn instanceof HTMLInputElement &&
-      (deactAutocorrectBtn.type === "checkbox" ||
-        deactAutocorrectBtn.type === "radio")
+      (deactAutocorrectBtn.type === "checkbox" || deactAutocorrectBtn.type === "radio")
     )
       isAutocorrectOn = !isAutocorrectOn;
-    else
-      elementNotFound(
-        deactAutocorrectBtn,
-        "arguments for switchAutocorrect()",
-        extLine(new Error())
-      );
+    else elementNotFound(deactAutocorrectBtn, "arguments for switchAutocorrect()", extLine(new Error()));
   return isAutocorrectOn;
 }
 
@@ -310,26 +215,15 @@ export function checkAllGenConts(...els: targEl[]): boolean {
   if (
     Array.isArray(els) &&
     els?.every(
-      el =>
-        el instanceof HTMLSelectElement ||
-        el instanceof HTMLInputElement ||
-        el instanceof HTMLTextAreaElement
+      el => el instanceof HTMLSelectElement || el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement
     )
   )
     return true;
-  else
-    multipleElementsNotFound(
-      extLine(new Error()),
-      "arguments for checkAllGenConts()",
-      `${JSON.stringify(els)}`
-    );
+  else multipleElementsNotFound(extLine(new Error()), "arguments for checkAllGenConts()", `${JSON.stringify(els)}`);
   return false;
 }
 
-export function fluxGen(
-  arrGenConts: entryEl[],
-  genIniValue: targStr = "masculino"
-): string {
+export function fluxGen(arrGenConts: entryEl[], genIniValue: targStr = "masculino"): string {
   if (
     Array.isArray(arrGenConts) &&
     arrGenConts?.every(
@@ -358,32 +252,21 @@ export function fluxGen(
           genTrans.value === "intermediario"
         ) {
           showGenFisAlin(genFisAlin);
-          const contFeminilizado = document.querySelector(
-            'option[value="feminilizado"]'
-          );
-          const contMasculinizado = document.querySelector(
-            'option[value="masculinizado"]'
-          );
-          if (
-            contFeminilizado instanceof HTMLOptionElement &&
-            contMasculinizado instanceof HTMLOptionElement
-          ) {
+          const contFeminilizado = document.querySelector('option[value="feminilizado"]');
+          const contMasculinizado = document.querySelector('option[value="masculinizado"]');
+          if (contFeminilizado instanceof HTMLOptionElement && contMasculinizado instanceof HTMLOptionElement) {
             if (genTrans.value === "intermediario") {
               if (gen.value === "masculino") {
-                contFeminilizado?.selected &&
-                  contFeminilizado.removeAttribute("selected");
+                contFeminilizado?.selected && contFeminilizado.removeAttribute("selected");
                 contMasculinizado.setAttribute("selected", "");
               }
               if (gen.value === "feminino") {
-                contMasculinizado?.selected &&
-                  contMasculinizado.removeAttribute("selected");
+                contMasculinizado?.selected && contMasculinizado.removeAttribute("selected");
                 contFeminilizado.setAttribute("selected", "");
               }
             } else {
-              contMasculinizado?.selected &&
-                contMasculinizado.removeAttribute("selected");
-              contFeminilizado?.selected &&
-                contFeminilizado.removeAttribute("selected");
+              contMasculinizado?.selected && contMasculinizado.removeAttribute("selected");
+              contFeminilizado?.selected && contFeminilizado.removeAttribute("selected");
             }
           }
           switch (genFisAlin.value) {
@@ -394,49 +277,27 @@ export function fluxGen(
             case "neutro":
               return "neutro";
             default:
-              stringError(
-                "argument for genFisAlin.value switch",
-                genFisAlin?.value,
-                extLine(new Error())
-              );
+              stringError("argument for genFisAlin.value switch", genFisAlin?.value, extLine(new Error()));
           }
           if (genFisAlin.value === "masculinizado") return "masculino";
           else if (genFisAlin.value === "feminilizado") return "feminino";
           else if (genFisAlin.value === "neutro") return "neutro";
         }
-      } else if (
-        genBirthRel.value === "outros" ||
-        genBirthRel.value === "undefined"
-      ) {
+      } else if (genBirthRel.value === "outros" || genBirthRel.value === "undefined") {
         showGenFisAlin(genFisAlin);
         if (genFisAlin.value === "masculinizado") return "masculino";
         else if (genFisAlin.value === "feminilizado") return "feminino";
         else if (genFisAlin.value === "neutro") return "neutro";
       }
-    } else if (
-      gen.value === "naoBinario" ||
-      gen.value === "outros" ||
-      gen.value === "undefined"
-    ) {
-      genBirthRel.value === "trans"
-        ? showStgTransHorm(genTrans)
-        : hideStgTransHorm(genTrans);
+    } else if (gen.value === "naoBinario" || gen.value === "outros" || gen.value === "undefined") {
+      genBirthRel.value === "trans" ? showStgTransHorm(genTrans) : hideStgTransHorm(genTrans);
       showGenFisAlin(genFisAlin);
       if (genFisAlin.value === "masculinizado") return "masculino";
       else if (genFisAlin.value === "feminilizado") return "feminino";
       else if (genFisAlin.value === "neutro") return "neutro";
-    } else
-      stringError(
-        "obtendo gen.value",
-        gen?.value ?? "UNDEFINED VALUE",
-        extLine(new Error())
-      );
+    } else stringError("obtendo gen.value", gen?.value ?? "UNDEFINED VALUE", extLine(new Error()));
   } else
-    multipleElementsNotFound(
-      extLine(new Error()),
-      "arguments for fluxGen()",
-      `${JSON.stringify(arrGenConts)}` || null
-    );
+    multipleElementsNotFound(extLine(new Error()), "arguments for fluxGen()", `${JSON.stringify(arrGenConts)}` || null);
   return "masculino";
 }
 
@@ -444,8 +305,7 @@ export function showGenFisAlin(genFisAlin: targEl): boolean {
   if (
     genFisAlin instanceof HTMLSelectElement ||
     genFisAlin instanceof HTMLInputElement ||
-    (genFisAlin instanceof HTMLTextAreaElement &&
-      genFisAlin.closest(".genSpan"))
+    (genFisAlin instanceof HTMLTextAreaElement && genFisAlin.closest(".genSpan"))
   ) {
     if ((genFisAlin.closest(".genSpan") as HTMLElement)?.hidden === true) {
       fadeElement(genFisAlin.closest(".genSpan"), "0");
@@ -457,12 +317,7 @@ export function showGenFisAlin(genFisAlin: targEl): boolean {
       }, 250);
     }
     return true;
-  } else
-    elementNotFound(
-      genFisAlin,
-      "argument for showGenFisAlin()",
-      extLine(new Error())
-    );
+  } else elementNotFound(genFisAlin, "argument for showGenFisAlin()", extLine(new Error()));
   return false;
 }
 
@@ -470,8 +325,7 @@ export function hideGenFisAlin(genFisAlin: targEl): boolean {
   if (
     genFisAlin instanceof HTMLSelectElement ||
     genFisAlin instanceof HTMLInputElement ||
-    (genFisAlin instanceof HTMLTextAreaElement &&
-      genFisAlin.closest(".genSpan"))
+    (genFisAlin instanceof HTMLTextAreaElement && genFisAlin.closest(".genSpan"))
   ) {
     if ((genFisAlin.closest(".genSpan") as HTMLElement)?.hidden === false) {
       setTimeout(() => {
@@ -482,12 +336,7 @@ export function hideGenFisAlin(genFisAlin: targEl): boolean {
       }, 250);
     }
     return false;
-  } else
-    elementNotFound(
-      genFisAlin,
-      "argument for hideGenFisAlin()",
-      extLine(new Error())
-    );
+  } else elementNotFound(genFisAlin, "argument for hideGenFisAlin()", extLine(new Error()));
   return true;
 }
 
@@ -507,12 +356,7 @@ export function showStgTransHorm(genTrans: targEl): boolean {
       }, 250);
     }
     return true;
-  } else
-    elementNotFound(
-      genTrans,
-      "argument for showStgTransHorm()",
-      extLine(new Error())
-    );
+  } else elementNotFound(genTrans, "argument for showStgTransHorm()", extLine(new Error()));
   return false;
 }
 
@@ -531,12 +375,7 @@ export function hideStgTransHorm(genTrans: targEl): boolean {
       }, 250);
     }
     return false;
-  } else
-    elementNotFound(
-      genTrans,
-      "argument for hideStgTransHorm()",
-      extLine(new Error())
-    );
+  } else elementNotFound(genTrans, "argument for hideStgTransHorm()", extLine(new Error()));
   return true;
 }
 
@@ -544,11 +383,7 @@ export function filterIdsByGender(
   arrayIds: string[] = ["peit", "abd", "coxa"],
   bodyType: string = "masculino"
 ): string[] {
-  if (
-    Array.isArray(arrayIds) &&
-    arrayIds?.every(prop => typeof prop === "string") &&
-    typeof bodyType === "string"
-  ) {
+  if (Array.isArray(arrayIds) && arrayIds?.every(prop => typeof prop === "string") && typeof bodyType === "string") {
     switch (bodyType) {
       case "masculino":
         return arrayIds.filter(id => /peit|abd|coxa/g.test(id));
@@ -560,34 +395,18 @@ export function filterIdsByGender(
         stringError(`obtaining valid bodyType`, bodyType, extLine(new Error()));
     }
   } else {
-    typeError(
-      `validating array in filterIdsByGender()`,
-      bodyType,
-      "string",
-      extLine(new Error())
-    );
+    typeError(`validating array in filterIdsByGender()`, bodyType, "string", extLine(new Error()));
   }
   return ["peit", "abd", "coxa"];
 }
 
 export function checkPasswordPattern(pwInp: HTMLInputElement | null): void {
   if (pwInp instanceof HTMLInputElement) {
-    !/^(?=.*[0-9])/g.test(pwInp.value) &&
-      pwInp.setCustomValidity("Sua senha deve ter pelo menos um número");
-    !/(?=.*[A-Z])/g.test(pwInp.value) &&
-      pwInp.setCustomValidity(
-        "Sua senha deve ter pelo menos uma letra maiúscula"
-      );
-    !/(?=.*[!@#$%^&*])/g.test(pwInp.value) &&
-      pwInp.setCustomValidity("Sua senha deve ter pelo menos um símbolo");
-    !/[*]{8,}/g.test(pwInp.value) &&
-      pwInp.setCustomValidity("Sua senha deve ter pelo menos oito caracteres");
-  } else
-    inputNotFound(
-      pwInp,
-      "pwInp in checkPasswordPattern()",
-      extLine(new Error())
-    );
+    !/^(?=.*[0-9])/g.test(pwInp.value) && pwInp.setCustomValidity("Sua senha deve ter pelo menos um número");
+    !/(?=.*[A-Z])/g.test(pwInp.value) && pwInp.setCustomValidity("Sua senha deve ter pelo menos uma letra maiúscula");
+    !/(?=.*[!@#$%^&*])/g.test(pwInp.value) && pwInp.setCustomValidity("Sua senha deve ter pelo menos um símbolo");
+    !/[*]{8,}/g.test(pwInp.value) && pwInp.setCustomValidity("Sua senha deve ter pelo menos oito caracteres");
+  } else inputNotFound(pwInp, "pwInp in checkPasswordPattern()", extLine(new Error()));
 }
 
 export function correctCursorNextWords(
@@ -608,17 +427,12 @@ export function correctCursorNextWords(
       if (
         keyboardEvent.key === " " ||
         keyboardEvent.key === "Backspace" ||
-        (keyboardEvent.key >= "ArrowLeft" &&
-          keyboardEvent.key <= "ArrowDown") ||
+        (keyboardEvent.key >= "ArrowLeft" && keyboardEvent.key <= "ArrowDown") ||
         (keyboardEvent.key >= "a" && keyboardEvent.key <= "z") ||
         (keyboardEvent.key >= "A" && keyboardEvent.key <= "Z") ||
         isUndoUppercase
       ) {
-        if (!isFixAfterDCursorExec)
-          isCursorAutoMoved = moveCursorToTheEnd(
-            isCursorAutoMoved,
-            textElement
-          );
+        if (!isFixAfterDCursorExec) isCursorAutoMoved = moveCursorToTheEnd(isCursorAutoMoved, textElement);
 
         keyboardEvent.preventDefault();
         isFixAfterDCursorExec = true;
@@ -628,25 +442,16 @@ export function correctCursorNextWords(
   return [text, isCursorAutoMoved];
 }
 
-export function wrongStartCorrection(
-  text: string | null = "",
-  wrongStartMatch: string | null = ""
-): string | null {
+export function wrongStartCorrection(text: string | null = "", wrongStartMatch: string | null = ""): string | null {
   let fixedText = text;
   if (wrongStartMatch && text) {
-    const wrongStartLength = wrongStartMatch
-      .toString()
-      .replaceAll(",", "").length;
-    fixedText =
-      text.slice(wrongStartLength - 1) + text.slice(0, wrongStartLength - 1);
+    const wrongStartLength = wrongStartMatch.toString().replaceAll(",", "").length;
+    fixedText = text.slice(wrongStartLength - 1) + text.slice(0, wrongStartLength - 1);
   }
   return fixedText;
 }
 
-export function moveCursorToTheEnd(
-  isCursorAutoMoved: boolean = false,
-  textElement: Element
-): boolean {
+export function moveCursorToTheEnd(isCursorAutoMoved: boolean = false, textElement: Element): boolean {
   if (window.getSelection && !isCursorAutoMoved) {
     const range = document.createRange();
     range.selectNodeContents(textElement);
@@ -681,22 +486,16 @@ export function fixFirstLetter(
   selection: Selection | null,
   shouldSetEnd: boolean = false
 ): string {
-  let contText =
-    (textElement as entryEl).value || textElement.textContent || "";
+  let contText = (textElement as entryEl).value || textElement.textContent || "";
   const firstLetterMatch = fstLet?.match(regex);
   if (firstLetterMatch) {
     contText = fstLet?.toUpperCase() + contText.substring(1).toLowerCase();
-    if (range.endOffset >= 1)
-      fixCursorPosition(textElement, range, selection, shouldSetEnd);
+    if (range.endOffset >= 1) fixCursorPosition(textElement, range, selection, shouldSetEnd);
   }
   return contText;
 }
 
-export function fixWrongStarts(
-  text: targStr = "",
-  match: targStr = "",
-  length: number = 0
-): string {
+export function fixWrongStarts(text: targStr = "", match: targStr = "", length: number = 0): string {
   let fixedStr = text ?? "";
   if (text && match) {
     const arrText = Array.from(text);
@@ -706,30 +505,21 @@ export function fixWrongStarts(
   return fixedStr;
 }
 
-export function fixNextWordsIniNotD(
-  remadeText: string = "",
-  letMatch: string = ""
-): string {
+export function fixNextWordsIniNotD(remadeText: string = "", letMatch: string = ""): string {
   if (remadeText) {
     const gLetMatchI = remadeText.lastIndexOf(letMatch) + 1;
     const capChar = remadeText.charAt(gLetMatchI)?.toUpperCase();
     const arrText = Array.from(remadeText);
     arrText[gLetMatchI] = capChar;
     remadeText = arrText.toString().replaceAll(",", "");
-    if (remadeText.match(/^\s[\w]+/g))
-      remadeText = remadeText.slice(1, remadeText.length) + " ";
+    if (remadeText.match(/^\s[\w]+/g)) remadeText = remadeText.slice(1, remadeText.length) + " ";
   } else remadeText = "";
 
   return remadeText;
 }
 
-export function fixNextWordsAfterD(
-  remadeText: string = "",
-  letMatch: string = ""
-): string {
-  const globalLetterMatchIndexD = remadeText
-    ? remadeText.lastIndexOf(letMatch) + 1
-    : undefined;
+export function fixNextWordsAfterD(remadeText: string = "", letMatch: string = ""): string {
+  const globalLetterMatchIndexD = remadeText ? remadeText.lastIndexOf(letMatch) + 1 : undefined;
   if (globalLetterMatchIndexD) {
     const actualCharD = remadeText?.charAt(globalLetterMatchIndexD);
     const capitalizedCharD = actualCharD?.toUpperCase();
@@ -742,11 +532,7 @@ export function fixNextWordsAfterD(
   return remadeText;
 }
 
-export function fixUnproperUppercases(
-  text: string = "",
-  match: string = "",
-  context: string | number = 0
-): string {
+export function fixUnproperUppercases(text: string = "", match: string = "", context: string | number = 0): string {
   const spaceMatches = text.match(/\s/g);
   const upperCasesRepetitionsIndex = text.indexOf(match);
   const textBeforeRepetitions = text.substring(0, upperCasesRepetitionsIndex);
@@ -755,13 +541,7 @@ export function fixUnproperUppercases(
 
   loweredRepetitions = match.toLowerCase().slice(1);
   if (spaceMatches) {
-    if (
-      context === "NoD" ||
-      context === "YesDCont" ||
-      context == 0 ||
-      context === 2 ||
-      !context
-    ) {
+    if (context === "NoD" || context === "YesDCont" || context == 0 || context === 2 || !context) {
       if (context === "YesDCont" || context === 2) {
         const lowercasesMatches = text.match(/[a-záàâäãéèêëíìîïóòôöõúùûü]/g);
         if (lowercasesMatches) addAcumulator += lowercasesMatches.length;
@@ -775,26 +555,15 @@ export function fixUnproperUppercases(
     text.length + 1
   );
   const textArray = Array.from(text);
-  textArray.splice(
-    upperCasesRepetitionsIndex + 1,
-    loweredRepetitions.length,
-    loweredRepetitions
-  );
+  textArray.splice(upperCasesRepetitionsIndex + 1, loweredRepetitions.length, loweredRepetitions);
   if (context === "NoD" || context == 0 || !context)
-    text =
-      textBeforeRepetitions +
-      match.slice(0, 1) +
-      loweredRepetitions +
-      textAfterRepetitions;
+    text = textBeforeRepetitions + match.slice(0, 1) + loweredRepetitions + textAfterRepetitions;
   else if (context === "YesDVal") {
     const upperlowercombD = text.match(/D[a-záàâäãéèêëíìîïóòôöõúùûü][sS]?[\s]/);
-    if (upperlowercombD?.length === 4)
-      loweredRepetitions += upperlowercombD.toString().replace(/S/, "s");
+    if (upperlowercombD?.length === 4) loweredRepetitions += upperlowercombD.toString().replace(/S/, "s");
     text = textBeforeRepetitions + loweredRepetitions + textAfterRepetitions;
   } else if (context === "YesDCont") {
-    text = text.match(
-      /D[aeiouáàâäãéèêëíìîïóòôöõúùûü][s]\s[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ]{3,}/
-    )
+    text = text.match(/D[aeiouáàâäãéèêëíìîïóòôöõúùûü][s]\s[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ]{3,}/)
       ? textBeforeRepetitions + loweredRepetitions + "S" + textAfterRepetitions
       : textBeforeRepetitions + loweredRepetitions + textAfterRepetitions;
   } else console.error(`Context value not suitable`);
@@ -811,24 +580,15 @@ export function fixForcedUpperCase(
   const DUppercased = strDlowercase.charAt(1).toUpperCase();
   if (DUppercased) {
     const strDAfterMinusInd =
-      (text?.length ?? 0) -
-      (strDlowercase.substring(0, 1) + DUppercased + strDlowercase.substring(2))
-        .length;
+      (text?.length ?? 0) - (strDlowercase.substring(0, 1) + DUppercased + strDlowercase.substring(2)).length;
     const startSlicedCite = text?.slice(0, strDAfterMinusInd);
-    if (wordMatch.length >= 1 && startSlicedCite)
-      text = startSlicedCite + text?.slice(strDAfterMinusInd);
+    if (wordMatch.length >= 1 && startSlicedCite) text = startSlicedCite + text?.slice(strDAfterMinusInd);
   }
   return text;
 }
 
-export function autoCapitalizeInputs(
-  textEl: targEl,
-  isAutocorrectOn: boolean = true
-): string {
-  if (
-    (textEl instanceof HTMLInputElement && textEl.type === "text") ||
-    textEl instanceof HTMLTextAreaElement
-  ) {
+export function autoCapitalizeInputs(textEl: targEl, isAutocorrectOn: boolean = true): string {
+  if ((textEl instanceof HTMLInputElement && textEl.type === "text") || textEl instanceof HTMLTextAreaElement) {
     let text = textEl?.value ?? null;
     if (isAutocorrectOn && text) {
       //inicialização de expressões regex com seus objetos e matches associados
@@ -838,26 +598,16 @@ export function autoCapitalizeInputs(
       const letterMatchesIniNotD = text.match(/\s[^d]/g);
       const letterMatchesIniD = text.match(/\sd/g);
       let letterNotMatchesAfterD =
-        text.match(
-          /\sd[aeioáàâäãéèêëíìîïóòôöõúùûüAEIOÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ][sS]?\s/g
-        ) ?? [];
-      const letterMatchesAfterDOp1 = text.match(
-        /\sd[^aeioáàâäãéèêëíìîïóòôöõúùûüAEIOÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ]/g
-      );
-      const letterMatchesAfterDOp2 = text.match(
-        /\sd[aeioáàâäãéèêëíìîïóòôöõúùûüAEIOÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ][^sS\s]/g
-      );
+        text.match(/\sd[aeioáàâäãéèêëíìîïóòôöõúùûüAEIOÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ][sS]?\s/g) ?? [];
+      const letterMatchesAfterDOp1 = text.match(/\sd[^aeioáàâäãéèêëíìîïóòôöõúùûüAEIOÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ]/g);
+      const letterMatchesAfterDOp2 = text.match(/\sd[aeioáàâäãéèêëíìîïóòôöõúùûüAEIOÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ][^sS\s]/g);
       const letterMatchesAfterDOp3 = text.match(
         /\sd[aeioáàâäãéèêëíìîïóòôöõúùûüAEIOÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ][sS][a-zA-ZáàâäãéèêëíìîïóòôöõúùûüÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ]/g
       );
       const lowercasesRegexObj = new RegExp(/[a-záàâäãéèêëíìîïóòôöõúùûü]/g);
       const uppercasesRegexObj = new RegExp(/[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ]/);
-      const multipleUppercasesMatches = text.match(
-        /[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ]{2,}/g
-      );
-      const multipleUppercasesMatches2 = text.match(
-        /D[a-záàâäãéèêëíìîïóòôöõúùûü][S]\s/g
-      );
+      const multipleUppercasesMatches = text.match(/[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ]{2,}/g);
+      const multipleUppercasesMatches2 = text.match(/D[a-záàâäãéèêëíìîïóòôöõúùûü][S]\s/g);
       const wrongUppercasesMatchesOp1 = text.match(
         /[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ][a-záàâäãéèêëíìîïóòôöõúùûü]+[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ]\b/g
       );
@@ -876,27 +626,17 @@ export function autoCapitalizeInputs(
       const wrongUppercasesMatchesOp6 = text.match(
         /[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ][a-záàâäãéèêëíìîïóòôöõúùûü]+[a-záàâäãéèêëíìîïóòôöõúùûü]+[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ]+[a-záàâäãéèêëíìîïóòôöõúùûü][a-záàâäãéèêëíìîïóòôöõúùûü]+\b/g
       );
-      const wrongUppercasesMatchesOp7 = text.match(
-        /D[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ][sS]/g
-      );
-      const wrongUppercasesMatchesOp8 = text.match(
-        /D[AEIOÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ][^sS]/g
-      );
-      const wrongUppercasesMatchesOp9 = text.match(
-        /D[aeioáàâäãéèêëíìîïóòôöõúùûüAEIOÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ][sS]\s/g
-      );
+      const wrongUppercasesMatchesOp7 = text.match(/D[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ][sS]/g);
+      const wrongUppercasesMatchesOp8 = text.match(/D[AEIOÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ][^sS]/g);
+      const wrongUppercasesMatchesOp9 = text.match(/D[aeioáàâäãéèêëíìîïóòôöõúùûüAEIOÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ][sS]\s/g);
       const wrongStartMatch =
-        text
-          .match(/^[a-záàâäãéèêëíìîïóòôöõúùûü]+[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ]/)
-          ?.toString() ?? null;
+        text.match(/^[a-záàâäãéèêëíìîïóòôöõúùûü]+[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ]/)?.toString() ?? null;
       const wrongCharsRegexOp1 =
         /[\s]*[\d\n,;.+\-=~\\/|"!@#$%&*¬°ªº§¹²³£¢(){}[\]]+[\s]*[\d\n,;.+\-=~\\/|"!@#$%&*¬°ªº§¹²³£¢(){}[\]]*/g;
       const wrongCharsMatchesOp1 = text.match(wrongCharsRegexOp1);
-      const wrongCharsRegexOp2 =
-        /$[\d\n,;.+\-=~\\/|"!@#$%&*¬°ªº§¹²³£¢(){}[\]]+/g;
+      const wrongCharsRegexOp2 = /$[\d\n,;.+\-=~\\/|"!@#$%&*¬°ªº§¹²³£¢(){}[\]]+/g;
       const wrongCharsMatchesOp2 = text.match(wrongCharsRegexOp2);
-      const wrongCharsRegexOp3 =
-        /(?<=\sdD)[\d\n,;.+\-=~\\/|"!@#$%&*¬°ªº§¹²³£¢(){}[\]]+/g;
+      const wrongCharsRegexOp3 = /(?<=\sdD)[\d\n,;.+\-=~\\/|"!@#$%&*¬°ªº§¹²³£¢(){}[\]]+/g;
       const wrongCharsMatchesOp3 = text.match(wrongCharsRegexOp3);
 
       //inicialização de outras variáveis
@@ -907,18 +647,8 @@ export function autoCapitalizeInputs(
       let isCursorAutoMoved = false;
 
       if (text.length === 1 && !newWordMatches)
-        textEl.value = fixFirstLetter(
-          text[0],
-          /\b\w/,
-          textEl,
-          range,
-          selection,
-          false
-        );
-      else if (
-        text.length > 1 &&
-        !textEl.classList.contains("autocorrectFirst")
-      ) {
+        textEl.value = fixFirstLetter(text[0], /\b\w/, textEl, range, selection, false);
+      else if (text.length > 1 && !textEl.classList.contains("autocorrectFirst")) {
         if (
           textEl.classList.contains("inpAst") ||
           textEl.classList.contains("inpIdentif") ||
@@ -926,11 +656,7 @@ export function autoCapitalizeInputs(
         ) {
           //IIFE para encapsular correção de inícios incorretos de entrada
           (() => {
-            if (
-              wrongCharsMatchesOp1 ||
-              wrongCharsMatchesOp2 ||
-              wrongCharsMatchesOp3
-            ) {
+            if (wrongCharsMatchesOp1 || wrongCharsMatchesOp2 || wrongCharsMatchesOp3) {
               const wrongCharsMatches = [
                 ...(wrongCharsMatchesOp1 || []),
                 ...(wrongCharsMatchesOp2 || []),
@@ -939,11 +665,7 @@ export function autoCapitalizeInputs(
 
               for (let iW = 0; iW < wrongCharsMatches.length; iW++) {
                 wrongCharsMatches.forEach(wrongCharMatch => {
-                  textEl.value = fixWrongStarts(
-                    text,
-                    wrongCharMatch,
-                    wrongCharsMatches[iW].length
-                  );
+                  textEl.value = fixWrongStarts(text, wrongCharMatch, wrongCharsMatches[iW].length);
                   [textEl.value, isCursorAutoMoved] = correctCursorNextWords(
                     isCursorAutoMoved,
                     isUndoUppercase,
@@ -955,11 +677,9 @@ export function autoCapitalizeInputs(
             }
           })();
 
-          if (wrongStartMatch)
-            textEl.value =
-              wrongStartCorrection(textEl.value, wrongStartMatch) ?? "";
+          if (wrongStartMatch) textEl.value = wrongStartCorrection(textEl.value, wrongStartMatch) ?? "";
           if (newWordMatches) {
-            newWordMatches.forEach(() => {
+            newWordMatches.forEach((): void => {
               //IIFE para capitalizar palavras após a primeira
               (() => {
                 if (letterMatchesIniNotD && !letterMatchesIniD) {
@@ -973,8 +693,7 @@ export function autoCapitalizeInputs(
                     wrongStartMatch,
                     textEl
                   );
-                  textEl.value =
-                    wrongStartCorrection(textEl.value, wrongStartMatch) ?? "";
+                  textEl.value = wrongStartCorrection(textEl.value, wrongStartMatch) ?? "";
                 } else if (
                   (letterMatchesIniNotD && letterMatchesIniD) ||
                   (!letterMatchesIniNotD && letterMatchesIniD)
@@ -984,9 +703,7 @@ export function autoCapitalizeInputs(
                     let letterMatchesAfterD: string[] = [];
                     if (
                       !letterNotMatchesAfterD &&
-                      (letterMatchesAfterDOp1 ||
-                        letterMatchesAfterDOp2 ||
-                        letterMatchesAfterDOp3)
+                      (letterMatchesAfterDOp1 || letterMatchesAfterDOp2 || letterMatchesAfterDOp3)
                     ) {
                       letterMatchesAfterD = [
                         ...(letterMatchesAfterDOp1 || []),
@@ -996,11 +713,7 @@ export function autoCapitalizeInputs(
                     } else if (
                       letterNotMatchesAfterD &&
                       letterMatchesIniNotD &&
-                      !(
-                        letterMatchesAfterDOp1 ||
-                        letterMatchesAfterDOp2 ||
-                        letterMatchesAfterDOp3
-                      )
+                      !(letterMatchesAfterDOp1 || letterMatchesAfterDOp2 || letterMatchesAfterDOp3)
                     ) {
                       letterMatchesAfterD = [...(letterMatchesIniNotD || [])];
                     } else if (
@@ -1020,65 +733,43 @@ export function autoCapitalizeInputs(
                     //IIFE para capitalização focada em iniciais D
                     (() => {
                       letterMatchesAfterD?.forEach(letterMatchD => {
-                        remadeText = fixNextWordsAfterD(
-                          remadeText,
-                          letterMatchD
-                        );
+                        remadeText = fixNextWordsAfterD(remadeText, letterMatchD);
                       });
                       textEl.value = remadeText;
-                      for (
-                        let iD = 0;
-                        iD < Array.from(letterMatchesAfterD ?? []).length;
-                        iD++
-                      ) {
-                        const filteredArrayD = letterMatchesAfterD?.filter(iD =>
-                          lowercasesRegexObj.test(iD)
-                        );
+                      for (let iD = 0; iD < Array.from(letterMatchesAfterD ?? []).length; iD++) {
+                        const filteredArrayD = letterMatchesAfterD?.filter(iD => lowercasesRegexObj.test(iD));
                         if (filteredArrayD) {
-                          const mappedArrayD = filteredArrayD.map(iD =>
-                            iD.toUpperCase()
-                          );
+                          const mappedArrayD = filteredArrayD.map(iD => iD.toUpperCase());
                           let remadeStringD = "";
                           if (iD === 0) {
                             filteredArrayD.splice(iD, 1, mappedArrayD[0]);
-                            remadeStringD = filteredArrayD
-                              .toString()
-                              .replaceAll(",", "");
-                            [textEl.value, isCursorAutoMoved] =
-                              correctCursorNextWords(
-                                isCursorAutoMoved,
-                                isUndoUppercase,
-                                wrongStartMatch,
-                                textEl
-                              );
+                            remadeStringD = filteredArrayD.toString().replaceAll(",", "");
+                            [textEl.value, isCursorAutoMoved] = correctCursorNextWords(
+                              isCursorAutoMoved,
+                              isUndoUppercase,
+                              wrongStartMatch,
+                              textEl
+                            );
                           } else if (iD === 1) {
                             filteredArrayD.splice(iD, 1, mappedArrayD[1]);
-                            remadeStringD = filteredArrayD
-                              .toString()
-                              .replaceAll(",", "")
-                              .slice(2);
-                            [textEl.value, isCursorAutoMoved] =
-                              correctCursorNextWords(
-                                isCursorAutoMoved,
-                                isUndoUppercase,
-                                wrongStartMatch,
-                                textEl
-                              );
+                            remadeStringD = filteredArrayD.toString().replaceAll(",", "").slice(2);
+                            [textEl.value, isCursorAutoMoved] = correctCursorNextWords(
+                              isCursorAutoMoved,
+                              isUndoUppercase,
+                              wrongStartMatch,
+                              textEl
+                            );
                             if (textEl.value)
-                              textEl.value = textEl.value.replace(
-                                new RegExp(filteredArrayD[iD], "g"),
-                                remadeStringD
-                              );
+                              textEl.value = textEl.value.replace(new RegExp(filteredArrayD[iD], "g"), remadeStringD);
                           } else if (iD > 2) {
                             filteredArrayD.pop();
                             filteredArrayD.push(mappedArrayD[iD]);
-                            [textEl.value, isCursorAutoMoved] =
-                              correctCursorNextWords(
-                                isCursorAutoMoved,
-                                isUndoUppercase,
-                                wrongStartMatch,
-                                textEl
-                              );
+                            [textEl.value, isCursorAutoMoved] = correctCursorNextWords(
+                              isCursorAutoMoved,
+                              isUndoUppercase,
+                              wrongStartMatch,
+                              textEl
+                            );
                           }
                         }
                       }
@@ -1111,11 +802,7 @@ export function autoCapitalizeInputs(
 
               unproperUppercases.forEach(multipleUppercasesMatch => {
                 if (text && multipleUppercasesMatch) {
-                  text = fixUnproperUppercases(
-                    text,
-                    multipleUppercasesMatch,
-                    "NoD"
-                  );
+                  text = fixUnproperUppercases(text, multipleUppercasesMatch, "NoD");
                   //correção de bugs com combinações posteriores de upper/lower
                   // const upperlowercomb = text.match(
                   //   /[a-záàâäãéèêëíìîïóòôöõúùûü][A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ]/g
@@ -1128,9 +815,7 @@ export function autoCapitalizeInputs(
                   // }
 
                   //fix para delay em processamento do S em conjunções
-                  const upperlowercombDS = text.match(
-                    /D[a-záàâäãéèêëíìîïóòôöõúùûü][S][\s]/
-                  );
+                  const upperlowercombDS = text.match(/D[a-záàâäãéèêëíìîïóòôöõúùûü][S][\s]/);
                   if (upperlowercombDS) upperlowercombDS.splice(3, 1, "s");
 
                   textEl.value = text;
@@ -1141,18 +826,13 @@ export function autoCapitalizeInputs(
                     wrongStartMatch,
                     textEl
                   );
-                  if (range.endOffset >= 1)
-                    fixCursorPosition(textEl, range, selection, true);
+                  if (range.endOffset >= 1) fixCursorPosition(textEl, range, selection, true);
                 }
               });
 
               unproperDUppercases.forEach(multipleUppercasesMatch => {
                 if (text && multipleUppercasesMatch) {
-                  textEl.value = fixUnproperUppercases(
-                    text,
-                    multipleUppercasesMatch,
-                    "YesDVal"
-                  );
+                  textEl.value = fixUnproperUppercases(text, multipleUppercasesMatch, "YesDVal");
                   isUndoUppercase = true;
                   [textEl.value, isCursorAutoMoved] = correctCursorNextWords(
                     isCursorAutoMoved,
@@ -1160,8 +840,7 @@ export function autoCapitalizeInputs(
                     wrongStartMatch,
                     textEl
                   );
-                  if (range.endOffset >= 1)
-                    fixCursorPosition(textEl, range, selection, true);
+                  if (range.endOffset >= 1) fixCursorPosition(textEl, range, selection, true);
                 }
               });
             })();
@@ -1171,11 +850,7 @@ export function autoCapitalizeInputs(
           if (
             letterMatchesIniD &&
             letterNotMatchesAfterD &&
-            !(
-              letterMatchesAfterDOp1 ||
-              letterMatchesAfterDOp2 ||
-              letterMatchesAfterDOp3
-            )
+            !(letterMatchesAfterDOp1 || letterMatchesAfterDOp2 || letterMatchesAfterDOp3)
           )
             letterNotMatchesAfterD = [];
 
@@ -1189,18 +864,11 @@ export function autoCapitalizeInputs(
                 ...(letterMatchesAfterDOp3 || []),
               ];
 
-              const wordMatch = [
-                ...(DMatch || []),
-                ...(letterMatchesIniNotD || []),
-              ];
+              const wordMatch = [...(DMatch || []), ...(letterMatchesIniNotD || [])];
 
               for (let iM = 0; iM < wordMatch.length; iM++) {
                 if (uppercasesRegexObj.test(wordMatch[iM])) continue;
-                textEl.value = fixForcedUpperCase(
-                  textEl,
-                  wordMatch,
-                  wordMatch[iM]
-                );
+                textEl.value = fixForcedUpperCase(textEl, wordMatch, wordMatch[iM]);
                 if (DMatch.flat(1).length > 0) {
                   [textEl.value, isCursorAutoMoved] = correctCursorNextWords(
                     isCursorAutoMoved,
@@ -1215,20 +883,13 @@ export function autoCapitalizeInputs(
 
           //IIFE para fazer correções adicionais no final da edição automática
           (() => {
-            if (wrongCharsMatchesOp1)
-              textEl.value =
-                textEl.value?.replaceAll(wrongCharsRegexOp1, "") ?? null;
+            if (wrongCharsMatchesOp1) textEl.value = textEl.value?.replaceAll(wrongCharsRegexOp1, "") ?? null;
 
-            if (wrongCharsMatchesOp2)
-              textEl.value =
-                textEl.value?.replaceAll(wrongCharsRegexOp2, "") ?? null;
+            if (wrongCharsMatchesOp2) textEl.value = textEl.value?.replaceAll(wrongCharsRegexOp2, "") ?? null;
 
-            if (wrongCharsMatchesOp3)
-              textEl.value =
-                textEl.value?.replaceAll(wrongCharsRegexOp3, "") ?? null;
+            if (wrongCharsMatchesOp3) textEl.value = textEl.value?.replaceAll(wrongCharsRegexOp3, "") ?? null;
 
-            if (text.match(/\s[\s]+/g))
-              textEl.value = textEl.value?.replaceAll(/\s[\s]+/g, " ") ?? null;
+            if (text.match(/\s[\s]+/g)) textEl.value = textEl.value?.replaceAll(/\s[\s]+/g, " ") ?? null;
 
             if (text.match(/^[a-záàâäãéèêëíìîïóòôöõúùûü]/))
               textEl.value = text.slice(0, 1).toUpperCase() + text.slice(1);
@@ -1237,30 +898,18 @@ export function autoCapitalizeInputs(
       }
     }
     return textEl.value;
-  } else
-    elementNotFound(
-      textEl,
-      "argument for autoCapitalizeInputs()",
-      extLine(new Error())
-    );
+  } else elementNotFound(textEl, "argument for autoCapitalizeInputs()", extLine(new Error()));
   return "";
 }
 
 export function capitalizeFirstLetter(text: string): string {
   try {
     if (!(typeof text === "string"))
-      throw typeError(
-        `type of argument for capitalizeFirstLetter`,
-        text,
-        "string",
-        extLine(new Error())
-      );
+      throw typeError(`type of argument for capitalizeFirstLetter`, text, "string", extLine(new Error()));
     text = `${text.slice(0, 1).toUpperCase()}${text.slice(1)}`;
     return text;
   } catch (e) {
-    console.error(
-      `Error executing capitalizeFirstLetter:\n${(e as Error).message}`
-    );
+    console.error(`Error executing capitalizeFirstLetter:\n${(e as Error).message}`);
     return text.toString();
   }
 }
@@ -1268,43 +917,29 @@ export function capitalizeFirstLetter(text: string): string {
 export function textTransformPascal(text: string): string {
   try {
     if (!(typeof text === "string"))
-      throw typeError(
-        `type of argument for capitalizeFirstLetter`,
-        text,
-        "string",
-        extLine(new Error())
-      );
+      throw typeError(`type of argument for capitalizeFirstLetter`, text, "string", extLine(new Error()));
     text = `${text.slice(0, 1).toUpperCase()}${text.slice(1).toLowerCase()}`;
     return text;
   } catch (e) {
-    console.error(
-      `Error executing capitalizeFirstLetter:\n${(e as Error).message}`
-    );
+    console.error(`Error executing capitalizeFirstLetter:\n${(e as Error).message}`);
     return text.toString();
   }
 }
 
 export function dateISOtoBRL(isoDate: string): string {
   try {
-    if (typeof isoDate !== "string")
-      throw new Error(`Invalid typeof passed to dateISOtoBRL`);
-    if (/\//g.test(isoDate) || /\\/g.test(isoDate) || /present/gi.test(isoDate))
-      return isoDate;
+    if (typeof isoDate !== "string") throw new Error(`Invalid typeof passed to dateISOtoBRL`);
+    if (/\//g.test(isoDate) || /\\/g.test(isoDate) || /present/gi.test(isoDate)) return isoDate;
     isoDate = isoDate.replaceAll(/[^0-9\-]/g, "");
-    if (isoDate.length < 5 || !/\-/g.test(isoDate))
-      throw new Error(`Invalid date passed to dateISOtoBRL`);
+    if (isoDate.length < 5 || !/\-/g.test(isoDate)) throw new Error(`Invalid date passed to dateISOtoBRL`);
     let d, m, y;
     const dateFragments = isoDate.split("-");
     if (dateFragments.length === 1) {
-      console.warn(
-        `No month and day were found after date split during conversion to BRL.`
-      );
+      console.warn(`No month and day were found after date split during conversion to BRL.`);
       [y] = dateFragments;
       (m = "00"), (d = "00");
     } else if (dateFragments.length === 2) {
-      console.warn(
-        `No day was found after date split during conversion to BRL.`
-      );
+      console.warn(`No day was found after date split during conversion to BRL.`);
       [y, m] = dateFragments;
       d = "00";
     } else [y, m, d] = dateFragments;
@@ -1333,9 +968,7 @@ export function kebabToCamel(str: string): string {
   try {
     return str
       .split("-")
-      .map((fragment, i) =>
-        i === 0 ? fragment : textTransformPascal(fragment)
-      )
+      .map((fragment, i) => (i === 0 ? fragment : textTransformPascal(fragment)))
       .join("");
   } catch (e) {
     console.error(`Error executing camelToKebab:\n${(e as Error).message}`);
@@ -1362,50 +995,32 @@ export function modelScripts(): void {
             return;
           }
           if ((meta as any).property && (meta as any).property !== "") {
-            meta.id = (meta as any).property.replace(
-              /[\/\-\?\=\+\s\.\<\>\&\^\:~,]/g,
-              "__"
-            );
+            meta.id = (meta as any).property.replace(/[\/\-\?\=\+\s\.\<\>\&\^\:~,]/g, "__");
             return;
           }
           if (meta.httpEquiv && meta.httpEquiv !== "") {
-            meta.id = meta.httpEquiv.replace(
-              /[\/\-\?\=\+\s\.\<\>\&\^\:~,]/g,
-              "__"
-            );
+            meta.id = meta.httpEquiv.replace(/[\/\-\?\=\+\s\.\<\>\&\^\:~,]/g, "__");
             return;
           }
           if (meta.content && meta.content !== "") {
-            meta.id = meta.content.replace(
-              /[\/\-\?\=\+\s\.\<\>\&\^\:~,]/g,
-              "__"
-            );
+            meta.id = meta.content.replace(/[\/\-\?\=\+\s\.\<\>\&\^\:~,]/g, "__");
           }
         }
       } catch (e) {
-        console.error(
-          `Error executing iteration ${i} for identifying meta tag:\n${
-            (e as Error).message
-          }`
-        );
+        console.error(`Error executing iteration ${i} for identifying meta tag:\n${(e as Error).message}`);
       }
     });
     document.querySelectorAll("script").forEach((script, i) => {
       try {
         if (!(script instanceof HTMLScriptElement)) return;
-        if (script.type === "" && script.src !== "")
-          script.type = "text/javascript";
+        if (script.type === "" && script.src !== "") script.type = "text/javascript";
         if (script.id === "" && script.src !== "") {
           const url = new URL(script.src);
           script.id = url.pathname.replace(/[\/\-\?\=\+\s\.\<\>\&\^~,]/g, "__");
         }
         if (script.crossOrigin === "") script.crossOrigin = "anonymous";
       } catch (e) {
-        console.error(
-          `Error executing iteration ${i} for <script> tags in modelScripts:\n${
-            (e as Error).message
-          }`
-        );
+        console.error(`Error executing iteration ${i} for <script> tags in modelScripts:\n${(e as Error).message}`);
       }
     });
     document.querySelectorAll("style").forEach((style, i) => {
@@ -1420,11 +1035,7 @@ export function modelScripts(): void {
           style.dataset.group = "automatic_name";
         }
       } catch (e) {
-        console.error(
-          `Error executing iteration ${i} for <style> tags in modelScripts:\n${
-            (e as Error).message
-          }`
-        );
+        console.error(`Error executing iteration ${i} for <style> tags in modelScripts:\n${(e as Error).message}`);
       }
     });
     document.querySelectorAll("link").forEach((link, i) => {
@@ -1437,32 +1048,18 @@ export function modelScripts(): void {
         if (link.rel === "") link.rel = "alternate";
         if (link.crossOrigin === "") link.crossOrigin = "anonymous";
       } catch (e) {
-        console.error(
-          `Error executing iteration ${i} for <link> tags in modelScripts:\n${
-            (e as Error).message
-          }`
-        );
+        console.error(`Error executing iteration ${i} for <link> tags in modelScripts:\n${(e as Error).message}`);
       }
     });
     document.querySelectorAll("a").forEach((a, i) => {
       try {
         if (!(a instanceof HTMLAnchorElement)) return;
-        if (
-          a.href !== "" &&
-          !(
-            new RegExp(location.hostname, "g").test(a.href) ||
-            /https/.test(a.href)
-          )
-        ) {
+        if (a.href !== "" && !(new RegExp(location.hostname, "g").test(a.href) || /https/.test(a.href))) {
           if (!/noopener/g.test(a.rel)) a.rel += " noopener";
           if (!/noreferrer/g.test(a.rel)) a.rel += " noreferrer";
         }
       } catch (e) {
-        console.error(
-          `Error executing iteration ${i} for <a> tags in modelScripts:\n${
-            (e as Error).message
-          }`
-        );
+        console.error(`Error executing iteration ${i} for <a> tags in modelScripts:\n${(e as Error).message}`);
       }
     });
   } catch (e) {

@@ -608,6 +608,23 @@ export type MouseEventMethod =
   | EventMethod;
 export type DragEventMethod = "dataTransfer" | "initDragEvent" | MouseEventMethods;
 export type EventTargetMethod = "addEventListener" | "removeEventListener" | "dispatchEvent";
+export type NodeMethod =
+  | "appendChild"
+  | "cloneNode"
+  | "compareDocumentPosition"
+  | "contains"
+  | "getRootNode"
+  | "hasChildNodes"
+  | "insertBefore"
+  | "isDefaultNamespace"
+  | "isEqualNode"
+  | "isSameNode"
+  | "lookupNamespaceURI"
+  | "lookupPrefix"
+  | "normalize"
+  | "removeChild"
+  | "replaceChild"
+  | EventTargetMethod;
 export type ElementMethod =
   | "after"
   | "animate"
@@ -646,7 +663,7 @@ export type ElementMethod =
   | "toggleAttribute"
   | "webkitMatchesSelector"
   | "setPointerCapture"
-  | EventTargetMethod;
+  | NodeMethod;
 export type HTMLElementMethod =
   | "accessKey"
   | "blur"
@@ -708,6 +725,14 @@ export type HTMLInputElementMethod =
   | "getAttribute"
   | "setAttribute"
   | "removeAttribute"
+  | "dispatchEvent";
+export type CanvasMethod =
+  | "getContext"
+  | "toDataURL"
+  | "toBlob"
+  | "captureStream"
+  | "addEventListener"
+  | "removeEventListener"
   | "dispatchEvent";
 export type ScriptType =
   | "application/javascript"
@@ -806,9 +831,14 @@ export type GlobalHandler =
   | "doubleClickHandler"
   | "cpbInpHandler"
   | "deactTextInput"
-  | "useCurrentDate";
-export type GlobalModeler = "numberLimit" | "checkAllGenConts" | "switchAutoCorrect";
-export type GlobalControlMethod = "addListenerTexts" | "addListenerRadios" | "addListenerDateBtns";
+  | "useCurrentDate"
+  | "changeToAstDigit";
+export type GlobalModeler = "numberLimit" | "checkAllGenConts" | "switchAutocorrect" | "fluxGen";
+export type GlobalControlMethod =
+  | "addListenerTexts"
+  | "addListenerRadios"
+  | "addListenerDateBtns"
+  | "addCanvasListeners";
 export type SearchFunction = "searchParents" | "searchNextSiblings" | "searchPreviousSiblings";
 export type OdHandler =
   | "showInspSpanSub"
@@ -835,6 +865,7 @@ export type AppointmentHandler =
   | "replaceBtnSlot"
   | "checkIntervDate"
   | "transferDataAloc";
+export type xlsHandler = "book_new";
 export type CEP = `${number}${number}${number}${number}${number}-${number}${number}`;
 export type CPF =
   `${number}${number}${number}.${number}${number}${number}.${number}${number}${number}-${number}${number}`;

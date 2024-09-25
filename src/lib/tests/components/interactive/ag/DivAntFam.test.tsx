@@ -12,11 +12,17 @@ jest.mock(
 describe("DivAntFam Component", (): void => {
   it("renders family members checkboxes with transformed names", (): void => {
     render(<DivAntFam name='family_test' fullName='Test Family' />);
-    expect(screen.getByLabelText<HTMLInputElement>("Mãe — Test Family")).toBeInTheDocument() as void;
-    expect(screen.getByLabelText<HTMLInputElement>("Pai — Test Family")).toBeInTheDocument() as void;
-  });
+    (
+      expect(screen.getByLabelText<HTMLInputElement>("Mãe — Test Family")) as jest.JestMatchers<jest.SpyInstance>
+    ).toBeInTheDocument() as void;
+    (
+      expect(screen.getByLabelText<HTMLInputElement>("Pai — Test Family")) as jest.JestMatchers<jest.SpyInstance>
+    ).toBeInTheDocument() as void;
+  }) as void;
   it("uses PascalCase for transformed name", (): void => {
     render(<DivAntFam name='family_test' />);
-    expect(textTransformPascal).toHaveBeenCalledWith<Parameters<typeof textTransformPascal>>("family") as void;
-  });
-});
+    (expect(textTransformPascal) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalledWith<
+      Parameters<typeof textTransformPascal>
+    >("family") as void;
+  }) as void;
+}) as void;

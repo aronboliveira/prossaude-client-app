@@ -36,7 +36,7 @@ jest.mock(
   })
 ) as typeof jest;
 describe("PrevConsList Component", (): void => {
-  const mockDispatch = jest.fn();
+  const mockDispatch = jest.fn() as jest.Mock;
   const defaultProps: {
     dispatch: jest.Mock<any, any, any>;
     state: boolean;
@@ -77,19 +77,19 @@ describe("PrevConsList Component", (): void => {
     );
   beforeEach((): void => {
     jest.clearAllMocks() as typeof jest;
-  });
+  }) as void;
   test("renders the dialog and table with historic data", async (): Promise<void> => {
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
-    await waitFor((): void => {
+    (await waitFor((): void => {
       expect(screen.getByRole<HTMLDialogElement>("dialog")).toBeInTheDocument() as void;
       expect(screen.getAllByText<HTMLTableRowElement>(/PrevConsRow/)).toHaveLength(2);
-    });
-  });
+    })) as void;
+  }) as void;
   test("calls dispatch when close button is clicked", async (): Promise<void> => {
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
-    fireEvent.click(screen.getByRole<HTMLButtonElement>("button"));
+    fireEvent.click(screen.getByRole<HTMLButtonElement>("button")) as boolean;
     expect(mockDispatch).toHaveBeenCalledWith<Parameters<typeof mockDispatch>>(!defaultProps.state) as void;
-  });
+  }) as void;
   test("renders GenericErrorComponent on error", async (): Promise<void> => {
     jest.spyOn<Console, "error">(console, "error").mockImplementation((): void => {}) as jest.SpyInstance;
     jest.mock(
@@ -104,5 +104,5 @@ describe("PrevConsList Component", (): void => {
     ) as typeof jest;
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
     expect(screen.getByText<HTMLElement>("GenericErrorComponent")).toBeInTheDocument() as void;
-  });
-});
+  }) as void;
+}) as void;

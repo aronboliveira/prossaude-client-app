@@ -7,7 +7,7 @@ jest.mock(
   (): {
     addEmailExtension: jest.Mock<any, any, any>;
   } => ({
-    addEmailExtension: jest.fn(),
+    addEmailExtension: jest.fn() as jest.Mock,
   })
 ) as typeof jest;
 jest.mock(
@@ -15,24 +15,30 @@ jest.mock(
   (): {
     handleCondtReq: jest.Mock<any, any, any>;
   } => ({
-    handleCondtReq: jest.fn(),
+    handleCondtReq: jest.fn() as jest.Mock,
   })
 ) as typeof jest;
 describe("Email Component", (): void => {
   it("renders the email input field", (): void => {
     render(<Email />);
-    expect(screen.getByLabelText<HTMLInputElement>("E-mail Primário")).toBeInTheDocument() as void;
-  });
+    (
+      expect(screen.getByLabelText<HTMLInputElement>("E-mail Primário")) as jest.JestMatchers<jest.SpyInstance>
+    ).toBeInTheDocument() as void;
+  }) as void;
   it("calls addEmailExtension and handleCondtReq on input", async (): Promise<void> => {
     render(<Email />);
     const input = screen.getByLabelText<HTMLInputElement>("E-mail Primário");
-    fireEvent.input(input, { target: { value: "test@example.com" } });
-    await waitFor((): void => {
-      expect(addEmailExtension).toHaveBeenCalledWith<Parameters<typeof addEmailExtension>>(input) as void;
-      expect(handleCondtReq).toHaveBeenCalledWith<Parameters<typeof handleCondtReq>>(input, {
+    fireEvent.input(input, { target: { value: "test@example.com" } }) as boolean;
+    (await waitFor((): void => {
+      (expect(addEmailExtension) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalledWith<
+        Parameters<typeof addEmailExtension>
+      >(input) as void;
+      (expect(handleCondtReq) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalledWith<
+        Parameters<typeof handleCondtReq>
+      >(input, {
         min: 6,
         pattern: ["@", "g"],
-      });
-    });
-  });
-});
+      }) as void;
+    })) as void;
+  }) as void;
+}) as void;

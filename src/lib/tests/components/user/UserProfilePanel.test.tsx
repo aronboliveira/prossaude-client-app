@@ -3,7 +3,7 @@ import UserProfilePanel from "../../../../../components/user/UserProfilePanel";
 import { NextRouter } from "next/router";
 describe("UserProfilePanel", (): void => {
   const mockRouter: Partial<NextRouter> = {
-    push: jest.fn(),
+    push: jest.fn() as jest.Mock,
     route: "/",
     pathname: "/",
     query: {},
@@ -16,22 +16,26 @@ describe("UserProfilePanel", (): void => {
     locales: [],
     defaultLocale: undefined,
     events: {
-      on: jest.fn(),
-      off: jest.fn(),
-      emit: jest.fn(),
+      on: jest.fn() as jest.Mock,
+      off: jest.fn() as jest.Mock,
+      emit: jest.fn() as jest.Mock,
     },
-    beforePopState: jest.fn(),
-    back: jest.fn(),
-    reload: jest.fn(),
-    prefetch: jest.fn(),
+    beforePopState: jest.fn() as jest.Mock,
+    back: jest.fn() as jest.Mock,
+    reload: jest.fn() as jest.Mock,
+    prefetch: jest.fn() as jest.Mock,
   };
   it("renders the user profile panel", (): void => {
     render(<UserProfilePanel router={mockRouter as NextRouter} />);
-    expect(screen.getByRole<HTMLImageElement>("img", { name: /user img/i })).toBeInTheDocument() as void;
-  });
+    (
+      expect(screen.getByRole<HTMLImageElement>("img", { name: /user img/i })) as jest.JestMatchers<jest.SpyInstance>
+    ).toBeInTheDocument() as void;
+  }) as void;
   it("toggles the user profile dropdown on image click", (): void => {
     render(<UserProfilePanel router={mockRouter as NextRouter} />);
-    fireEvent.click(screen.getByRole<HTMLImageElement>("img", { name: /user img/i }));
-    expect(screen.getByText<HTMLElement>("Informações de Usuário")).toBeInTheDocument() as void;
-  });
-});
+    fireEvent.click(screen.getByRole<HTMLImageElement>("img", { name: /user img/i })) as boolean;
+    (
+      expect(screen.getByText<HTMLElement>("Informações de Usuário")) as jest.JestMatchers<jest.SpyInstance>
+    ).toBeInTheDocument() as void;
+  }) as void;
+}) as void;

@@ -6,20 +6,24 @@ jest.mock(
   (): {
     handleEventReq: jest.Mock<any, any, any>;
   } => ({
-    handleEventReq: jest.fn(),
+    handleEventReq: jest.fn() as jest.Mock,
   })
 ) as typeof jest;
 describe("DDDElementPrim Component", (): void => {
   it("renders the DDD input field", (): void => {
     render(<DDDElementPrim />);
-    expect(screen.getByLabelText<HTMLInputElement>("DDD Primário")).toBeInTheDocument() as void;
-  });
+    (
+      expect(screen.getByLabelText<HTMLInputElement>("DDD Primário")) as jest.JestMatchers<jest.SpyInstance>
+    ).toBeInTheDocument() as void;
+  }) as void;
   it("calls handleEventReq on input", async (): Promise<void> => {
     render(<DDDElementPrim />);
     const input = screen.getByLabelText<HTMLInputElement>("DDD Primário");
-    fireEvent.input(input, { target: { value: "11" } });
-    await waitFor((): void => {
-      expect(handleEventReq).toHaveBeenCalledWith<Parameters<typeof handleEventReq>>(input);
-    });
-  });
-});
+    fireEvent.input(input, { target: { value: "11" } }) as boolean;
+    (await waitFor((): void => {
+      (expect(handleEventReq) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalledWith<
+        Parameters<typeof handleEventReq>
+      >(input) as void;
+    })) as void;
+  }) as void;
+}) as void;

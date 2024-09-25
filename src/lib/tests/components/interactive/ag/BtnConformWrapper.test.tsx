@@ -9,17 +9,23 @@ jest.mock("../../../../../components/interactive/def/BtnConform", (): (() => JSX
 describe("BtnConformWrapper", (): void => {
   it("renders BtnConform component", (): void => {
     render(<BtnConformWrapper />);
-    expect(screen.getByText<HTMLButtonElement>("BtnConform Component")).toBeInTheDocument() as void;
-  });
+    (
+      expect(screen.getByText<HTMLButtonElement>("BtnConform Component")) as jest.JestMatchers<jest.SpyInstance>
+    ).toBeInTheDocument() as void;
+  }) as void;
   it("renders AGDeclaration component when the state is true", async (): Promise<void> => {
     render(<BtnConformWrapper />);
     window.history.pushState({}, "", "/?conform=open");
-    await waitFor((): void => {
-      expect(screen.getByText<HTMLElement>("AGDeclaration Component")).toBeInTheDocument() as void;
-    });
-  });
+    (await waitFor((): void => {
+      (
+        expect(screen.getByText<HTMLElement>("AGDeclaration Component")) as jest.JestMatchers<jest.SpyInstance>
+      ).toBeInTheDocument() as void;
+    })) as void;
+  }) as void;
   it("does not render AGDeclaration component when state is false", (): void => {
     render(<BtnConformWrapper />);
-    expect(screen.queryByText<HTMLElement>("AGDeclaration Component")).not.toBeInTheDocument() as void;
-  });
-});
+    (
+      expect(screen.queryByText<HTMLElement>("AGDeclaration Component")).not as jest.JestMatchers<jest.SpyInstance>
+    ).toBeInTheDocument() as void;
+  }) as void;
+}) as void;

@@ -8,7 +8,7 @@ jest.mock(
   (): {
     formatTel: jest.Mock<any, any, any>;
   } => ({
-    formatTel: jest.fn(),
+    formatTel: jest.fn() as jest.Mock,
   })
 ) as typeof jest;
 jest.mock(
@@ -16,19 +16,26 @@ jest.mock(
   (): {
     handleEventReq: jest.Mock<any, any, any>;
   } => ({
-    handleEventReq: jest.fn(),
+    handleEventReq: jest.fn() as jest.Mock,
   })
 ) as typeof jest;
 describe("TelPrim", (): void => {
   it("renders a text input for primary phone number", (): void => {
     render(<TelPrim />);
-    expect(screen.getByRole<HTMLInputElement>("textbox")).toBeInTheDocument() as void;
-  });
+    (
+      expect(screen.getByRole<HTMLInputElement>("textbox")) as jest.JestMatchers<jest.SpyInstance>
+    ).toBeInTheDocument() as void;
+  }) as void;
   it("calls formatTel and handleEventReq on input", (): void => {
     render(<TelPrim />);
     const input = screen.getByRole<HTMLInputElement>("textbox");
     userEvent.type(input, "12345678");
-    expect(formatTel).toHaveBeenCalledWith<Parameters<typeof formatTel>>(input, false) as void;
-    expect(handleEventReq).toHaveBeenCalledWith<Parameters<typeof handleEventReq>>(input) as void;
-  });
-});
+    (expect(formatTel) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalledWith<Parameters<typeof formatTel>>(
+      input,
+      false
+    ) as void;
+    (expect(handleEventReq) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalledWith<
+      Parameters<typeof handleEventReq>
+    >(input) as void;
+  }) as void;
+}) as void;

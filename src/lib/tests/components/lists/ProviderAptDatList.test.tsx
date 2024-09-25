@@ -33,9 +33,9 @@ describe("ProviderAptDatList Component", (): void => {
   test("renders AptDataList when shouldDisplayAptList is true", async (): Promise<void> => {
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
     expect(screen.getByText<HTMLElement>("AptDataList")).toBeInTheDocument() as void;
-  });
+  }) as void;
   test("does not render AptDataList when shouldDisplayAptList is false", async (): Promise<void> => {
     render(<ProviderAptDatList {...defaultProps} shouldDisplayAptList={false} />);
     expect(screen.queryByText<HTMLElement>("AptDataList")).not.toBeInTheDocument() as void;
-  });
-});
+  }) as void;
+}) as void;

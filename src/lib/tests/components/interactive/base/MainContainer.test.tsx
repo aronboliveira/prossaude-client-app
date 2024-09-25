@@ -9,7 +9,7 @@ jest.mock(
   (): {
     useRouter: jest.Mock<any, any, any>;
   } => ({
-    useRouter: jest.fn(),
+    useRouter: jest.fn() as jest.Mock,
   })
 ) as typeof jest;
 jest.mock(
@@ -17,7 +17,7 @@ jest.mock(
   (): {
     useDispatch: jest.Mock<any, any, any>;
   } => ({
-    useDispatch: jest.fn(),
+    useDispatch: jest.fn() as jest.Mock,
   })
 ) as typeof jest;
 jest.mock(
@@ -25,13 +25,13 @@ jest.mock(
   (): (() => JSX.Element) => (): JSX.Element => <div>UserProfilePanel</div>
 ) as typeof jest;
 describe("MainContainer Component", (): void => {
-  const mockDispatch: jest.Mock<any, any, any> = jest.fn();
-  const mockRouter = { push: jest.fn() };
+  const mockDispatch: jest.Mock<any, any, any> = jest.fn() as jest.Mock;
+  const mockRouter = { push: jest.fn() as jest.Mock };
   beforeEach((): void => {
-    (useRouter as jest.Mock).mockReturnValue(mockRouter);
-    (useDispatch as unknown as jest.Mock).mockReturnValue(mockDispatch);
+    (useRouter as jest.Mock).mockReturnValue(mockRouter) as jest.Mock;
+    (useDispatch as unknown as jest.Mock).mockReturnValue(mockDispatch) as jest.Mock;
     localStorage.clear();
-  });
+  }) as void;
   it("renders the cards and the work panel button", (): void => {
     render(
       <AppRootContext.Provider value={{ roots: { baseRootedUser: null } }}>
@@ -43,7 +43,7 @@ describe("MainContainer Component", (): void => {
     expect(screen.getByText<HTMLElement>("Nutrição")).toBeInTheDocument() as void;
     expect(screen.getByText<HTMLElement>("Odontologia")).toBeInTheDocument() as void;
     expect(screen.getByRole<HTMLButtonElement>("button", { name: /Painel de Trabalho/i })).toBeInTheDocument() as void;
-  });
+  }) as void;
   it("renders the UserProfilePanel and fetches user data from localStorage", (): void => {
     const mockUser: {
       loadedData: {
@@ -79,18 +79,18 @@ describe("MainContainer Component", (): void => {
     }>(mockUser);
     expect(mockDispatch).toHaveBeenCalledWith<Parameters<typeof mockDispatch>>(expect.any(User) as any) as void;
     expect(screen.getByText<HTMLElement>("UserProfilePanel")).toBeInTheDocument() as void;
-  });
+  }) as void;
   it("calls router.push when a card button is clicked", (): void => {
     render(
       <AppRootContext.Provider value={{ roots: { baseRootedUser: null } }}>
         <MainContainer />
       </AppRootContext.Provider>
     );
-    fireEvent.click(screen.getByRole<HTMLButtonElement>("button", { name: /Geral & Saúde Mental/i }));
+    fireEvent.click(screen.getByRole<HTMLButtonElement>("button", { name: /Geral & Saúde Mental/i })) as boolean;
     expect(mockRouter.push).toHaveBeenCalledWith<Parameters<typeof mockRouter.push>>("/ag") as void;
-    fireEvent.click(screen.getByRole<HTMLButtonElement>("button", { name: /Educação Física/i }));
+    fireEvent.click(screen.getByRole<HTMLButtonElement>("button", { name: /Educação Física/i })) as boolean;
     expect(mockRouter.push).toHaveBeenCalledWith<Parameters<typeof mockRouter.push>>("/edfis") as void;
-  });
+  }) as void;
   it("logs a warning when no user is found in localStorage", (): void => {
     const consoleSpy: jest.SpyInstance<void, [message?: any, ...optionalParams: any[]], any> = jest
       .spyOn<Console, "warn">(console, "warn")
@@ -104,7 +104,7 @@ describe("MainContainer Component", (): void => {
       "Failed to fetch user from local storage. Default user displayed."
     );
     consoleSpy.mockRestore() as void;
-  });
+  }) as void;
   it("handles window resize events correctly", (): void => {
     render(
       <AppRootContext.Provider value={{ roots: { baseRootedUser: null } }}>
@@ -112,5 +112,5 @@ describe("MainContainer Component", (): void => {
       </AppRootContext.Provider>
     );
     fireEvent(window, new Event("resize"));
-  });
-});
+  }) as void;
+}) as void;

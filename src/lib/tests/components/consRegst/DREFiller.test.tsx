@@ -12,7 +12,7 @@ jest.mock(
   (): {
     addListenerAvMembers: jest.Mock<any, any, any>;
   } => ({
-    addListenerAvMembers: jest.fn(),
+    addListenerAvMembers: jest.fn() as jest.Mock,
   })
 ) as typeof jest;
 jest.mock(
@@ -21,8 +21,8 @@ jest.mock(
     handleCondtReq: jest.Mock<any, any, any>;
     syncAriaStates: jest.Mock<any, any, any>;
   } => ({
-    handleCondtReq: jest.fn(),
-    syncAriaStates: jest.fn(),
+    handleCondtReq: jest.fn() as jest.Mock,
+    syncAriaStates: jest.fn() as jest.Mock,
   })
 ) as typeof jest;
 jest.mock(
@@ -33,7 +33,7 @@ jest.mock(
     };
   } => ({
     globalDataProvider: {
-      initPersist: jest.fn(),
+      initPersist: jest.fn() as jest.Mock,
     },
   })
 ) as typeof jest;
@@ -69,20 +69,24 @@ describe("DREFiller Component", (): void => {
   test("toggles student list display on button click", (): void => {
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
     const btnShowList = screen.getByText<HTMLElement>("Consultar Lista de Estudantes");
-    fireEvent.click(btnShowList);
-    expect(screen.getByRole<HTMLDialogElement>("dialog")).toBeInTheDocument() as void;
-    fireEvent.click(btnShowList);
-    expect(screen.queryByRole<HTMLDialogElement>("dialog")).not.toBeInTheDocument() as void;
-  });
+    fireEvent.click(btnShowList) as boolean;
+    (
+      expect(screen.getByRole<HTMLDialogElement>("dialog")) as jest.JestMatchers<jest.SpyInstance>
+    ).toBeInTheDocument() as void;
+    fireEvent.click(btnShowList) as boolean;
+    (
+      expect(screen.queryByRole<HTMLDialogElement>("dialog")).not as jest.JestMatchers<jest.SpyInstance>
+    ).toBeInTheDocument() as void;
+  }) as void;
   test("calls syncAriaStates and addListenerAvMembers on mount", (): void => {
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
-    expect(syncAriaStates).toHaveBeenCalled() as void;
-    expect(addListenerAvMembers).toHaveBeenCalled() as void;
-  });
+    (expect(syncAriaStates) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalled() as void;
+    (expect(addListenerAvMembers) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalled() as void;
+  }) as void;
   test("syncs aria states on mount", (): void => {
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
-    expect(syncAriaStates).toHaveBeenCalled() as void;
-  });
+    (expect(syncAriaStates) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalled() as void;
+  }) as void;
   test("sets initial display state based on location.search", (): void => {
     const original: Location = window.location;
     Object.defineProperty(window, "location", {
@@ -92,11 +96,13 @@ describe("DREFiller Component", (): void => {
       writable: true,
     });
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
-    expect(screen.queryByRole<HTMLDialogElement>("dialog")).toBeInTheDocument() as void;
+    (
+      expect(screen.queryByRole<HTMLDialogElement>("dialog")) as jest.JestMatchers<jest.SpyInstance>
+    ).toBeInTheDocument() as void;
     window.location = original;
-  });
+  }) as void;
   test("calls initPersist from globalDataProvider on mount", (): void => {
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
-    expect(globalDataProvider?.initPersist).toHaveBeenCalled() as void;
-  });
-});
+    (expect(globalDataProvider?.initPersist) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalled() as void;
+  }) as void;
+}) as void;

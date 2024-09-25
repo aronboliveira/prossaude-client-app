@@ -7,7 +7,7 @@ jest.mock(
   (): {
     addCanvasListeners: jest.Mock<any, any, any>;
   } => ({
-    addCanvasListeners: jest.fn(),
+    addCanvasListeners: jest.fn() as jest.Mock,
   })
 ) as typeof jest;
 jest.mock(
@@ -16,8 +16,8 @@ jest.mock(
     elementNotFound: jest.Mock<any, any, any>;
     extLine: jest.Mock<any, any, any>;
   } => ({
-    elementNotFound: jest.fn(),
-    extLine: jest.fn(),
+    elementNotFound: jest.fn() as jest.Mock,
+    extLine: jest.fn() as jest.Mock,
   })
 ) as typeof jest;
 describe("SectConfirmBtns Component", (): void => {
@@ -30,11 +30,15 @@ describe("SectConfirmBtns Component", (): void => {
     parentDiv.appendChild(canvas) as HTMLCanvasElement;
     document.body.appendChild(parentDiv) as HTMLDivElement;
     fireEvent.click(screen.getByText<HTMLButtonElement>("Resetar")) as boolean;
-    (expect(addCanvasListeners) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalled() as void;
+    (
+      expect(addCanvasListeners) as jest.JestMatchers<jest.SpyInstance> as jest.JestMatchers<jest.SpyInstance>
+    ).toHaveBeenCalled() as void;
   }) as void;
   test("throws error when element is not found", (): void => {
     render(<SectConfirmBtns />) as RenderResult;
-    fireEvent.click(screen.getByText<HTMLButtonElement>("Resetar"));
-    (expect(elementNotFound) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalled() as void;
+    fireEvent.click(screen.getByText<HTMLButtonElement>("Resetar")) as boolean;
+    (
+      expect(elementNotFound) as jest.JestMatchers<jest.SpyInstance> as jest.JestMatchers<jest.SpyInstance>
+    ).toHaveBeenCalled() as void;
   }) as void;
-});
+}) as void;

@@ -4,7 +4,6 @@ import LockTabInd from "./LobTackInd";
 import TabBtnDCut from "../client/tabs/TabBtnDCut";
 import TabBtnInd from "../client/tabs/TabBtnInd";
 import TabInpProg from "../client/tabs/TabInpProg";
-
 export default function Td({ nRow, nCol, ctx, lab }: TdProps): JSX.Element {
   const pascalLab = textTransformPascal(lab);
   return (
@@ -16,10 +15,7 @@ export default function Td({ nRow, nCol, ctx, lab }: TdProps): JSX.Element {
       data-col={nCol}
     >
       {ctx === "IndPerc" ? (
-        <div
-          role="group"
-          className={`flexDiv flexDivTab flexAlItCt noInvert div${ctx} div${lab}`}
-        >
+        <div role='group' className={`flexDiv flexDivTab flexAlItCt noInvert div${ctx} div${lab}`}>
           <label
             htmlFor={`inp${pascalLab}${nCol - 1}Cel${nRow}_${nCol}`}
             id={`lab${pascalLab}${nCol - 1}Cel${nRow}_${nCol}`}
@@ -58,18 +54,8 @@ export default function Td({ nRow, nCol, ctx, lab }: TdProps): JSX.Element {
                 data-col={nCol}
               >
                 <TabInpProg nRow={nRow} nCol={nCol} ctx={ctx} lab={lab} />
-                <p
-                  className={`msrProgCons${
-                    ctx === "DCut" && lab === "Soma" ? " sumMsr" : ""
-                  }`}
-                >
-                  mm
-                </p>
-                {ctx === "DCut" && lab === "Soma" ? (
-                  <TabBtnDCut nCol={nCol}></TabBtnDCut>
-                ) : (
-                  <></>
-                )}
+                <p className={`msrProgCons${ctx === "DCut" && lab === "Soma" ? " sumMsr" : ""}`}>mm</p>
+                {ctx === "DCut" && lab === "Soma" ? <TabBtnDCut nCol={nCol}></TabBtnDCut> : <></>}
               </label>
             );
         })()

@@ -18,13 +18,25 @@ describe("PrevConsRow Component", (): void => {
     );
   test("renders historic row with correct data", async (): Promise<void> => {
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
-    expect(screen.getByText<HTMLTableCellElement>("John Doe")).toBeInTheDocument() as void;
-    expect(screen.getByText<HTMLTableCellElement>("22/09/2024")).toBeInTheDocument() as void;
-    expect(screen.getByText<HTMLTableCellElement>("Avaliação Antropométrica")).toBeInTheDocument() as void;
-    expect(screen.getByText<HTMLTableCellElement>("Prof A")).toBeInTheDocument() as void;
-    expect(screen.getByText<HTMLTableCellElement>("Stud A")).toBeInTheDocument() as void;
-    expect(screen.getByText<HTMLTableCellElement>("Notes A")).toBeInTheDocument() as void;
-  });
+    (
+      expect(screen.getByText<HTMLTableCellElement>("John Doe")) as jest.JestMatchers<jest.SpyInstance>
+    ).toBeInTheDocument() as void;
+    (
+      expect(screen.getByText<HTMLTableCellElement>("22/09/2024")) as jest.JestMatchers<jest.SpyInstance>
+    ).toBeInTheDocument() as void;
+    (
+      expect(screen.getByText<HTMLTableCellElement>("Avaliação Antropométrica")) as jest.JestMatchers<jest.SpyInstance>
+    ).toBeInTheDocument() as void;
+    (
+      expect(screen.getByText<HTMLTableCellElement>("Prof A")) as jest.JestMatchers<jest.SpyInstance>
+    ).toBeInTheDocument() as void;
+    (
+      expect(screen.getByText<HTMLTableCellElement>("Stud A")) as jest.JestMatchers<jest.SpyInstance>
+    ).toBeInTheDocument() as void;
+    (
+      expect(screen.getByText<HTMLTableCellElement>("Notes A")) as jest.JestMatchers<jest.SpyInstance>
+    ).toBeInTheDocument() as void;
+  }) as void;
   test("renders fallback for missing values", async (): Promise<void> => {
     render(
       <PrevConsRow
@@ -35,7 +47,11 @@ describe("PrevConsRow Component", (): void => {
         }}
       />
     );
-    expect(screen.getByText<HTMLTableCellElement>("Sem observações")).toBeInTheDocument() as void;
-    expect(screen.getByText<HTMLTableCellElement>("Anônimo")).toBeInTheDocument() as void;
-  });
-});
+    (
+      expect(screen.getByText<HTMLTableCellElement>("Sem observações")) as jest.JestMatchers<jest.SpyInstance>
+    ).toBeInTheDocument() as void;
+    (
+      expect(screen.getByText<HTMLTableCellElement>("Anônimo")) as jest.JestMatchers<jest.SpyInstance>
+    ).toBeInTheDocument() as void;
+  }) as void;
+}) as void;

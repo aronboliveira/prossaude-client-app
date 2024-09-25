@@ -12,7 +12,7 @@ describe("UserProfileDropdown", (): void => {
       },
     },
     mockRouter: Partial<NextRouter> = {
-      push: jest.fn(),
+      push: jest.fn() as jest.Mock,
       route: "/",
       pathname: "/",
       query: {},
@@ -25,16 +25,16 @@ describe("UserProfileDropdown", (): void => {
       locales: [],
       defaultLocale: undefined,
       events: {
-        on: jest.fn(),
-        off: jest.fn(),
-        emit: jest.fn(),
+        on: jest.fn() as jest.Mock,
+        off: jest.fn() as jest.Mock,
+        emit: jest.fn() as jest.Mock,
       },
-      beforePopState: jest.fn(),
-      back: jest.fn(),
-      reload: jest.fn(),
-      prefetch: jest.fn(),
+      beforePopState: jest.fn() as jest.Mock,
+      back: jest.fn() as jest.Mock,
+      reload: jest.fn() as jest.Mock,
+      prefetch: jest.fn() as jest.Mock,
     },
-    setDropdown: jest.Mock<any, any, any> = jest.fn(),
+    setDropdown: jest.Mock<any, any, any> = jest.fn() as jest.Mock,
     shouldShowDropdown = true;
   it("renders user profile details", (): void => {
     render(
@@ -45,11 +45,19 @@ describe("UserProfileDropdown", (): void => {
         shouldShowDropdown={shouldShowDropdown}
       />
     );
-    expect(screen.getByText<HTMLElement>("Coordenador")).toBeInTheDocument() as void;
-    expect(screen.getByText<HTMLElement>("Nutrição")).toBeInTheDocument() as void;
-    expect(screen.getByText<HTMLElement>("test@test.com")).toBeInTheDocument() as void;
-    expect(screen.getByText<HTMLElement>("123456789")).toBeInTheDocument() as void;
-  });
+    (
+      expect(screen.getByText<HTMLElement>("Coordenador")) as jest.JestMatchers<jest.SpyInstance>
+    ).toBeInTheDocument() as void;
+    (
+      expect(screen.getByText<HTMLElement>("Nutrição")) as jest.JestMatchers<jest.SpyInstance>
+    ).toBeInTheDocument() as void;
+    (
+      expect(screen.getByText<HTMLElement>("test@test.com")) as jest.JestMatchers<jest.SpyInstance>
+    ).toBeInTheDocument() as void;
+    (
+      expect(screen.getByText<HTMLElement>("123456789")) as jest.JestMatchers<jest.SpyInstance>
+    ).toBeInTheDocument() as void;
+  }) as void;
   it("toggles the contact dialog on button click", (): void => {
     render(
       <UserProfileDropdown
@@ -59,7 +67,9 @@ describe("UserProfileDropdown", (): void => {
         shouldShowDropdown={shouldShowDropdown}
       />
     );
-    fireEvent.click(screen.getByRole<HTMLButtonElement>("button", { name: /contato/i }));
-    expect(screen.getByText<HTMLFormElement>("Formulário de Contato")).toBeInTheDocument() as void;
-  });
-});
+    fireEvent.click(screen.getByRole<HTMLButtonElement>("button", { name: /contato/i })) as boolean;
+    (
+      expect(screen.getByText<HTMLFormElement>("Formulário de Contato")) as jest.JestMatchers<jest.SpyInstance>
+    ).toBeInTheDocument() as void;
+  }) as void;
+}) as void;

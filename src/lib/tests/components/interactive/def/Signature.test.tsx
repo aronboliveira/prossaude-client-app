@@ -6,7 +6,7 @@ jest.mock(
   (): {
     changeToAstDigit: jest.Mock<any, any, any>;
   } => ({
-    changeToAstDigit: jest.fn(),
+    changeToAstDigit: jest.fn() as jest.Mock,
   })
 ) as typeof jest;
 jest.mock(
@@ -15,8 +15,8 @@ jest.mock(
     elementNotFound: jest.Mock<any, any, any>;
     extLine: jest.Mock<any, any, any>;
   } => ({
-    elementNotFound: jest.fn(),
-    extLine: jest.fn(),
+    elementNotFound: jest.fn() as jest.Mock,
+    extLine: jest.fn() as jest.Mock,
   })
 ) as typeof jest;
 describe("Signature Component", (): void => {
@@ -26,14 +26,16 @@ describe("Signature Component", (): void => {
     fireEvent.mouseDown(canvas, { clientX: 10, clientY: 10 }) as boolean;
     fireEvent.mouseMove(canvas, { clientX: 20, clientY: 20 }) as boolean;
     fireEvent.mouseUp(canvas) as boolean;
-    (expect(canvas) as jest.JestMatchers<jest.SpyInstance>).toBeInTheDocument() as void;
+    (
+      expect(canvas) as jest.JestMatchers<jest.SpyInstance> as jest.JestMatchers<jest.SpyInstance>
+    ).toBeInTheDocument() as void;
   }) as void;
   test("calls changeToAstDigit on button click", (): void => {
     render(<Signature />) as RenderResult;
     const digitalSignBtn = screen.getByText<HTMLButtonElement>(/Usar Assinatura Digital/i);
     fireEvent.click(digitalSignBtn) as boolean;
-    (expect(changeToAstDigit) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalledWith<[HTMLButtonElement]>(
-      digitalSignBtn
-    );
+    (
+      expect(changeToAstDigit) as jest.JestMatchers<jest.SpyInstance> as jest.JestMatchers<jest.SpyInstance>
+    ).toHaveBeenCalledWith<[HTMLButtonElement]>(digitalSignBtn);
   }) as void;
 }) as void;

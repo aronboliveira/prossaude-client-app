@@ -43,52 +43,63 @@ describe("ExcludeDlg Component", (): void => {
 
   test("renders the modal dialog when shouldDisplayExcludeDlg is true", (): void => {
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
-    expect(screen.getByRole<HTMLDialogElement>("alertdialog")).toBeInTheDocument() as void;
-    expect(screen.getByText<HTMLButtonElement>("Confirmar remoção?")).toBeInTheDocument() as void;
+    (
+      expect(screen.getByRole<HTMLDialogElement>("alertdialog")) as jest.JestMatchers<jest.SpyInstance>
+    ).toBeInTheDocument() as void;
+    (
+      expect(screen.getByText<HTMLButtonElement>("Confirmar remoção?")) as jest.JestMatchers<jest.SpyInstance>
+    ).toBeInTheDocument() as void;
     expect(
       screen.getByText<HTMLElement>("Esse processo é parcialmente ou totalmente irreversível!")
     ).toBeInTheDocument() as void;
-  });
+  }) as void;
 
   test("does not render the modal dialog when shouldDisplayExcludeDlg is false", (): void => {
-    renderComponent({ shouldDisplayExcludeDlg: false });
-    expect(screen.queryByRole<HTMLElement>("alertdialog")).not.toBeInTheDocument() as void;
-  });
+    renderComponent({ shouldDisplayExcludeDlg: false }) as RenderResult;
+    (
+      expect(screen.queryByRole<HTMLElement>("alertdialog")).not as jest.JestMatchers<jest.SpyInstance>
+    ).toBeInTheDocument() as void;
+  }) as void;
 
   test("calls setDisplayExcludeDlg when confirm button is clicked", (): void => {
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
-    fireEvent.click(screen.getByText<HTMLButtonElement>("Confirmar"));
-    expect(defaultProps.setDisplayExcludeDlg).toHaveBeenCalledWith<
+    fireEvent.click(screen.getByText<HTMLButtonElement>("Confirmar")) as boolean;
+    (expect(defaultProps.setDisplayExcludeDlg) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalledWith<
       Parameters<typeof defaultProps.setDisplayExcludeDlg>
     >(false);
-  });
+  }) as void;
   test("calls handleDelete when the form is submitted", (): void => {
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
-    fireEvent.submit(screen.getByRole<HTMLElement>("form"));
-    expect(handleDelete).toHaveBeenCalledWith<Parameters<typeof handleDelete>>("ag", true) as void;
-  });
+    fireEvent.submit(screen.getByRole<HTMLFormElement>("form")) as boolean;
+    (expect(handleDelete) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalledWith<Parameters<typeof handleDelete>>(
+      "ag",
+      true
+    ) as void;
+  }) as void;
   test("closes dialog and toggles state when clicking outside the modal", (): void => {
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
-    fireEvent.click(screen.getByRole<HTMLDialogElement>("alertdialog"));
-    expect(defaultProps.setDisplayExcludeDlg).toHaveBeenCalledWith<
+    fireEvent.click(screen.getByRole<HTMLDialogElement>("alertdialog")) as boolean;
+    (expect(defaultProps.setDisplayExcludeDlg) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalledWith<
       Parameters<typeof defaultProps.setDisplayExcludeDlg>
     >(false);
-  });
+  }) as void;
   test("syncs aria states on mount", (): void => {
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
-    expect(require("../../../../lib/global/handlers/gHandlers").syncAriaStates).toHaveBeenCalled() as void;
-  });
+    (
+      expect(require("../../../../lib/global/handlers/gHandlers").syncAriaStates) as jest.JestMatchers<jest.SpyInstance>
+    ).toHaveBeenCalled() as void;
+  }) as void;
   test("adds keydown event listener for Escape key to close dialog", (): void => {
     const { container }: { container: HTMLElement } = renderComponent() as RenderResult<
       typeof import("@testing-library/dom/types/queries"),
       HTMLElement,
       HTMLElement
     >;
-    fireEvent.keyDown(container, { key: "Escape" });
-    expect(defaultProps.setDisplayExcludeDlg).toHaveBeenCalledWith<
+    fireEvent.keyDown(container, { key: "Escape" }) as boolean;
+    (expect(defaultProps.setDisplayExcludeDlg) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalledWith<
       Parameters<typeof defaultProps.setDisplayExcludeDlg>
     >(false);
-  });
+  }) as void;
   test("shows error fallback if an error is thrown", (): void => {
     jest.mock(
       "react-error-boundary",
@@ -101,6 +112,8 @@ describe("ExcludeDlg Component", (): void => {
       })
     );
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
-    expect(screen.getByText<HTMLElement>("Erro carregando a janela modal!")).toBeInTheDocument() as void;
-  });
-});
+    (
+      expect(screen.getByText<HTMLElement>("Erro carregando a janela modal!")) as jest.JestMatchers<jest.SpyInstance>
+    ).toBeInTheDocument() as void;
+  }) as void;
+}) as void;

@@ -6,7 +6,7 @@ jest.mock(
   (): {
     handleDivAddShow: jest.Mock<any, any, any>;
   } => ({
-    handleDivAddShow: jest.fn(),
+    handleDivAddShow: jest.fn() as jest.Mock,
   })
 ) as typeof jest;
 describe("FamDislip Component", (): void => {
@@ -15,13 +15,15 @@ describe("FamDislip Component", (): void => {
     expect(
       screen.getByLabelText<HTMLInputElement>("Antecedentes Familiares — Dislipidemia")
     ).toBeInTheDocument() as void;
-  });
+  }) as void;
   it("calls handleDivAddShow on checkbox click", async (): Promise<void> => {
     render(<FamDislip />);
     const checkbox = screen.getByLabelText<HTMLInputElement>("Antecedentes Familiares — Dislipidemia");
-    fireEvent.click(checkbox);
-    await waitFor((): void => {
-      expect(handleDivAddShow).toHaveBeenCalledWith<Parameters<typeof handleDivAddShow>>(checkbox) as void;
-    });
-  });
-});
+    fireEvent.click(checkbox) as boolean;
+    (await waitFor((): void => {
+      (expect(handleDivAddShow) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalledWith<
+        Parameters<typeof handleDivAddShow>
+      >(checkbox) as void;
+    })) as void;
+  }) as void;
+}) as void;

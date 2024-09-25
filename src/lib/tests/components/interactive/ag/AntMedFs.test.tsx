@@ -9,7 +9,7 @@ jest.mock(
   (): {
     syncAriaStates: jest.Mock<any, any, any>;
   } => ({
-    syncAriaStates: jest.fn(),
+    syncAriaStates: jest.fn() as jest.Mock,
   })
 ) as typeof jest;
 jest.mock(
@@ -17,7 +17,7 @@ jest.mock(
   (): {
     elementNotFound: jest.Mock<any, any, any>;
   } => ({
-    elementNotFound: jest.fn(),
+    elementNotFound: jest.fn() as jest.Mock,
   })
 ) as typeof jest;
 jest.mock(
@@ -25,7 +25,7 @@ jest.mock(
   (): {
     addMedHistHandler: jest.Mock<any, any, any>;
   } => ({
-    addMedHistHandler: jest.fn(),
+    addMedHistHandler: jest.fn() as jest.Mock,
   })
 ) as typeof jest;
 jest.mock(
@@ -33,7 +33,7 @@ jest.mock(
   (): {
     clearPhDates: jest.Mock<any, any, any>;
   } => ({
-    clearPhDates: jest.fn(),
+    clearPhDates: jest.fn() as jest.Mock,
   })
 ) as typeof jest;
 describe("AntMedFs", (): void => {
@@ -42,32 +42,32 @@ describe("AntMedFs", (): void => {
     expect(
       screen.getByText<HTMLElement>("Tratamentos Médicos Atuais e Anteriores e/ou Internações")
     ).toBeInTheDocument() as void;
-  });
+  }) as void;
   it("calls syncAriaStates and clearPhDates on mount", async (): Promise<void> => {
     render(<AntMedFs />);
-    await waitFor((): void => {
-      expect(syncAriaStates).toHaveBeenCalled() as void;
-      expect(clearPhDates).toHaveBeenCalled() as void;
-    });
-  });
+    (await waitFor((): void => {
+      (expect(syncAriaStates) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalled() as void;
+      (expect(clearPhDates) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalled() as void;
+    })) as void;
+  }) as void;
   it("increments blockCount when the add button is clicked", async (): Promise<void> => {
     render(<AntMedFs />);
-    fireEvent.click(screen.getByRole<HTMLButtonElement>("button", { name: /addAntMed/i }));
-    await waitFor((): void => {
-      expect(addMedHistHandler).toHaveBeenCalled() as void;
-    });
-  });
+    fireEvent.click(screen.getByRole<HTMLButtonElement>("button", { name: /addAntMed/i })) as boolean;
+    (await waitFor((): void => {
+      (expect(addMedHistHandler) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalled() as void;
+    })) as void;
+  }) as void;
   it("decrements blockCount when the remove button is clicked", async (): Promise<void> => {
     render(<AntMedFs />);
-    fireEvent.click(screen.getByRole<HTMLButtonElement>("button", { name: /removeAntMed/i }));
-    await waitFor((): void => {
-      expect(addMedHistHandler).toHaveBeenCalled() as void;
-    });
-  });
+    fireEvent.click(screen.getByRole<HTMLButtonElement>("button", { name: /removeAntMed/i })) as boolean;
+    (await waitFor((): void => {
+      (expect(addMedHistHandler) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalled() as void;
+    })) as void;
+  }) as void;
   it("calls elementNotFound when mainRef is not an HTMLElement", async (): Promise<void> => {
     render(<AntMedFs />);
-    await waitFor((): void => {
-      expect(elementNotFound).toHaveBeenCalled() as void;
-    });
-  });
-});
+    (await waitFor((): void => {
+      (expect(elementNotFound) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalled() as void;
+    })) as void;
+  }) as void;
+}) as void;

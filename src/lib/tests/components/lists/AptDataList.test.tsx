@@ -63,21 +63,21 @@ describe("AptDataList Component", (): void => {
     expect(screen.getByText<HTMLTableCellElement>("111-1111")).toBeInTheDocument() as void;
     expect(screen.getByText<HTMLTableCellElement>("johndoe@example.com")).toBeInTheDocument() as void;
     expect(screen.getByText<HTMLTableCellElement>("general")).toBeInTheDocument() as void;
-  });
+  }) as void;
   test("calls setDisplayAptList when close button is clicked", async (): Promise<void> => {
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
-    fireEvent.click(screen.getByRole<HTMLButtonElement>("button", { name: "" }));
+    fireEvent.click(screen.getByRole<HTMLButtonElement>("button", { name: "" })) as boolean;
     expect(mockSetDisplayAptList).toHaveBeenCalled() as void;
-  });
+  }) as void;
   test("calls addListenerExportBtn when export button is rendered", async (): Promise<void> => {
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
-    fireEvent.click(screen.getByRole<HTMLButtonElement>("button", { name: /Gerar Planilha/i }));
+    fireEvent.click(screen.getByRole<HTMLButtonElement>("button", { name: /Gerar Planilha/i })) as boolean;
     expect(addListenerExportBtn).toHaveBeenCalled() as void;
-  });
+  }) as void;
   test("renders the ErrorFallbackDlg when an error occurs", async (): Promise<void> => {
     jest.spyOn<Console, "warn">(console, "warn").mockImplementation((): void => {}) as jest.SpyInstance;
     consVariablesData.rootDlg = undefined;
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
     expect(screen.getByText<HTMLDialogElement>(/ErrorFallbackDlg/i)).toBeInTheDocument() as void;
-  });
-});
+  }) as void;
+}) as void;

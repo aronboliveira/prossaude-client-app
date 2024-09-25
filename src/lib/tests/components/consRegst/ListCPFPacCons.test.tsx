@@ -11,9 +11,9 @@ jest.mock(
   (): {
     createRoot: jest.Mock<any, any, any>;
   } => ({
-    createRoot: jest.fn().mockReturnValue({
-      render: jest.fn(),
-      unmount: jest.fn(),
+    createRoot: (jest.fn() as jest.Mock).mockReturnValue({
+      render: jest.fn() as jest.Mock,
+      unmount: jest.fn() as jest.Mock,
     }),
   })
 ) as typeof jest;
@@ -22,7 +22,7 @@ jest.mock(
   (): {
     handleFetch: jest.Mock<any, any, any>;
   } => ({
-    handleFetch: jest.fn().mockResolvedValue([
+    handleFetch: (jest.fn() as jest.Mock).mockResolvedValue([
       { name: "John Doe", idf: "123", tel: "111-1111", email: "johndoe@example.com" },
       { name: "Jane Doe", idf: "456", tel: "222-2222", email: "janedoe@example.com" },
     ]),
@@ -33,7 +33,7 @@ jest.mock(
   (): {
     syncAriaStates: jest.Mock<any, any, any>;
   } => ({
-    syncAriaStates: jest.fn(),
+    syncAriaStates: jest.fn() as jest.Mock,
   })
 ) as typeof jest;
 jest.mock(
@@ -42,8 +42,8 @@ jest.mock(
     elementNotFound: jest.Mock<any, any, any>;
     extLine: jest.Mock<any, any, any>;
   } => ({
-    elementNotFound: jest.fn(),
-    extLine: jest.fn(),
+    elementNotFound: jest.fn() as jest.Mock,
+    extLine: jest.fn() as jest.Mock,
   })
 ) as typeof jest;
 describe("ListCPFPacCons Component", (): void => {
@@ -60,55 +60,55 @@ describe("ListCPFPacCons Component", (): void => {
     >) && (expect(screen.getByRole<HTMLElement>("listbox")).toBeInTheDocument() as void));
   test("fetches and populates options from handleFetch", async (): Promise<void> => {
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
-    await waitFor((): void => {
+    (await waitFor((): void => {
       expect(handleFetch).toHaveBeenCalledWith<Parameters<typeof handleFetch>>("patients", "_table", true) as void;
       const options = screen.getAllByRole<HTMLOptionElement>("option");
       expect(options).toHaveLength(2);
-      expect(options[0]).toHaveValue("123");
-      expect(options[0]).toHaveTextContent("John Doe");
-      expect(options[1]).toHaveValue("456");
-      expect(options[1]).toHaveTextContent("Jane Doe");
-    });
-  });
+      expect(options[0]).toHaveValue("123") as void;
+      expect(options[0]).toHaveTextContent("John Doe") as void;
+      expect(options[1]).toHaveValue("456") as void;
+      expect(options[1]).toHaveTextContent("Jane Doe") as void;
+    })) as void;
+  }) as void;
   test("throws error when dlRef is not a valid HTMLDataListElement", async (): Promise<void> => {
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
-    (document.getElementById as jest.Mock).mockReturnValueOnce(null);
+    (document.getElementById as jest.Mock).mockReturnValueOnce(null) as jest.Mock;
     expect(elementNotFound).toHaveBeenCalledWith<Parameters<typeof elementNotFound>>(
       null,
       expect.any(String),
       extLine(expect.any(Error) as any)
     );
-  });
+  }) as void;
   test("handles rendering and re-rendering of the options", async (): Promise<void> => {
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
-    await waitFor(() => expect(handleFetch).toHaveBeenCalled());
+    await waitFor((): void => expect(handleFetch).toHaveBeenCalled() as void);
     expect(createRoot).toHaveBeenCalledWith<Parameters<typeof createRoot>>(
       screen.getByRole<HTMLElement>("listbox")
     ) as void;
-    await waitFor(() => {
-      expect(screen.getAllByRole<HTMLOptionElement>("option")).toHaveLength(2);
-    });
-  });
+    (await waitFor((): void => {
+      expect(screen.getAllByRole<HTMLOptionElement>("option")).toHaveLength(2) as void;
+    })) as void;
+  }) as void;
 
   test("syncs aria states after fetching and rendering", async (): Promise<void> => {
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
-    await waitFor((): void => expect(handleFetch).toHaveBeenCalled());
-    await waitFor((): void => {
+    await waitFor((): void => expect(handleFetch).toHaveBeenCalled() as void);
+    (await waitFor((): void => {
       expect(syncAriaStates).toHaveBeenCalledTimes(2) as void;
       expect(syncAriaStates).toHaveBeenCalledWith<Parameters<typeof syncAriaStates>>(expect.any(Array)) as void;
-    });
-  });
+    })) as void;
+  }) as void;
   test("logs error if fetch fails", async (): Promise<void> => {
     (handleFetch as jest.Mock).mockRejectedValueOnce(new Error("Fetch failed"));
     const consoleErrorSpy: jest.SpyInstance<void, [message?: any, ...optionalParams: any[]], any> = jest
       .spyOn<Console, ConsoleMethod>(console, "error")
       .mockImplementation((): void => {}) as jest.SpyInstance;
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
-    await waitFor((): void => {
+    (await waitFor((): void => {
       expect(consoleErrorSpy).toHaveBeenCalledWith<any[]>(
         expect.stringContaining("Failed to fetch from Patients Table for filling First Name DL: Fetch failed")
       );
-    });
+    })) as void;
     consoleErrorSpy.mockRestore() as void;
-  });
-});
+  }) as void;
+}) as void;

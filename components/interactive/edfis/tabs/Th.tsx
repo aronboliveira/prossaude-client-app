@@ -1,5 +1,4 @@
 import { ThProps } from "@/lib/global/declarations/interfaces";
-
 export default function Th({ nRow, nCol, ctx, lab }: ThProps): JSX.Element {
   return (
     <th

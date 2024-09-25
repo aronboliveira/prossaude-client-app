@@ -36,35 +36,41 @@ describe("FailRegstAlert Component", (): void => {
 
   test("renders the modal dialog when shouldDisplayFailRegstDlg is true", (): void => {
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
-    expect(screen.getByRole<HTMLDialogElement>("alertdialog")).toBeInTheDocument() as void;
+    (
+      expect(screen.getByRole<HTMLDialogElement>("alertdialog")) as jest.JestMatchers<jest.SpyInstance>
+    ).toBeInTheDocument() as void;
     expect(
       screen.getByText<HTMLElement>(
         "Falha na procura de um encaixe correspondente na agenda! Arraste  ou insira manualmente."
       )
     ).toBeInTheDocument() as void;
-  });
+  }) as void;
   test("does not render the modal dialog when shouldDisplayFailRegstDlg is false", (): void => {
-    renderComponent({ shouldDisplayFailRegstDlg: false });
-    expect(screen.queryByRole<HTMLDialogElement>("alertdialog")).not.toBeInTheDocument() as void;
-  });
+    renderComponent({ shouldDisplayFailRegstDlg: false }) as RenderResult;
+    (
+      expect(screen.queryByRole<HTMLDialogElement>("alertdialog")).not as jest.JestMatchers<jest.SpyInstance>
+    ).toBeInTheDocument() as void;
+  }) as void;
   test("calls setDisplayFailRegstDlg when 'Fechar' button is clicked", (): void => {
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
-    fireEvent.click(screen.getByText<HTMLButtonElement>("Fechar"));
-    expect(defaultProps.setDisplayFailRegstDlg).toHaveBeenCalledWith<
+    fireEvent.click(screen.getByText<HTMLButtonElement>("Fechar")) as boolean;
+    (expect(defaultProps.setDisplayFailRegstDlg) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalledWith<
       Parameters<typeof defaultProps.setDisplayFailRegstDlg>
     >(false);
-  });
+  }) as void;
   test("closes the dialog when clicking outside the modal", (): void => {
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
-    fireEvent.click(screen.getByRole<HTMLDialogElement>("alertdialog"));
-    expect(defaultProps.setDisplayFailRegstDlg).toHaveBeenCalledWith<
+    fireEvent.click(screen.getByRole<HTMLDialogElement>("alertdialog")) as boolean;
+    (expect(defaultProps.setDisplayFailRegstDlg) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalledWith<
       Parameters<typeof defaultProps.setDisplayFailRegstDlg>
     >(false);
-  });
+  }) as void;
   test("syncs aria states on mount", (): void => {
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
-    expect(require("../../../../lib/global/handlers/gHandlers").syncAriaStates).toHaveBeenCalled() as void;
-  });
+    (
+      expect(require("../../../../lib/global/handlers/gHandlers").syncAriaStates) as jest.JestMatchers<jest.SpyInstance>
+    ).toHaveBeenCalled() as void;
+  }) as void;
 
   test("adds keydown event listener for Escape key to close dialog", (): void => {
     const { container }: { container: HTMLElement } = renderComponent() as RenderResult<
@@ -72,11 +78,11 @@ describe("FailRegstAlert Component", (): void => {
       HTMLElement,
       HTMLElement
     >;
-    fireEvent.keyDown(container, { key: "Escape" });
-    expect(defaultProps.setDisplayFailRegstDlg).toHaveBeenCalledWith<
+    fireEvent.keyDown(container, { key: "Escape" }) as boolean;
+    (expect(defaultProps.setDisplayFailRegstDlg) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalledWith<
       Parameters<typeof defaultProps.setDisplayFailRegstDlg>
     >(false);
-  });
+  }) as void;
 
   test("shows error fallback if an error is thrown", (): void => {
     jest.mock(
@@ -90,6 +96,8 @@ describe("FailRegstAlert Component", (): void => {
       })
     );
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
-    expect(screen.getByText<HTMLElement>("Erro carregando a janela modal!")).toBeInTheDocument() as void;
-  });
-});
+    (
+      expect(screen.getByText<HTMLElement>("Erro carregando a janela modal!")) as jest.JestMatchers<jest.SpyInstance>
+    ).toBeInTheDocument() as void;
+  }) as void;
+}) as void;

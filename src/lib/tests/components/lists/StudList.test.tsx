@@ -40,7 +40,7 @@ jest.mock(
   (): {
     handleFetch: jest.Mock<any, any, any>;
   } => ({
-    handleFetch: jest.fn().mockResolvedValue([
+    handleFetch: (jest.fn() as jest.Mock).mockResolvedValue([
       {
         name: "Student A",
         tel: "123456789",
@@ -61,7 +61,7 @@ jest.mock(
   })
 ) as typeof jest;
 describe("StudList Component", (): void => {
-  const mockDispatch = jest.fn();
+  const mockDispatch = jest.fn() as jest.Mock;
   const mockMainDlgRef = { current: document.createElement("dialog") };
   const defaultProps = {
     mainDlgRef: mockMainDlgRef,
@@ -76,26 +76,26 @@ describe("StudList Component", (): void => {
   > => render(<StudList {...defaultProps} />);
   beforeEach((): void => {
     jest.clearAllMocks() as typeof jest;
-  });
+  }) as void;
   test("renders the table with students data", async (): Promise<void> => {
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
-    await waitFor((): void => {
+    (await waitFor((): void => {
       expect(screen.getByRole<HTMLTableElement>("table")).toBeInTheDocument() as void;
       expect(screen.getAllByText<HTMLTableRowElement>(/StudRow/)).toHaveLength(2);
-    });
-  });
+    })) as void;
+  }) as void;
   test("displays the spinner while fetching data", async (): Promise<void> => {
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
     expect(screen.getByText<HTMLElement>("Spinner")).toBeInTheDocument() as void;
-    await waitFor((): void => {
+    (await waitFor((): void => {
       expect(screen.queryByText<HTMLElement>("Spinner")).not.toBeInTheDocument() as void;
-    });
-  });
+    })) as void;
+  }) as void;
   test("handles close event and dispatches state toggle", async (): Promise<void> => {
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
-    fireEvent.click(screen.getByRole<HTMLButtonElement>("button"));
+    fireEvent.click(screen.getByRole<HTMLButtonElement>("button")) as boolean;
     expect(mockDispatch).toHaveBeenCalledWith<Parameters<typeof mockDispatch>>(!defaultProps.state) as void;
-  });
+  }) as void;
   test("handles error and renders error fallback component", async (): Promise<void> => {
     jest.spyOn<Console, "error">(console, "error").mockImplementation((): void => {}) as jest.SpyInstance;
     jest.mock(
@@ -109,18 +109,18 @@ describe("StudList Component", (): void => {
       })
     ) as typeof jest;
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
-    await waitFor((): void => {
+    (await waitFor((): void => {
       expect(screen.getByText<HTMLElement>("GenericErrorComponent")).toBeInTheDocument() as void;
-    });
-  });
+    })) as void;
+  }) as void;
 
   test("fetches and renders student data", async (): Promise<void> => {
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
-    await waitFor((): void => {
+    (await waitFor((): void => {
       expect(screen.getByText<HTMLElement>("Student A")).toBeInTheDocument() as void;
       expect(screen.getByText<HTMLElement>("Student B")).toBeInTheDocument() as void;
-    });
-  });
+    })) as void;
+  }) as void;
   test("handles errors in fetch and displays fallback", async (): Promise<void> => {
     jest.spyOn<Console, "error">(console, "error").mockImplementation((): void => {}) as jest.SpyInstance;
     jest.mock(
@@ -128,12 +128,12 @@ describe("StudList Component", (): void => {
       (): {
         handleFetch: jest.Mock<any, any, any>;
       } => ({
-        handleFetch: jest.fn().mockRejectedValueOnce(new Error("Fetch error")),
+        handleFetch: (jest.fn() as jest.Mock).mockRejectedValueOnce(new Error("Fetch error")),
       })
     ) as typeof jest;
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
-    await waitFor((): void => {
+    (await waitFor((): void => {
       expect(screen.getByText<HTMLElement>("GenericErrorComponent")).toBeInTheDocument() as void;
-    });
-  });
-});
+    })) as void;
+  }) as void;
+}) as void;

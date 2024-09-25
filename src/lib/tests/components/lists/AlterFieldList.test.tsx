@@ -16,7 +16,7 @@ jest.mock(
   (): {
     syncAriaStates: jest.Mock<any, any, any>;
   } => ({
-    syncAriaStates: jest.fn(),
+    syncAriaStates: jest.fn() as jest.Mock,
   })
 ) as typeof jest;
 jest.mock(
@@ -24,11 +24,11 @@ jest.mock(
   (): {
     elementNotFound: jest.Mock<any, any, any>;
   } => ({
-    elementNotFound: jest.fn(),
+    elementNotFound: jest.fn() as jest.Mock,
   })
 ) as typeof jest;
 describe("AlterFieldList Component", (): void => {
-  const mockDispatch: jest.Mock<any, any, any> = jest.fn();
+  const mockDispatch: jest.Mock<any, any, any> = jest.fn() as jest.Mock;
   const renderComponent = (
     name = "anonimo",
     state = true
@@ -43,32 +43,36 @@ describe("AlterFieldList Component", (): void => {
     );
   test("renders the dialog and syncs aria states", async (): Promise<void> => {
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
-    expect(screen.getByRole<HTMLDialogElement>("dialog")).toBeInTheDocument() as void;
-    await waitFor((): void => expect(syncAriaStates).toHaveBeenCalled());
-  });
+    (
+      expect(screen.getByRole<HTMLDialogElement>("dialog")) as jest.JestMatchers<jest.SpyInstance>
+    ).toBeInTheDocument() as void;
+    await waitFor(
+      (): void => (expect(syncAriaStates) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalled() as void
+    );
+  }) as void;
   test("calls dispatch function and closes dialog on clicking outside", (): void => {
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
-    fireEvent.click(screen.getByRole<HTMLDialogElement>("dialog"));
-    expect(mockDispatch).toHaveBeenCalled() as void;
-  });
+    fireEvent.click(screen.getByRole<HTMLDialogElement>("dialog")) as boolean;
+    (expect(mockDispatch) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalled() as void;
+  }) as void;
   test("calls elementNotFound when alterFieldRef is not found", async (): Promise<void> => {
-    (document.getElementById as jest.Mock).mockReturnValueOnce(null);
+    (document.getElementById as jest.Mock).mockReturnValueOnce(null) as jest.Mock;
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
-    expect(elementNotFound).toHaveBeenCalledWith<Parameters<typeof elementNotFound>>(
-      expect.anything() as any,
-      expect.any(String),
-      expect.any(String)
-    );
-  });
+    (expect(elementNotFound) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalledWith<
+      Parameters<typeof elementNotFound>
+    >(expect.anything() as any, expect.any(String), expect.any(String));
+  }) as void;
   test("generates new options dynamically based on headers", async (): Promise<void> => {
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
     const select = screen.getByRole<HTMLSelectElement>("combobox");
-    expect(select).toBeInTheDocument() as void;
-    fireEvent.change(select, { target: { value: "nome" } });
-    expect(select.value).toBe<string>("nome");
-  });
+    (expect(select) as jest.JestMatchers<jest.SpyInstance>).toBeInTheDocument() as void;
+    fireEvent.change(select, { target: { value: "nome" } }) as boolean;
+    (expect(select.value) as jest.JestMatchers<jest.SpyInstance>).toBe<string>("nome") as void;
+  }) as void;
   test("renders ErrorFallbackDlg when error occurs", (): void => {
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
-    expect(screen.queryByText<HTMLDialogElement>("ErrorFallbackDlg")).not.toBeInTheDocument() as void;
-  });
-});
+    (
+      expect(screen.queryByText<HTMLDialogElement>("ErrorFallbackDlg")).not as jest.JestMatchers<jest.SpyInstance>
+    ).toBeInTheDocument() as void;
+  }) as void;
+}) as void;
