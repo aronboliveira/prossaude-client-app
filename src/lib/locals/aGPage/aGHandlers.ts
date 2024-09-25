@@ -3,12 +3,7 @@ import { targEl, targEv } from "../../global/declarations/types";
 import { useCurrentDate } from "../../global/handlers/gHandlers";
 //nesse file estão presentes principalmente as funções de manipulação dinâmica de texto e layout
 
-import {
-  extLine,
-  elementNotFound,
-  inputNotFound,
-  multipleElementsNotFound,
-} from "../../global/handlers/errorHandler";
+import { extLine, elementNotFound, inputNotFound, multipleElementsNotFound } from "../../global/handlers/errorHandler";
 
 export function searchCEPXML(cepElement: targEl): number {
   let initTime = Date.now(),
@@ -19,71 +14,35 @@ export function searchCEPXML(cepElement: targEl): number {
     const [progMax, progValue, progBar] = progInts;
     const cepHifenOutValue = cepElement.value?.replaceAll("-", "") ?? "";
     const xmlReq1 = new XMLHttpRequest();
-    xmlReq1.open(
-      "GET",
-      `https://brasilapi.com.br/api/cep/v2/${cepHifenOutValue}`
-    );
+    xmlReq1.open("GET", `https://brasilapi.com.br/api/cep/v2/${cepHifenOutValue}`);
     xmlReq1.send();
     xmlReq1.onload = () => {
       statusNum = loadCEPXML(xmlReq1, reqAcc);
       if (statusNum === 200) {
-        progBar &&
-          progMax &&
-          uploadCEPLoadBar(cepElement, progBar, initTime, progMax, progValue);
+        progBar && progMax && uploadCEPLoadBar(cepElement, progBar, initTime, progMax, progValue);
       } else {
-        console.warn(
-          `Error on the first XML/HTTP request. Initializing second request.`
-        );
+        console.warn(`Error on the first XML/HTTP request. Initializing second request.`);
         reqAcc--;
         initTime = Date.now();
         const xmlReq2 = new XMLHttpRequest();
-        xmlReq2.open(
-          "GET",
-          `https://brasilapi.com.br/api/cep/v1/${cepHifenOutValue}`
-        );
+        xmlReq2.open("GET", `https://brasilapi.com.br/api/cep/v1/${cepHifenOutValue}`);
         xmlReq2.send();
         xmlReq2.onload = () => {
           statusNum = loadCEPXML(xmlReq2, reqAcc);
           if (statusNum === 200) {
-            progBar &&
-              progMax &&
-              uploadCEPLoadBar(
-                cepElement,
-                progBar,
-                initTime,
-                progMax,
-                progValue
-              );
+            progBar && progMax && uploadCEPLoadBar(cepElement, progBar, initTime, progMax, progValue);
           } else {
-            console.error(
-              `Error on the second XML/HTTP request. Aborting process.`
-            );
-            progBar &&
-              progMax &&
-              uploadCEPLoadBar(
-                cepElement,
-                progBar,
-                initTime,
-                progMax,
-                progValue
-              );
+            console.error(`Error on the second XML/HTTP request. Aborting process.`);
+            progBar && progMax && uploadCEPLoadBar(cepElement, progBar, initTime, progMax, progValue);
           }
         };
       }
     };
-  } else
-    elementNotFound(
-      cepElement,
-      "argument for searchCEPXML",
-      extLine(new Error())
-    );
+  } else elementNotFound(cepElement, "argument for searchCEPXML", extLine(new Error()));
   return statusNum;
 }
 
-export function loadCEPXML(
-  xmlReq: XMLHttpRequest = new XMLHttpRequest(),
-  reqAcc: number = 1
-): number {
+export function loadCEPXML(xmlReq: XMLHttpRequest = new XMLHttpRequest(), reqAcc: number = 1): number {
   try {
     if (xmlReq instanceof XMLHttpRequest && typeof reqAcc === "number") {
       const parsedAddress = JSON.parse(xmlReq.response);
@@ -94,21 +53,15 @@ export function loadCEPXML(
         const street = document.getElementById("streetId");
         if (uf instanceof HTMLInputElement) uf.value = parsedAddress.state;
         if (city instanceof HTMLInputElement) city.value = parsedAddress.city;
-        if (neighborhood instanceof HTMLInputElement)
-          neighborhood.value = parsedAddress.neighborhood;
-        if (street instanceof HTMLInputElement)
-          street.value = parsedAddress.street;
-      } else if (!xmlReq.status.toString().match(/^2/))
-        throw new Error(`Invalid status: ${xmlReq.status}`);
+        if (neighborhood instanceof HTMLInputElement) neighborhood.value = parsedAddress.neighborhood;
+        if (street instanceof HTMLInputElement) street.value = parsedAddress.street;
+      } else if (!xmlReq.status.toString().match(/^2/)) throw new Error(`Invalid status: ${xmlReq.status}`);
       else throw new Error(`Status not recognized.`);
     } else
       throw new Error(`Error on the values entry.
       Obtained values: ${JSON.stringify(xmlReq) || null}, ${reqAcc}`);
   } catch (loadError) {
-    console.warn(
-      `Error status for CEPV${reqAcc}: `,
-      (loadError as Error).message
-    );
+    console.warn(`Error status for CEPV${reqAcc}: `, (loadError as Error).message);
   }
   return xmlReq.status;
 }
@@ -117,11 +70,7 @@ export async function searchCEP(cepElement: targEl): Promise<string> {
   try {
     let initTime = Date.now();
     if (!(cepElement instanceof HTMLInputElement)) {
-      elementNotFound(
-        cepElement,
-        "argument for searchCEPXML",
-        extLine(new Error())
-      );
+      elementNotFound(cepElement, "argument for searchCEPXML", extLine(new Error()));
       return "fail";
     }
     const progInts = displayCEPLoadBar(cepElement) ?? [0, 100, null];
@@ -136,15 +85,11 @@ export async function searchCEP(cepElement: targEl): Promise<string> {
       );
       if (res.ok) {
         loadCEP(res);
-        progBar &&
-          progMax &&
-          uploadCEPLoadBar(cepElement, progBar, initTime, progMax, progValue);
+        progBar && progMax && uploadCEPLoadBar(cepElement, progBar, initTime, progMax, progValue);
         return "success";
       } else {
         console.error(`Both requests failed. Aborting process.`);
-        progBar &&
-          progMax &&
-          uploadCEPLoadBar(cepElement, progBar, initTime, progMax, progValue);
+        progBar && progMax && uploadCEPLoadBar(cepElement, progBar, initTime, progMax, progValue);
       }
     } catch (error) {
       console.error(`Error in both requests: ${(error as Error).message}`);
@@ -152,9 +97,7 @@ export async function searchCEP(cepElement: targEl): Promise<string> {
         document.getElementById("divCEPWarn")!.textContent =
           "*Erro carregando informações a partir de CEP. \n Inclua manualmente";
       }
-      progBar &&
-        progMax &&
-        uploadCEPLoadBar(cepElement, progBar, initTime, progMax, progValue);
+      progBar && progMax && uploadCEPLoadBar(cepElement, progBar, initTime, progMax, progValue);
     }
   } catch (err) {
     console.error(`Error initializing searchCEP`);
@@ -165,8 +108,7 @@ export async function searchCEP(cepElement: targEl): Promise<string> {
 export async function makeCEPRequest(url: string): Promise<Response> {
   const response = await fetch(url);
   try {
-    if (!response.ok)
-      throw new Error(`Error in CEP request. Status: ${response.status}`);
+    if (!response.ok) throw new Error(`Error in CEP request. Status: ${response.status}`);
   } catch (error) {
     console.error(`Error in CEP request: ${(error as Error).message}`);
   }
@@ -184,13 +126,10 @@ export async function loadCEP(res: Response): Promise<any> {
         const street = document.getElementById("streetId");
         if (uf instanceof HTMLInputElement) uf.value = parsedAddress.state;
         if (city instanceof HTMLInputElement) city.value = parsedAddress.city;
-        if (neighborhood instanceof HTMLInputElement)
-          neighborhood.value = parsedAddress.neighborhood;
-        if (street instanceof HTMLInputElement)
-          street.value = parsedAddress.street;
+        if (neighborhood instanceof HTMLInputElement) neighborhood.value = parsedAddress.neighborhood;
+        if (street instanceof HTMLInputElement) street.value = parsedAddress.street;
         return parsedAddress;
-      } else if (!res.status.toString().match(/^2/))
-        throw new Error(`Invalid status: ${res.status}`);
+      } else if (!res.status.toString().match(/^2/)) throw new Error(`Invalid status: ${res.status}`);
       else throw new Error(`Status not recognized.`);
     } else
       throw new Error(`Error on the values entry.
@@ -201,9 +140,7 @@ export async function loadCEP(res: Response): Promise<any> {
   return -1;
 }
 
-export function displayCEPLoadBar(
-  cepElement: targEl
-): [number, number, HTMLProgressElement] {
+export function displayCEPLoadBar(cepElement: targEl): [number, number, HTMLProgressElement] {
   const progressBar = document.createElement("progress");
   if (cepElement instanceof HTMLInputElement) {
     document.getElementById("divProgCEP")?.append(progressBar);
@@ -234,10 +171,7 @@ export function uploadCEPLoadBar(
   ) {
     const elapsedTime = Date.now() - initTime;
     const elapsedNDec = elapsedTime.toString().length - 1;
-    const addedZerosMult = Array.from(
-      { length: elapsedNDec },
-      () => "0"
-    ).reduce((acc, curr) => acc + curr, "1");
+    const addedZerosMult = Array.from({ length: elapsedNDec }, () => "0").reduce((acc, curr) => acc + curr, "1");
     const indNDec = 1 * parseInt(addedZerosMult);
     const roundedElapsed = Math.round(elapsedTime / indNDec) * indNDec;
     if (progValueInt !== progMaxInt) {
@@ -271,31 +205,16 @@ export function enableCEPBtn(cepBtn: targEl, cepLength: number = 0): boolean {
       cepBtn.removeAttribute("disabled");
       isCepElemenBtnOff = false;
     } else cepBtn.setAttribute("disabled", "");
-  } else
-    multipleElementsNotFound(
-      extLine(new Error()),
-      "argumentos para enableCEPBtn",
-      cepBtn,
-      cepLength
-    );
+  } else multipleElementsNotFound(extLine(new Error()), "argumentos para enableCEPBtn", cepBtn, cepLength);
 
   return isCepElemenBtnOff;
 }
 
-export function addMedHistHandler(
-  click: targEv | React.MouseEvent,
-  blockCount: number = 1
-): number {
-  if (
-    click?.currentTarget instanceof HTMLButtonElement &&
-    typeof blockCount === "number"
-  ) {
-    if (
-      click.currentTarget instanceof HTMLElement &&
-      click.currentTarget.classList.contains("addAntMed")
-    ) {
+export function addMedHistHandler(click: targEv | React.MouseEvent, blockCount: number = 1): number {
+  if (click?.currentTarget instanceof HTMLButtonElement && typeof blockCount === "number") {
+    if (click.currentTarget instanceof HTMLElement && click.currentTarget.classList.contains("addAntMed")) {
       // Cria um novo conjunto de elementos HTML
-      const newBlock = Object.assign(document.createElement("div"), {
+      const newBlock = Object.assign(document.createElement("div") as HTMLDivElement, {
         className: "antMedBlock",
         id: `antMedBlock${blockCount}`,
         innerHTML: `
@@ -326,9 +245,7 @@ export function addMedHistHandler(
       // Adiciona o novo bloco ao contêiner
       document.getElementById("antMedContainer")?.appendChild(newBlock);
       newBlock.querySelectorAll('button[id$="DatBtn"]').forEach(dateBtn => {
-        dateBtn.addEventListener("click", activation =>
-          useCurrentDate(activation, dateBtn as HTMLButtonElement)
-        );
+        dateBtn.addEventListener("click", activation => useCurrentDate(activation, dateBtn as HTMLButtonElement));
       });
       newBlock.querySelectorAll('input[type="text"]').forEach(textEl => {
         textEl.addEventListener("input", () =>
@@ -341,13 +258,8 @@ export function addMedHistHandler(
           )
         );
       });
-    } else if (
-      click.currentTarget instanceof HTMLElement &&
-      click.currentTarget.classList.contains("removeAntMed")
-    ) {
-      const divToRemove = Array.from(
-        document.querySelectorAll(".antMedBlock")
-      ).at(-1);
+    } else if (click.currentTarget instanceof HTMLElement && click.currentTarget.classList.contains("removeAntMed")) {
+      const divToRemove = Array.from(document.querySelectorAll(".antMedBlock")).at(-1);
       divToRemove && blockCount > 0 && divToRemove?.id !== "antMedBlock1"
         ? divToRemove.remove()
         : console.warn(`Erro localizando divToRemove:
@@ -356,14 +268,8 @@ export function addMedHistHandler(
         divToRemove id: ${divToRemove?.id}`);
     } else
       console.error(`Error validating .classList of click.target in addAntMedHandler.
-        Catched value: ${
-          (click?.target as HTMLElement)?.classList ?? "UNDEFINED CLASS LIST"
-        }.`);
+        Catched value: ${(click?.target as HTMLElement)?.classList ?? "UNDEFINED CLASS LIST"}.`);
   } else
-    elementNotFound(
-      click?.target,
-      `${(click?.target as Element)?.id ?? "UNDEFINED BUTTON ID"}`,
-      extLine(new Error())
-    );
+    elementNotFound(click?.target, `${(click?.target as Element)?.id ?? "UNDEFINED BUTTON ID"}`, extLine(new Error()));
   return blockCount;
 }

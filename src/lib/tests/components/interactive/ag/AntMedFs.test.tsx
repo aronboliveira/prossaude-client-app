@@ -11,7 +11,7 @@ jest.mock(
   } => ({
     syncAriaStates: jest.fn(),
   })
-);
+) as typeof jest;
 jest.mock(
   "../../../../../lib/global/handlers/errorHandler",
   (): {
@@ -19,7 +19,7 @@ jest.mock(
   } => ({
     elementNotFound: jest.fn(),
   })
-);
+) as typeof jest;
 jest.mock(
   "../../../../../lib/locals/aGPage/aGHandlers",
   (): {
@@ -27,7 +27,7 @@ jest.mock(
   } => ({
     addMedHistHandler: jest.fn(),
   })
-);
+) as typeof jest;
 jest.mock(
   "../../../../../lib/global/gStyleScript",
   (): {
@@ -35,39 +35,39 @@ jest.mock(
   } => ({
     clearPhDates: jest.fn(),
   })
-);
+) as typeof jest;
 describe("AntMedFs", (): void => {
   it("renders the fieldset with legend text", (): void => {
     render(<AntMedFs />);
     expect(
       screen.getByText<HTMLElement>("Tratamentos Médicos Atuais e Anteriores e/ou Internações")
-    ).toBeInTheDocument();
+    ).toBeInTheDocument() as void;
   });
   it("calls syncAriaStates and clearPhDates on mount", async (): Promise<void> => {
     render(<AntMedFs />);
     await waitFor((): void => {
-      expect(syncAriaStates).toHaveBeenCalled();
-      expect(clearPhDates).toHaveBeenCalled();
+      expect(syncAriaStates).toHaveBeenCalled() as void;
+      expect(clearPhDates).toHaveBeenCalled() as void;
     });
   });
   it("increments blockCount when the add button is clicked", async (): Promise<void> => {
     render(<AntMedFs />);
     fireEvent.click(screen.getByRole<HTMLButtonElement>("button", { name: /addAntMed/i }));
     await waitFor((): void => {
-      expect(addMedHistHandler).toHaveBeenCalled();
+      expect(addMedHistHandler).toHaveBeenCalled() as void;
     });
   });
   it("decrements blockCount when the remove button is clicked", async (): Promise<void> => {
     render(<AntMedFs />);
     fireEvent.click(screen.getByRole<HTMLButtonElement>("button", { name: /removeAntMed/i }));
     await waitFor((): void => {
-      expect(addMedHistHandler).toHaveBeenCalled();
+      expect(addMedHistHandler).toHaveBeenCalled() as void;
     });
   });
   it("calls elementNotFound when mainRef is not an HTMLElement", async (): Promise<void> => {
     render(<AntMedFs />);
     await waitFor((): void => {
-      expect(elementNotFound).toHaveBeenCalled();
+      expect(elementNotFound).toHaveBeenCalled() as void;
     });
   });
 });

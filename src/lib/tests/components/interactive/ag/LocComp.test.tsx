@@ -9,12 +9,12 @@ jest.mock(
   } => ({
     handleCondtReq: jest.fn(),
   })
-);
+) as typeof jest;
 describe("LocComp", (): void => {
   it("renders a number input for location complement", (): void => {
     render(<LocComp />);
     const input = screen.getByRole<HTMLElement>("spinbutton");
-    expect(input).toBeInTheDocument();
+    expect(input).toBeInTheDocument() as void;
   });
   it("calls handleCondtReq on input", (): void => {
     render(<LocComp />);

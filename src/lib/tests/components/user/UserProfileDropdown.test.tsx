@@ -45,10 +45,10 @@ describe("UserProfileDropdown", (): void => {
         shouldShowDropdown={shouldShowDropdown}
       />
     );
-    expect(screen.getByText<HTMLElement>("Coordenador")).toBeInTheDocument();
-    expect(screen.getByText<HTMLElement>("Nutrição")).toBeInTheDocument();
-    expect(screen.getByText<HTMLElement>("test@test.com")).toBeInTheDocument();
-    expect(screen.getByText<HTMLElement>("123456789")).toBeInTheDocument();
+    expect(screen.getByText<HTMLElement>("Coordenador")).toBeInTheDocument() as void;
+    expect(screen.getByText<HTMLElement>("Nutrição")).toBeInTheDocument() as void;
+    expect(screen.getByText<HTMLElement>("test@test.com")).toBeInTheDocument() as void;
+    expect(screen.getByText<HTMLElement>("123456789")).toBeInTheDocument() as void;
   });
   it("toggles the contact dialog on button click", (): void => {
     render(
@@ -60,6 +60,6 @@ describe("UserProfileDropdown", (): void => {
       />
     );
     fireEvent.click(screen.getByRole<HTMLButtonElement>("button", { name: /contato/i }));
-    expect(screen.getByText<HTMLFormElement>("Formulário de Contato")).toBeInTheDocument();
+    expect(screen.getByText<HTMLFormElement>("Formulário de Contato")).toBeInTheDocument() as void;
   });
 });

@@ -8,11 +8,11 @@ jest.mock(
   } => ({
     handleCondtReq: jest.fn(),
   })
-);
+) as typeof jest;
 describe("DDDElementSec Component", (): void => {
   it("renders the DDD secondary input field", (): void => {
     render(<DDDElementSec />);
-    expect(screen.getByLabelText<HTMLInputElement>("DDD Secundário")).toBeInTheDocument();
+    expect(screen.getByLabelText<HTMLInputElement>("DDD Secundário")).toBeInTheDocument() as void;
   });
   it("calls handleCondtReq on input", async (): Promise<void> => {
     render(<DDDElementSec />);

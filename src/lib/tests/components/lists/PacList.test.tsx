@@ -7,7 +7,7 @@ jest.mock("react-dom/client", (): { createRoot: jest.Mock<any, any, any> } => ({
     render: jest.fn(),
     unmount: jest.fn(),
   }),
-}));
+})) as typeof jest;
 jest.mock(
   "../../../../../pages/api/ts/handlers",
   (): {
@@ -15,16 +15,19 @@ jest.mock(
   } => ({
     handleFetch: jest.fn(),
   })
-);
+) as typeof jest;
 jest.mock(
   "../../../../../components/consRegst/ErrorFallbackDlg",
   (): (() => JSX.Element) => (): JSX.Element => <div>ErrorFallbackDlg</div>
-);
-jest.mock("../../../../../components/icons/Spinner", (): (() => JSX.Element) => (): JSX.Element => <div>Spinner</div>);
+) as typeof jest;
+jest.mock(
+  "../../../../../components/icons/Spinner",
+  (): (() => JSX.Element) => (): JSX.Element => <div>Spinner</div>
+) as typeof jest;
 jest.mock(
   "../../../../../components/consRegst/PacRow",
   (): (() => JSX.Element) => (): JSX.Element => <div>PacRow</div>
-);
+) as typeof jest;
 describe("PacList Component", (): void => {
   const mockDispatch = jest.fn();
   const mockSetDisplayRowData = jest.fn();
@@ -70,32 +73,34 @@ describe("PacList Component", (): void => {
     ]);
   });
   test("renders PacList table with fetched data", async (): Promise<void> => {
-    renderComponent();
+    renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
     await waitFor((): void =>
       expect(handleFetch).toHaveBeenCalledWith<Parameters<typeof handleFetch>>("patients", "_table", true)
     );
-    expect(screen.getByText<HTMLElement>(/Pac1/i)).toBeInTheDocument();
-    expect(screen.getByText<HTMLElement>(/Pac2/i)).toBeInTheDocument();
+    expect(screen.getByText<HTMLElement>(/Pac1/i)).toBeInTheDocument() as void;
+    expect(screen.getByText<HTMLElement>(/Pac2/i)).toBeInTheDocument() as void;
   });
   test("renders Spinner while fetching data", async (): Promise<void> => {
-    renderComponent();
-    expect(screen.getByText<HTMLElement>(/Loading Patients Table/i)).toBeInTheDocument();
+    renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
+    expect(screen.getByText<HTMLElement>(/Loading Patients Table/i)).toBeInTheDocument() as void;
   });
   test("renders ErrorFallbackDlg on fetch failure", async (): Promise<void> => {
     (handleFetch as jest.Mock).mockRejectedValueOnce(new Error("Failed to fetch"));
-    renderComponent();
-    await waitFor((): void => expect(screen.getByText<HTMLDialogElement>(/ErrorFallbackDlg/i)).toBeInTheDocument());
+    renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
+    await waitFor(
+      (): void => expect(screen.getByText<HTMLDialogElement>(/ErrorFallbackDlg/i)).toBeInTheDocument() as void
+    );
   });
   test("validates table rendering and column headers", async (): Promise<void> => {
-    renderComponent();
+    renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
     await waitFor((): void => {
       const table = screen.getByRole<HTMLTableElement>("table", { name: /Lista Recuperada/i });
-      expect(table).toBeInTheDocument();
+      expect(table).toBeInTheDocument() as void;
       expect(table.querySelectorAll<HTMLTableCellElement>("th")).toHaveLength(12);
     });
   });
   test("dispatches on Escape keydown event to close the dialog", async (): Promise<void> => {
-    renderComponent();
+    renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
     fireEvent.keyDown(document, { key: "Escape" });
     await waitFor((): void =>
       expect(mockSetDisplayRowData).toHaveBeenCalledWith<Parameters<typeof mockSetDisplayRowData>>(

@@ -40,20 +40,20 @@ describe("UserDlg", (): void => {
   };
   it("renders user details", (): void => {
     render(<UserDlg {...defaultProps} />);
-    expect(screen.getByText<HTMLElement>("Coordenador")).toBeInTheDocument();
-    expect(screen.getByText<HTMLElement>("Nutrição")).toBeInTheDocument();
-    expect(screen.getByText<HTMLElement>("test@test.com")).toBeInTheDocument();
-    expect(screen.getByText<HTMLElement>("123456789")).toBeInTheDocument();
+    expect(screen.getByText<HTMLElement>("Coordenador")).toBeInTheDocument() as void;
+    expect(screen.getByText<HTMLElement>("Nutrição")).toBeInTheDocument() as void;
+    expect(screen.getByText<HTMLElement>("test@test.com")).toBeInTheDocument() as void;
+    expect(screen.getByText<HTMLElement>("123456789")).toBeInTheDocument() as void;
   });
   it("opens the user properties dialog on button click", (): void => {
     render(<UserDlg {...defaultProps} />);
     fireEvent.click(screen.getByRole<HTMLButtonElement>("button", { name: /alteração/i }));
-    expect(defaultProps.setPropDlg).toHaveBeenCalledWith<Parameters<typeof defaultProps.setPropDlg>>(true);
+    expect(defaultProps.setPropDlg).toHaveBeenCalledWith<Parameters<typeof defaultProps.setPropDlg>>(true) as void;
   });
   it("calls router push on logout", (): void => {
     render(<UserDlg {...defaultProps} />);
     const link = screen.getByRole<HTMLAnchorElement>("link", { name: /login/i });
     fireEvent.click(link);
-    expect(defaultProps.router.push).toHaveBeenCalledWith<[string]>("/login");
+    expect(defaultProps.router.push).toHaveBeenCalledWith<[string]>("/login") as void;
   });
 });

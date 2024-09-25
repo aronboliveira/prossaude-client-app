@@ -8,7 +8,7 @@ jest.mock(
   } => ({
     elementNotFound: jest.fn(),
   })
-);
+) as typeof jest;
 describe("AGTips", (): void => {
   const defaultProps: {
     state: boolean;
@@ -19,23 +19,23 @@ describe("AGTips", (): void => {
   };
   it("renders the modal when state is true", (): void => {
     render(<AGTips {...defaultProps} />);
-    expect(screen.getByText<HTMLElement>("Manual para controle de formulário")).toBeInTheDocument();
+    expect(screen.getByText<HTMLElement>("Manual para controle de formulário")).toBeInTheDocument() as void;
   });
   it("does not render when state is false", (): void => {
     render(<AGTips {...defaultProps} state={false} />);
-    expect(screen.queryByText<HTMLElement>("Manual para controle de formulário")).not.toBeInTheDocument();
+    expect(screen.queryByText<HTMLElement>("Manual para controle de formulário")).not.toBeInTheDocument() as void;
   });
   it("closes the modal when ESC key is pressed", async (): Promise<void> => {
     render(<AGTips {...defaultProps} />);
     fireEvent.keyDown(window, { key: "ESCAPE" });
     await waitFor((): void => {
-      expect(defaultProps.dispatch).toHaveBeenCalledWith<Parameters<typeof defaultProps.dispatch>>(false);
+      expect(defaultProps.dispatch).toHaveBeenCalledWith<Parameters<typeof defaultProps.dispatch>>(false) as void;
     });
   });
   it("calls elementNotFound when dlgRef is not an HTMLDialogElement", async (): Promise<void> => {
     render(<AGTips {...defaultProps} />);
     await waitFor((): void => {
-      expect(elementNotFound).toHaveBeenCalled();
+      expect(elementNotFound).toHaveBeenCalled() as void;
     });
   });
 });

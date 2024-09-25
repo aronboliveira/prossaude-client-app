@@ -36,22 +36,22 @@ describe("Testing all provided functions", (): void => {
   let siblingEl: HTMLElement, dialogEl: HTMLDialogElement, textAreaEl: HTMLTextAreaElement;
   let element: HTMLElement;
   beforeEach((): void => {
-    inputEl = document.createElement("input");
+    inputEl = document.createElement("input") as HTMLInputElement;
     siblingEl = document.createElement("span");
     event = new MouseEvent("click");
     Object.defineProperty(event, "currentTarget", {
       value: inputEl,
       writable: false,
     });
-    buttonEl = document.createElement("button");
+    buttonEl = document.createElement("button") as HTMLButtonElement;
     dialogEl = document.createElement("dialog");
     textAreaEl = document.createElement("textarea");
-    element = document.createElement("div");
-    jest.clearAllMocks();
+    element = document.createElement("div") as HTMLDivElement;
+    jest.clearAllMocks() as typeof jest;
   });
   it("should remove hidden attribute from valid sibling when 'radYes' is checked", (): void => {
     inputEl.type = "radio";
-    inputEl.classList.add("radYes");
+    inputEl.classList.add("radYes") as void;
     inputEl.checked = true;
     jest
       .spyOn<any, SearchFunction>(require("../../../global/handlers/gHandlers"), "searchNextSiblings")
@@ -78,7 +78,7 @@ describe("Testing all provided functions", (): void => {
     showInspSpanSub(event);
     expect(
       jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "inputNotFound")
-    ).toHaveBeenCalled();
+    ).toHaveBeenCalled() as void;
   });
   it("should call multipleElementsNotFound when parent or sibling is not found", (): void => {
     const mockMultipleElementsNotFound = jest.spyOn<any, ErrorHandler>(
@@ -86,10 +86,10 @@ describe("Testing all provided functions", (): void => {
       "multipleElementsNotFound"
     );
     showInspSpanSub(event as MouseEvent);
-    expect(mockMultipleElementsNotFound).toHaveBeenCalled();
+    expect(mockMultipleElementsNotFound).toHaveBeenCalled() as void;
   });
   it("should show the dialog and update button text when isDialogCalled is false", (): void => {
-    const parentEl = document.createElement("div");
+    const parentEl = document.createElement("div") as HTMLDivElement;
     parentEl.appendChild(buttonEl);
     parentEl.appendChild(dialogEl);
     const event = new MouseEvent("click");
@@ -124,12 +124,12 @@ describe("Testing all provided functions", (): void => {
     showInspDialogs(event);
     expect(
       jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "elementNotFound")
-    ).toHaveBeenCalled();
+    ).toHaveBeenCalled() as void;
   });
   it("should add text to textarea when empty", (): void => {
     jest
       .spyOn<any, SearchFunction>(require("../../../global/handlers/gHandlers"), "searchParents")
-      .mockReturnValue(document.createElement("div"));
+      .mockReturnValue(document.createElement("div") as HTMLDivElement);
     jest
       .spyOn<any, SearchFunction>(require("../../../global/handlers/gHandlers"), "searchPreviousSiblings")
       .mockReturnValue(textAreaEl);
@@ -139,7 +139,7 @@ describe("Testing all provided functions", (): void => {
   it("should append text in lowercase when textarea is not empty", (): void => {
     jest
       .spyOn<any, SearchFunction>(require("../../../global/handlers/gHandlers"), "searchParents")
-      .mockReturnValue(document.createElement("div"));
+      .mockReturnValue(document.createElement("div") as HTMLDivElement);
     jest
       .spyOn<any, SearchFunction>(require("../../../global/handlers/gHandlers"), "searchPreviousSiblings")
       .mockReturnValue(textAreaEl);
@@ -156,7 +156,7 @@ describe("Testing all provided functions", (): void => {
       .spyOn<any, SearchFunction>(require("../../../global/handlers/gHandlers"), "searchPreviousSiblings")
       .mockReturnValue({} as any);
     addTextToObs(event as MouseEvent);
-    expect(mockInputNotFound).toHaveBeenCalled();
+    expect(mockInputNotFound).toHaveBeenCalled() as void;
   });
   it("should change cursor style to 'grabbing' and back to 'grab'", (): void => {
     jest.useFakeTimers();
@@ -172,7 +172,7 @@ describe("Testing all provided functions", (): void => {
     dragHover(null as any);
     expect(
       jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "elementNotFound")
-    ).toHaveBeenCalled();
+    ).toHaveBeenCalled() as void;
   });
   it("should call elementNotFound when nextElementSibling is not found", (): void => {
     Object.defineProperty(inputEl, "nextElementSibling", {
@@ -182,7 +182,7 @@ describe("Testing all provided functions", (): void => {
     clearQuadrInps(inputEl);
     expect(
       jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "elementNotFound")
-    ).toHaveBeenCalled();
+    ).toHaveBeenCalled() as void;
   });
   it("should clear input value and set placeholder to 'Apagado'", (): void => {
     const siblingEl = document.createElement("datalist"),
@@ -204,7 +204,7 @@ describe("Testing all provided functions", (): void => {
       "inputNotFound"
     );
     clearQuadrInps(null as any);
-    expect(mockInputNotFound).toHaveBeenCalled();
+    expect(mockInputNotFound).toHaveBeenCalled() as void;
   });
   describe("dragStart", (): void => {
     let dragEvent: DragEvent;
@@ -212,7 +212,7 @@ describe("Testing all provided functions", (): void => {
     let element: HTMLElement;
     let quadrsTe: HTMLElement[];
     beforeEach((): void => {
-      element = document.createElement("div");
+      element = document.createElement("div") as HTMLDivElement;
       element.classList.add("quadrMainDiv");
       quadrsTe = [element];
       dragEvent = new DragEvent("dragstart", { bubbles: true });
@@ -230,7 +230,10 @@ describe("Testing all provided functions", (): void => {
     });
     it("should handle a drag event and set dataTransfer", (): void => {
       dragStart(dragEvent, quadrsTe);
-      expect(dragEvent.dataTransfer?.setData).toHaveBeenCalledWith<[DataTransferFormat, string]>("text/plain", "");
+      expect(dragEvent.dataTransfer?.setData).toHaveBeenCalledWith<[DataTransferFormat, string]>(
+        "text/plain",
+        ""
+      ) as void;
     });
     it("should handle a touch event and start dragging", (): void => {
       dragStart(touchEvent, quadrsTe);
@@ -242,7 +245,7 @@ describe("Testing all provided functions", (): void => {
       dragStart({} as DragEvent, quadrsTe);
       expect(
         jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "elementNotFound")
-      ).toHaveBeenCalled();
+      ).toHaveBeenCalled() as void;
     });
   });
   describe("dragEnter", (): void => {
@@ -252,13 +255,13 @@ describe("Testing all provided functions", (): void => {
     });
     it("should prevent default if the event is valid", (): void => {
       dragEnter(dragEvent);
-      expect(jest.spyOn<DragEvent, DragEventMethod>(dragEvent, "preventDefault")).toHaveBeenCalled();
+      expect(jest.spyOn<DragEvent, DragEventMethod>(dragEvent, "preventDefault")).toHaveBeenCalled() as void;
     });
     it("should call elementNotFound if target is invalid", (): void => {
       dragEnter({ target: null } as DragEvent);
       expect(
         jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "elementNotFound")
-      ).toHaveBeenCalled();
+      ).toHaveBeenCalled() as void;
     });
   });
   describe("dragOver", (): void => {
@@ -268,13 +271,13 @@ describe("Testing all provided functions", (): void => {
     });
     it("should prevent default if the event is valid", (): void => {
       dragOver(dragEvent);
-      expect(jest.spyOn<DragEvent, DragEventMethod>(dragEvent, "preventDefault")).toHaveBeenCalled();
+      expect(jest.spyOn<DragEvent, DragEventMethod>(dragEvent, "preventDefault")).toHaveBeenCalled() as void;
     });
     it("should call elementNotFound if target is invalid", (): void => {
       dragOver({ target: null } as DragEvent);
       expect(
         jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "elementNotFound")
-      ).toHaveBeenCalled();
+      ).toHaveBeenCalled() as void;
     });
   });
   describe("dragDrop", (): void => {
@@ -283,8 +286,8 @@ describe("Testing all provided functions", (): void => {
     let targetEl: HTMLElement;
     let quadrsTe: HTMLElement[];
     beforeEach((): void => {
-      srcEl = document.createElement("div");
-      targetEl = document.createElement("div");
+      srcEl = document.createElement("div") as HTMLDivElement;
+      targetEl = document.createElement("div") as HTMLDivElement;
       srcEl.classList.add("quadrMainDiv");
       targetEl.classList.add("quadrAvDent");
       quadrsTe = [srcEl, targetEl];
@@ -293,19 +296,23 @@ describe("Testing all provided functions", (): void => {
     });
     it("should swap grid properties of source and target elements", (): void => {
       //@ts-ignore
-      jest.spyOn<Window, WindowMethods>(window, "getComputedStyle").mockImplementation((el: Element) => {
-        if (el === srcEl) {
-          return {
-            getPropertyValue: (prop: string) => (prop === "grid-column" ? "1" : "1"),
-          } as CSSStyleDeclaration;
-        }
-        if (el === targetEl) {
-          return {
-            getPropertyValue: (prop: string) => (prop === "grid-column" ? "2" : "2"),
-          } as CSSStyleDeclaration;
-        }
-        return {} as CSSStyleDeclaration;
-      });
+      jest
+        //@ts-ignore
+        .spyOn<Window, WindowMethods>(window, "getComputedStyle")
+        //@ts-ignore
+        .mockImplementation((el: Element) => {
+          if (el === srcEl) {
+            return {
+              getPropertyValue: (prop: string) => (prop === "grid-column" ? "1" : "1"),
+            } as CSSStyleDeclaration;
+          }
+          if (el === targetEl) {
+            return {
+              getPropertyValue: (prop: string) => (prop === "grid-column" ? "2" : "2"),
+            } as CSSStyleDeclaration;
+          }
+          return {} as CSSStyleDeclaration;
+        });
       dragDrop(dropEvent, srcEl, quadrsTe, jest.fn());
       expect(srcEl.style.getPropertyValue("grid-column")).toBe<PseudoNum>("2");
       expect(targetEl.style.getPropertyValue("grid-column")).toBe<PseudoNum>("1");
@@ -314,31 +321,34 @@ describe("Testing all provided functions", (): void => {
       dragDrop({} as Event, srcEl, quadrsTe, jest.fn());
       expect(
         jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "multipleElementsNotFound")
-      ).toHaveBeenCalled();
+      ).toHaveBeenCalled() as void;
     });
   });
   describe("dragEnd", (): void => {
     let element: HTMLElement;
     beforeEach((): void => {
-      element = document.createElement("div");
+      element = document.createElement("div") as HTMLDivElement;
     });
     it("should call dragEndChilds if element is valid", (): void => {
       document.body.innerHTML = '<div class="contInQuadrs"></div>';
       dragEnd(element);
       expect(
         jest.spyOn<any, OdHandler>(require("../../../locals/odPage/odHandler"), "dragEndChilds")
-      ).toHaveBeenCalledWith<[NodeListOf<Element>]>(document.querySelectorAll(".contInQuadrs"));
+      ).toHaveBeenCalledWith<[NodeListOf<Element>]>(document.querySelectorAll(".contInQuadrs")) as void;
     });
     it("should call elementNotFound if element is invalid", (): void => {
       dragEnd(null as any);
       expect(
         jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "elementNotFound")
-      ).toHaveBeenCalled();
+      ).toHaveBeenCalled() as void;
     });
   });
   describe("dragStartChilds", (): void => {
     it("should set 'draggable' attribute to true for all elements", (): void => {
-      const contInQuadrs = [document.createElement("div"), document.createElement("div")];
+      const contInQuadrs = [
+        document.createElement("div") as HTMLDivElement,
+        document.createElement("div") as HTMLDivElement,
+      ];
       dragStartChilds(contInQuadrs);
       contInQuadrs.forEach(contInQuadr => {
         expect(contInQuadr.getAttribute("draggable")).toBe<PseudoBool>("true");
@@ -347,7 +357,10 @@ describe("Testing all provided functions", (): void => {
   });
   describe("dragEndChilds", (): void => {
     it("should set 'draggable' attribute to false for all elements", (): void => {
-      const contInQuadrs = [document.createElement("div"), document.createElement("div")];
+      const contInQuadrs = [
+        document.createElement("div") as HTMLDivElement,
+        document.createElement("div") as HTMLDivElement,
+      ];
       dragEndChilds(contInQuadrs);
       contInQuadrs.forEach(contInQuadr => {
         expect(contInQuadr.getAttribute("draggable")).toBe<PseudoBool>("false");
@@ -358,19 +371,19 @@ describe("Testing all provided functions", (): void => {
     let quadrBtn: HTMLButtonElement;
     let parentDiv: HTMLDivElement;
     beforeEach((): void => {
-      quadrBtn = document.createElement("button");
-      parentDiv = document.createElement("div");
+      quadrBtn = document.createElement("button") as HTMLButtonElement;
+      parentDiv = document.createElement("div") as HTMLDivElement;
       parentDiv.classList.add("quadrMainDiv");
       quadrBtn.closest = jest.fn().mockReturnValue(parentDiv);
     });
     it("should reset all input values to 'Hígido'", (): void => {
       for (let i = 0; i < 8; i++) {
-        const input = document.createElement("input");
+        const input = document.createElement("input") as HTMLInputElement;
         input.id = `inpD${i}`;
         parentDiv.appendChild(input);
       }
       resetLabels(quadrBtn);
-      parentDiv.querySelectorAll("input[id^=inpD]").forEach(input => {
+      parentDiv.querySelectorAll("input[id^=inpD]").forEach((input): void => {
         (input instanceof HTMLInputElement ||
           input instanceof HTMLSelectElement ||
           inputEl instanceof HTMLTextAreaElement) &&
@@ -381,21 +394,21 @@ describe("Testing all provided functions", (): void => {
       resetLabels(quadrBtn);
       expect(
         jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "multipleElementsNotFound")
-      ).toHaveBeenCalled();
+      ).toHaveBeenCalled() as void;
     });
     it("should log a warning if input length is less than 8", (): void => {
-      parentDiv.appendChild(document.createElement("input"));
+      parentDiv.appendChild(document.createElement("input") as HTMLInputElement);
       resetLabels(quadrBtn);
       expect(
-        jest.spyOn<Console, ConsoleMethod>(console, "warn").mockImplementation((): void => {})
-      ).toHaveBeenCalledWith<[any]>(expect.stringContaining("Error validating inputs"));
+        jest.spyOn<Console, ConsoleMethod>(console, "warn").mockImplementation((): void => {}) as jest.SpyInstance
+      ).toHaveBeenCalledWith(<[any]>expect.stringContaining("Error validating inputs")) as void;
     });
   });
   describe("addSubDivTrat", (): void => {
     let addSubDivBtn: HTMLButtonElement;
     let blockCount = 1;
     beforeEach((): void => {
-      addSubDivBtn = document.createElement("button");
+      addSubDivBtn = document.createElement("button") as HTMLButtonElement;
       addSubDivBtn.classList.add("addTrat");
       document.body.innerHTML = '<div id="tratContainer"></div>';
     });
@@ -423,7 +436,7 @@ describe("Testing all provided functions", (): void => {
       addSubDivTrat({ currentTarget: null } as any, addSubDivBtn, blockCount);
       expect(
         jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "elementNotFound")
-      ).toHaveBeenCalled();
+      ).toHaveBeenCalled() as void;
     });
   });
 });

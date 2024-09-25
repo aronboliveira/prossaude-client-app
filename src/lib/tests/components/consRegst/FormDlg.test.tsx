@@ -20,7 +20,7 @@ jest.mock(
   } => ({
     addListenerAvMembers: jest.fn(),
   })
-);
+) as typeof jest;
 jest.mock(
   "../../../../lib/global/gController",
   (): {
@@ -28,7 +28,7 @@ jest.mock(
   } => ({
     addListenerExportBtn: jest.fn(),
   })
-);
+) as typeof jest;
 jest.mock(
   "../../../../lib/global/handlers/gHandlers",
   (): {
@@ -38,7 +38,7 @@ jest.mock(
     syncAriaStates: jest.fn(),
     checkRegstBtn: jest.fn().mockReturnValue(false),
   })
-);
+) as typeof jest;
 jest.mock(
   "../../../../lib/global/gStyleScript",
   (): {
@@ -46,7 +46,7 @@ jest.mock(
   } => ({
     isClickOutside: jest.fn().mockReturnValue([true]),
   })
-);
+) as typeof jest;
 jest.mock(
   "react-dom/client",
   (): {
@@ -54,7 +54,7 @@ jest.mock(
   } => ({
     createRoot: jest.fn(),
   })
-);
+) as typeof jest;
 jest.mock(
   "../../../../lib/locals/panelPage/consController",
   (): {
@@ -62,7 +62,7 @@ jest.mock(
   } => ({
     formData: {},
   })
-);
+) as typeof jest;
 jest.mock(
   "../../../../lib/locals/panelPage/declarations/interfacesCons",
   (): {
@@ -72,7 +72,7 @@ jest.mock(
     toggleACCons: jest.fn(),
     toggleAFCons: jest.fn(),
   })
-);
+) as typeof jest;
 jest.mock(
   "../../../../lib/global/gModel",
   (): {
@@ -84,7 +84,7 @@ jest.mock(
     formatTel: jest.fn(),
     addEmailExtension: jest.fn(),
   })
-);
+) as typeof jest;
 jest.mock(
   "../../../../lib/global/handlers/gHandlers",
   (): {
@@ -94,7 +94,7 @@ jest.mock(
     handleCondtReq: jest.fn(),
     enableCPFBtn: jest.fn(),
   })
-);
+) as typeof jest;
 jest.mock(
   "../../../../lib/global/handlers/gHandlers",
   (): {
@@ -106,7 +106,7 @@ jest.mock(
     generateSchedPacData: jest.fn(),
     generateSchedBtn: jest.fn(),
   })
-);
+) as typeof jest;
 jest.mock(
   "../../../../pages/api/ts/handlers",
   (): {
@@ -114,8 +114,8 @@ jest.mock(
   } => ({
     handleSubmit: jest.fn(),
   })
-);
-jest.mock("../../../../../components/alerts/FailRegsAlert", (): jest.Mock<any, any, any> => jest.fn());
+) as typeof jest;
+jest.mock("../../../../../components/alerts/FailRegsAlert", (): jest.Mock<any, any, any> => jest.fn()) as typeof jest;
 describe("FormDlg Component", (): void => {
   const defaultProps: ConsDlgProps = {
     onClose: jest.fn(),
@@ -126,29 +126,29 @@ describe("FormDlg Component", (): void => {
   ): RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement> =>
     render(<FormDlg {...defaultProps} {...props} />);
   test("calls addListenerAvMembers on mount", (): void => {
-    renderComponent();
-    expect(addListenerAvMembers).toHaveBeenCalled();
+    renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
+    expect(addListenerAvMembers).toHaveBeenCalled() as void;
   });
   test("calls addListenerExportBtn when exportRef and dlgRef are valid", (): void => {
-    renderComponent();
+    renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
     expect(addListenerExportBtn).toHaveBeenCalledWith<Parameters<typeof addListenerExportBtn>>(
       "Paciente",
-      expect.anything(),
+      expect.anything() as any,
       "#firstNamePac"
     );
   });
   test("calls isClickOutside and onClose when clicking outside dialog", (): void => {
-    renderComponent();
+    renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
     fireEvent.click(document);
-    expect(isClickOutside).toHaveBeenCalled();
-    expect(defaultProps.onClose).toHaveBeenCalled();
+    expect(isClickOutside).toHaveBeenCalled() as void;
+    expect(defaultProps.onClose).toHaveBeenCalled() as void;
   });
   test("syncs aria states on dialog initialization", (): void => {
-    renderComponent();
-    expect(syncAriaStates).toHaveBeenCalled();
+    renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
+    expect(syncAriaStates).toHaveBeenCalled() as void;
   });
   test("pushes correct state to history on mount and unmount", (): void => {
-    renderComponent();
+    renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
     expect(jest.spyOn<History, "pushState">(window.history, "pushState")).toHaveBeenCalledWith<[{}, string, any]>(
       {},
       "",
@@ -156,180 +156,218 @@ describe("FormDlg Component", (): void => {
     );
   });
   test("handles CPF button click and populates form", (): void => {
-    const { container }: { container: HTMLElement } = renderComponent();
+    const { container }: { container: HTMLElement } = renderComponent() as RenderResult<
+      typeof import("@testing-library/dom/types/queries"),
+      HTMLElement,
+      HTMLElement
+    >;
     fireEvent.click(container.querySelector("button[id*='cpf']")!);
-    expect(jest.fn()).toHaveBeenCalled();
+    expect(jest.fn()).toHaveBeenCalled() as void;
   });
   test("activates and toggles CPFFiller", (): void => {
-    const { container }: { container: HTMLElement } = renderComponent();
+    const { container }: { container: HTMLElement } = renderComponent() as RenderResult<
+      typeof import("@testing-library/dom/types/queries"),
+      HTMLElement,
+      HTMLElement
+    >;
     fireEvent.click(container.querySelector("button[id*='CPFProf']")!);
     expect(container).toHaveClass("active");
   });
   test("handles registration button click and validation", (): void => {
-    renderComponent();
+    renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
     fireEvent.click(screen.getByText<HTMLButtonElement>("Submit"));
-    expect(checkRegstBtn).toHaveBeenCalled();
+    expect(checkRegstBtn).toHaveBeenCalled() as void;
   });
   test("calls syncAriaStates on dialog initialization", (): void => {
-    renderComponent();
-    expect(syncAriaStates).toHaveBeenCalled();
+    renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
+    expect(syncAriaStates).toHaveBeenCalled() as void;
   });
   test("pushes history correctly on mount/unmount", (): void => {
-    renderComponent();
-    expect(jest.spyOn<History, "pushState">(window.history, "pushState")).toHaveBeenCalled();
+    renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
+    expect(jest.spyOn<History, "pushState">(window.history, "pushState")).toHaveBeenCalled() as void;
   });
   test("scrolls dialog into view", (): void => {
-    const { container }: { container: HTMLElement } = renderComponent();
+    const { container }: { container: HTMLElement } = renderComponent() as RenderResult<
+      typeof import("@testing-library/dom/types/queries"),
+      HTMLElement,
+      HTMLElement
+    >;
     container.querySelector("dialog")?.scrollIntoView({ behavior: "smooth", block: "center" });
-    expect(jest.fn()).toHaveBeenCalled();
+    expect(jest.fn()).toHaveBeenCalled() as void;
   });
   test("renders the dialog modal correctly", (): void =>
-    renderComponent() && expect(screen.getByRole<HTMLDialogElement>("dialog")).toBeInTheDocument());
+    (renderComponent() as RenderResult<
+      typeof import("@testing-library/dom/types/queries"),
+      HTMLElement,
+      HTMLElement
+    >) && (expect(screen.getByRole<HTMLDialogElement>("dialog")).toBeInTheDocument() as void));
   test("renders 'Registro de Consulta' title", (): void =>
-    renderComponent() && expect(screen.getByText<HTMLElement>("Registro de Consulta")).toBeInTheDocument());
+    (renderComponent() as RenderResult<
+      typeof import("@testing-library/dom/types/queries"),
+      HTMLElement,
+      HTMLElement
+    >) && (expect(screen.getByText<HTMLElement>("Registro de Consulta")).toBeInTheDocument() as void));
   test("renders ErrorBoundary with fallback component", (): void => {
-    renderComponent();
-    expect(screen.getByText<HTMLDialogElement>("Erro carregando a janela modal!")).toBeInTheDocument();
+    renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
+    expect(screen.getByText<HTMLDialogElement>("Erro carregando a janela modal!")).toBeInTheDocument() as void;
   });
   test("renders 'Autocorreção' checkbox", (): void =>
-    renderComponent() && expect(screen.getByTitle<HTMLElement>("Correção automática de Nomes")).toBeInTheDocument());
+    (renderComponent() as RenderResult<
+      typeof import("@testing-library/dom/types/queries"),
+      HTMLElement,
+      HTMLElement
+    >) && (expect(screen.getByTitle<HTMLElement>("Correção automática de Nomes")).toBeInTheDocument() as void));
   test("renders 'Autopreenchimento' checkbox", (): void =>
-    renderComponent() &&
-    expect(screen.getByTitle<HTMLElement>("Correção automática de CPF, Telefone e E-mail")).toBeInTheDocument());
+    (renderComponent() as RenderResult<
+      typeof import("@testing-library/dom/types/queries"),
+      HTMLElement,
+      HTMLElement
+    >) &&
+    (expect(
+      screen.getByTitle<HTMLElement>("Correção automática de CPF, Telefone e E-mail")
+    ).toBeInTheDocument() as void));
   test("clicking the 'Autocorreção' checkbox triggers toggleACCons", (): void => {
-    renderComponent();
+    renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
     fireEvent.click(screen.getByTitle("Correção automática de Nomes"));
-    expect(jest.fn()).toHaveBeenCalled();
+    expect(jest.fn()).toHaveBeenCalled() as void;
   });
   test("clicking the 'Autopreenchimento' checkbox triggers toggleAFCons", (): void => {
-    renderComponent();
+    renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
     fireEvent.click(screen.getByTitle("Correção automática de CPF, Telefone e E-mail"));
-    expect(jest.fn()).toHaveBeenCalled();
+    expect(jest.fn()).toHaveBeenCalled() as void;
   });
   test("calls onClose when close button is clicked", (): void => {
-    renderComponent();
+    renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
     fireEvent.click(screen.getByRole<HTMLButtonElement>("button", { name: /close/i }));
-    expect(defaultProps.onClose).toHaveBeenCalled();
+    expect(defaultProps.onClose).toHaveBeenCalled() as void;
   });
   test("renders CPF input and triggers appropriate handlers", (): void => {
-    renderComponent();
+    renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
     fireEvent.input(screen.getByPlaceholderText<HTMLInputElement>("Preencha com o CPF"), {
       target: { value: "123.456.789-12" },
     });
-    expect(formatCPF).toHaveBeenCalled();
-    expect(handleCondtReq).toHaveBeenCalled();
-    expect(enableCPFBtn).toHaveBeenCalled();
+    expect(formatCPF).toHaveBeenCalled() as void;
+    expect(handleCondtReq).toHaveBeenCalled() as void;
+    expect(enableCPFBtn).toHaveBeenCalled() as void;
   });
   test("renders 'Preencher Dados com CPF' button and calls handleCPFBtnClick", (): void => {
-    renderComponent();
+    renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
     fireEvent.click(screen.getByText<HTMLInputElement>("Preencher Dados com CPF"));
-    expect(jest.fn()).toHaveBeenCalled();
+    expect(jest.fn()).toHaveBeenCalled() as void;
   });
   test("renders first name input and handles input with auto-capitalization", (): void => {
-    renderComponent();
+    renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
     fireEvent.input(screen.getByPlaceholderText<HTMLInputElement>("Preencha com o Primeiro Nome do Paciente"), {
       target: { value: "jose" },
     });
-    expect(handleCondtReq).toHaveBeenCalled();
+    expect(handleCondtReq).toHaveBeenCalled() as void;
   });
   test("renders family name input and applies autocorrect", (): void => {
-    renderComponent();
+    renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
     fireEvent.input(screen.getByPlaceholderText<HTMLInputElement>("Preencha com Sobrenome(s) do Paciente"), {
       target: { value: "silva" },
     });
-    expect(handleCondtReq).toHaveBeenCalled();
+    expect(handleCondtReq).toHaveBeenCalled() as void;
   });
   test("renders telephone input and triggers appropriate handlers", (): void => {
-    renderComponent();
+    renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
     fireEvent.input(
       screen.getByPlaceholderText<HTMLInputElement>("Preencha com o Telefone (sem código nacional e DDD) de Contato"),
       {
         target: { value: "98765-4321" },
       }
     );
-    expect(formatTel).toHaveBeenCalled();
-    expect(handleCondtReq).toHaveBeenCalled();
+    expect(formatTel).toHaveBeenCalled() as void;
+    expect(handleCondtReq).toHaveBeenCalled() as void;
   });
   test("renders email input and triggers email extension handler", (): void => {
-    renderComponent();
+    renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
     fireEvent.input(screen.getByPlaceholderText<HTMLInputElement>("Preencha com o E-mail do Paciente"), {
       target: { value: "email@example.com" },
     });
-    expect(addEmailExtension).toHaveBeenCalled();
-    expect(handleCondtReq).toHaveBeenCalled();
+    expect(addEmailExtension).toHaveBeenCalled() as void;
+    expect(handleCondtReq).toHaveBeenCalled() as void;
   });
   test("renders 'Paciente Confirmado' checkbox", (): void => {
-    renderComponent();
+    renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
     const confirmCheckbox: HTMLElement = screen.getByLabelText<HTMLInputElement>("Paciente Confirmado:");
-    expect(confirmCheckbox).toBeInTheDocument();
+    expect(confirmCheckbox).toBeInTheDocument() as void;
     fireEvent.click(confirmCheckbox);
     expect(confirmCheckbox).toBeChecked();
   });
   test("renders 'Status do Paciente' select and its options", (): void => {
-    renderComponent();
-    expect(screen.getByLabelText<HTMLSelectElement>("Status do Paciente:")).toBeInTheDocument();
-    expect(screen.getByText<HTMLOptionElement>("Em Avaliação Inicial")).toBeInTheDocument();
-    expect(screen.getByText<HTMLOptionElement>("Em Tratamento Geral")).toBeInTheDocument();
+    renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
+    expect(screen.getByLabelText<HTMLSelectElement>("Status do Paciente:")).toBeInTheDocument() as void;
+    expect(screen.getByText<HTMLOptionElement>("Em Avaliação Inicial")).toBeInTheDocument() as void;
+    expect(screen.getByText<HTMLOptionElement>("Em Tratamento Geral")).toBeInTheDocument() as void;
   });
   test("renders 'Tipo da Consulta' select and its options", (): void => {
-    renderComponent();
-    expect(screen.getByLabelText<HTMLSelectElement>("Tipo da Consulta:")).toBeInTheDocument();
-    expect(screen.getByText<HTMLOptionElement>("Anamnese e Exame Clínico")).toBeInTheDocument();
-    expect(screen.getByText<HTMLOptionElement>("Acompanhamento Geral")).toBeInTheDocument();
+    renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
+    expect(screen.getByLabelText<HTMLSelectElement>("Tipo da Consulta:")).toBeInTheDocument() as void;
+    expect(screen.getByText<HTMLOptionElement>("Anamnese e Exame Clínico")).toBeInTheDocument() as void;
+    expect(screen.getByText<HTMLOptionElement>("Acompanhamento Geral")).toBeInTheDocument() as void;
   });
   test("renders 'Estudante alocado' input and button", (): void => {
-    renderComponent();
+    renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
     expect(
       screen.getByPlaceholderText<HTMLInputElement>("Preencha com o Nome do Estudante alocado")
-    ).toBeInTheDocument();
-    expect(screen.getByText<HTMLButtonElement>("Capturar por Identificadores")).toBeInTheDocument();
+    ).toBeInTheDocument() as void;
+    expect(screen.getByText<HTMLButtonElement>("Capturar por Identificadores")).toBeInTheDocument() as void;
   });
   test("renders 'Professor ou Profissional Responsável' input", (): void => {
-    renderComponent();
+    renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
     expect(
       screen.getByPlaceholderText<HTMLInputElement>("Preencha com o Nome do Profissional Responsável alocado")
-    ).toBeInTheDocument();
+    ).toBeInTheDocument() as void;
   });
   test("renders 'Notas' textarea", (): void => {
-    renderComponent();
+    renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
     expect(
       screen.getByPlaceholderText<HTMLInputElement>("Insira aqui observações adicionais sobre a consulta")
-    ).toBeInTheDocument();
+    ).toBeInTheDocument() as void;
   });
   test("renders time input and applies hour validation logic", (): void => {
-    renderComponent();
+    renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
     const timeInput = screen.getByTitle("Selecione aqui o horário na agenda (só funcionará para horários tabelados)");
     fireEvent.input(timeInput, { target: { value: "18:00" } });
     expect(timeInput).toHaveValue("18:00");
     expect(timeInput.style.color).toBe<CSSColor>("rgb(33, 37, 41)");
   });
   test("renders 'Finalizar' button", (): void =>
-    renderComponent() && expect(screen.getByText<HTMLButtonElement>("Finalizar")).toBeInTheDocument());
+    (renderComponent() as RenderResult<
+      typeof import("@testing-library/dom/types/queries"),
+      HTMLElement,
+      HTMLElement
+    >) && (expect(screen.getByText<HTMLButtonElement>("Finalizar")).toBeInTheDocument() as void));
   test("calls validateForm and handleSubmit on 'Finalizar' button click", async (): Promise<void> => {
-    renderComponent();
+    renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
     const submitBtn: HTMLButtonElement = screen.getByText<HTMLButtonElement>("Finalizar");
     const fakeEvent: MouseEvent = new MouseEvent("click");
     fireEvent.click(submitBtn, fakeEvent);
-    expect(validateForm).toHaveBeenCalledWith<Parameters<typeof validateForm>>(fakeEvent, submitBtn, false);
+    expect(validateForm).toHaveBeenCalledWith<Parameters<typeof validateForm>>(fakeEvent, submitBtn, false) as void;
     await validateForm(fakeEvent, submitBtn, false).then(validation => {
-      expect(generateSchedPacData).toHaveBeenCalled();
-      expect(handleSubmit).toHaveBeenCalledWith<Parameters<typeof handleSubmit>>("cons", validation[2], true);
-      expect(defaultProps.onClose).toHaveBeenCalled();
+      expect(generateSchedPacData).toHaveBeenCalled() as void;
+      expect(handleSubmit).toHaveBeenCalledWith<Parameters<typeof handleSubmit>>("cons", validation[2], true) as void;
+      expect(defaultProps.onClose).toHaveBeenCalled() as void;
     });
   });
   test("prevents form submission when validation fails", async (): Promise<void> => {
     (validateForm as jest.Mock).mockResolvedValueOnce([false, null, {}]);
-    renderComponent();
+    renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
     const submitBtn: HTMLButtonElement = screen.getByText<HTMLButtonElement>("Finalizar");
     const fakeEvent: MouseEvent = new MouseEvent("click");
     fireEvent.click(submitBtn, fakeEvent);
     await validateForm(fakeEvent, submitBtn, false).then((validation): void => {
       expect(validation[0]).toBe<boolean>(false);
-      expect(handleSubmit).not.toHaveBeenCalled();
+      expect(handleSubmit).not.toHaveBeenCalled() as void;
     });
   });
   test("renders 'Gerar Planilha' button", (): void =>
-    renderComponent() && expect(screen.getByText<HTMLButtonElement>("Gerar Planilha")).toBeInTheDocument());
+    (renderComponent() as RenderResult<
+      typeof import("@testing-library/dom/types/queries"),
+      HTMLElement,
+      HTMLElement
+    >) && (expect(screen.getByText<HTMLButtonElement>("Gerar Planilha")).toBeInTheDocument() as void));
   test("renders FailRegstAlert when shouldDisplayFailRegstDlg is true", (): void => {
     renderComponent({ shouldDisplayFailRegstDlg: true });
     expect(FailRegstAlert).toHaveBeenCalledWith<[any, {}]>(
@@ -341,9 +379,9 @@ describe("FormDlg Component", (): void => {
     );
   });
   test("handles export button click", (): void => {
-    renderComponent();
+    renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
     const exportBtn: HTMLButtonElement = screen.getByText<HTMLButtonElement>("Gerar Planilha");
     fireEvent.click(exportBtn);
-    expect(exportBtn).toBeInTheDocument();
+    expect(exportBtn).toBeInTheDocument() as void;
   });
 });

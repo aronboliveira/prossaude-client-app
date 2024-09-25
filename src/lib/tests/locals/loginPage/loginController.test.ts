@@ -22,7 +22,7 @@ describe("addListenerShowPw", (): void => {
       addListenerShowPw();
       expect(jest.spyOn<HTMLElement, EventTargetMethod>(span, "addEventListener")).toHaveBeenCalledWith<
         [DOMEvent, any]
-      >("click", expect.any(Function));
+      >("click", expect.any(Function) as any);
     } else throw new Error("spanShowPw element not found");
   });
   it("should throw an error if the span element is not found", (): void => {

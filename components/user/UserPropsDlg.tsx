@@ -23,7 +23,7 @@ export default function UserPropsDlg({ setPropDlg, shouldDisplayPropDlg = true }
       setPropValue(value);
       newUserValueRef.current.value = "";
       const replaceInp = (type: string = "text", placeholder: boolean = true, minText: boolean = true) => {
-        const newInp = document.createElement("input");
+        const newInp = document.createElement("input") as HTMLInputElement;
         newInp.classList.add(...["form-control"]);
         Object.assign(newInp, {
           id: "userPropsNewValue",

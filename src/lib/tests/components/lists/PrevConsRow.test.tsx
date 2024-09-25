@@ -17,13 +17,13 @@ describe("PrevConsRow Component", (): void => {
       />
     );
   test("renders historic row with correct data", async (): Promise<void> => {
-    renderComponent();
-    expect(screen.getByText<HTMLTableCellElement>("John Doe")).toBeInTheDocument();
-    expect(screen.getByText<HTMLTableCellElement>("22/09/2024")).toBeInTheDocument();
-    expect(screen.getByText<HTMLTableCellElement>("Avaliação Antropométrica")).toBeInTheDocument();
-    expect(screen.getByText<HTMLTableCellElement>("Prof A")).toBeInTheDocument();
-    expect(screen.getByText<HTMLTableCellElement>("Stud A")).toBeInTheDocument();
-    expect(screen.getByText<HTMLTableCellElement>("Notes A")).toBeInTheDocument();
+    renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
+    expect(screen.getByText<HTMLTableCellElement>("John Doe")).toBeInTheDocument() as void;
+    expect(screen.getByText<HTMLTableCellElement>("22/09/2024")).toBeInTheDocument() as void;
+    expect(screen.getByText<HTMLTableCellElement>("Avaliação Antropométrica")).toBeInTheDocument() as void;
+    expect(screen.getByText<HTMLTableCellElement>("Prof A")).toBeInTheDocument() as void;
+    expect(screen.getByText<HTMLTableCellElement>("Stud A")).toBeInTheDocument() as void;
+    expect(screen.getByText<HTMLTableCellElement>("Notes A")).toBeInTheDocument() as void;
   });
   test("renders fallback for missing values", async (): Promise<void> => {
     render(
@@ -35,7 +35,7 @@ describe("PrevConsRow Component", (): void => {
         }}
       />
     );
-    expect(screen.getByText<HTMLTableCellElement>("Sem observações")).toBeInTheDocument();
-    expect(screen.getByText<HTMLTableCellElement>("Anônimo")).toBeInTheDocument();
+    expect(screen.getByText<HTMLTableCellElement>("Sem observações")).toBeInTheDocument() as void;
+    expect(screen.getByText<HTMLTableCellElement>("Anônimo")).toBeInTheDocument() as void;
   });
 });

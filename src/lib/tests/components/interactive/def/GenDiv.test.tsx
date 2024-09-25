@@ -4,7 +4,7 @@ describe("GenDiv Component", (): void => {
   it("renders the gender select dropdown with options", (): void => {
     render(<GenDiv flux={false} />);
     const select = screen.getByRole<HTMLSelectElement>("combobox", { name: /gênero/i });
-    expect(select).toBeInTheDocument();
+    expect(select).toBeInTheDocument() as void;
     expect(select).toHaveValue("masculino");
   });
   it("updates the selected option and triggers fluxGen when flux is true", (): void => {
@@ -14,6 +14,6 @@ describe("GenDiv Component", (): void => {
     expect(select).toHaveValue("feminino");
     expect(
       screen.getByRole<HTMLSelectElement>("combobox", { name: /estágio da transição hormonal/i })
-    ).toBeInTheDocument();
+    ).toBeInTheDocument() as void;
   });
 });

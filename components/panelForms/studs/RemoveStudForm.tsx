@@ -12,21 +12,11 @@ import { useEffect, useRef, useCallback } from "react";
 import GenericErrorComponent from "../../error/GenericErrorComponent";
 import Spinner from "../../icons/Spinner";
 import StudRow from "./StudRow";
-import {
-  nullishBtn,
-  nullishForm,
-  nullishTab,
-  nullishTabSect,
-} from "@/lib/global/declarations/types";
-import {
-  GlobalFormProps,
-  StudInfo,
-} from "@/lib/locals/panelPage/declarations/interfacesCons";
+import { nullishBtn, nullishForm, nullishTab, nullishTabSect } from "@/lib/global/declarations/types";
+import { GlobalFormProps, StudInfo } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import { strikeEntries } from "@/lib/locals/panelPage/consStyleScript";
 
-export default function RemoveStudForm({
-  userClass = "estudante",
-}: GlobalFormProps): JSX.Element {
+export default function RemoveStudForm({ userClass = "estudante" }: GlobalFormProps): JSX.Element {
   const studs: StudInfo[] = [];
   const formRef = useRef<nullishForm>(null);
   const tabRef = useRef<nullishTab>(null);
@@ -48,11 +38,7 @@ export default function RemoveStudForm({
   useEffect(() => {
     try {
       if (!(tbodyRef.current instanceof HTMLTableSectionElement))
-        throw elementNotFound(
-          tbodyRef.current,
-          `Validation of Table Body instance`,
-          extLine(new Error())
-        );
+        throw elementNotFound(tbodyRef.current, `Validation of Table Body instance`, extLine(new Error()));
       if (studs.length > 0 && tbodyRef.current.querySelector("tr")) return;
       setTimeout(() => {
         if (studs.length > 0) return;
@@ -74,17 +60,9 @@ export default function RemoveStudForm({
             });
             try {
               if (!(tabRef.current instanceof HTMLElement))
-                throw elementNotFound(
-                  tabRef.current,
-                  `Validation of Table reference`,
-                  extLine(new Error())
-                );
+                throw elementNotFound(tabRef.current, `Validation of Table reference`, extLine(new Error()));
               if (!(tbodyRef.current instanceof HTMLElement))
-                throw elementNotFound(
-                  tbodyRef.current,
-                  `Validation of Table Body Reference`,
-                  extLine(new Error())
-                );
+                throw elementNotFound(tbodyRef.current, `Validation of Table Body Reference`, extLine(new Error()));
               if (
                 panelRoots[`${tbodyRef.current.id}`] &&
                 !(panelRoots[`${tbodyRef.current.id}`] as any)["_internalRoot"]
@@ -92,11 +70,7 @@ export default function RemoveStudForm({
                 setTimeout(() => {
                   try {
                     if (!(tabRef.current instanceof HTMLElement))
-                      throw elementNotFound(
-                        tabRef.current,
-                        `Validation of Table reference`,
-                        extLine(new Error())
-                      );
+                      throw elementNotFound(tabRef.current, `Validation of Table reference`, extLine(new Error()));
                     if (!(tbodyRef.current instanceof HTMLElement))
                       throw elementNotFound(
                         tbodyRef.current,
@@ -106,23 +80,20 @@ export default function RemoveStudForm({
                     if (tbodyRef.current.querySelector("tr")) return;
                     panelRoots[`${tbodyRef.current.id}`]?.unmount();
                     delete panelRoots[`${tbodyRef.current.id}`];
-                    tbodyRef.current.remove();
+                    tbodyRef.current.remove() as void;
                     if (!panelRoots[`${tabRef.current.id}`])
-                      panelRoots[`${tabRef.current.id}`] = createRoot(
-                        tabRef.current
-                      );
+                      panelRoots[`${tabRef.current.id}`] = createRoot(tabRef.current);
                     panelRoots[`${tabRef.current.id}`]?.render(
                       <ErrorBoundary
                         FallbackComponent={() => (
-                          <GenericErrorComponent message="Error reloading replacement for table body" />
+                          <GenericErrorComponent message='Error reloading replacement for table body' />
                         )}
                       >
-                        <caption className="caption-t">
+                        <caption className='caption-t'>
                           <strong>
-                            <small role="textbox">
+                            <small role='textbox'>
                               <em>
-                                Lista Recuperada da Ficha de Estudantes
-                                registrados. Acesse
+                                Lista Recuperada da Ficha de Estudantes registrados. Acesse
                                 <samp>
                                   <a> ROTA_PLACEHOLDER </a>
                                 </samp>
@@ -142,54 +113,36 @@ export default function RemoveStudForm({
                           {userClass === "coordenador" && <col></col>}
                           {userClass === "coordenador" && <col></col>}
                         </colgroup>
-                        <thead className="thead-dark">
-                          <tr id="avPacs-row1">
-                            {userClass === "coordenador" && (
-                              <th scope="col">CPF</th>
-                            )}
-                            {userClass === "coordenador" && (
-                              <th scope="col">DRE</th>
-                            )}
-                            <th scope="col">Nome</th>
-                            <th scope="col">E-mail</th>
-                            <th scope="col">Telefone</th>
-                            <th scope="col">Área de Atividade</th>
-                            <th scope="col">Dia de Atividade</th>
-                            <th scope="col">Período de Atividade</th>
-                            {userClass === "coordenador" && (
-                              <th scope="col">Alteração</th>
-                            )}
-                            {userClass === "coordenador" && (
-                              <th scope="col">Exclusão</th>
-                            )}
+                        <thead className='thead-dark'>
+                          <tr id='avPacs-row1'>
+                            {userClass === "coordenador" && <th scope='col'>CPF</th>}
+                            {userClass === "coordenador" && <th scope='col'>DRE</th>}
+                            <th scope='col'>Nome</th>
+                            <th scope='col'>E-mail</th>
+                            <th scope='col'>Telefone</th>
+                            <th scope='col'>Área de Atividade</th>
+                            <th scope='col'>Dia de Atividade</th>
+                            <th scope='col'>Período de Atividade</th>
+                            {userClass === "coordenador" && <th scope='col'>Alteração</th>}
+                            {userClass === "coordenador" && <th scope='col'>Exclusão</th>}
                           </tr>
                         </thead>
                         <tbody ref={tbodyRef}>
-                          <span
-                            style={{ margin: "2rem", position: "absolute" }}
-                          >
+                          <span style={{ margin: "2rem", position: "absolute" }}>
                             <Spinner
-                              spinnerClass="spinner-border"
-                              spinnerColor="text-info"
-                              message="Loading Students Table..."
+                              spinnerClass='spinner-border'
+                              spinnerColor='text-info'
+                              message='Loading Students Table...'
                             />
                           </span>
                         </tbody>
                       </ErrorBoundary>
                     );
-                    tbodyRef.current = document.getElementById(
-                      "studsTbody"
-                    ) as nullishTabSect;
+                    tbodyRef.current = document.getElementById("studsTbody") as nullishTabSect;
                     if (!(tbodyRef.current instanceof HTMLElement))
-                      throw elementNotFound(
-                        tbodyRef.current,
-                        `Validation of replaced tbody`,
-                        extLine(new Error())
-                      );
+                      throw elementNotFound(tbodyRef.current, `Validation of replaced tbody`, extLine(new Error()));
                     if (!panelRoots[`${tbodyRef.current.id}`])
-                      panelRoots[`${tbodyRef.current.id}`] = createRoot(
-                        tbodyRef.current
-                      );
+                      panelRoots[`${tbodyRef.current.id}`] = createRoot(tbodyRef.current);
                     if (!tbodyRef.current.querySelector("tr"))
                       panelRoots[`${tbodyRef.current.id}`]?.render(
                         studs.map((stud, i) => (
@@ -209,42 +162,27 @@ export default function RemoveStudForm({
                       } else
                         elementNotFound(
                           tabRef.current,
-                          `tabRef id ${
-                            (tabRef?.current as any)?.id || "UNIDENTIFIED"
-                          } in useEffect() for tableRef`,
+                          `tabRef id ${(tabRef?.current as any)?.id || "UNIDENTIFIED"} in useEffect() for tableRef`,
                           extLine(new Error())
                         );
                     }, 300);
                   } catch (e) {
                     console.error(
-                      `Error executing scheduled rendering of Table Body Content Replacement:\n${
-                        (e as Error).message
-                      }`
+                      `Error executing scheduled rendering of Table Body Content Replacement:\n${(e as Error).message}`
                     );
                   }
                   if (document) {
                   }
                 }, 1000);
-              } else
-                panelRoots[`${tbodyRef.current.id}`] = createRoot(
-                  tbodyRef.current
-                );
+              } else panelRoots[`${tbodyRef.current.id}`] = createRoot(tbodyRef.current);
               if (!tbodyRef.current.querySelector("tr"))
                 panelRoots[`${tbodyRef.current.id}`]?.render(
                   studs.map((stud, i) => {
-                    return Array.from(
-                      tbodyRef.current?.querySelectorAll("output") ?? []
-                    ).some(
+                    return Array.from(tbodyRef.current?.querySelectorAll("output") ?? []).some(
                       outp => outp.innerText === (stud as StudInfo)["cpf"]
                     ) ||
-                      Array.from(
-                        tbodyRef.current?.querySelectorAll("tr") ?? []
-                      ).some(
-                        tr =>
-                          tr.dataset.key &&
-                          tbodyRef.current?.querySelector(
-                            `tr[data-key=${tr.dataset.key}`
-                          )
+                      Array.from(tbodyRef.current?.querySelectorAll("tr") ?? []).some(
+                        tr => tr.dataset.key && tbodyRef.current?.querySelector(`tr[data-key=${tr.dataset.key}`)
                       ) ? (
                       <></>
                     ) : (
@@ -265,40 +203,26 @@ export default function RemoveStudForm({
                 } else
                   elementNotFound(
                     tabRef.current,
-                    `tabRef id ${
-                      (tabRef?.current as any)?.id || "UNIDENTIFIED"
-                    } in useEffect() for tableRef`,
+                    `tabRef id ${(tabRef?.current as any)?.id || "UNIDENTIFIED"} in useEffect() for tableRef`,
                     extLine(new Error())
                   );
               }, 300);
               setTimeout(() => {
-                if (
-                  !document.querySelector("tr") &&
-                  document.querySelector("table")
-                ) {
+                if (!document.querySelector("tr") && document.querySelector("table")) {
                   if (!panelRoots[`${document.querySelector("table")!.id}`])
-                    panelRoots[`${document.querySelector("table")!.id}`] =
-                      createRoot(document.querySelector("table")!);
+                    panelRoots[`${document.querySelector("table")!.id}`] = createRoot(document.querySelector("table")!);
                   panelRoots[`${document.querySelector("table")!.id}`]?.render(
-                    <GenericErrorComponent message="Failed to render table" />
+                    <GenericErrorComponent message='Failed to render table' />
                   );
                 }
               }, 5000);
             } catch (e) {
-              console.error(
-                `Error executing rendering of Table Body Content:\n${
-                  (e as Error).message
-                }`
-              );
+              console.error(`Error executing rendering of Table Body Content:\n${(e as Error).message}`);
             }
             const handleAttempt = () => {
               try {
                 if (!(tabRef.current instanceof HTMLElement))
-                  throw elementNotFound(
-                    tabRef.current,
-                    `Validation of Table instance`,
-                    extLine(new Error())
-                  );
+                  throw elementNotFound(tabRef.current, `Validation of Table instance`, extLine(new Error()));
                 equalizeTabCells(tabRef.current);
                 strikeEntries(tabRef.current);
                 document.getElementById("btnExport") &&
@@ -309,54 +233,26 @@ export default function RemoveStudForm({
                     document.getElementById("btnExport")
                   );
               } catch (e) {
-                console.error(
-                  `Error executing handleAttempt for Professionals table:\n${
-                    (e as Error).message
-                  }`
-                );
+                console.error(`Error executing handleAttempt for Professionals table:\n${(e as Error).message}`);
               }
             };
             setTimeout(() => {
-              !tbodyRef.current?.querySelector("tr")
-                ? setTimeout(() => handleAttempt(), 1800)
-                : handleAttempt();
+              !tbodyRef.current?.querySelector("tr") ? setTimeout(() => handleAttempt(), 1800) : handleAttempt();
             }, 1200);
           })
-          .catch(e =>
-            console.error(`Failed to fetch from Students Table: ${e.message}`)
-          )
+          .catch(e => console.error(`Failed to fetch from Students Table: ${e.message}`))
           .finally(() => {
-            setTimeout(
-              () =>
-                syncAriaStates([
-                  ...(tabRef.current?.querySelectorAll("*") ?? []),
-                  tabRef.current!,
-                ]),
-              1200
-            );
-            setTimeout(
-              () =>
-                syncAriaStates([
-                  ...(tabRef.current?.querySelectorAll("*") ?? []),
-                  tabRef.current!,
-                ]),
-              3000
-            );
+            setTimeout(() => syncAriaStates([...(tabRef.current?.querySelectorAll("*") ?? []), tabRef.current!]), 1200);
+            setTimeout(() => syncAriaStates([...(tabRef.current?.querySelectorAll("*") ?? []), tabRef.current!]), 3000);
           });
       }, 300);
     } catch (e) {
-      console.error(
-        `Error executing useEffect for Table Body Reference:\n${
-          (e as Error).message
-        }`
-      );
+      console.error(`Error executing useEffect for Table Body Reference:\n${(e as Error).message}`);
     }
   }, []);
   useEffect(() => {
     if (formRef?.current instanceof HTMLFormElement) {
-      const btnExportTabStuds =
-        btnExportTabStudsRef.current ||
-        formRef.current!.querySelector("#btnExport");
+      const btnExportTabStuds = btnExportTabStudsRef.current || formRef.current!.querySelector("#btnExport");
       btnExportTabStuds instanceof HTMLButtonElement
         ? addListenerExportBtn(
             "tab_Estudantes",
@@ -369,16 +265,8 @@ export default function RemoveStudForm({
             extLine(new Error())
           );
       callbackNormalizeSizeSb();
-      syncAriaStates([
-        ...formRef.current!.querySelectorAll("*"),
-        formRef.current,
-      ]);
-    } else
-      elementNotFound(
-        formRef?.current,
-        "formRef.current in useEffect() for RemoveStudForm",
-        extLine(new Error())
-      );
+      syncAriaStates([...formRef.current!.querySelectorAll("*"), formRef.current]);
+    } else elementNotFound(formRef?.current, "formRef.current in useEffect() for RemoveStudForm", extLine(new Error()));
   }, [formRef]);
   useEffect(() => {
     if (tabRef.current instanceof HTMLElement) {
@@ -392,36 +280,29 @@ export default function RemoveStudForm({
   }, [tabRef]);
   return (
     <form
-      id="formRemoveStud"
-      name="form_studs_table"
-      action="studs_table"
-      encType="multipart/form-data"
-      method="get"
-      target="_top"
+      id='formRemoveStud'
+      name='form_studs_table'
+      action='studs_table'
+      encType='multipart/form-data'
+      method='get'
+      target='_top'
       ref={formRef}
-      className="form-padded-nosb wid101"
+      className='form-padded-nosb wid101'
     >
-      <div role="group" className="wsBs flexNoWC cGap1v">
-        <h1 className="mg-3b bolded">
-          <strong id="titleTabStuds">Tabela de Estudantes Registrados</strong>
+      <div role='group' className='wsBs flexNoWC cGap1v'>
+        <h1 className='mg-3b bolded'>
+          <strong id='titleTabStuds'>Tabela de Estudantes Registrados</strong>
         </h1>
         <em>
-          <small role="textbox">
-            Verifique aqui as informações para leitura, alteração e remoção de
-            estudantes
-          </small>
+          <small role='textbox'>Verifique aqui as informações para leitura, alteração e remoção de estudantes</small>
         </em>
       </div>
       <hr />
-      <section className="form-padded pdL0 mg-0b" id="sectStudsTab">
-        <table
-          className="table table-striped table-responsive table-hover tabPacs"
-          id="avPacsTab"
-          ref={tabRef}
-        >
-          <caption className="caption-t">
+      <section className='form-padded pdL0 mg-0b' id='sectStudsTab'>
+        <table className='table table-striped table-responsive table-hover tabPacs' id='avPacsTab' ref={tabRef}>
+          <caption className='caption-t'>
             <strong>
-              <small role="textbox">
+              <small role='textbox'>
                 <em>
                   Lista Recuperada da Ficha de Estudantes registrados. Acesse
                   <samp>
@@ -443,38 +324,34 @@ export default function RemoveStudForm({
             {userClass === "coordenador" && <col></col>}
             {userClass === "coordenador" && <col></col>}
           </colgroup>
-          <thead className="thead-dark">
-            <tr id="avPacs-row1">
-              {userClass === "coordenador" && <th scope="col">CPF</th>}
-              {userClass === "coordenador" && <th scope="col">DRE</th>}
-              <th scope="col">Nome</th>
-              <th scope="col">E-mail</th>
-              <th scope="col">Telefone</th>
-              <th scope="col">Área de Atividade</th>
-              <th scope="col">Dia de Atividade</th>
-              <th scope="col">Período de Atividade</th>
-              {userClass === "coordenador" && <th scope="col">Alteração</th>}
-              {userClass === "coordenador" && <th scope="col">Exclusão</th>}
+          <thead className='thead-dark'>
+            <tr id='avPacs-row1'>
+              {userClass === "coordenador" && <th scope='col'>CPF</th>}
+              {userClass === "coordenador" && <th scope='col'>DRE</th>}
+              <th scope='col'>Nome</th>
+              <th scope='col'>E-mail</th>
+              <th scope='col'>Telefone</th>
+              <th scope='col'>Área de Atividade</th>
+              <th scope='col'>Dia de Atividade</th>
+              <th scope='col'>Período de Atividade</th>
+              {userClass === "coordenador" && <th scope='col'>Alteração</th>}
+              {userClass === "coordenador" && <th scope='col'>Exclusão</th>}
             </tr>
           </thead>
           <tbody ref={tbodyRef}>
             <span style={{ margin: "2rem", position: "absolute" }}>
-              <Spinner
-                spinnerClass="spinner-border"
-                spinnerColor="text-info"
-                message="Loading Students Table..."
-              />
+              <Spinner spinnerClass='spinner-border' spinnerColor='text-info' message='Loading Students Table...' />
             </span>
           </tbody>
         </table>
       </section>
       <button
-        type="button"
-        id="btnExport"
-        className="btn btn-success flexAlItCt flexJC flexBasis50 bolded widQ460FullW"
-        name="btnExportTabStuds"
+        type='button'
+        id='btnExport'
+        className='btn btn-success flexAlItCt flexJC flexBasis50 bolded widQ460FullW'
+        name='btnExportTabStuds'
         ref={btnExportTabStudsRef}
-        title="Gere um .xlsx com os dados preenchidos"
+        title='Gere um .xlsx com os dados preenchidos'
       >
         Gerar Planilha
       </button>

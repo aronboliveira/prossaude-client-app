@@ -36,7 +36,7 @@ export default function ListEmailPacCons(): JSX.Element {
                 if (dlRef.current.querySelector("option")) return;
                 panelRoots[`${dlRef.current.id}`]?.unmount();
                 delete panelRoots[`${dlRef.current.id}`];
-                dlRef.current.remove();
+                dlRef.current.remove() as void;
                 if (!panelRoots[`${dlRef.current.id}`]) panelRoots[`${dlRef.current.id}`] = createRoot(dlRef.current);
                 panelRoots[`${dlRef.current.id}`]?.render(
                   <ErrorBoundary

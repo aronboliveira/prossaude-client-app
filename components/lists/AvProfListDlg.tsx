@@ -135,7 +135,7 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                     if (tbodyIntRef.current.querySelector("tr")) return;
                     panelRoots[`${tbodyIntRef.current.id}`]?.unmount();
                     delete panelRoots[`${tbodyIntRef.current.id}`];
-                    tbodyIntRef.current.remove();
+                    tbodyIntRef.current.remove() as void;
                     if (!panelRoots[`${tabProfIntRef.current.id}`])
                       panelRoots[`${tabProfIntRef.current.id}`] = createRoot(tabProfIntRef.current);
                     panelRoots[`${tabProfIntRef.current.id}`]?.render(
@@ -324,7 +324,7 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                     if (tbodyExtRef.current.querySelector("tr")) return;
                     panelRoots[`${tbodyExtRef.current.id}`]?.unmount();
                     delete panelRoots[`${tbodyExtRef.current.id}`];
-                    tbodyExtRef.current.remove();
+                    tbodyExtRef.current.remove() as void;
                     if (!panelRoots[`${tabProfIntRef.current.id}`])
                       panelRoots[`${tabProfIntRef.current.id}`] = createRoot(tabProfIntRef.current);
                     panelRoots[`${tabProfIntRef.current.id}`]?.render(

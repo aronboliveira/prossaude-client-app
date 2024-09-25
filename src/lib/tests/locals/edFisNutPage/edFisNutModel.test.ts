@@ -12,8 +12,8 @@ import { ErrorHandler, Protocol } from "../../testVars";
 describe("checkInnerColGroups", (): void => {
   let parentEl: HTMLElement;
   beforeEach((): void => {
-    parentEl = document.createElement("div");
-    jest.clearAllMocks();
+    parentEl = document.createElement("div") as HTMLDivElement;
+    jest.clearAllMocks() as typeof jest;
   });
   it("should return the correct count and similarity flag when colgroups are valid and similar", (): void => {
     const colgroup1 = document.createElement("colgroup");
@@ -34,11 +34,11 @@ describe("checkInnerColGroups", (): void => {
       "multipleElementsNotFound"
     );
     checkInnerColGroups(parentEl);
-    expect(mockMultipleElementsNotFound).toHaveBeenCalled();
+    expect(mockMultipleElementsNotFound).toHaveBeenCalled() as void;
   });
   it("should call elementNotFound when a child is not an HTMLTableColElement", (): void => {
     const colgroup = document.createElement("colgroup");
-    const div = document.createElement("div");
+    const div = document.createElement("div") as HTMLDivElement;
     colgroup.appendChild(div);
     parentEl.appendChild(colgroup);
     const mockElementNotFound = jest.spyOn<any, ErrorHandler>(
@@ -46,7 +46,7 @@ describe("checkInnerColGroups", (): void => {
       "elementNotFound"
     );
     checkInnerColGroups(parentEl);
-    expect(mockElementNotFound).toHaveBeenCalled();
+    expect(mockElementNotFound).toHaveBeenCalled() as void;
   });
 });
 describe("checkTabRowsIds", (): void => {
@@ -54,7 +54,7 @@ describe("checkTabRowsIds", (): void => {
   beforeEach((): void => {
     tab = document.createElement("table");
     tab.id = "tabDCut";
-    jest.clearAllMocks();
+    jest.clearAllMocks() as typeof jest;
   });
   it("should return an array of ids from valid rows", (): void => {
     const row1 = document.createElement("tr");
@@ -75,13 +75,13 @@ describe("checkTabRowsIds", (): void => {
     checkTabRowsIds(tab);
     expect(
       jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "stringError")
-    ).toHaveBeenCalled();
+    ).toHaveBeenCalled() as void;
   });
   it("should call elementNotFound when the table is invalid", (): void => {
-    checkTabRowsIds(document.createElement("div") as any);
+    checkTabRowsIds(document.createElement("div") as HTMLDivElement as any);
     expect(
       jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "elementNotFound")
-    ).toHaveBeenCalled();
+    ).toHaveBeenCalled() as void;
   });
 });
 describe("changeTabDCutLayout", (): void => {
@@ -92,7 +92,7 @@ describe("changeTabDCutLayout", (): void => {
     protocolo = document.createElement("select");
     tabDC = document.createElement("table");
     bodyType = document.createElement("select");
-    jest.clearAllMocks();
+    jest.clearAllMocks() as typeof jest;
   });
   it("should return 'pollock7' when protocolo matches 'pollock7'", (): void => {
     protocolo.value = "pollock7";
@@ -106,7 +106,7 @@ describe("changeTabDCutLayout", (): void => {
     changeTabDCutLayout(null as any, null as any, null as any);
     expect(
       jest.spyOn<any, ErrorHandler>(require("../../global/handlers/errorHandler"), "elementNotFound")
-    ).toHaveBeenCalled();
+    ).toHaveBeenCalled() as void;
   });
   it("should call stringError when invalid body type is provided", (): void => {
     protocolo.value = "pollock3";
@@ -114,7 +114,7 @@ describe("changeTabDCutLayout", (): void => {
     changeTabDCutLayout(protocolo, tabDC, bodyType);
     expect(
       jest.spyOn<any, ErrorHandler>(require("../../global/handlers/errorHandler"), "stringError")
-    ).toHaveBeenCalled();
+    ).toHaveBeenCalled() as void;
   });
 });
 describe("defineHiddenRows", (): void => {
@@ -125,18 +125,18 @@ describe("defineHiddenRows", (): void => {
     tabDC = document.createElement("table");
     arrayTabIds = ["123", "456"];
     genderedIds = ["123", "456"];
-    jest.clearAllMocks();
+    jest.clearAllMocks() as typeof jest;
   });
   it("should correctly update hidden and required attributes for matched rows", (): void => {
     const row1 = document.createElement("tr");
     row1.id = "row123";
     row1.classList.add("tabRowDCutMed");
-    const input1 = document.createElement("input");
+    const input1 = document.createElement("input") as HTMLInputElement;
     row1.appendChild(input1);
     const row2 = document.createElement("tr");
     row2.id = "row456";
     row2.classList.add("tabRowDCutMed");
-    const input2 = document.createElement("input");
+    const input2 = document.createElement("input") as HTMLInputElement;
     row2.appendChild(input2);
     tabDC.appendChild(row1);
     tabDC.appendChild(row2);
@@ -150,7 +150,7 @@ describe("defineHiddenRows", (): void => {
     defineHiddenRows(null as any, [], [], "invalid");
     expect(
       jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "multipleElementsNotFound")
-    ).toHaveBeenCalled();
+    ).toHaveBeenCalled() as void;
   });
 });
 describe("evaluatePGCDecay", (): void => {
@@ -158,8 +158,8 @@ describe("evaluatePGCDecay", (): void => {
   let targInpPGC: HTMLInputElement;
   beforeEach((): void => {
     person = new Person("male", 30, 80, 180, 100, "1.2");
-    targInpPGC = document.createElement("input");
-    jest.clearAllMocks();
+    targInpPGC = document.createElement("input") as HTMLInputElement;
+    jest.clearAllMocks() as typeof jest;
   });
   it("should return true and correct PGC value when decay point is found", (): void => {
     const [foundDecayPoint, PGC] = evaluatePGCDecay(person, targInpPGC, 25);
@@ -172,15 +172,15 @@ describe("evaluatePGCDecay", (): void => {
       "multipleElementsNotFound"
     );
     evaluatePGCDecay(null as any, null as any, NaN);
-    expect(mockMultipleElementsNotFound).toHaveBeenCalled();
+    expect(mockMultipleElementsNotFound).toHaveBeenCalled() as void;
   });
 });
 describe("alertPGCRounding", (): void => {
   let targInpPGC: HTMLInputElement;
   beforeEach((): void => {
-    targInpPGC = document.createElement("input");
+    targInpPGC = document.createElement("input") as HTMLInputElement;
     targInpPGC.id = "pgcInput";
-    jest.clearAllMocks();
+    jest.clearAllMocks() as typeof jest;
   });
   it("should hide the alert icon when it is visible", (): void => {
     const spanRoundingAlertIcon = document.createElement("span");
@@ -194,12 +194,12 @@ describe("alertPGCRounding", (): void => {
     alertPGCRounding(targInpPGC);
     expect(
       jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "elementNotFound")
-    ).toHaveBeenCalled();
+    ).toHaveBeenCalled() as void;
   });
   it("should call inputNotFound when targInpPGC is not an input element", (): void => {
     alertPGCRounding(null as any);
     expect(
       jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "inputNotFound")
-    ).toHaveBeenCalled();
+    ).toHaveBeenCalled() as void;
   });
 });

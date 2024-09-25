@@ -3,8 +3,8 @@ import HeaderDate from "../../../../../../components/interactive/def/HeaderDate"
 describe("HeaderDate Component", (): void => {
   it("renders the date input and button", (): void => {
     render(<HeaderDate />);
-    expect(screen.getByRole<HTMLInputElement>("textbox", { name: /date/i })).toBeInTheDocument();
-    expect(screen.getByRole<HTMLButtonElement>("button", { name: /usar data atual/i })).toBeInTheDocument();
+    expect(screen.getByRole<HTMLInputElement>("textbox", { name: /date/i })).toBeInTheDocument() as void;
+    expect(screen.getByRole<HTMLButtonElement>("button", { name: /usar data atual/i })).toBeInTheDocument() as void;
   });
   it("equalizes button and input widths on resize", (): void => {
     render(<HeaderDate />);

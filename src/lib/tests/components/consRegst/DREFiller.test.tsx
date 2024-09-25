@@ -14,7 +14,7 @@ jest.mock(
   } => ({
     addListenerAvMembers: jest.fn(),
   })
-);
+) as typeof jest;
 jest.mock(
   "../../../../lib/global/handlers/gHandlers",
   (): {
@@ -24,7 +24,7 @@ jest.mock(
     handleCondtReq: jest.fn(),
     syncAriaStates: jest.fn(),
   })
-);
+) as typeof jest;
 jest.mock(
   "../../../../../components/panelForms/defs/client/SelectPanel",
   (): {
@@ -36,7 +36,7 @@ jest.mock(
       initPersist: jest.fn(),
     },
   })
-);
+) as typeof jest;
 describe("DREFiller Component", (): void => {
   const forwardedRef: MutableRefObject<nullishHtEl> = useRef<nullishHtEl>(null);
   const defaultProps: FillerProps = {
@@ -48,28 +48,40 @@ describe("DREFiller Component", (): void => {
   ): RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement> =>
     render(<DREFiller {...defaultProps} {...props} />);
   test("renders CPF input correctly", (): void =>
-    renderComponent() &&
-    expect(screen.getByPlaceholderText<HTMLElement>("Preencha com o CPF do Estudante Alocado")).toBeInTheDocument());
+    (renderComponent() as RenderResult<
+      typeof import("@testing-library/dom/types/queries"),
+      HTMLElement,
+      HTMLElement
+    >) &&
+    (expect(
+      screen.getByPlaceholderText<HTMLElement>("Preencha com o CPF do Estudante Alocado")
+    ).toBeInTheDocument() as void));
   test("renders DRE input correctly", (): void =>
-    renderComponent() &&
-    expect(screen.getByPlaceholderText<HTMLElement>("Preencha com o DRE do Estudante Alocado")).toBeInTheDocument());
+    (renderComponent() as RenderResult<
+      typeof import("@testing-library/dom/types/queries"),
+      HTMLElement,
+      HTMLElement
+    >) &&
+    (expect(
+      screen.getByPlaceholderText<HTMLElement>("Preencha com o DRE do Estudante Alocado")
+    ).toBeInTheDocument() as void));
 
   test("toggles student list display on button click", (): void => {
-    renderComponent();
+    renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
     const btnShowList = screen.getByText<HTMLElement>("Consultar Lista de Estudantes");
     fireEvent.click(btnShowList);
-    expect(screen.getByRole<HTMLDialogElement>("dialog")).toBeInTheDocument();
+    expect(screen.getByRole<HTMLDialogElement>("dialog")).toBeInTheDocument() as void;
     fireEvent.click(btnShowList);
-    expect(screen.queryByRole<HTMLDialogElement>("dialog")).not.toBeInTheDocument();
+    expect(screen.queryByRole<HTMLDialogElement>("dialog")).not.toBeInTheDocument() as void;
   });
   test("calls syncAriaStates and addListenerAvMembers on mount", (): void => {
-    renderComponent();
-    expect(syncAriaStates).toHaveBeenCalled();
-    expect(addListenerAvMembers).toHaveBeenCalled();
+    renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
+    expect(syncAriaStates).toHaveBeenCalled() as void;
+    expect(addListenerAvMembers).toHaveBeenCalled() as void;
   });
   test("syncs aria states on mount", (): void => {
-    renderComponent();
-    expect(syncAriaStates).toHaveBeenCalled();
+    renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
+    expect(syncAriaStates).toHaveBeenCalled() as void;
   });
   test("sets initial display state based on location.search", (): void => {
     const original: Location = window.location;
@@ -79,12 +91,12 @@ describe("DREFiller Component", (): void => {
       },
       writable: true,
     });
-    renderComponent();
-    expect(screen.queryByRole<HTMLDialogElement>("dialog")).toBeInTheDocument();
+    renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
+    expect(screen.queryByRole<HTMLDialogElement>("dialog")).toBeInTheDocument() as void;
     window.location = original;
   });
   test("calls initPersist from globalDataProvider on mount", (): void => {
-    renderComponent();
-    expect(globalDataProvider?.initPersist).toHaveBeenCalled();
+    renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
+    expect(globalDataProvider?.initPersist).toHaveBeenCalled() as void;
   });
 });

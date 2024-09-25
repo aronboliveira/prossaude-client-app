@@ -27,7 +27,7 @@ jest.mock(
     inputNotFound: jest.fn(),
     multipleElementsNotFound: jest.fn(),
   })
-);
+) as typeof jest;
 jest.mock(
   "../../../global/gStyleScript",
   (): {
@@ -37,7 +37,7 @@ jest.mock(
     strikeNulls: jest.fn(),
     highlightChange: jest.fn(),
   })
-);
+) as typeof jest;
 jest.mock(
   "./handlers/consHandlerCmn",
   (): {
@@ -49,7 +49,7 @@ jest.mock(
     correlateAptMonthDays: jest.fn(),
     correlateWorkingDays: jest.fn(),
   })
-);
+) as typeof jest;
 describe("strikeEntries", (): void => {
   beforeEach((): void => {
     document.body.innerHTML = "";
@@ -64,7 +64,7 @@ describe("strikeEntries", (): void => {
       </div>
     `;
     strikeEntries(document.getElementById("main") as HTMLElement);
-    expect(strikeNulls).toHaveBeenCalledWith<Parameters<typeof strikeNulls>>(expect.any(Array));
+    expect(strikeNulls).toHaveBeenCalledWith<Parameters<typeof strikeNulls>>(expect.any(Array) as any) as void;
   });
   test("should call elementNotPopulated when no elements found", (): void => {
     document.body.innerHTML = `<div id="main"></div>`;
@@ -72,7 +72,7 @@ describe("strikeEntries", (): void => {
     expect(elementNotPopulated).toHaveBeenCalledWith<Parameters<typeof elementNotPopulated>>(
       [],
       "inAndOutEls in useEffect() for sectTabRef",
-      expect.anything()
+      expect.anything() as any
     );
   });
 });
@@ -92,7 +92,7 @@ describe("setListenersForDates", (): void => {
       Array.from(document.querySelectorAll(".dateInp")) as Array<HTMLInputElement>,
       document.getElementById("monthStateSelector") as HTMLSelectElement
     );
-    expect(pattern).toEqual<any>(expect.any(RegExp));
+    expect(pattern).toEqual<any>(expect.any(RegExp) as any);
     expect(handler).toBeInstanceOf<FunctionConstructor>(Function);
   });
   test("should call inputNotFound when monthStateSelector is invalid", async (): Promise<void> => {
@@ -108,7 +108,7 @@ describe("setListenersForDates", (): void => {
     expect(elementNotFound).toHaveBeenCalledWith<Parameters<typeof elementNotFound>>(
       monthStateSelector,
       "monthStateSelector in setListenerForDates()",
-      expect.anything()
+      expect.anything() as any
     );
   });
   test("should call elementNotPopulated when dateInps is empty", async (): Promise<void> => {
@@ -116,7 +116,7 @@ describe("setListenersForDates", (): void => {
     expect(elementNotPopulated).toHaveBeenCalledWith<Parameters<typeof elementNotPopulated>>(
       [],
       "argument for setListenerForDates()",
-      expect.anything()
+      expect.anything() as any
     );
   });
 });
@@ -183,7 +183,7 @@ describe("correlateDayOpts", (): void => {
     expect(inputNotFound).toHaveBeenCalledWith<Parameters<typeof inputNotFound>>(
       dateInps[0],
       "dateInp id UNIDENTIFIED",
-      expect.anything()
+      expect.anything() as any
     );
   });
   test("should call multipleElementsNotFound if dateInps or dateSel are invalid", (): void => {
@@ -192,10 +192,10 @@ describe("correlateDayOpts", (): void => {
     `;
     correlateDayOpts([], document.getElementById("dateSel") as HTMLSelectElement);
     expect(multipleElementsNotFound).toHaveBeenCalledWith<Parameters<typeof multipleElementsNotFound>>(
-      expect.anything(),
+      expect.anything() as any,
       "arguments for correlateDayOpts",
-      expect.anything(),
-      expect.anything()
+      expect.anything() as any,
+      expect.anything() as any
     );
   });
 });

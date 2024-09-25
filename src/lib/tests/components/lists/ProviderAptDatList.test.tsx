@@ -10,7 +10,7 @@ jest.mock(
     __esModule: true,
     default: (): JSX.Element => <div>AptDataList</div>,
   })
-);
+) as typeof jest;
 describe("ProviderAptDatList Component", (): void => {
   const defaultProps: {
     data: {
@@ -31,11 +31,11 @@ describe("ProviderAptDatList Component", (): void => {
     HTMLElement
   > => render(<ProviderAptDatList {...defaultProps} />);
   test("renders AptDataList when shouldDisplayAptList is true", async (): Promise<void> => {
-    renderComponent();
-    expect(screen.getByText<HTMLElement>("AptDataList")).toBeInTheDocument();
+    renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
+    expect(screen.getByText<HTMLElement>("AptDataList")).toBeInTheDocument() as void;
   });
   test("does not render AptDataList when shouldDisplayAptList is false", async (): Promise<void> => {
     render(<ProviderAptDatList {...defaultProps} shouldDisplayAptList={false} />);
-    expect(screen.queryByText<HTMLElement>("AptDataList")).not.toBeInTheDocument();
+    expect(screen.queryByText<HTMLElement>("AptDataList")).not.toBeInTheDocument() as void;
   });
 });

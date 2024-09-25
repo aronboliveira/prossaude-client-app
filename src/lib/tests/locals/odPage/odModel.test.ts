@@ -14,7 +14,7 @@ jest.mock(
     elementNotFound: jest.fn(),
     elementNotPopulated: jest.fn(),
   })
-);
+) as typeof jest;
 describe("resetAvDentValue", (): void => {
   beforeEach((): void => {
     document.body.innerHTML = "";
@@ -42,9 +42,13 @@ describe("resetAvDentValue", (): void => {
     expect(input.value).toBe<string>("nonPredefinedValue");
   });
   test("should call inputNotFound if targInp is not an input, select, or textarea", (): void => {
-    const div = document.createElement("div");
+    const div = document.createElement("div") as HTMLDivElement;
     resetAvDentValue(div);
-    expect(inputNotFound).toHaveBeenCalledWith<Parameters<typeof inputNotFound>>(div, "targInp", expect.anything());
+    expect(inputNotFound).toHaveBeenCalledWith<Parameters<typeof inputNotFound>>(
+      div,
+      "targInp",
+      expect.anything() as any
+    );
   });
   test("should call inputNotFound if dlOptionsArray contains invalid elements", (): void => {
     document.body.innerHTML = `
@@ -54,9 +58,9 @@ describe("resetAvDentValue", (): void => {
     const input = document.querySelector(".inpAvDent") as HTMLInputElement;
     resetAvDentValue(input);
     expect(inputNotFound).toHaveBeenCalledWith<Parameters<typeof inputNotFound>>(
-      expect.anything(),
+      expect.anything() as any,
       "UNDEFINED ID DLOPTION",
-      expect.anything()
+      expect.anything() as any
     );
   });
 });
@@ -88,18 +92,18 @@ describe("orderLabels", (): void => {
     document.getElementById("label1")?.removeAttribute("id");
     orderLabels(document.querySelector(".subDiv") as HTMLElement);
     expect(elementNotPopulated).toHaveBeenCalledWith<Parameters<typeof elementNotPopulated>>(
-      expect.anything(),
+      expect.anything() as any,
       "labsNList in orderLabels",
-      expect.anything()
+      expect.anything() as any
     );
   });
   test("should call elementNotFound when subDiv is not an HTMLElement", (): void => {
-    const div = document.createElement("input");
+    const div = document.createElement("input") as HTMLInputElement;
     orderLabels(div);
     expect(elementNotFound).toHaveBeenCalledWith<Parameters<typeof elementNotFound>>(
       div,
       "subDiv in orderLabels",
-      expect.anything()
+      expect.anything() as any
     );
   });
 });

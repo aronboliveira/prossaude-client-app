@@ -4,7 +4,7 @@ describe("Uf", (): void => {
   it("renders the select input for UF and sets default value to RJ", (): void => {
     render(<Uf />);
     const select = screen.getByRole<HTMLSelectElement>("combobox");
-    expect(select).toBeInTheDocument();
+    expect(select).toBeInTheDocument() as void;
     expect(select).toHaveValue("RJ");
   });
   it("renders the correct number of options", (): void => {

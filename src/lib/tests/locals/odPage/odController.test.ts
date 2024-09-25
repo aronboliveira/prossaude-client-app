@@ -13,12 +13,12 @@ import {
   addListenerTratContainer,
 } from "../../../locals/odPage/odController";
 import { DOMEvent, EventTargetMethod, OdModeler } from "../../testVars";
-jest.mock("../../../locals/odPage/odHandler");
-jest.mock("../../../locals/odPage/odModel");
+jest.mock("../../../locals/odPage/odHandler") as typeof jest;
+jest.mock("../../../locals/odPage/odModel") as typeof jest;
 describe("odController", (): void => {
   beforeEach((): void => {
     document.body.innerHTML = "";
-  });
+  }) as typeof jest;
   test("addListenerInspRadios adds click listeners to radio buttons", (): void => {
     document.body.innerHTML = `
       <input type="radio" class="radYes" id="radio1">
@@ -27,7 +27,7 @@ describe("odController", (): void => {
     expect(addListenerInspRadios().length).toBe<number>(2);
     expect(
       jest.spyOn<HTMLElement, EventTargetMethod>(HTMLInputElement.prototype, "addEventListener")
-    ).toHaveBeenCalledWith<[DOMEvent, any]>("click", OdHandler.showInspSpanSub);
+    ).toHaveBeenCalledWith<[DOMEvent, any]>("click", OdHandler.showInspSpanSub) as void;
   });
   test("addListenerInspDialogBtns adds click listeners to dialog buttons", (): void => {
     document.body.innerHTML = `
@@ -39,7 +39,7 @@ describe("odController", (): void => {
     expect(isDialogCalled).toBe<boolean>(false);
     expect(
       jest.spyOn<HTMLElement, EventTargetMethod>(HTMLButtonElement.prototype, "addEventListener")
-    ).toHaveBeenCalledWith<[DOMEvent, any]>("click", expect.any(Function));
+    ).toHaveBeenCalledWith<[DOMEvent, any]>("click", expect.any(Function) as any) as void;
   });
   test("addListenerInspLIBtns adds click listeners to LI buttons", (): void => {
     document.body.innerHTML = `
@@ -49,7 +49,7 @@ describe("odController", (): void => {
     expect(addListenerInspLIBtns().length).toBe<number>(2);
     expect(
       jest.spyOn<HTMLElement, EventTargetMethod>(HTMLButtonElement.prototype, "addEventListener")
-    ).toHaveBeenCalledWith<[DOMEvent, any]>("click", OdHandler.addTextToObs);
+    ).toHaveBeenCalledWith<[DOMEvent, any]>("click", OdHandler.addTextToObs) as void;
   });
   test("addListenerQuadrsTe adds drag and touch listeners to quadrant elements", (): void => {
     document.body.innerHTML = `
@@ -58,9 +58,9 @@ describe("odController", (): void => {
     `;
     const spyAddEventListener = jest.spyOn<HTMLElement, EventTargetMethod>(HTMLElement.prototype, "addEventListener");
     expect(addListenerQuadrsTe().length).toBe<number>(2);
-    expect(spyAddEventListener).toHaveBeenCalledWith<[DOMEvent, any]>("mousemove", expect.any(Function));
-    expect(spyAddEventListener).toHaveBeenCalledWith<[DOMEvent, any]>("dragstart", expect.any(Function));
-    expect(spyAddEventListener).toHaveBeenCalledWith<[DOMEvent, any]>("dragend", expect.any(Function));
+    expect(spyAddEventListener).toHaveBeenCalledWith<[DOMEvent, any]>("mousemove", expect.any(Function) as any) as void;
+    expect(spyAddEventListener).toHaveBeenCalledWith<[DOMEvent, any]>("dragstart", expect.any(Function) as any) as void;
+    expect(spyAddEventListener).toHaveBeenCalledWith<[DOMEvent, any]>("dragend", expect.any(Function) as any) as void;
   });
   test("addListenerAvElemenDents adds click listeners to dental elements", (): void => {
     document.body.innerHTML = `
@@ -72,7 +72,7 @@ describe("odController", (): void => {
     expect(isValuePreDef).toBe<boolean>(false);
     expect(
       jest.spyOn<HTMLElement, EventTargetMethod>(HTMLInputElement.prototype, "addEventListener")
-    ).toHaveBeenCalledWith<[DOMEvent, any]>("click", expect.any(Function));
+    ).toHaveBeenCalledWith<[DOMEvent, any]>("click", expect.any(Function) as any) as void;
   });
   test("addListenerQuadrInps adds click listeners to quadrant input elements", (): void => {
     document.body.innerHTML = `
@@ -82,7 +82,7 @@ describe("odController", (): void => {
     expect(addListenerQuadrInps().length).toBe<number>(2);
     expect(
       jest.spyOn<HTMLElement, EventTargetMethod>(HTMLInputElement.prototype, "addEventListener")
-    ).toHaveBeenCalledWith<[DOMEvent, any]>("click", expect.any(Function));
+    ).toHaveBeenCalledWith<[DOMEvent, any]>("click", expect.any(Function) as any) as void;
   });
   test("addListenerResetDivsQuadrs adds click listeners to reset buttons", (): void => {
     document.body.innerHTML = `
@@ -92,7 +92,7 @@ describe("odController", (): void => {
     expect(addListenerResetDivsQuadrs().length).toBe<number>(2);
     expect(
       jest.spyOn<HTMLElement, EventTargetMethod>(HTMLButtonElement.prototype, "addEventListener")
-    ).toHaveBeenCalledWith<[DOMEvent, any]>("click", expect.any(Function));
+    ).toHaveBeenCalledWith<[DOMEvent, any]>("click", expect.any(Function) as any) as void;
   });
   test("addListenersSubDivsQuadrs calls orderLabels on sub divs when DOM is ready", (): void => {
     document.body.innerHTML = `
@@ -101,7 +101,7 @@ describe("odController", (): void => {
     `;
     document.dispatchEvent(new Event("DOMContentLoaded"));
     expect(addListenersSubDivsQuadrs().length).toBe<number>(2);
-    expect(jest.spyOn<any, OdModeler>(OdModel, "orderLabels")).toHaveBeenCalledTimes(2);
+    expect(jest.spyOn<any, OdModeler>(OdModel, "orderLabels")).toHaveBeenCalledTimes(2) as void;
   });
   test("addListenerTratContainer adds click listeners to treatment buttons", (): void => {
     document.body.innerHTML = `
@@ -113,6 +113,6 @@ describe("odController", (): void => {
     expect(blockCount).toBe<number>(1);
     expect(
       jest.spyOn<HTMLElement, EventTargetMethod>(HTMLButtonElement.prototype, "addEventListener")
-    ).toHaveBeenCalledWith<[DOMEvent, any]>("click", expect.any(Function));
+    ).toHaveBeenCalledWith<[DOMEvent, any]>("click", expect.any(Function) as any) as void;
   });
 });

@@ -6,13 +6,13 @@ describe("BtnConform Component", (): void => {
     render(<BtnConform dispatch={mockDispatch} state={false} />);
     expect(
       screen.getByRole<HTMLButtonElement>("button", { name: /abrir declaração de concordância/i })
-    ).toBeInTheDocument();
+    ).toBeInTheDocument() as void;
   });
   it("calls dispatch with toggled state when clicked", (): void => {
     render(<BtnConform dispatch={mockDispatch} state={false} />);
     fireEvent.click(screen.getByRole<HTMLButtonElement>("button", { name: /abrir declaração de concordância/i }));
-    expect(mockDispatch).toHaveBeenCalledWith<[boolean]>(true);
+    expect(mockDispatch).toHaveBeenCalledWith<[boolean]>(true) as void;
     fireEvent.click(screen.getByRole<HTMLButtonElement>("button", { name: /abrir declaração de concordância/i }));
-    expect(mockDispatch).toHaveBeenCalledWith<[boolean]>(false);
+    expect(mockDispatch).toHaveBeenCalledWith<[boolean]>(false) as void;
   });
 });

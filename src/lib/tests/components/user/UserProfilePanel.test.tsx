@@ -27,11 +27,11 @@ describe("UserProfilePanel", (): void => {
   };
   it("renders the user profile panel", (): void => {
     render(<UserProfilePanel router={mockRouter as NextRouter} />);
-    expect(screen.getByRole<HTMLImageElement>("img", { name: /user img/i })).toBeInTheDocument();
+    expect(screen.getByRole<HTMLImageElement>("img", { name: /user img/i })).toBeInTheDocument() as void;
   });
   it("toggles the user profile dropdown on image click", (): void => {
     render(<UserProfilePanel router={mockRouter as NextRouter} />);
     fireEvent.click(screen.getByRole<HTMLImageElement>("img", { name: /user img/i }));
-    expect(screen.getByText<HTMLElement>("Informações de Usuário")).toBeInTheDocument();
+    expect(screen.getByText<HTMLElement>("Informações de Usuário")).toBeInTheDocument() as void;
   });
 });

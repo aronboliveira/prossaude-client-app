@@ -9,28 +9,17 @@ import {
 } from "./handlers/errorHandler";
 
 export function dinamicGridAdjust(gridDivs: Array<targEl>): void {
-  if (
-    gridDivs?.length > 0 &&
-    gridDivs.every(div => div instanceof HTMLElement)
-  ) {
+  if (gridDivs?.length > 0 && gridDivs.every(div => div instanceof HTMLElement)) {
     gridDivs.forEach(gridDiv => {
-      if (
-        gridDiv instanceof HTMLElement &&
-        !gridDiv.classList.contains("noEqualize")
-      ) {
+      if (gridDiv instanceof HTMLElement && !gridDiv.classList.contains("noEqualize")) {
         switch (getComputedStyle(gridDiv).display) {
           case "grid":
-            const nColumns = (
-              gridDiv.style.gridTemplateColumns ||
-              getComputedStyle(gridDiv).gridTemplateColumns
-            )
+            const nColumns = (gridDiv.style.gridTemplateColumns || getComputedStyle(gridDiv).gridTemplateColumns)
               .trim()
               .split(/\s+/g).length;
             !isNaN(nColumns) && nColumns > 0
               ? (gridDiv.style.width = (25 * (nColumns + 1)).toFixed(1) + "vw")
-              : console.warn(
-                  `nColumns returned as NaN or not a natural number. Value obtained: ${nColumns}`
-                );
+              : console.warn(`nColumns returned as NaN or not a natural number. Value obtained: ${nColumns}`);
             break;
           case "flex":
             switch (gridDiv.style.flexDirection) {
@@ -53,19 +42,9 @@ export function dinamicGridAdjust(gridDivs: Array<targEl>): void {
           default:
             gridDiv.style.width = "70%";
         }
-      } else
-        elementNotFound(
-          gridDiv,
-          `gridDiv id ${gridDiv?.id || "UNIDENTIFIED"}`,
-          extLine(new Error())
-        );
+      } else elementNotFound(gridDiv, `gridDiv id ${gridDiv?.id || "UNIDENTIFIED"}`, extLine(new Error()));
     });
-  } else
-    elementNotPopulated(
-      gridDivs,
-      "gridDivs in dinamicGridAjust()",
-      extLine(new Error())
-    );
+  } else elementNotPopulated(gridDivs, "gridDivs in dinamicGridAjust()", extLine(new Error()));
 }
 
 export function equalizeFlexSibilings(
@@ -82,11 +61,7 @@ export function equalizeFlexSibilings(
       ) {
         const elChildren = Array.from(el.children);
         Array.from(el.previousElementSibling.children)
-          .filter(
-            child =>
-              child instanceof HTMLInputElement &&
-              (child.type === "checkbox" || child.type === "radio")
-          )
+          .filter(child => child instanceof HTMLInputElement && (child.type === "checkbox" || child.type === "radio"))
           .forEach((previousChild, i) => {
             if (elChildren[i] instanceof HTMLElement) {
               contexts.forEach(context => {
@@ -94,49 +69,34 @@ export function equalizeFlexSibilings(
                   .previousElementSibling!.getBoundingClientRect()
                   .width.toString();
                 (elChildren[i] as HTMLElement).style[
-                  `min${(context[0] as string)
-                    .slice(0, 1)
-                    .toUpperCase()}${context[0].slice(1)}` as any
-                ] = getComputedStyle(
-                  el.previousElementSibling!
-                ).width.toString();
+                  `min${(context[0] as string).slice(0, 1).toUpperCase()}${context[0].slice(1)}` as any
+                ] = getComputedStyle(el.previousElementSibling!).width.toString();
                 const previousChildRect = previousChild.getBoundingClientRect();
-                if (
-                  el.classList.contains(`flexTwin-${context[0]}`) &&
-                  context[0] in previousChildRect
-                ) {
-                  (elChildren[i] as any).style.width = `${(
-                    previousChildRect as any
-                  )[context[0]].toFixed(4)}${context[1]}`;
-                  (elChildren[i] as any).style.minWidth = `${(
-                    previousChildRect as any
-                  )[context[0]].toFixed(4)}${context[1]}`;
+                if (el.classList.contains(`flexTwin-${context[0]}`) && context[0] in previousChildRect) {
+                  (elChildren[i] as any).style.width = `${(previousChildRect as any)[context[0]].toFixed(4)}${
+                    context[1]
+                  }`;
+                  (elChildren[i] as any).style.minWidth = `${(previousChildRect as any)[context[0]].toFixed(4)}${
+                    context[1]
+                  }`;
                 } else
                   console.warn(`Error validating objects for Geometry:
-                flexTwin type applied: el.classList.contains(flexTwin-${
-                  context[0]
-                });
-                ${context[0]} in elChildren${i}, id ${
-                    elChildren[i]?.id || "UNIDENTIFIED"
-                  }: ${context[0] in elChildren[i]};
-                ${context[0]} in previousChildRect, id ${
-                    previousChild ?? "UNIDENTIFIED"
-                  }: ${context[0] in previousChildRect}.`);
+                flexTwin type applied: el.classList.contains(flexTwin-${context[0]});
+                ${context[0]} in elChildren${i}, id ${elChildren[i]?.id || "UNIDENTIFIED"}: ${
+                    context[0] in elChildren[i]
+                  };
+                ${context[0]} in previousChildRect, id ${previousChild ?? "UNIDENTIFIED"}: ${
+                    context[0] in previousChildRect
+                  }.`);
               });
             } else
               console.warn(`Error validating instance of child in index ${i}:
-          Obtained instance: ${Object.prototype.toString
-            .call(el.children[i])
-            .slice(8, -1)}`);
+          Obtained instance: ${Object.prototype.toString.call(el.children[i]).slice(8, -1)}`);
           });
       } else
-        console.warn(`Error calling equalizeFlexSibilings() for Element id ${
-          el?.id
-        }:
+        console.warn(`Error calling equalizeFlexSibilings() for Element id ${el?.id}:
         Instance of current Element: ${el instanceof HTMLElement}
-        Instance of previousElementSibling: ${Object.prototype.toString
-          .call(el?.previousElementSibling)
-          .slice(8, -1)};
+        Instance of previousElementSibling: ${Object.prototype.toString.call(el?.previousElementSibling).slice(8, -1)};
         Match as flexTwin: ${/flexTwin/gi.test(el?.classList?.toString()!)}
         Display value: ${getComputedStyle(el!)?.display}.`);
     });
@@ -145,19 +105,13 @@ export function equalizeFlexSibilings(
 
 export function equalizeTabCells(tab: HTMLTableElement | null): void {
   if (tab instanceof HTMLTableElement) {
-    const parentEl =
-      tab.closest("section") || tab.closest("dialog") || tab.closest("form");
+    const parentEl = tab.closest("section") || tab.closest("dialog") || tab.closest("form");
     if (parentEl instanceof HTMLElement) {
       const relatedTabs = parentEl.querySelectorAll("table");
       const largestTabWid = Math.max(
         ...Array.from(relatedTabs)?.map(cel => {
           let relTab = parseFloat(getComputedStyle(cel).width);
-          if (
-            Number.isNaN(relTab) ||
-            Math.abs(relTab) === Infinity ||
-            relTab < 0
-          )
-            relTab = 0;
+          if (Number.isNaN(relTab) || Math.abs(relTab) === Infinity || relTab < 0) relTab = 0;
           return relTab;
         })
       )?.toString();
@@ -165,14 +119,8 @@ export function equalizeTabCells(tab: HTMLTableElement | null): void {
         relTab.style.minWidth = largestTabWid;
         relTab.style.width = largestTabWid;
       }
-      const tabCells = [
-        ...parentEl.querySelectorAll("td"),
-        ...parentEl.querySelectorAll("th"),
-      ];
-      if (
-        tabCells.length > 0 &&
-        tabCells.every(cel => cel instanceof HTMLElement)
-      ) {
+      const tabCells = [...parentEl.querySelectorAll("td"), ...parentEl.querySelectorAll("th")];
+      if (tabCells.length > 0 && tabCells.every(cel => cel instanceof HTMLElement)) {
         const largestCellWid = Math.max(
           ...tabCells.map(cel => {
             let widCell = parseFloat(getComputedStyle(cel).width);
@@ -185,19 +133,11 @@ export function equalizeTabCells(tab: HTMLTableElement | null): void {
               ...parentEl.querySelectorAll("tfoot"),
               ...parentEl.querySelectorAll("caption"),
             ];
-            if (
-              tabCells.length > 0 &&
-              tabCells.every(cel => cel instanceof HTMLElement)
-            ) {
+            if (tabCells.length > 0 && tabCells.every(cel => cel instanceof HTMLElement)) {
               const largestCellWid = Math.max(
                 ...tabCells.map(cel => {
                   let widCell = parseFloat(getComputedStyle(cel).width);
-                  if (
-                    Number.isNaN(widCell) ||
-                    Math.abs(widCell) === Infinity ||
-                    widCell < 0
-                  )
-                    widCell = 0;
+                  if (Number.isNaN(widCell) || Math.abs(widCell) === Infinity || widCell < 0) widCell = 0;
                   return widCell;
                 })
               );
@@ -206,27 +146,14 @@ export function equalizeTabCells(tab: HTMLTableElement | null): void {
                   minWidth: "15ch",
                   width: `${
                     parseFloat(largestCellWid.toFixed(1)) /
-                    parseFloat(
-                      window.getComputedStyle(document.querySelector("html")!)
-                        .fontSize
-                    )
+                    parseFloat(window.getComputedStyle(document.querySelector("html")!).fontSize)
                   }rem`,
                   height: "fit-content",
                   verticalAlign: "text-top",
                 });
               }
-            } else
-              elementNotPopulated(
-                tabCells,
-                "tabCells in equalizeTabCells()",
-                extLine(new Error())
-              );
-            if (
-              Number.isNaN(widCell) ||
-              Math.abs(widCell) === Infinity ||
-              widCell < 0
-            )
-              widCell = 0;
+            } else elementNotPopulated(tabCells, "tabCells in equalizeTabCells()", extLine(new Error()));
+            if (Number.isNaN(widCell) || Math.abs(widCell) === Infinity || widCell < 0) widCell = 0;
             return widCell;
           })
         );
@@ -238,71 +165,35 @@ export function equalizeTabCells(tab: HTMLTableElement | null): void {
             verticalAlign: "text-top",
           });
         }
-      } else
-        elementNotPopulated(
-          tabCells,
-          "tabCells in equalizeTabCells()",
-          extLine(new Error())
-        );
-    } else
-      elementNotFound(
-        parentEl,
-        `parentEl for tab id ${tab?.id || "UNIDENTIFIED"}`,
-        extLine(new Error())
-      );
+      } else elementNotPopulated(tabCells, "tabCells in equalizeTabCells()", extLine(new Error()));
+    } else elementNotFound(parentEl, `parentEl for tab id ${tab?.id || "UNIDENTIFIED"}`, extLine(new Error()));
   } else
-    elementNotFound(
-      tab,
-      `tab id ${(tab as any)?.id || "UNIDENTIFIED in equalizeTabCells()"}`,
-      extLine(new Error())
-    );
+    elementNotFound(tab, `tab id ${(tab as any)?.id || "UNIDENTIFIED in equalizeTabCells()"}`, extLine(new Error()));
 }
 
-export function isClickOutside(
-  event: MouseEvent | React.MouseEvent,
-  dlgInBtn: Element
-): boolean[] {
+export function isClickOutside(event: MouseEvent | React.MouseEvent, dlgInBtn: Element): boolean[] {
   try {
     if (!document.querySelector(`#${dlgInBtn.id}` || "dialog"))
       throw new Error(`Modal for outside click not in screen anymore.`);
     const rect = dlgInBtn.getBoundingClientRect();
     const { clientX, clientY } = event;
-    return [
-      clientX < rect.left,
-      clientX > rect.right,
-      clientY < rect.top,
-      clientY > rect.bottom,
-    ];
+    return [clientX < rect.left, clientX > rect.right, clientY < rect.top, clientY > rect.bottom];
   } catch (e) {
     console.error(`Error executing isClickOutside:\n${(e as Error).message}`);
     return [false, false, false, false];
   }
 }
 
-export function fadeElement(
-  el: targEl,
-  opacity: string = "1",
-  timer: string = "0.5",
-  timeout: number = 500
-): void {
+export function fadeElement(el: targEl, opacity: string = "1", timer: string = "0.5", timeout: number = 500): void {
   if (el instanceof HTMLElement) {
     el.style.opacity = opacity;
     setTimeout(() => {
       el.style.transition = `opacity ${timer}s ease-in`;
     }, timeout);
-  } else
-    elementNotFound(
-      el,
-      `element ${el?.id || "UNDEFINED ELEMENT"}`,
-      extLine(new Error())
-    );
+  } else elementNotFound(el, `element ${el?.id || "UNDEFINED ELEMENT"}`, extLine(new Error()));
 }
 
-export function highlightChange(
-  el: targEl,
-  color: string = "red",
-  context: string = "both"
-): void {
+export function highlightChange(el: targEl, color: string = "red", context: string = "both"): void {
   if (el instanceof HTMLElement && typeof color === "string") {
     const iniColor = "rgb(222, 226, 230)";
     const iniFontColor = "rgb(33, 37, 41)";
@@ -348,13 +239,7 @@ export function highlightChange(
         pulseFColor(el);
       }, 1600);
     }
-  } else
-    multipleElementsNotFound(
-      extLine(new Error()),
-      "arguments for highlightChange()",
-      el,
-      color
-    );
+  } else multipleElementsNotFound(extLine(new Error()), "arguments for highlightChange()", el, color);
 }
 
 export function switchBtnBS(
@@ -362,42 +247,23 @@ export function switchBtnBS(
   bsClasses: Array<string> = ["btn-warning"],
   bsClassesToRemove: Array<string> = ["btn-success"]
 ): void {
-  if (
-    Array.isArray(bsBtns) &&
-    bsBtns.every(btn => btn instanceof HTMLElement)
-  ) {
+  if (Array.isArray(bsBtns) && bsBtns.every(btn => btn instanceof HTMLElement)) {
     bsBtns.forEach(bsBtn => {
       if (bsBtn instanceof HTMLButtonElement) {
         fadeElement(bsBtn, "0.5", "3", 3000);
-        if (
-          bsClasses.some(
-            bsClass => /warn/gi.test(bsClass) || /danger/gi.test(bsClass)
-          )
-        ) {
+        if (bsClasses.some(bsClass => /warn/gi.test(bsClass) || /danger/gi.test(bsClass))) {
           highlightChange(bsBtn, "yellow");
           if (!bsBtn.querySelector(".bi-exclamation")) {
-            const rootSize = parseFloat(
-              getComputedStyle(document.querySelector("html")!).fontSize
-            );
-            const svg = document.createElementNS(
-              "http://www.w3.org/2000/svg",
-              "svg"
-            );
+            const rootSize = parseFloat(getComputedStyle(document.querySelector("html")!).fontSize);
+            const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
             svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
             svg.setAttribute("width", "1rem");
             svg.style.setProperty("height", "1.25rem", "important");
             svg.setAttribute("fill", "currentColor");
             svg.setAttribute("class", "bi bi-exclamation");
             svg.setAttribute("viewBox", "0 0 16 16");
-            svg.style.setProperty(
-              "padding-bottom",
-              `${(rootSize * 0.03) / rootSize}rem`,
-              "!important"
-            );
-            const path = document.createElementNS(
-              "http://www.w3.org/2000/svg",
-              "path"
-            );
+            svg.style.setProperty("padding-bottom", `${(rootSize * 0.03) / rootSize}rem`, "!important");
+            const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
             path.setAttribute(
               "d",
               "M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.553.553 0 0 1-1.1 0z"
@@ -415,19 +281,9 @@ export function switchBtnBS(
           bsBtn.classList.add(...bsClasses);
           bsBtn.classList.remove(...bsClassesToRemove);
         }
-      } else
-        elementNotFound(
-          bsBtn,
-          `button id ${bsBtn?.id || "UNIDENTIFIED"}`,
-          extLine(new Error())
-        );
+      } else elementNotFound(bsBtn, `button id ${bsBtn?.id || "UNIDENTIFIED"}`, extLine(new Error()));
     });
-  } else
-    elementNotPopulated(
-      bsBtns,
-      "argument for switchBtnBS()",
-      extLine(new Error())
-    );
+  } else elementNotPopulated(bsBtns, "argument for switchBtnBS()", extLine(new Error()));
 }
 
 export function clearDefInvalidMsg(
@@ -436,9 +292,7 @@ export function clearDefInvalidMsg(
 ): void {
   if (Array.isArray(inps) && inps.every(inp => inp instanceof HTMLElement)) {
     const inpsValidity: boolean[] = [];
-    const submitBtns = Array.from(
-      document.querySelectorAll('button[type="submit"]')
-    );
+    const submitBtns = Array.from(document.querySelectorAll('button[type="submit"]'));
     if (submitBtns.every(btn => btn instanceof HTMLElement)) {
       submitBtns.forEach(subBtn => {
         subBtn.addEventListener("click", () => {
@@ -448,34 +302,16 @@ export function clearDefInvalidMsg(
               inp instanceof HTMLSelectElement ||
               inp instanceof HTMLTextAreaElement
             ) {
-              if (!inp.checkValidity())
-                console.warn(
-                  `Error validating data in field id ${
-                    inp?.id || "UNDEFINED ID"
-                  }`
-                );
+              if (!inp.checkValidity()) console.warn(`Error validating data in field id ${inp?.id || "UNDEFINED ID"}`);
               inpsValidity.push(inp.checkValidity());
             } else
-              inputNotFound(
-                inp,
-                `entry field id ${(inp as any)?.id || "UNDEFINED ID"} invalid`,
-                extLine(new Error())
-              );
+              inputNotFound(inp, `entry field id ${(inp as any)?.id || "UNDEFINED ID"} invalid`, extLine(new Error()));
           }
         });
       });
-    } else
-      elementNotPopulated(
-        submitBtns,
-        "submitBtns in clearDefInvalidMsg()",
-        extLine(new Error())
-      );
+    } else elementNotPopulated(submitBtns, "submitBtns in clearDefInvalidMsg()", extLine(new Error()));
     inps.forEach(inp => {
-      if (
-        inp instanceof HTMLInputElement ||
-        inp instanceof HTMLSelectElement ||
-        inp instanceof HTMLTextAreaElement
-      ) {
+      if (inp instanceof HTMLInputElement || inp instanceof HTMLSelectElement || inp instanceof HTMLTextAreaElement) {
         inp.addEventListener("invalid", ev => {
           ev.preventDefault();
         });
@@ -485,35 +321,23 @@ export function clearDefInvalidMsg(
       form.addEventListener("submit", ev => {
         if (inpsValidity.some(validity => validity === false)) {
           ev.preventDefault();
-          console.warn(
-            `Error validating fields in the form. Submission prevented.`
-          );
+          console.warn(`Error validating fields in the form. Submission prevented.`);
         }
       });
-    } else
-      elementNotFound(
-        form,
-        "form in clearDefInvalidMsg()",
-        extLine(new Error())
-      );
+    } else elementNotFound(form, "form in clearDefInvalidMsg()", extLine(new Error()));
   }
 }
 
-export function fillCustomValidityWarn(
-  inpId: string,
-  customMsg: string = "Campo inválido"
-): void {
+export function fillCustomValidityWarn(inpId: string, customMsg: string = "Campo inválido"): void {
   const warnEl = document.getElementById(`${inpId}Warn`);
   if (warnEl instanceof HTMLElement) {
     try {
-      let relatedInp: Element | null | undefined =
-        warnEl.previousElementSibling;
+      let relatedInp: Element | null | undefined = warnEl.previousElementSibling;
       if (!(relatedInp instanceof HTMLElement)) {
         relatedInp = warnEl.parentElement?.previousElementSibling;
         if (!relatedInp) throw new Error();
       } else {
-        const rectLeft =
-          relatedInp.getBoundingClientRect().left + window.scrollX;
+        const rectLeft = relatedInp.getBoundingClientRect().left + window.scrollX;
         warnEl.style.position = "relative";
         warnEl.style.left = rectLeft / 2 + "px";
       }
@@ -527,27 +351,15 @@ export function fillCustomValidityWarn(
   } else
     elementNotFound(
       warnEl,
-      `warnEl id ${
-        (warnEl as any)?.id || "UNDEFINED"
-      } in fillCustomValidityWarn()`,
+      `warnEl id ${(warnEl as any)?.id || "UNDEFINED"} in fillCustomValidityWarn()`,
       extLine(new Error())
     );
 }
 
-export function addListenerForValidities(
-  inps: Array<targEl>,
-  pattern?: RegExp
-): boolean {
-  if (
-    Array.isArray(inps) &&
-    inps.length > 0 &&
-    inps.every(inp => inp instanceof HTMLElement)
-  ) {
+export function addListenerForValidities(inps: Array<targEl>, pattern?: RegExp): boolean {
+  if (Array.isArray(inps) && inps.length > 0 && inps.every(inp => inp instanceof HTMLElement)) {
     inps.forEach(inp => {
-      if (
-        inp instanceof HTMLInputElement ||
-        inp instanceof HTMLTextAreaElement
-      ) {
+      if (inp instanceof HTMLInputElement || inp instanceof HTMLTextAreaElement) {
         inp.addEventListener("input", () => {
           let inpValidity = true;
           if (inp.value.length > 10) inp.value = inp.value.slice(0, 11);
@@ -599,70 +411,35 @@ export function addListenerForValidities(
           }
           return inpValidity;
         });
-      } else
-        inputNotFound(
-          inp,
-          `input id ${inp?.id || "UNIDENFITIED"}`,
-          extLine(new Error())
-        );
+      } else inputNotFound(inp, `input id ${inp?.id || "UNIDENFITIED"}`, extLine(new Error()));
     });
-  } else
-    elementNotPopulated(
-      inps,
-      "argument for addListenerForValidites()",
-      extLine(new Error())
-    );
+  } else elementNotPopulated(inps, "argument for addListenerForValidites()", extLine(new Error()));
   return false;
 }
 
 export function clearPhDates(dateInps: Array<targEl>): void {
-  if (
-    Array.isArray(dateInps) &&
-    dateInps.every(inp => inp instanceof HTMLElement)
-  ) {
+  if (Array.isArray(dateInps) && dateInps.every(inp => inp instanceof HTMLElement)) {
     dateInps.forEach(inp => {
       if (inp instanceof HTMLInputElement && inp.type === "date") {
         inp.style.color = "transparent";
         if (inp.parentElement!.querySelector(".datBtn")) {
-          inp
-            .parentElement!.querySelector(".datBtn")
-            ?.addEventListener("click", () => {
-              inp.value.length === 0
-                ? (inp.style.color = "transparent")
-                : (inp.style.color = "black");
-            });
+          inp.parentElement!.querySelector(".datBtn")?.addEventListener("click", () => {
+            inp.value.length === 0 ? (inp.style.color = "transparent") : (inp.style.color = "black");
+          });
         }
         inp.addEventListener("input", () => {
-          inp.value.length === 0
-            ? (inp.style.color = "transparent")
-            : (inp.style.color = "black");
+          inp.value.length === 0 ? (inp.style.color = "transparent") : (inp.style.color = "black");
         });
-      } else
-        inputNotFound(
-          inp,
-          `date input id ${inp?.id || "UNIDENTIFIED"}`,
-          extLine(new Error())
-        );
+      } else inputNotFound(inp, `date input id ${inp?.id || "UNIDENTIFIED"}`, extLine(new Error()));
     });
-  } else
-    elementNotPopulated(
-      dateInps,
-      "dateInps in clearPhDates()",
-      extLine(new Error())
-    );
+  } else elementNotPopulated(dateInps, "dateInps in clearPhDates()", extLine(new Error()));
 }
 
-export function resetPhs(
-  inps: Array<entryEl>,
-  phs: { [key: string]: string }
-): void {
+export function resetPhs(inps: Array<entryEl>, phs: { [key: string]: string }): void {
   if (Array.isArray(inps) && inps.every(inp => inp instanceof HTMLElement)) {
     for (const inp of inps) {
       const ph = phs[inp.id] ?? "";
-      if (
-        inp instanceof HTMLInputElement ||
-        inp instanceof HTMLTextAreaElement
-      ) {
+      if (inp instanceof HTMLInputElement || inp instanceof HTMLTextAreaElement) {
         inp.placeholder = ph;
         ["click", "input"].forEach(ev => {
           inp.addEventListener(ev, () => {
@@ -673,42 +450,19 @@ export function resetPhs(
               }, 3000);
           });
         });
-      } else
-        inputNotFound(
-          inp,
-          `inp id ${inp?.id || "UNIDENFITIED"}`,
-          extLine(new Error())
-        );
+      } else inputNotFound(inp, `inp id ${inp?.id || "UNIDENFITIED"}`, extLine(new Error()));
     }
-  } else
-    elementNotPopulated(
-      inps,
-      "argument for cleanLoginPhs()",
-      extLine(new Error())
-    );
+  } else elementNotPopulated(inps, "argument for cleanLoginPhs()", extLine(new Error()));
 }
 
 export function equalizeWidWithPhs(els: Array<targEl>): void {
-  if (
-    Array.isArray(els) &&
-    els.length > 0 &&
-    els.every(el => el instanceof HTMLElement)
-  ) {
+  if (Array.isArray(els) && els.length > 0 && els.every(el => el instanceof HTMLElement)) {
     const chReferenceCanva = document.getElementById("chreference");
-    if (
-      document.getElementById("chreference") &&
-      chReferenceCanva instanceof HTMLCanvasElement
-    ) {
-      const chWid =
-        chReferenceCanva
-          .getContext("2d")
-          ?.measureText(chReferenceCanva.textContent ?? "0").width ?? 16;
+    if (document.getElementById("chreference") && chReferenceCanva instanceof HTMLCanvasElement) {
+      const chWid = chReferenceCanva.getContext("2d")?.measureText(chReferenceCanva.textContent ?? "0").width ?? 16;
       els.forEach(el => {
         if (
-          ((el instanceof HTMLInputElement &&
-            (el.type === "text" ||
-              el.type === "number" ||
-              el.type === "search")) ||
+          ((el instanceof HTMLInputElement && (el.type === "text" || el.type === "number" || el.type === "search")) ||
             el instanceof HTMLTextAreaElement) &&
           el.placeholder.length > 4
         ) {
@@ -733,15 +487,11 @@ export function equalizeWidWithPhs(els: Array<targEl>): void {
                       chWid
                   }ch`;
                   if (
-                    parseFloat(getComputedStyle(el).width) <
-                      (option.textContent?.length ?? 0) + 8 ||
-                    parseFloat(getComputedStyle(el).width) <
-                      (option.value.length ?? 0) + 8
+                    parseFloat(getComputedStyle(el).width) < (option.textContent?.length ?? 0) + 8 ||
+                    parseFloat(getComputedStyle(el).width) < (option.value.length ?? 0) + 8
                   )
                     console.warn(
-                      `Failed to apply Placeholder equalization for ${
-                        el.id || "UNIDENTIFIED"
-                      } in equalizeWidWithPhs()`,
+                      `Failed to apply Placeholder equalization for ${el.id || "UNIDENTIFIED"} in equalizeWidWithPhs()`,
                       extLine(new Error())
                     );
                 });
@@ -759,105 +509,53 @@ export function equalizeWidWithPhs(els: Array<targEl>): void {
               }ch`;
             }
             if (
-              parseFloat(getComputedStyle(el).width) <
-                (options[0].textContent?.length ?? 0) + 8 ||
-              parseFloat(getComputedStyle(el).width) <
-                (options[0].value.length ?? 0) + 8
+              parseFloat(getComputedStyle(el).width) < (options[0].textContent?.length ?? 0) + 8 ||
+              parseFloat(getComputedStyle(el).width) < (options[0].value.length ?? 0) + 8
             )
               console.warn(
-                `Failed to apply Placeholder equalization for ${
-                  el.id || "UNIDENTIFIED"
-                } in equalizeWidWithPhs()`,
+                `Failed to apply Placeholder equalization for ${el.id || "UNIDENTIFIED"} in equalizeWidWithPhs()`,
                 extLine(new Error())
               );
           } else
             console.warn(
               `No <${
                 options[0]?.tagName.toLowerCase() ?? "UNDEFINED TAG"
-              }> found for <${el.tagName.toLowerCase()}> id ${
-                el?.id || "UNIDENTIFIED"
-              } in equalizeWidWithPhs()`
+              }> found for <${el.tagName.toLowerCase()}> id ${el?.id || "UNIDENTIFIED"} in equalizeWidWithPhs()`
             );
-        } else if (
-          el instanceof HTMLInputElement &&
-          (el.type === "date" || el.type === "hour")
-        ) {
+        } else if (el instanceof HTMLInputElement && (el.type === "date" || el.type === "hour")) {
           el.style.minWidth = `${
-            10 +
-            parseFloat(getComputedStyle(el).paddingLeft) +
-            parseFloat(getComputedStyle(el).paddingRight)
+            10 + parseFloat(getComputedStyle(el).paddingLeft) + parseFloat(getComputedStyle(el).paddingRight)
           }ch`;
           if (parseFloat(getComputedStyle(el).width) < 16)
             console.warn(
-              `Failed to apply Placeholder equalization for ${
-                el.id || "UNIDENTIFIED"
-              } in equalizeWidWithPhs()`,
+              `Failed to apply Placeholder equalization for ${el.id || "UNIDENTIFIED"} in equalizeWidWithPhs()`,
               extLine(new Error())
             );
         } else if (
-          !(
-            el instanceof HTMLInputElement ||
-            el instanceof HTMLTextAreaElement ||
-            el instanceof HTMLSelectElement
-          )
+          !(el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement || el instanceof HTMLSelectElement)
         )
-          elementNotFound(
-            el,
-            `Element id ${el?.id || "UNIDENTIFIED"}`,
-            extLine(new Error())
-          );
+          elementNotFound(el, `Element id ${el?.id || "UNIDENTIFIED"}`, extLine(new Error()));
       });
     } else
-      console.error(
-        `No ch measure reference. Results for equalizeWidWithPhs may be misleading. Aborting process.`
-      );
-  } else
-    elementNotPopulated(
-      els,
-      "els in balanceWidWithPhs()",
-      extLine(new Error())
-    );
+      console.error(`No ch measure reference. Results for equalizeWidWithPhs may be misleading. Aborting process.`);
+  } else elementNotPopulated(els, "els in balanceWidWithPhs()", extLine(new Error()));
 }
 
 export function strikeNulls(els: Array<targEl>): void {
-  if (
-    Array.isArray(els) &&
-    els.length > 0 &&
-    els.every(el => el instanceof HTMLElement)
-  ) {
+  if (Array.isArray(els) && els.length > 0 && els.every(el => el instanceof HTMLElement)) {
     els.forEach(el => {
-      if (
-        el instanceof HTMLInputElement ||
-        el instanceof HTMLSelectElement ||
-        el instanceof HTMLTextAreaElement
-      ) {
-        if (
-          /nul[ol]/gi.test(el.value) ||
-          /[ui]ndefin[ei]d/gi.test(el.value) ||
-          /NaN/g.test(el.value)
-        )
+      if (el instanceof HTMLInputElement || el instanceof HTMLSelectElement || el instanceof HTMLTextAreaElement) {
+        if (/nul[ol]/gi.test(el.value) || /[ui]ndefin[ei]d/gi.test(el.value) || /NaN/g.test(el.value))
           el.style.textDecoration = "line-through";
       } else if (el instanceof HTMLElement) {
         if (
           el.textContent &&
-          (/nul[ol]/gi.test(el.textContent) ||
-            /[ui]ndefin[ei]d/gi.test(el.textContent) ||
-            /NaN/g.test(el.textContent))
+          (/nul[ol]/gi.test(el.textContent) || /[ui]ndefin[ei]d/gi.test(el.textContent) || /NaN/g.test(el.textContent))
         )
           el.style.textDecoration = "line-through";
-      } else
-        elementNotFound(
-          el,
-          `el id ${(el as any)?.id || "UNIDENTIFIED"} in strikeNulls()`,
-          extLine(new Error())
-        );
+      } else elementNotFound(el, `el id ${(el as any)?.id || "UNIDENTIFIED"} in strikeNulls()`, extLine(new Error()));
     });
-  } else
-    elementNotPopulated(
-      els,
-      "argument for strikeNulls()",
-      extLine(new Error())
-    );
+  } else elementNotPopulated(els, "argument for strikeNulls()", extLine(new Error()));
 }
 
 export function normalizeSizeSb(
@@ -866,45 +564,30 @@ export function normalizeSizeSb(
   includeHeight: boolean = false,
   elsToCurrent?: Array<targEl>
 ): void {
-  if (
-    Array.isArray(els) &&
-    els.length > 0 &&
-    els.every(el => el instanceof HTMLElement)
-  ) {
+  if (Array.isArray(els) && els.length > 0 && els.every(el => el instanceof HTMLElement)) {
     const rem = parseFloat(getComputedStyle(document.documentElement).fontSize);
     els.forEach(el => {
       if (el instanceof HTMLElement) {
-        const normalizeScb = (
-          element: HTMLElement,
-          shouldNormCurrent: boolean = false
-        ) => {
+        const normalizeScb = (element: HTMLElement, shouldNormCurrent: boolean = false) => {
           const iniWid = parseFloat(getComputedStyle(element).width);
           const iniHt = parseFloat(getComputedStyle(element).height);
-          const scrollDiv = document.createElement("div");
+          const scrollDiv = document.createElement("div") as HTMLDivElement;
           scrollDiv.className = "scrollbar-measure";
           document.body.appendChild(scrollDiv);
           const scbWidAppend = scrollDiv.offsetWidth - scrollDiv.clientWidth;
           const scbHtAppend = scrollDiv.offsetWidth - scrollDiv.clientHeight;
           document.body.removeChild(scrollDiv);
-          const scbWidWindow =
-            window.innerWidth - document.body.clientWidth + "px";
-          const scbHtWindow =
-            window.innerHeight - document.body.clientHeight + "px";
+          const scbWidWindow = window.innerWidth - document.body.clientWidth + "px";
+          const scbHtWindow = window.innerHeight - document.body.clientHeight + "px";
           const validScbWid = Math.max(parseNotNaN(scbWidWindow), scbWidAppend);
           const validScbHt = Math.max(parseNotNaN(scbHtWindow), scbHtAppend);
           element.style.minWidth = `${(iniWid + validScbWid) / rem}rem`;
-          includeHeight &&
-            (element.style.minHeight = `${(iniHt + validScbHt) / rem}rem`);
+          includeHeight && (element.style.minHeight = `${(iniHt + validScbHt) / rem}rem`);
           if (shouldNormCurrent && elsToCurrent && elsToCurrent.length > 0) {
             for (let c = 0; c < elsToCurrent.length; c++) {
               if (elsToCurrent[c] instanceof HTMLElement) {
-                (elsToCurrent[c] as HTMLElement).style.width = `${
-                  (iniWid + validScbWid) / rem
-                }rem`;
-                includeHeight &&
-                  ((elsToCurrent[c] as HTMLElement).style.height = `${
-                    (iniHt + validScbHt) / rem
-                  }rem`);
+                (elsToCurrent[c] as HTMLElement).style.width = `${(iniWid + validScbWid) / rem}rem`;
+                includeHeight && ((elsToCurrent[c] as HTMLElement).style.height = `${(iniHt + validScbHt) / rem}rem`);
               } else
                 elementNotFound(
                   elsToCurrent[c],
@@ -924,23 +607,16 @@ export function normalizeSizeSb(
             if (
               safeAcc < includeChilds[1] &&
               Array.from(el.children).some(
-                child =>
-                  getComputedStyle(child).overflow === "auto" &&
-                  child.classList.contains("form-padded")
+                child => getComputedStyle(child).overflow === "auto" && child.classList.contains("form-padded")
               )
             ) {
               Array.from(el.children)
-                .filter(
-                  children =>
-                    children.classList.contains("form-padded") &&
-                    children instanceof HTMLElement
-                )
+                .filter(children => children.classList.contains("form-padded") && children instanceof HTMLElement)
                 .forEach(formPadded => {
                   (formPadded as HTMLElement).style.overflow = "unset";
                 });
             }
-            if (el.firstElementChild instanceof HTMLElement)
-              el = el.firstElementChild;
+            if (el.firstElementChild instanceof HTMLElement) el = el.firstElementChild;
             ++safeAcc;
           } while (
             safeAcc <= includeChilds[1] &&
@@ -952,11 +628,7 @@ export function normalizeSizeSb(
       }
     });
   } else
-    elementNotPopulated(
-      els,
-      "Elements for normalization of size based on scrollbar display",
-      extLine(new Error())
-    );
+    elementNotPopulated(els, "Elements for normalization of size based on scrollbar display", extLine(new Error()));
 }
 
 export function convertToHex(
@@ -964,12 +636,7 @@ export function convertToHex(
 ): [Array<boolean>, Array<[string, Map<string, string>]>] {
   const hexValidations: Array<boolean> = [];
   const rgbaToHex = (numValues: number[], alpha: number = 1): string => {
-    return `#${(
-      (1 << 24) +
-      (numValues[0] << 16) +
-      (numValues[1] << 8) +
-      numValues[2]
-    )
+    return `#${((1 << 24) + (numValues[0] << 16) + (numValues[1] << 8) + numValues[2])
       .toString(16)
       .toUpperCase()}${Math.round(alpha * 255)
       .toString(16)
@@ -1005,62 +672,41 @@ export function convertToHex(
       //array de elementos individuais
       const propsValidations: boolean[] = [];
       for (let [key, value] of arrColors[j][1].entries()) {
-        if (
-          !/^\s?#/.test(value) &&
-          !/^\d/.test(value) &&
-          !/inset/g.test(value)
-        ) {
+        if (!/^\s?#/.test(value) && !/^\d/.test(value) && !/inset/g.test(value)) {
           if (/none/g.test(value)) value = "rgba(0, 0, 0, 0)";
           if (/\s?rgba\(/.test(value)) {
-            const numValues = value
-              .match(/\d+/g)!
-              .map(stNum => parseInt(stNum.trim()));
+            const numValues = value.match(/\d+/g)!.map(stNum => parseInt(stNum.trim()));
             arrColors[j][1].set(key, rgbaToHex(numValues, numValues[3]));
             propsValidations.push(true);
             elValidations.push(true);
             hexValidations.push(true);
           } else if (/\s?rgb\(/.test(value)) {
-            const numValues = value
-              .match(/\d+/g)!
-              .map(stNum => parseInt(stNum.trim()));
+            const numValues = value.match(/\d+/g)!.map(stNum => parseInt(stNum.trim()));
             arrColors[j][1].set(key, rgbaToHex(numValues));
             propsValidations.push(true);
             elValidations.push(true);
             hexValidations.push(true);
           } else if (/\s?hsla\(/.test(value)) {
-            const hslaNumValues = value
-              .match(/\d+/g)!
-              .map(stNum => parseInt(stNum.trim()));
+            const hslaNumValues = value.match(/\d+/g)!.map(stNum => parseInt(stNum.trim()));
             const rgbaNumValues = hslaToRgba(
               hslaNumValues[0],
               hslaNumValues[1] / 100,
               hslaNumValues[2] / 100,
               hslaNumValues[3]
             );
-            arrColors[j][1].set(
-              key,
-              rgbaToHex(rgbaNumValues, rgbaNumValues[3])
-            );
+            arrColors[j][1].set(key, rgbaToHex(rgbaNumValues, rgbaNumValues[3]));
             propsValidations.push(true);
             elValidations.push(true);
             hexValidations.push(true);
           } else if (/\s?hsl\(/.test(value)) {
-            const hslNumValues = value
-              .match(/\d+/g)!
-              .map(stNum => parseInt(stNum.trim()));
-            const rgbaNumValues = hslaToRgba(
-              hslNumValues[0],
-              hslNumValues[1] / 100,
-              hslNumValues[2] / 100
-            );
+            const hslNumValues = value.match(/\d+/g)!.map(stNum => parseInt(stNum.trim()));
+            const rgbaNumValues = hslaToRgba(hslNumValues[0], hslNumValues[1] / 100, hslNumValues[2] / 100);
             arrColors[j][1].set(key, rgbaToHex(rgbaNumValues));
             propsValidations.push(true);
             elValidations.push(true);
             hexValidations.push(true);
           } else {
-            console.error(
-              `Value for color scheme not supported. Aborting process`
-            );
+            console.error(`Value for color scheme not supported. Aborting process`);
             propsValidations.push(false);
             elValidations.push(false);
             hexValidations.push(false);
@@ -1072,8 +718,7 @@ export function convertToHex(
         hexValidations.push(false);
       }
     }
-    if (elValidations.some(elValidity => elValidity === false))
-      hexValidations.push(false);
+    if (elValidations.some(elValidity => elValidity === false)) hexValidations.push(false);
   }
   return [hexValidations, arrColors];
 }
@@ -1090,9 +735,7 @@ export function expandContent(el: targEl) {
       }
     }
     setTimeout(() => {
-      (
-        el.parentElement!.querySelector(".profileIcon") as HTMLElement
-      ).style.opacity = "0";
+      (el.parentElement!.querySelector(".profileIcon") as HTMLElement).style.opacity = "0";
       setTimeout(() => {
         let safeAcc = 0;
         Array.from(el.children).forEach(child => {
@@ -1102,82 +745,48 @@ export function expandContent(el: targEl) {
         let opcAcc = 0,
           widthAcc = 0;
         const interval = setInterval(() => {
-          let maxWidth =
-            (document.getElementById("nameLogin")?.innerText.length || 12) *
-            10.6;
+          let maxWidth = (document.getElementById("nameLogin")?.innerText.length || 12) * 10.6;
           if (!maxWidth || maxWidth < 0 || !Number.isFinite(maxWidth)) return;
           if (
             parseInt(getComputedStyle(el).opacity) < 1 ||
             parseInt(getComputedStyle(el.parentElement!).opacity) < 1 ||
-            parseInt(
-              getComputedStyle(
-                el.parentElement!.querySelector(".profileIcon") as HTMLElement
-              ).opacity
-            ) < 1
+            parseInt(getComputedStyle(el.parentElement!.querySelector(".profileIcon") as HTMLElement).opacity) < 1
           ) {
             opcAcc += 0.003;
-            if (parseInt(getComputedStyle(el).opacity) < 1)
-              el.style.opacity = opcAcc.toString();
+            if (parseInt(getComputedStyle(el).opacity) < 1) el.style.opacity = opcAcc.toString();
             if (parseInt(getComputedStyle(el.parentElement!).opacity) < 1)
               el.parentElement!.style.opacity = opcAcc.toString();
-            if (
-              parseInt(
-                (el.parentElement!.querySelector(".profileIcon") as HTMLElement)
-                  .style.opacity
-              ) < 1
-            )
-              (
-                el.parentElement!.querySelector(".profileIcon") as HTMLElement
-              ).style.opacity = ((opcAcc * 2) / 3).toString();
+            if (parseInt((el.parentElement!.querySelector(".profileIcon") as HTMLElement).style.opacity) < 1)
+              (el.parentElement!.querySelector(".profileIcon") as HTMLElement).style.opacity = (
+                (opcAcc * 2) /
+                3
+              ).toString();
             Array.from(el.children).forEach(child => {
-              if (child instanceof HTMLElement)
-                child.style.opacity = opcAcc.toString();
+              if (child instanceof HTMLElement) child.style.opacity = opcAcc.toString();
             });
-            if (
-              parseFloat(getComputedStyle(el).width.replace("px", "").trim()) <
-              maxWidth
-            ) {
+            if (parseFloat(getComputedStyle(el).width.replace("px", "").trim()) < maxWidth) {
               widthAcc += 1;
               el.style.width = `${widthAcc}px`;
             }
-            if (
-              parseFloat(getComputedStyle(el).width.replace("px", "").trim()) >=
-              maxWidth
-            )
+            if (parseFloat(getComputedStyle(el).width.replace("px", "").trim()) >= maxWidth)
               el.style.width = `${maxWidth}px`;
             safeAcc++;
             for (const output of outputs) {
-              if (
-                parseFloat(
-                  getComputedStyle(output).width.replace("px", "").trim()
-                ) < 120
-              )
+              if (parseFloat(getComputedStyle(output).width.replace("px", "").trim()) < 120)
                 output.style.width = `${widthAcc}px`;
-              if (
-                parseFloat(
-                  getComputedStyle(output).width.replace("px", "").trim()
-                ) >= 120
-              )
+              if (parseFloat(getComputedStyle(output).width.replace("px", "").trim()) >= 120)
                 output.style.width = "100%";
             }
           }
         }, 5);
         setTimeout(() => {
-          let maxWidth =
-            (document.getElementById("nameLogin")?.innerText.length || 12) *
-            10.6;
-          if (!maxWidth || maxWidth < 0 || !Number.isFinite(maxWidth))
-            maxWidth = 120;
+          let maxWidth = (document.getElementById("nameLogin")?.innerText.length || 12) * 10.6;
+          if (!maxWidth || maxWidth < 0 || !Number.isFinite(maxWidth)) maxWidth = 120;
           el.style.width = `${parseNotNaN(`${maxWidth}px`)}`;
           el.style.maxWidth = `100%`;
           clearInterval(interval);
         }, 6000);
       }, 100);
     }, 100);
-  } else
-    elementNotFound(
-      el,
-      `element for applying expandContent()`,
-      extLine(new Error())
-    );
+  } else elementNotFound(el, `element for applying expandContent()`, extLine(new Error()));
 }

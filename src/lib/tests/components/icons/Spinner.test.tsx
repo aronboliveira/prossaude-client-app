@@ -5,7 +5,7 @@ import "@testing-library/jest-dom/extend-expect";
 jest.mock(
   "../../../../../components/consRegst/GenericErrorComponent",
   (): (() => JSX.Element) => (): JSX.Element => <div>GenericErrorComponent</div>
-);
+) as typeof jest;
 describe("Spinner Component", (): void => {
   const renderComponent = (
     spinnerClass = "spinner-border",
@@ -14,9 +14,9 @@ describe("Spinner Component", (): void => {
   ): RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement> =>
     render(<Spinner spinnerClass={spinnerClass as any} spinnerColor={spinnerColor as any} message={message} />);
   test("renders spinner with default values", (): void => {
-    renderComponent();
-    expect(screen.getByRole<HTMLElement>("status")).toBeInTheDocument();
-    expect(screen.getByText<HTMLSpanElement>("Loading...")).toBeInTheDocument();
+    renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
+    expect(screen.getByRole<HTMLElement>("status")).toBeInTheDocument() as void;
+    expect(screen.getByText<HTMLSpanElement>("Loading...")).toBeInTheDocument() as void;
     expect(screen.getByText<HTMLSpanElement>("Loading...").className).toContain<string>("visually-hidden");
   });
   test("renders spinner with custom values", (): void => {
@@ -25,11 +25,11 @@ describe("Spinner Component", (): void => {
     const customMessage = "Loading data...";
     renderComponent(customClass, customColor, customMessage);
     expect(screen.getByRole<HTMLElement>("status")).toHaveClass(`${customClass} ${customColor}`);
-    expect(screen.getByText<HTMLSpanElement>(customMessage)).toBeInTheDocument();
+    expect(screen.getByText<HTMLSpanElement>(customMessage)).toBeInTheDocument() as void;
   });
   test("renders GenericErrorComponent when error occurs", (): void => {
-    renderComponent();
-    expect(screen.queryByText("GenericErrorComponent")).not.toBeInTheDocument();
-    jest.spyOn<ErrorBoundary, "componentDidCatch">(ErrorBoundary.prototype, "componentDidCatch").mockRestore();
+    renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
+    expect(screen.queryByText("GenericErrorComponent")).not.toBeInTheDocument() as void;
+    jest.spyOn<ErrorBoundary, "componentDidCatch">(ErrorBoundary.prototype, "componentDidCatch").mockRestore() as void;
   });
 });

@@ -44,7 +44,7 @@ export default function OptGrpUsers({ grp, area }: { grp: formCases; area: valid
                 if (optGrpRef.current.querySelector("option")) return;
                 panelRoots[`${optGrpRef.current.id}`]?.unmount();
                 delete panelRoots[`${optGrpRef.current.id}`];
-                optGrpRef.current.remove();
+                optGrpRef.current.remove() as void;
                 if (!panelRoots[`${optGrpRef.current.id}`])
                   panelRoots[`${optGrpRef.current.id}`] = createRoot(optGrpRef.current);
                 panelRoots[`${optGrpRef.current.id}`]?.render(

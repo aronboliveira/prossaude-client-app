@@ -21,7 +21,7 @@ jest.mock(
     autoCapitalizeInputs: jest.fn(),
     checkAutoCorrect: jest.fn(),
   })
-);
+) as typeof jest;
 jest.mock(
   "../../../global/handlers/errorHandler",
   (): {
@@ -35,7 +35,7 @@ jest.mock(
     multipleElementsNotFound: jest.fn(),
     inputNotFound: jest.fn(),
   })
-);
+) as typeof jest;
 jest.mock(
   "../../../global/handlers/gHandlers",
   (): {
@@ -43,7 +43,7 @@ jest.mock(
   } => ({
     useCurrentDate: jest.fn(),
   })
-);
+) as typeof jest;
 describe("searchCEPXML", (): void => {
   let mockXMLHttpRequest: jest.Mocked<XMLHttpRequest>;
   beforeEach((): void => {
@@ -81,7 +81,7 @@ describe("searchCEPXML", (): void => {
     document.body.innerHTML = '<input id="cepId" value="12345-678"/>';
   });
   it("should initiate an XMLHttpRequest and load data on success", (): void => {
-    const cepElement = document.createElement("input");
+    const cepElement = document.createElement("input") as HTMLInputElement;
     cepElement.id = "cepId";
     cepElement.value = "12345-678";
     document.body.appendChild(cepElement);
@@ -90,7 +90,7 @@ describe("searchCEPXML", (): void => {
       "GET",
       "https://brasilapi.com.br/api/cep/v2/12345678"
     );
-    expect(mockXMLHttpRequest.send).toHaveBeenCalled();
+    expect(mockXMLHttpRequest.send).toHaveBeenCalled() as void;
     Object.defineProperty(mockXMLHttpRequest, "status", {
       value: 200,
       writable: true,
@@ -105,11 +105,11 @@ describe("searchCEPXML", (): void => {
       writable: true,
     });
     mockXMLHttpRequest && (mockXMLHttpRequest as any).onload();
-    expect(loadCEPXML).toHaveBeenCalledWith<Parameters<typeof loadCEPXML>>(mockXMLHttpRequest, 2);
+    expect(loadCEPXML).toHaveBeenCalledWith<Parameters<typeof loadCEPXML>>(mockXMLHttpRequest, 2) as void;
   });
   it("should call elementNotFound if input element is not valid", (): void => {
     searchCEPXML(null as any);
-    expect(elementNotFound).toHaveBeenCalled();
+    expect(elementNotFound).toHaveBeenCalled() as void;
   });
 });
 describe("loadCEPXML", (): void => {
@@ -165,17 +165,17 @@ describe("searchCEP", (): void => {
       json: jest.fn().mockResolvedValue({ state: "SP", city: "São Paulo" }),
     });
     expect(await searchCEP(document.getElementById("cepId") as HTMLInputElement)).toBe<PromiseRes>("success");
-    expect(loadCEP).toHaveBeenCalled();
+    expect(loadCEP).toHaveBeenCalled() as void;
   });
   it("should handle failed fetch requests", async (): Promise<void> => {
     global.fetch = jest.fn().mockRejectedValue(new Error("Failed request"));
     const cepElement = document.getElementById("cepId") as HTMLInputElement;
     expect(await searchCEP(cepElement)).toBe<PromiseRes>("fail");
-    expect(loadCEP).not.toHaveBeenCalled();
+    expect(loadCEP).not.toHaveBeenCalled() as void;
   });
   it("should call elementNotFound if cepElement is not an input", async (): Promise<void> => {
     await searchCEP(null as any);
-    expect(elementNotFound).toHaveBeenCalled();
+    expect(elementNotFound).toHaveBeenCalled() as void;
   });
 });
 describe("makeCEPRequest", (): void => {
@@ -206,7 +206,7 @@ describe("enableCEPBtn", (): void => {
   });
   it("should call multipleElementsNotFound if the button is not valid", (): void => {
     enableCEPBtn(null as any, 9);
-    expect(multipleElementsNotFound).toHaveBeenCalled();
+    expect(multipleElementsNotFound).toHaveBeenCalled() as void;
   });
 });
 describe("addMedHistHandler", (): void => {
@@ -229,7 +229,7 @@ describe("addMedHistHandler", (): void => {
       <div class="antMedBlock" id="antMedBlock1"></div>
       <div class="antMedBlock" id="antMedBlock2"></div>
     `;
-    const button = document.createElement("button");
+    const button = document.createElement("button") as HTMLButtonElement;
     button.classList.add("removeAntMed");
     document.body.appendChild(button);
     const blockCount = addMedHistHandler({ currentTarget: button } as unknown as React.MouseEvent, 2);
@@ -238,13 +238,13 @@ describe("addMedHistHandler", (): void => {
   });
   it("should call elementNotFound if click target is invalid", (): void => {
     addMedHistHandler(null as any);
-    expect(elementNotFound).toHaveBeenCalled();
+    expect(elementNotFound).toHaveBeenCalled() as void;
   });
 });
 describe("displayCEPLoadBar", (): void => {
   let cepElement: HTMLInputElement;
   beforeEach((): void => {
-    cepElement = document.createElement("input");
+    cepElement = document.createElement("input") as HTMLInputElement;
     cepElement.id = "cepId";
     document.body.innerHTML = `
       <div id="divProgCEP"></div>
@@ -264,16 +264,16 @@ describe("displayCEPLoadBar", (): void => {
     expect(value).toBe<number>(0);
   });
   it("should throw an error if cepElement is not an HTMLInputElement", (): void => {
-    expect((): [number, number, HTMLProgressElement] => displayCEPLoadBar(document.createElement("div"))).toThrow(
-      "Input not found for cepElement"
-    );
+    expect((): [number, number, HTMLProgressElement] =>
+      displayCEPLoadBar(document.createElement("div") as HTMLDivElement)
+    ).toThrow("Input not found for cepElement");
   });
 });
 describe("uploadCEPLoadBar", (): void => {
   let cepElement: HTMLInputElement;
   let progressBar: HTMLProgressElement;
   beforeEach((): void => {
-    cepElement = document.createElement("input");
+    cepElement = document.createElement("input") as HTMLInputElement;
     cepElement.id = "cepId";
     progressBar = document.createElement("progress");
     progressBar.id = "loadBarCepVars";
@@ -303,7 +303,7 @@ describe("uploadCEPLoadBar", (): void => {
   });
   it("should throw an error if any of the arguments are invalid", (): void => {
     expect((): void => {
-      uploadCEPLoadBar(document.createElement("div"), progressBar, Date.now(), 100, 0);
+      uploadCEPLoadBar(document.createElement("div") as HTMLDivElement, progressBar, Date.now(), 100, 0);
     }).toThrow("Multiple elements not found");
   });
 });

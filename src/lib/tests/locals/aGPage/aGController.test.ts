@@ -21,7 +21,7 @@ jest.mock(
     formatTel: jest.fn(),
     addEmailExtension: jest.fn(),
   })
-);
+) as typeof jest;
 jest.mock(
   "../../global/handlers/errorHandler",
   (): {
@@ -35,7 +35,7 @@ jest.mock(
     multipleElementsNotFound: jest.fn(),
     elementNotPopulated: jest.fn(),
   })
-);
+) as typeof jest;
 jest.mock(
   "./aGHandlers",
   (): {
@@ -47,13 +47,13 @@ jest.mock(
     searchCEP: jest.fn().mockResolvedValue("success"),
     searchCEPXML: jest.fn(),
   })
-);
+) as typeof jest;
 describe("addListenerTelInputs", (): void => {
   beforeEach((): void => {
     document.body.innerHTML = "";
   });
   it("should add event listeners to all tel inputs and format them on input", (): void => {
-    const telInput = document.createElement("input");
+    const telInput = document.createElement("input") as HTMLInputElement;
     telInput.type = "text";
     telInput.id = "telInput1";
     document.body.appendChild(telInput);
@@ -61,11 +61,11 @@ describe("addListenerTelInputs", (): void => {
     expect(telInputs.length).toBe<number>(1);
     expect(telInputs[0]).toBe<HTMLInputElement>(telInput);
     telInput.dispatchEvent(new Event("input"));
-    expect(formatTel).toHaveBeenCalledWith<Parameters<typeof formatTel>>(telInput);
+    expect(formatTel).toHaveBeenCalledWith<Parameters<typeof formatTel>>(telInput) as void;
   });
   it("should call elementNotPopulated if no tel inputs are found", (): void => {
     addListenerTelInputs();
-    expect(elementNotPopulated).toHaveBeenCalled();
+    expect(elementNotPopulated).toHaveBeenCalled() as void;
   });
   it("should call inputNotFound if target input is not found", (): void => {
     const telInput = document.createElement("textarea");
@@ -73,7 +73,7 @@ describe("addListenerTelInputs", (): void => {
     document.body.appendChild(telInput);
     addListenerTelInputs();
     telInput.dispatchEvent(new Event("input"));
-    expect(inputNotFound).toHaveBeenCalled();
+    expect(inputNotFound).toHaveBeenCalled() as void;
   });
 });
 describe("addListenersEmailInputs", (): void => {
@@ -81,29 +81,29 @@ describe("addListenersEmailInputs", (): void => {
     document.body.innerHTML = "";
   });
   it("should add event listeners to email inputs and format them on click and input", (): void => {
-    const emailInput = document.createElement("input");
+    const emailInput = document.createElement("input") as HTMLInputElement;
     emailInput.id = "emailInput1";
     emailInput.type = "text";
     document.body.appendChild(emailInput);
     const emailInputs = addListenersEmailInputs();
     expect(emailInputs.length).toBe<number>(1);
     expect(emailInputs[0]).toBe<HTMLInputElement>(emailInput);
-    emailInput.click();
-    expect(addEmailExtension).toHaveBeenCalledWith<Parameters<typeof addEmailExtension>>(emailInput);
+    emailInput.click() as void;
+    expect(addEmailExtension).toHaveBeenCalledWith<Parameters<typeof addEmailExtension>>(emailInput) as void;
     emailInput.dispatchEvent(new Event("input"));
-    expect(addEmailExtension).toHaveBeenCalledWith<Parameters<typeof addEmailExtension>>(emailInput);
+    expect(addEmailExtension).toHaveBeenCalledWith<Parameters<typeof addEmailExtension>>(emailInput) as void;
   });
   it("should call elementNotPopulated if no email inputs are found", (): void => {
     addListenersEmailInputs();
-    expect(elementNotPopulated).toHaveBeenCalled();
+    expect(elementNotPopulated).toHaveBeenCalled() as void;
   });
   it("should call inputNotFound if the target is not an input", (): void => {
     const invalidInput = document.createElement("textarea");
     invalidInput.id = "emailInput1";
     document.body.appendChild(invalidInput);
     addListenersEmailInputs();
-    invalidInput.click();
-    expect(inputNotFound).toHaveBeenCalled();
+    invalidInput.click() as void;
+    expect(inputNotFound).toHaveBeenCalled() as void;
   });
 });
 describe("addListenerCPFCont", (): void => {
@@ -111,16 +111,16 @@ describe("addListenerCPFCont", (): void => {
     document.body.innerHTML = "";
   });
   it("should add input event listener to CPF input and format CPF", (): void => {
-    const inpCPF = document.createElement("input");
+    const inpCPF = document.createElement("input") as HTMLInputElement;
     inpCPF.id = "inpCPF";
     document.body.appendChild(inpCPF);
     expect(addListenerCPFCont()).toBe<HTMLInputElement>(inpCPF);
     inpCPF.dispatchEvent(new Event("input"));
-    expect(formatCPF).toHaveBeenCalledWith<Parameters<typeof formatCPF>>(inpCPF);
+    expect(formatCPF).toHaveBeenCalledWith<Parameters<typeof formatCPF>>(inpCPF) as void;
   });
   it("should call inputNotFound if the CPF input is not found", (): void => {
     addListenerCPFCont();
-    expect(inputNotFound).toHaveBeenCalled();
+    expect(inputNotFound).toHaveBeenCalled() as void;
   });
 });
 describe("addListenersCepElements", (): void => {
@@ -128,27 +128,27 @@ describe("addListenersCepElements", (): void => {
     document.body.innerHTML = "";
   });
   it("should add event listeners to the CEP input and button, and handle input correctly", async (): Promise<void> => {
-    const cepElement = document.createElement("input");
+    const cepElement = document.createElement("input") as HTMLInputElement;
     cepElement.id = "cepId";
     document.body.appendChild(cepElement);
-    const cepElementBtn = document.createElement("button");
+    const cepElementBtn = document.createElement("button") as HTMLButtonElement;
     cepElementBtn.id = "autoCompCepBtn";
     document.body.appendChild(cepElementBtn);
     const [returnedCepElement, returnedCepElementBtn] = addListenersCepElements();
     expect(returnedCepElement).toBe<HTMLInputElement>(cepElement);
     expect(returnedCepElementBtn).toBe<HTMLButtonElement>(cepElementBtn);
     cepElement.dispatchEvent(new Event("input"));
-    expect(formatCEP).toHaveBeenCalledWith<Parameters<typeof formatCEP>>(cepElement);
+    expect(formatCEP).toHaveBeenCalledWith<Parameters<typeof formatCEP>>(cepElement) as void;
     cepElementBtn.dispatchEvent(new Event("click"));
     expect(AGHandlers.enableCEPBtn).toHaveBeenCalledWith<Parameters<typeof AGHandlers.enableCEPBtn>>(
       cepElementBtn,
       cepElement.value.length
     );
-    expect(AGHandlers.searchCEP).toHaveBeenCalled();
+    expect(AGHandlers.searchCEP).toHaveBeenCalled() as void;
   });
 
   it("should call multipleElementsNotFound if the CEP input or button is not found", (): void => {
     addListenersCepElements();
-    expect(multipleElementsNotFound).toHaveBeenCalled();
+    expect(multipleElementsNotFound).toHaveBeenCalled() as void;
   });
 });

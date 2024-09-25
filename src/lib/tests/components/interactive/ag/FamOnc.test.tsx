@@ -8,20 +8,20 @@ jest.mock(
   } => ({
     handleDivAddShow: jest.fn(),
   })
-);
+) as typeof jest;
 describe("FamOnc Component", (): void => {
   it("renders the checkbox for family oncology history", (): void => {
     render(<FamOnc />);
     expect(
       screen.getByLabelText<HTMLInputElement>("Antecedentes Familiares — Doença(s) Oncológica(s)")
-    ).toBeInTheDocument();
+    ).toBeInTheDocument() as void;
   });
   it("calls handleDivAddShow on checkbox click", async (): Promise<void> => {
     render(<FamOnc />);
     const checkbox = screen.getByLabelText<HTMLInputElement>("Antecedentes Familiares — Doença(s) Oncológica(s)");
     fireEvent.click(checkbox);
     await waitFor((): void => {
-      expect(handleDivAddShow).toHaveBeenCalledWith<Parameters<typeof handleDivAddShow>>(checkbox);
+      expect(handleDivAddShow).toHaveBeenCalledWith<Parameters<typeof handleDivAddShow>>(checkbox) as void;
     });
   });
 });

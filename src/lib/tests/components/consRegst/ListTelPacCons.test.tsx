@@ -10,7 +10,7 @@ jest.mock(
   } => ({
     handleFetch: jest.fn(),
   })
-);
+) as typeof jest;
 jest.mock(
   "react-dom/client",
   (): {
@@ -28,35 +28,37 @@ jest.mock(
       unmount: jest.fn(),
     })),
   })
-);
+) as typeof jest;
 describe("<ListTelPacCons />", (): void => {
   const mockPacs = [
     { name: "John Doe", tel: "123-456-7890", email: "john@example.com" },
     { name: "Jane Smith", tel: "987-654-3210", email: "jane@example.com" },
   ];
   beforeEach((): void => {
-    jest.clearAllMocks();
+    jest.clearAllMocks() as typeof jest;
   });
   test("renders datalist and fetches patient data", async (): Promise<void> => {
     (handleFetch as jest.Mock).mockResolvedValue(mockPacs);
     render(<ListTelPacCons />);
-    expect(screen.getByRole<HTMLElement>("listbox")).toBeInTheDocument();
+    expect(screen.getByRole<HTMLElement>("listbox")).toBeInTheDocument() as void;
     await waitFor((): void =>
-      mockPacs.forEach((pac): void =>
-        expect(screen.getByDisplayValue<HTMLInputElement>(pac.tel.trim())).toBeInTheDocument()
+      mockPacs.forEach(
+        (pac): void => expect(screen.getByDisplayValue<HTMLInputElement>(pac.tel.trim())).toBeInTheDocument() as void
       )
     );
   });
   test("renders error fallback on error", async (): Promise<void> => {
     (handleFetch as jest.Mock).mockRejectedValue(new Error("Fetch Error"));
     render(<ListTelPacCons />);
-    await waitFor((): void => expect(screen.queryByRole("listbox")).not.toBeInTheDocument());
-    expect(createRoot).not.toHaveBeenCalled();
+    await waitFor((): void => expect(screen.queryByRole("listbox")).not.toBeInTheDocument() as void);
+    expect(createRoot).not.toHaveBeenCalled() as void;
   });
   test("syncs aria states after fetch", async (): Promise<void> => {
     (handleFetch as jest.Mock).mockResolvedValue(mockPacs);
     render(<ListTelPacCons />);
-    await waitFor(() => expect(screen.getByDisplayValue<HTMLInputElement>(mockPacs[0].tel.trim())).toBeInTheDocument());
+    await waitFor(
+      () => expect(screen.getByDisplayValue<HTMLInputElement>(mockPacs[0].tel.trim())).toBeInTheDocument() as void
+    );
     await waitFor(() => {
       screen.getAllByRole<HTMLOptionElement>("option").forEach(option => {
         expect(option).toHaveAttribute("aria-selected");
@@ -67,7 +69,7 @@ describe("<ListTelPacCons />", (): void => {
     (handleFetch as jest.Mock).mockResolvedValue(mockPacs);
     render(<ListTelPacCons />);
     await waitFor(() =>
-      mockPacs.forEach((pac): void => expect(screen.getByText<HTMLInputElement>(pac.name)).toBeInTheDocument())
+      mockPacs.forEach((pac): void => expect(screen.getByText<HTMLInputElement>(pac.name)).toBeInTheDocument() as void)
     );
   });
   test("unmounts panelRoot if it already exists", async (): Promise<void> => {

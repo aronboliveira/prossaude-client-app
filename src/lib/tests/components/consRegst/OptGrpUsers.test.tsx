@@ -17,7 +17,7 @@ jest.mock(
       unmount: jest.fn(),
     }),
   })
-);
+) as typeof jest;
 jest.mock(
   "../../../../pages/api/ts/handlers",
   (): {
@@ -28,7 +28,7 @@ jest.mock(
       { name: "Jane Doe", area: "Educação Física", tel: "222-2222", email: "janedoe@example.com" },
     ]),
   })
-);
+) as typeof jest;
 jest.mock(
   "../../../../lib/global/handlers/gHandlers",
   (): {
@@ -36,7 +36,7 @@ jest.mock(
   } => ({
     syncAriaStates: jest.fn(),
   })
-);
+) as typeof jest;
 jest.mock(
   "../../../../lib/global/handlers/errorHandler",
   (): {
@@ -46,7 +46,7 @@ jest.mock(
     elementNotFound: jest.fn(),
     extLine: jest.fn(),
   })
-);
+) as typeof jest;
 describe("OptGrpUsers Component", (): void => {
   const renderComponent = (
     grp: string,
@@ -55,12 +55,12 @@ describe("OptGrpUsers Component", (): void => {
     render(<OptGrpUsers grp={grp as formCases} area={area as validAreas} />);
   test("renders the optgroup component", (): void => {
     renderComponent("profs", "Odontologia");
-    expect(screen.getByRole<HTMLOptGroupElement>("group")).toBeInTheDocument();
+    expect(screen.getByRole<HTMLOptGroupElement>("group")).toBeInTheDocument() as void;
   });
   test("fetches and populates options for a specific group and area from handleFetch", async (): Promise<void> => {
     renderComponent("profs", "Odontologia");
     await waitFor((): void => {
-      expect(handleFetch).toHaveBeenCalledWith<Parameters<typeof handleFetch>>("profs", "_table", true);
+      expect(handleFetch).toHaveBeenCalledWith<Parameters<typeof handleFetch>>("profs", "_table", true) as void;
       const options = screen.getAllByRole<HTMLOptionElement>("option");
       expect(options).toHaveLength(1);
       expect(options[0]).toHaveValue("John Doe");
@@ -73,7 +73,7 @@ describe("OptGrpUsers Component", (): void => {
     expect(elementNotFound).toHaveBeenCalledWith<Parameters<typeof elementNotFound>>(
       null,
       expect.any(String),
-      extLine(expect.any(Error))
+      extLine(expect.any(Error) as any)
     );
   });
   test("handles rendering and re-rendering of the options", async (): Promise<void> => {
@@ -90,21 +90,21 @@ describe("OptGrpUsers Component", (): void => {
     renderComponent("profs", "Odontologia");
     await waitFor((): void => expect(handleFetch).toHaveBeenCalled());
     await waitFor((): void => {
-      expect(syncAriaStates).toHaveBeenCalledTimes(2);
-      expect(syncAriaStates).toHaveBeenCalledWith<Parameters<typeof syncAriaStates>>(expect.any(Array));
+      expect(syncAriaStates).toHaveBeenCalledTimes(2) as void;
+      expect(syncAriaStates).toHaveBeenCalledWith<Parameters<typeof syncAriaStates>>(expect.any(Array)) as void;
     });
   });
   test("logs error if fetch fails", async (): Promise<void> => {
     (handleFetch as jest.Mock).mockRejectedValueOnce(new Error("Fetch failed"));
     const consoleErrorSpy: jest.SpyInstance<void, [message?: any, ...optionalParams: any[]], any> = jest
       .spyOn<Console, ConsoleMethod>(console, "error")
-      .mockImplementation((): void => {});
+      .mockImplementation((): void => {}) as jest.SpyInstance;
     renderComponent("profs", "Odontologia");
     await waitFor((): void => {
       expect(consoleErrorSpy).toHaveBeenCalledWith<[any]>(
         expect.stringContaining("Failed to fetch from Patients Table for filling First Name DL: Fetch failed")
       );
     });
-    consoleErrorSpy.mockRestore();
+    consoleErrorSpy.mockRestore() as void;
   });
 });

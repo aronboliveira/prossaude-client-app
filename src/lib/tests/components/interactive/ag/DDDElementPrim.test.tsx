@@ -8,11 +8,11 @@ jest.mock(
   } => ({
     handleEventReq: jest.fn(),
   })
-);
+) as typeof jest;
 describe("DDDElementPrim Component", (): void => {
   it("renders the DDD input field", (): void => {
     render(<DDDElementPrim />);
-    expect(screen.getByLabelText<HTMLInputElement>("DDD Primário")).toBeInTheDocument();
+    expect(screen.getByLabelText<HTMLInputElement>("DDD Primário")).toBeInTheDocument() as void;
   });
   it("calls handleEventReq on input", async (): Promise<void> => {
     render(<DDDElementPrim />);

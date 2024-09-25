@@ -1,11 +1,7 @@
 import { entryEl, targEl } from "../../../global/declarations/types";
 //nesse arquivo estarão as funções de gerenciamento de usuário
 
-import {
-  elementNotPopulated,
-  extLine,
-  typeError,
-} from "../../../global/handlers/errorHandler";
+import { elementNotPopulated, extLine, typeError } from "../../../global/handlers/errorHandler";
 
 export function handleClientPermissions(
   userClass: string = "estudante",
@@ -20,21 +16,9 @@ export function handleClientPermissions(
         "string",
         extLine(new Error())
       );
-    if (
-      !(
-        Array.isArray(allowedClasses) &&
-        allowedClasses.every(userClass => typeof userClass === "string")
-      )
-    )
-      throw elementNotPopulated(
-        `${JSON.stringify(allowedClasses)}`,
-        "allowedClasses",
-        extLine(new Error())
-      );
-    if (
-      Array.isArray(elements) &&
-      elements.every(el => el instanceof Element)
-    ) {
+    if (!(Array.isArray(allowedClasses) && allowedClasses.every(userClass => typeof userClass === "string")))
+      throw elementNotPopulated(`${JSON.stringify(allowedClasses)}`, "allowedClasses", extLine(new Error()));
+    if (Array.isArray(elements) && elements.every(el => el instanceof Element)) {
       let message = `Permissõnes não concedidas. 
       Campos afetados:\n`;
       for (let e = 0; e < elements.length; e++) {
@@ -45,16 +29,9 @@ export function handleClientPermissions(
           elements[e] instanceof HTMLTextAreaElement
         ) {
           (elements[e] as entryEl).disabled = true;
-          if (
-            elements[e]?.classList.contains("btn") &&
-            !elements[e]?.classList.contains("btn-secondary")
-          )
+          if (elements[e]?.classList.contains("btn") && !elements[e]?.classList.contains("btn-secondary"))
             elements[e]!.classList.add("btn-secondary", "blocked");
-          if (
-            allowedClasses.some(allowedClass =>
-              new RegExp(allowedClass, "gi").test(userClass)
-            )
-          ) {
+          if (allowedClasses.some(allowedClass => new RegExp(allowedClass, "gi").test(userClass))) {
             (elements[e] as entryEl).disabled = false;
             if (
               elements[e]?.classList.contains("btn") &&
@@ -62,30 +39,15 @@ export function handleClientPermissions(
               elements[e]?.classList.contains("blocked")
             )
               elements[e]?.classList.remove("btn-secondary", "blocked");
-          } else
-            message += `Element ${e + 1}. \n ${
-              elements[e]?.id || elements[e]?.tagName || "Não identificado"
-            }\n`;
+          } else message += `Element ${e + 1}. \n ${elements[e]?.id || elements[e]?.tagName || "Não identificado"}\n`;
           if (/Element/g.test(message)) console.warn(message);
         }
-        if (
-          elements[e] instanceof HTMLDataListElement ||
-          elements[e] instanceof HTMLTableElement
-        ) {
-          if (
-            !allowedClasses.some(allowedClass =>
-              new RegExp(allowedClass, "gi").test(userClass)
-            )
-          )
-            elements[e]!.remove();
+        if (elements[e] instanceof HTMLDataListElement || elements[e] instanceof HTMLTableElement) {
+          if (!allowedClasses.some(allowedClass => new RegExp(allowedClass, "gi").test(userClass)))
+            elements[e]!.remove() as void;
         }
       }
-    } else
-      throw elementNotPopulated(
-        elements,
-        "Elements for handleSupervisionCredential",
-        extLine(new Error())
-      );
+    } else throw elementNotPopulated(elements, "Elements for handleSupervisionCredential", extLine(new Error()));
   } catch (err) {
     console.error(`ERROR:
 		${(err as Error).message}.`);

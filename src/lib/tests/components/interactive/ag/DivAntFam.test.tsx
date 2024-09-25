@@ -8,15 +8,15 @@ jest.mock(
   } => ({
     textTransformPascal: jest.fn(str => str.charAt(0).toUpperCase() + str.slice(1)),
   })
-);
+) as typeof jest;
 describe("DivAntFam Component", (): void => {
   it("renders family members checkboxes with transformed names", (): void => {
     render(<DivAntFam name='family_test' fullName='Test Family' />);
-    expect(screen.getByLabelText<HTMLInputElement>("Mãe — Test Family")).toBeInTheDocument();
-    expect(screen.getByLabelText<HTMLInputElement>("Pai — Test Family")).toBeInTheDocument();
+    expect(screen.getByLabelText<HTMLInputElement>("Mãe — Test Family")).toBeInTheDocument() as void;
+    expect(screen.getByLabelText<HTMLInputElement>("Pai — Test Family")).toBeInTheDocument() as void;
   });
   it("uses PascalCase for transformed name", (): void => {
     render(<DivAntFam name='family_test' />);
-    expect(textTransformPascal).toHaveBeenCalledWith<Parameters<typeof textTransformPascal>>("family");
+    expect(textTransformPascal).toHaveBeenCalledWith<Parameters<typeof textTransformPascal>>("family") as void;
   });
 });

@@ -55,29 +55,29 @@ jest.mock(
     inputNotFound: jest.fn(),
     multipleElementsNotFound: jest.fn(),
   })
-);
+) as typeof jest;
 describe("gHandlers Tests", (): void => {
   describe("updateSimpleProperty", (): void => {
     it("should return the checked state for a radio or checkbox input", () => {
-      const input = document.createElement("input");
+      const input = document.createElement("input") as HTMLInputElement;
       input.type = "checkbox" as InputType;
       input.checked = true;
       expect(updateSimpleProperty(input)).toBe<PseudoBool>("true");
     });
     it("should return the parsed value of a number input", () => {
-      const input = document.createElement("input");
+      const input = document.createElement("input") as HTMLInputElement;
       input.type = "number" as InputType;
       input.value = "123" as PseudoNum;
       expect(updateSimpleProperty(input)).toBe<number>(123);
     });
     it("should return the text value for a regular input", () => {
-      const input = document.createElement("input");
+      const input = document.createElement("input") as HTMLInputElement;
       input.type = "text" as InputType;
       input.value = "test";
       expect(updateSimpleProperty(input)).toBe<string>("test");
     });
     it("should call inputNotFound if the element is not recognized", () => {
-      const element = document.createElement("div");
+      const element = document.createElement("div") as HTMLDivElement;
       updateSimpleProperty(element);
       expect(inputNotFound).toHaveBeenCalledWith<Parameters<typeof inputNotFound>>(
         element,
@@ -111,9 +111,9 @@ describe("gHandlers Tests", (): void => {
         altKey: true,
         key: "y",
       });
-      radioYes = document.createElement("input");
+      radioYes = document.createElement("input") as HTMLInputElement;
       radioYes.type = "radio" as InputType;
-      radioNo = document.createElement("input");
+      radioNo = document.createElement("input") as HTMLInputElement;
       radioNo.type = "radio" as InputType;
     });
     it("should check the 'Yes' radio when alt+y is pressed", () => {
@@ -121,7 +121,7 @@ describe("gHandlers Tests", (): void => {
       expect(radioYes.checked).toBe<boolean>(true);
     });
     it("should call multipleElementsNotFound if validation fails", () => {
-      const invalidRadio = document.createElement("div");
+      const invalidRadio = document.createElement("div") as HTMLDivElement;
       opRadioHandler(keydownEvent, [invalidRadio, radioNo]);
       expect(multipleElementsNotFound).toHaveBeenCalledWith<Parameters<typeof multipleElementsNotFound>>(
         "test-line",
@@ -135,16 +135,16 @@ describe("gHandlers Tests", (): void => {
     let radio: HTMLInputElement;
     let event: Event;
     beforeEach((): void => {
-      radio = document.createElement("input");
+      radio = document.createElement("input") as HTMLInputElement;
       radio.type = "radio";
       event = new Event("click");
     });
     it("should fade in the divAdd element when the radio is checked", () => {
-      const divAdd = document.createElement("div");
+      const divAdd = document.createElement("div") as HTMLDivElement;
       divAdd.classList.add("divAdd");
       radio.id = "testYes";
       radio.checked = true;
-      const parentDiv = document.createElement("div");
+      const parentDiv = document.createElement("div") as HTMLDivElement;
       parentDiv.appendChild(radio);
       parentDiv.appendChild(divAdd);
       document.body.appendChild(parentDiv);
@@ -153,22 +153,22 @@ describe("gHandlers Tests", (): void => {
         .spyOn<Window, WindowMethods>(window, "setTimeout")
         //@ts-ignore
         .mockImplementation((callback: (...args: any[]) => void): any => {
-          callback();
+          callback() as void;
           return {} as any;
         });
       cpbInpHandler(event, radio);
-      expect(setTimeoutSpy).toHaveBeenCalled();
-      setTimeoutSpy.mockRestore();
+      expect(setTimeoutSpy).toHaveBeenCalled() as void;
+      setTimeoutSpy.mockRestore() as void;
     });
     it("should set inputs in divAdd to required when radio is checked", () => {
-      const divAdd = document.createElement("div");
+      const divAdd = document.createElement("div") as HTMLDivElement;
       divAdd.classList.add("divAdd");
       radio.id = "testYes";
       radio.checked = true;
-      const parentDiv = document.createElement("div");
+      const parentDiv = document.createElement("div") as HTMLDivElement;
       parentDiv.appendChild(radio);
       parentDiv.appendChild(divAdd);
-      const textInput = document.createElement("input");
+      const textInput = document.createElement("input") as HTMLInputElement;
       textInput.type = "text";
       divAdd.appendChild(textInput);
       document.body.appendChild(parentDiv);
@@ -176,11 +176,11 @@ describe("gHandlers Tests", (): void => {
       expect(textInput.required).toBe<boolean>(true);
     });
     it("should fade out the divAdd element when the radio is unchecked", () => {
-      const divAdd = document.createElement("div");
+      const divAdd = document.createElement("div") as HTMLDivElement;
       divAdd.classList.add("divAdd");
       radio.id = "testYes";
       radio.checked = false;
-      const parentDiv = document.createElement("div");
+      const parentDiv = document.createElement("div") as HTMLDivElement;
       parentDiv.appendChild(radio);
       parentDiv.appendChild(divAdd);
       document.body.appendChild(parentDiv);
@@ -189,12 +189,12 @@ describe("gHandlers Tests", (): void => {
         .spyOn<Window, WindowMethods>(window, "setTimeout")
         //@ts-ignore
         .mockImplementation((callback: (...args: any[]) => void): any => {
-          callback();
+          callback() as void;
           return {} as any;
         });
       cpbInpHandler(event, radio);
-      expect(setTimeoutSpy).toHaveBeenCalled();
-      setTimeoutSpy.mockRestore();
+      expect(setTimeoutSpy).toHaveBeenCalled() as void;
+      setTimeoutSpy.mockRestore() as void;
     });
     it("should call multipleElementsNotFound if the element structure is invalid", () => {
       const multipleElementsNotFoundSpy = jest.spyOn<any, ErrorHandler>(
@@ -202,20 +202,26 @@ describe("gHandlers Tests", (): void => {
         "multipleElementsNotFound"
       );
       cpbInpHandler(event, radio);
-      expect(multipleElementsNotFoundSpy).toHaveBeenCalled();
-      multipleElementsNotFoundSpy.mockRestore();
+      expect(multipleElementsNotFoundSpy).toHaveBeenCalled() as void;
+      multipleElementsNotFoundSpy.mockRestore() as void;
     });
   });
   describe("deactTextInput", (): void => {
     let addressInps: HTMLInputElement[], nullRadios: HTMLInputElement[], blockableInput: HTMLInputElement;
     beforeEach((): void => {
-      addressInps = [document.createElement("input"), document.createElement("input")];
-      nullRadios = [document.createElement("input"), document.createElement("input")];
-      blockableInput = document.createElement("input");
-      const parentDiv1 = document.createElement("div"),
-        parentDiv2 = document.createElement("div"),
-        grandParentDiv1 = document.createElement("div"),
-        grandParentDiv2 = document.createElement("div");
+      addressInps = [
+        document.createElement("input") as HTMLInputElement,
+        document.createElement("input") as HTMLInputElement,
+      ];
+      nullRadios = [
+        document.createElement("input") as HTMLInputElement,
+        document.createElement("input") as HTMLInputElement,
+      ];
+      blockableInput = document.createElement("input") as HTMLInputElement;
+      const parentDiv1 = document.createElement("div") as HTMLDivElement,
+        parentDiv2 = document.createElement("div") as HTMLDivElement,
+        grandParentDiv1 = document.createElement("div") as HTMLDivElement,
+        grandParentDiv2 = document.createElement("div") as HTMLDivElement;
       parentDiv1.appendChild(blockableInput);
       grandParentDiv1.appendChild(parentDiv1);
       grandParentDiv2.appendChild(parentDiv2);
@@ -243,7 +249,7 @@ describe("gHandlers Tests", (): void => {
   describe("doubleClickHandler", (): void => {
     let radio: HTMLInputElement;
     beforeEach((): void => {
-      radio = document.createElement("input");
+      radio = document.createElement("input") as HTMLInputElement;
       radio.type = "radio";
     });
     it("should toggle the radio's checked property and call cpbInpHandler", () => {
@@ -254,30 +260,30 @@ describe("gHandlers Tests", (): void => {
       radio.checked = false;
       doubleClickHandler(radio);
       expect(radio.checked).toBe<boolean>(true);
-      expect(cpbInpHandlerSpy).toHaveBeenCalledWith<[any, HTMLInputElement]>(expect.any(Event), radio);
+      expect(cpbInpHandlerSpy).toHaveBeenCalledWith<[any, HTMLInputElement]>(expect.any(Event), radio) as void;
       doubleClickHandler(radio);
       expect(radio.checked).toBe<boolean>(false);
-      cpbInpHandlerSpy.mockRestore();
+      cpbInpHandlerSpy.mockRestore() as void;
     });
     it("should call inputNotFound if the element is not a checkbox or radio input", () => {
       const inputNotFoundSpy = jest.spyOn<any, ErrorHandler>(
         require("../../../global/handlers/errorHandler"),
         "inputNotFound"
       );
-      doubleClickHandler(document.createElement("div"));
-      expect(inputNotFoundSpy).toHaveBeenCalled();
-      inputNotFoundSpy.mockRestore();
+      doubleClickHandler(document.createElement("div") as HTMLDivElement);
+      expect(inputNotFoundSpy).toHaveBeenCalled() as void;
+      inputNotFoundSpy.mockRestore() as void;
     });
   });
   describe("useCurrentDate", (): void => {
     let dateBtn: HTMLButtonElement;
     let event: Event;
     beforeEach((): void => {
-      dateBtn = document.createElement("button");
+      dateBtn = document.createElement("button") as HTMLButtonElement;
       event = new Event("click");
     });
     it("should set the current date to the target input when the button is clicked", () => {
-      const dateInput = document.createElement("input");
+      const dateInput = document.createElement("input") as HTMLInputElement;
       dateInput.type = "date" as InputType;
       jest
         .spyOn<any, SearchFunction>(require("../../../global/handlers/gHandlers"), "searchPreviousSiblings")
@@ -298,8 +304,8 @@ describe("gHandlers Tests", (): void => {
         .spyOn<any, SearchFunction>(require("../../../global/handlers/gHandlers"), "searchPreviousSiblings")
         .mockReturnValue(null);
       useCurrentDate(event, dateBtn);
-      expect(inputNotFoundSpy).toHaveBeenCalled();
-      inputNotFoundSpy.mockRestore();
+      expect(inputNotFoundSpy).toHaveBeenCalled() as void;
+      inputNotFoundSpy.mockRestore() as void;
     });
     it("should call elementNotFound if activation target does not match the button", () => {
       const elementNotFoundSpy = jest.spyOn<any, ErrorHandler>(
@@ -308,18 +314,18 @@ describe("gHandlers Tests", (): void => {
       );
       dateBtn.dispatchEvent(new Event("click"));
       useCurrentDate(new Event("click"), dateBtn);
-      expect(elementNotFoundSpy).toHaveBeenCalled();
-      elementNotFoundSpy.mockRestore();
+      expect(elementNotFoundSpy).toHaveBeenCalled() as void;
+      elementNotFoundSpy.mockRestore() as void;
     });
   });
   describe("Sibling Search Functions", (): void => {
     let parentElement: HTMLElement, currentElement: HTMLElement;
     beforeEach((): void => {
-      parentElement = document.createElement("div");
-      currentElement = document.createElement("div");
+      parentElement = document.createElement("div") as HTMLDivElement;
+      currentElement = document.createElement("div") as HTMLDivElement;
       currentElement.classList.add("currentElement");
-      const sibling1 = document.createElement("div"),
-        sibling2 = document.createElement("div");
+      const sibling1 = document.createElement("div") as HTMLDivElement,
+        sibling2 = document.createElement("div") as HTMLDivElement;
       sibling2.classList.add("searchedClass");
       parentElement.append(currentElement, sibling1, sibling2);
     });
@@ -339,10 +345,10 @@ describe("gHandlers Tests", (): void => {
   describe("searchPreviousSiblingsById", (): void => {
     let parentElement: HTMLElement, currentElement: HTMLElement, targetSibling: HTMLElement;
     beforeEach((): void => {
-      parentElement = document.createElement("div");
-      targetSibling = document.createElement("div");
+      parentElement = document.createElement("div") as HTMLDivElement;
+      targetSibling = document.createElement("div") as HTMLDivElement;
       targetSibling.id = "targetSibling";
-      currentElement = document.createElement("div");
+      currentElement = document.createElement("div") as HTMLDivElement;
       parentElement.appendChild(targetSibling);
       parentElement.appendChild(currentElement);
     });
@@ -352,8 +358,8 @@ describe("gHandlers Tests", (): void => {
     it("should stop and return when the loop accumulator exceeds 999", () => {
       let tempElement: HTMLElement;
       for (let i = 0; i < 1000; i++) {
-        tempElement = document.createElement("div");
-        document.createElement("div").appendChild(tempElement);
+        tempElement = document.createElement("div") as HTMLDivElement;
+        (document.createElement("div") as HTMLDivElement).appendChild(tempElement);
         expect(searchPreviousSiblingsById(tempElement, "nonexistentId")).toBe<HTMLElement>(tempElement);
       }
     });
@@ -364,11 +370,11 @@ describe("gHandlers Tests", (): void => {
   describe("changeToAstDigit", (): void => {
     let toFileInpBtn: HTMLButtonElement;
     beforeEach((): void => {
-      toFileInpBtn = document.createElement("button");
+      toFileInpBtn = document.createElement("button") as HTMLButtonElement;
       toFileInpBtn.textContent = "Usar Assinatura Digital";
     });
     it("should replace the current element with a file input and add listeners", () => {
-      const inpAst = document.createElement("input");
+      const inpAst = document.createElement("input") as HTMLInputElement;
       inpAst.type = "text" as InputType;
       inpAst.classList.add("inpAst");
       toFileInpBtn.parentElement?.insertBefore(inpAst, toFileInpBtn);
@@ -382,16 +388,16 @@ describe("gHandlers Tests", (): void => {
       const elementNotFoundSpy = jest.spyOn<any, ErrorHandler>(require("./errorHandler"), "elementNotFound");
       toFileInpBtn.classList.add("tratBtn");
       changeToAstDigit(toFileInpBtn);
-      expect(elementNotFoundSpy).toHaveBeenCalled();
-      elementNotFoundSpy.mockRestore();
+      expect(elementNotFoundSpy).toHaveBeenCalled() as void;
+      elementNotFoundSpy.mockRestore() as void;
     });
   });
   describe("defineLabId", (): void => {
     let labelElement: HTMLLabelElement, buttonElement: HTMLButtonElement, inputElement: HTMLInputElement;
     beforeEach((): void => {
-      labelElement = document.createElement("label");
-      buttonElement = document.createElement("button");
-      inputElement = document.createElement("input");
+      labelElement = document.createElement("label") as HTMLLabelElement;
+      buttonElement = document.createElement("button") as HTMLButtonElement;
+      inputElement = document.createElement("input") as HTMLInputElement;
     });
     it('should set the id of the label element to "spanAstPct" when valid arguments are provided', () => {
       defineLabId(labelElement, buttonElement, inputElement);
@@ -399,20 +405,23 @@ describe("gHandlers Tests", (): void => {
     });
     it("should call multipleElementsNotFound if the arguments are invalid", () => {
       defineLabId(null, buttonElement, inputElement);
-      expect(multipleElementsNotFound).toHaveBeenCalled();
+      expect(multipleElementsNotFound).toHaveBeenCalled() as void;
     });
     it("should call elementNotFound if the button or input element is not valid", () => {
-      defineLabId(labelElement, document.createElement("div") as any, inputElement);
-      expect(elementNotFound).toHaveBeenCalled();
+      defineLabId(labelElement, document.createElement("div") as HTMLDivElement as any, inputElement);
+      expect(elementNotFound).toHaveBeenCalled() as void;
     });
   });
   describe("resetarFormulario", (): void => {
     let clickEvent: MouseEvent, resetFormBtn: HTMLButtonElement, fileBtns: HTMLButtonElement[];
     beforeEach((): void => {
-      resetFormBtn = document.createElement("button");
+      resetFormBtn = document.createElement("button") as HTMLButtonElement;
       clickEvent = new MouseEvent("click");
-      Object.defineProperty(clickEvent, "target", { value: resetFormBtn });
-      fileBtns = [document.createElement("button"), document.createElement("button")];
+      Object.defineProperty(clickEvent, "target", { value: resetFormBtn }) as MouseEvent;
+      fileBtns = [
+        document.createElement("button") as HTMLButtonElement,
+        document.createElement("button") as HTMLButtonElement,
+      ];
       document.body.innerHTML = `
 				<form id="formAnamGId"></form>
 				<cite contenteditable="true">Old Name</cite>
@@ -421,82 +430,86 @@ describe("gHandlers Tests", (): void => {
 			`;
     });
     afterEach((): void => {
-      jest.clearAllMocks();
+      jest.clearAllMocks() as typeof jest;
     });
-    it("should reset the form and set default values for editable elements", () => {
+    it("should reset the form and set default values for editable elements", (): void => {
       resetarFormulario(clickEvent, fileBtns);
-      expect(document.getElementById("formAnamGId") as HTMLFormElement).toBeTruthy();
+      expect(document.getElementById("formAnamGId") as HTMLFormElement).toBeTruthy() as void;
       expect((document.querySelector('cite[contenteditable="true"]') as HTMLElement).textContent).toBe<string>(
         "--Nome"
       );
       expect((document.getElementById("genBirthRelId") as HTMLInputElement).value).toBe<BirthRelation>("cis");
       expect((document.getElementById("genTransId") as HTMLInputElement).value).toBe<TransitionLevel>("avancado");
     });
-    it('should call changeToAstDigit for buttons with "Retornar" in textContent', () => {
+    it('should call changeToAstDigit for buttons with "Retornar" in textContent', (): void => {
       fileBtns[0].textContent = "Retornar à Assinatura Escrita";
       resetarFormulario(clickEvent, fileBtns);
-      expect(changeToAstDigit).toHaveBeenCalledWith<Parameters<typeof changeToAstDigit>>(fileBtns[0]);
+      expect(changeToAstDigit).toHaveBeenCalledWith<Parameters<typeof changeToAstDigit>>(fileBtns[0]) as void;
     });
     it("should call elementNotFound when form is not found", () => {
-      document.getElementById("formAnamGId")?.remove();
+      document.getElementById("formAnamGId")?.remove() as void;
       resetarFormulario(clickEvent, fileBtns);
-      expect(elementNotFound).toHaveBeenCalled();
+      expect(elementNotFound).toHaveBeenCalled() as void;
     });
-    it("should call multipleElementsNotFound when button elements are invalid", () => {
+    it("should call multipleElementsNotFound when button elements are invalid", (): void => {
       resetarFormulario(clickEvent, []);
-      expect(multipleElementsNotFound).toHaveBeenCalled();
+      expect(multipleElementsNotFound).toHaveBeenCalled() as void;
     });
   });
   describe("enableCPFBtn", (): void => {
     let cpfBtn: HTMLButtonElement;
     beforeEach((): void => {
-      cpfBtn = document.createElement("button");
+      cpfBtn = document.createElement("button") as HTMLButtonElement;
       document.body.appendChild(cpfBtn);
     });
     afterEach((): void => {
-      jest.clearAllMocks();
+      jest.clearAllMocks() as typeof jest;
     });
-    it("should disable the button if CPF length is less than 11", () => {
+    it("should disable the button if CPF length is less than 11", (): void => {
       expect(cpfBtn.disabled).toBe<boolean>(true);
       expect(cpfBtn.style.backgroundColor).toBe<CSSColor>("gray");
       expect(cpfBtn.style.borderColor).toBe<CSSColor>("gray");
       expect(enableCPFBtn(cpfBtn, "123")).toBe<boolean>(true);
     });
-    it("should enable the button if CPF length is 11 or more", () => {
+    it("should enable the button if CPF length is 11 or more", (): void => {
       expect(cpfBtn.disabled).toBe<boolean>(false);
       expect(cpfBtn.style.backgroundColor).toBe<CSSColor>("#0a58ca");
       expect(cpfBtn.style.borderColor).toBe<CSSColor>("#0a58ca");
       expect(enableCPFBtn(cpfBtn, "12345678901")).toBe<boolean>(false);
     });
-    it("should call multipleElementsNotFound if invalid arguments are provided", () => {
+    it("should call multipleElementsNotFound if invalid arguments are provided", (): void => {
       enableCPFBtn(null, "123");
-      expect(multipleElementsNotFound).toHaveBeenCalled();
+      expect(multipleElementsNotFound).toHaveBeenCalled() as void;
     });
   });
   describe("syncAriaStates", (): void => {
     let elements: HTMLElement[];
     beforeEach((): void => {
-      elements = [document.createElement("input"), document.createElement("button"), document.createElement("select")];
+      elements = [
+        document.createElement("input") as HTMLInputElement,
+        document.createElement("button") as HTMLButtonElement,
+        document.createElement("select"),
+      ];
     });
     afterEach((): void => {
-      jest.clearAllMocks();
+      jest.clearAllMocks() as typeof jest;
     });
-    it("should sync aria attributes for elements", () => {
+    it("should sync aria attributes for elements", (): void => {
       syncAriaStates(elements);
       elements.forEach(el => {
         if (el instanceof HTMLInputElement || el instanceof HTMLSelectElement)
           expect(el.ariaRequired).toBe<PseudoBool>("false");
       });
     });
-    it("should not modify elements inside the head", () => {
+    it("should not modify elements inside the head", (): void => {
       const metaElement = document.createElement("meta");
       document.head.appendChild(metaElement);
       syncAriaStates([metaElement]);
-      expect(metaElement.ariaHidden).toBeUndefined();
+      expect(metaElement.ariaHidden).toBeUndefined() as void;
     });
-    it("should call elementNotPopulated if the elements array is empty", () => {
+    it("should call elementNotPopulated if the elements array is empty", (): void => {
       syncAriaStates([]);
-      expect(elementNotPopulated).toHaveBeenCalled();
+      expect(elementNotPopulated).toHaveBeenCalled() as void;
     });
   });
   describe("toggleTips", (): void => {
@@ -506,28 +519,28 @@ describe("gHandlers Tests", (): void => {
       tipsDialog = document.createElement("dialog");
       tipsDialog.id = "tipsDlg";
       document.body.appendChild(tipsDialog);
-      tipsBtn = document.createElement("button");
+      tipsBtn = document.createElement("button") as HTMLButtonElement;
       tipsBtn.id = "tipsBtn";
       document.body.appendChild(tipsBtn);
     });
     afterEach((): void => {
-      jest.clearAllMocks();
+      jest.clearAllMocks() as typeof jest;
     });
-    it("should open the dialog when the button is clicked", () => {
+    it("should open the dialog when the button is clicked", (): void => {
       toggleTips();
-      tipsBtn.click();
+      tipsBtn.click() as void;
       expect(tipsDialog.open).toBe<boolean>(true);
     });
-    it("should close the dialog when the button is clicked again", () => {
+    it("should close the dialog when the button is clicked again", (): void => {
       toggleTips();
-      tipsBtn.click();
-      tipsBtn.click();
+      tipsBtn.click() as void;
+      tipsBtn.click() as void;
       expect(tipsDialog.open).toBe<boolean>(false);
     });
-    it("should call elementNotFound if the tips dialog is not found", () => {
-      document.getElementById("tipsDlg")?.remove();
+    it("should call elementNotFound if the tips dialog is not found", (): void => {
+      document.getElementById("tipsDlg")?.remove() as void;
       toggleTips();
-      expect(elementNotFound).toHaveBeenCalled();
+      expect(elementNotFound).toHaveBeenCalled() as void;
     });
   });
   describe("toggleConformDlg", (): void => {
@@ -537,7 +550,7 @@ describe("gHandlers Tests", (): void => {
       conformDlg = document.createElement("dialog");
       conformDlg.id = "conformDlg";
       document.body.appendChild(conformDlg);
-      btnConform = document.createElement("button");
+      btnConform = document.createElement("button") as HTMLButtonElement;
       btnConform.id = "btnConform";
       document.body.appendChild(btnConform);
       jest.spyOn<HTMLDialogElement, HTMLDialogElementMethod>(conformDlg, "showModal");
@@ -545,28 +558,28 @@ describe("gHandlers Tests", (): void => {
     });
     afterEach((): void => {
       document.body.innerHTML = "";
-      jest.clearAllMocks();
+      jest.clearAllMocks() as typeof jest;
     });
     it("should open the dialog when the button is clicked", () => {
       toggleConformDlg();
-      btnConform.click();
-      expect(conformDlg.showModal).toHaveBeenCalled();
+      btnConform.click() as void;
+      expect(conformDlg.showModal).toHaveBeenCalled() as void;
     });
     it("should close the dialog when clicked outside", () => {
       toggleConformDlg();
       conformDlg.dispatchEvent(new MouseEvent("click"));
-      expect(conformDlg.close).toHaveBeenCalled();
+      expect(conformDlg.close).toHaveBeenCalled() as void;
     });
     it("should close the dialog when Escape key is pressed", () => {
       toggleConformDlg();
       const escapeEvent = new KeyboardEvent("keydown", { key: "Escape" });
       document.dispatchEvent(escapeEvent);
-      expect(conformDlg.close).toHaveBeenCalled();
+      expect(conformDlg.close).toHaveBeenCalled() as void;
     });
     it("should call multipleElementsNotFound if conformDlg or btnConform is not found", () => {
-      document.getElementById("conformDlg")?.remove();
+      document.getElementById("conformDlg")?.remove() as void;
       toggleConformDlg();
-      expect(multipleElementsNotFound).toHaveBeenCalled();
+      expect(multipleElementsNotFound).toHaveBeenCalled() as void;
     });
   });
   describe("validateForm", (): void => {
@@ -579,16 +592,16 @@ describe("gHandlers Tests", (): void => {
     let canvas: HTMLCanvasElement;
     let submitButton: HTMLButtonElement;
     beforeEach((): void => {
-      form = document.createElement("form");
-      inputText = document.createElement("input");
+      form = document.createElement("form") as HTMLFormElement;
+      inputText = document.createElement("input") as HTMLInputElement;
       inputText.type = "text";
       inputText.name = "textInput";
       inputText.value = "valid text";
-      inputNumber = document.createElement("input");
+      inputNumber = document.createElement("input") as HTMLInputElement;
       inputNumber.type = "number";
       inputNumber.name = "numberInput";
       inputNumber.value = "10";
-      inputDate = document.createElement("input");
+      inputDate = document.createElement("input") as HTMLInputElement;
       inputDate.type = "date";
       inputDate.name = "dateInput";
       inputDate.value = new Date().toISOString().split("T")[0];
@@ -602,14 +615,14 @@ describe("gHandlers Tests", (): void => {
       select.appendChild(option);
       select.value = "valid";
       canvas = document.createElement("canvas");
-      submitButton = document.createElement("button");
+      submitButton = document.createElement("button") as HTMLButtonElement;
       submitButton.type = "submit";
       form.append(inputText, inputNumber, inputDate, textarea, select, canvas, submitButton);
       document.body.appendChild(form);
     });
     afterEach((): void => {
       document.body.innerHTML = "";
-      jest.clearAllMocks();
+      jest.clearAllMocks() as typeof jest;
     });
     it("should validate a form with valid entries", async () => {
       const [isValid, invalidEntries, validEntries] = await validateForm(form, document, false);
@@ -639,7 +652,7 @@ describe("gHandlers Tests", (): void => {
         bubbles: true,
         cancelable: true,
       });
-      submitButton.click();
+      submitButton.click() as void;
       const [isValid] = await validateForm(submitEvent as any, document, true);
       expect(isValid).toBe<boolean>(true);
     });
@@ -658,7 +671,7 @@ describe("gHandlers Tests", (): void => {
       expect(inputText.placeholder).toBe<string>("Entrada inválida");
     });
     it("should handle file inputs correctly", async () => {
-      const fileInput = document.createElement("input");
+      const fileInput = document.createElement("input") as HTMLInputElement;
       fileInput.type = "file";
       form.appendChild(fileInput);
       const file = new File(["content"], "test.txt", { type: "text/plain" });
@@ -670,12 +683,12 @@ describe("gHandlers Tests", (): void => {
       expect(validEntries).toContainEqual<(string | File)[]>(["", file]);
     });
     it("should validate radio button groups correctly", async () => {
-      const radioGroupDiv = document.createElement("div");
-      const radio1 = document.createElement("input");
+      const radioGroupDiv = document.createElement("div") as HTMLDivElement;
+      const radio1 = document.createElement("input") as HTMLInputElement;
       radio1.type = "radio";
       radio1.name = "radioGroup";
       radio1.value = "option1";
-      const radio2 = document.createElement("input");
+      const radio2 = document.createElement("input") as HTMLInputElement;
       radio2.type = "radio";
       radio2.name = "radioGroup";
       radio2.value = "option2";
@@ -687,7 +700,7 @@ describe("gHandlers Tests", (): void => {
       expect(validEntries).toContainEqual<string[]>(["radioGroup", "true"]);
     });
     it("should validate checkbox groups correctly", async () => {
-      const checkbox = document.createElement("input");
+      const checkbox = document.createElement("input") as HTMLInputElement;
       checkbox.type = "checkbox";
       checkbox.name = "checkboxGroup";
       checkbox.checked = true;
@@ -723,31 +736,31 @@ describe("gHandlers Tests", (): void => {
     let form: HTMLFormElement;
     let ep = "ag";
     beforeEach((): void => {
-      form = document.createElement("form");
-      const input = document.createElement("input");
+      form = document.createElement("form") as HTMLFormElement;
+      const input = document.createElement("input") as HTMLInputElement;
       input.type = "text";
       input.name = "name";
-      form.appendChild(input);
-      document.body.appendChild(form);
+      form.appendChild(input) as HTMLInputElement;
+      document.body.appendChild(form) as HTMLFormElement;
     });
     afterEach((): void => {
       document.body.innerHTML = "";
-      jest.clearAllMocks();
+      jest.clearAllMocks() as typeof jest;
     });
-    it("should call handleSubmit with FormData when valid form is submitted", async () => {
+    it("should call handleSubmit with FormData when valid form is submitted", async (): Promise<void> => {
       await submitForm(form, ep as formCases);
       expect(handleSubmit).toHaveBeenCalledWith<Parameters<typeof handleSubmit>>(
         ep as formCases,
-        expect.any(FormData),
+        expect.any(FormData) as any,
         true
       );
     });
-    it("should throw an error if form is not an HTMLFormElement", async () => {
+    it("should throw an error if form is not an HTMLFormElement", async (): Promise<void> => {
       const invalidForm = null;
       await submitForm(invalidForm as any, ep as formCases);
-      expect(elementNotFound).toHaveBeenCalled();
+      expect(elementNotFound).toHaveBeenCalled() as void;
     });
-    it("should throw an error if ep is not a string", async () => {
+    it("should throw an error if ep is not a string", async (): Promise<void> => {
       await expect(submitForm(form, 123 as any)).rejects.toThrow("Incorret type for ep argument in submitForm");
     });
   });
@@ -761,15 +774,15 @@ describe("gHandlers Tests", (): void => {
       maxNum: 100,
     };
     beforeEach((): void => {
-      input = document.createElement("input");
+      input = document.createElement("input") as HTMLInputElement;
       input.type = "text";
       document.body.appendChild(input);
     });
     afterEach((): void => {
       document.body.innerHTML = "";
-      jest.clearAllMocks();
+      jest.clearAllMocks() as typeof jest;
     });
-    it("should set the correct attributes when options are provided", () => {
+    it("should set the correct attributes when options are provided", (): void => {
       handleCondtReq(input, options);
       expect(input.dataset.reqlength).toBe<PseudoNum>("5");
       expect(input.minLength).toBe<number>(5);
@@ -781,49 +794,49 @@ describe("gHandlers Tests", (): void => {
       expect(input.max).toBe<PseudoNum>("100");
     });
 
-    it("should remove attributes if the input value is empty", () => {
+    it("should remove attributes if the input value is empty", (): void => {
       input.value = "";
       handleCondtReq(input, options);
-      expect(input.dataset.reqlength).toBeUndefined();
-      expect(input.dataset.maxlength).toBeUndefined();
+      expect(input.dataset.reqlength).toBeUndefined() as void;
+      expect(input.dataset.maxlength).toBeUndefined() as void;
       expect(input.min).toBe<string>("");
       expect(input.max).toBe<string>("");
     });
-    it("should call inputNotFound when input is invalid", () => {
-      const invalidInput = document.createElement("div");
+    it("should call inputNotFound when input is invalid", (): void => {
+      const invalidInput = document.createElement("div") as HTMLDivElement;
       handleCondtReq(invalidInput as any, options);
-      expect(inputNotFound).toHaveBeenCalled();
+      expect(inputNotFound).toHaveBeenCalled() as void;
     });
   });
   describe("handleEventReq", (): void => {
     let input: HTMLInputElement;
     let textarea: HTMLTextAreaElement;
     beforeEach((): void => {
-      input = document.createElement("input");
+      input = document.createElement("input") as HTMLInputElement;
       textarea = document.createElement("textarea");
       document.body.appendChild(input);
       document.body.appendChild(textarea);
     });
     afterEach((): void => {
       document.body.innerHTML = "";
-      jest.clearAllMocks();
+      jest.clearAllMocks() as typeof jest;
     });
-    it("should throw error if input is not a valid element", () => {
-      const invalidElement = document.createElement("div");
+    it("should throw error if input is not a valid element", (): void => {
+      const invalidElement = document.createElement("div") as HTMLDivElement;
       expect((): void => handleEventReq(invalidElement as any)).toThrow();
     });
-    it("should skip validation if event target is not a valid input or textarea", () => {
+    it("should skip validation if event target is not a valid input or textarea", (): void => {
       const invalidEvent = new Event("change");
       expect((): void => handleEventReq(invalidEvent)).not.toThrow();
     });
-    it('should set alert color if input is invalid and type is "text"', () => {
+    it('should set alert color if input is invalid and type is "text"', (): void => {
       input.type = "text" as InputType;
       input.value = "";
       jest.spyOn<HTMLInputElement, HTMLInputElementMethod>(input, "checkValidity").mockReturnValue(false);
       handleEventReq(input);
       expect(input.style.color).toBe<CSSColor>("#e52626");
     });
-    it("should reset color after 2000ms", () => {
+    it("should reset color after 2000ms", (): void => {
       jest.useFakeTimers();
       input.type = "text" as InputType;
       input.value = "";
@@ -834,27 +847,27 @@ describe("gHandlers Tests", (): void => {
       expect(input.style.color).toBe<CSSColor>("rgb(33, 37, 41)");
       jest.useRealTimers();
     });
-    it('should validate input type for "number" and "date"', () => {
+    it('should validate input type for "number" and "date"', (): void => {
       input.type = "number" as InputType;
       input.step = "";
       handleEventReq(input);
       expect(input.step).toBe<string>("any");
     });
-    it("should validate date with minCurrDate class", () => {
+    it("should validate date with minCurrDate class", (): void => {
       input.type = "date" as InputType;
       input.classList.add("minCurrDate");
       input.value = new Date().toISOString().split("T")[0];
       handleEventReq(input);
       expect(input.style.color).toBe<string>("");
     });
-    it("should validate date with maxCurrDate class", () => {
+    it("should validate date with maxCurrDate class", (): void => {
       input.type = "date" as InputType;
       input.classList.add("maxCurrDate");
       input.value = new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString().split("T")[0];
       handleEventReq(input);
       expect(input.style.color).toBe<CSSColor>("#e52626");
     });
-    it("should check validity for patternText", () => {
+    it("should check validity for patternText", (): void => {
       input.type = "text" as InputType;
       input.classList.add("patternText");
       input.dataset.pattern = "^[A-Za-z]+$";
@@ -862,7 +875,7 @@ describe("gHandlers Tests", (): void => {
       handleEventReq(input);
       expect(input.style.color).toBe<CSSColor>("#e52626");
     });
-    it("should check validity for minText", () => {
+    it("should check validity for minText", (): void => {
       input.type = "text" as InputType;
       input.classList.add("minText");
       input.dataset.reqlength = "5";
@@ -870,7 +883,7 @@ describe("gHandlers Tests", (): void => {
       handleEventReq(input);
       expect(input.style.color).toBe<CSSColor>("#e52626");
     });
-    it("should check validity for maxText", () => {
+    it("should check validity for maxText", (): void => {
       input.type = "text" as InputType;
       input.classList.add("maxText");
       input.dataset.maxlength = "5";
@@ -878,7 +891,7 @@ describe("gHandlers Tests", (): void => {
       handleEventReq(input);
       expect(input.style.color).toBe<CSSColor>("#e52626");
     });
-    it("should check validity for minNum and maxNum", () => {
+    it("should check validity for minNum and maxNum", (): void => {
       input.type = "number" as InputType;
       input.classList.add("minNum", "maxNum");
       input.dataset.minnum = "1";
@@ -887,7 +900,7 @@ describe("gHandlers Tests", (): void => {
       handleEventReq(input);
       expect(input.style.color).toBe<CSSColor>("#e52626");
     });
-    it("should skip check for unsupported input types", () => {
+    it("should skip check for unsupported input types", (): void => {
       input.type = "radio" as InputType;
       handleEventReq(input);
       expect(input.style.color).toBe<CSSColor>("");

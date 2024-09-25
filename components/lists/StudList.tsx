@@ -75,7 +75,7 @@ export default function StudList({
                     if (tbodyRef.current.querySelector("tr")) return;
                     panelRoots[`${tbodyRef.current.id}`]?.unmount();
                     delete panelRoots[`${tbodyRef.current.id}`];
-                    tbodyRef.current.remove();
+                    tbodyRef.current.remove() as void;
                     if (!panelRoots[`${tabRef.current.id}`])
                       panelRoots[`${tabRef.current.id}`] = createRoot(tabRef.current);
                     panelRoots[`${tabRef.current.id}`]?.render(

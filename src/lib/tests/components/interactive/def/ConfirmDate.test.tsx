@@ -3,8 +3,8 @@ import ConfirmDate from "../../../../../../components/interactive/def/ConfirmDat
 describe("ConfirmDate Component", (): void => {
   it("renders the input date field and button", (): void => {
     render(<ConfirmDate />);
-    expect(screen.getByLabelText<HTMLInputElement>("Data:")).toBeInTheDocument();
-    expect(screen.getByRole<HTMLButtonElement>("button", { name: /usar data atual/i })).toBeInTheDocument();
+    expect(screen.getByLabelText<HTMLInputElement>("Data:")).toBeInTheDocument() as void;
+    expect(screen.getByRole<HTMLButtonElement>("button", { name: /usar data atual/i })).toBeInTheDocument() as void;
   });
   it("equalizes button and input widths on resize", (): void => {
     render(<ConfirmDate />);

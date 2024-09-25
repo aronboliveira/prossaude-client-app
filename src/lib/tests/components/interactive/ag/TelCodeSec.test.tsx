@@ -9,11 +9,11 @@ jest.mock(
   } => ({
     handleCondtReq: jest.fn(),
   })
-);
+) as typeof jest;
 describe("TelCodeSec", (): void => {
   it("renders a number input for secondary country code", (): void => {
     render(<TelCodeSec />);
-    expect(screen.getByRole<HTMLElement>("spinbutton")).toBeInTheDocument();
+    expect(screen.getByRole<HTMLElement>("spinbutton")).toBeInTheDocument() as void;
   });
   it("calls handleCondtReq on input", (): void => {
     render(<TelCodeSec />);

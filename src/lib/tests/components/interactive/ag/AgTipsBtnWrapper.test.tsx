@@ -3,33 +3,33 @@ import AgTipsBtnWrapper from "../../../../../../components/interactive/ag/AgTips
 import { ErrorBoundary } from "react-error-boundary";
 jest.mock("../../../../../components/AGTips", (): (() => JSX.Element) =>
   jest.fn((): JSX.Element => <div>AGTips Component</div>)
-);
+) as typeof jest;
 jest.mock("../../../../../components/def/TipsBtn", (): (() => JSX.Element) =>
   jest.fn((): JSX.Element => <div>TipsBtn Component</div>)
-);
+) as typeof jest;
 describe("AgTipsBtnWrapper", (): void => {
   it("renders TipsBtn component", (): void => {
     render(<AgTipsBtnWrapper />);
-    expect(screen.getByText<HTMLElement>("TipsBtn Component")).toBeInTheDocument();
+    expect(screen.getByText<HTMLElement>("TipsBtn Component")).toBeInTheDocument() as void;
   });
   it("renders AGTips component when the state is true", async (): Promise<void> => {
     render(<AgTipsBtnWrapper />);
     window.history.pushState({}, "", "/?tips=open");
     await waitFor((): void => {
-      expect(screen.getByText<HTMLElement>("AGTips Component")).toBeInTheDocument();
+      expect(screen.getByText<HTMLElement>("AGTips Component")).toBeInTheDocument() as void;
     });
   });
   it("does not render AGTips component when state is false", (): void => {
     render(<AgTipsBtnWrapper />);
-    expect(screen.queryByText<HTMLElement>("AGTips Component")).not.toBeInTheDocument();
+    expect(screen.queryByText<HTMLElement>("AGTips Component")).not.toBeInTheDocument() as void;
   });
   it("renders the fallback error component if an error occurs", async (): Promise<void> => {
     jest.spyOn<ErrorBoundary, "render">(ErrorBoundary.prototype, "render").mockImplementation((): never => {
       throw new Error("Test Error");
-    });
+    }) as jest.Mock;
     render(<AgTipsBtnWrapper />);
     await waitFor((): void => {
-      expect(screen.getByText<HTMLElement>("Failed to render Tips Btn")).toBeInTheDocument();
+      expect(screen.getByText<HTMLElement>("Failed to render Tips Btn")).toBeInTheDocument() as void;
     });
   });
 });

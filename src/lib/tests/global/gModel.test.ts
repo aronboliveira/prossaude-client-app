@@ -19,18 +19,18 @@ describe("numberLimit", (): void => {
   beforeEach((): void => {
     elementNotFoundSpy = jest
       .spyOn<typeof errorHandler, "elementNotFound">(errorHandler, "elementNotFound")
-      .mockImplementation((): Error => new Error(`Element not found.`));
-    jest.clearAllMocks();
+      .mockImplementation((): Error => new Error(`Element not found.`)) as jest.SpyInstance;
+    jest.clearAllMocks() as typeof jest;
   });
   it("should remove invalid characters from input", (): void => {
-    const mockInput = document.createElement("input");
+    const mockInput = document.createElement("input") as HTMLInputElement;
     mockInput.value = "1234$%";
     mockInput.classList.add("inpLocNum");
     gModel.numberLimit(mockInput);
     expect(mockInput.value).toBe<PseudoNum>("1234");
   });
   it("should limit value to two digits for specific classes", (): void => {
-    const mockInput = document.createElement("input");
+    const mockInput = document.createElement("input") as HTMLInputElement;
     mockInput.value = "123";
     mockInput.classList.add("inpAtivFis");
     gModel.numberLimit(mockInput);
@@ -38,7 +38,7 @@ describe("numberLimit", (): void => {
   });
   it("should throw an error if input element is invalid", (): void => {
     gModel.numberLimit(null as any);
-    expect(elementNotFoundSpy).toHaveBeenCalled();
+    expect(elementNotFoundSpy).toHaveBeenCalled() as void;
   });
 });
 describe("normalizeNegatives", (): void => {
@@ -46,11 +46,11 @@ describe("normalizeNegatives", (): void => {
   beforeEach((): void => {
     inputNotFoundSpy = jest
       .spyOn<any, ErrorHandler>(errorHandler, "inputNotFound")
-      .mockImplementation((): Error => new Error(`Input not found.`));
-    jest.clearAllMocks();
+      .mockImplementation((): Error => new Error(`Input not found.`)) as jest.SpyInstance;
+    jest.clearAllMocks() as typeof jest;
   });
   it("should normalize negative values to zero", (): void => {
-    const mockInput = document.createElement("input");
+    const mockInput = document.createElement("input") as HTMLInputElement;
     mockInput.value = "-10";
     const result = gModel.normalizeNegatives(mockInput);
     expect(mockInput.value).toBe<PseudoNum>("0");
@@ -58,7 +58,7 @@ describe("normalizeNegatives", (): void => {
   });
   it("should throw an error if the element is not an input", (): void => {
     gModel.normalizeNegatives(null as any);
-    expect(inputNotFoundSpy).toHaveBeenCalled();
+    expect(inputNotFoundSpy).toHaveBeenCalled() as void;
   });
 });
 describe("parseNotNaN", (): void => {
@@ -80,18 +80,18 @@ describe("formatCEP", (): void => {
   beforeEach((): void => {
     inputNotFoundSpy = jest
       .spyOn<any, ErrorHandler>(errorHandler, "inputNotFound")
-      .mockImplementation((): Error => new Error(`Input not found.`));
-    jest.clearAllMocks();
+      .mockImplementation((): Error => new Error(`Input not found.`)) as jest.SpyInstance;
+    jest.clearAllMocks() as typeof jest;
   });
   it("should format valid CEP correctly", (): void => {
-    const mockInput = document.createElement("input");
+    const mockInput = document.createElement("input") as HTMLInputElement;
     mockInput.value = "12345678";
     gModel.formatCEP(mockInput);
     expect(mockInput.value).toBe<CEP>("12345-678");
   });
   it("should throw an error if element is not an input", (): void => {
     gModel.formatCEP(null as any);
-    expect(inputNotFoundSpy).toHaveBeenCalled();
+    expect(inputNotFoundSpy).toHaveBeenCalled() as void;
   });
 });
 describe("formatCPF", (): void => {
@@ -99,18 +99,18 @@ describe("formatCPF", (): void => {
   beforeEach((): void => {
     inputNotFoundSpy = jest
       .spyOn<any, ErrorHandler>(errorHandler, "inputNotFound")
-      .mockImplementation((): Error => new Error(`Input not found.`));
-    jest.clearAllMocks();
+      .mockImplementation((): Error => new Error(`Input not found.`)) as jest.SpyInstance;
+    jest.clearAllMocks() as typeof jest;
   });
   it("should format valid CPF correctly", (): void => {
-    const mockInput = document.createElement("input");
+    const mockInput = document.createElement("input") as HTMLInputElement;
     mockInput.value = "12345678909";
     gModel.formatCPF(mockInput);
     expect(mockInput.value).toBe<CPF>("123.456.789-09");
   });
   it("should throw an error if element is not an input", (): void => {
     gModel.formatCPF(null as any);
-    expect(inputNotFoundSpy).toHaveBeenCalled();
+    expect(inputNotFoundSpy).toHaveBeenCalled() as void;
   });
 });
 describe("formatTel", (): void => {
@@ -118,17 +118,17 @@ describe("formatTel", (): void => {
   beforeEach((): void => {
     inputNotFoundSpy = jest
       .spyOn<any, ErrorHandler>(errorHandler, "inputNotFound")
-      .mockImplementation((): Error => new Error(`Input not found.`));
-    jest.clearAllMocks();
+      .mockImplementation((): Error => new Error(`Input not found.`)) as jest.SpyInstance;
+    jest.clearAllMocks() as typeof jest;
   });
   it("should format telephone number correctly", (): void => {
-    const mockInput = document.createElement("input");
+    const mockInput = document.createElement("input") as HTMLInputElement;
     mockInput.value = "11987654321";
     expect(gModel.formatTel(mockInput, true)).toBe<LocalNumber>("(11) 98765-4321");
   });
   it("should throw an error if element is not an input", (): void => {
     gModel.formatTel(null as any);
-    expect(inputNotFoundSpy).toHaveBeenCalled();
+    expect(inputNotFoundSpy).toHaveBeenCalled() as void;
   });
 });
 describe("addEmailExtension", (): void => {
@@ -136,17 +136,17 @@ describe("addEmailExtension", (): void => {
   beforeEach((): void => {
     inputNotFoundSpy = jest
       .spyOn<any, ErrorHandler>(errorHandler, "inputNotFound")
-      .mockImplementation((): Error => new Error(`Input not found.`));
-    jest.clearAllMocks();
+      .mockImplementation((): Error => new Error(`Input not found.`)) as jest.SpyInstance;
+    jest.clearAllMocks() as typeof jest;
   });
   it("should add default email extension", (): void => {
-    const mockInput = document.createElement("input");
+    const mockInput = document.createElement("input") as HTMLInputElement;
     mockInput.value = "";
     expect(gModel.addEmailExtension(mockInput)).toBe<Email>("@.");
   });
   it("should throw an error if element is not an input", (): void => {
     gModel.addEmailExtension(null as any);
-    expect(inputNotFoundSpy).toHaveBeenCalled();
+    expect(inputNotFoundSpy).toHaveBeenCalled() as void;
   });
 });
 describe("removeFirstClick", (): void => {
@@ -154,27 +154,27 @@ describe("removeFirstClick", (): void => {
   beforeEach((): void => {
     elementNotFoundSpy = jest
       .spyOn<any, ErrorHandler>(errorHandler, "elementNotFound")
-      .mockImplementation((): Error => new Error(`Element not found.`));
-    jest.clearAllMocks();
+      .mockImplementation((): Error => new Error(`Element not found.`)) as jest.SpyInstance;
+    jest.clearAllMocks() as typeof jest;
   });
   it("should clear text content on first click", (): void => {
-    const mockElement = document.createElement("div");
+    const mockElement = document.createElement("div") as HTMLDivElement;
     mockElement.textContent = "Insira Seu Nome Aqui";
     expect(gModel.removeFirstClick(mockElement)).toBe<string>("");
   });
   it("should throw an error if element is not valid", (): void => {
     gModel.removeFirstClick(null as any);
-    expect(elementNotFoundSpy).toHaveBeenCalled();
+    expect(elementNotFoundSpy).toHaveBeenCalled() as void;
   });
 });
 describe("checkAutoCorrect", (): void => {
   it("should return false if button text contains 'Ativar'", (): void => {
-    const mockButton = document.createElement("button");
+    const mockButton = document.createElement("button") as HTMLButtonElement;
     mockButton.textContent = "Ativar";
     expect(gModel.checkAutoCorrect(mockButton)).toBe<boolean>(false);
   });
   it("should return true if checkbox is checked", (): void => {
-    const mockCheckbox = document.createElement("input");
+    const mockCheckbox = document.createElement("input") as HTMLInputElement;
     mockCheckbox.type = "checkbox";
     mockCheckbox.checked = true;
     expect(gModel.checkAutoCorrect(mockCheckbox)).toBe<boolean>(true);
@@ -185,11 +185,11 @@ describe("switchAutocorrect", (): void => {
   beforeEach((): void => {
     elementNotFoundSpy = jest
       .spyOn<any, ErrorHandler>(errorHandler, "elementNotFound")
-      .mockImplementation((): Error => new Error(`Element not found.`));
-    jest.clearAllMocks();
+      .mockImplementation((): Error => new Error(`Element not found.`)) as jest.SpyInstance;
+    jest.clearAllMocks() as typeof jest;
   });
   it("should toggle autocorrect on a button", (): void => {
-    const mockButton = document.createElement("button");
+    const mockButton = document.createElement("button") as HTMLButtonElement;
     mockButton.textContent = "Ativar Autocorreção";
     expect(mockButton.textContent).toBe<string>("Desativar Autocorreção");
     expect(gModel.switchAutocorrect(new Event("click"), mockButton, false)).toBe<boolean>(true);
@@ -208,17 +208,17 @@ describe("checkAllGenConts", (): void => {
   beforeEach((): void => {
     multipleElementsNotFoundSpy = jest
       .spyOn<any, ErrorHandler>(errorHandler, "multipleElementsNotFound")
-      .mockImplementation((): Error => new Error(`Multiple elements not found.`));
-    jest.clearAllMocks();
+      .mockImplementation((): Error => new Error(`Multiple elements not found.`)) as jest.SpyInstance;
+    jest.clearAllMocks() as typeof jest;
   });
   it("should return true if all elements are valid inputs", (): void => {
-    expect(gModel.checkAllGenConts(document.createElement("input"), document.createElement("textarea"))).toBe<boolean>(
-      true
-    );
+    expect(
+      gModel.checkAllGenConts(document.createElement("input") as HTMLInputElement, document.createElement("textarea"))
+    ).toBe<boolean>(true);
   });
   it("should call error handler if invalid elements are passed", (): void => {
     gModel.checkAllGenConts(null as any);
-    expect(multipleElementsNotFoundSpy).toHaveBeenCalled();
+    expect(multipleElementsNotFoundSpy).toHaveBeenCalled() as void;
   });
 });
 describe("fluxGen", (): void => {
@@ -226,8 +226,8 @@ describe("fluxGen", (): void => {
   beforeEach((): void => {
     multipleElementsNotFoundSpy = jest
       .spyOn<any, ErrorHandler>(errorHandler, "multipleElementsNotFound")
-      .mockImplementation((): Error => new Error(`Multiple element not found.`));
-    jest.clearAllMocks();
+      .mockImplementation((): Error => new Error(`Multiple element not found.`)) as jest.SpyInstance;
+    jest.clearAllMocks() as typeof jest;
   });
   it("should return 'masculino' if appropriate conditions are met", (): void => {
     const mockGen = document.createElement("select"),
@@ -254,7 +254,7 @@ describe("fluxGen", (): void => {
   });
   it("should call multipleElementsNotFound if elements are invalid", (): void => {
     gModel.fluxGen([null as any]);
-    expect(multipleElementsNotFoundSpy).toHaveBeenCalled();
+    expect(multipleElementsNotFoundSpy).toHaveBeenCalled() as void;
   });
 });
 describe("showGenFisAlin", (): void => {
@@ -262,12 +262,12 @@ describe("showGenFisAlin", (): void => {
   beforeEach((): void => {
     elementNotFoundSpy = jest
       .spyOn<any, ErrorHandler>(errorHandler, "elementNotFound")
-      .mockImplementation((): Error => new Error(`Element not found.`));
-    jest.clearAllMocks();
+      .mockImplementation((): Error => new Error(`Element not found.`)) as jest.SpyInstance;
+    jest.clearAllMocks() as typeof jest;
   });
   it("should show genFisAlin", (): void => {
     const mockGenFisAlin = document.createElement("select");
-    const mockGenSpan = document.createElement("div");
+    const mockGenSpan = document.createElement("div") as HTMLDivElement;
     mockGenSpan.classList.add("genSpan");
     mockGenSpan.hidden = true;
     mockGenFisAlin.appendChild(mockGenSpan);
@@ -276,7 +276,7 @@ describe("showGenFisAlin", (): void => {
   });
   it("should throw an error if element is not valid", (): void => {
     gModel.showGenFisAlin(null as any);
-    expect(elementNotFoundSpy).toHaveBeenCalled();
+    expect(elementNotFoundSpy).toHaveBeenCalled() as void;
   });
 });
 describe("hideGenFisAlin", (): void => {
@@ -284,12 +284,12 @@ describe("hideGenFisAlin", (): void => {
   beforeEach((): void => {
     elementNotFoundSpy = jest
       .spyOn<any, ErrorHandler>(errorHandler, "elementNotFound")
-      .mockImplementation((): Error => new Error(`Element not found.`));
-    jest.clearAllMocks();
+      .mockImplementation((): Error => new Error(`Element not found.`)) as jest.SpyInstance;
+    jest.clearAllMocks() as typeof jest;
   });
   it("should hide genFisAlin", (): void => {
     const mockGenFisAlin = document.createElement("select");
-    const mockGenSpan = document.createElement("div");
+    const mockGenSpan = document.createElement("div") as HTMLDivElement;
     mockGenSpan.classList.add("genSpan");
     mockGenSpan.hidden = false;
     mockGenFisAlin.appendChild(mockGenSpan);
@@ -298,7 +298,7 @@ describe("hideGenFisAlin", (): void => {
   });
   it("should throw an error if element is not valid", (): void => {
     gModel.hideGenFisAlin(null as any);
-    expect(elementNotFoundSpy).toHaveBeenCalled();
+    expect(elementNotFoundSpy).toHaveBeenCalled() as void;
   });
 });
 describe("showStgTransHorm", (): void => {
@@ -306,12 +306,12 @@ describe("showStgTransHorm", (): void => {
   beforeEach((): void => {
     elementNotFoundSpy = jest
       .spyOn<any, ErrorHandler>(errorHandler, "elementNotFound")
-      .mockImplementation((): Error => new Error(`Element not found.`));
-    jest.clearAllMocks();
+      .mockImplementation((): Error => new Error(`Element not found.`)) as jest.SpyInstance;
+    jest.clearAllMocks() as typeof jest;
   });
   it("should show genTrans", (): void => {
     const mockGenTrans = document.createElement("select");
-    const mockGenSpan = document.createElement("div");
+    const mockGenSpan = document.createElement("div") as HTMLDivElement;
     mockGenSpan.classList.add("genSpan");
     mockGenSpan.hidden = true;
     mockGenTrans.appendChild(mockGenSpan);
@@ -320,7 +320,7 @@ describe("showStgTransHorm", (): void => {
   });
   it("should throw an error if element is not valid", (): void => {
     gModel.showStgTransHorm(null as any);
-    expect(elementNotFoundSpy).toHaveBeenCalled();
+    expect(elementNotFoundSpy).toHaveBeenCalled() as void;
   });
 });
 describe("filterIdsByGender", (): void => {
@@ -328,8 +328,8 @@ describe("filterIdsByGender", (): void => {
   beforeEach((): void => {
     typeErrorSpy = jest
       .spyOn<any, ErrorHandler>(errorHandler, "typeError")
-      .mockImplementation((): Error => new Error(`Type error.`));
-    jest.clearAllMocks();
+      .mockImplementation((): Error => new Error(`Type error.`)) as jest.SpyInstance;
+    jest.clearAllMocks() as typeof jest;
   });
   it("should filter ids for masculine body type", (): void => {
     expect(gModel.filterIdsByGender(["peit", "abd", "coxa", "tricp"], "masculino")).toEqual<[string, string, string]>([
@@ -340,7 +340,7 @@ describe("filterIdsByGender", (): void => {
   });
   it("should return default ids if body type is invalid", (): void => {
     expect(gModel.filterIdsByGender(["invalid"], "invalid")).toEqual<[string, string, string]>(["peit", "abd", "coxa"]);
-    expect(typeErrorSpy).toHaveBeenCalled();
+    expect(typeErrorSpy).toHaveBeenCalled() as void;
   });
 });
 describe("checkPasswordPattern", (): void => {
@@ -348,41 +348,41 @@ describe("checkPasswordPattern", (): void => {
   beforeEach((): void => {
     inputNotFoundSpy = jest
       .spyOn<any, ErrorHandler>(errorHandler, "inputNotFound")
-      .mockImplementation((): Error => new Error(`Input not found.`));
-    jest.clearAllMocks();
+      .mockImplementation((): Error => new Error(`Input not found.`)) as jest.SpyInstance;
+    jest.clearAllMocks() as typeof jest;
   });
   it("should set custom validity for missing number", (): void => {
-    const mockInput = document.createElement("input");
+    const mockInput = document.createElement("input") as HTMLInputElement;
     mockInput.value = "Password!";
     gModel.checkPasswordPattern(mockInput);
     expect(mockInput.validationMessage).toBe<string>("Sua senha deve ter pelo menos um número");
   });
   it("should set custom validity for missing uppercase letter", (): void => {
-    const mockInput = document.createElement("input");
+    const mockInput = document.createElement("input") as HTMLInputElement;
     mockInput.value = "password1!";
     gModel.checkPasswordPattern(mockInput);
     expect(mockInput.validationMessage).toBe<string>("Sua senha deve ter pelo menos uma letra maiúscula");
   });
   it("should set custom validity for missing symbol", (): void => {
-    const mockInput = document.createElement("input");
+    const mockInput = document.createElement("input") as HTMLInputElement;
     mockInput.value = "Password1";
     gModel.checkPasswordPattern(mockInput);
     expect(mockInput.validationMessage).toBe<string>("Sua senha deve ter pelo menos um símbolo");
   });
   it("should set custom validity for short password", (): void => {
-    const mockInput = document.createElement("input");
+    const mockInput = document.createElement("input") as HTMLInputElement;
     mockInput.value = "P1!";
     gModel.checkPasswordPattern(mockInput);
     expect(mockInput.validationMessage).toBe<string>("Sua senha deve ter pelo menos oito caracteres");
   });
   it("should throw an error if input element is invalid", (): void => {
     gModel.checkPasswordPattern(null as any);
-    expect(inputNotFoundSpy).toHaveBeenCalled();
+    expect(inputNotFoundSpy).toHaveBeenCalled() as void;
   });
 });
 describe("correctCursorNextWords", (): void => {
   it("should move cursor to the end and fix words", (): void => {
-    const mockElement = document.createElement("input");
+    const mockElement = document.createElement("input") as HTMLInputElement;
     mockElement.value = "Sample text";
     expect(gModel.correctCursorNextWords(false, false, "Sample", mockElement)).toEqual<[string, boolean]>([
       "Sample text",
@@ -390,7 +390,7 @@ describe("correctCursorNextWords", (): void => {
     ]);
   });
   it("should return the correct text even if no match is found", (): void => {
-    const mockElement = document.createElement("input");
+    const mockElement = document.createElement("input") as HTMLInputElement;
     mockElement.value = "Different text";
     expect(gModel.correctCursorNextWords(false, false, "NoMatch", mockElement)).toEqual<[string, boolean]>([
       "Different text",
@@ -408,12 +408,12 @@ describe("wrongStartCorrection", (): void => {
 });
 describe("moveCursorToTheEnd", (): void => {
   it("should move the cursor to the end of the text", (): void => {
-    const mockElement = document.createElement("div");
+    const mockElement = document.createElement("div") as HTMLDivElement;
     document.body.appendChild(mockElement);
     expect(gModel.moveCursorToTheEnd(false, mockElement)).toBe<boolean>(true);
   });
   it("should not move the cursor if isCursorAutoMoved is true", (): void => {
-    const mockElement = document.createElement("div");
+    const mockElement = document.createElement("div") as HTMLDivElement;
     document.body.appendChild(mockElement);
     expect(gModel.moveCursorToTheEnd(true, mockElement)).toBe<boolean>(true);
   });
@@ -421,19 +421,31 @@ describe("moveCursorToTheEnd", (): void => {
 describe("fixCursorPosition", (): void => {
   it("should correctly set cursor position", (): void => {
     const mockRange = document.createRange();
-    gModel.fixCursorPosition(document.createElement("div"), mockRange, window.getSelection(), true);
+    gModel.fixCursorPosition(document.createElement("div") as HTMLDivElement, mockRange, window.getSelection(), true);
     expect(mockRange.collapsed).toBe<boolean>(true);
   });
 });
 describe("fixFirstLetter", (): void => {
   it("should capitalize the first letter", (): void => {
     expect(
-      gModel.fixFirstLetter("a", /^[a-z]/, document.createElement("div"), document.createRange(), window.getSelection())
+      gModel.fixFirstLetter(
+        "a",
+        /^[a-z]/,
+        document.createElement("div") as HTMLDivElement,
+        document.createRange(),
+        window.getSelection()
+      )
     ).toBe<string>("A");
   });
   it("should return unchanged text if no match is found", (): void => {
     expect(
-      gModel.fixFirstLetter("A", /^[a-z]/, document.createElement("div"), document.createRange(), window.getSelection())
+      gModel.fixFirstLetter(
+        "A",
+        /^[a-z]/,
+        document.createElement("div") as HTMLDivElement,
+        document.createRange(),
+        window.getSelection()
+      )
     ).toBe<string>("A");
   });
 });
@@ -462,9 +474,11 @@ describe("fixUnproperUppercases", (): void => {
 });
 describe("fixForcedUpperCase", (): void => {
   it("should fix forced uppercase in text", (): void => {
-    const mockElement = document.createElement("div");
+    const mockElement = document.createElement("div") as HTMLDivElement;
     mockElement.textContent = "sample text";
-    expect(gModel.fixForcedUpperCase(document.createElement("div"), ["sample"], "sample")).toBe<string>("sample text");
+    expect(
+      gModel.fixForcedUpperCase(document.createElement("div") as HTMLDivElement, ["sample"], "sample")
+    ).toBe<string>("sample text");
   });
 });
 describe("autoCapitalizeInputs", (): void => {
@@ -472,54 +486,54 @@ describe("autoCapitalizeInputs", (): void => {
   beforeEach((): void => {
     elementNotFoundSpy = jest
       .spyOn<any, ErrorHandler>(errorHandler, "elementNotFound")
-      .mockImplementation((): Error => new Error(`Element not found.`));
-    jest.clearAllMocks();
+      .mockImplementation((): Error => new Error(`Element not found.`)) as jest.SpyInstance;
+    jest.clearAllMocks() as typeof jest;
   });
   it("should capitalize the first letter of a single word", (): void => {
-    const mockInput = document.createElement("input");
+    const mockInput = document.createElement("input") as HTMLInputElement;
     mockInput.type = "text";
     mockInput.value = "example";
     expect(gModel.autoCapitalizeInputs(mockInput)).toBe<string>("Example");
   });
   it("should capitalize the first letter of each word", (): void => {
-    const mockInput = document.createElement("input");
+    const mockInput = document.createElement("input") as HTMLInputElement;
     mockInput.type = "text";
     mockInput.value = "example text";
     expect(gModel.autoCapitalizeInputs(mockInput)).toBe<string>("Example Text");
   });
   it("should correct improper upper case in a sentence", (): void => {
-    const mockInput = document.createElement("input");
+    const mockInput = document.createElement("input") as HTMLInputElement;
     mockInput.type = "text";
     mockInput.value = "eXample TexT";
     expect(gModel.autoCapitalizeInputs(mockInput)).toBe<string>("Example Text");
   });
   it("should correct capitalization after the letter 'D'", (): void => {
-    const mockInput = document.createElement("input");
+    const mockInput = document.createElement("input") as HTMLInputElement;
     mockInput.type = "text";
     mockInput.value = "Dexample text";
     expect(gModel.autoCapitalizeInputs(mockInput)).toBe<string>("DExample text");
   });
   it("should fix multiple upper case letters in a word", (): void => {
-    const mockInput = document.createElement("input");
+    const mockInput = document.createElement("input") as HTMLInputElement;
     mockInput.type = "text";
     mockInput.value = "EXample";
     expect(gModel.autoCapitalizeInputs(mockInput)).toBe<string>("Example");
   });
   it("should not modify text if autocorrect is disabled", (): void => {
-    const mockInput = document.createElement("input");
+    const mockInput = document.createElement("input") as HTMLInputElement;
     mockInput.type = "text";
     mockInput.value = "example text";
     expect(gModel.autoCapitalizeInputs(mockInput, false)).toBe<string>("example text");
   });
   it("should remove improper characters", (): void => {
-    const mockInput = document.createElement("input");
+    const mockInput = document.createElement("input") as HTMLInputElement;
     mockInput.type = "text";
     mockInput.value = "Example @!text";
     expect(gModel.autoCapitalizeInputs(mockInput)).toBe<string>("Example text");
   });
   it("should throw an error if the element is not an input or textarea", (): void => {
     gModel.autoCapitalizeInputs(null as any);
-    expect(elementNotFoundSpy).toHaveBeenCalled();
+    expect(elementNotFoundSpy).toHaveBeenCalled() as void;
   });
 });
 describe("capitalizeFirstLetter", (): void => {
@@ -527,8 +541,8 @@ describe("capitalizeFirstLetter", (): void => {
   beforeEach((): void => {
     typeErrorSpy = jest
       .spyOn<any, ErrorHandler>(errorHandler, "typeError")
-      .mockImplementation((): Error => new Error(`Type error.`));
-    jest.clearAllMocks();
+      .mockImplementation((): Error => new Error(`Type error.`)) as jest.SpyInstance;
+    jest.clearAllMocks() as typeof jest;
   });
   it("should capitalize the first letter of the string", (): void => {
     expect(gModel.capitalizeFirstLetter("example")).toBe<string>("Example");
@@ -538,7 +552,7 @@ describe("capitalizeFirstLetter", (): void => {
   });
   it("should call typeError if the argument is not a string", (): void => {
     gModel.capitalizeFirstLetter(null as any);
-    expect(typeErrorSpy).toHaveBeenCalled();
+    expect(typeErrorSpy).toHaveBeenCalled() as void;
   });
 });
 describe("textTransformPascal", (): void => {
@@ -546,8 +560,8 @@ describe("textTransformPascal", (): void => {
   beforeEach((): void => {
     typeErrorSpy = jest
       .spyOn<any, ErrorHandler>(errorHandler, "typeError")
-      .mockImplementation((): Error => new Error(`Type error.`));
-    jest.clearAllMocks();
+      .mockImplementation((): Error => new Error(`Type error.`)) as jest.SpyInstance;
+    jest.clearAllMocks() as typeof jest;
   });
   it("should transform text to PascalCase", (): void => {
     expect(gModel.textTransformPascal("example")).toBe<string>("Example");
@@ -557,7 +571,7 @@ describe("textTransformPascal", (): void => {
   });
   it("should call typeError if the argument is not a string", (): void => {
     gModel.textTransformPascal(null as any);
-    expect(typeErrorSpy).toHaveBeenCalled();
+    expect(typeErrorSpy).toHaveBeenCalled() as void;
   });
 });
 describe("dateISOtoBRL", (): void => {

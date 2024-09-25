@@ -55,8 +55,8 @@ describe("asyncJSXCall", (): void => {
   test("should call both component and called function", async (): Promise<void> => {
     const mockComponent: jest.Mock<React.JSX.Element, [], any> = jest.fn((): JSX.Element => <div>Component</div>);
     const mockCalled: jest.Mock<any, any, any> = jest.fn();
-    expect(mockComponent).toHaveBeenCalled();
-    expect(mockCalled).toHaveBeenCalled();
+    expect(mockComponent).toHaveBeenCalled() as void;
+    expect(mockCalled).toHaveBeenCalled() as void;
     expect((await asyncJSXCall(mockComponent, mockCalled)).type).toBe<HTMLTag>("div");
   });
   test("should return default JSX in case of error", async (): Promise<void> => {
@@ -73,7 +73,10 @@ describe("asyncJSXCall", (): void => {
 describe("correlateAptMonthDays", (): void => {
   test("should populate daySel with options from dayRefs", (): void => {
     const daySel = document.createElement("select");
-    const dayRefs = [document.createElement("input"), document.createElement("input")];
+    const dayRefs = [
+      document.createElement("input") as HTMLInputElement,
+      document.createElement("input") as HTMLInputElement,
+    ];
     dayRefs.forEach((dayRef: HTMLInputElement, i): string => (dayRef.value = `2024-08-${i + 1}`));
     correlateAptMonthDays(daySel, dayRefs);
     expect(daySel.children.length).toBe<number>(dayRefs.length);
@@ -86,10 +89,12 @@ describe("correlateAptMonthDays", (): void => {
     } else console.error(`Day Select First Chilldren is not an <input>, <select> or <textarea>`);
   });
   test("should handle case when no dayRefs are provided", (): void => {
-    const consoleSpy = jest.spyOn<Console, ConsoleMethod>(console, "warn").mockImplementation((): void => {});
+    const consoleSpy = jest
+      .spyOn<Console, ConsoleMethod>(console, "warn")
+      .mockImplementation((): void => {}) as jest.SpyInstance;
     correlateAptMonthDays(document.createElement("select"), []);
-    expect(consoleSpy).toHaveBeenCalled();
-    consoleSpy.mockRestore();
+    expect(consoleSpy).toHaveBeenCalled() as void;
+    consoleSpy.mockRestore() as void;
   });
 });
 describe("convertWeekdaysToMonthdays", (): void => {
@@ -118,10 +123,12 @@ describe("correlateWorkingDays", (): void => {
     expect(labels[1].textContent).toContain<WeekDay>("Quarta-feira");
   });
   test("should log warning if labels do not match working day names", (): void => {
-    const consoleSpy = jest.spyOn<Console, ConsoleMethod>(console, "warn").mockImplementation((): void => {});
+    const consoleSpy = jest
+      .spyOn<Console, ConsoleMethod>(console, "warn")
+      .mockImplementation((): void => {}) as jest.SpyInstance;
     correlateWorkingDays(["Segunda-feira"], 2);
-    expect(consoleSpy).toHaveBeenCalled();
-    consoleSpy.mockRestore();
+    expect(consoleSpy).toHaveBeenCalled() as void;
+    consoleSpy.mockRestore() as void;
   });
 });
 describe("removeRepeateadWorkingDays", (): void => {
@@ -132,29 +139,31 @@ describe("removeRepeateadWorkingDays", (): void => {
     expect(removeRepeateadWorkingDays([3, 5])).toEqual([3, 5]);
   });
   test("should log errors if elements are not found", (): void => {
-    const consoleSpy = jest.spyOn<Console, ConsoleMethod>(console, "error").mockImplementation((): void => {});
+    const consoleSpy = jest
+      .spyOn<Console, ConsoleMethod>(console, "error")
+      .mockImplementation((): void => {}) as jest.SpyInstance;
     removeRepeateadWorkingDays([3, 5]);
-    expect(consoleSpy).toHaveBeenCalled();
-    consoleSpy.mockRestore();
+    expect(consoleSpy).toHaveBeenCalled() as void;
+    consoleSpy.mockRestore() as void;
   });
 });
 describe("generateSchedPacData", (): void => {
   let scope: HTMLElement;
   beforeEach((): void => {
-    scope = document.createElement("div");
-    const input1 = document.createElement("input");
+    scope = document.createElement("div") as HTMLDivElement;
+    const input1 = document.createElement("input") as HTMLInputElement;
     input1.name = "name-in";
     input1.value = "John";
     scope.appendChild(input1);
-    const input2 = document.createElement("input");
+    const input2 = document.createElement("input") as HTMLInputElement;
     input2.name = "sobrenome-in";
     input2.value = "Doe";
     scope.appendChild(input2);
-    const input3 = document.createElement("input");
+    const input3 = document.createElement("input") as HTMLInputElement;
     input3.name = "ddd-in";
     input3.value = "11";
     scope.appendChild(input3);
-    const input4 = document.createElement("input");
+    const input4 = document.createElement("input") as HTMLInputElement;
     input4.name = "tel-in";
     input4.value = "999999999";
     scope.appendChild(input4);
@@ -168,13 +177,13 @@ describe("generateSchedPacData", (): void => {
     generateSchedPacData(null as any);
     expect(
       jest.spyOn<any, ErrorHandler>(require("../../../../global/handlers/errorHandler"), "elementNotFound")
-    ).toHaveBeenCalled();
+    ).toHaveBeenCalled() as void;
   });
 });
 describe("handleRenderRefLost", (): void => {
   let prevRef: HTMLElement;
   beforeEach((): void => {
-    prevRef = document.createElement("div");
+    prevRef = document.createElement("div") as HTMLDivElement;
     prevRef.id = "appointmentBtn-1";
     document.body.appendChild(prevRef);
     rootDlgContext.aptBtnsRoots["appointmentBtn-1"] = {
@@ -193,14 +202,16 @@ describe("handleRenderRefLost", (): void => {
   });
   it("should throw typeError when id is not a string", (): void => {
     handleRenderRefLost(null as any, prevRef, "coordenador");
-    expect(jest.spyOn<Console, ConsoleMethod>(console, "error").mockImplementation((): void => {})).toHaveBeenCalled();
+    expect(
+      jest.spyOn<Console, ConsoleMethod>(console, "error").mockImplementation((): void => {}) as jest.SpyInstance
+    ).toHaveBeenCalled() as void;
   });
 });
 describe("handleAptBtnClick", (): void => {
   let ev: MouseEvent;
   beforeEach((): void => {
     ev = {
-      currentTarget: document.createElement("button"),
+      currentTarget: document.createElement("button") as HTMLButtonElement,
     } as any;
     rootDlgContext.aptBtnsRoots = {};
     consVariablesData.rootDlg = undefined;
@@ -216,13 +227,15 @@ describe("handleAptBtnClick", (): void => {
     } else console.error(`Event current target is not an Element.`);
   });
   it("should log an error if currentTarget is invalid", (): void => {
-    const consoleErrorMock = jest.spyOn<Console, ConsoleMethod>(console, "error").mockImplementation((): void => {});
+    const consoleErrorMock = jest
+      .spyOn<Console, ConsoleMethod>(console, "error")
+      .mockImplementation((): void => {}) as jest.SpyInstance;
     const mockEvent = {
       currentTarget: null,
     } as unknown as MouseEvent;
     handleAptBtnClick(mockEvent, "coordenador");
-    expect(consoleErrorMock).toHaveBeenCalled();
-    consoleErrorMock.mockRestore();
+    expect(consoleErrorMock).toHaveBeenCalled() as void;
+    consoleErrorMock.mockRestore() as void;
   });
 });
 describe("createAptBtn", (): void => {
@@ -252,21 +265,21 @@ describe("createAptBtn", (): void => {
     createAptBtn(formData, providerFormData, rootedDlg, "coordenador");
     expect(
       jest.spyOn<any, ErrorHandler>(require("../../../../global/handlers/errorHandler"), "elementNotFound")
-    ).toHaveBeenCalled();
+    ).toHaveBeenCalled() as void;
   });
 });
 describe("handleDragAptBtn", (): void => {
   let newAppointmentBtn: HTMLButtonElement;
   let mockReplaceRegstSlot: jest.SpyInstance;
   beforeEach((): void => {
-    newAppointmentBtn = document.createElement("button");
+    newAppointmentBtn = document.createElement("button") as HTMLButtonElement;
     newAppointmentBtn.classList.add("appointmentBtn");
     mockReplaceRegstSlot = jest
       .spyOn<any, AppointmentHandler>(
         require("../../../../locals/panelPage/handlers/consHandlerCmn"),
         "replaceRegstSlot"
       )
-      .mockImplementation();
+      .mockImplementation() as jest.SpyInstance;
     document.body.innerHTML = `
       <div class="consSlot"></div>
       <div id="monthSelector"></div>
@@ -274,12 +287,12 @@ describe("handleDragAptBtn", (): void => {
     `;
   });
   afterEach((): void => {
-    jest.clearAllMocks();
+    jest.clearAllMocks() as typeof jest;
   });
   it("should attach dragend event and handle successful slot match", (): void => {
     handleDragAptBtn(newAppointmentBtn);
     newAppointmentBtn.dispatchEvent(new DragEvent("dragend", { clientX: 50, clientY: 50 }));
-    expect(mockReplaceRegstSlot).toHaveBeenCalled();
+    expect(mockReplaceRegstSlot).toHaveBeenCalled() as void;
   });
   it("should attach touchstart event and update isDragging", (): void => {
     handleDragAptBtn(newAppointmentBtn);
@@ -311,13 +324,13 @@ describe("handleDragAptBtn", (): void => {
         ],
       })
     );
-    expect(mockReplaceRegstSlot).toHaveBeenCalled();
+    expect(mockReplaceRegstSlot).toHaveBeenCalled() as void;
   });
   it("should throw an error if newAppointmentBtn is not an HTMLButtonElement", (): void => {
     handleDragAptBtn({} as any);
     expect(
       jest.spyOn<any, ErrorHandler>(require("../../../../global/handlers/errorHandler"), "elementNotFound")
-    ).toHaveBeenCalled();
+    ).toHaveBeenCalled() as void;
   });
 });
 describe("replaceRegstSlot", (): void => {
@@ -326,7 +339,7 @@ describe("replaceRegstSlot", (): void => {
   beforeEach((): void => {
     matchedSlot = document.createElement("slot");
     matchedSlot.classList.add("consSlot");
-    newAppointmentBtn = document.createElement("button");
+    newAppointmentBtn = document.createElement("button") as HTMLButtonElement;
     newAppointmentBtn.classList.add("appointmentBtn");
     document.body.innerHTML = `
       <div id="monthSelector"></div>
@@ -345,14 +358,14 @@ describe("replaceRegstSlot", (): void => {
           require("../../../../locals/panelPage/handlers/consHandlerCmn"),
           "fillSchedStateValues"
         )
-        .mockImplementation()
-    ).toHaveBeenCalled();
+        .mockImplementation() as jest.SpyInstance
+    ).toHaveBeenCalled() as void;
   });
   it("should throw an error if matchedSlot is not an HTMLElement", (): void => {
     replaceRegstSlot(null as any, newAppointmentBtn, [matchedSlot], "estudante");
     expect(
       jest.spyOn<any, ErrorHandler>(require("../../../../global/handlers/errorHandler"), "elementNotFound")
-    ).toHaveBeenCalled();
+    ).toHaveBeenCalled() as void;
   });
 });
 describe("checkRegstBtn", (): void => {
@@ -361,7 +374,7 @@ describe("checkRegstBtn", (): void => {
   let failProps: [Root | undefined, boolean, jest.Mock, string];
   const userClass = "coordenador";
   beforeEach((): void => {
-    regstBtn = document.createElement("button");
+    regstBtn = document.createElement("button") as HTMLButtonElement;
     regstBtn.id = "appointmentBtn";
     document.body.appendChild(regstBtn);
     failProps = [undefined, false, jest.fn(), "Error message"];
@@ -386,28 +399,28 @@ describe("checkRegstBtn", (): void => {
       "multipleElementsNotFound"
     );
     checkRegstBtn(regstBtn, scope, failProps, userClass);
-    expect(errorSpy).toHaveBeenCalled();
-    errorSpy.mockRestore();
+    expect(errorSpy).toHaveBeenCalled() as void;
+    errorSpy.mockRestore() as void;
   });
 });
 describe("addEraseEvent", (): void => {
   let eraser: HTMLButtonElement;
   beforeEach((): void => {
-    eraser = document.createElement("button");
+    eraser = document.createElement("button") as HTMLButtonElement;
     eraser.classList.add("btn-close");
     document.body.innerHTML = '<div class="consSlot"></div>';
   });
   it("should add event listener for erase button and call replaceBtnSlot", (): void => {
     addEraseEvent(eraser, "coordenador");
-    eraser.click();
+    eraser.click() as void;
     expect(
       jest
         .spyOn<any, AppointmentHandler>(
           require("../../../../locals/panelPage/handlers/consHandlerCmn"),
           "replaceBtnSlot"
         )
-        .mockImplementation()
-    ).toHaveBeenCalled();
+        .mockImplementation() as jest.SpyInstance
+    ).toHaveBeenCalled() as void;
   });
 
   it("should disable the eraser if no appointment button is found", (): void => {
@@ -415,7 +428,7 @@ describe("addEraseEvent", (): void => {
     expect(eraser.disabled).toBe<boolean>(true);
   });
   it("should enable the eraser if appointment button is found", (): void => {
-    const appointmentBtn = document.createElement("button");
+    const appointmentBtn = document.createElement("button") as HTMLButtonElement;
     appointmentBtn.classList.add("appointmentBtn");
     document.querySelector(".consSlot")?.appendChild(appointmentBtn);
     addEraseEvent(eraser, "coordenador");
@@ -424,19 +437,19 @@ describe("addEraseEvent", (): void => {
 });
 describe("replaceBtnSlot", (): void => {
   test("should replace aptBtn with input in parent", (): void => {
-    const aptBtn = document.createElement("button");
-    const parent = document.createElement("div");
+    const aptBtn = document.createElement("button") as HTMLButtonElement;
+    const parent = document.createElement("div") as HTMLDivElement;
     parent.appendChild(aptBtn);
-    replaceBtnSlot(aptBtn, parent, document.createElement("button"));
-    expect(parent.querySelector("input")).toBeTruthy();
+    replaceBtnSlot(aptBtn, parent, document.createElement("button") as HTMLButtonElement);
+    expect(parent.querySelector("input")).toBeTruthy() as void;
     expect(parent.querySelector("button")).toBeNull();
   });
 });
 describe("checkConfirmApt", (): void => {
   test("should update appointment button based on dayCheck status", (): void => {
-    const dayCheck = document.createElement("input");
+    const dayCheck = document.createElement("input") as HTMLInputElement;
     dayCheck.type = "checkbox";
-    const relAptBtn = document.createElement("button");
+    const relAptBtn = document.createElement("button") as HTMLButtonElement;
     relAptBtn.classList.add("btn-info");
     const td = document.createElement("td");
     td.appendChild(relAptBtn);
@@ -455,24 +468,28 @@ describe("handleScheduleChange", (): void => {
     option.value = "August";
     monthSelector.appendChild(option);
     monthSelector.value = "August";
-    const root = document.createElement("div");
+    const root = document.createElement("div") as HTMLDivElement;
     sessionScheduleState["August"] = "<div>August Schedule</div>";
     handleScheduleChange(monthSelector, root, "coordenador");
     expect(root.innerHTML).toContain<string>("August Schedule");
   });
   test("should throw error for invalid monthSelector", (): void => {
     expect((): void =>
-      handleScheduleChange(document.createElement("select"), document.createElement("div"), "coordenador")
+      handleScheduleChange(
+        document.createElement("select"),
+        document.createElement("div") as HTMLDivElement,
+        "coordenador"
+      )
     ).toThrow();
   });
 });
 describe("verifyAptCheck", (): void => {
   test("should update related appointment button when checkbox is checked", (): void => {
-    const dayCheck = document.createElement("input");
+    const dayCheck = document.createElement("input") as HTMLInputElement;
     dayCheck.type = "checkbox";
     dayCheck.checked = true;
     const relSlot = document.createElement("slot");
-    const relBtn = document.createElement("button");
+    const relBtn = document.createElement("button") as HTMLButtonElement;
     relBtn.classList.add("btn-info");
     relSlot.appendChild(relBtn);
     document.body.appendChild(relSlot);
@@ -482,8 +499,8 @@ describe("verifyAptCheck", (): void => {
 });
 describe("addListenersForSchedTab", (): void => {
   test("should add listeners for appointment buttons", (): void => {
-    const scope = document.createElement("div");
-    const aptBtn = document.createElement("button");
+    const scope = document.createElement("div") as HTMLDivElement;
+    const aptBtn = document.createElement("button") as HTMLButtonElement;
     aptBtn.classList.add("appointmentBtn");
     scope.appendChild(aptBtn);
     addListenersForSchedTab(scope, "coordenador", true);
@@ -493,12 +510,12 @@ describe("addListenersForSchedTab", (): void => {
 });
 describe("applyStylesForSchedTab", (): void => {
   test("should apply styles to schedule table", (): void => {
-    const scope = document.createElement("div");
-    const dateInput = document.createElement("input");
+    const scope = document.createElement("div") as HTMLDivElement;
+    const dateInput = document.createElement("input") as HTMLInputElement;
     dateInput.type = "date";
     scope.appendChild(dateInput);
     applyStylesForSchedTab(scope);
-    expect(scope.querySelector('input[type="date"]')).toBeTruthy();
+    expect(scope.querySelector('input[type="date"]')).toBeTruthy() as void;
   });
 });
 describe("addListenerForSchedUpdates", (): void => {
@@ -525,7 +542,7 @@ describe("addListenerForSchedUpdates", (): void => {
     (global as any).sessionScheduleState["January"] = "";
   });
   afterEach((): void => {
-    jest.clearAllMocks();
+    jest.clearAllMocks() as typeof jest;
   });
   it("should add event listeners to input, select, and textarea elements", (): void => {
     addListenerForSchedUpdates(monthSelector);
@@ -536,17 +553,17 @@ describe("addListenerForSchedUpdates", (): void => {
     const inputEvent = new Event("input");
     inputEl.dispatchEvent(inputEvent);
     expect((global as any).sessionScheduleState["January"]).toBe<string>(tbodyTab.innerHTML);
-    expect(mockSetEntryValueState).toHaveBeenCalledWith<[HTMLInputElement]>(inputEl);
+    expect(mockSetEntryValueState).toHaveBeenCalledWith<[HTMLInputElement]>(inputEl) as void;
     textareaEl.value = "Updated Text";
     const textareaEvent = new Event("input");
     textareaEl.dispatchEvent(textareaEvent);
     expect((global as any).sessionScheduleState["January"]).toBe<string>(tbodyTab.innerHTML);
-    expect(mockSetEntryValueState).toHaveBeenCalledWith<[HTMLTextAreaElement]>(textareaEl);
+    expect(mockSetEntryValueState).toHaveBeenCalledWith<[HTMLTextAreaElement]>(textareaEl) as void;
     selectEl.value = "2";
     const selectEvent = new Event("change");
     selectEl.dispatchEvent(selectEvent);
     expect((global as any).sessionScheduleState["January"]).toBe<string>(tbodyTab.innerHTML);
-    expect(mockSetEntryValueState).toHaveBeenCalledWith<[HTMLSelectElement]>(selectEl);
+    expect(mockSetEntryValueState).toHaveBeenCalledWith<[HTMLSelectElement]>(selectEl) as void;
   });
   it("should add event listeners to slot elements for drop events", (): void => {
     const slotEl = document.createElement("slot");
@@ -556,10 +573,10 @@ describe("addListenerForSchedUpdates", (): void => {
     expect((global as any).sessionScheduleState["January"]).toBe<string>(tbodyTab.innerHTML);
   });
   it("should throw error if monthSelector is not valid", (): void => {
-    addListenerForSchedUpdates(document.createElement("div") as any);
+    addListenerForSchedUpdates(document.createElement("div") as HTMLDivElement as any);
     expect(
       jest.spyOn<any, ErrorHandler>(require("../../../../global/handlers/errorHandler"), "inputNotFound")
-    ).toHaveBeenCalled();
+    ).toHaveBeenCalled() as void;
   });
   it("should throw error if no input/select/textarea elements are found", (): void => {
     document.body.innerHTML = `
@@ -572,7 +589,7 @@ describe("addListenerForSchedUpdates", (): void => {
     addListenerForSchedUpdates(monthSelector);
     expect(
       jest.spyOn<any, ErrorHandler>(require("../../../../global/handlers/errorHandler"), "elementNotPopulated")
-    ).toHaveBeenCalled();
+    ).toHaveBeenCalled() as void;
   });
   it("should throw error if no slots are found", (): void => {
     document.body.innerHTML = `
@@ -587,7 +604,7 @@ describe("addListenerForSchedUpdates", (): void => {
     addListenerForSchedUpdates(monthSelector);
     expect(
       jest.spyOn<any, ErrorHandler>(require("../../../../global/handlers/errorHandler"), "elementNotPopulated")
-    ).toHaveBeenCalled();
+    ).toHaveBeenCalled() as void;
   });
   it("should update session state on event listener triggers", (): void => {
     addListenerForSchedUpdates(monthSelector);
@@ -611,7 +628,7 @@ describe("fillSchedStateValues", (): void => {
     (global as any).sessionScheduleState = {};
   });
   afterEach((): void => {
-    jest.clearAllMocks();
+    jest.clearAllMocks() as typeof jest;
   });
   it("should populate sessionScheduleState with HTML content and form values", (): void => {
     fillSchedStateValues("January");
@@ -627,7 +644,7 @@ describe("fillSchedStateValues", (): void => {
     fillSchedStateValues("January");
     expect(
       jest.spyOn<any, ErrorHandler>(require("../../../../global/handlers/errorHandler"), "elementNotFound")
-    ).toHaveBeenCalled();
+    ).toHaveBeenCalled() as void;
   });
   it("should throw error if no input/select/textarea elements are found", (): void => {
     document.body.innerHTML = `
@@ -636,6 +653,6 @@ describe("fillSchedStateValues", (): void => {
     fillSchedStateValues("January");
     expect(
       jest.spyOn<any, ErrorHandler>(require("../../../../global/handlers/errorHandler"), "elementNotPopulated")
-    ).toHaveBeenCalled();
+    ).toHaveBeenCalled() as void;
   });
 });

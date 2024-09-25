@@ -10,7 +10,7 @@ jest.mock(
   } => ({
     syncAriaStates: jest.fn<void, HTMLElement[]>(),
   })
-);
+) as typeof jest;
 describe("BtnAddPac Component", (): void => {
   const defaultProps: BtnAddPacPros = {
     userClass: "estudante",
@@ -21,20 +21,24 @@ describe("BtnAddPac Component", (): void => {
   ): RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement> =>
     render(<BtnAddPac {...defaultProps} {...props} />);
   test("renders the button correctly", (): void =>
-    renderComponent() && expect(screen.getByText<HTMLButtonElement>("Adicionar Consulta")).toBeInTheDocument());
+    (renderComponent() as RenderResult<
+      typeof import("@testing-library/dom/types/queries"),
+      HTMLElement,
+      HTMLElement
+    >) && (expect(screen.getByText<HTMLButtonElement>("Adicionar Consulta")).toBeInTheDocument() as void));
   test("toggles form visibility on button click", (): void => {
-    renderComponent();
+    renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
     const addButton: HTMLElement = screen.getByText<HTMLButtonElement>("Adicionar Consulta");
     fireEvent.click(addButton);
-    expect(screen.queryByRole<HTMLDialogElement>("dialog")).toBeInTheDocument();
+    expect(screen.queryByRole<HTMLDialogElement>("dialog")).toBeInTheDocument() as void;
     fireEvent.click(addButton);
-    expect(screen.queryByRole<HTMLDialogElement>("dialog")).not.toBeInTheDocument();
+    expect(screen.queryByRole<HTMLDialogElement>("dialog")).not.toBeInTheDocument() as void;
   });
   test("syncs aria states on mount and button press", (): void => {
-    renderComponent();
-    expect(syncAriaStates).toHaveBeenCalled();
+    renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
+    expect(syncAriaStates).toHaveBeenCalled() as void;
     fireEvent.click(screen.getByText<HTMLButtonElement>("Adicionar Consulta"));
-    expect(syncAriaStates).toHaveBeenCalledTimes(2);
+    expect(syncAriaStates).toHaveBeenCalledTimes(2) as void;
   });
   test("sets initial pressState based on location.search", (): void => {
     const original: Location = window.location;
@@ -44,15 +48,15 @@ describe("BtnAddPac Component", (): void => {
       },
       writable: true,
     });
-    renderComponent();
-    expect(screen.queryByRole<HTMLDialogElement>("dialog")).toBeInTheDocument();
+    renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
+    expect(screen.queryByRole<HTMLDialogElement>("dialog")).toBeInTheDocument() as void;
     window.location = original;
   });
   test("handles timeout case for aria syncing", (): void => {
     jest.useFakeTimers();
-    renderComponent();
+    renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
     jest.advanceTimersByTime(2000);
-    expect(syncAriaStates).toHaveBeenCalledTimes(2);
+    expect(syncAriaStates).toHaveBeenCalledTimes(2) as void;
     jest.useRealTimers();
   });
 });

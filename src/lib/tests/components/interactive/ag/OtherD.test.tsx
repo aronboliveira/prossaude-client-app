@@ -9,11 +9,11 @@ jest.mock(
   } => ({
     opRadioHandler: jest.fn(),
   })
-);
+) as typeof jest;
 describe("OtherD", (): void => {
   it("renders a radio input for other diseases", (): void => {
     render(<OtherD />);
-    expect(screen.getByRole<HTMLInputElement>("radio")).toBeInTheDocument();
+    expect(screen.getByRole<HTMLInputElement>("radio")).toBeInTheDocument() as void;
   });
   it("calls opRadioHandler on keydown", (): void => {
     render(<OtherD />);

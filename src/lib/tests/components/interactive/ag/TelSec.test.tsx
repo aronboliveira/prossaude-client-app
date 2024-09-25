@@ -10,7 +10,7 @@ jest.mock(
   } => ({
     formatTel: jest.fn(),
   })
-);
+) as typeof jest;
 jest.mock(
   "../../../../../lib/global/handlers/gHandlers",
   (): {
@@ -18,11 +18,11 @@ jest.mock(
   } => ({
     handleCondtReq: jest.fn(),
   })
-);
+) as typeof jest;
 describe("TelSec", (): void => {
   it("renders a text input for secondary phone number", (): void => {
     render(<TelSec />);
-    expect(screen.getByRole<HTMLInputElement>("textbox")).toBeInTheDocument();
+    expect(screen.getByRole<HTMLInputElement>("textbox")).toBeInTheDocument() as void;
   });
   it("calls formatTel and handleCondtReq on input", (): void => {
     render(<TelSec />);

@@ -8,8 +8,8 @@ describe("DataProvider Class", (): void => {
   beforeEach((): void => {
     mockSessionStorage = {};
     dataProvider = new DataProvider(mockSessionStorage);
-    mockScope = document.createElement("div");
-    jest.clearAllMocks();
+    mockScope = document.createElement("div") as HTMLDivElement;
+    jest.clearAllMocks() as typeof jest;
     sessionStorage.clear();
   });
   describe("constructor", (): void => {
@@ -28,7 +28,7 @@ describe("DataProvider Class", (): void => {
         dataProvider,
         "parseSessionStorage"
       );
-      const element = document.createElement("div");
+      const element = document.createElement("div") as HTMLDivElement;
       element.id = "testElement";
       dataProvider.initPersist(element, dataProvider);
       setTimeout((): void => {
@@ -42,7 +42,7 @@ describe("DataProvider Class", (): void => {
   });
   describe("initStorageParsing", (): void => {
     it("should correctly parse session storage data for HTML elements", (): void => {
-      const inputEl = document.createElement("input");
+      const inputEl = document.createElement("input") as HTMLInputElement;
       inputEl.id = "input1";
       mockScope.appendChild(inputEl);
       sessionStorage.setItem("testScope", JSON.stringify({ input1: "testValue" }));
@@ -50,7 +50,7 @@ describe("DataProvider Class", (): void => {
       expect(inputEl.value).toBe<string>("testValue");
     });
     it("should handle checkboxes correctly", (): void => {
-      const checkbox = document.createElement("input");
+      const checkbox = document.createElement("input") as HTMLInputElement;
       checkbox.id = "checkbox1";
       checkbox.type = "checkbox";
       mockScope.appendChild(checkbox);
@@ -61,7 +61,7 @@ describe("DataProvider Class", (): void => {
   });
   describe("parseSessionStorage", (): void => {
     it("should parse session storage and set element values correctly", (): void => {
-      const inputEl = document.createElement("input");
+      const inputEl = document.createElement("input") as HTMLInputElement;
       inputEl.id = "input1";
       mockScope.appendChild(inputEl);
       sessionStorage.setItem("testScope", JSON.stringify({ input1: "testValue" }));
@@ -77,12 +77,12 @@ describe("DataProvider Class", (): void => {
       monthSelector.id = "monthSelector";
       mockScope.appendChild(monthSelector);
       dataProvider.parseSessionStorage(mockScope, "testScope", "student");
-      expect(mockHandleScheduleChange).toHaveBeenCalled();
+      expect(mockHandleScheduleChange).toHaveBeenCalled() as void;
     });
   });
   describe("checkForPersist", (): void => {
     it("should persist session entries to sessionStorage", (): void => {
-      const inputEl = document.createElement("input");
+      const inputEl = document.createElement("input") as HTMLInputElement;
       inputEl.id = "input1";
       inputEl.value = "persistedValue";
       inputEl.classList.add("ssPersist");
@@ -93,7 +93,7 @@ describe("DataProvider Class", (): void => {
   });
   describe("persistSessionEntries", (): void => {
     it("should persist HTMLInputElement and HTMLTextAreaElement values", (): void => {
-      const inputEl = document.createElement("input");
+      const inputEl = document.createElement("input") as HTMLInputElement;
       inputEl.id = "input1";
       inputEl.value = "persistedValue";
       inputEl.classList.add("ssPersist");
@@ -102,7 +102,7 @@ describe("DataProvider Class", (): void => {
       expect(persistedEntries).toEqual<{ [k: string]: string }>({ input1: "persistedValue" });
     });
     it("should persist checkbox state correctly", (): void => {
-      const checkbox = document.createElement("input");
+      const checkbox = document.createElement("input") as HTMLInputElement;
       checkbox.id = "checkbox1";
       checkbox.type = "checkbox";
       checkbox.checked = true;
@@ -117,7 +117,7 @@ describe("DataProvider Class", (): void => {
       expect(dataProvider.checkForm("nonExistentElement")).toBe<boolean>(false);
     });
     it("should return true if the element exists", (): void => {
-      const element = document.createElement("form");
+      const element = document.createElement("form") as HTMLFormElement;
       element.id = "testForm";
       document.body.appendChild(element);
       expect(dataProvider.checkForm("testForm")).toBe<boolean>(true);

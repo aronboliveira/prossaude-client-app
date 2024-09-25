@@ -1,11 +1,6 @@
 import { FormEvent } from "react";
 import { addCanvasListeners } from "../gController";
-import {
-  autoCapitalizeInputs,
-  parseNotNaN,
-  regularToSnake,
-  removeFirstClick,
-} from "../gModel";
+import { autoCapitalizeInputs, parseNotNaN, regularToSnake, removeFirstClick } from "../gModel";
 import { fadeElement, isClickOutside } from "../gStyleScript";
 //nesse file estão presentes principalmente as funções de manipulação dinâmica de texto e layout
 import type {
@@ -29,26 +24,15 @@ import { handleSubmit } from "@/pages/api/ts/handlers";
 //function for facilitating conversion of types when passing properties to DOM elements
 export function updateSimpleProperty(el: targEl): primitiveType {
   if (el instanceof HTMLInputElement) {
-    if (el.type === "radio" || el.type === "checkbox")
-      return (el as HTMLInputElement).checked.toString();
+    if (el.type === "radio" || el.type === "checkbox") return (el as HTMLInputElement).checked.toString();
     else if (el.type === "number" || el.type === "text") {
-      return !Number.isFinite(
-        parseFloat(el.value?.replaceAll(/[^0-9.,+-]/g, ""))
-      )
+      return !Number.isFinite(parseFloat(el.value?.replaceAll(/[^0-9.,+-]/g, "")))
         ? 0
         : parseFloat(el.value?.replaceAll(/[^0-9.,+-]/g, "")) ?? 0;
     } else return el.value || "0";
-  } else if (
-    el instanceof HTMLSelectElement ||
-    el instanceof HTMLTextAreaElement
-  )
-    return el.value;
+  } else if (el instanceof HTMLSelectElement || el instanceof HTMLTextAreaElement) return el.value;
   else inputNotFound(el, "el in updateSimpleProperty", extLine(new Error()));
-  console.log(
-    `Failed to update property for ${
-      el?.id || el?.tagName || "unidentified"
-    }. Value returned: -1`
-  );
+  console.log(`Failed to update property for ${el?.id || el?.tagName || "unidentified"}. Value returned: -1`);
   return "-1";
 }
 
@@ -62,10 +46,7 @@ export function cursorCheckTimer(): number {
   return 0;
 }
 //handler for radios with options
-export function opRadioHandler(
-  keydown: KeyboardEvent | React.KeyboardEvent,
-  radioPairs: targEl[]
-): void {
+export function opRadioHandler(keydown: KeyboardEvent | React.KeyboardEvent, radioPairs: targEl[]): void {
   if (radioPairs.every(radioPair => radioPair instanceof HTMLInputElement)) {
     for (
       let i = 0;
@@ -101,9 +82,7 @@ export function opRadioHandler(
       } else
         multipleElementsNotFound(
           extLine(new Error()),
-          `validando radioYes id ${
-            radioYes?.id || "UNDEFINED ID"
-          } or radiosNo id ${radioNo?.id || "UNDEFINED ID"}`,
+          `validando radioYes id ${radioYes?.id || "UNDEFINED ID"} or radiosNo id ${radioNo?.id || "UNDEFINED ID"}`,
           radioYes,
           radioNo
         );
@@ -119,29 +98,12 @@ export function cpbInpHandler(ev: Event, radio: targEl): void {
     radio?.parentElement?.parentElement
   ) {
     let divAdd: targEl = radio.parentElement.nextElementSibling;
-    if (
-      !(
-        divAdd?.classList.contains("divAdd") ||
-        divAdd?.classList.contains("textAdd")
-      )
-    ) {
+    if (!(divAdd?.classList.contains("divAdd") || divAdd?.classList.contains("textAdd"))) {
       divAdd = radio.parentElement.parentElement.nextElementSibling;
-      if (
-        !(
-          divAdd?.classList.contains("divAdd") ||
-          divAdd?.classList.contains("textAdd")
-        )
-      ) {
+      if (!(divAdd?.classList.contains("divAdd") || divAdd?.classList.contains("textAdd"))) {
         divAdd = radio.parentElement.nextElementSibling?.nextElementSibling;
-        if (
-          !(
-            divAdd?.classList.contains("divAdd") ||
-            divAdd?.classList.contains("textAdd")
-          )
-        )
-          divAdd =
-            radio.parentElement.parentElement?.parentElement
-              ?.nextElementSibling;
+        if (!(divAdd?.classList.contains("divAdd") || divAdd?.classList.contains("textAdd")))
+          divAdd = radio.parentElement.parentElement?.parentElement?.nextElementSibling;
       }
     }
     //inclui ambos os tipos de eventos
@@ -159,48 +121,30 @@ export function cpbInpHandler(ev: Event, radio: targEl): void {
     if (
       divAdd instanceof HTMLElement &&
       (radio.id?.toLowerCase().includes(idPattern) ||
-        radio.id
-          ?.toLocaleLowerCase()
-          .includes(idPattern.slice(0, 1).toUpperCase() + idPattern.slice(1)))
+        radio.id?.toLocaleLowerCase().includes(idPattern.slice(0, 1).toUpperCase() + idPattern.slice(1)))
     ) {
       if (radio.checked && radio.id.includes("Yes")) {
         fadeElement(divAdd, "0");
         setTimeout(() => {
-          if (divAdd?.classList.toString().match(/grid/gi))
-            (divAdd as HTMLElement).style.display = "grid";
-          else if (divAdd?.classList.toString().match(/flex/gi))
-            (divAdd as HTMLElement).style.display = "flex";
+          if (divAdd?.classList.toString().match(/grid/gi)) (divAdd as HTMLElement).style.display = "grid";
+          else if (divAdd?.classList.toString().match(/flex/gi)) (divAdd as HTMLElement).style.display = "flex";
           else (divAdd as HTMLElement).style.display = "block";
           setTimeout(() => {
             fadeElement(divAdd, "1");
           }, 100);
           setTimeout(() => {
-            if (
-              divAdd instanceof HTMLElement &&
-              getComputedStyle(divAdd).display !== "none"
-            ) {
+            if (divAdd instanceof HTMLElement && getComputedStyle(divAdd).display !== "none") {
               [
                 ...divAdd.querySelectorAll('input[type="radio"]'),
                 ...divAdd.querySelectorAll('input[type="checkbox"]'),
               ].forEach((rad, i) => {
                 try {
-                  if (
-                    !(
-                      rad instanceof HTMLInputElement &&
-                      (rad.type === "radio" || rad.type === "checkbox")
-                    )
-                  )
-                    throw inputNotFound(
-                      rad,
-                      `Validation of input instance`,
-                      extLine(new Error())
-                    );
+                  if (!(rad instanceof HTMLInputElement && (rad.type === "radio" || rad.type === "checkbox")))
+                    throw inputNotFound(rad, `Validation of input instance`, extLine(new Error()));
                   rad.dataset.required = "true";
                 } catch (e) {
                   console.error(
-                    `Error executing iteration ${i} for updating checkboxes requirements:\n${
-                      (e as Error).message
-                    }`
+                    `Error executing iteration ${i} for updating checkboxes requirements:\n${(e as Error).message}`
                   );
                 }
               });
@@ -213,17 +157,11 @@ export function cpbInpHandler(ev: Event, radio: targEl): void {
               ].forEach((inp, i) => {
                 try {
                   if (!(inp instanceof HTMLInputElement))
-                    throw inputNotFound(
-                      inp,
-                      `Validation of input instance`,
-                      extLine(new Error())
-                    );
+                    throw inputNotFound(inp, `Validation of input instance`, extLine(new Error()));
                   inp.required = true;
                 } catch (e) {
                   console.error(
-                    `Error executing iteration ${i} for updating text inputs requirements:\n${
-                      (e as Error).message
-                    }`
+                    `Error executing iteration ${i} for updating text inputs requirements:\n${(e as Error).message}`
                   );
                 }
               });
@@ -236,32 +174,18 @@ export function cpbInpHandler(ev: Event, radio: targEl): void {
           (divAdd as HTMLElement).style.display = "none";
         }, 400);
         setTimeout(() => {
-          if (
-            divAdd instanceof HTMLElement &&
-            getComputedStyle(divAdd).display !== "none"
-          ) {
+          if (divAdd instanceof HTMLElement && getComputedStyle(divAdd).display !== "none") {
             [
               ...divAdd.querySelectorAll('input[type="radio"]'),
               ...divAdd.querySelectorAll('input[type="checkbox"]'),
             ].forEach((rad, i) => {
               try {
-                if (
-                  !(
-                    rad instanceof HTMLInputElement &&
-                    (rad.type === "radio" || rad.type === "checkbox")
-                  )
-                )
-                  throw inputNotFound(
-                    rad,
-                    `Validation of input instance`,
-                    extLine(new Error())
-                  );
+                if (!(rad instanceof HTMLInputElement && (rad.type === "radio" || rad.type === "checkbox")))
+                  throw inputNotFound(rad, `Validation of input instance`, extLine(new Error()));
                 delete rad.dataset.required;
               } catch (e) {
                 console.error(
-                  `Error executing iteration ${i} for updating checkboxes requirements:\n${
-                    (e as Error).message
-                  }`
+                  `Error executing iteration ${i} for updating checkboxes requirements:\n${(e as Error).message}`
                 );
               }
             });
@@ -274,17 +198,11 @@ export function cpbInpHandler(ev: Event, radio: targEl): void {
             ].forEach((inp, i) => {
               try {
                 if (!(inp instanceof HTMLInputElement))
-                  throw inputNotFound(
-                    inp,
-                    `Validation of input instance`,
-                    extLine(new Error())
-                  );
+                  throw inputNotFound(inp, `Validation of input instance`, extLine(new Error()));
                 inp.required = false;
               } catch (e) {
                 console.error(
-                  `Error executing iteration ${i} for updating text inputs requirements:\n${
-                    (e as Error).message
-                  }`
+                  `Error executing iteration ${i} for updating text inputs requirements:\n${(e as Error).message}`
                 );
               }
             });
@@ -308,8 +226,7 @@ export function deactTextInput(
 ): void {
   addressInps?.length > 0 && addressInps.length === nullRadios.length
     ? nullRadios.forEach(nullRadio => {
-        const blockeableInput =
-          nullRadio.parentElement?.parentElement?.querySelector(".inpLocNum");
+        const blockeableInput = nullRadio.parentElement?.parentElement?.querySelector(".inpLocNum");
         ["click", "dblclick"].forEach(event => {
           nullRadio.addEventListener(event, () => {
             nullRadio instanceof HTMLInputElement && nullRadio.checked
@@ -318,24 +235,14 @@ export function deactTextInput(
           });
         });
       })
-    : console.error(
-        "Number of Inputs and Radios unequal, aborting deactTextInput()"
-      );
+    : console.error("Number of Inputs and Radios unequal, aborting deactTextInput()");
 }
 
 export function doubleClickHandler(inpEl: targEl): void {
-  if (
-    inpEl instanceof HTMLInputElement &&
-    (inpEl.type === "checkbox" || inpEl.type === "radio")
-  ) {
+  if (inpEl instanceof HTMLInputElement && (inpEl.type === "checkbox" || inpEl.type === "radio")) {
     inpEl.checked = inpEl.checked ? false : true;
     cpbInpHandler(new Event("change"), inpEl);
-  } else
-    inputNotFound(
-      inpEl,
-      `inpEl id ${inpEl?.id || "UNDEFINED ID"}`,
-      extLine(new Error())
-    );
+  } else inputNotFound(inpEl, `inpEl id ${inpEl?.id || "UNDEFINED ID"}`, extLine(new Error()));
 }
 
 export function useCurrentDate(activation: Event, dateBtn: targEl): void {
@@ -346,63 +253,34 @@ export function useCurrentDate(activation: Event, dateBtn: targEl): void {
       ? (targInputDate.value =
           currentDate.getFullYear() +
           "-" +
-          (currentDate.getMonth() + 1)
-            .toString()
-            .padStart(2, "0")
-            .replaceAll("'", "") +
+          (currentDate.getMonth() + 1).toString().padStart(2, "0").replaceAll("'", "") +
           "-" +
           currentDate.getDate().toString().padStart(2, "0").replaceAll("'", ""))
-      : inputNotFound(
-          targInputDate,
-          `targInputDate id ${targInputDate?.id || "UNDEFINED ID"}`,
-          extLine(new Error())
-        );
-  } else
-    elementNotFound(
-      dateBtn,
-      "arguments for useCurrentDate()",
-      extLine(new Error())
-    );
+      : inputNotFound(targInputDate, `targInputDate id ${targInputDate?.id || "UNDEFINED ID"}`, extLine(new Error()));
+  } else elementNotFound(dateBtn, "arguments for useCurrentDate()", extLine(new Error()));
 }
 
-export function searchNextSiblings(
-  currentElement: Element,
-  searchedSiblingClass: string
-): Element {
+export function searchNextSiblings(currentElement: Element, searchedSiblingClass: string): Element {
   let loopAcc = 0;
   while (currentElement?.nextElementSibling) {
     currentElement = currentElement.nextElementSibling;
-    if (
-      currentElement?.classList?.contains(searchedSiblingClass) ||
-      loopAcc > 999
-    )
-      break;
+    if (currentElement?.classList?.contains(searchedSiblingClass) || loopAcc > 999) break;
     loopAcc++;
   }
   return currentElement;
 }
 
-export function searchPreviousSiblings(
-  currentElement: Element,
-  searchedSiblingClass: string
-): Element {
+export function searchPreviousSiblings(currentElement: Element, searchedSiblingClass: string): Element {
   let loopAcc = 0;
   while (currentElement?.previousElementSibling) {
     currentElement = currentElement.previousElementSibling;
-    if (
-      currentElement?.classList?.contains(searchedSiblingClass) ||
-      loopAcc > 999
-    )
-      break;
+    if (currentElement?.classList?.contains(searchedSiblingClass) || loopAcc > 999) break;
     loopAcc++;
   }
   return currentElement;
 }
 
-export function searchPreviousSiblingsById(
-  currentElement: Element,
-  searchedSiblingId: string
-): Element {
+export function searchPreviousSiblingsById(currentElement: Element, searchedSiblingId: string): Element {
   let loopAcc = 0;
   while (currentElement?.previousElementSibling) {
     currentElement = currentElement.previousElementSibling;
@@ -412,18 +290,11 @@ export function searchPreviousSiblingsById(
   return currentElement;
 }
 
-export function searchParents(
-  currentElement: Element,
-  searchedParentClass: string
-): Element {
+export function searchParents(currentElement: Element, searchedParentClass: string): Element {
   let loopAcc = 0;
   while (currentElement?.parentElement) {
     currentElement = currentElement.parentElement;
-    if (
-      currentElement?.classList?.contains(searchedParentClass) ||
-      loopAcc > 999
-    )
-      break;
+    if (currentElement?.classList?.contains(searchedParentClass) || loopAcc > 999) break;
     loopAcc++;
   }
   return currentElement;
@@ -432,15 +303,9 @@ export function searchParents(
 export function changeToAstDigit(toFileInpBtn: targEl): void {
   try {
     if (!(toFileInpBtn instanceof HTMLButtonElement))
-      throw elementNotFound(
-        toFileInpBtn,
-        `Validation of Button for changin Signature input`,
-        extLine(new Error())
-      );
+      throw elementNotFound(toFileInpBtn, `Validation of Button for changin Signature input`, extLine(new Error()));
     if (!(toFileInpBtn.textContent || toFileInpBtn.textContent === ""))
-      throw new Error(
-        `No valid textContent for Button for changing Signature input`
-      );
+      throw new Error(`No valid textContent for Button for changing Signature input`);
     const inpAst = toFileInpBtn.classList.contains("tratBtn")
       ? toFileInpBtn.previousElementSibling ??
         searchPreviousSiblings(toFileInpBtn, "inpAst") ??
@@ -450,17 +315,9 @@ export function changeToAstDigit(toFileInpBtn: targEl): void {
         searchPreviousSiblings(toFileInpBtn, "inpAst") ??
         searchPreviousSiblings(toFileInpBtn, "imgAstDigit");
     if (
-      !(
-        inpAst instanceof HTMLCanvasElement ||
-        inpAst instanceof HTMLInputElement ||
-        inpAst instanceof HTMLImageElement
-      )
+      !(inpAst instanceof HTMLCanvasElement || inpAst instanceof HTMLInputElement || inpAst instanceof HTMLImageElement)
     )
-      throw elementNotFound(
-        inpAst,
-        `Validation of field for Signature instance`,
-        extLine(new Error())
-      );
+      throw elementNotFound(inpAst, `Validation of field for Signature instance`, extLine(new Error()));
     if (!(inpAst.parentElement instanceof HTMLElement))
       throw elementNotFound(
         inpAst.parentElement,
@@ -473,15 +330,12 @@ export function changeToAstDigit(toFileInpBtn: targEl): void {
       (inpAst instanceof HTMLInputElement && inpAst.type === "text")
     ) {
       toFileInpBtn.textContent = "Retornar à Assinatura Escrita";
-      const fileInp = document.createElement("input");
+      const fileInp = document.createElement("input") as HTMLInputElement;
       fileInp.classList.add("inpAst", "mg-07t", "form-control");
       if (toFileInpBtn.classList.contains("tratBtn")) {
         fileInp.classList.add("inpTrat", "tratAst");
         fileInp.dataset.title =
-          inpAst.dataset.title ||
-          `Assinatura do Tratamento ${
-            document.querySelectorAll(".tratAst").length + 1
-          }`;
+          inpAst.dataset.title || `Assinatura do Tratamento ${document.querySelectorAll(".tratAst").length + 1}`;
       } else {
         fileInp.dataset.title = "Assinatura do Paciente";
         defineLabId(document.querySelector(".labAst"), toFileInpBtn, fileInp);
@@ -540,11 +394,7 @@ export function changeToAstDigit(toFileInpBtn: targEl): void {
                 imgAstDigt.style.overflow = "auto";
                 fileInp.parentElement?.replaceChild(imgAstDigt, fileInp);
                 !fileInp.classList.contains("inpTrat") &&
-                  defineLabId(
-                    document.querySelector(".labAst"),
-                    toFileInpBtn,
-                    imgAstDigt
-                  );
+                  defineLabId(document.querySelector(".labAst"), toFileInpBtn, imgAstDigt);
               };
               fileReader.readAsDataURL(imgFile); //lê o file baseado na src carregada
             } else
@@ -559,112 +409,66 @@ export function changeToAstDigit(toFileInpBtn: targEl): void {
             console.error((error as Error).message);
           }
         });
-      [
-        ...document.querySelectorAll(".inpAst"),
-        ...document.querySelectorAll(".tratBtn"),
-      ].forEach((fileInp, i) => {
+      [...document.querySelectorAll(".inpAst"), ...document.querySelectorAll(".tratBtn")].forEach((fileInp, i) => {
         try {
           if (!(fileInp instanceof HTMLElement))
-            throw elementNotFound(
-              fileInp,
-              `Validation of field for Signature`,
-              extLine(new Error())
-            );
+            throw elementNotFound(fileInp, `Validation of field for Signature`, extLine(new Error()));
           fileInp.style.width = `${Math.max(
-            ...Array.from(document.querySelectorAll(".tratBtn")).map(
-              tratBtn => {
-                return tratBtn instanceof HTMLElement
-                  ? parseNotNaN(
-                      getComputedStyle(tratBtn).width.replace("px", "").trim()
-                    )
-                  : 0;
-              }
-            )
+            ...Array.from(document.querySelectorAll(".tratBtn")).map(tratBtn => {
+              return tratBtn instanceof HTMLElement
+                ? parseNotNaN(getComputedStyle(tratBtn).width.replace("px", "").trim())
+                : 0;
+            })
           )}px`;
         } catch (e) {
           console.error(
-            `Error executing iteration ${i} for applying width to Fields for Signatures:\n${
-              (e as Error).message
-            }`
+            `Error executing iteration ${i} for applying width to Fields for Signatures:\n${(e as Error).message}`
           );
         }
       });
     } else if (
       /Retornar/gi.test(toFileInpBtn.textContent) ||
-      !(
-        inpAst instanceof HTMLCanvasElement ||
-        (inpAst instanceof HTMLInputElement && inpAst.type === "text")
-      )
+      !(inpAst instanceof HTMLCanvasElement || (inpAst instanceof HTMLInputElement && inpAst.type === "text"))
     ) {
       toFileInpBtn.textContent = "Usar Assinatura Digital";
       if (toFileInpBtn.classList.contains("tratBtn")) {
-        const textInp = document.createElement("input");
+        const textInp = document.createElement("input") as HTMLInputElement;
         textInp.id = inpAst.id;
-        textInp.classList.add(
-          "inpTrat",
-          "inpAst",
-          "mg-07t",
-          "tratAst",
-          "form-control"
-        );
+        textInp.classList.add("inpTrat", "inpAst", "mg-07t", "tratAst", "form-control");
         textInp.dataset.title =
-          inpAst.dataset.title ||
-          `Assinatura do Tratamento ${
-            document.querySelectorAll(".tratAst").length + 1
-          }`;
+          inpAst.dataset.title || `Assinatura do Tratamento ${document.querySelectorAll(".tratAst").length + 1}`;
         textInp.required = true;
         inpAst.parentElement.replaceChild(textInp, inpAst);
         document.querySelectorAll(".inpAst").forEach((fileInp, i) => {
           try {
             if (!(fileInp instanceof HTMLElement))
-              throw elementNotFound(
-                fileInp,
-                `Validation of field for Signature`,
-                extLine(new Error())
-              );
+              throw elementNotFound(fileInp, `Validation of field for Signature`, extLine(new Error()));
             fileInp.style.width = `${Math.max(
-              ...Array.from(document.querySelectorAll(".tratBtn")).map(
-                tratBtn => {
-                  return tratBtn instanceof HTMLElement
-                    ? parseNotNaN(
-                        getComputedStyle(tratBtn).width.replace("px", "").trim()
-                      )
-                    : 0;
-                }
-              )
+              ...Array.from(document.querySelectorAll(".tratBtn")).map(tratBtn => {
+                return tratBtn instanceof HTMLElement
+                  ? parseNotNaN(getComputedStyle(tratBtn).width.replace("px", "").trim())
+                  : 0;
+              })
             )}px`;
           } catch (e) {
             console.error(
-              `Error executing iteration ${i} for applying width to Fields for Signatures:\n${
-                (e as Error).message
-              }`
+              `Error executing iteration ${i} for applying width to Fields for Signatures:\n${(e as Error).message}`
             );
           }
         });
-        textInp.addEventListener("input", ev =>
-          autoCapitalizeInputs(ev.currentTarget as HTMLInputElement)
-        );
+        textInp.addEventListener("input", ev => autoCapitalizeInputs(ev.currentTarget as HTMLInputElement));
       } else {
         const fileInp = document.createElement("canvas");
         Object.assign(fileInp, {
           id: "inpAstConfirmId",
         });
         fileInp.dataset.title = "Assinatura do Paciente";
-        defineLabId(
-          document.querySelector(".labAst"),
-          toFileInpBtn,
-          fileInp as any
-        );
+        defineLabId(document.querySelector(".labAst"), toFileInpBtn, fileInp as any);
         toFileInpBtn.previousElementSibling?.removeAttribute("hidden");
         inpAst.parentElement.replaceChild(fileInp, inpAst);
         addCanvasListeners();
       }
-    } else
-      stringError(
-        "textContent for toFileInpBtn",
-        toFileInpBtn?.textContent,
-        extLine(new Error())
-      );
+    } else stringError("textContent for toFileInpBtn", toFileInpBtn?.textContent, extLine(new Error()));
     // //TODO INCLUIR TOKEN ANTI-CSRF QUANDO HOUVER SERVIDOR
   } catch (e) {
     console.error(`Error executing changeToAstDigt:\n${(e as Error).message}`);
@@ -678,24 +482,12 @@ export function defineLabId(
 ): void {
   if (
     toFileInpBtn instanceof HTMLButtonElement &&
-    (fileEl instanceof HTMLInputElement ||
-      fileEl instanceof HTMLImageElement ||
-      fileEl instanceof HTMLCanvasElement)
+    (fileEl instanceof HTMLInputElement || fileEl instanceof HTMLImageElement || fileEl instanceof HTMLCanvasElement)
   ) {
-    if (
-      !labAst &&
-      (toFileInpBtn.parentElement?.tagName === "LABEL" ||
-        toFileInpBtn.parentElement?.tagName === "SPAN")
-    )
+    if (!labAst && (toFileInpBtn.parentElement?.tagName === "LABEL" || toFileInpBtn.parentElement?.tagName === "SPAN"))
       labAst = toFileInpBtn.parentElement;
     labAst!.id = "spanAstPct";
-  } else
-    multipleElementsNotFound(
-      extLine(new Error()),
-      "argumentos para defineLabId",
-      toFileInpBtn,
-      fileEl
-    );
+  } else multipleElementsNotFound(extLine(new Error()), "argumentos para defineLabId", toFileInpBtn, fileEl);
 }
 
 export function resetarFormulario(
@@ -704,11 +496,8 @@ export function resetarFormulario(
   resetFormBtn: targEl = click?.target as HTMLElement
 ): void {
   if (
-    (click?.target instanceof HTMLButtonElement ||
-      resetFormBtn instanceof HTMLButtonElement) &&
-    Array.from(toFileInpBtns).every(
-      fileBtn => fileBtn instanceof HTMLButtonElement
-    )
+    (click?.target instanceof HTMLButtonElement || resetFormBtn instanceof HTMLButtonElement) &&
+    Array.from(toFileInpBtns).every(fileBtn => fileBtn instanceof HTMLButtonElement)
   ) {
     const formulario = document.getElementById("formAnamGId");
     const editableCite = document.querySelector('cite[contenteditable="true"]');
@@ -717,21 +506,12 @@ export function resetarFormulario(
 
     formulario instanceof HTMLFormElement
       ? formulario.reset()
-      : elementNotFound(
-          formulario,
-          "formulario in resetarFormulario()",
-          extLine(new Error())
-        );
+      : elementNotFound(formulario, "formulario in resetarFormulario()", extLine(new Error()));
 
     if (editableCite) {
       editableCite.textContent = `--Nome`;
       removeFirstClick(editableCite);
-    } else
-      elementNotFound(
-        editableCite,
-        "editableCite in resetarFormulario()",
-        extLine(new Error())
-      );
+    } else elementNotFound(editableCite, "editableCite in resetarFormulario()", extLine(new Error()));
 
     if (
       genBirthRel instanceof HTMLSelectElement ||
@@ -740,12 +520,7 @@ export function resetarFormulario(
     ) {
       genBirthRel.value = "cis";
       genBirthRel.hidden = true;
-    } else
-      inputNotFound(
-        genBirthRel,
-        "genBirthRel in resetarFormulario()",
-        extLine(new Error())
-      );
+    } else inputNotFound(genBirthRel, "genBirthRel in resetarFormulario()", extLine(new Error()));
 
     if (
       genTrans instanceof HTMLSelectElement ||
@@ -754,16 +529,10 @@ export function resetarFormulario(
     ) {
       genTrans.value = "avancado";
       genTrans.hidden = true;
-    } else
-      inputNotFound(
-        genTrans,
-        "genTrans in resetarFormulario()",
-        extLine(new Error())
-      );
+    } else inputNotFound(genTrans, "genTrans in resetarFormulario()", extLine(new Error()));
 
     toFileInpBtns.forEach(toFileInpBtn => {
-      if (toFileInpBtn?.textContent?.match(/Retornar/g))
-        changeToAstDigit(toFileInpBtn);
+      if (toFileInpBtn?.textContent?.match(/Retornar/g)) changeToAstDigit(toFileInpBtn);
     });
   } else
     multipleElementsNotFound(
@@ -786,26 +555,14 @@ export function enableCPFBtn(cpfBtn: targEl, cpfLength: string = ""): boolean {
       cpfBtn.style.borderColor = "#0a58ca";
     }
     return cpfBtn.disabled;
-  } else
-    multipleElementsNotFound(
-      extLine(new Error()),
-      "argumentos para enableCEPBtn",
-      cpfBtn,
-      cpfLength
-    );
+  } else multipleElementsNotFound(extLine(new Error()), "argumentos para enableCEPBtn", cpfBtn, cpfLength);
   return true;
 }
 
-export function syncAriaStates(
-  els: Array<Element> | NodeListOf<Element>
-): void {
+export function syncAriaStates(els: Array<Element> | NodeListOf<Element>): void {
   if (els instanceof NodeList) els = Array.from(els);
   els = els.filter(el => el instanceof Element);
-  if (
-    Array.isArray(els) &&
-    els.length > 0 &&
-    Array.from(els).every(el => el instanceof Element)
-  ) {
+  if (Array.isArray(els) && els.length > 0 && Array.from(els).every(el => el instanceof Element)) {
     els.forEach(el => {
       if (
         el instanceof HTMLHtmlElement ||
@@ -821,34 +578,22 @@ export function syncAriaStates(
       )
         return;
       if (el instanceof HTMLElement) {
-        el.hidden && !el.focus
-          ? (el.ariaHidden = "true")
-          : (el.ariaHidden = "false");
+        el.hidden && !el.focus ? (el.ariaHidden = "true") : (el.ariaHidden = "false");
         el.addEventListener("click", () => {
-          el.hidden && !el.focus
-            ? (el.ariaHidden = "true")
-            : (el.ariaHidden = "false");
+          el.hidden && !el.focus ? (el.ariaHidden = "true") : (el.ariaHidden = "false");
         });
         if (el.classList.contains("poCaller")) {
           el.ariaHasPopup = "menu";
         }
-        if (
-          el instanceof HTMLSelectElement ||
-          el instanceof HTMLInputElement ||
-          el instanceof HTMLTextAreaElement
-        ) {
+        if (el instanceof HTMLSelectElement || el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement) {
           if (el instanceof HTMLSelectElement) {
             if (el.querySelectorAll("option").length > 0) {
               el.querySelectorAll("option").forEach(option => {
-                option.selected
-                  ? (option.ariaSelected = "true")
-                  : (option.ariaSelected = "false");
+                option.selected ? (option.ariaSelected = "true") : (option.ariaSelected = "false");
               });
               el.addEventListener("change", () => {
                 el.querySelectorAll("option").forEach(option => {
-                  option.selected
-                    ? (option.ariaSelected = "true")
-                    : (option.ariaSelected = "false");
+                  option.selected ? (option.ariaSelected = "true") : (option.ariaSelected = "false");
                 });
               });
             }
@@ -857,23 +602,13 @@ export function syncAriaStates(
               if (el.ariaExpanded === "true") el.ariaExpanded = "false";
             });
           }
-          if (
-            el instanceof HTMLInputElement ||
-            el instanceof HTMLTextAreaElement
-          ) {
-            if (el.placeholder && el.placeholder !== "")
-              el.ariaPlaceholder = el.placeholder;
+          if (el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement) {
+            if (el.placeholder && el.placeholder !== "") el.ariaPlaceholder = el.placeholder;
             if (el.type !== "radio") {
-              el.required
-                ? (el.ariaRequired = "true")
-                : (el.ariaRequired = "false");
-              !el.checkValidity()
-                ? (el.ariaInvalid = "true")
-                : (el.ariaInvalid = "false");
+              el.required ? (el.ariaRequired = "true") : (el.ariaRequired = "false");
+              !el.checkValidity() ? (el.ariaInvalid = "true") : (el.ariaInvalid = "false");
               el.closest("form")?.addEventListener("submit", () => {
-                !el.checkValidity()
-                  ? (el.ariaInvalid = "true")
-                  : (el.ariaInvalid = "false");
+                !el.checkValidity() ? (el.ariaInvalid = "true") : (el.ariaInvalid = "false");
               });
             }
             if (
@@ -890,17 +625,10 @@ export function syncAriaStates(
                   el.type === "month" ||
                   el.type === "week"))
             ) {
+              if (el instanceof HTMLInputElement && el.list && el.list.id !== "") el.ariaAutoComplete = "list";
               if (
                 el instanceof HTMLInputElement &&
-                el.list &&
-                el.list.id !== ""
-              )
-                el.ariaAutoComplete = "list";
-              if (
-                el instanceof HTMLInputElement &&
-                (el.type === "number" ||
-                  el.type === "date" ||
-                  el.type === "time")
+                (el.type === "number" || el.type === "date" || el.type === "time")
               ) {
                 el.ariaValueMax = (el as HTMLInputElement).max;
                 el.ariaValueMin = (el as HTMLInputElement).min;
@@ -911,29 +639,16 @@ export function syncAriaStates(
                   el.ariaValueText = el.value;
                 });
               }
-            } else if (
-              el instanceof HTMLInputElement &&
-              (el.type === "radio" || el.type === "checkbox")
-            ) {
-              el.checked
-                ? (el.ariaChecked = "true")
-                : (el.ariaChecked = "false");
-              el.disabled
-                ? (el.ariaDisabled = "true")
-                : (el.ariaDisabled = "false");
+            } else if (el instanceof HTMLInputElement && (el.type === "radio" || el.type === "checkbox")) {
+              el.checked ? (el.ariaChecked = "true") : (el.ariaChecked = "false");
+              el.disabled ? (el.ariaDisabled = "true") : (el.ariaDisabled = "false");
               el.addEventListener("change", () => {
-                el.checked
-                  ? (el.ariaChecked = "true")
-                  : (el.ariaChecked = "false");
-                el.disabled
-                  ? (el.ariaDisabled = "true")
-                  : (el.ariaDisabled = "false");
+                el.checked ? (el.ariaChecked = "true") : (el.ariaChecked = "false");
+                el.disabled ? (el.ariaDisabled = "true") : (el.ariaDisabled = "false");
               });
             } else if (
               el instanceof HTMLInputElement &&
-              (el.type === "button" ||
-                el.type === "submit" ||
-                el.type === "reset")
+              (el.type === "button" || el.type === "submit" || el.type === "reset")
             ) {
               el.addEventListener("mousedown", click => {
                 if (click.button === 0) el.ariaPressed = "true";
@@ -963,12 +678,7 @@ export function syncAriaStates(
         if (el instanceof HTMLDialogElement) el.ariaModal = "true";
       }
     });
-  } else
-    elementNotPopulated(
-      els,
-      "List of elements for synchronizing aria states",
-      extLine(new Error())
-    );
+  } else elementNotPopulated(els, "List of elements for synchronizing aria states", extLine(new Error()));
 }
 
 let showTipsDlg = false;
@@ -987,28 +697,19 @@ export function toggleTips(awaitMount: boolean = false): void {
           showTipsDlg = !showTipsDlg;
           showTipsDlg ? odTipsDlg.showModal() : odTipsDlg.close();
         })
-      : elementNotFound(
-          odTipsBtn,
-          "Button for toggling tips",
-          extLine(new Error())
-        );
+      : elementNotFound(odTipsBtn, "Button for toggling tips", extLine(new Error()));
     const odTipsClose = document.getElementById("tipsClose");
     odTipsClose instanceof HTMLButtonElement
       ? odTipsClose.addEventListener("click", () => {
           showTipsDlg = !showTipsDlg;
           showTipsDlg ? odTipsDlg.showModal() : odTipsDlg.close();
         })
-      : elementNotFound(
-          odTipsClose,
-          "Close Button for toggling tips",
-          extLine(new Error())
-        );
+      : elementNotFound(odTipsClose, "Close Button for toggling tips", extLine(new Error()));
   } else {
     !awaitMount
       ? elementNotFound(odTipsDlg, "Dialog for tips", extLine(new Error()))
       : setTimeout(() => {
-          !document.getElementById("tipsDlg") &&
-            elementNotFound(odTipsDlg, "Dialog for tips", extLine(new Error()));
+          !document.getElementById("tipsDlg") && elementNotFound(odTipsDlg, "Dialog for tips", extLine(new Error()));
         }, 2000);
   }
 }
@@ -1017,10 +718,7 @@ let showConformDlg = false;
 export function toggleConformDlg(): void {
   const conformDlg = document.getElementById("conformDlg");
   const btnConform = document.getElementById("btnConform");
-  if (
-    conformDlg instanceof HTMLDialogElement &&
-    btnConform instanceof HTMLButtonElement
-  ) {
+  if (conformDlg instanceof HTMLDialogElement && btnConform instanceof HTMLButtonElement) {
     conformDlg.close();
     btnConform.addEventListener("click", () => {
       showConformDlg = !showConformDlg;
@@ -1042,12 +740,7 @@ export function toggleConformDlg(): void {
       }
     });
   } else
-    multipleElementsNotFound(
-      "Elements for Dialog for agreement terms",
-      extLine(new Error()),
-      conformDlg,
-      btnConform
-    );
+    multipleElementsNotFound("Elements for Dialog for agreement terms", extLine(new Error()), conformDlg, btnConform);
 }
 
 const borderColors: { [k: string]: string } = {};
@@ -1057,13 +750,11 @@ export async function validateForm(
   submit: boolean = true
 ): Promise<[boolean, string[], Array<[string, string | File]>]> {
   let targ;
-  if (!(ev instanceof HTMLFormElement || "currentTarget" in ev))
-    throw new Error(`Invalid form reference`);
+  if (!(ev instanceof HTMLFormElement || "currentTarget" in ev)) throw new Error(`Invalid form reference`);
   if (ev instanceof HTMLFormElement) targ = ev;
   else if (
     ev.currentTarget instanceof HTMLFormElement ||
-    ((ev.currentTarget instanceof HTMLButtonElement ||
-      ev.currentTarget instanceof HTMLInputElement) &&
+    ((ev.currentTarget instanceof HTMLButtonElement || ev.currentTarget instanceof HTMLInputElement) &&
       ev.currentTarget.type === "submit")
   ) {
     ev.preventDefault();
@@ -1081,20 +772,12 @@ export async function validateForm(
         (targ instanceof HTMLInputElement && targ.type === "submit")
       )
     )
-      throw elementNotFound(
-        targ,
-        `Validation of Submit Button instance`,
-        extLine(new Error())
-      );
+      throw elementNotFound(targ, `Validation of Submit Button instance`, extLine(new Error()));
     if (targ instanceof HTMLFormElement) form = targ;
     else form = targ.closest("form");
     if (!(form instanceof HTMLFormElement)) scope.querySelector("form");
     if (!(form instanceof HTMLFormElement))
-      throw elementNotFound(
-        form,
-        `Validation of Form instance`,
-        extLine(new Error())
-      );
+      throw elementNotFound(form, `Validation of Form instance`, extLine(new Error()));
     [
       ...form.querySelectorAll("input"),
       ...form.querySelectorAll("textarea"),
@@ -1105,32 +788,16 @@ export async function validateForm(
         if (!valid && !(entry instanceof HTMLCanvasElement)) {
           entry.scrollIntoView({ behavior: "smooth" });
           if (!/border-color/g.test(getComputedStyle(entry).transition))
-            entry.style.transition =
-              (getComputedStyle(entry).transition || "") +
-              "border-color ease-in-out 1s";
-          if (
-            !borderColors[
-              entry.id ||
-                entry.name ||
-                entry.classList.toString().replaceAll(" ", "_")
-            ]
-          )
-            borderColors[
-              entry.id ||
-                entry.name ||
-                entry.classList.toString().replaceAll(" ", "_")
-            ] =
-              getComputedStyle(entry).borderColor ||
-              getComputedStyle(entry).borderBottomColor;
+            entry.style.transition = (getComputedStyle(entry).transition || "") + "border-color ease-in-out 1s";
+          if (!borderColors[entry.id || entry.name || entry.classList.toString().replaceAll(" ", "_")])
+            borderColors[entry.id || entry.name || entry.classList.toString().replaceAll(" ", "_")] =
+              getComputedStyle(entry).borderColor || getComputedStyle(entry).borderBottomColor;
           entry.style.borderColor = "red";
           setTimeout(
             () =>
               (entry.style.borderColor =
-                borderColors[
-                  entry.id ||
-                    entry.name ||
-                    entry.classList.toString().replaceAll(" ", "_")
-                ] || "rgb(222, 226, 230)"),
+                borderColors[entry.id || entry.name || entry.classList.toString().replaceAll(" ", "_")] ||
+                "rgb(222, 226, 230)"),
             1000
           );
           if (
@@ -1157,146 +824,85 @@ export async function validateForm(
       if (entry instanceof HTMLSelectElement) {
         if (entry.value === "") {
           isValid = false;
-          invalidEntries.push(
-            entry.name || entry.id || entry.dataset.title || entry.tagName
-          );
+          invalidEntries.push(entry.name || entry.id || entry.dataset.title || entry.tagName);
           displayInvalidity(isValid);
         }
-      } else if (
-        entry instanceof HTMLInputElement ||
-        entry instanceof HTMLTextAreaElement
-      ) {
+      } else if (entry instanceof HTMLInputElement || entry instanceof HTMLTextAreaElement) {
         if (!entry.checkValidity()) {
           isValid = false;
-          invalidEntries.push(
-            entry.id || entry.name || entry.dataset.title || entry.tagName
-          );
+          invalidEntries.push(entry.id || entry.name || entry.dataset.title || entry.tagName);
           displayInvalidity(isValid);
         }
         if (entry instanceof HTMLInputElement && entry.type === "date") {
           if (entry.classList.contains("minCurrDate")) {
-            const currDate = new Date()
-              .toISOString()
-              .split("T")[0]
-              .replaceAll("-", "")
-              .trim();
+            const currDate = new Date().toISOString().split("T")[0].replaceAll("-", "").trim();
             if (currDate.length < 8) {
-              console.warn(
-                `Failed to form Current Date string. Aborting check.`
-              );
+              console.warn(`Failed to form Current Date string. Aborting check.`);
               return;
             }
             const currNumDate = Math.abs(parseNotNaN(currDate));
             if (
               !Number.isFinite(currNumDate) ||
-              currNumDate
-                .toString()
-                .slice(0, currNumDate.toString().indexOf(".")).length < 8
+              currNumDate.toString().slice(0, currNumDate.toString().indexOf(".")).length < 8
             ) {
-              console.warn(
-                `Failed to get Current Date as a Number. Aborting check.`
-              );
+              console.warn(`Failed to get Current Date as a Number. Aborting check.`);
               return;
             }
-            const entryNumDateValue = parseNotNaN(
-              entry.value.replaceAll("-", "")
-            );
+            const entryNumDateValue = parseNotNaN(entry.value.replaceAll("-", ""));
             if (
               !Number.isFinite(entryNumDateValue) ||
-              entryNumDateValue
-                .toString()
-                .slice(0, entryNumDateValue.toString().indexOf(".")).length < 8
+              entryNumDateValue.toString().slice(0, entryNumDateValue.toString().indexOf(".")).length < 8
             ) {
-              console.warn(
-                `Failed to get Current Date as a Number. Aborting check.`
-              );
+              console.warn(`Failed to get Current Date as a Number. Aborting check.`);
               return;
             }
             if (entryNumDateValue < currNumDate) {
               isValid = false;
-              invalidEntries.push(
-                entry.id || entry.name || entry.dataset.title || entry.tagName
-              );
+              invalidEntries.push(entry.id || entry.name || entry.dataset.title || entry.tagName);
               displayInvalidity(isValid);
             }
           }
           if (entry.classList.contains("maxCurrDate")) {
-            const currDate = new Date()
-              .toISOString()
-              .split("T")[0]
-              .replaceAll("-", "")
-              .trim();
+            const currDate = new Date().toISOString().split("T")[0].replaceAll("-", "").trim();
             if (currDate.length < 8) {
-              console.warn(
-                `Failed to form Current Date string. Aborting check.`
-              );
+              console.warn(`Failed to form Current Date string. Aborting check.`);
               return;
             }
             const currNumDate = Math.abs(parseNotNaN(currDate));
             if (
               !Number.isFinite(currNumDate) ||
-              currNumDate
-                .toString()
-                .slice(0, currNumDate.toString().indexOf(".")).length < 8
+              currNumDate.toString().slice(0, currNumDate.toString().indexOf(".")).length < 8
             ) {
-              console.warn(
-                `Failed to get Current Date as a Number. Aborting check.`
-              );
+              console.warn(`Failed to get Current Date as a Number. Aborting check.`);
               return;
             }
-            const entryNumDateValue = parseNotNaN(
-              entry.value.replaceAll("-", "")
-            );
+            const entryNumDateValue = parseNotNaN(entry.value.replaceAll("-", ""));
             if (
               !Number.isFinite(entryNumDateValue) ||
-              entryNumDateValue
-                .toString()
-                .slice(0, entryNumDateValue.toString().indexOf(".")).length < 8
+              entryNumDateValue.toString().slice(0, entryNumDateValue.toString().indexOf(".")).length < 8
             ) {
-              console.warn(
-                `Failed to get Current Date as a Number. Aborting check.`
-              );
+              console.warn(`Failed to get Current Date as a Number. Aborting check.`);
               return;
             }
             if (entryNumDateValue > currNumDate) {
               isValid = false;
-              invalidEntries.push(
-                entry.id || entry.name || entry.dataset.title || entry.tagName
-              );
+              invalidEntries.push(entry.id || entry.name || entry.dataset.title || entry.tagName);
               displayInvalidity(isValid);
             }
           }
-        } else if (
-          entry instanceof HTMLInputElement &&
-          entry.type === "radio"
-        ) {
+        } else if (entry instanceof HTMLInputElement && entry.type === "radio") {
           try {
             let parent = entry.parentElement;
-            if (!(parent instanceof Element))
-              throw elementNotFound(
-                parent,
-                `Validation of parent instance`,
-                "Element"
-              );
+            if (!(parent instanceof Element)) throw elementNotFound(parent, `Validation of parent instance`, "Element");
             if (parent.querySelectorAll('input[type="radio"]').length < 2)
               parent = parent.closest(".divAdd") ?? parent.parentElement;
             if (!(parent instanceof Element))
-              throw elementNotFound(
-                parent,
-                `Validation of parent parent instance`,
-                "Element"
-              );
-            const radioGroupList = parent.querySelectorAll(
-              'input[type="radio"]'
-            );
-            if (radioGroupList.length === 0)
-              throw new Error(`Error populating list of radios from parent`);
+              throw elementNotFound(parent, `Validation of parent parent instance`, "Element");
+            const radioGroupList = parent.querySelectorAll('input[type="radio"]');
+            if (radioGroupList.length === 0) throw new Error(`Error populating list of radios from parent`);
             if (
               Array.from(radioGroupList)
-                .filter(
-                  radio =>
-                    radio instanceof HTMLInputElement && radio.type === "radio"
-                )
+                .filter(radio => radio instanceof HTMLInputElement && radio.type === "radio")
                 .some(
                   radio =>
                     radio instanceof HTMLInputElement &&
@@ -1304,32 +910,17 @@ export async function validateForm(
                     (radio.dataset.required === "true" || radio.required)
                 ) &&
               !Array.from(radioGroupList)
-                .filter(
-                  radio =>
-                    radio instanceof HTMLInputElement && radio.type === "radio"
-                )
-                .some(
-                  radio =>
-                    radio instanceof HTMLInputElement &&
-                    radio.type === "radio" &&
-                    radio.checked
-                )
+                .filter(radio => radio instanceof HTMLInputElement && radio.type === "radio")
+                .some(radio => radio instanceof HTMLInputElement && radio.type === "radio" && radio.checked)
             ) {
               isValid = false;
               displayInvalidity(isValid);
             }
             const cbGrpL = parent.querySelectorAll('input[type="checkbox"]');
-            if (cbGrpL.length === 0)
-              throw new Error(
-                `Error populating list of checkboxes from parent`
-              );
+            if (cbGrpL.length === 0) throw new Error(`Error populating list of checkboxes from parent`);
             if (
               Array.from(cbGrpL)
-                .filter(
-                  checkbox =>
-                    checkbox instanceof HTMLInputElement &&
-                    checkbox.type === "checkbox"
-                )
+                .filter(checkbox => checkbox instanceof HTMLInputElement && checkbox.type === "checkbox")
                 .some(
                   checkbox =>
                     checkbox instanceof HTMLInputElement &&
@@ -1337,55 +928,32 @@ export async function validateForm(
                     (checkbox.dataset.required === "true" || checkbox.required)
                 ) &&
               !Array.from(cbGrpL)
-                .filter(
-                  checkbox =>
-                    checkbox instanceof HTMLInputElement &&
-                    checkbox.type === "checkbox"
-                )
+                .filter(checkbox => checkbox instanceof HTMLInputElement && checkbox.type === "checkbox")
                 .some(
-                  checkbox =>
-                    checkbox instanceof HTMLInputElement &&
-                    checkbox.type === "checkbox" &&
-                    checkbox.checked
+                  checkbox => checkbox instanceof HTMLInputElement && checkbox.type === "checkbox" && checkbox.checked
                 )
             ) {
               isValid = false;
               displayInvalidity(isValid);
             }
           } catch (e) {
-            console.error(
-              `Error executing procedure for validating radio:\n${
-                (e as Error).message
-              }`
-            );
+            console.error(`Error executing procedure for validating radio:\n${(e as Error).message}`);
           }
         } else if (entry instanceof HTMLInputElement && entry.type === "file") {
           if (!(entry.files && entry.files[0])) {
             isValid = false;
-            invalidEntries.push(
-              entry.name || entry.id || entry.dataset.title || entry.tagName
-            );
+            invalidEntries.push(entry.name || entry.id || entry.dataset.title || entry.tagName);
             displayInvalidity(isValid);
           }
         } else {
-          if (
-            entry.classList.contains("minText") &&
-            entry.value.length < parseNotNaN(entry.dataset.reqlength || "3")
-          ) {
+          if (entry.classList.contains("minText") && entry.value.length < parseNotNaN(entry.dataset.reqlength || "3")) {
             isValid = false;
-            invalidEntries.push(
-              entry.id || entry.name || entry.dataset.title || entry.tagName
-            );
+            invalidEntries.push(entry.id || entry.name || entry.dataset.title || entry.tagName);
             displayInvalidity(isValid);
           }
-          if (
-            entry.classList.contains("maxText") &&
-            entry.value.length > parseNotNaN(entry.dataset.maxlength || "3")
-          ) {
+          if (entry.classList.contains("maxText") && entry.value.length > parseNotNaN(entry.dataset.maxlength || "3")) {
             isValid = false;
-            invalidEntries.push(
-              entry.id || entry.name || entry.dataset.title || entry.tagName
-            );
+            invalidEntries.push(entry.id || entry.name || entry.dataset.title || entry.tagName);
             displayInvalidity(isValid);
           }
           if (
@@ -1393,9 +961,7 @@ export async function validateForm(
             parseNotNaN(entry.value) < parseNotNaN(entry.dataset.minnum || "3")
           ) {
             isValid = false;
-            invalidEntries.push(
-              entry.id || entry.name || entry.dataset.title || entry.tagName
-            );
+            invalidEntries.push(entry.id || entry.name || entry.dataset.title || entry.tagName);
             displayInvalidity(isValid);
           }
           if (
@@ -1403,61 +969,34 @@ export async function validateForm(
             parseNotNaN(entry.value) > parseNotNaN(entry.dataset.maxnum || "3")
           ) {
             isValid = false;
-            invalidEntries.push(
-              entry.id || entry.name || entry.dataset.title || entry.tagName
-            );
+            invalidEntries.push(entry.id || entry.name || entry.dataset.title || entry.tagName);
             displayInvalidity(isValid);
           }
           if (
             entry.classList.contains("patternText") &&
             entry.dataset.pattern &&
-            !new RegExp(entry.dataset.pattern, entry.dataset.flags || "").test(
-              entry.value
-            )
+            !new RegExp(entry.dataset.pattern, entry.dataset.flags || "").test(entry.value)
           ) {
             isValid = false;
-            invalidEntries.push(
-              entry.id || entry.name || entry.dataset.title || entry.tagName
-            );
+            invalidEntries.push(entry.id || entry.name || entry.dataset.title || entry.tagName);
             displayInvalidity(isValid);
           }
         }
         arrValidity.push(isValid);
         if (isValid) {
-          if (
-            entry instanceof HTMLInputElement &&
-            entry.type === "checkbox" &&
-            entry.role !== "switch"
-          )
-            validEntries.push([
-              entry.name || entry.id || entry.dataset.title || entry.tagName,
-              `${entry.checked}`,
-            ]);
-          else if (
-            entry instanceof HTMLInputElement &&
-            entry.type === "radio"
-          ) {
+          if (entry instanceof HTMLInputElement && entry.type === "checkbox" && entry.role !== "switch")
+            validEntries.push([entry.name || entry.id || entry.dataset.title || entry.tagName, `${entry.checked}`]);
+          else if (entry instanceof HTMLInputElement && entry.type === "radio") {
             try {
               let parent = entry.parentElement;
               if (!(parent instanceof Element))
-                throw elementNotFound(
-                  parent,
-                  `Validation of parent instance`,
-                  "Element"
-                );
+                throw elementNotFound(parent, `Validation of parent instance`, "Element");
               if (parent.querySelectorAll('input[type="radio"]').length < 2)
                 parent = parent.closest(".divAdd") ?? parent.parentElement;
               if (!(parent instanceof Element))
-                throw elementNotFound(
-                  parent,
-                  `Validation of parent parent instance`,
-                  "Element"
-                );
-              const radioGroupList = parent.querySelectorAll(
-                'input[type="radio"]'
-              );
-              if (radioGroupList.length === 0)
-                throw new Error(`Error populating list of radios from parent`);
+                throw elementNotFound(parent, `Validation of parent parent instance`, "Element");
+              const radioGroupList = parent.querySelectorAll('input[type="radio"]');
+              if (radioGroupList.length === 0) throw new Error(`Error populating list of radios from parent`);
               if (
                 radioGroupList.length === 1 &&
                 radioGroupList[0] instanceof HTMLInputElement &&
@@ -1480,21 +1019,10 @@ export async function validateForm(
                     ]);
               } else {
                 const opChecked = Array.from(radioGroupList).filter(
-                  radio =>
-                    radio instanceof HTMLInputElement &&
-                    radio.type === "radio" &&
-                    radio.checked
+                  radio => radio instanceof HTMLInputElement && radio.type === "radio" && radio.checked
                 )[0];
-                if (
-                  !(
-                    opChecked instanceof HTMLInputElement &&
-                    opChecked.type === "radio"
-                  )
-                ) {
-                  validEntries.push([
-                    opChecked.id || opChecked.tagName,
-                    `undefined`,
-                  ]);
+                if (!(opChecked instanceof HTMLInputElement && opChecked.type === "radio")) {
+                  validEntries.push([opChecked.id || opChecked.tagName, `undefined`]);
                   throw new Error(`Failed to find checked radio in group`);
                 } else {
                   if (radioGroupList.length === 2) {
@@ -1505,115 +1033,66 @@ export async function validateForm(
                       opChecked.classList.contains("radNo")
                     )
                       validEntries.push([
-                        opChecked.name ||
-                          opChecked.id ||
-                          opChecked.dataset.title ||
-                          opChecked.tagName,
+                        opChecked.name || opChecked.id || opChecked.dataset.title || opChecked.tagName,
                         `false`,
                       ]);
                     else
                       validEntries.push([
-                        opChecked.name ||
-                          opChecked.id ||
-                          opChecked.dataset.title ||
-                          opChecked.tagName,
+                        opChecked.name || opChecked.id || opChecked.dataset.title || opChecked.tagName,
                         `true`,
                       ]);
                   } else if (radioGroupList.length > 2) {
                     validEntries.push([
-                      opChecked.name ||
-                        opChecked.id ||
-                        opChecked.dataset.title ||
-                        opChecked.tagName,
+                      opChecked.name || opChecked.id || opChecked.dataset.title || opChecked.tagName,
                       opChecked.dataset.value || `true`,
                     ]);
                   }
                 }
               }
             } catch (e) {
-              console.error(
-                `Error executing procedure for pushing radio check:\n${
-                  (e as Error).message
-                }`
-              );
+              console.error(`Error executing procedure for pushing radio check:\n${(e as Error).message}`);
             }
-          } else if (
-            entry instanceof HTMLInputElement &&
-            entry.type === "file" &&
-            entry.files
-          ) {
-            validEntries.push([
-              entry.name || entry.id || entry.dataset.title || entry.tagName,
-              entry.files[0],
-            ]);
+          } else if (entry instanceof HTMLInputElement && entry.type === "file" && entry.files) {
+            validEntries.push([entry.name || entry.id || entry.dataset.title || entry.tagName, entry.files[0]]);
           } else if (entry instanceof HTMLCanvasElement) {
             (async (): Promise<File> => {
               return new Promise((res, rej) => {
                 entry.toBlob(blob => {
                   if (blob) {
                     res(
-                      new File(
-                        [blob],
-                        entry.name ||
-                          entry.id ||
-                          entry.dataset.title ||
-                          entry.tagName,
-                        { type: blob.type }
-                      )
+                      new File([blob], entry.name || entry.id || entry.dataset.title || entry.tagName, {
+                        type: blob.type,
+                      })
                     );
                   } else rej(new Error(`Failed to extract file.`));
                 });
               });
             })().then(file =>
-              validEntries.push([
-                entry.name || entry.id || entry.dataset.title || entry.tagName,
-                file,
-              ])
+              validEntries.push([entry.name || entry.id || entry.dataset.title || entry.tagName, file])
             );
-          } else
-            validEntries.push([
-              entry.name || entry.id || entry.dataset.title || entry.tagName,
-              entry.value,
-            ]);
+          } else validEntries.push([entry.name || entry.id || entry.dataset.title || entry.tagName, entry.value]);
         }
       }
     });
   } catch (e) {
     console.error(`Error executing validateForm:\n${(e as Error).message}`);
   }
-  const formValidated = arrValidity.some(validity => validity === false)
-    ? false
-    : true;
+  const formValidated = arrValidity.some(validity => validity === false) ? false : true;
   if (form instanceof HTMLFormElement) {
     if (formValidated && form.checkValidity()) {
       form.noValidate = false;
       submit &&
-        submitForm(
-          form,
-          (form.dataset.ep ||
-            form.action
-              .replace("submit_", "")
-              .replace("_form", "")) as formCases
-        );
+        submitForm(form, (form.dataset.ep || form.action.replace("submit_", "").replace("_form", "")) as formCases);
     } else form.noValidate = true;
   }
-  return [
-    formValidated,
-    invalidEntries.map(invalidIdf => `${invalidIdf} \n`),
-    validEntries,
-  ];
+  return [formValidated, invalidEntries.map(invalidIdf => `${invalidIdf} \n`), validEntries];
 }
 
 export async function submitForm(form: nullishForm, ep: formCases) {
   try {
     if (!(form instanceof HTMLFormElement))
-      throw elementNotFound(
-        form,
-        `Validation of form instance`,
-        extLine(new Error())
-      );
-    if (typeof ep !== "string")
-      throw new Error(`Incorret type for ep argument in submitForm`);
+      throw elementNotFound(form, `Validation of form instance`, extLine(new Error()));
+    if (typeof ep !== "string") throw new Error(`Incorret type for ep argument in submitForm`);
     const fd = new FormData();
     [
       ...form.querySelectorAll("input"),
@@ -1633,8 +1112,7 @@ export async function submitForm(form: nullishForm, ep: formCases) {
       .forEach((el, i) => {
         try {
           if (el instanceof HTMLCanvasElement) {
-            const idf =
-              el.dataset.name || el.id || el.dataset.title || el.tagName;
+            const idf = el.dataset.name || el.id || el.dataset.title || el.tagName;
             (async (): Promise<File> => {
               return new Promise((res, rej) => {
                 el.toBlob(blob => {
@@ -1643,29 +1121,12 @@ export async function submitForm(form: nullishForm, ep: formCases) {
                         new File(
                           [blob],
                           `${idf}_${
-                            (fd.get("name") &&
-                              regularToSnake(fd.get("name")!.toString())) ||
-                            `${
-                              fd.get("first_name")
-                                ? regularToSnake(
-                                    fd.get("first_name")!.toString()
-                                  )
-                                : ""
+                            (fd.get("name") && regularToSnake(fd.get("name")!.toString())) ||
+                            `${fd.get("first_name") ? regularToSnake(fd.get("first_name")!.toString()) : ""}__${
+                              fd.get("additional_name") ? regularToSnake(fd.get("additional_name")!.toString()) : ""
                             }__${
-                              fd.get("additional_name")
-                                ? regularToSnake(
-                                    fd.get("additional_name")!.toString()
-                                  )
-                                : ""
-                            }__${
-                              fd.get("family_name")
-                                ? regularToSnake(
-                                    fd.get("family_name")!.toString()
-                                  )
-                                : ""
-                            }__${new Date().getFullYear()}${
-                              new Date().getMonth() + 1
-                            }${new Date().getDate()}`
+                              fd.get("family_name") ? regularToSnake(fd.get("family_name")!.toString()) : ""
+                            }__${new Date().getFullYear()}${new Date().getMonth() + 1}${new Date().getDate()}`
                           }.jpeg`,
                           { type: "image/jpeg" }
                         )
@@ -1676,24 +1137,13 @@ export async function submitForm(form: nullishForm, ep: formCases) {
             })().then(file => fd.append(idf, file));
           } else {
             if (el.name === "") {
-              console.warn(
-                `Element ${
-                  el.id || el.className || `undefined ${el.tagName}`
-                } has no name prop defined!`
-              );
+              console.warn(`Element ${el.id || el.className || `undefined ${el.tagName}`} has no name prop defined!`);
               if (el.id === "")
                 console.warn(
-                  `Element ${
-                    el.className || `undefined ${el.tagName}`
-                  } also does not have a id prop defined!`
+                  `Element ${el.className || `undefined ${el.tagName}`} also does not have a id prop defined!`
                 );
             }
-            const idf =
-              el.name ||
-              el.id ||
-              el.dataset.title ||
-              el.className ||
-              el.tagName;
+            const idf = el.name || el.id || el.dataset.title || el.className || el.tagName;
             if (el instanceof HTMLInputElement) {
               if (el.type === "radio") {
                 const appendRad = (el: HTMLInputElement): void => {
@@ -1702,24 +1152,17 @@ export async function submitForm(form: nullishForm, ep: formCases) {
                     : fd.append(idf, el.checked.toString());
                 };
                 const checkGroup = (refAncestral: HTMLElement): void => {
-                  let group = refAncestral.querySelectorAll(
-                    'input[type="radio"]'
-                  );
+                  let group = refAncestral.querySelectorAll('input[type="radio"]');
                   if (group.length === 1) {
                     const parentOfAncestral = refAncestral.parentElement;
                     if (parentOfAncestral) {
-                      group = parentOfAncestral.querySelectorAll(
-                        'input[type="radio"]'
-                      );
+                      group = parentOfAncestral.querySelectorAll('input[type="radio"]');
                       if (group.length === 1) {
                         appendRad(el);
                         return;
                       } else {
                         const checked = Array.from(group).find(
-                          rad =>
-                            rad instanceof HTMLInputElement &&
-                            rad.type === "radio" &&
-                            rad.checked
+                          rad => rad instanceof HTMLInputElement && rad.type === "radio" && rad.checked
                         ) as HTMLInputElement;
                         if (!checked) {
                           if (fd.get(idf)) return;
@@ -1733,10 +1176,7 @@ export async function submitForm(form: nullishForm, ep: formCases) {
                     return;
                   } else {
                     const checked = Array.from(group).find(
-                      rad =>
-                        rad instanceof HTMLInputElement &&
-                        rad.type === "radio" &&
-                        rad.checked
+                      rad => rad instanceof HTMLInputElement && rad.type === "radio" && rad.checked
                     ) as HTMLInputElement;
                     if (!checked) {
                       if (fd.get(idf)) return;
@@ -1745,10 +1185,7 @@ export async function submitForm(form: nullishForm, ep: formCases) {
                     appendRad(checked);
                   }
                 };
-                const checkParent = (
-                  refAncestral: nullishHtEl,
-                  group: string = 'input[type="radio"]'
-                ): void => {
+                const checkParent = (refAncestral: nullishHtEl, group: string = 'input[type="radio"]'): void => {
                   if (el.dataset.parent && el.dataset.parent !== "") {
                     refAncestral = document.querySelector(el.dataset.parent);
                     if (refAncestral) {
@@ -1764,14 +1201,8 @@ export async function submitForm(form: nullishForm, ep: formCases) {
                       return;
                     }
                     let groupQueried = refAncestral.querySelectorAll(group);
-                    if (
-                      groupQueried.length === 0 &&
-                      group !== 'input[type="radio"]' &&
-                      group !== "input[type=radio]"
-                    )
-                      groupQueried = refAncestral.querySelectorAll(
-                        'input[type="radio"]'
-                      );
+                    if (groupQueried.length === 0 && group !== 'input[type="radio"]' && group !== "input[type=radio]")
+                      groupQueried = refAncestral.querySelectorAll('input[type="radio"]');
                     if (groupQueried.length <= 1 && el.parentElement) {
                       refAncestral = el.parentElement.parentElement;
                       if (!refAncestral) {
@@ -1793,10 +1224,7 @@ export async function submitForm(form: nullishForm, ep: formCases) {
                 };
                 const refAncestral = el.parentElement;
                 el.dataset.group && el.dataset.group !== ""
-                  ? checkParent(
-                      refAncestral,
-                      `[data-group="${el.dataset.group}"]`
-                    )
+                  ? checkParent(refAncestral, `[data-group="${el.dataset.group}"]`)
                   : checkParent(refAncestral);
                 return;
               }
@@ -1809,8 +1237,7 @@ export async function submitForm(form: nullishForm, ep: formCases) {
                   fd.append(idf, el.files?.[0] ?? "null");
                   return;
                 } else {
-                  if (el.files)
-                    for (const file of el.files) fd.append(idf, file);
+                  if (el.files) for (const file of el.files) fd.append(idf, file);
                   else fd.append(idf, "null");
                   return;
                 }
@@ -1819,8 +1246,7 @@ export async function submitForm(form: nullishForm, ep: formCases) {
               if (!el.multiple) {
                 fd.append(idf, el.value);
                 return;
-              } else
-                for (const opt of el.selectedOptions) fd.append(idf, opt.value);
+              } else for (const opt of el.selectedOptions) fd.append(idf, opt.value);
             } else {
               fd.append(idf, el.value);
               return;
@@ -1828,9 +1254,9 @@ export async function submitForm(form: nullishForm, ep: formCases) {
           }
         } catch (e) {
           console.error(
-            `Error executin iteration ${i} for mapping ${
-              form.id || form.className || form.tagName
-            }:\n${(e as Error).message}`
+            `Error executin iteration ${i} for mapping ${form.id || form.className || form.tagName}:\n${
+              (e as Error).message
+            }`
           );
         }
       });
@@ -1862,20 +1288,8 @@ export function handleCondtReq(
           el.type === "date")
       )
     )
-      throw inputNotFound(
-        el,
-        `${el?.id || el?.className || el?.tagName}`,
-        extLine(new Error())
-      );
-    if (
-      !(
-        options.pattern &&
-        options.min &&
-        options.max &&
-        options.maxNum &&
-        options.minNum
-      )
-    )
+      throw inputNotFound(el, `${el?.id || el?.className || el?.tagName}`, extLine(new Error()));
+    if (!(options.pattern && options.min && options.max && options.maxNum && options.minNum))
       throw new Error(`No pattern was given to handleCondtReq`);
     if (
       options.pattern &&
@@ -1886,10 +1300,8 @@ export function handleCondtReq(
       )
     )
       throw new Error(`Invalid instance given to options.pattern`);
-    if (options.min && typeof options.min !== "number")
-      throw new Error(`Wrong type given to options.min`);
-    if (options.max && typeof options.max !== "number")
-      throw new Error(`Wrong type given to options.max`);
+    if (options.min && typeof options.min !== "number") throw new Error(`Wrong type given to options.min`);
+    if (options.max && typeof options.max !== "number") throw new Error(`Wrong type given to options.max`);
     if (el.value.length > 0) {
       if (options.min) {
         el.dataset["reqlength"] = `${options.min}`;
@@ -1919,8 +1331,7 @@ export function handleCondtReq(
           el.dataset["pattern"] = `${(options.pattern as RegExp).source}`;
           el.dataset["flags"] = `${(options.pattern as RegExp).flags || ""}`;
         }
-        if (!el.classList.contains("patternText"))
-          el.classList.add("patternText");
+        if (!el.classList.contains("patternText")) el.classList.add("patternText");
       }
       handleEventReq(el);
     } else {
@@ -1942,29 +1353,15 @@ export function handleCondtReq(
 
 export const iniFontColors: { [k: string]: string } = {};
 
-export function handleEventReq(
-  entry: textEl | Event,
-  alertColor: string = "#e52626"
-): void {
+export function handleEventReq(entry: textEl | Event, alertColor: string = "#e52626"): void {
   let isValid = true;
   if (entry instanceof Event) {
-    if (
-      !(
-        entry.currentTarget instanceof HTMLInputElement ||
-        entry.currentTarget instanceof HTMLTextAreaElement
-      )
-    )
+    if (!(entry.currentTarget instanceof HTMLInputElement || entry.currentTarget instanceof HTMLTextAreaElement))
       return;
     entry = entry.currentTarget;
   }
-  if (
-    !(entry instanceof HTMLInputElement || entry instanceof HTMLTextAreaElement)
-  )
-    throw inputNotFound(
-      entry,
-      `validation of entry argument for handleEventReq`,
-      extLine(new Error())
-    );
+  if (!(entry instanceof HTMLInputElement || entry instanceof HTMLTextAreaElement))
+    throw inputNotFound(entry, `validation of entry argument for handleEventReq`, extLine(new Error()));
   if (
     entry instanceof HTMLInputElement &&
     !(
@@ -1977,10 +1374,8 @@ export function handleEventReq(
     )
   )
     return;
-  if (!iniFontColors[entry.id || entry.name])
-    iniFontColors[entry.id || entry.name] = getComputedStyle(entry).color;
-  if ((iniFontColors[entry.id || entry.name] = alertColor))
-    iniFontColors[entry.id || entry.name] = "rgb(33, 37, 41)";
+  if (!iniFontColors[entry.id || entry.name]) iniFontColors[entry.id || entry.name] = getComputedStyle(entry).color;
+  if ((iniFontColors[entry.id || entry.name] = alertColor)) iniFontColors[entry.id || entry.name] = "rgb(33, 37, 41)";
   [
     ...document.querySelectorAll('input[type="number"]'),
     ...document.querySelectorAll('input[type="date"]'),
@@ -1988,14 +1383,10 @@ export function handleEventReq(
   ].forEach(numInp => {
     if (
       numInp instanceof HTMLInputElement &&
-      (numInp.type === "number" ||
-        numInp.type === "date" ||
-        numInp.type === "time")
+      (numInp.type === "number" || numInp.type === "date" || numInp.type === "time")
     ) {
       if (numInp.step === "") numInp.step = "any";
-      numInp.step !== "any" &&
-        !/[^0-9]/g.test(numInp.step) &&
-        numInp.step.replaceAll(/[^0-9]/g, "");
+      numInp.step !== "any" && !/[^0-9]/g.test(numInp.step) && numInp.step.replaceAll(/[^0-9]/g, "");
     }
   });
   if (!entry.checkValidity()) {
@@ -2024,11 +1415,7 @@ export function handleEventReq(
   }
   if (entry.type === "date") {
     if (entry.classList.contains("minCurrDate")) {
-      const currDate = new Date()
-        .toISOString()
-        .split("T")[0]
-        .replaceAll("-", "")
-        .trim();
+      const currDate = new Date().toISOString().split("T")[0].replaceAll("-", "").trim();
       if (currDate.length < 8) {
         console.warn(`Failed to form Current Date string. Aborting check.`);
         return;
@@ -2036,8 +1423,7 @@ export function handleEventReq(
       const currNumDate = Math.abs(parseNotNaN(currDate));
       if (
         !Number.isFinite(currNumDate) ||
-        currNumDate.toString().slice(0, currNumDate.toString().indexOf("."))
-          .length < 8
+        currNumDate.toString().slice(0, currNumDate.toString().indexOf(".")).length < 8
       ) {
         console.warn(`Failed to get Current Date as a Number. Aborting check.`);
         return;
@@ -2045,9 +1431,7 @@ export function handleEventReq(
       const entryNumDateValue = parseNotNaN(entry.value.replaceAll("-", ""));
       if (
         !Number.isFinite(entryNumDateValue) ||
-        entryNumDateValue
-          .toString()
-          .slice(0, entryNumDateValue.toString().indexOf(".")).length < 8
+        entryNumDateValue.toString().slice(0, entryNumDateValue.toString().indexOf(".")).length < 8
       ) {
         console.warn(`Failed to get Current Date as a Number. Aborting check.`);
         return;
@@ -2055,11 +1439,7 @@ export function handleEventReq(
       if (entryNumDateValue < currNumDate) isValid = false;
     }
     if (entry.classList.contains("maxCurrDate")) {
-      const currDate = new Date()
-        .toISOString()
-        .split("T")[0]
-        .replaceAll("-", "")
-        .trim();
+      const currDate = new Date().toISOString().split("T")[0].replaceAll("-", "").trim();
       if (currDate.length < 8) {
         console.warn(`Failed to form Current Date string. Aborting check.`);
         return;
@@ -2067,8 +1447,7 @@ export function handleEventReq(
       const currNumDate = Math.abs(parseNotNaN(currDate));
       if (
         !Number.isFinite(currNumDate) ||
-        currNumDate.toString().slice(0, currNumDate.toString().indexOf("."))
-          .length < 8
+        currNumDate.toString().slice(0, currNumDate.toString().indexOf(".")).length < 8
       ) {
         console.warn(`Failed to get Current Date as a Number. Aborting check.`);
         return;
@@ -2076,9 +1455,7 @@ export function handleEventReq(
       const entryNumDateValue = parseNotNaN(entry.value.replaceAll("-", ""));
       if (
         !Number.isFinite(entryNumDateValue) ||
-        entryNumDateValue
-          .toString()
-          .slice(0, entryNumDateValue.toString().indexOf(".")).length < 8
+        entryNumDateValue.toString().slice(0, entryNumDateValue.toString().indexOf(".")).length < 8
       ) {
         console.warn(`Failed to get Current Date as a Number. Aborting check.`);
         return;
@@ -2086,40 +1463,26 @@ export function handleEventReq(
       if (entryNumDateValue > currNumDate) isValid = false;
     }
   } else {
-    if (
-      entry.classList.contains("minText") &&
-      entry.value.length < parseNotNaN(entry.dataset.reqlength || "3")
-    ) {
+    if (entry.classList.contains("minText") && entry.value.length < parseNotNaN(entry.dataset.reqlength || "3")) {
       console.log("Failed minText");
       isValid = false;
     }
-    if (
-      entry.classList.contains("maxText") &&
-      entry.value.length > parseNotNaN(entry.dataset.maxlength || "3")
-    ) {
+    if (entry.classList.contains("maxText") && entry.value.length > parseNotNaN(entry.dataset.maxlength || "3")) {
       console.log("Failed maxText");
       isValid = false;
     }
-    if (
-      entry.classList.contains("minNum") &&
-      parseNotNaN(entry.value) < parseNotNaN(entry.dataset.minnum || "3")
-    ) {
+    if (entry.classList.contains("minNum") && parseNotNaN(entry.value) < parseNotNaN(entry.dataset.minnum || "3")) {
       console.log("Failed minNum");
       isValid = false;
     }
-    if (
-      entry.classList.contains("maxNum") &&
-      parseNotNaN(entry.value) > parseNotNaN(entry.dataset.maxnum || "3")
-    ) {
+    if (entry.classList.contains("maxNum") && parseNotNaN(entry.value) > parseNotNaN(entry.dataset.maxnum || "3")) {
       console.log("Failed maxNum");
       isValid = false;
     }
     if (
       entry.classList.contains("patternText") &&
       entry.dataset.pattern &&
-      !new RegExp(entry.dataset.pattern, entry.dataset.flags || "").test(
-        entry.value
-      )
+      !new RegExp(entry.dataset.pattern, entry.dataset.flags || "").test(entry.value)
     ) {
       console.log("Failed patternText");
       isValid = false;
@@ -2128,12 +1491,7 @@ export function handleEventReq(
   if (!isValid) entry.style.color = alertColor;
   setTimeout(() => {
     if (entry instanceof Event) {
-      if (
-        !(
-          entry.currentTarget instanceof HTMLInputElement ||
-          entry.currentTarget instanceof HTMLTextAreaElement
-        )
-      )
+      if (!(entry.currentTarget instanceof HTMLInputElement || entry.currentTarget instanceof HTMLTextAreaElement))
         return;
       entry = entry.currentTarget;
     }

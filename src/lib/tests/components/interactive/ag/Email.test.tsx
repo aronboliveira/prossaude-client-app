@@ -9,7 +9,7 @@ jest.mock(
   } => ({
     addEmailExtension: jest.fn(),
   })
-);
+) as typeof jest;
 jest.mock(
   "../../../../../lib/global/handlers/gHandlers",
   (): {
@@ -17,18 +17,18 @@ jest.mock(
   } => ({
     handleCondtReq: jest.fn(),
   })
-);
+) as typeof jest;
 describe("Email Component", (): void => {
   it("renders the email input field", (): void => {
     render(<Email />);
-    expect(screen.getByLabelText<HTMLInputElement>("E-mail Primário")).toBeInTheDocument();
+    expect(screen.getByLabelText<HTMLInputElement>("E-mail Primário")).toBeInTheDocument() as void;
   });
   it("calls addEmailExtension and handleCondtReq on input", async (): Promise<void> => {
     render(<Email />);
     const input = screen.getByLabelText<HTMLInputElement>("E-mail Primário");
     fireEvent.input(input, { target: { value: "test@example.com" } });
     await waitFor((): void => {
-      expect(addEmailExtension).toHaveBeenCalledWith<Parameters<typeof addEmailExtension>>(input);
+      expect(addEmailExtension).toHaveBeenCalledWith<Parameters<typeof addEmailExtension>>(input) as void;
       expect(handleCondtReq).toHaveBeenCalledWith<Parameters<typeof handleCondtReq>>(input, {
         min: 6,
         pattern: ["@", "g"],

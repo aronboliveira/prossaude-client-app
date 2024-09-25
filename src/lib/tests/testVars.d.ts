@@ -801,8 +801,14 @@ export type ErrorHandler =
   | "typeError"
   | "objectError";
 export type GlobalStyleFunction = "highlightChange" | "fadeElement";
-export type GlobalHandler = "updateSimpleProperty";
-export type GeneralControllerMethod = "addListenerTexts" | "addListenerRadios" | "addListenerDateBtns";
+export type GlobalHandler =
+  | "updateSimpleProperty"
+  | "doubleClickHandler"
+  | "cpbInpHandler"
+  | "deactTextInput"
+  | "useCurrentDate";
+export type GlobalModeler = "numberLimit" | "checkAllGenConts" | "switchAutoCorrect";
+export type GlobalControlMethod = "addListenerTexts" | "addListenerRadios" | "addListenerDateBtns";
 export type SearchFunction = "searchParents" | "searchNextSiblings" | "searchPreviousSiblings";
 export type OdHandler =
   | "showInspSpanSub"

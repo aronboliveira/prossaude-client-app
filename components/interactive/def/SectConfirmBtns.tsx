@@ -3,57 +3,41 @@ import { addCanvasListeners } from "@/lib/global/gController";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 export default function SectConfirmBtns(): JSX.Element {
   return (
-    <section className="sectionMain sectionConfirm" id="sectConfirmBut">
+    <section className='sectionMain sectionConfirm' id='sectConfirmBut'>
       <button
-        type="submit"
-        name="submitFormButName"
-        id="submitFormButId"
-        className="confirmBut btn btn-success forceInvert"
-        formAction="_self"
-        formMethod="POST"
-        accessKey="enter"
+        type='submit'
+        name='submitFormButName'
+        id='submitFormButId'
+        className='confirmBut btn btn-success forceInvert'
+        formAction='_self'
+        formMethod='POST'
+        accessKey='enter'
       >
         Submeter
       </button>
       <button
-        type="reset"
-        className="confirmBut btn btn-warning forceInvert"
-        id="resetFormBtn"
+        type='reset'
+        className='confirmBut btn btn-warning forceInvert'
+        id='resetFormBtn'
         onClick={ev => {
           try {
             const divConfirm = ev.currentTarget.closest(".divConfirm");
             if (!(divConfirm instanceof HTMLElement))
-              throw elementNotFound(
-                divConfirm,
-                `Main ancestral div for resetAstBtn`,
-                extLine(new Error())
-              );
+              throw elementNotFound(divConfirm, `Main ancestral div for resetAstBtn`, extLine(new Error()));
             const astEl = divConfirm.querySelector("#inpAstConfirmId");
-            if (
-              !(
-                astEl instanceof HTMLCanvasElement ||
-                astEl instanceof HTMLInputElement
-              )
-            )
-              throw elementNotFound(
-                astEl,
-                `Element for patient signing`,
-                extLine(new Error())
-              );
+            if (!(astEl instanceof HTMLCanvasElement || astEl instanceof HTMLInputElement))
+              throw elementNotFound(astEl, `Element for patient signing`, extLine(new Error()));
             if (astEl instanceof HTMLCanvasElement) {
-              const replaceCanvas = Object.assign(
-                document.createElement("canvas"),
-                {
-                  id: "inpAstConfirmId",
-                }
-              );
+              const replaceCanvas = Object.assign(document.createElement("canvas"), {
+                id: "inpAstConfirmId",
+              });
               replaceCanvas.dataset.title = "Assinatura do Paciente";
               astEl.parentElement!.replaceChild(replaceCanvas, astEl);
               addCanvasListeners();
             }
             if (astEl instanceof HTMLInputElement) {
               const replaceInp = Object.assign(
-                Object.assign(document.createElement("input"), {
+                Object.assign(document.createElement("input") as HTMLInputElement, {
                   type: "file",
                   id: "inpAstConfirmId",
                   accept: "image/*",
@@ -71,9 +55,9 @@ export default function SectConfirmBtns(): JSX.Element {
         Resetar
       </button>
       <button
-        type="button"
-        id="btnExport"
-        className="btn btn-secondary forceInvert"
+        type='button'
+        id='btnExport'
+        className='btn btn-secondary forceInvert'
         style={{
           backgroundColor: "rgba(0, 0, 255, 0.904)",
           borderColor: "rgba(0, 0, 255, 0.904)",

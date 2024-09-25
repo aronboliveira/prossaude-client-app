@@ -9,7 +9,7 @@ jest.mock(
   } => ({
     formatCPF: jest.fn(),
   })
-);
+) as typeof jest;
 jest.mock(
   "../../../../../lib/global/handlers/gHandlers",
   (): {
@@ -17,11 +17,11 @@ jest.mock(
   } => ({
     handleCondtReq: jest.fn(),
   })
-);
+) as typeof jest;
 describe("CPFElement Component", (): void => {
   it("renders the CPF input field", (): void => {
     render(<CPFElement />);
-    expect(screen.getByPlaceholderText<HTMLInputElement>("Preencha com o CPF")).toBeInTheDocument();
+    expect(screen.getByPlaceholderText<HTMLInputElement>("Preencha com o CPF")).toBeInTheDocument() as void;
   });
   it("calls formatCPF and handleCondtReq on input", async (): Promise<void> => {
     render(<CPFElement />);

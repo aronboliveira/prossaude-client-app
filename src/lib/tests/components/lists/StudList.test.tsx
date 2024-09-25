@@ -8,9 +8,9 @@ jest.mock(
   } => ({
     ErrorBoundary: jest
       .fn()
-      .mockImplementation(({ children }: { children: JSX.Element[] }): JSX.Element => <>{children}</>),
+      .mockImplementation(({ children }: { children: JSX.Element[] }): JSX.Element => <>{children}</>) as jest.Mock,
   })
-);
+) as typeof jest;
 jest.mock(
   "../../../../../components/icons/Spinner",
   (): {
@@ -20,7 +20,7 @@ jest.mock(
     __esModule: true,
     default: (): JSX.Element => <div>Spinner</div>,
   })
-);
+) as typeof jest;
 jest.mock(
   "../../../../../components/studs/StudRow",
   (): {
@@ -34,7 +34,7 @@ jest.mock(
       </tr>
     ),
   })
-);
+) as typeof jest;
 jest.mock(
   "@/pages/api/ts/handlers",
   (): {
@@ -59,7 +59,7 @@ jest.mock(
       },
     ]),
   })
-);
+) as typeof jest;
 describe("StudList Component", (): void => {
   const mockDispatch = jest.fn();
   const mockMainDlgRef = { current: document.createElement("dialog") };
@@ -75,29 +75,29 @@ describe("StudList Component", (): void => {
     HTMLElement
   > => render(<StudList {...defaultProps} />);
   beforeEach((): void => {
-    jest.clearAllMocks();
+    jest.clearAllMocks() as typeof jest;
   });
   test("renders the table with students data", async (): Promise<void> => {
-    renderComponent();
+    renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
     await waitFor((): void => {
-      expect(screen.getByRole<HTMLTableElement>("table")).toBeInTheDocument();
+      expect(screen.getByRole<HTMLTableElement>("table")).toBeInTheDocument() as void;
       expect(screen.getAllByText<HTMLTableRowElement>(/StudRow/)).toHaveLength(2);
     });
   });
   test("displays the spinner while fetching data", async (): Promise<void> => {
-    renderComponent();
-    expect(screen.getByText<HTMLElement>("Spinner")).toBeInTheDocument();
+    renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
+    expect(screen.getByText<HTMLElement>("Spinner")).toBeInTheDocument() as void;
     await waitFor((): void => {
-      expect(screen.queryByText<HTMLElement>("Spinner")).not.toBeInTheDocument();
+      expect(screen.queryByText<HTMLElement>("Spinner")).not.toBeInTheDocument() as void;
     });
   });
   test("handles close event and dispatches state toggle", async (): Promise<void> => {
-    renderComponent();
+    renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
     fireEvent.click(screen.getByRole<HTMLButtonElement>("button"));
-    expect(mockDispatch).toHaveBeenCalledWith<Parameters<typeof mockDispatch>>(!defaultProps.state);
+    expect(mockDispatch).toHaveBeenCalledWith<Parameters<typeof mockDispatch>>(!defaultProps.state) as void;
   });
   test("handles error and renders error fallback component", async (): Promise<void> => {
-    jest.spyOn<Console, "error">(console, "error").mockImplementation((): void => {});
+    jest.spyOn<Console, "error">(console, "error").mockImplementation((): void => {}) as jest.SpyInstance;
     jest.mock(
       "../../../../../components/error/GenericErrorComponent",
       (): {
@@ -107,22 +107,22 @@ describe("StudList Component", (): void => {
         __esModule: true,
         default: (): JSX.Element => <div>GenericErrorComponent</div>,
       })
-    );
-    renderComponent();
+    ) as typeof jest;
+    renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
     await waitFor((): void => {
-      expect(screen.getByText<HTMLElement>("GenericErrorComponent")).toBeInTheDocument();
+      expect(screen.getByText<HTMLElement>("GenericErrorComponent")).toBeInTheDocument() as void;
     });
   });
 
   test("fetches and renders student data", async (): Promise<void> => {
-    renderComponent();
+    renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
     await waitFor((): void => {
-      expect(screen.getByText<HTMLElement>("Student A")).toBeInTheDocument();
-      expect(screen.getByText<HTMLElement>("Student B")).toBeInTheDocument();
+      expect(screen.getByText<HTMLElement>("Student A")).toBeInTheDocument() as void;
+      expect(screen.getByText<HTMLElement>("Student B")).toBeInTheDocument() as void;
     });
   });
   test("handles errors in fetch and displays fallback", async (): Promise<void> => {
-    jest.spyOn<Console, "error">(console, "error").mockImplementation((): void => {});
+    jest.spyOn<Console, "error">(console, "error").mockImplementation((): void => {}) as jest.SpyInstance;
     jest.mock(
       "@/pages/api/ts/handlers",
       (): {
@@ -130,10 +130,10 @@ describe("StudList Component", (): void => {
       } => ({
         handleFetch: jest.fn().mockRejectedValueOnce(new Error("Fetch error")),
       })
-    );
-    renderComponent();
+    ) as typeof jest;
+    renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
     await waitFor((): void => {
-      expect(screen.getByText<HTMLElement>("GenericErrorComponent")).toBeInTheDocument();
+      expect(screen.getByText<HTMLElement>("GenericErrorComponent")).toBeInTheDocument() as void;
     });
   });
 });

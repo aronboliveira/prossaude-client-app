@@ -4,9 +4,9 @@ import { CSSMeasureValue, ErrorHandler } from "../../testVars";
 describe("equalizeParagraphs", (): void => {
   let div1: HTMLDivElement, div2: HTMLDivElement, div3: HTMLDivElement;
   beforeEach((): void => {
-    div1 = document.createElement("div");
-    div2 = document.createElement("div");
-    div3 = document.createElement("div");
+    div1 = document.createElement("div") as HTMLDivElement;
+    div2 = document.createElement("div") as HTMLDivElement;
+    div3 = document.createElement("div") as HTMLDivElement;
     div1.style.width = "200px";
     div2.style.width = "150px";
     div3.style.width = "180px";
@@ -18,7 +18,7 @@ describe("equalizeParagraphs", (): void => {
           fontSize: "16px",
         } as CSSStyleDeclaration;
       });
-    jest.clearAllMocks();
+    jest.clearAllMocks() as typeof jest;
   });
   it("should set all elements to the minimum width in rem", (): void => {
     jest.spyOn<any, "parseNotNaN">(require("../../../global/gModel"), "parseNotNaN").mockImplementation(value => {

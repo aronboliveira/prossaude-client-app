@@ -11,7 +11,7 @@ jest.mock(
     validateForm: jest.fn((): Promise<[true]> => Promise.resolve([true])),
     syncAriaStates: jest.fn(),
   })
-);
+) as typeof jest;
 jest.mock(
   "@/lib/global/gModel",
   (): {
@@ -23,7 +23,7 @@ jest.mock(
     autoCapitalizeInputs: jest.fn(),
     formatTel: jest.fn(),
   })
-);
+) as typeof jest;
 describe("UserPropsDlg", (): void => {
   const defaultProps = {
     setPropDlg: jest.fn(),
@@ -31,19 +31,19 @@ describe("UserPropsDlg", (): void => {
   };
   it("renders the UserPropsDlg component", (): void => {
     render(<UserPropsDlg {...defaultProps} />);
-    expect(screen.getByText<HTMLFormElement>("Formulário de Alteração")).toBeInTheDocument();
+    expect(screen.getByText<HTMLFormElement>("Formulário de Alteração")).toBeInTheDocument() as void;
   });
   it("closes the dialog when the close button is clicked", async (): Promise<void> => {
     render(<UserPropsDlg {...defaultProps} />);
     fireEvent.click(screen.getByRole<HTMLButtonElement>("button", { name: /close/i }));
     await waitFor((): void => {
-      expect(defaultProps.setPropDlg).toHaveBeenCalledWith<Parameters<typeof defaultProps.setPropDlg>>(false);
+      expect(defaultProps.setPropDlg).toHaveBeenCalledWith<Parameters<typeof defaultProps.setPropDlg>>(false) as void;
     });
   });
   it("calls syncAriaStates on mount", async (): Promise<void> => {
     render(<UserPropsDlg {...defaultProps} />);
     await waitFor((): void => {
-      expect(syncAriaStates).toHaveBeenCalled();
+      expect(syncAriaStates).toHaveBeenCalled() as void;
     });
   });
   it("changes the input type to email and adds email extension", async (): Promise<void> => {
@@ -53,7 +53,7 @@ describe("UserPropsDlg", (): void => {
     });
     fireEvent.input(screen.getByPlaceholderText<HTMLInputElement>("Insira aqui o novo valor"));
     await waitFor((): void => {
-      expect(addEmailExtension).toHaveBeenCalled();
+      expect(addEmailExtension).toHaveBeenCalled() as void;
     });
   });
   it("changes the input type to telephone and formats the input", async (): Promise<void> => {
@@ -63,15 +63,15 @@ describe("UserPropsDlg", (): void => {
     });
     fireEvent.input(screen.getByPlaceholderText<HTMLInputElement>("Insira aqui o novo valor"));
     await waitFor(() => {
-      expect(formatTel).toHaveBeenCalled();
+      expect(formatTel).toHaveBeenCalled() as void;
     });
   });
   it("validates the form and submits the new property", async (): Promise<void> => {
     render(<UserPropsDlg {...defaultProps} />);
     fireEvent.click(screen.getByRole<HTMLButtonElement>("button", { name: /enviar/i }));
     await waitFor((): void => {
-      expect(validateForm).toHaveBeenCalled();
-      expect(defaultProps.setPropDlg).toHaveBeenCalledWith<Parameters<typeof defaultProps.setPropDlg>>(false);
+      expect(validateForm).toHaveBeenCalled() as void;
+      expect(defaultProps.setPropDlg).toHaveBeenCalledWith<Parameters<typeof defaultProps.setPropDlg>>(false) as void;
     });
   });
   it("autocapitalizes the input when changing the user name", async (): Promise<void> => {
@@ -82,7 +82,7 @@ describe("UserPropsDlg", (): void => {
     const nameInput = screen.getByPlaceholderText<HTMLLabelElement>("Insira aqui o novo valor");
     fireEvent.input(nameInput);
     await waitFor((): void => {
-      expect(autoCapitalizeInputs).toHaveBeenCalledWith<Parameters<typeof autoCapitalizeInputs>>(nameInput);
+      expect(autoCapitalizeInputs).toHaveBeenCalledWith<Parameters<typeof autoCapitalizeInputs>>(nameInput) as void;
     });
   });
 });

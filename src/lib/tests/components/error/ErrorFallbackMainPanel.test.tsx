@@ -4,7 +4,7 @@ import "@testing-library/jest-dom/extend-expect";
 jest.mock(
   "../../../../../components/consRegst/MainFormPanel",
   (): (() => JSX.Element) => (): JSX.Element => <div>MainFormPanel Component</div>
-);
+) as typeof jest;
 describe("ErrorFallbackMainPanel Component", (): void => {
   const mockMainRoot: {
     render: jest.Mock<any, any, any>;
@@ -45,14 +45,14 @@ describe("ErrorFallbackMainPanel Component", (): void => {
       />
     );
   test("renders error message and select options", (): void => {
-    renderComponent();
-    expect(screen.getByRole<HTMLElement>("alert")).toBeInTheDocument();
-    expect(screen.getByText<HTMLHeadingElement>(/Oops, algo deu errado!/i)).toBeInTheDocument();
-    expect(screen.getByText<HTMLHeadingElement>(mockProps.renderError.message)).toBeInTheDocument();
-    expect(screen.getByRole<HTMLSelectElement>("combobox")).toBeInTheDocument();
+    renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
+    expect(screen.getByRole<HTMLElement>("alert")).toBeInTheDocument() as void;
+    expect(screen.getByText<HTMLHeadingElement>(/Oops, algo deu errado!/i)).toBeInTheDocument() as void;
+    expect(screen.getByText<HTMLHeadingElement>(mockProps.renderError.message)).toBeInTheDocument() as void;
+    expect(screen.getByRole<HTMLSelectElement>("combobox")).toBeInTheDocument() as void;
   });
   test("calls resetErrorBoundary on button click", (): void => {
-    renderComponent();
+    renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
     fireEvent.click(screen.getByText<HTMLButtonElement>("Tentar novamente"));
     expect(mockProps.resetErrorBoundary).toHaveBeenCalledWith<Parameters<typeof mockProps.resetErrorBoundary>>(
       mockMainRoot,
@@ -61,8 +61,10 @@ describe("ErrorFallbackMainPanel Component", (): void => {
     );
   });
   test("changes panel value on selecting new option", (): void => {
-    renderComponent();
+    renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
     fireEvent.change(screen.getByRole<HTMLSelectElement>("combobox"), { target: { value: "agenda" } });
-    expect(mockMainRoot.render).toHaveBeenCalledWith<Parameters<typeof mockMainRoot.render>>(expect.anything());
+    expect(mockMainRoot.render).toHaveBeenCalledWith<Parameters<typeof mockMainRoot.render>>(
+      expect.anything() as any
+    ) as void;
   });
 });

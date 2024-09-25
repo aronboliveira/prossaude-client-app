@@ -45,9 +45,9 @@ describe("switchAutoFill", (): void => {
   let autoFillBtn: HTMLButtonElement;
   let lockTabInd: HTMLDivElement;
   beforeEach((): void => {
-    autoFillBtn = document.createElement("button");
+    autoFillBtn = document.createElement("button") as HTMLButtonElement;
     autoFillBtn.innerText = "Ativar Cálculo Automático";
-    lockTabInd = document.createElement("div");
+    lockTabInd = document.createElement("div") as HTMLDivElement;
     lockTabInd.classList.add("lockTabInd");
     document.body.appendChild(autoFillBtn);
     document.body.appendChild(lockTabInd);
@@ -62,7 +62,7 @@ describe("switchAutoFill", (): void => {
     expect(autoFillBtn.textContent).toBe<string>("Ativar Cálculo Automático");
   });
   it("should throw an error if autoFillBtn is not found", (): void => {
-    expect((): boolean => switchAutoFill(document.createElement("div") as any)).toThrow(
+    expect((): boolean => switchAutoFill(document.createElement("div") as HTMLDivElement as any)).toThrow(
       "Element not found: autoFillBtn"
     );
   });
@@ -73,9 +73,9 @@ describe("switchLockInputs", (): void => {
   beforeEach((): void => {
     lockTabInd = document.createElement("span");
     lockTabInd.classList.add("lockTabInd");
-    siblingInput = document.createElement("input");
+    siblingInput = document.createElement("input") as HTMLInputElement;
     siblingInput.classList.add("tabInpProg");
-    const parentDiv = document.createElement("div");
+    const parentDiv = document.createElement("div") as HTMLDivElement;
     parentDiv.appendChild(lockTabInd);
     parentDiv.appendChild(siblingInput);
     document.body.appendChild(parentDiv);
@@ -93,19 +93,19 @@ describe("switchLockInputs", (): void => {
     }, 500);
   });
   it("should throw an error if input not found", (): void => {
-    expect((): void => switchLockInputs([document.createElement("div") as any], true)).toThrow(
+    expect((): void => switchLockInputs([document.createElement("div") as HTMLDivElement as any], true)).toThrow(
       "Element not found: siblingInput"
     );
   });
 });
 describe("getNumCol", (): void => {
   it("should return correct column number from element ID", (): void => {
-    const inputElement = document.createElement("input");
+    const inputElement = document.createElement("input") as HTMLInputElement;
     inputElement.id = "row_1_2";
     expect(getNumCol(inputElement)).toBe<number>(2);
   });
   it("should throw an error if element ID does not match the pattern", (): void => {
-    const invalidElement = document.createElement("input");
+    const invalidElement = document.createElement("input") as HTMLInputElement;
     invalidElement.id = "invalid_id";
     expect((): number => getNumCol(invalidElement)).toThrow("Match error in .id do Elemento de Evento");
   });
@@ -113,7 +113,7 @@ describe("getNumCol", (): void => {
 describe("validateEvResultNum", (): void => {
   let inputElement: HTMLInputElement;
   beforeEach((): void => {
-    inputElement = document.createElement("input");
+    inputElement = document.createElement("input") as HTMLInputElement;
     inputElement.type = "number";
   });
   it("should return the correct number when valid input", (): void => {
@@ -125,7 +125,7 @@ describe("validateEvResultNum", (): void => {
     expect(validateEvResultNum(inputElement)).toBe<number>(0);
   });
   it("should throw an error when element is not valid", (): void => {
-    expect((): number => validateEvResultNum(document.createElement("div") as any)).toThrow(
+    expect((): number => validateEvResultNum(document.createElement("div") as HTMLDivElement as any)).toThrow(
       "Multiple elements not found"
     );
   });
@@ -136,8 +136,8 @@ describe("matchPersonPropertiesWH", (): void => {
   let heightInput: HTMLInputElement;
   beforeEach((): void => {
     person = new Person();
-    weightInput = document.createElement("input");
-    heightInput = document.createElement("input");
+    weightInput = document.createElement("input") as HTMLInputElement;
+    heightInput = document.createElement("input") as HTMLInputElement;
   });
   it("should return correct weight and height from input fields", (): void => {
     weightInput.value = "70";
@@ -159,7 +159,7 @@ describe("matchPersonPropertiesDC", (): void => {
   let inputElement: HTMLInputElement;
   beforeEach((): void => {
     person = new Person();
-    inputElement = document.createElement("input");
+    inputElement = document.createElement("input") as HTMLInputElement;
     inputElement.value = "25";
   });
   it("should set and return the sumDCut value when valid input is provided", (): void => {
@@ -171,9 +171,9 @@ describe("matchPersonPropertiesDC", (): void => {
     expect(matchPersonPropertiesDC(person, inputElement)).toBe<number>(0);
   });
   it("should throw an error if input element is not found", (): void => {
-    expect((): number => matchPersonPropertiesDC(person, document.createElement("div") as any)).toThrow(
-      "Element not found: targInpSumDCut"
-    );
+    expect((): number =>
+      matchPersonPropertiesDC(person, document.createElement("div") as HTMLDivElement as any)
+    ).toThrow("Element not found: targInpSumDCut");
   });
   it("should throw an error if person object is not valid", (): void => {
     expect((): number => matchPersonPropertiesDC(null as any, inputElement)).toThrow(
@@ -187,8 +187,16 @@ describe("updateIndexesContexts", (): void => {
   let arrMetab: [HTMLInputElement, HTMLInputElement, HTMLSelectElement];
   beforeEach((): void => {
     person = new Person();
-    arrGord = [document.createElement("input"), document.createElement("input"), document.createElement("input")];
-    arrMetab = [document.createElement("input"), document.createElement("input"), document.createElement("select")];
+    arrGord = [
+      document.createElement("input") as HTMLInputElement,
+      document.createElement("input") as HTMLInputElement,
+      document.createElement("input") as HTMLInputElement,
+    ];
+    arrMetab = [
+      document.createElement("input") as HTMLInputElement,
+      document.createElement("input") as HTMLInputElement,
+      document.createElement("select"),
+    ];
   });
   it("should calculate and return the correct IMC, MLG, TMB, and GET values", (): void => {
     jest.spyOn<Person, PersonMethod>(person, "calcIMC").mockReturnValue(["IMC", 22.5]);
@@ -203,16 +211,16 @@ describe("updateIndexesContexts", (): void => {
   });
   it("should throw an error if one of the input elements is not found", (): void => {
     const invalidArray = [
-      document.createElement("div") as any,
-      document.createElement("div") as any,
-      document.createElement("div") as any,
+      document.createElement("div") as HTMLDivElement as any,
+      document.createElement("div") as HTMLDivElement as any,
+      document.createElement("div") as HTMLDivElement as any,
     ] as [targEl, targEl, targEl];
     expect((): [number, number, number, number] => updateIndexesContexts(person, invalidArray, arrMetab)).toThrow(
       "Multiple elements not found"
     );
   });
   it("should log a warning if TMB and/or factorAtvLvl are invalid", (): void => {
-    jest.spyOn<Console, ConsoleMethod>(console, "warn").mockImplementation((): void => {});
+    jest.spyOn<Console, ConsoleMethod>(console, "warn").mockImplementation((): void => {}) as jest.SpyInstance;
     jest.spyOn<Person, PersonMethod>(person, "calcTMB").mockReturnValue(["Invalid", NaN]);
     updateIndexesContexts(person, arrGord, arrMetab, -1);
     expect(console.warn).toHaveBeenCalledWith<[any]>(
@@ -224,7 +232,11 @@ describe("updateIMCContext", (): void => {
   let arrGord: [HTMLInputElement, HTMLInputElement, HTMLInputElement];
   let formTMBTypeElement: HTMLSelectElement;
   beforeEach((): void => {
-    arrGord = [document.createElement("input"), document.createElement("input"), document.createElement("input")];
+    arrGord = [
+      document.createElement("input") as HTMLInputElement,
+      document.createElement("input") as HTMLInputElement,
+      document.createElement("input") as HTMLInputElement,
+    ];
     formTMBTypeElement = document.createElement("select");
   });
   it("should update IMC context correctly when values are valid", (): void => {
@@ -236,9 +248,9 @@ describe("updateIMCContext", (): void => {
     expect((): void =>
       updateIMCContext(
         [
-          document.createElement("div") as any,
-          document.createElement("div") as any,
-          document.createElement("div") as any,
+          document.createElement("div") as HTMLDivElement as any,
+          document.createElement("div") as HTMLDivElement as any,
+          document.createElement("div") as HTMLDivElement as any,
         ] as [targEl, targEl, targEl],
         formTMBTypeElement
       )
@@ -248,7 +260,7 @@ describe("updateIMCContext", (): void => {
     updateIMCContext(arrGord, formTMBTypeElement, ["abaixo", 18.0]);
     expect(
       jest.spyOn<any, GlobalStyleFunction>(require("../../../global/gStyleScript"), "highlightChange")
-    ).toHaveBeenCalled();
+    ).toHaveBeenCalled() as void;
   });
 });
 describe("updateTMBContext", (): void => {
@@ -256,7 +268,7 @@ describe("updateTMBContext", (): void => {
   let arrTMB: [HTMLInputElement, HTMLSelectElement];
   beforeEach((): void => {
     person = new Person();
-    arrTMB = [document.createElement("input"), document.createElement("select")];
+    arrTMB = [document.createElement("input") as HTMLInputElement, document.createElement("select")];
   });
   it("should update the TMB context correctly", (): void => {
     jest.spyOn<Person, PersonMethod>(person, "calcTMB").mockReturnValue(["harrisBenedict", 1500]);
@@ -268,7 +280,10 @@ describe("updateTMBContext", (): void => {
     expect((): number =>
       updateTMBContext(
         person,
-        [document.createElement("div") as any, document.createElement("div") as any] as [targEl, targEl],
+        [
+          document.createElement("div") as HTMLDivElement as any,
+          document.createElement("div") as HTMLDivElement as any,
+        ] as [targEl, targEl],
         ["eutrofico", 22, 15]
       )
     ).toThrow("Multiple elements not found");
@@ -279,7 +294,7 @@ describe("updateGETContext", (): void => {
   let inputElement: HTMLInputElement;
   beforeEach((): void => {
     person = new Person();
-    inputElement = document.createElement("input");
+    inputElement = document.createElement("input") as HTMLInputElement;
   });
   it("should calculate and return the correct GET value", (): void => {
     jest.spyOn<Person, PersonMethod>(person, "calcGET").mockReturnValue(2100);
@@ -287,7 +302,7 @@ describe("updateGETContext", (): void => {
     expect(inputElement.value).toBe<PseudoNum>("2100");
   });
   it("should throw an error if input element is not found", (): void => {
-    expect((): number => updateGETContext(person, document.createElement("div") as any)).toThrow(
+    expect((): number => updateGETContext(person, document.createElement("div") as HTMLDivElement as any)).toThrow(
       "Element not found: targInpGET em updateGETContext"
     );
   });
@@ -303,8 +318,8 @@ describe("matchTMBElements", (): void => {
     gordCorpLvl = document.createElement("select");
     formTMBTypeElement = document.createElement("select");
     spanFactorAtleta = document.createElement("span");
-    lockGordCorpLvl = document.createElement("div");
-    jest.clearAllMocks();
+    lockGordCorpLvl = document.createElement("div") as HTMLDivElement;
+    jest.clearAllMocks() as typeof jest;
   });
   it("should update formTMBTypeElement value to 'tinsley' when mainSelect value is 'muitoIntenso'", (): void => {
     mainSelect.value = "muitoIntenso";
@@ -316,8 +331,8 @@ describe("matchTMBElements", (): void => {
     mainSelect.value = "muitoIntenso";
     const mockFadeElement = jest.spyOn<any, GlobalStyleFunction>(require("../../global/gStyleScripts"), "fadeElement");
     matchTMBElements(mainSelect, gordCorpLvl, formTMBTypeElement, spanFactorAtleta, lockGordCorpLvl);
-    expect(mockFadeElement).toHaveBeenCalledWith<[HTMLElement, string]>(spanFactorAtleta, "0");
-    expect(mockFadeElement).toHaveBeenCalledWith<[HTMLElement, string]>(lockGordCorpLvl, "0");
+    expect(mockFadeElement).toHaveBeenCalledWith<[HTMLElement, string]>(spanFactorAtleta, "0") as void;
+    expect(mockFadeElement).toHaveBeenCalledWith<[HTMLElement, string]>(lockGordCorpLvl, "0") as void;
   });
   it("should call inputNotFound when nafType element is not found", (): void => {
     mainSelect.id = "LvlAtFis";
@@ -326,13 +341,13 @@ describe("matchTMBElements", (): void => {
       "inputNotFound"
     );
     matchTMBElements(mainSelect, gordCorpLvl, formTMBTypeElement, spanFactorAtleta, lockGordCorpLvl);
-    expect(mockInputNotFound).toHaveBeenCalled();
+    expect(mockInputNotFound).toHaveBeenCalled() as void;
   });
   it("should call stringError when an invalid mainSelect value is provided", (): void => {
     mainSelect.value = "invalidValue";
     const mockStringError = jest.spyOn<any, ErrorHandler>(require("../../global/handlers/errorHandler"), "stringError");
     matchTMBElements(mainSelect, gordCorpLvl, formTMBTypeElement, spanFactorAtleta, lockGordCorpLvl);
-    expect(mockStringError).toHaveBeenCalled();
+    expect(mockStringError).toHaveBeenCalled() as void;
   });
   it("should call multipleElementsNotFound when elements are invalid", (): void => {
     const mockMultipleElementsNotFound = jest.spyOn<any, ErrorHandler>(
@@ -340,7 +355,7 @@ describe("matchTMBElements", (): void => {
       "multipleElementsNotFound"
     );
     matchTMBElements(null as any, null as any, null as any, null as any, null as any);
-    expect(mockMultipleElementsNotFound).toHaveBeenCalled();
+    expect(mockMultipleElementsNotFound).toHaveBeenCalled() as void;
   });
 });
 describe("updatePGC", (): void => {
@@ -348,15 +363,15 @@ describe("updatePGC", (): void => {
   let parentEl: HTMLElement;
   beforeEach((): void => {
     person = new Person("male", 30, 80, 180, 100, "1.2");
-    parentEl = document.createElement("div");
-    jest.clearAllMocks();
+    parentEl = document.createElement("div") as HTMLDivElement;
+    jest.clearAllMocks() as typeof jest;
   });
   it("should correctly update sumDCut and PGC", (): void => {
-    const inputSumDCut = document.createElement("input");
+    const inputSumDCut = document.createElement("input") as HTMLInputElement;
     inputSumDCut.type = "number";
     inputSumDCut.value = "150";
     parentEl.appendChild(inputSumDCut);
-    const inputPGC = document.createElement("input");
+    const inputPGC = document.createElement("input") as HTMLInputElement;
     inputPGC.type = "number";
     parentEl.appendChild(inputPGC);
     const result = updatePGC(person, parentEl, 1, "cons");
@@ -368,13 +383,13 @@ describe("updatePGC", (): void => {
     updatePGC(person, parentEl, 1, "cons");
     expect(
       jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "inputNotFound")
-    ).toHaveBeenCalled();
+    ).toHaveBeenCalled() as void;
   });
   it("should call multipleElementsNotFound when arguments are invalid", (): void => {
     updatePGC(null as any, null as any, NaN);
     expect(
       jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "multipleElementsNotFound")
-    ).toHaveBeenCalled();
+    ).toHaveBeenCalled() as void;
   });
 });
 describe("updateAtvLvl", (): void => {
@@ -383,7 +398,7 @@ describe("updateAtvLvl", (): void => {
   beforeEach((): void => {
     mainSelect = document.createElement("select");
     secondarySelect = document.createElement("select");
-    jest.clearAllMocks();
+    jest.clearAllMocks() as typeof jest;
   });
   it("should update secondarySelect value based on mainSelect", (): void => {
     mainSelect.value = "moderado";
@@ -396,24 +411,24 @@ describe("updateAtvLvl", (): void => {
       .spyOn<any, GlobalHandler>(require("../../../global/handlers/gHandlers"), "updateSimpleProperty")
       .mockReturnValue(123 as any);
     updateAtvLvl(mainSelect, secondarySelect, "leve");
-    expect(mockTypeError).toHaveBeenCalled();
+    expect(mockTypeError).toHaveBeenCalled() as void;
   });
   it("should call multipleElementsNotFound when elements are invalid", (): void => {
     updateAtvLvl(null as any, null as any, "leve");
     expect(
       jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "multipleElementsNotFound")
-    ).toHaveBeenCalled();
+    ).toHaveBeenCalled() as void;
   });
 });
 describe("defineTargInps", (): void => {
   let parentEl: HTMLElement;
   beforeEach((): void => {
-    parentEl = document.createElement("div");
-    jest.clearAllMocks();
+    parentEl = document.createElement("div") as HTMLDivElement;
+    jest.clearAllMocks() as typeof jest;
   });
   it("should return valid target inputs", (): void => {
-    const input1 = document.createElement("input");
-    const input2 = document.createElement("input");
+    const input1 = document.createElement("input") as HTMLInputElement;
+    const input2 = document.createElement("input") as HTMLInputElement;
     parentEl.appendChild(input1);
     parentEl.appendChild(input2);
     jest
@@ -429,19 +444,19 @@ describe("defineTargInps", (): void => {
     defineTargInps(parentEl, "invalidRef", "cons");
     expect(
       jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "stringError")
-    ).toHaveBeenCalled();
+    ).toHaveBeenCalled() as void;
   });
   it("should call inputNotFound when a target input is not found", (): void => {
     defineTargInps(parentEl, 1, "cons");
     expect(
       jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "inputNotFound")
-    ).toHaveBeenCalled();
+    ).toHaveBeenCalled() as void;
   });
   it("should call multipleElementsNotFound when elements are invalid", (): void => {
     defineTargInps(null as any, NaN, "cons");
     expect(
       jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "multipleElementsNotFound")
-    ).toHaveBeenCalled();
+    ).toHaveBeenCalled() as void;
   });
 });
 describe("addRowAtivFis", (): void => {
@@ -450,7 +465,7 @@ describe("addRowAtivFis", (): void => {
     tBodyContainer = document.createElement("tbody");
     tBodyContainer.id = "tbodyAtFisRot";
     document.body.appendChild(tBodyContainer);
-    jest.clearAllMocks();
+    jest.clearAllMocks() as typeof jest;
   });
   it("should correctly add a new row to the table body", (): void => {
     addRowAtivFis(3, "Rot");
@@ -459,11 +474,11 @@ describe("addRowAtivFis", (): void => {
     expect(newRow?.id).toBe<string>("tabRowAtFisRotId3");
   });
   it("should call multipleElementsNotFound when tBodyContainer is not found", (): void => {
-    document.getElementById("tbodyAtFisRot")?.remove();
+    document.getElementById("tbodyAtFisRot")?.remove() as void;
     addRowAtivFis(3, "Rot");
     expect(
       jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "multipleElementsNotFound")
-    ).toHaveBeenCalled();
+    ).toHaveBeenCalled() as void;
   });
 });
 describe("removeRowAtivFis", (): void => {
@@ -480,13 +495,13 @@ describe("removeRowAtivFis", (): void => {
     expect(removeRowAtivFis(3)).toBe<number>(3);
   });
   it("should not remove the row if the count is less than 3", (): void => {
-    expect(document.getElementById("tabRowAtFisRotId2")).toBeTruthy();
+    expect(document.getElementById("tabRowAtFisRotId2")).toBeTruthy() as void;
     expect(removeRowAtivFis(2)).toBe<number>(2);
   });
   it("should log a warning if no row is found to remove", (): void => {
     console.warn = jest.fn();
     removeRowAtivFis(4, "NonExisting");
-    expect(console.warn).toHaveBeenCalledWith<[string]>("No row to remove detected!");
+    expect(console.warn).toHaveBeenCalledWith<[string]>("No row to remove detected!") as void;
   });
 });
 describe("switchRowComorb", (): void => {
@@ -502,9 +517,9 @@ describe("switchRowComorb", (): void => {
   it("should add a new comorbidity row when the add button is clicked", (): void => {
     switchRowComorb(document.getElementById("addComorb") as HTMLButtonElement, 3);
     const newRow = document.getElementById("tabRowComorb3");
-    expect(newRow).toBeTruthy();
-    expect(newRow?.querySelector('input[type="text"]')).toBeTruthy();
-    expect(newRow?.querySelector('input[type="date"]')).toBeTruthy();
+    expect(newRow).toBeTruthy() as void;
+    expect(newRow?.querySelector('input[type="text"]')).toBeTruthy() as void;
+    expect(newRow?.querySelector('input[type="date"]')).toBeTruthy() as void;
   });
   it("should remove a comorbidity row when the remove button is clicked", (): void => {
     switchRowComorb(document.getElementById("removeComorb") as HTMLButtonElement, 3);
@@ -513,8 +528,8 @@ describe("switchRowComorb", (): void => {
   it("should not remove the last row if rowCountComorb is less than or equal to 3", (): void => {
     console.warn = jest.fn();
     switchRowComorb(document.getElementById("removeComorb") as HTMLButtonElement, 3);
-    expect(document.getElementById("tabRowComorb2")).toBeTruthy();
-    expect(console.warn).toHaveBeenCalledWith<[string]>("No row to remove detected.");
+    expect(document.getElementById("tabRowComorb2")).toBeTruthy() as void;
+    expect(console.warn).toHaveBeenCalledWith<[string]>("No row to remove detected.") as void;
   });
   it("should throw an error if comorbContainer is not found", (): void => {
     expect((): void => switchRowComorb(null as any)).toThrow("Element not found: comorbContainer in switchRowComorb");
@@ -534,7 +549,11 @@ describe("switchRequiredCols", (): void => {
         <tr><td><input id="testInput3" class="inpInd" /></td></tr>
       </table>
     `;
-    elements = [document.createElement("input"), document.createElement("div"), document.createElement("table")];
+    elements = [
+      document.createElement("input") as HTMLInputElement,
+      document.createElement("div") as HTMLDivElement,
+      document.createElement("table"),
+    ];
   });
   it("should update the required status of input fields", (): void => {
     switchRequiredCols(elements, 2);
@@ -546,14 +565,14 @@ describe("switchRequiredCols", (): void => {
     expect(input3.required).toBe<boolean>(true);
   });
   it("should throw an error if consTablesFs or other tables are not found", (): void => {
-    expect((): void => switchRequiredCols([document.createElement("input"), null as any, null as any], 2)).toThrow(
-      "Multiple elements not found"
-    );
+    expect((): void =>
+      switchRequiredCols([document.createElement("input") as HTMLInputElement, null as any, null as any], 2)
+    ).toThrow("Multiple elements not found");
   });
   it("should log an error if numCons is invalid", (): void => {
     console.error = jest.fn();
     switchRequiredCols(elements, -1, false);
-    expect(console.error).toHaveBeenCalledWith<[string]>("Number of Appointment Options Invalid");
+    expect(console.error).toHaveBeenCalledWith<[string]>("Number of Appointment Options Invalid") as void;
   });
 });
 describe("defineMatrixAxes", (): void => {
@@ -592,7 +611,7 @@ describe("filterCellsPattern", (): void => {
   let inputElements: HTMLInputElement[];
   beforeEach((): void => {
     inputElements = Array.from({ length: 3 }, (_, i) => {
-      const input = document.createElement("input");
+      const input = document.createElement("input") as HTMLInputElement;
       input.id = `testInput_${i + 1}`;
       return input;
     });
@@ -618,11 +637,11 @@ describe("switchNumConsTitles", (): void => {
   let consTitles: HTMLElement[];
   let trioEl: HTMLInputElement;
   beforeEach((): void => {
-    consTitles = [document.createElement("div"), document.createElement("div")];
-    trioEl = document.createElement("input");
+    consTitles = [document.createElement("div") as HTMLDivElement, document.createElement("div") as HTMLDivElement];
+    trioEl = document.createElement("input") as HTMLInputElement;
     trioEl.type = "number";
     document.body.appendChild(trioEl);
-    jest.clearAllMocks();
+    jest.clearAllMocks() as typeof jest;
   });
   it("should update the text content of consTitles based on trioEl value", (): void => {
     trioEl.value = "2";
@@ -631,17 +650,17 @@ describe("switchNumConsTitles", (): void => {
     expect(consTitles[1].textContent).toBe<Appointment>("3ª Consulta");
   });
   it("should call inputNotFound when an input element inside a table is not found", (): void => {
-    document.querySelectorAll = jest.fn().mockReturnValue([document.createElement("div")]);
+    document.querySelectorAll = jest.fn().mockReturnValue([document.createElement("div") as HTMLDivElement]);
     switchNumConsTitles(consTitles, trioEl, 3, 1);
     expect(
       jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "inputNotFound")
-    ).toHaveBeenCalled();
+    ).toHaveBeenCalled() as void;
   });
   it("should call multipleElementsNotFound when invalid arguments are passed", (): void => {
     switchNumConsTitles(null as any, null as any, NaN, NaN);
     expect(
       jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "multipleElementsNotFound")
-    ).toHaveBeenCalled();
+    ).toHaveBeenCalled() as void;
   });
 });
 describe("createArraysRels", (): void => {
@@ -650,15 +669,15 @@ describe("createArraysRels", (): void => {
   beforeEach((): void => {
     const row1 = document.createElement("tr");
     const row2 = document.createElement("tr");
-    const input1 = document.createElement("input");
+    const input1 = document.createElement("input") as HTMLInputElement;
     input1.id = "input_1";
-    const input2 = document.createElement("input");
+    const input2 = document.createElement("input") as HTMLInputElement;
     input2.id = "input_2";
     row1.appendChild(input1);
     row2.appendChild(input2);
     arrayRows = [row1, row2];
     protocolValue = "pollock3";
-    jest.clearAllMocks();
+    jest.clearAllMocks() as typeof jest;
   });
   it("should correctly calculate the sum of input values", (): void => {
     if (arrayRows[0].querySelector("input")) arrayRows[0].querySelector("input")!.value = "10";
@@ -672,14 +691,14 @@ describe("createArraysRels", (): void => {
     createArraysRels(null as any, "", "");
     expect(
       jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "multipleElementsNotFound")
-    ).toHaveBeenCalled();
+    ).toHaveBeenCalled() as void;
   });
 });
 describe("getConsultasNums", (): void => {
   let arrayRow: HTMLTableRowElement;
   beforeEach((): void => {
     arrayRow = document.createElement("tr");
-    jest.clearAllMocks();
+    jest.clearAllMocks() as typeof jest;
   });
   it("should return an array of consulta numbers extracted from innerText", (): void => {
     arrayRow.innerText = "Consulta 123";
@@ -693,6 +712,6 @@ describe("getConsultasNums", (): void => {
     getConsultasNums(null as any);
     expect(
       jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "elementNotFound")
-    ).toHaveBeenCalled();
+    ).toHaveBeenCalled() as void;
   });
 });

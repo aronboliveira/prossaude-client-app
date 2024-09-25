@@ -10,7 +10,7 @@ jest.mock(
   } => ({
     handleDelete: jest.fn<void, [string, boolean]>(),
   })
-);
+) as typeof jest;
 jest.mock(
   "../../../../lib/global/gStyleScript",
   (): {
@@ -18,7 +18,7 @@ jest.mock(
   } => ({
     isClickOutside: jest.fn<boolean[], [MouseEvent, HTMLElement]>().mockReturnValue([true]),
   })
-);
+) as typeof jest;
 jest.mock(
   "../../../../lib/global/handlers/gHandlers",
   (): {
@@ -26,7 +26,7 @@ jest.mock(
   } => ({
     syncAriaStates: jest.fn<void, HTMLElement[]>(),
   })
-);
+) as typeof jest;
 describe("ExcludeDlg Component", (): void => {
   const defaultProps: ExcludeDlgProps = {
     route: "ag",
@@ -42,44 +42,48 @@ describe("ExcludeDlg Component", (): void => {
     render(<ExcludeDlg {...defaultProps} {...props} />);
 
   test("renders the modal dialog when shouldDisplayExcludeDlg is true", (): void => {
-    renderComponent();
-    expect(screen.getByRole<HTMLDialogElement>("alertdialog")).toBeInTheDocument();
-    expect(screen.getByText<HTMLButtonElement>("Confirmar remoção?")).toBeInTheDocument();
+    renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
+    expect(screen.getByRole<HTMLDialogElement>("alertdialog")).toBeInTheDocument() as void;
+    expect(screen.getByText<HTMLButtonElement>("Confirmar remoção?")).toBeInTheDocument() as void;
     expect(
       screen.getByText<HTMLElement>("Esse processo é parcialmente ou totalmente irreversível!")
-    ).toBeInTheDocument();
+    ).toBeInTheDocument() as void;
   });
 
   test("does not render the modal dialog when shouldDisplayExcludeDlg is false", (): void => {
     renderComponent({ shouldDisplayExcludeDlg: false });
-    expect(screen.queryByRole<HTMLElement>("alertdialog")).not.toBeInTheDocument();
+    expect(screen.queryByRole<HTMLElement>("alertdialog")).not.toBeInTheDocument() as void;
   });
 
   test("calls setDisplayExcludeDlg when confirm button is clicked", (): void => {
-    renderComponent();
+    renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
     fireEvent.click(screen.getByText<HTMLButtonElement>("Confirmar"));
     expect(defaultProps.setDisplayExcludeDlg).toHaveBeenCalledWith<
       Parameters<typeof defaultProps.setDisplayExcludeDlg>
     >(false);
   });
   test("calls handleDelete when the form is submitted", (): void => {
-    renderComponent();
+    renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
     fireEvent.submit(screen.getByRole<HTMLElement>("form"));
-    expect(handleDelete).toHaveBeenCalledWith<Parameters<typeof handleDelete>>("ag", true);
+    expect(handleDelete).toHaveBeenCalledWith<Parameters<typeof handleDelete>>("ag", true) as void;
   });
   test("closes dialog and toggles state when clicking outside the modal", (): void => {
-    renderComponent();
+    renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
     fireEvent.click(screen.getByRole<HTMLDialogElement>("alertdialog"));
     expect(defaultProps.setDisplayExcludeDlg).toHaveBeenCalledWith<
       Parameters<typeof defaultProps.setDisplayExcludeDlg>
     >(false);
   });
   test("syncs aria states on mount", (): void => {
-    renderComponent();
-    expect(require("../../../../lib/global/handlers/gHandlers").syncAriaStates).toHaveBeenCalled();
+    renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
+    expect(require("../../../../lib/global/handlers/gHandlers").syncAriaStates).toHaveBeenCalled() as void;
   });
   test("adds keydown event listener for Escape key to close dialog", (): void => {
-    const { container }: { container: HTMLElement } = renderComponent();
+    const { container }: { container: HTMLElement } = renderComponent() as RenderResult<
+      typeof import("@testing-library/dom/types/queries"),
+      HTMLElement,
+      HTMLElement
+    >;
     fireEvent.keyDown(container, { key: "Escape" });
     expect(defaultProps.setDisplayExcludeDlg).toHaveBeenCalledWith<
       Parameters<typeof defaultProps.setDisplayExcludeDlg>
@@ -93,10 +97,10 @@ describe("ExcludeDlg Component", (): void => {
       } => ({
         ErrorBoundary: jest.fn<never, []>().mockImplementation((): never => {
           throw new Error("Test Error");
-        }),
+        }) as jest.Mock,
       })
     );
-    renderComponent();
-    expect(screen.getByText<HTMLElement>("Erro carregando a janela modal!")).toBeInTheDocument();
+    renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
+    expect(screen.getByText<HTMLElement>("Erro carregando a janela modal!")).toBeInTheDocument() as void;
   });
 });

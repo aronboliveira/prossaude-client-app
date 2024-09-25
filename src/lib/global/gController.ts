@@ -10,27 +10,15 @@ import {
   elementNotPopulated,
 } from "./handlers/errorHandler";
 
-export function getGlobalEls(
-  isAutocorrectOn: boolean = true,
-  context: string = "notNum"
-): boolean {
-  const textConts = [
-    ...document.querySelectorAll("textarea"),
-    ...document.querySelectorAll('input[type="text"]'),
-  ];
-  const radioInps = Array.from(
-    document.querySelectorAll('input[type="radio"]')
-  );
-  const dateBtns = Array.from(
-    document.querySelectorAll('button[id$="DatBtn"]')
-  );
+export function getGlobalEls(isAutocorrectOn: boolean = true, context: string = "notNum"): boolean {
+  const textConts = [...document.querySelectorAll("textarea"), ...document.querySelectorAll('input[type="text"]')];
+  const radioInps = Array.from(document.querySelectorAll('input[type="radio"]'));
+  const dateBtns = Array.from(document.querySelectorAll('button[id$="DatBtn"]'));
   const deactAutocorrectBtns = [
     ...document.querySelectorAll('button[id^="deactAutocorrectBtn"]'),
     ...document.querySelectorAll('input[id^="deactAutocorrectBtn"]'),
   ];
-  const astDigtBtns = Array.from(
-    document.querySelectorAll('button[id$="AstDigtBtn')
-  );
+  const astDigtBtns = Array.from(document.querySelectorAll('button[id$="AstDigtBtn'));
   const resetFormBtn = document.getElementById("resetFormBtn");
   textConts?.length > 0
     ? addListenerTexts(textConts, isAutocorrectOn)
@@ -50,35 +38,20 @@ export function getGlobalEls(
       )
     : elementNotFound(resetFormBtn, "resetFormBtn", extLine(new Error()));
   if (context === "num") {
-    const numInps = Array.from(
-      document.querySelectorAll('input[type="number"]')
-    );
-    numInps?.length > 0
-      ? addListenerNumInps(numInps)
-      : elementNotPopulated(numInps, "numInps", extLine(new Error()));
+    const numInps = Array.from(document.querySelectorAll('input[type="number"]'));
+    numInps?.length > 0 ? addListenerNumInps(numInps) : elementNotPopulated(numInps, "numInps", extLine(new Error()));
   }
   deactAutocorrectBtns?.length > 0
-    ? (isAutocorrectOn = addListenerAutocorrectBtns(
-        deactAutocorrectBtns,
-        isAutocorrectOn
-      ))
-    : elementNotPopulated(
-        deactAutocorrectBtns,
-        "deactAutoCorrectBtns",
-        extLine(new Error())
-      );
+    ? (isAutocorrectOn = addListenerAutocorrectBtns(deactAutocorrectBtns, isAutocorrectOn))
+    : elementNotPopulated(deactAutocorrectBtns, "deactAutoCorrectBtns", extLine(new Error()));
   return isAutocorrectOn || true;
 }
 
-export function addListenerTexts(
-  textConts: targEl[],
-  isAutocorrectOn: boolean = true
-): void {
+export function addListenerTexts(textConts: targEl[], isAutocorrectOn: boolean = true): void {
   if (textConts.every(el => el instanceof HTMLElement)) {
     textConts.forEach(textCont => {
       if (textCont?.classList.contains("autocorrect")) {
-        textCont instanceof HTMLTextAreaElement ||
-        (textCont instanceof HTMLInputElement && textCont.type === "text")
+        textCont instanceof HTMLTextAreaElement || (textCont instanceof HTMLInputElement && textCont.type === "text")
           ? textCont.addEventListener("input", (): void => {
               isAutocorrectOn = GlobalModel.checkAutoCorrect(
                 document.querySelector('button[id^="deactAutocorrectBtn"]') ||
@@ -88,9 +61,7 @@ export function addListenerTexts(
             })
           : inputNotFound(
               textCont,
-              `target textCont id ${JSON.stringify(
-                textCont?.id || "UNIDENTIFIED TEXTCONT"
-              )}`,
+              `target textCont id ${JSON.stringify(textCont?.id || "UNIDENTIFIED TEXTCONT")}`,
               extLine(new Error())
             );
       }
@@ -107,35 +78,21 @@ export function addListenerNumInps(numInps: targEl[]): void {
           })
         : inputNotFound(
             numInp,
-            `target numInp id ${JSON.stringify(
-              numInp?.id || "UNIDENTIFIED TEXTCONT"
-            )}`,
+            `target numInp id ${JSON.stringify(numInp?.id || "UNIDENTIFIED TEXTCONT")}`,
             extLine(new Error())
           );
     });
   } else console.error(`Erro validando instâncias em numInps`);
 }
 
-export function addListenerRadios(
-  radioInps: targEl[],
-  context: string = "od"
-): void {
-  if (
-    radioInps.every(el => el instanceof HTMLElement) &&
-    (context === "od" || context === "ed" || context === "ag")
-  ) {
+export function addListenerRadios(radioInps: targEl[], context: string = "od"): void {
+  if (radioInps.every(el => el instanceof HTMLElement) && (context === "od" || context === "ed" || context === "ag")) {
     radioInps.forEach(radio => {
       if (radio instanceof HTMLInputElement && radio.type === "radio") {
-        radio.addEventListener("dblclick", () =>
-          GlobalHandler.doubleClickHandler(radio)
-        );
+        radio.addEventListener("dblclick", () => GlobalHandler.doubleClickHandler(radio));
         if (context === "ed" || context === "ag") {
-          radio.addEventListener("change", (change): void =>
-            GlobalHandler.cpbInpHandler(change, radio)
-          );
-          radio.addEventListener("keydown", (keydown): void =>
-            GlobalHandler.cpbInpHandler(keydown, radio)
-          );
+          radio.addEventListener("change", (change): void => GlobalHandler.cpbInpHandler(change, radio));
+          radio.addEventListener("keydown", (keydown): void => GlobalHandler.cpbInpHandler(keydown, radio));
           context === "ag" &&
             radio.addEventListener("change", (): void =>
               GlobalHandler.deactTextInput(
@@ -145,12 +102,7 @@ export function addListenerRadios(
             );
         }
         // radio.addEventListener("touchstart", GlobalHandler.touchStartHandler);
-      } else
-        inputNotFound(
-          radio,
-          `target radio id ${radio?.id || "UNDEFINED ID RADIO"}`,
-          extLine(new Error())
-        );
+      } else inputNotFound(radio, `target radio id ${radio?.id || "UNDEFINED ID RADIO"}`, extLine(new Error()));
     });
   } else console.error(`Erro validando instâncias em radioInps`);
 }
@@ -162,80 +114,40 @@ export function addListenerDateBtns(dateBtns: targEl[]): void {
         ? dateBtn.addEventListener("click", (activation): void => {
             GlobalHandler.useCurrentDate(activation, dateBtn);
           })
-        : elementNotFound(
-            dateBtn,
-            `target dateBtn id ${dateBtn?.id || "UNDEFINED ID DATEBTN"}`,
-            extLine(new Error())
-          );
+        : elementNotFound(dateBtn, `target dateBtn id ${dateBtn?.id || "UNDEFINED ID DATEBTN"}`, extLine(new Error()));
     });
   } else console.error(`Erro validando instâncias em dateBtns`);
 }
 
-export function addListenersGenConts(
-  genElement: targEl,
-  genValue: string = "masculino"
-): string {
+export function addListenersGenConts(genElement: targEl, genValue: string = "masculino"): string {
   const genBirthRel = document.getElementById("genBirthRelId");
   const genTrans = document.getElementById("genTransId");
   const genFisAlin = document.getElementById("genFisAlinId");
-  if (
-    GlobalModel.checkAllGenConts(
-      genElement,
-      genBirthRel,
-      genTrans,
-      genFisAlin
-    ) &&
-    typeof genValue === "string"
-  ) {
-    const arrGenConts = [
-      genElement,
-      genBirthRel,
-      genTrans,
-      genFisAlin,
-    ] as entryEl[];
+  if (GlobalModel.checkAllGenConts(genElement, genBirthRel, genTrans, genFisAlin) && typeof genValue === "string") {
+    const arrGenConts = [genElement, genBirthRel, genTrans, genFisAlin] as entryEl[];
     arrGenConts.forEach(genCont => {
       genCont.addEventListener("change", (): string => {
-        genValue =
-          GlobalModel.fluxGen(arrGenConts, (genElement as entryEl)?.value) ||
-          "masculino";
+        genValue = GlobalModel.fluxGen(arrGenConts, (genElement as entryEl)?.value) || "masculino";
         return genValue || "masculino";
       });
     });
-  } else
-    multipleElementsNotFound(
-      extLine(new Error()),
-      "gen Elements",
-      genElement,
-      genBirthRel,
-      genTrans,
-      genFisAlin
-    );
+  } else multipleElementsNotFound(extLine(new Error()), "gen Elements", genElement, genBirthRel, genTrans, genFisAlin);
   return genValue || "masculino";
 }
 
-export function addListenerAutocorrectBtns(
-  deactAutocorrectBtns: targEl[],
-  isAutocorrectOn: boolean = true
-): boolean {
+export function addListenerAutocorrectBtns(deactAutocorrectBtns: targEl[], isAutocorrectOn: boolean = true): boolean {
   if (deactAutocorrectBtns.every(el => el instanceof HTMLElement)) {
     deactAutocorrectBtns.forEach(deactAutocorrectBtn => {
       deactAutocorrectBtn instanceof HTMLButtonElement ||
       (deactAutocorrectBtn instanceof HTMLInputElement &&
-        (deactAutocorrectBtn.type === "checkbox" ||
-          deactAutocorrectBtn.type === "radio"))
+        (deactAutocorrectBtn.type === "checkbox" || deactAutocorrectBtn.type === "radio"))
         ? deactAutocorrectBtn.addEventListener("click", (click): boolean => {
-            isAutocorrectOn = GlobalModel.switchAutocorrect(
-              click,
-              deactAutocorrectBtn,
-              isAutocorrectOn
-            );
+            isAutocorrectOn = GlobalModel.switchAutocorrect(click, deactAutocorrectBtn, isAutocorrectOn);
             return isAutocorrectOn;
           })
         : elementNotPopulated(
             deactAutocorrectBtns,
-            `target deactAutocorrectBtn id ${
-              deactAutocorrectBtn?.id || "UNDEFINED ID BUTTON"
-            }`,
+            `target deactAutocorrectBtn id ${deactAutocorrectBtn?.id || "UNDEFINED ID BUTTON"}`,
             extLine(new Error())
           );
     });
@@ -250,11 +162,7 @@ export function addListenerAstDigitBtns(astDigtBtns: targEl[]): void {
         ? astDigtBtn.addEventListener("click", (): void => {
             GlobalHandler.changeToAstDigit(astDigtBtn);
           })
-        : elementNotFound(
-            astDigtBtn,
-            astDigtBtn?.id || "UNDEFINED ID BUTTON",
-            extLine(new Error())
-          );
+        : elementNotFound(astDigtBtn, astDigtBtn?.id || "UNDEFINED ID BUTTON", extLine(new Error()));
     });
   } else console.error(`Erro validando instâncias em astDigtBtns`);
 }
@@ -265,15 +173,13 @@ export function addListenerExportBtn(
   namer?: HTMLElement | string | voidVal
 ): targEl {
   const btnExport =
-    (scope ?? document).querySelector(`[id*="btnExport"]`) ||
-    (scope ?? document).querySelector(`[name*="btnExport"]`);
+    (scope ?? document).querySelector(`[id*="btnExport"]`) || (scope ?? document).querySelector(`[name*="btnExport"]`);
   Array.from((scope ?? document).querySelectorAll("button")).filter(
     btn => /btnexport/gi.test(btn.id) || /exportbtn/gi.test(btn.id)
   )[0];
   if (
     btnExport instanceof HTMLButtonElement ||
-    (btnExport instanceof HTMLInputElement &&
-      (btnExport.type === "radio" || btnExport.type === "checkbox"))
+    (btnExport instanceof HTMLInputElement && (btnExport.type === "radio" || btnExport.type === "checkbox"))
   ) {
     btnExport.addEventListener("click", () => {
       try {
@@ -289,25 +195,17 @@ export function addListenerExportBtn(
         for (const el of allEntryEls) {
           if (el instanceof HTMLOutputElement) {
             arrValues.push(el?.innerText || "Nulo");
-          } else if (
-            el instanceof HTMLInputElement &&
-            (el.type === "checkbox" || el.type === "radio")
-          ) {
+          } else if (el instanceof HTMLInputElement && (el.type === "checkbox" || el.type === "radio")) {
             el.checked ? arrValues.push("Sim") : arrValues.push("Não");
           } else arrValues.push(el?.value || "Nulo");
-          arrTitles.push(
-            el?.dataset?.title || el?.id || el?.name || "Sem_titulo"
-          );
+          arrTitles.push(el?.dataset?.title || el?.id || el?.name || "Sem_titulo");
         }
 
         const editableCite = (scope ?? document).querySelector("#citeNameId");
         arrValues.push(editableCite?.textContent || "Nulo");
-        arrTitles.push(
-          (editableCite as HTMLElement)?.dataset?.title || "Sem_titulo"
-        );
+        arrTitles.push((editableCite as HTMLElement)?.dataset?.title || "Sem_titulo");
 
-        while (arrValues.length > arrTitles.length)
-          arrTitles.push("Sem título");
+        while (arrValues.length > arrTitles.length) arrTitles.push("Sem título");
         while (arrTitles.length > arrValues.length) arrValues.push("Nulo");
 
         if (arrValues.length === arrTitles.length) {
@@ -321,8 +219,7 @@ export function addListenerExportBtn(
           Object.entries(worksheet).forEach(row => {
             row.forEach((cell, i) => {
               const celLength = cell!.toString().length;
-              (!maxLengths[i] || maxLengths[i] < celLength) &&
-                (maxLengths[i] = celLength);
+              (!maxLengths[i] || maxLengths[i] < celLength) && (maxLengths[i] = celLength);
             });
           });
           worksheet["!cols"] = Object.keys(maxLengths).map(colIndex => {
@@ -340,9 +237,7 @@ export function addListenerExportBtn(
           };
           utils.book_append_sheet(wb, worksheet, "Sheet1", undefined);
           const date = new Date();
-          const fullDate = `d${date.getDate()}m${
-            date.getMonth() + 1
-          }y${date.getFullYear()}`;
+          const fullDate = `d${date.getDate()}m${date.getMonth() + 1}y${date.getFullYear()}`;
           if (namer) {
             const writeNamedFile = (namer: HTMLElement) => {
               if (
@@ -378,35 +273,21 @@ export function addListenerExportBtn(
                   undefined
                 );
               } else if (namer instanceof HTMLElement) {
-                writeFile(
-                  wb,
-                  `data_${context}_${
-                    namer.textContent?.trim() ?? ""
-                  }form_${fullDate}.xlsx`,
-                  undefined
-                );
-              } else
-                throw new Error(`namer unqualified for naming spreadsheet`);
+                writeFile(wb, `data_${context}_${namer.textContent?.trim() ?? ""}form_${fullDate}.xlsx`, undefined);
+              } else throw new Error(`namer unqualified for naming spreadsheet`);
             };
             if (typeof namer === "string") {
-              if ((scope ?? document).querySelector(namer))
-                writeNamedFile((scope ?? document).querySelector(namer)!);
+              if ((scope ?? document).querySelector(namer)) writeNamedFile((scope ?? document).querySelector(namer)!);
               else throw new Error(`Error validating namer.`);
             }
             if (typeof namer === "object") writeNamedFile(namer);
-          } else
-            writeFile(wb, `data_${context}form_${fullDate}.xlsx`, undefined);
+          } else writeFile(wb, `data_${context}form_${fullDate}.xlsx`, undefined);
         } else throw new Error(`Error validating length of data arrays`);
       } catch (error) {
         console.error("Error generating spreadsheet:", error);
       }
     });
-  } else
-    elementNotFound(
-      btnExport,
-      "argument for addListenerExportBtn()",
-      extLine(new Error())
-    );
+  } else elementNotFound(btnExport, "argument for addListenerExportBtn()", extLine(new Error()));
   return btnExport;
 }
 
@@ -414,46 +295,26 @@ export function addResetAstListener(): void {
   try {
     const resetBtn = document.getElementById("resetAstBtn");
     if (!(resetBtn instanceof HTMLButtonElement))
-      throw elementNotFound(
-        resetBtn,
-        `Button for reseting signature`,
-        extLine(new Error())
-      );
+      throw elementNotFound(resetBtn, `Button for reseting signature`, extLine(new Error()));
     resetBtn.addEventListener("click", () => {
       try {
         const divConfirm = resetBtn.closest(".divConfirm");
         if (!(divConfirm instanceof HTMLElement))
-          throw elementNotFound(
-            divConfirm,
-            `Main ancestral div for resetAstBtn`,
-            extLine(new Error())
-          );
+          throw elementNotFound(divConfirm, `Main ancestral div for resetAstBtn`, extLine(new Error()));
         const astEl = divConfirm.querySelector("#inpAstConfirmId");
-        if (
-          !(
-            astEl instanceof HTMLCanvasElement ||
-            astEl instanceof HTMLInputElement
-          )
-        )
-          throw elementNotFound(
-            astEl,
-            `Element for patient signing`,
-            extLine(new Error())
-          );
+        if (!(astEl instanceof HTMLCanvasElement || astEl instanceof HTMLInputElement))
+          throw elementNotFound(astEl, `Element for patient signing`, extLine(new Error()));
         if (astEl instanceof HTMLCanvasElement) {
-          const replaceCanvas = Object.assign(
-            document.createElement("canvas"),
-            {
-              id: "inpAstConfirmId",
-            }
-          );
+          const replaceCanvas = Object.assign(document.createElement("canvas"), {
+            id: "inpAstConfirmId",
+          });
           replaceCanvas.dataset.title = "Assinatura do Paciente";
           astEl.parentElement!.replaceChild(replaceCanvas, astEl);
           addCanvasListeners();
         }
         if (astEl instanceof HTMLInputElement) {
           const replaceInp = Object.assign(
-            Object.assign(document.createElement("input"), {
+            Object.assign(document.createElement("input") as HTMLInputElement, {
               type: "file",
               id: "inpAstConfirmId",
               accept: "image/*",
@@ -476,17 +337,9 @@ export function addResetAstListener(): void {
 export function addCustomSbListeners(container: targEl, content: targEl): void {
   try {
     if (!(container instanceof HTMLElement))
-      throw elementNotFound(
-        container,
-        `Main Element for addCustomSbListeners()`,
-        extLine(new Error())
-      );
+      throw elementNotFound(container, `Main Element for addCustomSbListeners()`, extLine(new Error()));
     if (!(content instanceof HTMLElement))
-      throw elementNotFound(
-        content,
-        `Content Element for addCustomSbListeners()`,
-        extLine(new Error())
-      );
+      throw elementNotFound(content, `Content Element for addCustomSbListeners()`, extLine(new Error()));
     const updateThumb = () => {
       const percentage = container.clientHeight / content.scrollHeight;
       const thumbHeight = percentage * container.clientHeight;
@@ -496,16 +349,15 @@ export function addCustomSbListeners(container: targEl, content: targEl): void {
       if (!isScrolling) return;
       const deltaY = e.clientY - startY;
       const percentage = deltaY / container.clientHeight;
-      container.scrollTop =
-        percentage * (content.scrollHeight - container.clientHeight);
+      container.scrollTop = percentage * (content.scrollHeight - container.clientHeight);
     };
     const onMouseUp = () => {
       isScrolling = false;
       document.removeEventListener("mousemove", onMouseMove);
       document.removeEventListener("mouseup", onMouseUp);
     };
-    const scrollbar = document.createElement("div");
-    const thumb = document.createElement("div");
+    const scrollbar = document.createElement("div") as HTMLDivElement;
+    const thumb = document.createElement("div") as HTMLDivElement;
     let isScrolling = false;
     let startY = 0;
 
@@ -532,11 +384,7 @@ export function addCanvasListeners(): void {
   try {
     const canvas = document.getElementById("inpAstConfirmId");
     if (!(canvas instanceof HTMLCanvasElement))
-      throw elementNotFound(
-        canvas,
-        `Canvas for executing addCanvasListeners()`,
-        extLine(new Error())
-      );
+      throw elementNotFound(canvas, `Canvas for executing addCanvasListeners()`, extLine(new Error()));
     canvas.width = innerWidth;
     addEventListener("resize", () => {
       canvas.width = innerWidth;
@@ -598,32 +446,14 @@ export function watchLabels(): void {
     try {
       document.querySelectorAll("label").forEach(label => {
         label.dataset[`watched`] = "true";
-        let relInp: targEl =
-          label.querySelector("input") ?? label.querySelector("textarea");
-        if (
-          !(
-            relInp instanceof HTMLInputElement ||
-            relInp instanceof HTMLTextAreaElement
-          )
-        )
+        let relInp: targEl = label.querySelector("input") ?? label.querySelector("textarea");
+        if (!(relInp instanceof HTMLInputElement || relInp instanceof HTMLTextAreaElement))
           relInp = label.nextElementSibling;
-        if (
-          !(
-            relInp instanceof HTMLInputElement ||
-            relInp instanceof HTMLTextAreaElement
-          )
-        )
+        if (!(relInp instanceof HTMLInputElement || relInp instanceof HTMLTextAreaElement))
           relInp = label.previousElementSibling;
         if (!label.parentElement) return;
-        if (
-          !(
-            relInp instanceof HTMLInputElement ||
-            relInp instanceof HTMLTextAreaElement
-          )
-        )
-          relInp =
-            label.parentElement.querySelector("input") ??
-            label.parentElement.querySelector("textarea");
+        if (!(relInp instanceof HTMLInputElement || relInp instanceof HTMLTextAreaElement))
+          relInp = label.parentElement.querySelector("input") ?? label.parentElement.querySelector("textarea");
         if (!relInp) return;
         if (relInp.id === "" && label.htmlFor === "") {
           const labelNum = document.querySelectorAll("label").length;
@@ -632,9 +462,7 @@ export function watchLabels(): void {
         if (label.htmlFor !== relInp.id) label.htmlFor = relInp.id;
       });
     } catch (e) {
-      console.error(
-        `Error executing interval for watchLabels:\n${(e as Error).message}`
-      );
+      console.error(`Error executing interval for watchLabels:\n${(e as Error).message}`);
     }
   }, 3000);
 }

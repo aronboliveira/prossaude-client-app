@@ -9,11 +9,11 @@ describe("GenericErrorComponent", (): void => {
   test("renders with a custom error message", (): void => {
     const customMessage = "Custom error occurred";
     renderComponent(customMessage);
-    expect(screen.getByText<HTMLHeadingElement>(/Oops, algo deu errado!/i)).toBeInTheDocument();
-    expect(screen.getByText<HTMLHeadingElement>(customMessage)).toBeInTheDocument();
+    expect(screen.getByText<HTMLHeadingElement>(/Oops, algo deu errado!/i)).toBeInTheDocument() as void;
+    expect(screen.getByText<HTMLHeadingElement>(customMessage)).toBeInTheDocument() as void;
   });
   test("renders with default error message when message is undefined", (): void => {
-    renderComponent();
-    expect(screen.getByText<HTMLHeadingElement>("Erro indefinido")).toBeInTheDocument();
+    renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
+    expect(screen.getByText<HTMLHeadingElement>("Erro indefinido")).toBeInTheDocument() as void;
   });
 });

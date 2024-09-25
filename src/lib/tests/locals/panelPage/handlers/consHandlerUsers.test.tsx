@@ -12,10 +12,10 @@ jest.mock(
     typeError: jest.fn(),
     elementNotPopulated: jest.fn(),
   })
-);
+) as typeof jest;
 describe("handleClientPermissions", (): void => {
   beforeEach((): void => {
-    jest.clearAllMocks();
+    jest.clearAllMocks() as typeof jest;
     document.body.innerHTML = "";
   });
   test("should disable elements if userClass is not in allowedClasses", (): void => {
@@ -75,8 +75,8 @@ describe("handleClientPermissions", (): void => {
       document.getElementById("datalist1") as HTMLDataListElement,
       document.getElementById("table1") as HTMLTableElement
     );
-    expect(document.getElementById("datalist1")).toBeTruthy();
-    expect(document.getElementById("table1")).toBeTruthy();
+    expect(document.getElementById("datalist1")).toBeTruthy() as void;
+    expect(document.getElementById("table1")).toBeTruthy() as void;
   });
   test("should throw a typeError if userClass is not a string", (): void => {
     handleClientPermissions(123 as any, ["coordenador"]);
@@ -104,9 +104,9 @@ describe("handleClientPermissions", (): void => {
     );
   });
   test("should log an error if an unexpected error occurs", (): void => {
-    const consoleSpy = jest.spyOn<Console, ConsoleMethod>(console, "error").mockImplementation();
+    const consoleSpy = jest.spyOn<Console, ConsoleMethod>(console, "error").mockImplementation() as jest.SpyInstance;
     handleClientPermissions(null as any);
-    expect(consoleSpy).toHaveBeenCalledWith<[any]>(expect.stringContaining("ERROR:"));
-    consoleSpy.mockRestore();
+    expect(consoleSpy).toHaveBeenCalledWith<[any]>(expect.stringContaining("ERROR:")) as void;
+    consoleSpy.mockRestore() as void;
   });
 });

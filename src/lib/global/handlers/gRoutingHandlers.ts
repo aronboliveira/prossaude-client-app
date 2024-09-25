@@ -2,39 +2,23 @@ import { elementNotFound, extLine } from "./errorHandler";
 import { pageCases, pageStyleCases } from "../declarations/types";
 import { decodeToken } from "@/pages/api/ts/handlers";
 import { pageProps } from "../vars";
-export function handleLinkChanges(
-  componentCase: pageCases,
-  styleFlag: pageStyleCases
-): void {
+export function handleLinkChanges(componentCase: pageCases, styleFlag: pageStyleCases): void {
   try {
     if (!decodeToken("", true).ok) {
       console.warn(`User token invalid. Redirecting to base page`);
       window.location.replace(window.location.origin);
     }
-    if (typeof componentCase !== "string")
-      throw new Error(
-        `invalid componentCase argument given to handleLinkChanges`
-      );
-    if (typeof styleFlag !== "string")
-      throw new Error(`invalid StyleFlag given to handleLinkChanges`);
+    if (typeof componentCase !== "string") throw new Error(`invalid componentCase argument given to handleLinkChanges`);
+    if (typeof styleFlag !== "string") throw new Error(`invalid StyleFlag given to handleLinkChanges`);
     const heads = document.querySelectorAll("head");
-    if (heads.length > 1)
-      for (let i = 0; i < heads.length; i++) i > 0 && heads[i].remove();
+    if (heads.length > 1) for (let i = 0; i < heads.length; i++) i > 0 && (heads[i].remove() as void);
     const noscript = document.querySelector("noscript");
-    if (
-      noscript instanceof HTMLElement &&
-      noscript.tagName === "NOSCRIPT" &&
-      noscript.innerText === ""
-    )
+    if (noscript instanceof HTMLElement && noscript.tagName === "NOSCRIPT" && noscript.innerText === "")
       noscript.innerText = "You need JavaScript to run this application.";
     try {
       const head = document.querySelector("head");
-      if (!(head instanceof HTMLHeadElement))
-        throw elementNotFound(head, `<head>`, extLine(new Error()));
-      if (
-        !head.querySelector('meta[charset="utf-8"]') &&
-        !head.querySelector('meta[charset="UTF-8"]')
-      )
+      if (!(head instanceof HTMLHeadElement)) throw elementNotFound(head, `<head>`, extLine(new Error()));
+      if (!head.querySelector('meta[charset="utf-8"]') && !head.querySelector('meta[charset="UTF-8"]'))
         head.prepend(
           Object.assign(document.createElement("meta"), {
             charSet: "UTF-8",
@@ -45,15 +29,11 @@ export function handleLinkChanges(
         head.prepend(
           Object.assign(document.createElement("meta"), {
             name: "viewport",
-            content:
-              "width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=3.0, user-scalable=yes",
+            content: "width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=3.0, user-scalable=yes",
             id: "viewportMeta",
           })
         );
-      if (
-        !head.querySelector('meta[content="IE=edge"]') &&
-        !head.querySelector('meta[content="IE=Edge"]')
-      ) {
+      if (!head.querySelector('meta[content="IE=edge"]') && !head.querySelector('meta[content="IE=Edge"]')) {
         head.prepend(
           Object.assign(document.createElement("meta"), {
             httEquip: "X-UA-Compatible",
@@ -62,19 +42,14 @@ export function handleLinkChanges(
           })
         );
       }
-      if (
-        head.hasChildNodes() &&
-        head.lastElementChild &&
-        head.firstElementChild
-      ) {
-        for (const title of head.querySelectorAll("title")) title.remove();
+      if (head.hasChildNodes() && head.lastElementChild && head.firstElementChild) {
+        for (const title of head.querySelectorAll("title")) title.remove() as void;
         for (const favicon of [
           ...head.querySelectorAll('link[rel="icon"]'),
           ...head.querySelectorAll('link[rel="apple-touch-icon"]'),
         ])
-          favicon.remove();
-        for (const canonical of head.querySelectorAll('link[rel="canonical"]'))
-          canonical.remove();
+          favicon.remove() as void;
+        for (const canonical of head.querySelectorAll('link[rel="canonical"]')) canonical.remove() as void;
         head.querySelectorAll("meta").forEach((meta, m) => {
           try {
             if (
@@ -82,20 +57,14 @@ export function handleLinkChanges(
               /property="og:/gi.test(meta.outerHTML) ||
               /name="twitter:/gi.test(meta.outerHTML)
             )
-              meta.remove();
+              meta.remove() as void;
           } catch (e) {
-            console.error(
-              `Error executing iteration ${m} for removing local meta tags:${
-                (e as Error).message
-              }`
-            );
+            console.error(`Error executing iteration ${m} for removing local meta tags:${(e as Error).message}`);
           }
         });
         const { base, firstPub, name } = pageProps;
         let origin = pageProps.origin;
-        origin = location.origin.endsWith("/")
-          ? location.origin.slice(0, -1)
-          : location.origin;
+        origin = location.origin.endsWith("/") ? location.origin.slice(0, -1) : location.origin;
         switch (componentCase) {
           case "login": {
             const title = "Login — PROSSaúde";
@@ -417,10 +386,8 @@ export function handleLinkChanges(
           const element = headElements[i];
           let elementId = element.id;
           if (!elementId) {
-            if (element instanceof HTMLScriptElement && element.src !== "")
-              elementId = element.src;
-            else if (element instanceof HTMLLinkElement && element.href !== "")
-              elementId = element.href;
+            if (element instanceof HTMLScriptElement && element.src !== "") elementId = element.src;
+            else if (element instanceof HTMLLinkElement && element.href !== "") elementId = element.href;
             else if (element instanceof HTMLMetaElement) {
               if (element.name !== "") elementId = element.name;
               else if (element.httpEquiv !== "") elementId = element.httpEquiv;
@@ -434,24 +401,18 @@ export function handleLinkChanges(
             const existingAttrCount = existingElement.attributes.length;
             if (currentAttrCount > existingAttrCount) {
               elementsById.set(elementId, element);
-              existingElement.remove();
+              existingElement.remove() as void;
             } else if (currentAttrCount === existingAttrCount) {
-              existingElement.remove();
+              existingElement.remove() as void;
               elementsById.set(elementId, element);
-            } else element.remove();
+            } else element.remove() as void;
           } else elementsById.set(elementId, element);
         }
       }
     } catch (e) {
-      console.error(
-        `Error executing procedure for checking local links and metas:\n${
-          (e as Error).message
-        }`
-      );
+      console.error(`Error executing procedure for checking local links and metas:\n${(e as Error).message}`);
     }
   } catch (e) {
-    console.error(
-      `Error executing handleLinkChanges:\n${(e as Error).message}`
-    );
+    console.error(`Error executing handleLinkChanges:\n${(e as Error).message}`);
   }
 }

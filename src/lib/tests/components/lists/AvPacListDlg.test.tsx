@@ -1,17 +1,25 @@
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, RenderResult } from "@testing-library/react";
 import AvPacListDlg from "../../../../../components/lists/AvPacListDlg";
 import "@testing-library/jest-dom/extend-expect";
 jest.mock(
   "../../../../../components/consRegst/ErrorFallbackDlg",
   (): (() => JSX.Element) => (): JSX.Element => <div>ErrorFallbackDlg</div>
-);
+) as typeof jest;
 jest.mock(
   "../../../../../components/consRegst/PacList",
   (): (() => JSX.Element) => (): JSX.Element => <div>PacList</div>
-);
+) as typeof jest;
 describe("AvPacListDlg Component", (): void => {
   const mockDispatch: jest.Mock<any, any, any> = jest.fn();
-  const defaultProps = {
+  const defaultProps: {
+    dispatch: jest.Mock<any, any, any>;
+    state: boolean;
+    shouldShowAlocBtn: boolean;
+    userClass: string;
+    mainDlgRef: {
+      current: HTMLDialogElement;
+    };
+  } = {
     dispatch: mockDispatch,
     state: true,
     shouldShowAlocBtn: true,
@@ -31,16 +39,16 @@ describe("AvPacListDlg Component", (): void => {
       />
     );
   test("renders PacList component", async (): Promise<void> => {
-    renderComponent();
-    expect(screen.getByText<HTMLElement>(/PacList/i)).toBeInTheDocument();
+    renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
+    expect(screen.getByText<HTMLElement>(/PacList/i)).toBeInTheDocument() as void;
   });
   test("calls dispatch when close button is clicked", async (): Promise<void> => {
-    renderComponent();
+    renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
     fireEvent.click(screen.getByRole<HTMLButtonElement>("button", { name: "" }));
-    expect(mockDispatch).toHaveBeenCalledWith<Parameters<typeof mockDispatch>>(!defaultProps.state);
+    expect(mockDispatch).toHaveBeenCalledWith<Parameters<typeof mockDispatch>>(!defaultProps.state) as void;
   });
   test("renders the ErrorFallbackDlg when an error occurs", async (): Promise<void> => {
-    renderComponent();
-    expect(screen.getByText<HTMLDialogElement>(/ErrorFallbackDlg/i)).toBeInTheDocument();
+    renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
+    expect(screen.getByText<HTMLDialogElement>(/ErrorFallbackDlg/i)).toBeInTheDocument() as void;
   });
 });

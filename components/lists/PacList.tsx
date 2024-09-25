@@ -73,7 +73,7 @@ export default function PacList({
                     if (tbodyRef.current.querySelector("tr")) return;
                     panelRoots[`${tbodyRef.current.id}`]?.unmount();
                     delete panelRoots[`${tbodyRef.current.id}`];
-                    tbodyRef.current.remove();
+                    tbodyRef.current.remove() as void;
                     if (!panelRoots[`${tabPacRef.current.id}`])
                       panelRoots[`${tabPacRef.current.id}`] = createRoot(tabPacRef.current);
                     panelRoots[`${tabPacRef.current.id}`]?.render(

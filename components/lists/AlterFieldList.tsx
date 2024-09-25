@@ -135,7 +135,7 @@ export default function AlterFieldList({
         console.error(
           `Error generating options for <select> reflecting headers. Abort process and replacing by <input>`
         );
-        const replaceInp = document.createElement("input");
+        const replaceInp = document.createElement("input") as HTMLInputElement;
         Object.assign(replaceInp, optsRef.current);
         Object.assign(replaceInp.style, optsRef.current);
         replaceInp.classList.add(...optsRef.current.classList);
@@ -182,7 +182,7 @@ export default function AlterFieldList({
                 onChange={ev => {
                   handleChange(ev.currentTarget);
                   setChosenOp(ev.currentTarget.value);
-                  const newValueOpt = document.createElement("input");
+                  const newValueOpt = document.createElement("input") as HTMLInputElement;
                   Object.assign(newValueOpt, {
                     type: "text",
                     id: "newValueOpt",
@@ -216,7 +216,7 @@ export default function AlterFieldList({
                         });
                         break;
                       case "e-mail":
-                        const newValueEmailOpt = document.createElement("input");
+                        const newValueEmailOpt = document.createElement("input") as HTMLInputElement;
                         Object.assign(newValueEmailOpt, {
                           type: "email",
                           id: "newValueOpt",
@@ -236,7 +236,7 @@ export default function AlterFieldList({
                         });
                         break;
                       case "telefone":
-                        const newValueTelOpt = document.createElement("input");
+                        const newValueTelOpt = document.createElement("input") as HTMLInputElement;
                         Object.assign(newValueTelOpt, {
                           type: "tel",
                           id: "newValueOpt",
@@ -253,7 +253,7 @@ export default function AlterFieldList({
                         });
                         break;
                       case "assinatura":
-                        const newValueFileOpt = document.createElement("input");
+                        const newValueFileOpt = document.createElement("input") as HTMLInputElement;
                         Object.assign(newValueFileOpt, {
                           type: "file",
                           accept: "image/*,.pdf",

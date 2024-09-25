@@ -8,9 +8,9 @@ jest.mock(
   } => ({
     ErrorBoundary: jest
       .fn()
-      .mockImplementation(({ children }: { children: JSX.Element[] }): JSX.Element => <>{children}</>),
+      .mockImplementation(({ children }: { children: JSX.Element[] }): JSX.Element => <>{children}</>) as jest.Mock,
   })
-);
+) as typeof jest;
 jest.mock(
   "../../../../../components/error/GenericErrorComponent",
   (): {
@@ -20,7 +20,7 @@ jest.mock(
     __esModule: true,
     default: (): JSX.Element => <div>GenericErrorComponent</div>,
   })
-);
+) as typeof jest;
 jest.mock(
   "../../../../../components/prevCons/PrevConsRow",
   (): {
@@ -34,7 +34,7 @@ jest.mock(
       </tr>
     ),
   })
-);
+) as typeof jest;
 describe("PrevConsList Component", (): void => {
   const mockDispatch = jest.fn();
   const defaultProps: {
@@ -76,22 +76,22 @@ describe("PrevConsList Component", (): void => {
       />
     );
   beforeEach((): void => {
-    jest.clearAllMocks();
+    jest.clearAllMocks() as typeof jest;
   });
   test("renders the dialog and table with historic data", async (): Promise<void> => {
-    renderComponent();
+    renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
     await waitFor((): void => {
-      expect(screen.getByRole<HTMLDialogElement>("dialog")).toBeInTheDocument();
+      expect(screen.getByRole<HTMLDialogElement>("dialog")).toBeInTheDocument() as void;
       expect(screen.getAllByText<HTMLTableRowElement>(/PrevConsRow/)).toHaveLength(2);
     });
   });
   test("calls dispatch when close button is clicked", async (): Promise<void> => {
-    renderComponent();
+    renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
     fireEvent.click(screen.getByRole<HTMLButtonElement>("button"));
-    expect(mockDispatch).toHaveBeenCalledWith<Parameters<typeof mockDispatch>>(!defaultProps.state);
+    expect(mockDispatch).toHaveBeenCalledWith<Parameters<typeof mockDispatch>>(!defaultProps.state) as void;
   });
   test("renders GenericErrorComponent on error", async (): Promise<void> => {
-    jest.spyOn<Console, "error">(console, "error").mockImplementation((): void => {});
+    jest.spyOn<Console, "error">(console, "error").mockImplementation((): void => {}) as jest.SpyInstance;
     jest.mock(
       "../../../../../components/error/GenericErrorComponent",
       (): {
@@ -101,8 +101,8 @@ describe("PrevConsList Component", (): void => {
         __esModule: true,
         default: (): JSX.Element => <div>GenericErrorComponent</div>,
       })
-    );
-    renderComponent();
-    expect(screen.getByText<HTMLElement>("GenericErrorComponent")).toBeInTheDocument();
+    ) as typeof jest;
+    renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
+    expect(screen.getByText<HTMLElement>("GenericErrorComponent")).toBeInTheDocument() as void;
   });
 });

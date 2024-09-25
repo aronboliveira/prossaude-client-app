@@ -5,9 +5,9 @@ describe("addDblQuotes", (): void => {
   let inputElement: HTMLInputElement;
   let textareaElement: HTMLTextAreaElement;
   beforeEach((): void => {
-    inputElement = document.createElement("input");
+    inputElement = document.createElement("input") as HTMLInputElement;
     textareaElement = document.createElement("textarea");
-    jest.clearAllMocks();
+    jest.clearAllMocks() as typeof jest;
   });
   it("should add double quotes to an empty input field and set cursor between the quotes", (): void => {
     inputElement.value = "";
@@ -34,10 +34,14 @@ describe("addDblQuotes", (): void => {
     expect(textareaElement.value).toBe<string>("textarea test");
   });
   it("should call inputNotFound when element is not input or textarea", (): void => {
-    const divElement = document.createElement("div");
+    const divElement = document.createElement("div") as HTMLDivElement;
     addDblQuotes(divElement as any);
     expect(
       jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "inputNotFound")
-    ).toHaveBeenCalledWith<[HTMLElement, string, any]>(divElement, "UNDEFINED ID QUOTED CONTAINER", expect.any(String));
+    ).toHaveBeenCalledWith<[HTMLElement, string, any]>(
+      divElement,
+      "UNDEFINED ID QUOTED CONTAINER",
+      expect.any(String) as any
+    );
   });
 });

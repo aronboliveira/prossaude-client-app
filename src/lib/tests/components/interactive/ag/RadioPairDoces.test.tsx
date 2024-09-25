@@ -9,16 +9,16 @@ jest.mock(
   } => ({
     opRadioHandler: jest.fn(),
   })
-);
+) as typeof jest;
 describe("RadioPairDoces", (): void => {
   it("renders two radio buttons for Yes and No", (): void => {
     render(<RadioPairDoces />);
-    expect(screen.getByLabelText<HTMLInputElement>("Sim")).toBeInTheDocument();
-    expect(screen.getByLabelText<HTMLInputElement>("Não")).toBeInTheDocument();
+    expect(screen.getByLabelText<HTMLInputElement>("Sim")).toBeInTheDocument() as void;
+    expect(screen.getByLabelText<HTMLInputElement>("Não")).toBeInTheDocument() as void;
   });
   it("calls opRadioHandler on keydown for radio buttons", (): void => {
     render(<RadioPairDoces />);
     userEvent.type(screen.getByLabelText<HTMLInputElement>("Sim"), "{enter}");
-    expect(opRadioHandler).toHaveBeenCalled();
+    expect(opRadioHandler).toHaveBeenCalled() as void;
   });
 });

@@ -9,18 +9,18 @@ jest.mock(
   } => ({
     addDblQuotes: jest.fn(),
   })
-);
+) as typeof jest;
 describe("QxPrinc", (): void => {
   it("renders the textarea input", (): void => {
     render(<QxPrinc />);
-    expect(screen.getByPlaceholderText<HTMLTextAreaElement>("Escreva aqui a(s) queixa(s)")).toBeInTheDocument();
+    expect(screen.getByPlaceholderText<HTMLTextAreaElement>("Escreva aqui a(s) queixa(s)")).toBeInTheDocument() as void;
   });
   it("calls addDblQuotes on input and click events", (): void => {
     render(<QxPrinc />);
     const textarea = screen.getByPlaceholderText<HTMLTextAreaElement>("Escreva aqui a(s) queixa(s)");
     userEvent.type(textarea, "test");
     userEvent.click(textarea);
-    expect(addDblQuotes).toHaveBeenCalledTimes(2);
-    expect(addDblQuotes).toHaveBeenCalledWith<Parameters<typeof addDblQuotes>>(textarea);
+    expect(addDblQuotes).toHaveBeenCalledTimes(2) as void;
+    expect(addDblQuotes).toHaveBeenCalledWith<Parameters<typeof addDblQuotes>>(textarea) as void;
   });
 });

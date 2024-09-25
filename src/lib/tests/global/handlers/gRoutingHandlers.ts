@@ -11,7 +11,7 @@ jest.mock(
   } => ({
     decodeToken: jest.fn(),
   })
-);
+) as typeof jest;
 jest.mock(
   "../../../global/handlers/errorHandler",
   (): {
@@ -21,7 +21,7 @@ jest.mock(
     elementNotFound: jest.fn(),
     extLine: jest.fn().mockReturnValue("test-line"),
   })
-);
+) as typeof jest;
 describe("handleLinkChanges", (): void => {
   beforeEach((): void => {
     document.head.innerHTML = "";
@@ -32,10 +32,10 @@ describe("handleLinkChanges", (): void => {
     (decodeToken as jest.Mock).mockReturnValue({ ok: false });
     const locationReplaceSpy = jest
       .spyOn<Location, LocationMethod>(window.location, "replace")
-      .mockImplementation((): void => {});
+      .mockImplementation((): void => {}) as jest.SpyInstance;
     handleLinkChanges("login", "Login Page Style");
-    expect(locationReplaceSpy).toHaveBeenCalledWith<[string]>(window.location.origin);
-    locationReplaceSpy.mockRestore();
+    expect(locationReplaceSpy).toHaveBeenCalledWith<[string]>(window.location.origin) as void;
+    locationReplaceSpy.mockRestore() as void;
   });
   it("should throw an error if componentCase is not a string", (): void => {
     expect((): void => handleLinkChanges(123 as any, "Login Page Style")).toThrow(
@@ -66,7 +66,7 @@ describe("handleLinkChanges", (): void => {
   });
   it("should throw an error if <head> is not found", (): void => {
     handleLinkChanges("login", "Login Page Style");
-    expect(elementNotFound).toHaveBeenCalled();
+    expect(elementNotFound).toHaveBeenCalled() as void;
     jest
       .spyOn<Console, ConsoleMethod>(console, "error")
       .mockImplementation((): void => {})
@@ -76,9 +76,9 @@ describe("handleLinkChanges", (): void => {
     const head = document.createElement("head");
     document.documentElement.appendChild(head);
     handleLinkChanges("login", "Login Page Style");
-    expect(head.querySelector('meta[charset="UTF-8"]')).toBeTruthy();
-    expect(head.querySelector('meta[name="viewport"]')).toBeTruthy();
-    expect(head.querySelector('meta[content="IE=edge"]')).toBeTruthy();
+    expect(head.querySelector('meta[charset="UTF-8"]')).toBeTruthy() as void;
+    expect(head.querySelector('meta[name="viewport"]')).toBeTruthy() as void;
+    expect(head.querySelector('meta[content="IE=edge"]')).toBeTruthy() as void;
   });
 
   it('should insert title and meta tags for "login" case', (): void => {
@@ -172,9 +172,9 @@ describe("handleLinkChanges", (): void => {
     document.documentElement.appendChild(head);
     const consoleErrorSpy = jest.spyOn<Console, ConsoleMethod>(console, "error").mockImplementation((): void => {
       throw new Error("meta tag error");
-    });
+    }) as jest.Mock;
     handleLinkChanges("login", "Login Page Style");
-    expect(consoleErrorSpy).toHaveBeenCalledWith<[any]>(expect.stringContaining("Error executing iteration"));
-    consoleErrorSpy.mockRestore();
+    expect(consoleErrorSpy).toHaveBeenCalledWith<[any]>(expect.stringContaining("Error executing iteration")) as void;
+    consoleErrorSpy.mockRestore() as void;
   });
 });

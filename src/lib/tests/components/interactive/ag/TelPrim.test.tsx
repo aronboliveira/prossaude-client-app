@@ -10,7 +10,7 @@ jest.mock(
   } => ({
     formatTel: jest.fn(),
   })
-);
+) as typeof jest;
 jest.mock(
   "../../../../../lib/global/handlers/gHandlers",
   (): {
@@ -18,17 +18,17 @@ jest.mock(
   } => ({
     handleEventReq: jest.fn(),
   })
-);
+) as typeof jest;
 describe("TelPrim", (): void => {
   it("renders a text input for primary phone number", (): void => {
     render(<TelPrim />);
-    expect(screen.getByRole<HTMLInputElement>("textbox")).toBeInTheDocument();
+    expect(screen.getByRole<HTMLInputElement>("textbox")).toBeInTheDocument() as void;
   });
   it("calls formatTel and handleEventReq on input", (): void => {
     render(<TelPrim />);
     const input = screen.getByRole<HTMLInputElement>("textbox");
     userEvent.type(input, "12345678");
-    expect(formatTel).toHaveBeenCalledWith<Parameters<typeof formatTel>>(input, false);
-    expect(handleEventReq).toHaveBeenCalledWith<Parameters<typeof handleEventReq>>(input);
+    expect(formatTel).toHaveBeenCalledWith<Parameters<typeof formatTel>>(input, false) as void;
+    expect(handleEventReq).toHaveBeenCalledWith<Parameters<typeof handleEventReq>>(input) as void;
   });
 });

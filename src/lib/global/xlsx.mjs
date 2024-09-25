@@ -3203,7 +3203,7 @@ function write_dl(fname/*:string*/, payload/*:any*/, enc/*:?string*/) {
 			var a = document.createElement("a");
 			if(a.download != null) {
 				/*:: if(document.body == null) throw new Error("unreachable"); */
-				a.download = fname; a.href = url; document.body.appendChild(a); a.click();
+				a.download = fname; a.href = url; document.body.appendChild(a); a.click() as void;
 				/*:: if(document.body == null) throw new Error("unreachable"); */ document.body.removeChild(a);
 				if(URL.revokeObjectURL && typeof setTimeout !== 'undefined') setTimeout(function() { URL.revokeObjectURL(url); }, 60000);
 				return url;

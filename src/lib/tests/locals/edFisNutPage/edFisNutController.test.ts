@@ -21,7 +21,7 @@ jest.mock(
   } => ({
     parseNotNaN: jest.fn(),
   })
-);
+) as typeof jest;
 jest.mock(
   "../../../global/handlers/gHandlers",
   (): {
@@ -29,7 +29,7 @@ jest.mock(
   } => ({
     updateSimpleProperty: jest.fn(),
   })
-);
+) as typeof jest;
 jest.mock(
   "../../../locals/edFisNutPage/edFisNutHandler",
   (): {
@@ -37,7 +37,7 @@ jest.mock(
   } => ({
     switchRowComorb: jest.fn(),
   })
-);
+) as typeof jest;
 jest.mock(
   "../../../locals/edFisNutPage/edFisNutModel",
   (): {
@@ -45,11 +45,11 @@ jest.mock(
   } => ({
     checkInnerColGroups: jest.fn(),
   })
-);
+) as typeof jest;
 describe("formatValue", (): void => {
   let targetInput: HTMLInputElement;
   beforeEach((): void => {
-    targetInput = document.createElement("input");
+    targetInput = document.createElement("input") as HTMLInputElement;
     targetInput.type = "text";
   });
   it("should format the number with correct comma and decimal points", (): void => {
@@ -75,7 +75,7 @@ describe("formatValue", (): void => {
 describe("checkReturnIndex", (): void => {
   let inputElement: HTMLInputElement;
   beforeEach((): void => {
-    inputElement = document.createElement("input");
+    inputElement = document.createElement("input") as HTMLInputElement;
     inputElement.type = "text";
   });
   it("should call updateSimpleProperty and return the updated prop value", (): void => {
@@ -108,7 +108,7 @@ describe("validateTitlesForTargs", (): void => {
     document.body.innerHTML = "";
     const result = validateTitlesForTargs(1);
     expect(result.length).toBe<number>(8);
-    expect(result[0]).toBeUndefined();
+    expect(result[0]).toBeUndefined() as void;
   });
 });
 describe("addListenerComorbBtns", (): void => {
@@ -121,7 +121,7 @@ describe("addListenerComorbBtns", (): void => {
     const [rowCount, btnArray] = addListenerComorbBtns(3);
     btnArray[0].dispatchEvent(new Event("click"));
     expect(rowCount).toBe<number>(3);
-    expect(switchRowComorb).toHaveBeenCalled();
+    expect(switchRowComorb).toHaveBeenCalled() as void;
   });
   it("should throw an error when no buttons are found", (): void => {
     document.body.innerHTML = "";
@@ -152,12 +152,12 @@ describe("addListenerTrioReadNumCons", (): void => {
   let consTablesFs: HTMLElement;
   let trioReadNumCons: HTMLInputElement;
   beforeEach((): void => {
-    consTablesFs = document.createElement("div");
-    trioReadNumCons = document.createElement("input");
+    consTablesFs = document.createElement("div") as HTMLDivElement;
+    trioReadNumCons = document.createElement("input") as HTMLInputElement;
     trioReadNumCons.type = "number";
     trioReadNumCons.id = "trioReadNumCons";
     document.body.appendChild(trioReadNumCons);
-    jest.clearAllMocks();
+    jest.clearAllMocks() as typeof jest;
   });
   it("should add an input event listener to trioReadNumCons when valid arguments are passed", (): void => {
     document.getElementById = jest.fn(() => trioReadNumCons);
@@ -173,52 +173,52 @@ describe("addListenerTrioReadNumCons", (): void => {
     addListenerTrioReadNumCons(consTablesFs, 3, 3);
     expect(
       jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "inputNotFound")
-    ).toHaveBeenCalled();
+    ).toHaveBeenCalled() as void;
   });
   it("should call multipleElementsNotFound when invalid arguments are provided", (): void => {
     addListenerTrioReadNumCons(null as any, NaN, NaN);
     expect(
       jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "multipleElementsNotFound")
-    ).toHaveBeenCalled();
+    ).toHaveBeenCalled() as void;
   });
 });
 describe("callbackTrioReadNumCons", (): void => {
   let consTablesFs: HTMLElement;
   let trioReadNumCons: HTMLInputElement;
   beforeEach((): void => {
-    consTablesFs = document.createElement("div");
-    trioReadNumCons = document.createElement("input");
+    consTablesFs = document.createElement("div") as HTMLDivElement;
+    trioReadNumCons = document.createElement("input") as HTMLInputElement;
     trioReadNumCons.type = "number";
     document.body.appendChild(trioReadNumCons);
-    jest.clearAllMocks();
+    jest.clearAllMocks() as typeof jest;
   });
   it("should update numConsTextHeadCels and call EdFisNutHandler.switchNumConsTitles when valid arguments are passed", (): void => {
-    const numConsTextHeadCel = document.createElement("div");
+    const numConsTextHeadCel = document.createElement("div") as HTMLDivElement;
     numConsTextHeadCel.classList.add("numConsTextHeadCel");
     document.body.appendChild(numConsTextHeadCel);
     callbackTrioReadNumCons(consTablesFs, trioReadNumCons, 3, 1);
     expect(
       jest.spyOn<any, EdHandler>(require("../../../locals/edFisNutPage/edFisNutHandler"), "switchNumConsTitles")
-    ).toHaveBeenCalled();
+    ).toHaveBeenCalled() as void;
   });
   it("should call elementNotPopulated when numConsTextHeadCels array length is invalid", (): void => {
     callbackTrioReadNumCons(consTablesFs, trioReadNumCons, 3, 2);
     expect(
       jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "elementNotPopulated")
-    ).toHaveBeenCalled();
+    ).toHaveBeenCalled() as void;
   });
   it("should call multipleElementsNotFound when invalid arguments are passed", (): void => {
     callbackTrioReadNumCons(null as any, null as any, NaN, NaN);
     expect(
       jest.spyOn<any, ErrorHandler>(require("../../global/handlers/errorHandler"), "multipleElementsNotFound")
-    ).toHaveBeenCalled();
+    ).toHaveBeenCalled() as void;
   });
 });
 describe("callbackAutoFillBtn", (): void => {
   let autoFillBtn: HTMLButtonElement;
   beforeEach((): void => {
-    autoFillBtn = document.createElement("button");
-    jest.clearAllMocks();
+    autoFillBtn = document.createElement("button") as HTMLButtonElement;
+    jest.clearAllMocks() as typeof jest;
   });
   it("should switch the autofill status when a valid button or input is passed", (): void => {
     expect(callbackAutoFillBtn(autoFillBtn, false)).toBe<boolean>(true);
@@ -226,13 +226,13 @@ describe("callbackAutoFillBtn", (): void => {
       jest
         .spyOn<any, EdHandler>(require("../../../locals/edFisNutPage/edFisNutHandler"), "switchAutoFill")
         .mockReturnValue(true)
-    ).toHaveBeenCalledWith<[HTMLButtonElement, boolean]>(autoFillBtn, false);
+    ).toHaveBeenCalledWith<[HTMLButtonElement, boolean]>(autoFillBtn, false) as void;
   });
   it("should call elementNotFound when the autoFillBtn is invalid", (): void => {
     callbackAutoFillBtn(null as any);
     expect(
       jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "elementNotFound")
-    ).toHaveBeenCalled();
+    ).toHaveBeenCalled() as void;
   });
 });
 describe("addListenerProtocolo", (): void => {
@@ -242,8 +242,8 @@ describe("addListenerProtocolo", (): void => {
   beforeEach((): void => {
     protocolo = document.createElement("select");
     tabDC = document.createElement("table");
-    textBodytype = document.createElement("input");
-    jest.clearAllMocks();
+    textBodytype = document.createElement("input") as HTMLInputElement;
+    jest.clearAllMocks() as typeof jest;
   });
   it("should add a change event listener to protocolo and update its value", (): void => {
     expect(addListenerProtocolo(protocolo, tabDC, textBodytype)).toBe<Protocol>("pollock3");
@@ -252,12 +252,12 @@ describe("addListenerProtocolo", (): void => {
       jest
         .spyOn<any, EdModeler>(require("../../../locals/edFisNutPage/edFisNutModel"), "changeTabDCutLayout")
         .mockReturnValue("pollock7")
-    ).toHaveBeenCalledWith<[HTMLSelectElement, HTMLElement, HTMLElement]>(protocolo, tabDC, textBodytype);
+    ).toHaveBeenCalledWith<[HTMLSelectElement, HTMLElement, HTMLElement]>(protocolo, tabDC, textBodytype) as void;
   });
   it("should call multipleElementsNotFound when invalid arguments are passed", (): void => {
     addListenerProtocolo(null as any, null as any, null as any);
     expect(
       jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "multipleElementsNotFound")
-    ).toHaveBeenCalled();
+    ).toHaveBeenCalled() as void;
   });
 });

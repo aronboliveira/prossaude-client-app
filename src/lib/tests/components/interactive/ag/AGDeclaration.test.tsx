@@ -9,7 +9,7 @@ jest.mock(
   } => ({
     syncAriaStates: jest.fn(),
   })
-);
+) as typeof jest;
 jest.mock(
   "../../../../../lib/global/handlers/errorHandler",
   (): {
@@ -17,7 +17,7 @@ jest.mock(
   } => ({
     elementNotFound: jest.fn(),
   })
-);
+) as typeof jest;
 describe("AGDeclaration", (): void => {
   const defaultProps = {
     state: true,
@@ -25,29 +25,29 @@ describe("AGDeclaration", (): void => {
   };
   it("renders the modal when state is true", (): void => {
     render(<AGDeclaration {...defaultProps} />);
-    expect(screen.getByText<HTMLElement>("TERMOS DE CONCORDÂNCIA")).toBeInTheDocument();
+    expect(screen.getByText<HTMLElement>("TERMOS DE CONCORDÂNCIA")).toBeInTheDocument() as void;
   });
   it("does not render when state is false", (): void => {
     render(<AGDeclaration {...defaultProps} state={false} />);
-    expect(screen.queryByText<HTMLElement>("TERMOS DE CONCORDÂNCIA")).not.toBeInTheDocument();
+    expect(screen.queryByText<HTMLElement>("TERMOS DE CONCORDÂNCIA")).not.toBeInTheDocument() as void;
   });
   it("calls syncAriaStates on mount", async (): Promise<void> => {
     render(<AGDeclaration {...defaultProps} />);
     await waitFor((): void => {
-      expect(syncAriaStates).toHaveBeenCalled();
+      expect(syncAriaStates).toHaveBeenCalled() as void;
     });
   });
   it("closes the modal when ESC key is pressed", async (): Promise<void> => {
     render(<AGDeclaration {...defaultProps} />);
     fireEvent.keyDown(window, { key: "ESCAPE" });
     await waitFor((): void => {
-      expect(defaultProps.dispatch).toHaveBeenCalledWith<Parameters<typeof defaultProps.dispatch>>(false);
+      expect(defaultProps.dispatch).toHaveBeenCalledWith<Parameters<typeof defaultProps.dispatch>>(false) as void;
     });
   });
   it("calls elementNotFound when mainRef is not an HTMLElement", async (): Promise<void> => {
     render(<AGDeclaration {...defaultProps} />);
     await waitFor((): void => {
-      expect(elementNotFound).toHaveBeenCalled();
+      expect(elementNotFound).toHaveBeenCalled() as void;
     });
   });
 });

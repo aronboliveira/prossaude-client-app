@@ -9,16 +9,16 @@ jest.mock(
   } => ({
     handleEventReq: jest.fn(),
   })
-);
+) as typeof jest;
 describe("Nat", (): void => {
   it("renders a text input for naturality", (): void => {
     render(<Nat />);
-    expect(screen.getByRole<HTMLInputElement>("textbox")).toBeInTheDocument();
+    expect(screen.getByRole<HTMLInputElement>("textbox")).toBeInTheDocument() as void;
   });
   it("calls handleEventReq on input", (): void => {
     render(<Nat />);
     const input = screen.getByRole<HTMLInputElement>("textbox");
     userEvent.type(input, "São Paulo");
-    expect(handleEventReq).toHaveBeenCalledWith<Parameters<typeof handleEventReq>>(input);
+    expect(handleEventReq).toHaveBeenCalledWith<Parameters<typeof handleEventReq>>(input) as void;
   });
 });
