@@ -3135,7 +3135,6 @@ function cfb_mov(cfb/*:CFBContainer*/, old_name/*:string*/, new_name/*:string*/)
 }
 
 function cfb_gc(cfb/*:CFBContainer*/)/*:void*/ { rebuild_cfb(cfb, true); }
-
 exports.find = find;
 exports.read = read;
 exports.parse = parse;
@@ -3203,7 +3202,7 @@ function write_dl(fname/*:string*/, payload/*:any*/, enc/*:?string*/) {
 			var a = document.createElement("a");
 			if(a.download != null) {
 				/*:: if(document.body == null) throw new Error("unreachable"); */
-				a.download = fname; a.href = url; document.body.appendChild(a); a.click() as void;
+				a.download = fname; a.href = url; document.body.appendChild(a); a.click();
 				/*:: if(document.body == null) throw new Error("unreachable"); */ document.body.removeChild(a);
 				if(URL.revokeObjectURL && typeof setTimeout !== 'undefined') setTimeout(function() { URL.revokeObjectURL(url); }, 60000);
 				return url;

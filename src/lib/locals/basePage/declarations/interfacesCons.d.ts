@@ -1,17 +1,9 @@
 import { MutableRefObject, Dispatch, SetStateAction, Component } from "react";
 import { Root } from "react-dom/client";
-import {
-  nullishForm,
-  nullishDlg,
-  nullishInp,
-  nullishTab,
-  voidVal,
-} from "@glSrc/types";
-
+import { nullishForm, nullishDlg, nullishInp, nullishTab, voidVal } from "@glSrc/types";
 export interface FormData {
   [key: string]: any;
 }
-
 export interface UserProfile {
   userClass: string;
   userArea: string;
@@ -19,32 +11,26 @@ export interface UserProfile {
   userEmail: string;
   userTel: string;
 }
-
 export interface DataContextType {
   formData: FormData;
   updateFormData: (newData: FormData) => void;
 }
-
 export interface PanelFormProps {
   formCallback: (form: nullishForm) => void;
 }
-
 export interface userProfileDropdownProps {
   user: userProfile;
   setDropdown: Dispatch<SetStateAction<boolean>>;
   shouldShowDropdown: boolean;
 }
-
 export interface ContactDlgProps {
   setContact: Dispatch<SetStateAction<boolean>>;
   shouldDisplayContact: boolean;
 }
-
 export interface UserPropsDlgProps {
   setPropDlg: Dispatch<SetStateAction<boolean>>;
   shouldDisplayPropDlg: boolean;
 }
-
 export interface UserDlgProps {
   user: UserProfile;
   setDropdown: Dispatch<SetStateAction<boolean>>;

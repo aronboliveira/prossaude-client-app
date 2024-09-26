@@ -2,7 +2,6 @@ import { entryEl, targEl } from "../../../global/declarations/types";
 //nesse arquivo estarão as funções de gerenciamento de usuário
 
 import { elementNotPopulated, extLine, typeError } from "../../../global/handlers/errorHandler";
-
 export function handleClientPermissions(
   userClass: string = "estudante",
   allowedClasses: string[] = ["coordenador"],

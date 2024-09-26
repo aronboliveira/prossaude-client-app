@@ -52,13 +52,7 @@ import {
   stringError,
   typeError,
 } from "@/lib/global/handlers/errorHandler";
-import {
-  autofillResult,
-  contextAutofill,
-  contextAutofillNums,
-  entryEl,
-  targEl,
-} from "@/lib/global/declarations/types";
+import { autofillResult, contextAutofill, contextAutofillNums, entryEl, targEl } from "@/lib/global/declarations/types";
 import {
   defineTargInps,
   fluxFormIMC,
@@ -71,7 +65,6 @@ import {
   updatePGC,
   validateEvResultNum,
 } from "@/lib/locals/edFisNutPage/edFisNutHandler";
-
 export const tabProps: ENTabsProps = {
   edIsAutoCorrectOn: true,
   isAutoFillActive: true,
@@ -105,24 +98,17 @@ export const person = new Person("masculino", 0, 0, 0, 0, "leve");
 // }, 2000);
 const MemoAge = memo(AgeElement);
 const MemoLoc = memo(ConfirmLocId);
-
 export default function EdFisNutPage(): JSX.Element {
   return (
     <ErrorBoundary
-      FallbackComponent={() => (
-        <GenericErrorComponent message="Error loading form Physical Education and Nutrition" />
-      )}
+      FallbackComponent={() => <GenericErrorComponent message='Error loading form Physical Education and Nutrition' />}
     >
-      <div id="bgDiv">
+      <div id='bgDiv'>
         <header>
-          <div role="group" className="pad1pc">
-            <div
-              role="group"
-              className="flexNoW flexDiv flexAlItT flexSimple flexQ900NoWC"
-              id="hDiv"
-            >
-              <div role="group" id="hTextDiv" className="noInvert">
-                <h1 className="bolded flexJBt" id="hForm">
+          <div role='group' className='pad1pc'>
+            <div role='group' className='flexNoW flexDiv flexAlItT flexSimple flexQ900NoWC' id='hDiv'>
+              <div role='group' id='hTextDiv' className='noInvert'>
+                <h1 className='bolded flexJBt' id='hForm'>
                   <strong>Ficha de Avaliação:</strong>
                 </h1>
                 <h2>
@@ -141,30 +127,28 @@ export default function EdFisNutPage(): JSX.Element {
           <SwitchDiv autofill={true} />
           <hr />
           <form
-            name="ed_form"
-            action="submit_ed_form"
-            encType="multipart/form-data"
-            method="post"
-            target="_top"
-            id="formEdFis"
-            autoComplete="on"
+            name='ed_form'
+            action='submit_ed_form'
+            encType='multipart/form-data'
+            method='post'
+            target='_top'
+            id='formEdFis'
+            autoComplete='on'
             onSubmit={ev =>
               validateForm(ev).then(validation =>
-                validation[0]
-                  ? handleSubmit("ed", validation[2], true)
-                  : ev.preventDefault()
+                validation[0] ? handleSubmit("ed", validation[2], true) : ev.preventDefault()
               )
             }
           >
-            <fieldset name="fsAnamGName" id="fsAnamGId" className="fsMain">
-              <legend className="legMain form-padded" id="fsAnamGLeg">
+            <fieldset name='fsAnamGName' id='fsAnamGId' className='fsMain'>
+              <legend className='legMain form-padded' id='fsAnamGLeg'>
                 Identificação
               </legend>
-              <section className="sectionMain" id="fsAnamGSect">
+              <section className='sectionMain' id='fsAnamGSect'>
                 <Name />
                 <SocialName />
-                <span role="group" className="fsAnamGSpan" id="fsAnamGSpan12">
-                  <label htmlFor="dateAgeId" className="labelIdentif">
+                <span role='group' className='fsAnamGSpan' id='fsAnamGSpan12'>
+                  <label htmlFor='dateAgeId' className='labelIdentif'>
                     Idade:
                     <MemoAge />
                   </label>
@@ -175,293 +159,178 @@ export default function EdFisNutPage(): JSX.Element {
             <hr />
             <TabComorb />
             <hr />
-            <fieldset name="fsHabRotName" id="fsHabRotId" className="fsMain">
-              <legend className="hRot legMain forceInvert" id="fsHabRotLeg">
+            <fieldset name='fsHabRotName' id='fsHabRotId' className='fsMain'>
+              <legend className='hRot legMain forceInvert' id='fsHabRotLeg'>
                 Hábitos Rotineiros — Alimentação
               </legend>
-              <section className="sectionMain sectHabRot" id="sectAlimRot">
-                <DivRot
-                  quest="Faz quantas refeições por dia"
-                  grp="Alim"
-                  ctx="RefDia"
-                />
-                <DivRot
-                  quest="Quantas das refeições diárias são completas"
-                  grp="Alim"
-                  ctx="RefCompDia"
-                />
+              <section className='sectionMain sectHabRot' id='sectAlimRot'>
+                <DivRot quest='Faz quantas refeições por dia' grp='Alim' ctx='RefDia' />
+                <DivRot quest='Quantas das refeições diárias são completas' grp='Alim' ctx='RefCompDia' />
                 <hr />
-                <h2 className="hRot legMain noInvert">
-                  Hábitos Rotineiros — Hidratação
-                </h2>
-                <DivRot
-                  quest="Ingere quantos litros de água por dia"
-                  grp="Alim"
-                  ctx="AguaDia"
-                />
+                <h2 className='hRot legMain noInvert'>Hábitos Rotineiros — Hidratação</h2>
+                <DivRot quest='Ingere quantos litros de água por dia' grp='Alim' ctx='AguaDia' />
                 <hr />
-                <h2 className="hRot legMain noInvert">
-                  Hábitos Rotineiros — Excreção
-                </h2>
+                <h2 className='hRot legMain noInvert'>Hábitos Rotineiros — Excreção</h2>
                 <DivRot
-                  quest="Quantas micções por dia"
-                  grp="Alim"
-                  ctx="UrDia"
+                  quest='Quantas micções por dia'
+                  grp='Alim'
+                  ctx='UrDia'
                   ur={{
                     ctx: "Elim",
                   }}
                 />
-                <DivRot
-                  quest="Qual é o intervalo mínimo (em horas) entre cada micção?"
-                  grp="Alim"
-                  ctx="UrInterv"
-                />
-                <div role="group" className="flexDiv divRot widMax900q80vw">
-                  <label
-                    htmlFor="inpCorUrDef"
-                    className="labAlimRot fitSpaced labUr widMax900q80vw"
-                  >
+                <DivRot quest='Qual é o intervalo mínimo (em horas) entre cada micção?' grp='Alim' ctx='UrInterv' />
+                <div role='group' className='flexDiv divRot widMax900q80vw'>
+                  <label htmlFor='inpCorUrDef' className='labAlimRot fitSpaced labUr widMax900q80vw'>
                     <span>Qual é a coloração da urina?</span>
                     <InpCorUr />
-                    <datalist id="corUr">
-                      <option className="opCorUr" value="Transparente"></option>
-                      <option className="opCorUr" value="Verde-claro"></option>
-                      <option className="opCorUr" value="Verde-escuro"></option>
-                      <option
-                        className="opCorUr"
-                        value="Amarelo-claro"
-                      ></option>
-                      <option
-                        className="opCorUr"
-                        value="Amarelo-escuro"
-                      ></option>
-                      <option className="opCorUr" value="Âmbar"></option>
-                      <option
-                        className="opCorUr"
-                        value="Laranja intenso"
-                      ></option>
-                      <option className="opCorUr" value="Rosada"></option>
-                      <option className="opCorUr" value="Avermelhada"></option>
-                      <option className="opCorUr" value="Marrom"></option>
-                      <option className="opCorUr" value="Azul"></option>
-                      <option className="opCorUr" value="Arroxeada"></option>
-                      <option className="opCorUr" value="Preta"></option>
+                    <datalist id='corUr'>
+                      <option className='opCorUr' value='Transparente'></option>
+                      <option className='opCorUr' value='Verde-claro'></option>
+                      <option className='opCorUr' value='Verde-escuro'></option>
+                      <option className='opCorUr' value='Amarelo-claro'></option>
+                      <option className='opCorUr' value='Amarelo-escuro'></option>
+                      <option className='opCorUr' value='Âmbar'></option>
+                      <option className='opCorUr' value='Laranja intenso'></option>
+                      <option className='opCorUr' value='Rosada'></option>
+                      <option className='opCorUr' value='Avermelhada'></option>
+                      <option className='opCorUr' value='Marrom'></option>
+                      <option className='opCorUr' value='Azul'></option>
+                      <option className='opCorUr' value='Arroxeada'></option>
+                      <option className='opCorUr' value='Preta'></option>
                     </datalist>
                   </label>
-                  <span
-                    role="group"
-                    id="spanDiur"
-                    className="labAlimRot fitSpaced labUr labUrInterval widMax900q80vw"
-                  >
+                  <span role='group' id='spanDiur' className='labAlimRot fitSpaced labUr labUrInterval widMax900q80vw'>
                     <span>Diurese:</span>
                     <label
-                      htmlFor="inpDiur"
-                      id="labDiur"
-                      className="form-control noInvert labAlimRot fitSpaced labUr labUrInterval widMax900q80vw noInvert"
+                      htmlFor='inpDiur'
+                      id='labDiur'
+                      className='form-control noInvert labAlimRot fitSpaced labUr labUrInterval widMax900q80vw noInvert'
                     >
                       <InpDiur />
-                      <p className="msrProgCons noInvert">ml/dia</p>
+                      <p className='msrProgCons noInvert'>ml/dia</p>
                     </label>
                   </span>
-                  <div
-                    role="group"
-                    className="form-padded noInvert"
-                    id="protUrDiv"
-                  >
-                    <span
-                      role="group"
-                      id="inpElimUrDiaMax"
-                      className="spanAlimRot spanbUr spanProtUr"
-                    >
-                      <span style={{ marginBottom: "0.1rem" }}>
-                        Proteinúria
-                      </span>
-                      <br role="presentation" />
+                  <div role='group' className='form-padded noInvert' id='protUrDiv'>
+                    <span role='group' id='inpElimUrDiaMax' className='spanAlimRot spanbUr spanProtUr'>
+                      <span style={{ marginBottom: "0.1rem" }}>Proteinúria</span>
+                      <br role='presentation' />
                       <input
-                        type="radio"
-                        className="inpAlimRot inpUr inpUrRadio noInvert"
-                        id="CpbinpProtUrRadioYes"
-                        name="protur"
-                        data-title="Proteinuria_Sim"
+                        type='radio'
+                        className='inpAlimRot inpUr inpUrRadio noInvert'
+                        id='CpbinpProtUrRadioYes'
+                        name='protur'
+                        data-title='Proteinuria_Sim'
                         style={{ marginTop: "0.7rem" }}
                       />
-                      <label
-                        htmlFor="CpbinpProtUrRadioYes"
-                        id="labCpbinpProtUrRadioYes"
-                      >
+                      <label htmlFor='CpbinpProtUrRadioYes' id='labCpbinpProtUrRadioYes'>
                         <span>Sim</span>
                       </label>
                       <input
-                        type="radio"
-                        className="inpAlimRot inpUr inpUrRadio"
-                        id="CpbinpProtUrRadioNo"
-                        name="protur"
-                        data-title="Proteinuria_Nao"
+                        type='radio'
+                        className='inpAlimRot inpUr inpUrRadio'
+                        id='CpbinpProtUrRadioNo'
+                        name='protur'
+                        data-title='Proteinuria_Nao'
                         style={{ marginTop: "0.7rem" }}
                       />
-                      <label
-                        htmlFor="CpbinpProtUrRadioNo"
-                        id="labCpbinpProtUrRadioNo"
-                      >
+                      <label htmlFor='CpbinpProtUrRadioNo' id='labCpbinpProtUrRadioNo'>
                         Não
                       </label>
                     </span>
-                    <br role="presentation" />
-                    <div
-                      role="group"
-                      className="divMain divAdd"
-                      id="divAddProtUr"
-                    >
-                      <OpProtUr ctx="Persist" />
-                      <br role="presentation" />
-                      <OpProtUr ctx="Ort" />
-                      <br role="presentation" />
-                      <OpProtUr ctx="Tr" />
-                      <br role="presentation" />
-                      <label
-                        htmlFor="protUrLvl"
-                        id="labProtUrLvl"
-                        className="form-control noInvert labUr"
-                      >
+                    <br role='presentation' />
+                    <div role='group' className='divMain divAdd' id='divAddProtUr'>
+                      <OpProtUr ctx='Persist' />
+                      <br role='presentation' />
+                      <OpProtUr ctx='Ort' />
+                      <br role='presentation' />
+                      <OpProtUr ctx='Tr' />
+                      <br role='presentation' />
+                      <label htmlFor='protUrLvl' id='labProtUrLvl' className='form-control noInvert labUr'>
                         <ProtUrLvl />
-                        <p className="msrProgCons noInvert">mg/dL</p>
+                        <p className='msrProgCons noInvert'>mg/dL</p>
                       </label>
                     </div>
                   </div>
                 </div>
+                <DivRot quest='Evacua quantas vezes por dia' ctx='EvDia' ev={{ ctx: "Elim" }} />
                 <DivRot
-                  quest="Evacua quantas vezes por dia"
-                  ctx="EvDia"
-                  ev={{ ctx: "Elim" }}
-                />
-                <DivRot
-                  quest="Qual é o intervalo mínimo (em horas) entre evacuações?"
-                  ctx="EvInterv"
+                  quest='Qual é o intervalo mínimo (em horas) entre evacuações?'
+                  ctx='EvInterv'
                   ev={{ ctx: "Interv" }}
                 />
                 <hr />
               </section>
-              <div role="group" id="divAtFisRot">
-                <span
-                  role="group"
-                  className="spanMain atvSpan fitSpaced flexQ900NoWC"
-                  id="divLvlAtFis"
-                >
+              <div role='group' id='divAtFisRot'>
+                <span role='group' className='spanMain atvSpan fitSpaced flexQ900NoWC' id='divLvlAtFis'>
                   <strong>Nível de Atividade Física:</strong>
                   <SelectLvlAtFis />
                 </span>
                 <TabAtFirsRot />
-                <br role="presentation" />
+                <br role='presentation' />
                 <hr />
                 <TabAtFirsProp />
               </div>
-              <br role="presentation" />
+              <br role='presentation' />
             </fieldset>
             <hr />
-            <fieldset
-              name="fsProgConsName"
-              id="fsProgConsId"
-              className="fsMain divTab"
-            >
-              <h4 className="bolded" id="hProgCons">
+            <fieldset name='fsProgConsName' id='fsProgConsId' className='fsMain divTab'>
+              <h4 className='bolded' id='hProgCons'>
                 Progresso em Consultas
               </h4>
-              <div role="group" id="divProgSels">
-                <div
-                  role="group"
-                  className="flexDiv flexDivProg"
-                  id="divProgCons"
-                >
-                  <label
-                    htmlFor="selectNumCons"
-                    id="labSelectNumCons"
-                    className="consLab"
-                  >
+              <div role='group' id='divProgSels'>
+                <div role='group' className='flexDiv flexDivProg' id='divProgCons'>
+                  <label htmlFor='selectNumCons' id='labSelectNumCons' className='consLab'>
                     <span>Consulta em Leitura:</span>
                     <SelectNumCons />
                   </label>
                   <TrioReadNumCons />
                 </div>
-                <div
-                  role="group"
-                  className="flexDiv flexDivProg"
-                  id="divProgType"
-                >
-                  <div role="group" className="divLab">
+                <div role='group' className='flexDiv flexDivProg' id='divProgType'>
+                  <div role='group' className='divLab'>
                     <span>Tipo corporal aplicado:</span>
                     <TextBodyType />
                   </div>
-                  <div role="group" className="spanForm divLab">
+                  <div role='group' className='spanForm divLab'>
                     <span>Nível de Gordura Corporal aplicado:</span>
-                    <span
-                      role="group"
-                      className="form-control noInvert spanSubForm consInp"
-                    >
+                    <span role='group' className='form-control noInvert spanSubForm consInp'>
                       <GordCorpLvl />
-                      <LockTabInd
-                        ctx="GordCorpLvl"
-                        addGroup={["spanLock"]}
-                        isSpan={true}
-                      />
+                      <LockTabInd ctx='GordCorpLvl' addGroup={["spanLock"]} isSpan={true} />
                     </span>
                   </div>
                 </div>
-                <div
-                  role="group"
-                  className="flexDiv flexDivProg"
-                  id="divProgFactor"
-                >
-                  <div role="group" className="divLab">
+                <div role='group' className='flexDiv flexDivProg' id='divProgFactor'>
+                  <div role='group' className='divLab'>
                     <span>Fator de Nível de Atividade Física:</span>
                     <NafType />
                   </div>
-                  <div role="group" className="divLab spanForm">
+                  <div role='group' className='divLab spanForm'>
                     <span>Fórmula aplicada para Cálculo de TMB:</span>
-                    <span
-                      role="group"
-                      className="form-control noInvert spanSubForm consInp"
-                    >
+                    <span role='group' className='form-control noInvert spanSubForm consInp'>
                       <FormCalcTmbType />
-                      <LockTabInd
-                        ctx="formCalcTMB"
-                        addGroup={["spanLock"]}
-                        isSpan={true}
-                      />
+                      <LockTabInd ctx='formCalcTMB' addGroup={["spanLock"]} isSpan={true} />
                     </span>
                   </div>
-                  <div
-                    role="group"
-                    className="divLab"
-                    id="spanFactorAtleta"
-                    hidden
-                  >
+                  <div role='group' className='divLab' id='spanFactorAtleta' hidden>
                     <span>Fator para Calcúlo de TMB em Atletas:</span>
                     <SelFactorAtleta />
                   </div>
                 </div>
               </div>
               <hr />
-              <fieldset
-                className="fsSub"
-                name="fsSubProgConsName"
-                id="fsSubProgConsId"
-              >
+              <fieldset className='fsSub' name='fsSubProgConsName' id='fsSubProgConsId'>
                 <TabProgSVi />
                 <hr />
                 <TabMedAnt />
                 <hr />
-                <div
-                  role="group"
-                  className="spanMain spanMainTabProgCons divLab"
-                  id="tabSpanDCut"
-                >
-                  <span className="forceInvert">Protocolo:</span>
+                <div role='group' className='spanMain spanMainTabProgCons divLab' id='tabSpanDCut'>
+                  <span className='forceInvert'>Protocolo:</span>
                   <Protocolo />
                 </div>
                 <TabDCut />
                 <hr />
                 <TabIndPerc />
-                <br role="presentation" />
+                <br role='presentation' />
                 <hr
                   style={{
                     opacity: 0.15,
@@ -470,27 +339,16 @@ export default function EdFisNutPage(): JSX.Element {
                 />
               </fieldset>
             </fieldset>
-            <fieldset
-              name="fsConfirmName"
-              id="fsConfirmId"
-              className="fsMain form-padded"
-            >
-              <section
-                className="sectionMain sectionConfirm"
-                id="sectConfirmCheck"
-              >
+            <fieldset name='fsConfirmName' id='fsConfirmId' className='fsMain form-padded'>
+              <section className='sectionMain sectionConfirm' id='sectConfirmCheck'>
                 <Declaration text='"DECLARO QUE CONCORDO COM AS AVALIAÇÕES DESCRITAS ACIMA"' />
-                <div className="divMain" id="divConfirm" role="group">
+                <div className='divMain' id='divConfirm' role='group'>
                   <ENBtnConformWrapper />
-                  <div
-                    className="divSub flexEl divConfirm flexQ900NoW"
-                    id="divConfirm2"
-                    role="group"
-                  >
+                  <div className='divSub flexEl divConfirm flexQ900NoW' id='divConfirm2' role='group'>
                     <label
-                      htmlFor="confirmLocId"
-                      className="labConfirm labDivConfirm2 pdT2pc900Q htFull900Q flexNoWC bolded widHalf900Q noInvert"
-                      id="labConfirmLoc"
+                      htmlFor='confirmLocId'
+                      className='labConfirm labDivConfirm2 pdT2pc900Q htFull900Q flexNoWC bolded widHalf900Q noInvert'
+                      id='labConfirmLoc'
                     >
                       <span>Local:</span>
                       <MemoLoc />
@@ -502,7 +360,7 @@ export default function EdFisNutPage(): JSX.Element {
                 </div>
                 <hr />
               </section>
-              <br role="presentation" />
+              <br role='presentation' />
               <SectConfirmBtns />
               <hr />
             </fieldset>
@@ -513,12 +371,7 @@ export default function EdFisNutPage(): JSX.Element {
     </ErrorBoundary>
   );
 }
-
-export function exeAutoFill(
-  targ: targEl,
-  isAutoFillActive: boolean = true,
-  context: string = "cons"
-): autofillResult {
+export function exeAutoFill(targ: targEl, isAutoFillActive: boolean = true, context: string = "cons"): autofillResult {
   let numRef = 1,
     arrIndexes: number[] = [],
     arrtargInps: targEl[] = [];
@@ -527,23 +380,16 @@ export function exeAutoFill(
     const gordCorpLvl = document.getElementById("gordCorpLvl");
     const formTMBTypeElement = document.getElementById("formCalcTMBType");
     if (
-      (targ instanceof HTMLInputElement ||
-        targ instanceof HTMLTextAreaElement ||
-        targ instanceof HTMLSelectElement) &&
+      (targ instanceof HTMLInputElement || targ instanceof HTMLTextAreaElement || targ instanceof HTMLSelectElement) &&
       tabProps.isAutoFillActive === true &&
       person instanceof Person &&
       typeof context === "string"
     ) {
       if (context === "cons") {
         const selectNumCons = document.getElementById("selectNumCons");
-        selectNumCons instanceof HTMLInputElement ||
-        selectNumCons instanceof HTMLSelectElement
+        selectNumCons instanceof HTMLInputElement || selectNumCons instanceof HTMLSelectElement
           ? (tabProps.numCons = parseInt(selectNumCons?.value || "1"))
-          : inputNotFound(
-              selectNumCons,
-              "selectNumCons in exeAutoFill()",
-              extLine(new Error())
-            );
+          : inputNotFound(selectNumCons, "selectNumCons in exeAutoFill()", extLine(new Error()));
         numRef = tabProps.numCons;
       } else if (context === "col") {
         tabProps.numCol = getNumCol(targ) || 2;
@@ -574,11 +420,7 @@ export function exeAutoFill(
         tabProps.factorAtleta
       );
       [tabProps.IMC, tabProps.MLG, tabProps.TMB, tabProps.GET] = arrIndexes;
-      [person.weight, person.height] = matchPersonPropertiesWH(
-        person,
-        tabProps.targInpWeigth,
-        tabProps.targInpHeigth
-      );
+      [person.weight, person.height] = matchPersonPropertiesWH(person, tabProps.targInpWeigth, tabProps.targInpHeigth);
       const arrPGC = updatePGC(person, consTablesFs, numRef, context);
       //PGC, targInpSumDCut, targInpPGC
       [tabProps.PGC, tabProps.targInpSumDCut, tabProps.targInpPGC] = arrPGC;
@@ -602,9 +444,7 @@ export function exeAutoFill(
       if (
         arrtargInps.every(
           targ =>
-            targ instanceof HTMLInputElement ||
-            targ instanceof HTMLSelectElement ||
-            targ instanceof HTMLTextAreaElement
+            targ instanceof HTMLInputElement || targ instanceof HTMLSelectElement || targ instanceof HTMLTextAreaElement
         )
       ) {
         (tabProps.targInpIMC as entryEl).value = tabProps.IMC.toString();
@@ -633,13 +473,7 @@ export function exeAutoFill(
         `${JSON.stringify(person)}`,
         context
       );
-      arrIndexes = [
-        tabProps.IMC,
-        tabProps.MLG,
-        tabProps.TMB,
-        tabProps.GET,
-        tabProps.PGC,
-      ];
+      arrIndexes = [tabProps.IMC, tabProps.MLG, tabProps.TMB, tabProps.GET, tabProps.PGC];
       arrtargInps = [
         tabProps.targInpWeigth,
         tabProps.targInpHeigth,
@@ -671,7 +505,6 @@ export function exeAutoFill(
     );
   }
 }
-
 export function callbackTextBodyEl(person: Person): [string, string, string] {
   const textBodytype = document.getElementById("textBodytype");
   const protocolo = document.getElementById("tabSelectDCutId");
@@ -681,71 +514,21 @@ export function callbackTextBodyEl(person: Person): [string, string, string] {
   const genFisAlin = document.getElementById("genFisAlinId");
   try {
     if (typeof person !== "object")
-      throw typeError(
-        `typeof person in callback for Text Body Element`,
-        person,
-        `object`,
-        extLine(new Error())
-      );
-    if (
-      !(
-        textBodytype instanceof HTMLSelectElement ||
-        textBodytype instanceof HTMLInputElement
-      )
-    )
-      throw elementNotFound(
-        textBodytype,
-        `Text Body Type Element`,
-        extLine(new Error())
-      );
-    if (
-      !(
-        protocolo instanceof HTMLSelectElement ||
-        protocolo instanceof HTMLInputElement
-      )
-    )
-      throw elementNotFound(
-        protocolo,
-        `Protocolo Element`,
-        extLine(new Error())
-      );
-    if (!(tabDC instanceof HTMLTableElement))
-      throw elementNotFound(tabDC, `Table of Skin Folds`, extLine(new Error()));
-    if (
-      !(
-        genElement instanceof HTMLSelectElement ||
-        genElement instanceof HTMLInputElement
-      )
-    )
+      throw typeError(`typeof person in callback for Text Body Element`, person, `object`, extLine(new Error()));
+    if (!(textBodytype instanceof HTMLSelectElement || textBodytype instanceof HTMLInputElement))
+      throw elementNotFound(textBodytype, `Text Body Type Element`, extLine(new Error()));
+    if (!(protocolo instanceof HTMLSelectElement || protocolo instanceof HTMLInputElement))
+      throw elementNotFound(protocolo, `Protocolo Element`, extLine(new Error()));
+    if (!(tabDC instanceof HTMLTableElement)) throw elementNotFound(tabDC, `Table of Skin Folds`, extLine(new Error()));
+    if (!(genElement instanceof HTMLSelectElement || genElement instanceof HTMLInputElement))
       throw elementNotFound(genElement, `Gender Element`, extLine(new Error()));
-    if (
-      !(
-        genBirthRel instanceof HTMLSelectElement ||
-        genBirthRel instanceof HTMLInputElement
-      )
-    )
-      throw elementNotFound(
-        genBirthRel,
-        `Gender Birth Relation Element`,
-        extLine(new Error())
-      );
-    if (
-      !(
-        genFisAlin instanceof HTMLSelectElement ||
-        genFisAlin instanceof HTMLInputElement
-      )
-    )
-      throw elementNotFound(
-        genFisAlin,
-        `Gen Physical Alignment Element`,
-        extLine(new Error())
-      );
+    if (!(genBirthRel instanceof HTMLSelectElement || genBirthRel instanceof HTMLInputElement))
+      throw elementNotFound(genBirthRel, `Gender Birth Relation Element`, extLine(new Error()));
+    if (!(genFisAlin instanceof HTMLSelectElement || genFisAlin instanceof HTMLInputElement))
+      throw elementNotFound(genFisAlin, `Gen Physical Alignment Element`, extLine(new Error()));
     changeTabDCutLayout(protocolo, tabDC, textBodytype);
     person.gen = textBodytype.value;
-    if (
-      (genElement.value === "masculino" || genElement.value === "feminino") &&
-      genBirthRel.value === "cis"
-    )
+    if ((genElement.value === "masculino" || genElement.value === "feminino") && genBirthRel.value === "cis")
       genElement.value = textBodytype.value;
     switch (textBodytype.value) {
       case "masculino":
@@ -758,16 +541,10 @@ export function callbackTextBodyEl(person: Person): [string, string, string] {
         genFisAlin.value = "neutro";
         break;
       default:
-        stringError(
-          "verifying textBodytype.value",
-          textBodytype?.value,
-          extLine(new Error())
-        );
+        stringError("verifying textBodytype.value", textBodytype?.value, extLine(new Error()));
     }
   } catch (e) {
-    console.error(
-      `Error executing callbackTextBodyEl:\n${(e as Error).message}`
-    );
+    console.error(`Error executing callbackTextBodyEl:\n${(e as Error).message}`);
   }
   return (
     [
@@ -777,82 +554,25 @@ export function callbackTextBodyEl(person: Person): [string, string, string] {
     ] || ["masculino", "masculino", "masculinizado"]
   );
 }
-
-export function callbackAtvLvlElementNaf(
-  contextData: [number[], targEl[]],
-  mainEl: string
-): [string, number] {
+export function callbackAtvLvlElementNaf(contextData: [number[], targEl[]], mainEl: string): [string, number] {
   [tabProps.factorAtvLvl, tabProps.IMC] = contextData[0];
-  const [atvLvlElement, gordCorpLvl, formTMBTypeElement, nafType] =
-    contextData[1];
+  const [atvLvlElement, gordCorpLvl, formTMBTypeElement, nafType] = contextData[1];
   try {
-    if (!(person instanceof Person))
-      throw new Error(`Failed to validate patient person instance`);
+    if (!(person instanceof Person)) throw new Error(`Failed to validate patient person instance`);
     if (typeof tabProps.factorAtvLvl !== "number")
-      throw typeError(
-        `typeof Factor for activity level`,
-        tabProps.factorAtvLvl,
-        `number`,
-        extLine(new Error())
-      );
-    if (typeof tabProps.IMC !== "number")
-      throw typeError(
-        `typeof IMC`,
-        tabProps.IMC,
-        `number`,
-        extLine(new Error())
-      );
-    if (
-      !(
-        atvLvlElement instanceof HTMLInputElement ||
-        atvLvlElement instanceof HTMLSelectElement
-      )
-    )
-      throw elementNotFound(
-        atvLvlElement,
-        `Activity Level Element instance`,
-        extLine(new Error())
-      );
-    if (
-      !(
-        gordCorpLvl instanceof HTMLInputElement ||
-        gordCorpLvl instanceof HTMLSelectElement
-      )
-    )
-      throw elementNotFound(
-        gordCorpLvl,
-        `Body Fat Level Element`,
-        extLine(new Error())
-      );
-    if (
-      !(
-        formTMBTypeElement instanceof HTMLInputElement ||
-        formTMBTypeElement instanceof HTMLSelectElement
-      )
-    )
-      throw elementNotFound(
-        formTMBTypeElement,
-        `TMB Type Element`,
-        extLine(new Error())
-      );
-    if (
-      !(
-        nafType instanceof HTMLInputElement ||
-        nafType instanceof HTMLSelectElement
-      )
-    )
-      throw elementNotFound(
-        nafType,
-        `Level of Physical Activity Type Element`,
-        extLine(new Error())
-      );
+      throw typeError(`typeof Factor for activity level`, tabProps.factorAtvLvl, `number`, extLine(new Error()));
+    if (typeof tabProps.IMC !== "number") throw typeError(`typeof IMC`, tabProps.IMC, `number`, extLine(new Error()));
+    if (!(atvLvlElement instanceof HTMLInputElement || atvLvlElement instanceof HTMLSelectElement))
+      throw elementNotFound(atvLvlElement, `Activity Level Element instance`, extLine(new Error()));
+    if (!(gordCorpLvl instanceof HTMLInputElement || gordCorpLvl instanceof HTMLSelectElement))
+      throw elementNotFound(gordCorpLvl, `Body Fat Level Element`, extLine(new Error()));
+    if (!(formTMBTypeElement instanceof HTMLInputElement || formTMBTypeElement instanceof HTMLSelectElement))
+      throw elementNotFound(formTMBTypeElement, `TMB Type Element`, extLine(new Error()));
+    if (!(nafType instanceof HTMLInputElement || nafType instanceof HTMLSelectElement))
+      throw elementNotFound(nafType, `Level of Physical Activity Type Element`, extLine(new Error()));
     //ajusta elementos <select> com base em combinações
     fluxFormIMC(gordCorpLvl, formTMBTypeElement, tabProps.IMC || 0);
-    if (
-      /LvlAtFis/gi.test(mainEl) ||
-      /TMBType/gi.test(mainEl) ||
-      /gordCorpLvl/gi.test(mainEl)
-    ) {
+    if (/LvlAtFis/gi.test(mainEl) || /TMBType/gi.test(mainEl) || /gordCorpLvl/gi.test(mainEl)) {
       matchTMBElements(
         atvLvlElement,
         gordCorpLvl,
@@ -866,12 +586,7 @@ export function callbackAtvLvlElementNaf(
       const returnedFactorAtvLvl = person.checkAtvLvl(person);
       typeof returnedFactorAtvLvl === "number"
         ? (tabProps.factorAtvLvl = returnedFactorAtvLvl || 1.4)
-        : typeError(
-            "returnedFactorAtvLvl",
-            returnedFactorAtvLvl,
-            "number",
-            extLine(new Error())
-          );
+        : typeError("returnedFactorAtvLvl", returnedFactorAtvLvl, "number", extLine(new Error()));
     } else if (/nafType/gi.test(mainEl)) {
       matchTMBElements(
         nafType,
@@ -886,24 +601,16 @@ export function callbackAtvLvlElementNaf(
       const returnedFactorAtvLvl = person.checkAtvLvl(person);
       typeof returnedFactorAtvLvl === "number"
         ? (tabProps.factorAtvLvl = returnedFactorAtvLvl || 1.4)
-        : typeError(
-            "returnedFactorAtvLvl",
-            returnedFactorAtvLvl,
-            "number",
-            extLine(new Error())
-          );
+        : typeError("returnedFactorAtvLvl", returnedFactorAtvLvl, "number", extLine(new Error()));
     } else
       console.error(`Error validating mainEl.
         obtained .id: ${mainEl ?? "UNDEFINED ID"}`);
     return [person.atvLvl, tabProps.factorAtvLvl];
   } catch (e) {
-    console.error(
-      `Error executing callbackAtvLvlElementNaf:\n${(e as Error).message}`
-    );
+    console.error(`Error executing callbackAtvLvlElementNaf:\n${(e as Error).message}`);
     return [person.atvLvl, tabProps.factorAtvLvl];
   }
 }
-
 export function handleCallbackWHS(
   contextComp: [contextAutofill, contextAutofillNums],
   inpWHS: targEl,
@@ -918,10 +625,7 @@ export function handleCallbackWHS(
         contextComp[1][3] || [0, 0, 0, 0, 0], //[1][3] === arrIndexes
         contextComp[0][3] || [], //[0][3] === arrTargs
       ] || defaultResult;
-  const fillResult = (
-    callbackResult: autofillResult,
-    mainNum: number
-  ): void => {
+  const fillResult = (callbackResult: autofillResult, mainNum: number): void => {
     if (tabProps.isAutoFillActive === true) {
       if (mainNum === 0) {
         tabProps.targInpWeigth = callbackResult[3][mainNum];
@@ -953,9 +657,7 @@ export function handleCallbackWHS(
         }
       } else if (mainNum === 2) {
         tabProps.targInpSumDCut = callbackResult[3].at(-mainNum);
-        for (const targSumDCut of document.getElementsByClassName(
-          "tabInpProgSumDCut"
-        )) {
+        for (const targSumDCut of document.getElementsByClassName("tabInpProgSumDCut")) {
           if (targSumDCut instanceof HTMLElement) {
             targSumDCut.dataset.active
               ? (targSumDCut.dataset[`active`] = "false")
@@ -968,26 +670,14 @@ export function handleCallbackWHS(
             : tabProps.targInpSumDCut?.setAttribute("data-active", "true");
         }
       } else console.error(`Error validating mainNum in fillResult()`);
-      [tabProps.IMC, tabProps.MLG, tabProps.TMB, tabProps.GET, tabProps.PGC] =
-        callbackResult[2];
-      [
-        tabProps.targInpIMC,
-        tabProps.targInpMLG,
-        tabProps.targInpTMB,
-        tabProps.targInpGET,
-        ,
-        tabProps.targInpPGC,
-      ] = callbackResult[3].slice(2);
+      [tabProps.IMC, tabProps.MLG, tabProps.TMB, tabProps.GET, tabProps.PGC] = callbackResult[2];
+      [tabProps.targInpIMC, tabProps.targInpMLG, tabProps.targInpTMB, tabProps.targInpGET, , tabProps.targInpPGC] =
+        callbackResult[3].slice(2);
     }
   };
   try {
     if (!(person instanceof Person))
-      throw typeError(
-        `instanceof person`,
-        (person as any).toString(),
-        `formClassPerson`,
-        extLine(new Error())
-      );
+      throw typeError(`instanceof person`, (person as any).toString(), `formClassPerson`, extLine(new Error()));
     if (
       !(
         inpWHS instanceof HTMLInputElement ||
@@ -995,11 +685,7 @@ export function handleCallbackWHS(
         inpWHS instanceof HTMLTextAreaElement
       )
     )
-      throw elementNotFound(
-        inpWHS,
-        `${inpWHS?.id || inpWHS?.tagName || "unidentified"}`,
-        extLine(new Error())
-      );
+      throw elementNotFound(inpWHS, `${inpWHS?.id || inpWHS?.tagName || "unidentified"}`, extLine(new Error()));
     if (
       inpWHS.value.length > 0 &&
       inpWHS.value !== "" &&
@@ -1011,52 +697,28 @@ export function handleCallbackWHS(
       prop = person.weight;
       prop = validateEvResultNum(inpWHS, parseInt(inpWHS.value || "0", 10));
       person.weight = prop;
-      if (tabProps.isAutoFillActive === true)
-        result = exeAutoFill(inpWHS, isAutoFillActive, "col");
-      const callbackResult: [number, autofillResult] = [
-        prop || 0,
-        result || defaultResult,
-      ] || [0, defaultResult];
+      if (tabProps.isAutoFillActive === true) result = exeAutoFill(inpWHS, isAutoFillActive, "col");
+      const callbackResult: [number, autofillResult] = [prop || 0, result || defaultResult] || [0, defaultResult];
       fillResult(callbackResult[1], 0);
     } else if (inpWHS.classList.contains("inpHeigth")) {
       if (parseNotNaN(inpWHS.value, 0, "float") > 3) inpWHS.value = "3";
       prop = person.height;
       prop = validateEvResultNum(inpWHS, parseInt(inpWHS.value || "0", 10));
       person.height = prop;
-      if (tabProps.isAutoFillActive === true)
-        result = exeAutoFill(inpWHS, isAutoFillActive, "col");
-      const callbackResult: [number, autofillResult] = [
-        prop || 0,
-        result || defaultResult,
-      ] || [0, defaultResult];
+      if (tabProps.isAutoFillActive === true) result = exeAutoFill(inpWHS, isAutoFillActive, "col");
+      const callbackResult: [number, autofillResult] = [prop || 0, result || defaultResult] || [0, defaultResult];
       fillResult(callbackResult[1], 1);
-    } else if (
-      inpWHS.classList.contains("inpSumDCut") ||
-      inpWHS.classList.contains("selFactorAtletaClass")
-    ) {
-      if (
-        inpWHS.classList.contains("inpSumDCut") &&
-        parseNotNaN(inpWHS.value, 0, "float") > 999
-      )
-        inpWHS.value = "999";
+    } else if (inpWHS.classList.contains("inpSumDCut") || inpWHS.classList.contains("selFactorAtletaClass")) {
+      if (inpWHS.classList.contains("inpSumDCut") && parseNotNaN(inpWHS.value, 0, "float") > 999) inpWHS.value = "999";
       prop = person.sumDCut;
       prop = validateEvResultNum(inpWHS, parseInt(inpWHS.value || "0", 10));
       person.sumDCut = prop;
-      if (tabProps.isAutoFillActive === true)
-        result = exeAutoFill(inpWHS, isAutoFillActive, "col");
-      const callbackResult: [number, autofillResult] = [
-        prop || 0,
-        result || defaultResult,
-      ] || [0, defaultResult];
+      if (tabProps.isAutoFillActive === true) result = exeAutoFill(inpWHS, isAutoFillActive, "col");
+      const callbackResult: [number, autofillResult] = [prop || 0, result || defaultResult] || [0, defaultResult];
       fillResult(callbackResult[1], 2);
-    } else
-      throw elementNotFound(inpWHS, `Inp WHS classList`, extLine(new Error()));
+    } else throw elementNotFound(inpWHS, `Inp WHS classList`, extLine(new Error()));
   } catch (e) {
-    console.error(
-      `Error executing callbackWHS for ${inpWHS?.id || "unidentified"}:${
-        (e as Error).message
-      }`
-    );
+    console.error(`Error executing callbackWHS for ${inpWHS?.id || "unidentified"}:${(e as Error).message}`);
   }
   return [prop || 0, result || defaultResult] || [0, defaultResult];
 }

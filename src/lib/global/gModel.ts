@@ -10,7 +10,6 @@ import {
   stringError,
   typeError,
 } from "./handlers/errorHandler";
-
 export function numberLimit(inpEl: targEl): void {
   if (inpEl instanceof HTMLInputElement || inpEl instanceof HTMLTextAreaElement || inpEl instanceof HTMLSelectElement) {
     const isAtivFis = inpEl.classList.contains("inpAtivFis");
@@ -36,7 +35,6 @@ export function numberLimit(inpEl: targEl): void {
     }
   } else elementNotFound(inpEl, `inpEl id ${inpEl?.id || "UNDEFINED ID"} in numberLimit`, extLine(new Error()));
 }
-
 export function normalizeNegatives(tabInp: Element): string {
   let parsedInpValue = 0;
   if (tabInp instanceof HTMLInputElement) {
@@ -48,7 +46,6 @@ export function normalizeNegatives(tabInp: Element): string {
 
   return parsedInpValue.toString() ?? "";
 }
-
 export function parseNotNaN(iniVal: string, def: number = 0, context: string = "int", fixed: number = 4): number {
   let returnVal = 0;
   try {
@@ -74,7 +71,6 @@ export function parseNotNaN(iniVal: string, def: number = 0, context: string = "
     return returnVal || 0;
   }
 }
-
 export function formatCEP(CEPInp: targEl): string {
   if (CEPInp instanceof HTMLInputElement || CEPInp instanceof HTMLTextAreaElement) {
     CEPInp.value.replaceAll(/[^0-9]/g, "");
@@ -83,7 +79,6 @@ export function formatCEP(CEPInp: targEl): string {
   } else inputNotFound(CEPInp, "CEPInp in formatCEP()", extLine(new Error()));
   return (CEPInp as entryEl)?.value ?? "";
 }
-
 export function formatCPF(CPFInp: targEl): string {
   if (CPFInp instanceof HTMLInputElement || CPFInp instanceof HTMLTextAreaElement) {
     CPFInp.value = CPFInp.value
@@ -112,7 +107,6 @@ export function formatCPF(CPFInp: targEl): string {
   } else inputNotFound(CPFInp, "CPFInp in formatCPF()", extLine(new Error()));
   return (CPFInp as entryEl)?.value ?? "";
 }
-
 export function formatTel(telInp: targEl, full: boolean = false): string {
   let numOnly = "";
   if (telInp instanceof HTMLInputElement || telInp instanceof HTMLTextAreaElement) {
@@ -155,7 +149,6 @@ export function formatTel(telInp: targEl, full: boolean = false): string {
   } else inputNotFound(telInp, "telInp", extLine(new Error()));
   return numOnly;
 }
-
 export function addEmailExtension(emailInp: targEl): string {
   let emailValue = "";
   if (emailInp instanceof HTMLInputElement || emailInp instanceof HTMLTextAreaElement) {
@@ -170,7 +163,6 @@ export function addEmailExtension(emailInp: targEl): string {
   } else inputNotFound(emailInp, `${emailInp?.id || "UNDEFINED ID EMAIL CONTAINER"}`, extLine(new Error()));
   return emailValue;
 }
-
 export function removeFirstClick(el: targEl): number {
   let cursorPosition = 0;
   if (el instanceof Element) {
@@ -181,7 +173,6 @@ export function removeFirstClick(el: targEl): number {
   } else elementNotFound(el, "argument for removeFirstClick()", extLine(new Error()));
   return cursorPosition ?? 0;
 }
-
 export function checkAutoCorrect(deactAutocorrectBtn: targEl): boolean {
   let isAutocorrectOn = true;
   if (deactAutocorrectBtn instanceof HTMLButtonElement) {
@@ -194,7 +185,6 @@ export function checkAutoCorrect(deactAutocorrectBtn: targEl): boolean {
   }
   return isAutocorrectOn;
 }
-
 export function switchAutocorrect(click: Event, deactAutocorrectBtn: targEl, isAutocorrectOn: boolean = true): boolean {
   if (click?.target === deactAutocorrectBtn)
     if (deactAutocorrectBtn instanceof HTMLButtonElement) {
@@ -210,7 +200,6 @@ export function switchAutocorrect(click: Event, deactAutocorrectBtn: targEl, isA
     else elementNotFound(deactAutocorrectBtn, "arguments for switchAutocorrect()", extLine(new Error()));
   return isAutocorrectOn;
 }
-
 export function checkAllGenConts(...els: targEl[]): boolean {
   if (
     Array.isArray(els) &&
@@ -222,7 +211,6 @@ export function checkAllGenConts(...els: targEl[]): boolean {
   else multipleElementsNotFound(extLine(new Error()), "arguments for checkAllGenConts()", `${JSON.stringify(els)}`);
   return false;
 }
-
 export function fluxGen(arrGenConts: entryEl[], genIniValue: targStr = "masculino"): string {
   if (
     Array.isArray(arrGenConts) &&
@@ -300,7 +288,6 @@ export function fluxGen(arrGenConts: entryEl[], genIniValue: targStr = "masculin
     multipleElementsNotFound(extLine(new Error()), "arguments for fluxGen()", `${JSON.stringify(arrGenConts)}` || null);
   return "masculino";
 }
-
 export function showGenFisAlin(genFisAlin: targEl): boolean {
   if (
     genFisAlin instanceof HTMLSelectElement ||
@@ -320,7 +307,6 @@ export function showGenFisAlin(genFisAlin: targEl): boolean {
   } else elementNotFound(genFisAlin, "argument for showGenFisAlin()", extLine(new Error()));
   return false;
 }
-
 export function hideGenFisAlin(genFisAlin: targEl): boolean {
   if (
     genFisAlin instanceof HTMLSelectElement ||
@@ -339,7 +325,6 @@ export function hideGenFisAlin(genFisAlin: targEl): boolean {
   } else elementNotFound(genFisAlin, "argument for hideGenFisAlin()", extLine(new Error()));
   return true;
 }
-
 export function showStgTransHorm(genTrans: targEl): boolean {
   if (
     genTrans instanceof HTMLSelectElement ||
@@ -359,7 +344,6 @@ export function showStgTransHorm(genTrans: targEl): boolean {
   } else elementNotFound(genTrans, "argument for showStgTransHorm()", extLine(new Error()));
   return false;
 }
-
 export function hideStgTransHorm(genTrans: targEl): boolean {
   if (
     genTrans instanceof HTMLSelectElement ||
@@ -378,7 +362,6 @@ export function hideStgTransHorm(genTrans: targEl): boolean {
   } else elementNotFound(genTrans, "argument for hideStgTransHorm()", extLine(new Error()));
   return true;
 }
-
 export function filterIdsByGender(
   arrayIds: string[] = ["peit", "abd", "coxa"],
   bodyType: string = "masculino"
@@ -399,7 +382,6 @@ export function filterIdsByGender(
   }
   return ["peit", "abd", "coxa"];
 }
-
 export function checkPasswordPattern(pwInp: HTMLInputElement | null): void {
   if (pwInp instanceof HTMLInputElement) {
     !/^(?=.*[0-9])/g.test(pwInp.value) && pwInp.setCustomValidity("Sua senha deve ter pelo menos um número");
@@ -408,7 +390,6 @@ export function checkPasswordPattern(pwInp: HTMLInputElement | null): void {
     !/[*]{8,}/g.test(pwInp.value) && pwInp.setCustomValidity("Sua senha deve ter pelo menos oito caracteres");
   } else inputNotFound(pwInp, "pwInp in checkPasswordPattern()", extLine(new Error()));
 }
-
 export function correctCursorNextWords(
   isCursorAutoMoved: boolean = false,
   isUndoUppercase: boolean = false,
@@ -441,7 +422,6 @@ export function correctCursorNextWords(
   });
   return [text, isCursorAutoMoved];
 }
-
 export function wrongStartCorrection(text: string | null = "", wrongStartMatch: string | null = ""): string | null {
   let fixedText = text;
   if (wrongStartMatch && text) {
@@ -450,7 +430,6 @@ export function wrongStartCorrection(text: string | null = "", wrongStartMatch: 
   }
   return fixedText;
 }
-
 export function moveCursorToTheEnd(isCursorAutoMoved: boolean = false, textElement: Element): boolean {
   if (window.getSelection && !isCursorAutoMoved) {
     const range = document.createRange();
@@ -464,7 +443,6 @@ export function moveCursorToTheEnd(isCursorAutoMoved: boolean = false, textEleme
 
   return isCursorAutoMoved;
 }
-
 export function fixCursorPosition(
   textElement: Element,
   range: Range,
@@ -477,7 +455,6 @@ export function fixCursorPosition(
   selection?.removeAllRanges();
   selection?.addRange(range);
 }
-
 export function fixFirstLetter(
   fstLet: string = "",
   regex: RegExp,
@@ -494,7 +471,6 @@ export function fixFirstLetter(
   }
   return contText;
 }
-
 export function fixWrongStarts(text: targStr = "", match: targStr = "", length: number = 0): string {
   let fixedStr = text ?? "";
   if (text && match) {
@@ -504,7 +480,6 @@ export function fixWrongStarts(text: targStr = "", match: targStr = "", length: 
   }
   return fixedStr;
 }
-
 export function fixNextWordsIniNotD(remadeText: string = "", letMatch: string = ""): string {
   if (remadeText) {
     const gLetMatchI = remadeText.lastIndexOf(letMatch) + 1;
@@ -517,7 +492,6 @@ export function fixNextWordsIniNotD(remadeText: string = "", letMatch: string = 
 
   return remadeText;
 }
-
 export function fixNextWordsAfterD(remadeText: string = "", letMatch: string = ""): string {
   const globalLetterMatchIndexD = remadeText ? remadeText.lastIndexOf(letMatch) + 1 : undefined;
   if (globalLetterMatchIndexD) {
@@ -531,7 +505,6 @@ export function fixNextWordsAfterD(remadeText: string = "", letMatch: string = "
   }
   return remadeText;
 }
-
 export function fixUnproperUppercases(text: string = "", match: string = "", context: string | number = 0): string {
   const spaceMatches = text.match(/\s/g);
   const upperCasesRepetitionsIndex = text.indexOf(match);
@@ -569,7 +542,6 @@ export function fixUnproperUppercases(text: string = "", match: string = "", con
   } else console.error(`Context value not suitable`);
   return text;
 }
-
 export function fixForcedUpperCase(
   textElement: Element,
   wordMatch: string[] = [""],
@@ -586,7 +558,6 @@ export function fixForcedUpperCase(
   }
   return text;
 }
-
 export function autoCapitalizeInputs(textEl: targEl, isAutocorrectOn: boolean = true): string {
   if ((textEl instanceof HTMLInputElement && textEl.type === "text") || textEl instanceof HTMLTextAreaElement) {
     let text = textEl?.value ?? null;
@@ -901,7 +872,6 @@ export function autoCapitalizeInputs(textEl: targEl, isAutocorrectOn: boolean = 
   } else elementNotFound(textEl, "argument for autoCapitalizeInputs()", extLine(new Error()));
   return "";
 }
-
 export function capitalizeFirstLetter(text: string): string {
   try {
     if (!(typeof text === "string"))
@@ -913,7 +883,6 @@ export function capitalizeFirstLetter(text: string): string {
     return text.toString();
   }
 }
-
 export function textTransformPascal(text: string): string {
   try {
     if (!(typeof text === "string"))
@@ -925,7 +894,6 @@ export function textTransformPascal(text: string): string {
     return text.toString();
   }
 }
-
 export function dateISOtoBRL(isoDate: string): string {
   try {
     if (typeof isoDate !== "string") throw new Error(`Invalid typeof passed to dateISOtoBRL`);
@@ -949,7 +917,6 @@ export function dateISOtoBRL(isoDate: string): string {
     return "00/00/0000";
   }
 }
-
 export function camelToKebab(str: string): string {
   const iniStr = str;
   try {
@@ -962,7 +929,6 @@ export function camelToKebab(str: string): string {
     return iniStr;
   }
 }
-
 export function kebabToCamel(str: string): string {
   const iniStr = str;
   try {
@@ -975,7 +941,6 @@ export function kebabToCamel(str: string): string {
     return iniStr;
   }
 }
-
 export function regularToSnake(str: string): string {
   return str
     .trim()
@@ -983,7 +948,6 @@ export function regularToSnake(str: string): string {
     .replace(/[\s_]+/g, "-")
     .toLowerCase();
 }
-
 export function modelScripts(): void {
   try {
     document.querySelectorAll("meta").forEach((meta, i) => {

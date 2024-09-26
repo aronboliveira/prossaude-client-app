@@ -11,7 +11,6 @@ import {
 } from "../../global/handlers/gHandlers";
 import { rDragEvent, rMouseEvent, targEl, textEl } from "../../global/declarations/types";
 import { extLine, elementNotFound, multipleElementsNotFound, inputNotFound } from "../../global/handlers/errorHandler";
-
 export function showInspSpanSub(ev: rMouseEvent): void {
   try {
     if (
@@ -42,7 +41,6 @@ export function showInspSpanSub(ev: rMouseEvent): void {
     console.error(`Error executing showInspSpanSub:\n${(e as Error).message}`);
   }
 }
-
 export function showInspDialogs(click: rMouseEvent, isDialogCalled: boolean = false): boolean {
   try {
     if (!(click.currentTarget instanceof HTMLButtonElement))
@@ -63,7 +61,6 @@ export function showInspDialogs(click: rMouseEvent, isDialogCalled: boolean = fa
   }
   return isDialogCalled;
 }
-
 export function addTextToObs(click: rMouseEvent): void {
   try {
     if (!(click.currentTarget instanceof HTMLButtonElement))
@@ -81,7 +78,6 @@ export function addTextToObs(click: rMouseEvent): void {
     console.error(`Error executing addTextToObs:\n${(e as Error).message}`);
   }
 }
-
 export function dragHover(quadrTo: targEl): void {
   if (quadrTo instanceof HTMLElement) {
     setTimeout(() => {
@@ -99,7 +95,6 @@ let odIsDragging = false,
   odInitialY = 0,
   odOffsetX = 0,
   odOffsetY = 0;
-
 export function dragStart(
   move: DragEvent | TouchEvent | React.DragEvent | React.TouchEvent,
   quadrsTe: Element[]
@@ -198,25 +193,21 @@ export function dragStart(
     console.error(`Error executing dragStart:\n${(e as Error).message}`);
   }
 }
-
 export function dragEnter(move: rDragEvent): void {
   move instanceof DragEvent && move.target instanceof HTMLElement
     ? move.preventDefault()
     : elementNotFound(move?.target, "move.target in dragEnter", extLine(new Error()));
 }
-
 export function dragOver(move: rDragEvent): void {
   move instanceof DragEvent && move.target instanceof HTMLElement
     ? move.preventDefault()
     : elementNotFound(move?.target, "move.target in dragOver", extLine(new Error()));
 }
-
 export function dragLeave(move: rDragEvent): void {
   move instanceof DragEvent && move.target instanceof HTMLElement
     ? move.preventDefault()
     : elementNotFound(move?.target, "move.target in dragLeave", extLine(new Error()));
 }
-
 export function dragDrop(
   drop: Event,
   srcEl: targEl,
@@ -254,26 +245,22 @@ export function dragDrop(
   );
   dragEnd(validSrcEl);
 }
-
 export function dragEnd(movingSrcEl: targEl): void {
   const contInQuadrs = document.querySelectorAll(".contInQuadrs");
   movingSrcEl instanceof HTMLElement
     ? dragEndChilds(contInQuadrs)
     : elementNotFound(movingSrcEl, "movingSrcEl in dragEnd", extLine(new Error()));
 }
-
 export function dragStartChilds(contInQuadrs: Element[] | NodeListOf<Element>): void {
   contInQuadrs.forEach(contInQuadr => {
     contInQuadr.setAttribute("draggable", "true");
   });
 }
-
 export function dragEndChilds(contInQuadrs: Element[] | NodeListOf<Element>): void {
   contInQuadrs.forEach(contInQuadr => {
     contInQuadr.setAttribute("draggable", "false");
   });
 }
-
 export function clearQuadrInps(quadrInp: targEl): void {
   if (
     quadrInp instanceof HTMLInputElement ||
@@ -293,7 +280,6 @@ export function clearQuadrInps(quadrInp: targEl): void {
     } else elementNotFound(quadrInp.nextElementSibling, "quadrInp.nextElementSibling", extLine(new Error()));
   } else inputNotFound(quadrInp, "quadrInp in clearQuadrInps", extLine(new Error()));
 }
-
 export function resetLabels(quadrBtn: targEl): void {
   const parentDiv = quadrBtn?.closest(".quadrMainDiv");
   const innerDivInps = parentDiv?.querySelectorAll("input[id^=inpD]");
@@ -314,7 +300,6 @@ export function resetLabels(quadrBtn: targEl): void {
     );
   }
 }
-
 export function addSubDivTrat(click: Event | React.MouseEvent, addSubDivBtn: targEl, blockCount: number = 1): number {
   if (click.currentTarget === addSubDivBtn && addSubDivBtn instanceof HTMLButtonElement) {
     if (addSubDivBtn.classList.contains("addTrat")) {

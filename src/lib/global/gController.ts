@@ -9,7 +9,6 @@ import {
   multipleElementsNotFound,
   elementNotPopulated,
 } from "./handlers/errorHandler";
-
 export function getGlobalEls(isAutocorrectOn: boolean = true, context: string = "notNum"): boolean {
   const textConts = [...document.querySelectorAll("textarea"), ...document.querySelectorAll('input[type="text"]')];
   const radioInps = Array.from(document.querySelectorAll('input[type="radio"]'));
@@ -46,7 +45,6 @@ export function getGlobalEls(isAutocorrectOn: boolean = true, context: string = 
     : elementNotPopulated(deactAutocorrectBtns, "deactAutoCorrectBtns", extLine(new Error()));
   return isAutocorrectOn || true;
 }
-
 export function addListenerTexts(textConts: targEl[], isAutocorrectOn: boolean = true): void {
   if (textConts.every(el => el instanceof HTMLElement)) {
     textConts.forEach(textCont => {
@@ -68,7 +66,6 @@ export function addListenerTexts(textConts: targEl[], isAutocorrectOn: boolean =
     });
   } else console.error(`Erro validando instâncias em textConts`);
 }
-
 export function addListenerNumInps(numInps: targEl[]): void {
   if (numInps.every(el => el instanceof HTMLElement)) {
     numInps.forEach(numInp => {
@@ -84,7 +81,6 @@ export function addListenerNumInps(numInps: targEl[]): void {
     });
   } else console.error(`Erro validando instâncias em numInps`);
 }
-
 export function addListenerRadios(radioInps: targEl[], context: string = "od"): void {
   if (radioInps.every(el => el instanceof HTMLElement) && (context === "od" || context === "ed" || context === "ag")) {
     radioInps.forEach(radio => {
@@ -106,7 +102,6 @@ export function addListenerRadios(radioInps: targEl[], context: string = "od"): 
     });
   } else console.error(`Erro validando instâncias em radioInps`);
 }
-
 export function addListenerDateBtns(dateBtns: targEl[]): void {
   if (dateBtns.every(el => el instanceof HTMLElement)) {
     dateBtns.forEach(dateBtn => {
@@ -118,7 +113,6 @@ export function addListenerDateBtns(dateBtns: targEl[]): void {
     });
   } else console.error(`Erro validando instâncias em dateBtns`);
 }
-
 export function addListenersGenConts(genElement: targEl, genValue: string = "masculino"): string {
   const genBirthRel = document.getElementById("genBirthRelId");
   const genTrans = document.getElementById("genTransId");
@@ -134,7 +128,6 @@ export function addListenersGenConts(genElement: targEl, genValue: string = "mas
   } else multipleElementsNotFound(extLine(new Error()), "gen Elements", genElement, genBirthRel, genTrans, genFisAlin);
   return genValue || "masculino";
 }
-
 export function addListenerAutocorrectBtns(deactAutocorrectBtns: targEl[], isAutocorrectOn: boolean = true): boolean {
   if (deactAutocorrectBtns.every(el => el instanceof HTMLElement)) {
     deactAutocorrectBtns.forEach(deactAutocorrectBtn => {
@@ -154,7 +147,6 @@ export function addListenerAutocorrectBtns(deactAutocorrectBtns: targEl[], isAut
   } else console.error(`Erro validando instâncias em deactAutocorrectBtns`);
   return isAutocorrectOn || true;
 }
-
 export function addListenerAstDigitBtns(astDigtBtns: targEl[]): void {
   if (astDigtBtns.every(el => el instanceof HTMLElement)) {
     astDigtBtns.forEach(astDigtBtn => {
@@ -166,7 +158,6 @@ export function addListenerAstDigitBtns(astDigtBtns: targEl[]): void {
     });
   } else console.error(`Erro validando instâncias em astDigtBtns`);
 }
-
 export function addListenerExportBtn(
   context: string = "undefined",
   scope: Document | Element | voidVal = document,
@@ -290,7 +281,6 @@ export function addListenerExportBtn(
   } else elementNotFound(btnExport, "argument for addListenerExportBtn()", extLine(new Error()));
   return btnExport;
 }
-
 export function addResetAstListener(): void {
   try {
     const resetBtn = document.getElementById("resetAstBtn");
@@ -333,7 +323,6 @@ export function addResetAstListener(): void {
     ${(e as Error).message}`);
   }
 }
-
 export function addCustomSbListeners(container: targEl, content: targEl): void {
   try {
     if (!(container instanceof HTMLElement))
@@ -440,7 +429,6 @@ export function addCanvasListeners(): void {
     ${(e as Error).message}`);
   }
 }
-
 export function watchLabels(): void {
   setTimeout(() => {
     try {

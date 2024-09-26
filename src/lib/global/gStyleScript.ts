@@ -7,7 +7,6 @@ import {
   multipleElementsNotFound,
   inputNotFound,
 } from "./handlers/errorHandler";
-
 export function dinamicGridAdjust(gridDivs: Array<targEl>): void {
   if (gridDivs?.length > 0 && gridDivs.every(div => div instanceof HTMLElement)) {
     gridDivs.forEach(gridDiv => {
@@ -46,7 +45,6 @@ export function dinamicGridAdjust(gridDivs: Array<targEl>): void {
     });
   } else elementNotPopulated(gridDivs, "gridDivs in dinamicGridAjust()", extLine(new Error()));
 }
-
 export function equalizeFlexSibilings(
   flexEls: Array<targEl> | NodeListOf<Element>,
   contexts: Array<Array<string>> = [["width", "px"]]
@@ -102,7 +100,6 @@ export function equalizeFlexSibilings(
     });
   } else console.warn(`Failed to equalize flex siblings`);
 }
-
 export function equalizeTabCells(tab: HTMLTableElement | null): void {
   if (tab instanceof HTMLTableElement) {
     const parentEl = tab.closest("section") || tab.closest("dialog") || tab.closest("form");
@@ -170,7 +167,6 @@ export function equalizeTabCells(tab: HTMLTableElement | null): void {
   } else
     elementNotFound(tab, `tab id ${(tab as any)?.id || "UNIDENTIFIED in equalizeTabCells()"}`, extLine(new Error()));
 }
-
 export function isClickOutside(event: MouseEvent | React.MouseEvent, dlgInBtn: Element): boolean[] {
   try {
     if (!document.querySelector(`#${dlgInBtn.id}` || "dialog"))
@@ -183,7 +179,6 @@ export function isClickOutside(event: MouseEvent | React.MouseEvent, dlgInBtn: E
     return [false, false, false, false];
   }
 }
-
 export function fadeElement(el: targEl, opacity: string = "1", timer: string = "0.5", timeout: number = 500): void {
   if (el instanceof HTMLElement) {
     el.style.opacity = opacity;
@@ -192,7 +187,6 @@ export function fadeElement(el: targEl, opacity: string = "1", timer: string = "
     }, timeout);
   } else elementNotFound(el, `element ${el?.id || "UNDEFINED ELEMENT"}`, extLine(new Error()));
 }
-
 export function highlightChange(el: targEl, color: string = "red", context: string = "both"): void {
   if (el instanceof HTMLElement && typeof color === "string") {
     const iniColor = "rgb(222, 226, 230)";
@@ -241,7 +235,6 @@ export function highlightChange(el: targEl, color: string = "red", context: stri
     }
   } else multipleElementsNotFound(extLine(new Error()), "arguments for highlightChange()", el, color);
 }
-
 export function switchBtnBS(
   bsBtns: Array<targEl>,
   bsClasses: Array<string> = ["btn-warning"],
@@ -285,7 +278,6 @@ export function switchBtnBS(
     });
   } else elementNotPopulated(bsBtns, "argument for switchBtnBS()", extLine(new Error()));
 }
-
 export function clearDefInvalidMsg(
   form: HTMLFormElement | null,
   inps: (HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement | null)[]
@@ -327,7 +319,6 @@ export function clearDefInvalidMsg(
     } else elementNotFound(form, "form in clearDefInvalidMsg()", extLine(new Error()));
   }
 }
-
 export function fillCustomValidityWarn(inpId: string, customMsg: string = "Campo inválido"): void {
   const warnEl = document.getElementById(`${inpId}Warn`);
   if (warnEl instanceof HTMLElement) {
@@ -355,7 +346,6 @@ export function fillCustomValidityWarn(inpId: string, customMsg: string = "Campo
       extLine(new Error())
     );
 }
-
 export function addListenerForValidities(inps: Array<targEl>, pattern?: RegExp): boolean {
   if (Array.isArray(inps) && inps.length > 0 && inps.every(inp => inp instanceof HTMLElement)) {
     inps.forEach(inp => {
@@ -416,7 +406,6 @@ export function addListenerForValidities(inps: Array<targEl>, pattern?: RegExp):
   } else elementNotPopulated(inps, "argument for addListenerForValidites()", extLine(new Error()));
   return false;
 }
-
 export function clearPhDates(dateInps: Array<targEl>): void {
   if (Array.isArray(dateInps) && dateInps.every(inp => inp instanceof HTMLElement)) {
     dateInps.forEach(inp => {
@@ -434,7 +423,6 @@ export function clearPhDates(dateInps: Array<targEl>): void {
     });
   } else elementNotPopulated(dateInps, "dateInps in clearPhDates()", extLine(new Error()));
 }
-
 export function resetPhs(inps: Array<entryEl>, phs: { [key: string]: string }): void {
   if (Array.isArray(inps) && inps.every(inp => inp instanceof HTMLElement)) {
     for (const inp of inps) {
@@ -454,7 +442,6 @@ export function resetPhs(inps: Array<entryEl>, phs: { [key: string]: string }): 
     }
   } else elementNotPopulated(inps, "argument for cleanLoginPhs()", extLine(new Error()));
 }
-
 export function equalizeWidWithPhs(els: Array<targEl>): void {
   if (Array.isArray(els) && els.length > 0 && els.every(el => el instanceof HTMLElement)) {
     const chReferenceCanva = document.getElementById("chreference");
@@ -540,7 +527,6 @@ export function equalizeWidWithPhs(els: Array<targEl>): void {
       console.error(`No ch measure reference. Results for equalizeWidWithPhs may be misleading. Aborting process.`);
   } else elementNotPopulated(els, "els in balanceWidWithPhs()", extLine(new Error()));
 }
-
 export function strikeNulls(els: Array<targEl>): void {
   if (Array.isArray(els) && els.length > 0 && els.every(el => el instanceof HTMLElement)) {
     els.forEach(el => {
@@ -557,7 +543,6 @@ export function strikeNulls(els: Array<targEl>): void {
     });
   } else elementNotPopulated(els, "argument for strikeNulls()", extLine(new Error()));
 }
-
 export function normalizeSizeSb(
   els: Array<targEl>,
   includeChilds: [boolean, number] = [true, 1],
@@ -630,7 +615,6 @@ export function normalizeSizeSb(
   } else
     elementNotPopulated(els, "Elements for normalization of size based on scrollbar display", extLine(new Error()));
 }
-
 export function convertToHex(
   arrColors: Array<[string, Map<string, string>]>
 ): [Array<boolean>, Array<[string, Map<string, string>]>] {
@@ -722,7 +706,6 @@ export function convertToHex(
   }
   return [hexValidations, arrColors];
 }
-
 export function expandContent(el: targEl) {
   if (el instanceof HTMLElement) {
     el.style.opacity = "0";

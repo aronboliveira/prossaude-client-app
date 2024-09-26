@@ -13,66 +13,34 @@ import {
   matchError,
   typeError,
 } from "../../global/handlers/errorHandler";
-import {
-  autofillResult,
-  entryEl,
-  targEl,
-} from "../../global/declarations/types";
-
-export const defaultResult: autofillResult = [
-  0,
-  [0, 0, 0],
-  [0, 0, 0, 0, 0],
-  [],
-];
-
-export const formatValue = (
-  targ: entryEl,
-  numValue: number | string = "0",
-  fix: number = 4
-) => {
+import { autofillResult, entryEl, targEl } from "../../global/declarations/types";
+export const defaultResult: autofillResult = [0, [0, 0, 0], [0, 0, 0, 0, 0], []];
+export const formatValue = (targ: entryEl, numValue: number | string = "0", fix: number = 4) => {
   const placeComma = (numValue: number | string) => {
-    return `${numValue
-      .toString()
-      .slice(0, numValue.toString().lastIndexOf("."))},${numValue
+    return `${numValue.toString().slice(0, numValue.toString().lastIndexOf("."))},${numValue
       .toString()
       .slice(numValue.toString().lastIndexOf(".") + 1)}`;
   };
   if (!(targ.type === "number")) {
-    targ.value = new Intl.NumberFormat("pt-BR").format(
-      parseNotNaN(numValue.toString(), 0, "float", fix)
-    );
+    targ.value = new Intl.NumberFormat("pt-BR").format(parseNotNaN(numValue.toString(), 0, "float", fix));
   }
   if (
-    !Number.isFinite(
-      parseNotNaN(targ.value.replaceAll(",", ""), 0, "float", fix)
-    ) ||
+    !Number.isFinite(parseNotNaN(targ.value.replaceAll(",", ""), 0, "float", fix)) ||
     targ.value === "" ||
     !targ.value
   ) {
-    targ.type === "number"
-      ? (targ.value = numValue.toString())
-      : (targ.value = placeComma(numValue));
+    targ.type === "number" ? (targ.value = numValue.toString()) : (targ.value = placeComma(numValue));
   } else {
     targ.value = numValue.toString();
   }
   if (
-    !Number.isFinite(
-      parseNotNaN(targ.value.replaceAll(",", ""), 0, "float", fix)
-    ) ||
+    !Number.isFinite(parseNotNaN(targ.value.replaceAll(",", ""), 0, "float", fix)) ||
     targ.value === "" ||
     !targ.value
   )
-    typeof numValue === "string"
-      ? (targ.value = numValue)
-      : (targ.value = numValue.toFixed(4));
+    typeof numValue === "string" ? (targ.value = numValue) : (targ.value = numValue.toFixed(4));
 };
-
-export function checkReturnIndex(
-  targInp: targEl,
-  prop: number = 0,
-  context?: string
-): number {
+export function checkReturnIndex(targInp: targEl, prop: number = 0, context?: string): number {
   if (
     (targInp instanceof HTMLInputElement ||
       targInp instanceof HTMLTextAreaElement ||
@@ -83,83 +51,25 @@ export function checkReturnIndex(
     const returnedProp = updateSimpleProperty(targInp) ?? 0;
     typeof returnedProp === "number"
       ? (prop = parseFloat(returnedProp.toFixed(4)))
-      : typeError(
-          "update de prop",
-          returnedProp,
-          "number",
-          extLine(new Error())
-        );
-  } else
-    multipleElementsNotFound(
-      extLine(new Error()),
-      "arguments for checkReturnIndex",
-      targInp,
-      context,
-      prop
-    );
+      : typeError("update de prop", returnedProp, "number", extLine(new Error()));
+  } else multipleElementsNotFound(extLine(new Error()), "arguments for checkReturnIndex", targInp, context, prop);
   return prop || 0;
 }
-
 export function validateTitlesForTargs(numCons: number = 1): targEl[] {
   const arrTargs: targEl[] = [];
   /*os titles são construídos somente para alertar se houver inadequação
     de entitulações no HTML (por ordem ou texto)*/
   [
-    [
-      document.querySelector(`#tabCelRowMedAnt2_1`),
-      /Peso/g,
-      "Weight",
-      "tabInpRowMedAnt2_",
-    ],
-    [
-      document.querySelector("#tabCelRowMedAnt3_1"),
-      /Altura/g,
-      "Height",
-      "tabInpRowMedAnt3_",
-    ],
-    [
-      document.querySelector("#tabCelRowIndPerc2_1"),
-      /IMC/g,
-      "IMC",
-      `inpImc${numCons}Cel2_`,
-    ],
-    [
-      document.querySelector("#tabCelRowIndPerc3_1"),
-      /MLG/g,
-      "MLG",
-      `inpMlg${numCons}Cel3_`,
-    ],
-    [
-      document.querySelector("#tabCelRowIndPerc5_1"),
-      /TMB/g,
-      "TMB",
-      `inpTmb${numCons}Cel5_`,
-    ],
-    [
-      document.querySelector("#tabCelRowIndPerc6_1"),
-      /GET/g,
-      "GET",
-      `inpGet${numCons}Cel6_`,
-    ],
-    [
-      document.querySelector("#tabCelRowDCut9_1"),
-      /Soma/g,
-      "SumDCut",
-      "tabInpRowDCut9_",
-    ],
-    [
-      document.querySelector("#tabCelRowIndPerc4_1"),
-      /PGC/g,
-      "PGC",
-      `inpPgc${numCons}Cel4_`,
-    ],
+    [document.querySelector(`#tabCelRowMedAnt2_1`), /Peso/g, "Weight", "tabInpRowMedAnt2_"],
+    [document.querySelector("#tabCelRowMedAnt3_1"), /Altura/g, "Height", "tabInpRowMedAnt3_"],
+    [document.querySelector("#tabCelRowIndPerc2_1"), /IMC/g, "IMC", `inpImc${numCons}Cel2_`],
+    [document.querySelector("#tabCelRowIndPerc3_1"), /MLG/g, "MLG", `inpMlg${numCons}Cel3_`],
+    [document.querySelector("#tabCelRowIndPerc5_1"), /TMB/g, "TMB", `inpTmb${numCons}Cel5_`],
+    [document.querySelector("#tabCelRowIndPerc6_1"), /GET/g, "GET", `inpGet${numCons}Cel6_`],
+    [document.querySelector("#tabCelRowDCut9_1"), /Soma/g, "SumDCut", "tabInpRowDCut9_"],
+    [document.querySelector("#tabCelRowIndPerc4_1"), /PGC/g, "PGC", `inpPgc${numCons}Cel4_`],
   ].forEach(context => {
-    const [titleEl, regex, stringAtt, idPrefix] = context as [
-      targEl,
-      RegExp,
-      string,
-      string
-    ];
+    const [titleEl, regex, stringAtt, idPrefix] = context as [targEl, RegExp, string, string];
     if (titleEl?.textContent?.match(regex)) {
       const targ = document.querySelector(`#${idPrefix}${numCons + 1}`);
       targ instanceof HTMLInputElement
@@ -173,18 +83,12 @@ export function validateTitlesForTargs(numCons: number = 1): targEl[] {
         extLine(new Error())
       );
   });
-  arrTargs.length < 8 &&
-    console.error(`Invalid Elements for arrTargs: ${arrTargs.toString()}`);
+  arrTargs.length < 8 && console.error(`Invalid Elements for arrTargs: ${arrTargs.toString()}`);
   while (arrTargs.length < 8) arrTargs.push(undefined);
   return arrTargs || [];
 }
-
-export function addListenerComorbBtns(
-  rowCountComorb: number = 3
-): [number, Element[]] {
-  const comorbBtnsArray = Array.from(
-    document.getElementsByClassName("countComorb")
-  );
+export function addListenerComorbBtns(rowCountComorb: number = 3): [number, Element[]] {
+  const comorbBtnsArray = Array.from(document.getElementsByClassName("countComorb"));
   if (comorbBtnsArray?.length > 0) {
     comorbBtnsArray.forEach(comorbBtn => {
       comorbBtn instanceof HTMLButtonElement
@@ -194,15 +98,9 @@ export function addListenerComorbBtns(
           })
         : elementNotFound(comorbBtn, "comorbBtn", extLine(new Error()));
     });
-  } else
-    elementNotPopulated(
-      comorbBtnsArray ?? "null",
-      "comorbBtnsArray",
-      extLine(new Error())
-    );
+  } else elementNotPopulated(comorbBtnsArray ?? "null", "comorbBtnsArray", extLine(new Error()));
   return [rowCountComorb, comorbBtnsArray];
 }
-
 export function addListenerInnerTabs(
   consTablesFs: targEl,
   numColsCons: number = 1,
@@ -213,20 +111,13 @@ export function addListenerInnerTabs(
     typeof numColsCons === "number" &&
     typeof areColGroupsSimilar === "boolean"
   ) {
-    [numColsCons, areColGroupsSimilar] = EdFisNutModel.checkInnerColGroups(
-      consTablesFs,
-      areColGroupsSimilar
-    );
+    [numColsCons, areColGroupsSimilar] = EdFisNutModel.checkInnerColGroups(consTablesFs, areColGroupsSimilar);
     const allTabledInps = consTablesFs.querySelectorAll("input");
     if (allTabledInps?.length > 0) {
       allTabledInps.forEach(tabInp => {
         //para apagar retornos negativos anômalos
         tabInp.addEventListener("input", (): string => {
-          if (
-            parseInt(tabInp.value) < 0 ||
-            Number.isNaN(parseInt(tabInp.value))
-          )
-            tabInp.value = "0";
+          if (parseInt(tabInp.value) < 0 || Number.isNaN(parseInt(tabInp.value))) tabInp.value = "0";
           return tabInp.value;
         });
       });
@@ -248,7 +139,6 @@ export function addListenerInnerTabs(
     );
   return [numColsCons || 0, areColGroupsSimilar || false] || [1, false];
 }
-
 export function addListenerTrioReadNumCons(
   consTablesFs: targEl,
   numTotalColsCons: number = 1,
@@ -260,21 +150,11 @@ export function addListenerTrioReadNumCons(
     typeof numTotalColsCons == "number" &&
     typeof numTotalTabsCons === "number"
   ) {
-    trioReadNumCons instanceof HTMLInputElement &&
-    trioReadNumCons.type === "number"
+    trioReadNumCons instanceof HTMLInputElement && trioReadNumCons.type === "number"
       ? trioReadNumCons.addEventListener("input", (): void => {
-          callbackTrioReadNumCons(
-            consTablesFs,
-            trioReadNumCons,
-            numTotalColsCons,
-            numTotalTabsCons
-          );
+          callbackTrioReadNumCons(consTablesFs, trioReadNumCons, numTotalColsCons, numTotalTabsCons);
         })
-      : inputNotFound(
-          trioReadNumCons?.id,
-          "trioReadNumCons",
-          extLine(new Error())
-        );
+      : inputNotFound(trioReadNumCons?.id, "trioReadNumCons", extLine(new Error()));
   } else
     multipleElementsNotFound(
       extLine(new Error()),
@@ -285,20 +165,16 @@ export function addListenerTrioReadNumCons(
     );
   return trioReadNumCons;
 }
-
 export function callbackTrioReadNumCons(
   consTablesFs: targEl,
   trioReadNumCons: targEl,
   numTotalColsCons: number = 1,
   numTotalTabsCons: number = 1
 ): Element[] {
-  const numConsTextHeadCels = Array.from(
-    document.getElementsByClassName("numConsTextHeadCel")
-  );
+  const numConsTextHeadCels = Array.from(document.getElementsByClassName("numConsTextHeadCel"));
   if (
     consTablesFs instanceof HTMLElement &&
-    (trioReadNumCons instanceof HTMLInputElement ||
-      trioReadNumCons instanceof HTMLSelectElement) &&
+    (trioReadNumCons instanceof HTMLInputElement || trioReadNumCons instanceof HTMLSelectElement) &&
     typeof numTotalColsCons == "number" &&
     typeof numTotalTabsCons === "number"
   ) {
@@ -338,45 +214,22 @@ export function callbackTrioReadNumCons(
     );
   return numConsTextHeadCels;
 }
-
-export function callbackAutoFillBtn(
-  autoFillBtn: targEl,
-  isAutoFillActive: boolean = true
-): boolean {
+export function callbackAutoFillBtn(autoFillBtn: targEl, isAutoFillActive: boolean = true): boolean {
   autoFillBtn instanceof HTMLButtonElement ||
-  (autoFillBtn instanceof HTMLInputElement &&
-    (autoFillBtn.type === "checkbox" || autoFillBtn.type === "radio"))
-    ? (isAutoFillActive = EdFisNutHandler.switchAutoFill(
-        autoFillBtn,
-        isAutoFillActive
-      ))
-    : elementNotFound(
-        autoFillBtn,
-        "autoFillBtn in callbackAutoFillBtn()",
-        extLine(new Error())
-      );
+  (autoFillBtn instanceof HTMLInputElement && (autoFillBtn.type === "checkbox" || autoFillBtn.type === "radio"))
+    ? (isAutoFillActive = EdFisNutHandler.switchAutoFill(autoFillBtn, isAutoFillActive))
+    : elementNotFound(autoFillBtn, "autoFillBtn in callbackAutoFillBtn()", extLine(new Error()));
   return isAutoFillActive;
 }
-
-export function addListenerProtocolo(
-  protocolo: targEl,
-  tabDC: targEl,
-  textBodytype: targEl
-): string {
+export function addListenerProtocolo(protocolo: targEl, tabDC: targEl, textBodytype: targEl): string {
   let prVal = (protocolo as entryEl)?.value ?? "pollock3";
   if (
-    (protocolo instanceof HTMLSelectElement ||
-      protocolo instanceof HTMLInputElement) &&
+    (protocolo instanceof HTMLSelectElement || protocolo instanceof HTMLInputElement) &&
     tabDC instanceof HTMLTableElement &&
-    (textBodytype instanceof HTMLSelectElement ||
-      textBodytype instanceof HTMLInputElement)
+    (textBodytype instanceof HTMLSelectElement || textBodytype instanceof HTMLInputElement)
   )
     protocolo.addEventListener("change", (): string => {
-      protocolo.value = EdFisNutModel.changeTabDCutLayout(
-        protocolo,
-        tabDC,
-        textBodytype
-      );
+      protocolo.value = EdFisNutModel.changeTabDCutLayout(protocolo, tabDC, textBodytype);
       return protocolo.value;
     });
   else

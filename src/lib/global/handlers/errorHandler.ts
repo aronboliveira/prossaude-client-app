@@ -10,15 +10,8 @@ import type {
   errorHandleSpreadType,
   errorLineExp,
 } from "../declarations/types";
-
-export const extLine = (error: Error): string =>
-  error.stack?.split("\n")[1]?.trim()?.slice(-3, -1) || "NULL";
-
-export function elementNotFound(
-  element: errorHandleElType,
-  elementName: targStr,
-  line: targStr | errorLineExp
-): Error {
+export const extLine = (error: Error): string => error.stack?.split("\n")[1]?.trim()?.slice(-3, -1) || "NULL";
+export function elementNotFound(element: errorHandleElType, elementName: targStr, line: targStr | errorLineExp): Error {
   element ??= "UNDEFINED";
   elementName ||= "UNNAMED";
   line ||= "UNDEFINED";
@@ -30,53 +23,33 @@ export function elementNotFound(
   ) {
     errorMsg = `
     ELEMENT NOT FOUND, LINE ${line ?? "UNDEFINED"}:
-    Error validating instance of ${
-      (element as HTMLElement)?.id || elementName || "NULL"
-    }.
-    Obtained instance: ${
-      Object.prototype.toString.call(element)?.slice(8, -1) || "NULL"
-    };
+    Error validating instance of ${(element as HTMLElement)?.id || elementName || "NULL"}.
+    Obtained instance: ${Object.prototype.toString.call(element)?.slice(8, -1) || "NULL"};
     Obtained value: ${(element as textEl)?.value ?? "NULL"}.`;
     console.error(errorMsg);
   } else {
     errorMsg = `
     ELEMENT NOT FOUND, LINE ${line ?? "UNDEFINED"}:
-    Error validating instance of ${
-      (element as HTMLElement)?.id || elementName || "UNDEFINED ID OR NAME"
-    }.
-    Obtained instance: ${
-      Object.prototype.toString.call(element)?.slice(8, -1) || "NULL"
-    }.`;
+    Error validating instance of ${(element as HTMLElement)?.id || elementName || "UNDEFINED ID OR NAME"}.
+    Obtained instance: ${Object.prototype.toString.call(element)?.slice(8, -1) || "NULL"}.`;
     console.error(errorMsg);
   }
   return Error(errorMsg);
 }
-
-export function inputNotFound(
-  element: errorHandleElType,
-  elementName: targStr,
-  line: targStr | errorLineExp
-): Error {
+export function inputNotFound(element: errorHandleElType, elementName: targStr, line: targStr | errorLineExp): Error {
   element ??= "UNDEFINED";
   elementName ||= "UNNAMED";
   line ||= "UNDEFINED";
   const errorMsg = `INPUT NOT FOUND, LINE ${line ?? "UNDEFINED"}:
-  Error validating ${
-    (element as HTMLElement)?.id || elementName || "UNDEFINED ID OR NAME"
-  }.
+  Error validating ${(element as HTMLElement)?.id || elementName || "UNDEFINED ID OR NAME"}.
   Obtained Element: ${element ?? "NULL"};
-  Obtained instance: ${
-    Object.prototype.toString.call(element)?.slice(8, -1) || "NULL"
-  };
-  Obtained type (only for <input>): ${
-    (element as HTMLInputElement)?.type || "NULL"
-  };
+  Obtained instance: ${Object.prototype.toString.call(element)?.slice(8, -1) || "NULL"};
+  Obtained type (only for <input>): ${(element as HTMLInputElement)?.type || "NULL"};
   Obtained value: ${(element as textEl)?.value || "NULL"};
   Obtained .checked: ${(element as HTMLInputElement)?.checked || "NULL"}.`;
   console.error(errorMsg);
   return Error(errorMsg);
 }
-
 export function elementWithArrayError(
   context: targStr,
   array: errorHandleArrayType,
@@ -100,7 +73,6 @@ export function elementWithArrayError(
   console.error(errorMsg);
   return Error(errorMsg);
 }
-
 export function elementWithObjectError(
   context: targStr,
   object: targObj = {},
@@ -113,16 +85,13 @@ export function elementWithObjectError(
   elementName ||= "UNNAMED";
   line ||= "UNDEFINED";
   const errorMsg = `ELEMENT WITH OBJECT ERROR, LINE ${line ?? "UNDEFINED"}:
-  Erro ${context ?? "UNDEFINED"}. Elemento: ${
-    object?.toString() || null
-  }; instância: ${object?.constructor?.name ?? "NULL"}
-  ${elementName ?? "UNNAMED"}: Obtained instance: ${
-    Object.prototype.toString.call(element)?.slice(8, -1) ?? "NULL"
-  }`;
+  Erro ${context ?? "UNDEFINED"}. Elemento: ${object?.toString() || null}; instância: ${
+    object?.constructor?.name ?? "NULL"
+  }
+  ${elementName ?? "UNNAMED"}: Obtained instance: ${Object.prototype.toString.call(element)?.slice(8, -1) ?? "NULL"}`;
   console.error(errorMsg);
   return Error(errorMsg);
 }
-
 export function elementNotPopulated(
   array: errorHandleArrayType,
   arrayName: targStr,
@@ -133,16 +102,9 @@ export function elementNotPopulated(
   line ||= "UNDEFINED";
   let arrInstances: string[] = [];
   if (array instanceof HTMLCollection || array instanceof NodeList)
-    array = Array.from(array).filter(
-      item => item instanceof Element
-    ) as Element[];
-  if (
-    array instanceof Array &&
-    array.every(item => item instanceof Element || typeof item === "object")
-  ) {
-    arrInstances = array.map(
-      el => Object.prototype.toString.call(el).slice(8, -1) + " "
-    );
+    array = Array.from(array).filter(item => item instanceof Element) as Element[];
+  if (array instanceof Array && array.every(item => item instanceof Element || typeof item === "object")) {
+    arrInstances = array.map(el => Object.prototype.toString.call(el).slice(8, -1) + " ");
   }
   const errorMsg = `ELEMENT POPULATION ERROR, LINE ${line ?? "UNDEFINED"}:
   Error validating ${arrayName || "NULL"}.
@@ -154,7 +116,6 @@ export function elementNotPopulated(
   console.error(errorMsg);
   return Error(errorMsg);
 }
-
 export function multipleElementsNotFound(
   line: targStr | errorLineExp,
   context: targStr,
@@ -165,9 +126,7 @@ export function multipleElementsNotFound(
 
   let errorMessage = `MULTIPLE ELEMENTS NOT FOUND, LINE ${line ?? "UNDEFINED"}:
   Error validating ${context || "Undefined Function Name"}.`;
-  const mappedNullElements = elements.map(element =>
-    element === null || element === undefined ? "NULL" : element
-  );
+  const mappedNullElements = elements.map(element => (element === null || element === undefined ? "NULL" : element));
 
   mappedNullElements.forEach(element => {
     if (
@@ -176,10 +135,7 @@ export function multipleElementsNotFound(
       element instanceof HTMLSelectElement ||
       element instanceof HTMLOptionElement
     ) {
-      if (
-        element instanceof HTMLInputElement &&
-        (element.type === "radio" || element.type === "checkbox")
-      )
+      if (element instanceof HTMLInputElement && (element.type === "radio" || element.type === "checkbox"))
         errorMessage += `
         Instance of ${element.id || "NULL"} obtained: ${
           Object.prototype.toString.call(element)?.slice(8, -1) ?? "NULL"
@@ -201,7 +157,6 @@ export function multipleElementsNotFound(
   console.error(errorMessage);
   return Error(errorMessage);
 }
-
 export function elementsNotFoundFunction(
   line: targStr | errorLineExp,
   funcName: targStr,
@@ -210,14 +165,10 @@ export function elementsNotFoundFunction(
   line ||= "UNDEFINED";
   funcName ||= "UNDEFINED FUNCTION NAME";
 
-  let errorMessage = `ELEMENTS NOT FOUND FOR FUNCTION, LINE ${
-    line ?? "UNDEFINED"
-  }:
+  let errorMessage = `ELEMENTS NOT FOUND FOR FUNCTION, LINE ${line ?? "UNDEFINED"}:
   Error validating Obtained instance for ${funcName || "NULL"}`;
 
-  const mappedNullElements = elements.map(element =>
-    element === null || element === undefined ? "NULL" : element
-  );
+  const mappedNullElements = elements.map(element => (element === null || element === undefined ? "NULL" : element));
 
   mappedNullElements.forEach(element => {
     if (
@@ -226,10 +177,7 @@ export function elementsNotFoundFunction(
       element instanceof HTMLSelectElement ||
       element instanceof HTMLOptionElement
     ) {
-      if (
-        element instanceof HTMLInputElement &&
-        (element.type === "radio" || element.type === "checkbox")
-      )
+      if (element instanceof HTMLInputElement && (element.type === "radio" || element.type === "checkbox"))
         errorMessage += `Instance of ${element.id || "NULL"} obtained: ${
           Object.prototype.toString.call(element)?.slice(8, -1) ?? "NULL"
         };\n
@@ -240,9 +188,7 @@ export function elementsNotFoundFunction(
         };\n
         Obtained value: ${(element as textEl)?.value || "NULL"}`;
     } else
-      errorMessage += `Instance of ${
-        (element as HTMLElement)?.id || "NULL"
-      } obtained: ${
+      errorMessage += `Instance of ${(element as HTMLElement)?.id || "NULL"} obtained: ${
         Object.prototype.toString.call(element)?.slice(8, -1) ?? "NULL"
       };\n`;
   });
@@ -250,15 +196,9 @@ export function elementsNotFoundFunction(
   console.error(errorMessage);
   return Error(errorMessage);
 }
-
-export function maxNumberError(
-  unvalidNumber: targLooseNum,
-  title: targStr,
-  line: targStr | errorLineExp
-): Error {
+export function maxNumberError(unvalidNumber: targLooseNum, title: targStr, line: targStr | errorLineExp): Error {
   unvalidNumber ??= "UNDEFINED NUMBER";
-  if (typeof unvalidNumber === "number")
-    unvalidNumber = unvalidNumber.toString();
+  if (typeof unvalidNumber === "number") unvalidNumber = unvalidNumber.toString();
   title ||= "UNDEFINED TITLE";
   line ||= "UNDEFINED";
   const errorMessage = `MAX NUMBER ERROR, LINE ${line ?? "UNDEFINED"}:
@@ -267,12 +207,7 @@ export function maxNumberError(
   console.error(errorMessage);
   return Error(errorMessage);
 }
-
-export function stringError(
-  context: targStr,
-  text: targStr,
-  line: targStr | errorLineExp
-): Error {
+export function stringError(context: targStr, text: targStr, line: targStr | errorLineExp): Error {
   context ||= "UNDEFINED CONTEXT";
   text ||= "UNDEFINED";
   line ||= "UNDEFINED";
@@ -282,7 +217,6 @@ export function stringError(
   console.error(errorMessage);
   return Error(errorMessage);
 }
-
 export function matchError(
   context: targStr,
   element: errorHandleElType,
@@ -300,7 +234,6 @@ export function matchError(
   console.error(errorMessage);
   return Error(errorMessage);
 }
-
 export function typeError(
   context: targStr,
   element: primitiveType | Element,
@@ -318,7 +251,6 @@ export function typeError(
   console.error(errorMessage);
   return Error(errorMessage);
 }
-
 export function objectError(
   context: targStr,
   object: targObj = {},
@@ -331,13 +263,9 @@ export function objectError(
   maxPropertiesNumber ||= "UNDEFINED";
   line ||= "UNDEFINED";
   const errorMessage = `OBJECT ERROR, LINE ${line ?? "UNDEFINED"}:
-  Error validating ${objectName ?? "UNDEFINED OBJECT NAME"} for ${
-    context || "UNDEFINED"
-  }.
+  Error validating ${objectName ?? "UNDEFINED OBJECT NAME"} for ${context || "UNDEFINED"}.
   Object obtained: ${object?.toString() || "Undefined Object"};
-  Número obtained of properties: ${Object.keys.length ?? 0}; Número accepted: ${
-    maxPropertiesNumber ?? 0
-  }`;
+  Número obtained of properties: ${Object.keys.length ?? 0}; Número accepted: ${maxPropertiesNumber ?? 0}`;
   console.error(errorMessage);
   return Error(errorMessage);
 }

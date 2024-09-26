@@ -4,7 +4,6 @@ import { useCurrentDate } from "../../global/handlers/gHandlers";
 //nesse file estão presentes principalmente as funções de manipulação dinâmica de texto e layout
 
 import { extLine, elementNotFound, inputNotFound, multipleElementsNotFound } from "../../global/handlers/errorHandler";
-
 export function searchCEPXML(cepElement: targEl): number {
   let initTime = Date.now(),
     reqAcc = 2,
@@ -41,7 +40,6 @@ export function searchCEPXML(cepElement: targEl): number {
   } else elementNotFound(cepElement, "argument for searchCEPXML", extLine(new Error()));
   return statusNum;
 }
-
 export function loadCEPXML(xmlReq: XMLHttpRequest = new XMLHttpRequest(), reqAcc: number = 1): number {
   try {
     if (xmlReq instanceof XMLHttpRequest && typeof reqAcc === "number") {
@@ -65,7 +63,6 @@ export function loadCEPXML(xmlReq: XMLHttpRequest = new XMLHttpRequest(), reqAcc
   }
   return xmlReq.status;
 }
-
 export async function searchCEP(cepElement: targEl): Promise<string> {
   try {
     let initTime = Date.now();
@@ -104,7 +101,6 @@ export async function searchCEP(cepElement: targEl): Promise<string> {
   }
   return "fail";
 }
-
 export async function makeCEPRequest(url: string): Promise<Response> {
   const response = await fetch(url);
   try {
@@ -114,7 +110,6 @@ export async function makeCEPRequest(url: string): Promise<Response> {
   }
   return response;
 }
-
 export async function loadCEP(res: Response): Promise<any> {
   try {
     if (res instanceof Response) {
@@ -139,7 +134,6 @@ export async function loadCEP(res: Response): Promise<any> {
   }
   return -1;
 }
-
 export function displayCEPLoadBar(cepElement: targEl): [number, number, HTMLProgressElement] {
   const progressBar = document.createElement("progress");
   if (cepElement instanceof HTMLInputElement) {
@@ -154,7 +148,6 @@ export function displayCEPLoadBar(cepElement: targEl): [number, number, HTMLProg
   } else inputNotFound(cepElement, "cepElement", extLine(new Error()));
   return [progressBar.max, progressBar.value, progressBar];
 }
-
 export function uploadCEPLoadBar(
   cepElement: targEl,
   progressBar: targEl = new HTMLProgressElement(),
@@ -197,7 +190,6 @@ export function uploadCEPLoadBar(
       progValueInt
     );
 }
-
 export function enableCEPBtn(cepBtn: targEl, cepLength: number = 0): boolean {
   let isCepElemenBtnOff = true;
   if (cepBtn instanceof HTMLButtonElement && typeof cepLength === "number") {
@@ -209,7 +201,6 @@ export function enableCEPBtn(cepBtn: targEl, cepLength: number = 0): boolean {
 
   return isCepElemenBtnOff;
 }
-
 export function addMedHistHandler(click: targEv | React.MouseEvent, blockCount: number = 1): number {
   if (click?.currentTarget instanceof HTMLButtonElement && typeof blockCount === "number") {
     if (click.currentTarget instanceof HTMLElement && click.currentTarget.classList.contains("addAntMed")) {

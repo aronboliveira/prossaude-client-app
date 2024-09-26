@@ -35,7 +35,6 @@ enum EnumTargInpTypes {
   "GET",
 }
 const enumTargInpTypes = EnumTargInpTypes;
-
 export function switchAutoFill(autoFillBtn: targEl, isAutoFillActive: boolean = true): boolean {
   const locksTabInd = Array.from(document.getElementsByClassName("lockTabInd"));
   if (
@@ -73,7 +72,6 @@ export function switchAutoFill(autoFillBtn: targEl, isAutoFillActive: boolean = 
 
   return isAutoFillActive;
 }
-
 export function switchLockInputs(locksTabInd: targEl[], autoFillActivation: boolean = false): void {
   if (
     locksTabInd?.length > 0 &&
@@ -157,7 +155,6 @@ export function switchLockInputs(locksTabInd: targEl[], autoFillActivation: bool
     }
     typeof autoFillActivation: ${typeof autoFillActivation}`);
 }
-
 export function getNumCol(evEl: targEl): number {
   let numCol = 2;
   (evEl && evEl.id?.match(/[0-9]+_[0-9]+$/g)) ||
@@ -168,7 +165,6 @@ export function getNumCol(evEl: targEl): number {
 
   return numCol || 2;
 }
-
 export function validateEvResultNum(evEl: targEl, property: primitiveType = 0): number {
   if (
     ((evEl instanceof HTMLInputElement && (evEl.type === "number" || evEl.type === "text")) ||
@@ -191,7 +187,6 @@ export function validateEvResultNum(evEl: targEl, property: primitiveType = 0): 
   property = 0;
   return property || 0;
 }
-
 export function matchPersonPropertiesWH(
   person: Person,
   targinpweigth: targEl,
@@ -219,7 +214,6 @@ export function matchPersonPropertiesWH(
 
   return [person.weight || 0, person.height || 0];
 }
-
 export function matchPersonPropertiesDC(person: Person, targInpSumDCut: targEl): number {
   if (person && Object.keys(person)?.length > 0) {
     if ("sumDCut" in person && typeof person.sumDCut !== "number" && typeof person.sumDCut !== "string") {
@@ -233,7 +227,6 @@ export function matchPersonPropertiesDC(person: Person, targInpSumDCut: targEl):
   } else objectError("arguments for matchPersonPropertiesDC", person, "person", 6, extLine(new Error()));
   return person.sumDCut || 0;
 }
-
 export function updateIndexesContexts(
   person: Person,
   arrGord: [targEl, targEl, targEl],
@@ -290,7 +283,6 @@ export function updateIndexesContexts(
     );
   return [IMC || 0, MLG || 0, TMB || 0, GET || 0];
 }
-
 export function updateIMCContext(
   arrGord: [targEl, targEl, targEl],
   formTMBTypeElement: targEl,
@@ -327,7 +319,6 @@ export function updateIMCContext(
       ignoredIndex
     );
 }
-
 export function fluxFormIMC(gordCorpLvl: targEl, formTMBTypeElement: targEl, IMC: number = 0): void {
   if (
     typeof IMC === "number" &&
@@ -373,7 +364,6 @@ export function fluxFormIMC(gordCorpLvl: targEl, formTMBTypeElement: targEl, IMC
   } else
     multipleElementsNotFound(extLine(new Error()), "arguments in fluxFormIMC()", IMC, formTMBTypeElement, gordCorpLvl);
 }
-
 export function updateTMBContext(
   person: Person,
   arrTMB: [targEl, targEl],
@@ -412,7 +402,6 @@ export function updateTMBContext(
 
   return TMB || 0;
 }
-
 export function updateGETContext(
   person: Person,
   targInpGET: targEl,
@@ -426,7 +415,6 @@ export function updateGETContext(
 
   return GET || 0;
 }
-
 export function matchTMBElements(
   mainSelect: targEl,
   gordCorpLvl: targEl,
@@ -584,7 +572,6 @@ export function matchTMBElements(
       IMC
     );
 }
-
 export function updatePGC(
   person: Person,
   parentEl: targEl,
@@ -640,7 +627,6 @@ export function updatePGC(
 
   return [PGC || 0, targInpSumDCut ?? null, targInpPGC ?? null];
 }
-
 export function updateAtvLvl(mainSelect: targEl, secondarySelect: targEl, atvLvl: string = "leve"): string {
   if (
     (mainSelect instanceof HTMLSelectElement || mainSelect instanceof HTMLInputElement) &&
@@ -661,7 +647,6 @@ export function updateAtvLvl(mainSelect: targEl, secondarySelect: targEl, atvLvl
 
   return atvLvl || "leve";
 }
-
 export function defineTargInps(parentEl: targEl, numRef: string | number = 1, context: string = "cons"): sixTargEl {
   const arrayTargInps = [];
   const validTargInps: targEl[] | sixTargEl = [];
@@ -714,7 +699,6 @@ export function defineTargInps(parentEl: targEl, numRef: string | number = 1, co
   } else multipleElementsNotFound(extLine(new Error()), "argument for defineTargInps()", parentEl, numRef, context);
   return validTargInps as sixTargEl;
 }
-
 export function addRowAtivFis(count: number = 3, context: string = "Rot"): void {
   const tBodyContainer = document.getElementById(`tbodyAtFis${context}`);
   let title = "Rotineira";
@@ -765,7 +749,6 @@ export function addRowAtivFis(count: number = 3, context: string = "Rot"): void 
     }
   } else multipleElementsNotFound(extLine(new Error()), "arguments for addRowAtivFis", context, tBodyContainer);
 }
-
 export function removeRowAtivFis(count: number = 3, context: string = "Rot"): number {
   if (context === "rot") context = "Rot";
   if (context === "prop") context = "Prop";
@@ -776,7 +759,6 @@ export function removeRowAtivFis(count: number = 3, context: string = "Rot"): nu
   else console.warn(`No row to remove detected!`);
   return count;
 }
-
 export function switchRowComorb(comorbContainer: targEl, rowCountComorb: number = 3): void {
   const parentTab = document.getElementById("tabComorb");
   if (comorbContainer?.tagName === "BUTTON" && comorbContainer?.id === "addComorb" && parentTab) {
@@ -813,7 +795,6 @@ export function switchRowComorb(comorbContainer: targEl, rowCountComorb: number 
     return;
   } else elementNotFound(comorbContainer, "comorbContainer in switchRowComorb", extLine(new Error()));
 }
-
 export function switchRequiredCols(
   elements: elCollection,
   numCons: number = 1,
@@ -949,7 +930,6 @@ export function switchRequiredCols(
         );
   }
 }
-
 export function defineMatrixAxes(tab: targEl): number {
   let matrixValidAxes = 0;
   if (tab instanceof HTMLTableElement) {
@@ -963,7 +943,6 @@ export function defineMatrixAxes(tab: targEl): number {
   } else elementNotFound(tab, "tab in defineMatrixAxes()", extLine(new Error()));
   return matrixValidAxes || 0;
 }
-
 export function validateTabInpList(inpsNL: NodeListOf<Element> | Array<Element>, nMatrix: number = 4): boolean {
   let validInpNL = false;
   if ((inpsNL instanceof NodeList || Array.isArray(inpsNL)) && typeof nMatrix === "number") {
@@ -986,7 +965,6 @@ export function validateTabInpList(inpsNL: NodeListOf<Element> | Array<Element>,
     );
   return validInpNL || false;
 }
-
 export function filterCellsPattern(
   inpCells: NodeListOf<Element> | Element[],
   filterPattern: RegExp,
@@ -1031,7 +1009,6 @@ export function filterCellsPattern(
     );
   return [[inpCells[0]]];
 }
-
 export function switchNumConsTitles(
   consTitles: elCollection,
   trioEl: targEl,
@@ -1124,7 +1101,6 @@ export function switchNumConsTitles(
       numTabs
     );
 }
-
 export function createArraysRels(
   arrayRows: HTMLTableRowElement[],
   btnId: string = "",
@@ -1171,7 +1147,6 @@ export function createArraysRels(
     );
   return colAcc;
 }
-
 export function getConsultasNums(arrayRow: targEl): number[] {
   let arrayConsultasNum: number[] = [];
   if (arrayRow instanceof HTMLTableRowElement) {

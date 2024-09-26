@@ -35,7 +35,6 @@ export function updateSimpleProperty(el: targEl): primitiveType {
   console.log(`Failed to update property for ${el?.id || el?.tagName || "unidentified"}. Value returned: -1`);
   return "-1";
 }
-
 export function cursorCheckTimer(): number {
   const selection = getSelection();
   if (selection && selection.focusNode !== null) {
@@ -219,7 +218,6 @@ export function cpbInpHandler(ev: Event, radio: targEl): void {
       radio?.parentElement?.parentElement
     );
 }
-
 export function deactTextInput(
   addressInps: NodeListOf<Element> | Element[],
   nullRadios: NodeListOf<Element> | Element[]
@@ -237,14 +235,12 @@ export function deactTextInput(
       })
     : console.error("Number of Inputs and Radios unequal, aborting deactTextInput()");
 }
-
 export function doubleClickHandler(inpEl: targEl): void {
   if (inpEl instanceof HTMLInputElement && (inpEl.type === "checkbox" || inpEl.type === "radio")) {
     inpEl.checked = inpEl.checked ? false : true;
     cpbInpHandler(new Event("change"), inpEl);
   } else inputNotFound(inpEl, `inpEl id ${inpEl?.id || "UNDEFINED ID"}`, extLine(new Error()));
 }
-
 export function useCurrentDate(activation: Event, dateBtn: targEl): void {
   if (activation?.target === dateBtn && dateBtn instanceof HTMLButtonElement) {
     const currentDate = new Date();
@@ -259,7 +255,6 @@ export function useCurrentDate(activation: Event, dateBtn: targEl): void {
       : inputNotFound(targInputDate, `targInputDate id ${targInputDate?.id || "UNDEFINED ID"}`, extLine(new Error()));
   } else elementNotFound(dateBtn, "arguments for useCurrentDate()", extLine(new Error()));
 }
-
 export function searchNextSiblings(currentElement: Element, searchedSiblingClass: string): Element {
   let loopAcc = 0;
   while (currentElement?.nextElementSibling) {
@@ -269,7 +264,6 @@ export function searchNextSiblings(currentElement: Element, searchedSiblingClass
   }
   return currentElement;
 }
-
 export function searchPreviousSiblings(currentElement: Element, searchedSiblingClass: string): Element {
   let loopAcc = 0;
   while (currentElement?.previousElementSibling) {
@@ -279,7 +273,6 @@ export function searchPreviousSiblings(currentElement: Element, searchedSiblingC
   }
   return currentElement;
 }
-
 export function searchPreviousSiblingsById(currentElement: Element, searchedSiblingId: string): Element {
   let loopAcc = 0;
   while (currentElement?.previousElementSibling) {
@@ -289,7 +282,6 @@ export function searchPreviousSiblingsById(currentElement: Element, searchedSibl
   }
   return currentElement;
 }
-
 export function searchParents(currentElement: Element, searchedParentClass: string): Element {
   let loopAcc = 0;
   while (currentElement?.parentElement) {
@@ -299,7 +291,6 @@ export function searchParents(currentElement: Element, searchedParentClass: stri
   }
   return currentElement;
 }
-
 export function changeToAstDigit(toFileInpBtn: targEl): void {
   try {
     if (!(toFileInpBtn instanceof HTMLButtonElement))
@@ -474,7 +465,6 @@ export function changeToAstDigit(toFileInpBtn: targEl): void {
     console.error(`Error executing changeToAstDigt:\n${(e as Error).message}`);
   }
 }
-
 export function defineLabId(
   labAst: targEl,
   toFileInpBtn: targEl,
@@ -489,7 +479,6 @@ export function defineLabId(
     labAst!.id = "spanAstPct";
   } else multipleElementsNotFound(extLine(new Error()), "argumentos para defineLabId", toFileInpBtn, fileEl);
 }
-
 export function resetarFormulario(
   click: MouseEvent,
   toFileInpBtns: targEl[] | NodeListOf<Element>,
@@ -542,7 +531,6 @@ export function resetarFormulario(
       `${JSON.stringify(toFileInpBtns)}` || null
     );
 }
-
 export function enableCPFBtn(cpfBtn: targEl, cpfLength: string = ""): boolean {
   if (cpfBtn instanceof HTMLButtonElement && typeof cpfLength === "string") {
     if (cpfLength.replaceAll(/[^0-9]/g, "").length < 11) {
@@ -558,7 +546,6 @@ export function enableCPFBtn(cpfBtn: targEl, cpfLength: string = ""): boolean {
   } else multipleElementsNotFound(extLine(new Error()), "argumentos para enableCEPBtn", cpfBtn, cpfLength);
   return true;
 }
-
 export function syncAriaStates(els: Array<Element> | NodeListOf<Element>): void {
   if (els instanceof NodeList) els = Array.from(els);
   els = els.filter(el => el instanceof Element);
@@ -1087,7 +1074,6 @@ export async function validateForm(
   }
   return [formValidated, invalidEntries.map(invalidIdf => `${invalidIdf} \n`), validEntries];
 }
-
 export async function submitForm(form: nullishForm, ep: formCases) {
   try {
     if (!(form instanceof HTMLFormElement))
@@ -1265,7 +1251,6 @@ export async function submitForm(form: nullishForm, ep: formCases) {
     console.error(`Error executing submitForm:\n${(e as Error).message}`);
   }
 }
-
 export function handleCondtReq(
   el: targEl,
   options: {
@@ -1350,9 +1335,7 @@ export function handleCondtReq(
     console.error(`Error executing handleCondtReq:\n${(e as Error).message}`);
   }
 }
-
 export const iniFontColors: { [k: string]: string } = {};
-
 export function handleEventReq(entry: textEl | Event, alertColor: string = "#e52626"): void {
   let isValid = true;
   if (entry instanceof Event) {

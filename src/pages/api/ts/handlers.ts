@@ -1,19 +1,8 @@
 import { jwtDecode } from "jwt-decode";
 import { NextRouter } from "next/router";
-import {
-  rMouseEvent,
-  formCases,
-  fetchSuffixes,
-} from "@/lib/global/declarations/types";
-import {
-  PacInfo,
-  ProfInfo,
-  StudInfo,
-} from "@/lib/locals/panelPage/declarations/interfacesCons";
-import {
-  ProfessionalTokenPayload,
-  StudentTokenPayload,
-} from "./serverInterfaces";
+import { rMouseEvent, formCases, fetchSuffixes } from "@/lib/global/declarations/types";
+import { PacInfo, ProfInfo, StudInfo } from "@/lib/locals/panelPage/declarations/interfacesCons";
+import { ProfessionalTokenPayload, StudentTokenPayload } from "./serverInterfaces";
 import Cookies from "js-cookie";
 import { defCurrSemester } from "@/redux/slices/userSlice";
 export function decodeToken(
@@ -25,9 +14,7 @@ export function decodeToken(
 } {
   try {
     if (!UNDER_TEST) {
-      const decoded = jwtDecode<StudentTokenPayload | ProfessionalTokenPayload>(
-        token
-      );
+      const decoded = jwtDecode<StudentTokenPayload | ProfessionalTokenPayload>(token);
       //TODO DEFINIR AQUI LÓGICA DE VALIDAÇÃO DO TOKEN DECODIFICADO
       return {
         ok: true,
@@ -62,7 +49,6 @@ export function decodeToken(
     };
   }
 }
-
 export async function handleLogin(
   ev: rMouseEvent,
   userData: FormData | [string, string],
@@ -71,16 +57,13 @@ export async function handleLogin(
 ): Promise<void> {
   let status = 404,
     resData;
-  const resSpan =
-    document.getElementById("res-span") || document.getElementById("pwWarn");
+  const resSpan = document.getElementById("res-span") || document.getElementById("pwWarn");
   try {
     if (typeof ev !== "object") throw new Error(`Error validating typeof ev`);
-    if (typeof UNDER_TEST !== "boolean")
-      throw new Error(`Error validating typeof UNDER_TEST`);
+    if (typeof UNDER_TEST !== "boolean") throw new Error(`Error validating typeof UNDER_TEST`);
     ev.preventDefault();
     const targ =
-      ev.currentTarget instanceof HTMLButtonElement &&
-      ev.currentTarget.querySelector("a")
+      ev.currentTarget instanceof HTMLButtonElement && ev.currentTarget.querySelector("a")
         ? ev.currentTarget.querySelector("a")!
         : ev.currentTarget;
     const exeLogin = (): void => {
@@ -107,26 +90,18 @@ export async function handleLogin(
           resSpan.style.transform = "scale(9)";
         }
       };
-      if (
-        typeof router === "object" &&
-        "beforePopState" in router &&
-        "push" in router
-      ) {
+      if (typeof router === "object" && "beforePopState" in router && "push" in router) {
         router.beforePopState(() => {
           resSpan && spin(resSpan);
           return true;
         });
         setTimeout(() => {
-          targ instanceof HTMLAnchorElement
-            ? router.push(targ.href)
-            : router.push("/base");
+          targ instanceof HTMLAnchorElement ? router.push(targ.href) : router.push("/base");
         }, 1000);
       } else {
         resSpan && spin(resSpan);
         setTimeout(() => {
-          targ instanceof HTMLAnchorElement
-            ? (location.href = targ.href)
-            : (location.href = "/base");
+          targ instanceof HTMLAnchorElement ? (location.href = targ.href) : (location.href = "/base");
         }, 1000);
       }
     };
@@ -137,9 +112,7 @@ export async function handleLogin(
           "Content-Type": "application/json",
         },
         body: JSON.stringify(
-          Array.isArray(userData)
-            ? userData.map(entry => [entry[0], entry[1]])
-            : userData.entries()
+          Array.isArray(userData) ? userData.map(entry => [entry[0], entry[1]]) : userData.entries()
         ),
       });
       if (!res.ok) {
@@ -158,8 +131,7 @@ export async function handleLogin(
       console.log(`Fetch was sucessfull: ${res.status}\nJSON Data:`);
       console.log(data);
       if (!("access" in data)) {
-        if (resSpan)
-          resSpan.innerText = `Failed to validate login: Error processing server response.`;
+        if (resSpan) resSpan.innerText = `Failed to validate login: Error processing server response.`;
         console.warn(`Error on processing JSONified HTTP Response:\n`);
         console.warn(data);
         status = res.status;
@@ -178,8 +150,7 @@ export async function handleLogin(
       });
       const { ok, res: user } = decodeToken(data);
       if (!ok) {
-        if (resSpan)
-          resSpan.innerText = `Failed to validate login: Error validating token.`;
+        if (resSpan) resSpan.innerText = `Failed to validate login: Error validating token.`;
         console.warn(`Error processing tokens :\n`);
         console.warn(user);
         status = res.status;
@@ -189,32 +160,22 @@ export async function handleLogin(
       localStorage.setItem("activeUser", JSON.stringify(user));
       exeLogin();
     } else {
-      localStorage.setItem(
-        "activeUser",
-        JSON.stringify(decodeToken("", true).res)
-      );
+      localStorage.setItem("activeUser", JSON.stringify(decodeToken("", true).res));
       exeLogin();
     }
   } catch (e) {
     console.error(`Error executing handleFetchStuds:\n${(e as Error).message}`);
-    if (resSpan)
-      resSpan.innerText = `Failed to validate login: Error code ${status}`;
+    if (resSpan) resSpan.innerText = `Failed to validate login: Error code ${status}`;
     console.warn(`Error on processing HTTP Response:\n${resData}`);
   }
 }
-
 export async function handleSubmit(
   apiRoute: formCases,
-  formData:
-    | FormData
-    | Array<[string, string | File]>
-    | { [k: string]: string | File }
-    | Map<string, string | File>,
+  formData: FormData | Array<[string, string | File]> | { [k: string]: string | File } | Map<string, string | File>,
   UNDER_TEST: boolean = true
 ): Promise<void> {
   try {
-    if (typeof apiRoute !== "string")
-      throw new Error(`Error validating apiRoute type`);
+    if (typeof apiRoute !== "string") throw new Error(`Error validating apiRoute type`);
     if (
       !(
         apiRoute === "login" ||
@@ -232,15 +193,11 @@ export async function handleSubmit(
       )
     )
       throw new Error(`Invalidating route for API argumented to handler`);
-    if (typeof UNDER_TEST !== "boolean")
-      throw new Error(`Error validating typeof UNDER_TEST`);
+    if (typeof UNDER_TEST !== "boolean") throw new Error(`Error validating typeof UNDER_TEST`);
     const body = (() => {
-      if (Array.isArray(formData))
-        return JSON.stringify(formData.map(entry => [entry[0], entry[1]]));
+      if (Array.isArray(formData)) return JSON.stringify(formData.map(entry => [entry[0], entry[1]]));
       else {
-        return formData instanceof Map
-          ? JSON.stringify(formData.entries())
-          : JSON.stringify(formData);
+        return formData instanceof Map ? JSON.stringify(formData.entries()) : JSON.stringify(formData);
       }
     })();
     if (!UNDER_TEST) {
@@ -260,7 +217,6 @@ export async function handleSubmit(
     console.error(`Error executing handleSubmit:\n${(e as Error).message}`);
   }
 }
-
 export async function handleFetch(
   apiRoute: formCases,
   apiSufix: fetchSuffixes,
@@ -508,10 +464,8 @@ export async function handleFetch(
     }
   })();
   try {
-    if (typeof UNDER_TEST !== "boolean")
-      throw new Error(`Error validating typeof UNDER_TEST`);
-    if (typeof apiRoute !== "string")
-      throw new Error(`Error validating apiRoute type`);
+    if (typeof UNDER_TEST !== "boolean") throw new Error(`Error validating typeof UNDER_TEST`);
+    if (typeof apiRoute !== "string") throw new Error(`Error validating apiRoute type`);
     if (
       !(
         apiRoute === "login" ||
@@ -527,12 +481,8 @@ export async function handleFetch(
       )
     )
       throw new Error(`Invalidating route for API argumented to handler`);
-    if (typeof apiSufix !== "string")
-      throw new Error(`Error validating typeof apiSufix`);
-    if (!(apiSufix === "_table"))
-      throw new Error(
-        `Invalidating sufix for route in API argumented to handler`
-      );
+    if (typeof apiSufix !== "string") throw new Error(`Error validating typeof apiSufix`);
+    if (!(apiSufix === "_table")) throw new Error(`Invalidating sufix for route in API argumented to handler`);
     if (!UNDER_TEST) {
       const res = await fetch(`../api/django/${apiRoute}${apiSufix}`, {
         method: "GET",
@@ -548,14 +498,9 @@ export async function handleFetch(
     return arrJSONResTest;
   }
 }
-
-export async function handleDelete(
-  apiRoute: formCases,
-  UNDER_TEST: boolean = true
-): Promise<void> {
+export async function handleDelete(apiRoute: formCases, UNDER_TEST: boolean = true): Promise<void> {
   try {
-    if (typeof apiRoute !== "string")
-      throw new Error(`Error validating apiRoute type`);
+    if (typeof apiRoute !== "string") throw new Error(`Error validating apiRoute type`);
     if (
       !(
         apiRoute === "login" ||
@@ -571,8 +516,7 @@ export async function handleDelete(
       )
     )
       throw new Error(`Invalidating route for API argumented to handler`);
-    if (typeof UNDER_TEST !== "boolean")
-      throw new Error(`Error validating typeof UNDER_TEST`);
+    if (typeof UNDER_TEST !== "boolean") throw new Error(`Error validating typeof UNDER_TEST`);
     if (!UNDER_TEST) {
       //TODO DEFINIR LÓGICA PARA ELIMINAR ROW AO INVÉS DA TABLE
       const res = await fetch(`../api/django/${apiRoute}_table`, {

@@ -48,13 +48,11 @@ import TelPrim from "../../components/interactive/ag/TelPrim";
 import TelSec from "../../components/interactive/ag/TelSec";
 import Uf from "../../components/interactive/ag/Uf";
 import Watcher from "../../components/interactive/def/Watcher";
-
 const MemoAge = memo(AgeElement);
 const MemoLoc = memo(ConfirmLocId);
 export const agProps = {
   agIsAutoCorrectOn: true,
 };
-
 export default function AGPage(): JSX.Element {
   return (
     <ErrorBoundary FallbackComponent={() => <GenericErrorComponent message='Error loading form for Anamnesis' />}>
@@ -1168,7 +1166,6 @@ export default function AGPage(): JSX.Element {
     </ErrorBoundary>
   );
 }
-
 export function handleDivAddShow(targ: targEl): void {
   try {
     if (!(targ instanceof HTMLInputElement && (targ.type === "radio" || targ.type === "checkbox")))

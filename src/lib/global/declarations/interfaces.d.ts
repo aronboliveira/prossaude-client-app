@@ -1,20 +1,9 @@
 import { SetStateAction } from "react";
-import {
-  TabCelCtxs,
-  ctxRot,
-  looseNum,
-  quadrCases,
-  targEl,
-  validTabLabs,
-} from "./types";
-
+import { TabCelCtxs, ctxRot, looseNum, quadrCases, targEl, validTabLabs } from "./types";
 export interface DocumentNodeProps {
   html: string;
   head?: (JSX.Element | null)[];
-  styles?:
-    | JSX.Element
-    | ReactElement<any, string | JSXElementConstructor<any>>[]
-    | ReactFragment;
+  styles?: JSX.Element | ReactElement<any, string | JSXElementConstructor<any>>[] | ReactFragment;
 }
 export interface ProSaudeAppProps extends AppProps {
   pageProps: Record<string, any>;
@@ -77,17 +66,7 @@ export interface DivAntFamProps extends ChecksProps {
 }
 export interface InspProps {
   count: looseNum;
-  ctx:
-    | "lab"
-    | "jug"
-    | "vest"
-    | "pltd"
-    | "pltm"
-    | "of"
-    | "lg"
-    | "asb"
-    | "mast"
-    | "peri";
+  ctx: "lab" | "jug" | "vest" | "pltd" | "pltm" | "of" | "lg" | "asb" | "mast" | "peri";
   fullName: string;
 }
 export interface InspDlgProps extends Omit<InspProps, "fullName">, DlgProps {}
@@ -141,7 +120,6 @@ export interface TdProps extends TabCelProps {
   lab: validTabLabs;
 }
 export interface ColProps extends Omit<ThProps, "nRow"> {}
-
 export interface SpinnerComponentProps {
   spinnerClass: "spinner-border" | "spinner-grow";
   spinnerColor:

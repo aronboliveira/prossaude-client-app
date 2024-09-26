@@ -7,11 +7,7 @@ import {
   inputNotFound,
   multipleElementsNotFound,
 } from "../../global/handlers/errorHandler";
-import {
-  highlightChange,
-  strikeNulls,
-  addListenerForValidities,
-} from "../../global/gStyleScript";
+import { highlightChange, strikeNulls, addListenerForValidities } from "../../global/gStyleScript";
 import {
   convertWeekdaysToMonthdays,
   convertMonthdaysToWeekdays,
@@ -31,28 +27,18 @@ export function strikeEntries(mainRef: HTMLElement): void {
   ];
   inAndOutEls.length > 0
     ? strikeNulls(inAndOutEls)
-    : elementNotPopulated(
-        inAndOutEls,
-        "inAndOutEls in useEffect() for sectTabRef",
-        extLine(new Error())
-      );
+    : elementNotPopulated(inAndOutEls, "inAndOutEls in useEffect() for sectTabRef", extLine(new Error()));
 }
-
 export async function setListenersForDates(
   dateInps: Array<targEl>,
   monthStateSelector: targEl,
   isAutoFillMonthOn = true,
   isInitialSet = true
 ): Promise<[RegExp, (workingDays: [number, number], month?: string) => void]> {
-  if (
-    Array.isArray(dateInps) &&
-    dateInps.length > 0 &&
-    dateInps.every(inp => inp instanceof HTMLElement)
-  ) {
+  if (Array.isArray(dateInps) && dateInps.length > 0 && dateInps.every(inp => inp instanceof HTMLElement)) {
     if (
       monthStateSelector instanceof HTMLSelectElement ||
-      (monthStateSelector instanceof HTMLInputElement &&
-        monthStateSelector.type === "number")
+      (monthStateSelector instanceof HTMLInputElement && monthStateSelector.type === "number")
     ) {
       const monthMap = new Map([
         ["jan", "01"],
@@ -93,61 +79,42 @@ export async function setListenersForDates(
       const year = `${new Date().getFullYear()}`;
       const handleMonthChange = (
         workingDays: [number, number],
-        month: string = `${(new Date().getMonth() + 1)
-          .toString()
-          .padStart(2, "0")}`
+        month: string = `${(new Date().getMonth() + 1).toString().padStart(2, "0")}`
       ) => {
         //criação dos padrões de mês aceitos com base nas options disponíveis
         if (monthMap.get(monthStateSelector.value.slice(0, 3))) {
           //define as datas iniciais e pattern, com base em ano e mês (extraído da chave do map associado ao select)
           for (let d = 0; dateInps.length > d; d++) {
-            if (
-              dateInps[d] instanceof HTMLInputElement &&
-              (dateInps[d] as HTMLInputElement).type === "date"
-            ) {
+            if (dateInps[d] instanceof HTMLInputElement && (dateInps[d] as HTMLInputElement).type === "date") {
               //DIA COMO 01 AQUI
               (dateInps[d] as HTMLInputElement).value = `${year}-${month}-01`;
-              (
-                dateInps[d] as HTMLInputElement
-              ).pattern = `/^${year}-${month}-[0-9]{2}$/`;
+              (dateInps[d] as HTMLInputElement).pattern = `/^${year}-${month}-[0-9]{2}$/`;
               (dateInps[d] as HTMLInputElement).style.color = "initial";
               highlightChange(dateInps[d] as HTMLInputElement, "skyblue");
             } else
-              inputNotFound(
-                dateInps[d],
-                `date input id ${dateInps[d]?.id || "UNIDENTIFIED"}`,
-                extLine(new Error())
-              );
+              inputNotFound(dateInps[d], `date input id ${dateInps[d]?.id || "UNIDENTIFIED"}`, extLine(new Error()));
           }
           const monthdates = convertWeekdaysToMonthdays(
             workingDays,
             [1, 2, 3, 4],
             parseNotNaN(
-              (
-                parseNotNaN(monthMap.get(monthStateSelector.value) || "01") - 1
-              ).toString() || new Date().getMonth().toString()
+              (parseNotNaN(monthMap.get(monthStateSelector.value) || "01") - 1).toString() ||
+                new Date().getMonth().toString()
             )
           );
           if (monthdates.length >= dateInps.length - 1) {
-            const lastConsDayConts = Array.from(
-              document.getElementsByClassName("lastConsDayCont")
-            );
+            const lastConsDayConts = Array.from(document.getElementsByClassName("lastConsDayCont"));
             lastConsDayConts.forEach(lastConsDayCont => {
               if (lastConsDayCont instanceof HTMLElement) {
                 //ESCONDE ÚLTIMA COLUNA AQUI, CASO NÃO HAJA QUINTO DIA REPETIDO NO MÊS
-                if (
-                  monthdates.length === dateInps.length - 1 &&
-                  lastConsDayCont instanceof HTMLElement
-                ) {
+                if (monthdates.length === dateInps.length - 1 && lastConsDayCont instanceof HTMLElement) {
                   lastConsDayCont.hidden = true;
                   lastConsDayCont.style.display = "none";
                 } else {
                   !lastConsDayCont
                     ? elementNotFound(
                         lastConsDayCont,
-                        `column for last day appointments, length of monthdates ${
-                          monthdates?.length || 0
-                        }`,
+                        `column for last day appointments, length of monthdates ${monthdates?.length || 0}`,
                         extLine(new Error())
                       )
                     : (() => {
@@ -158,14 +125,11 @@ export async function setListenersForDates(
               } else
                 elementNotFound(
                   lastConsDayCont,
-                  `Element in the fifth column id ${
-                    lastConsDayCont?.id || "UNDEFINED"
-                  }`,
+                  `Element in the fifth column id ${lastConsDayCont?.id || "UNDEFINED"}`,
                   extLine(new Error())
                 );
             });
-            const mainConsDaysCont =
-              document.getElementById(`mainConsDaysCont`);
+            const mainConsDaysCont = document.getElementById(`mainConsDaysCont`);
             if (mainConsDaysCont instanceof HTMLElement) {
               const consDayConts = document.querySelectorAll('th[scope="col"]');
               let lengthRef = monthdates.length;
@@ -176,21 +140,13 @@ export async function setListenersForDates(
                   );
               //ATRIBUIÇÃO AUTOMÁTICA DE DATAS AQUI
               for (let w = 0; w < lengthRef; w++) {
-                if (
-                  typeof monthdates[w] === "number" &&
-                  dateInps[w] instanceof HTMLInputElement
-                ) {
-                  (dateInps[w] as HTMLInputElement).value = `${(
-                    dateInps[w] as HTMLInputElement
-                  ).value.slice(0, 8)}${monthdates[w]
-                    .toString()
-                    .padStart(2, "0")}`;
+                if (typeof monthdates[w] === "number" && dateInps[w] instanceof HTMLInputElement) {
+                  (dateInps[w] as HTMLInputElement).value = `${(dateInps[w] as HTMLInputElement).value.slice(
+                    0,
+                    8
+                  )}${monthdates[w].toString().padStart(2, "0")}`;
                 } else {
-                  inputNotFound(
-                    dateInps[w],
-                    "dateInps in the conversion from monthdates",
-                    extLine(new Error())
-                  );
+                  inputNotFound(dateInps[w], "dateInps in the conversion from monthdates", extLine(new Error()));
                   break;
                 }
               }
@@ -222,15 +178,9 @@ export async function setListenersForDates(
             Array.from(document.querySelectorAll(".dayTabRef")),
             true
           );
-          addListenerForValidities(
-            dateInps,
-            new RegExp(`^${year}-${month}-[0-9]{2}$`)
-          );
+          addListenerForValidities(dateInps, new RegExp(`^${year}-${month}-[0-9]{2}$`));
           const [weekDayNames] = convertMonthdaysToWeekdays(
-            parseNotNaN(
-              monthMap.get(`${monthStateSelector.value}`) ||
-                new Date().getMonth().toString()
-            ),
+            parseNotNaN(monthMap.get(`${monthStateSelector.value}`) || new Date().getMonth().toString()),
             workingDays
           );
           correlateWorkingDays(weekDayNames, dateInps.length);
@@ -240,19 +190,14 @@ export async function setListenersForDates(
           );
       };
       if (isInitialSet === true) {
-        monthStateSelector.value = `${revMonthMap.get(
-          `${new Date().getMonth()}`
-        )}`;
+        monthStateSelector.value = `${revMonthMap.get(`${new Date().getMonth()}`)}`;
         workingDays = removeRepeateadWorkingDays(workingDays);
         handleMonthChange(workingDays);
         monthStateSelector.addEventListener("change", () => {
           //ajustes dinâmicos com base em mudança de valor do select de mês
-          const toggleAutoFillMonth = document.getElementById(
-            "toggleAutofillMonth"
-          );
+          const toggleAutoFillMonth = document.getElementById("toggleAutofillMonth");
           toggleAutoFillMonth instanceof HTMLInputElement &&
-          (toggleAutoFillMonth.type === "checkbox" ||
-            toggleAutoFillMonth.type === "radio")
+          (toggleAutoFillMonth.type === "checkbox" || toggleAutoFillMonth.type === "radio")
             ? (isAutoFillMonthOn = toggleAutoFillMonth.checked)
             : inputNotFound(
                 toggleAutoFillMonth,
@@ -271,42 +216,21 @@ export async function setListenersForDates(
         handleMonthChange(workingDays, month);
       }
       return [new RegExp(`^${year}-[0-9]{2}-${month}$`), handleMonthChange];
-    } else
-      elementNotFound(
-        monthStateSelector,
-        "monthStateSelector in setListenerForDates()",
-        extLine(new Error())
-      );
-  } else
-    elementNotPopulated(
-      dateInps,
-      "argument for setListenerForDates()",
-      extLine(new Error())
-    );
+    } else elementNotFound(monthStateSelector, "monthStateSelector in setListenerForDates()", extLine(new Error()));
+  } else elementNotPopulated(dateInps, "argument for setListenerForDates()", extLine(new Error()));
   return [/[0-9]{4}-[0-9]{2}-[0-9]{2}/, () => () => null];
 }
-
-export function hideLastDay(
-  daySel: HTMLSelectElement | HTMLInputElement
-): void {
+export function hideLastDay(daySel: HTMLSelectElement | HTMLInputElement): void {
   if (
-    Array.from(document.getElementsByClassName("lastConsDayCont")).some(
-      cont => {
-        cont instanceof HTMLElement &&
-          (cont.hidden === true || getComputedStyle(cont).display === "none");
-      }
-    )
+    Array.from(document.getElementsByClassName("lastConsDayCont")).some(cont => {
+      cont instanceof HTMLElement && (cont.hidden === true || getComputedStyle(cont).display === "none");
+    })
   ) {
     (daySel.lastElementChild as HTMLElement).hidden = true;
     (daySel.lastElementChild as HTMLElement).style.display = "none";
   }
 }
-
-export function correlateDayOpts(
-  dateInps: targEl[],
-  dateSel: targEl,
-  userClass: string = "estudante"
-) {
+export function correlateDayOpts(dateInps: targEl[], dateSel: targEl, userClass: string = "estudante") {
   if (
     Array.isArray(dateInps) &&
     dateInps.length > 0 &&
@@ -322,38 +246,28 @@ export function correlateDayOpts(
           Array.from(dateSel.querySelectorAll("option"))
             .map<[string, number]>(dateRef => [
               (dateRef as HTMLOptionElement).id,
-              parseNotNaN(
-                (dateRef as HTMLOptionElement).value.replaceAll("-", "")
-              ),
+              parseNotNaN((dateRef as HTMLOptionElement).value.replaceAll("-", "")),
             ])
             .map<[string, number]>(numDateRef => [
               numDateRef[0],
-              Math.abs(
-                numDateRef[1] - parseNotNaN(newOp.value.replaceAll("-", ""))
-              ),
+              Math.abs(numDateRef[1] - parseNotNaN(newOp.value.replaceAll("-", ""))),
             ])
             .filter(sorted => Number.isFinite(sorted[1]) && sorted[1] > 0)
             .sort((a, b) => a[1] - b[1])[0][0]
         }`
       );
-      sorted
-        ? sorted.insertAdjacentElement("afterend", newOp)
-        : dateSel.prepend(newOp);
+      sorted ? sorted.insertAdjacentElement("afterend", newOp) : dateSel.prepend(newOp);
       const [year, month, day] = dateInp.value.split("-");
       navigator.language === "en-US"
         ? (newOp.textContent = `${month}/${day}/${year}`)
         : (newOp.textContent = `${day}/${month}/${year}`);
       dateInpValues = [];
-      dateInpValues = dateInps.map(
-        dateInp => (dateInp as HTMLInputElement).value
-      );
+      dateInpValues = dateInps.map(dateInp => (dateInp as HTMLInputElement).value);
       return dateInpValues;
     };
     dateInps.forEach(dateInp => {
       if (dateInp instanceof HTMLInputElement) {
-        let dateInpValues = dateInps.map(
-          dateInp => (dateInp as HTMLInputElement).value
-        );
+        let dateInpValues = dateInps.map(dateInp => (dateInp as HTMLInputElement).value);
         (userClass === "coordenador" || userClass === "supervisor") &&
           dateInp.addEventListener("change", () => {
             //se a opção inputada não existir na coleção de opções, ela é incluída
@@ -365,23 +279,15 @@ export function correlateDayOpts(
               dateInpValues = includeOp(dateInp, dateInpValues);
             else
               setTimeout(() => {
-                if (
-                  Array.from(dateSel.querySelectorAll("option")).map(
-                    dateOpt => dateOpt.value
-                  ) !== dateInpValues
-                ) {
+                if (Array.from(dateSel.querySelectorAll("option")).map(dateOpt => dateOpt.value) !== dateInpValues) {
                   //inclusão inicial de opções totais
                   dateInpValues = includeOp(dateInp, dateInpValues);
-                  for (const option of Array.from(
-                    dateSel.querySelectorAll("option")
-                  )) {
+                  for (const option of Array.from(dateSel.querySelectorAll("option"))) {
                     //se a opção for duplicata, ela é removida
                     if (
                       dateInpValues
                         .map((dateInp, _, arr) => {
-                          return arr.some(
-                            otherDateValue => dateInp === otherDateValue
-                          );
+                          return arr.some(otherDateValue => dateInp === otherDateValue);
                         })
                         .filter(validity => validity === true).length > 1
                     ) {
@@ -389,56 +295,34 @@ export function correlateDayOpts(
                         .map((dateValue, i, arr) => {
                           arr.splice(i, 1);
                           if (arr.includes(dateValue)) {
-                            return arr[
-                              arr.findIndex(date => date === dateValue)
-                            ];
+                            return arr[arr.findIndex(date => date === dateValue)];
                           }
                         })
                         .filter(date => typeof date === "string");
-                      const optDuplicate = document.querySelectorAll(
-                        `option[value*="${duplicate}"]`
-                      );
+                      const optDuplicate = document.querySelectorAll(`option[value*="${duplicate}"]`);
                       //alerta de duplicação
                       setTimeout(() => {
-                        document
-                          .querySelectorAll(`input[value*="${duplicate}"]`)
-                          .forEach(duplicatedDate => {
-                            (
-                              duplicatedDate as HTMLInputElement
-                            ).style.color = `red`;
-                            (
-                              duplicatedDate as HTMLInputElement
-                            ).style.borderColor = `red`;
-                            setTimeout(() => {
-                              (
-                                duplicatedDate as HTMLInputElement
-                              ).style.color = `revert`;
-                              (
-                                duplicatedDate as HTMLInputElement
-                              ).style.borderColor = `revert`;
-                            }, 1000);
-                          });
+                        document.querySelectorAll(`input[value*="${duplicate}"]`).forEach(duplicatedDate => {
+                          (duplicatedDate as HTMLInputElement).style.color = `red`;
+                          (duplicatedDate as HTMLInputElement).style.borderColor = `red`;
+                          setTimeout(() => {
+                            (duplicatedDate as HTMLInputElement).style.color = `revert`;
+                            (duplicatedDate as HTMLInputElement).style.borderColor = `revert`;
+                          }, 1000);
+                        });
                       }, 500);
                       if (
-                        (optDuplicate instanceof NodeList ||
-                          Array.isArray(optDuplicate)) &&
+                        (optDuplicate instanceof NodeList || Array.isArray(optDuplicate)) &&
                         optDuplicate.length > 1
                       ) {
                         const duplicates = Array.from(optDuplicate).slice(-1);
-                        for (const duplicate of duplicates)
-                          dateSel.removeChild(duplicate);
+                        for (const duplicate of duplicates) dateSel.removeChild(duplicate);
                       }
                       //restaura o array após splicing
-                      dateInpValues = dateInps.map(
-                        dateInp => (dateInp as HTMLInputElement).value
-                      );
+                      dateInpValues = dateInps.map(dateInp => (dateInp as HTMLInputElement).value);
                     }
                     //se não houver nenhuma igualdade entre a opção e as datas na agenda, ela é removida
-                    if (
-                      !dateInpValues.some(
-                        dateInpValue => option.value === dateInpValue
-                      )
-                    ) {
+                    if (!dateInpValues.some(dateInpValue => option.value === dateInpValue)) {
                       dateSel.removeChild(option);
                     }
                   }
@@ -455,44 +339,20 @@ export function correlateDayOpts(
                 [6, "Sábado"],
               ]);
               const dateLabel =
-                (dateInp.closest("td") ?? dateInp.closest("th")!).querySelector(
-                  ".consWeekday"
-                ) ||
-                (dateInp.closest("td") ?? dateInp.closest("th")!).querySelector(
-                  "label"
-                );
+                (dateInp.closest("td") ?? dateInp.closest("th")!).querySelector(".consWeekday") ||
+                (dateInp.closest("td") ?? dateInp.closest("th")!).querySelector("label");
               if (dateLabel instanceof HTMLElement) {
                 dateLabel.textContent = `${dateLabel.textContent!.slice(
                   0,
                   dateLabel.textContent!.indexOf(" ") + 1
-                )}${mapOrderWeekdays.get(
-                  new Date(dateInp.value + "T00:00:00").getDay()
-                )}`;
-                /sábado/gi.test(dateLabel.textContent) ||
-                /domingo/gi.test(dateLabel.textContent)
-                  ? (dateLabel.textContent = dateLabel.textContent.replace(
-                      "Primeira",
-                      "Primeiro"
-                    ))
-                  : (dateLabel.textContent = dateLabel.textContent.replace(
-                      "Primeiro",
-                      "Primeira"
-                    ));
+                )}${mapOrderWeekdays.get(new Date(dateInp.value + "T00:00:00").getDay())}`;
+                /sábado/gi.test(dateLabel.textContent) || /domingo/gi.test(dateLabel.textContent)
+                  ? (dateLabel.textContent = dateLabel.textContent.replace("Primeira", "Primeiro"))
+                  : (dateLabel.textContent = dateLabel.textContent.replace("Primeiro", "Primeira"));
               }
             }, 600);
           });
-      } else
-        inputNotFound(
-          dateInp,
-          `dateInp id ${dateInp?.id ?? "UNIDENTIFIED"}`,
-          extLine(new Error())
-        );
+      } else inputNotFound(dateInp, `dateInp id ${dateInp?.id ?? "UNIDENTIFIED"}`, extLine(new Error()));
     });
-  } else
-    multipleElementsNotFound(
-      extLine(new Error()),
-      "arguments for correlateDayOpts",
-      ...dateInps,
-      dateSel
-    );
+  } else multipleElementsNotFound(extLine(new Error()), "arguments for correlateDayOpts", ...dateInps, dateSel);
 }

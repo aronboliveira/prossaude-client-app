@@ -1,15 +1,7 @@
 import { checkPasswordPattern } from "../../global/gModel";
 import { rMouseEvent, targEl } from "../../global/declarations/types";
-import {
-  fillCustomValidityWarn,
-  highlightChange,
-} from "../../global/gStyleScript";
-import {
-  extLine,
-  elementNotFound,
-  inputNotFound,
-} from "../../global/handlers/errorHandler";
-
+import { fillCustomValidityWarn, highlightChange } from "../../global/gStyleScript";
+import { extLine, elementNotFound, inputNotFound } from "../../global/handlers/errorHandler";
 export function addListenerShowPw(): targEl {
   const spanShowPw = document.getElementById("spanShowPw");
 
@@ -17,15 +9,9 @@ export function addListenerShowPw(): targEl {
     spanShowPw.addEventListener("click", () => {
       callbackShowPw(spanShowPw);
     });
-  } else
-    elementNotFound(
-      spanShowPw,
-      "spanShowPw in addListenerShowPw()",
-      extLine(new Error())
-    );
+  } else elementNotFound(spanShowPw, "spanShowPw in addListenerShowPw()", extLine(new Error()));
   return spanShowPw;
 }
-
 export function callbackShowPw(spanShowPw: targEl): void {
   if (spanShowPw instanceof HTMLElement) {
     const innerIcon = spanShowPw.querySelector(".bi");
@@ -48,16 +34,9 @@ export function callbackShowPw(spanShowPw: targEl): void {
         </svg>
         `;
       } else console.error(`innerIcon class not validated`);
-    } else
-      inputNotFound(pwInp, "pwInp in callbackShowPw()", extLine(new Error()));
-  } else
-    elementNotFound(
-      spanShowPw,
-      "spanShowPw in callbackShowPw()",
-      extLine(new Error())
-    );
+    } else inputNotFound(pwInp, "pwInp in callbackShowPw()", extLine(new Error()));
+  } else elementNotFound(spanShowPw, "spanShowPw in callbackShowPw()", extLine(new Error()));
 }
-
 export const clickAttempt: {
   shouldEvaluateTime: boolean;
   shouldEvaluateClient: boolean;
@@ -77,23 +56,13 @@ export function evaluateClickMovements(ev: rMouseEvent) {
   let suspicious = true;
   try {
     if (!("movementX" in ev)) throw new Error(`Invalid instance for Event`);
-    if (!ev.isTrusted)
-      return [
-        "Evento de mouse não confiável. Por favor aguarde para tentar novamente.",
-        suspicious,
-      ];
+    if (!ev.isTrusted) return ["Evento de mouse não confiável. Por favor aguarde para tentar novamente.", suspicious];
     if (!(ev.movementX === 0 && ev.movementY === 0))
-      return [
-        "Movimento de mouse não confiável. Por favor aguarde para tentar novamente.",
-        suspicious,
-      ];
+      return ["Movimento de mouse não confiável. Por favor aguarde para tentar novamente.", suspicious];
     if (clickAttempt.shouldEvaluateTime) {
       const now = new Date().getTime();
       if (now - clickAttempt.lastClickTime < 100)
-        return [
-          "Mouse interval tracked as suspicious. Please retry later.",
-          suspicious,
-        ];
+        return ["Mouse interval tracked as suspicious. Please retry later.", suspicious];
       else clickAttempt.lastClickTime = now;
     }
     clickAttempt.shouldEvaluateTime = true;
@@ -103,22 +72,14 @@ export function evaluateClickMovements(ev: rMouseEvent) {
       ev.clientX === clickAttempt.lastClickX &&
       ev.clientY === clickAttempt.lastClickY
     )
-      return [
-        "Deslocamento de mouse não confiável. Por favor aguarde para tentar novamente.",
-        suspicious,
-      ];
+      return ["Deslocamento de mouse não confiável. Por favor aguarde para tentar novamente.", suspicious];
     clickAttempt.shouldEvaluateClient = true;
     clickAttempt.clientAttempt += 1;
     suspicious = false;
     return ["Attempt validated.", suspicious];
   } catch (e) {
-    console.error(
-      `Error executing evaluateClickMovements:${(e as Error).message}`
-    );
-    return [
-      "Não foi possível validar a solicitação. Por favor aguarde para tentar novamente.",
-      suspicious,
-    ];
+    console.error(`Error executing evaluateClickMovements:${(e as Error).message}`);
+    return ["Não foi possível validar a solicitação. Por favor aguarde para tentar novamente.", suspicious];
   }
 }
 export const tryDetails: {
@@ -134,25 +95,12 @@ export function callbackSubmitBtn() {
     if (tryDetails.attempts > 0) {
       tryDetails.timeAcc += new Date().getTime();
       if (tryDetails.attempts > 4) {
-        const submitBtn =
-          document.getElementById("submitBtn") ||
-          document.querySelector('a[href*="/base"]');
-        if (
-          submitBtn instanceof HTMLButtonElement ||
-          submitBtn instanceof HTMLInputElement
-        )
-          submitBtn.disabled = true;
-        alert(
-          "Tentativas excedidas para o intervalo de tempo. Aguarde para tentat novamente."
-        );
+        const submitBtn = document.getElementById("submitBtn") || document.querySelector('a[href*="/base"]');
+        if (submitBtn instanceof HTMLButtonElement || submitBtn instanceof HTMLInputElement) submitBtn.disabled = true;
+        alert("Tentativas excedidas para o intervalo de tempo. Aguarde para tentat novamente.");
         setTimeout(() => {
-          const submitBtn =
-            document.getElementById("submitBtn") ||
-            document.querySelector('a[href*="/base"]');
-          if (
-            submitBtn instanceof HTMLButtonElement ||
-            submitBtn instanceof HTMLInputElement
-          )
+          const submitBtn = document.getElementById("submitBtn") || document.querySelector('a[href*="/base"]');
+          if (submitBtn instanceof HTMLButtonElement || submitBtn instanceof HTMLInputElement)
             submitBtn.disabled = false;
         }, 3000);
       }
@@ -163,18 +111,10 @@ export function callbackSubmitBtn() {
     const pwInp = document.getElementById("pw");
     const userInp = document.getElementById("user");
     if (!(userInp instanceof HTMLInputElement))
-      throw inputNotFound(
-        userInp,
-        "userInp in callbackSubmitBtn()",
-        extLine(new Error())
-      );
+      throw inputNotFound(userInp, "userInp in callbackSubmitBtn()", extLine(new Error()));
 
     if (!(pwInp instanceof HTMLInputElement))
-      throw inputNotFound(
-        pwInp,
-        "pwInp in callbackSubmitBtn()",
-        extLine(new Error())
-      );
+      throw inputNotFound(pwInp, "pwInp in callbackSubmitBtn()", extLine(new Error()));
     if (
       userInp.value.length < 5 ||
       userInp.value.length > 30 ||
@@ -184,17 +124,13 @@ export function callbackSubmitBtn() {
       userInp.placeholder = "Usuário inválido";
       highlightChange(userInp);
       let message = "";
-      if (userInp.value.length < 5)
-        message += "O usuário deve ter ao mínimo 5 caracteres!\n";
-      if (userInp.value.length > 30)
-        message += "O usuário deve ter no máximo 30 caracteres!\n";
-      if (/\s/g.test(userInp.value))
-        message += "O usuário não pode ter espaços!\n";
+      if (userInp.value.length < 5) message += "O usuário deve ter ao mínimo 5 caracteres!\n";
+      if (userInp.value.length > 30) message += "O usuário deve ter no máximo 30 caracteres!\n";
+      if (/\s/g.test(userInp.value)) message += "O usuário não pode ter espaços!\n";
       const v = userInp.validity;
       if (v.badInput || v.typeMismatch) message += "Tipo de entrada indevida\n";
       if (v.patternMismatch) message += "Padrão solicitado não cumprido\n";
-      if (v.tooShort || v.valueMissing)
-        message += "Entrada com falta de caracteres\n";
+      if (v.tooShort || v.valueMissing) message += "Entrada com falta de caracteres\n";
       if (v.tooLong) message += "Entrada com excesso de caracteres\n";
       userInp.setCustomValidity(message);
       fillCustomValidityWarn(userInp.id ?? "", message);
@@ -208,9 +144,7 @@ export function callbackSubmitBtn() {
     if (
       pw.length < 8 ||
       pw.length > 30 ||
-      !/^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[^a-zA-Z0-9])(?=.{8,})(?:(?!.*\s).)*(?!.*(.).*\1{4,}).*$/.test(
-        pw
-      ) ||
+      !/^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[^a-zA-Z0-9])(?=.{8,})(?:(?!.*\s).)*(?!.*(.).*\1{4,}).*$/.test(pw) ||
       !pwInp.checkValidity()
     ) {
       pwInp.placeholder = "Senha inválida";
@@ -218,30 +152,20 @@ export function callbackSubmitBtn() {
       setTimeout(() => {
         pwInp.placeholder = "Senha";
       }, 5000);
-      if (pw.length < 8)
-        message += "A senha deve conter ao menos 8 caracteres\n";
-      if (pw.length > 30)
-        message += "A senha deve conter no máximo 8 caracteres\n";
+      if (pw.length < 8) message += "A senha deve conter ao menos 8 caracteres\n";
+      if (pw.length > 30) message += "A senha deve conter no máximo 8 caracteres\n";
       if (/\s/.test(pw)) message += "Espaços em branco não permitidos\n";
       if (/[a-zA-Z]/.test(pw)) {
-        if (!/[A-Z]/g.test(pw))
-          message += "A senha deve ter ao menos um caractere maiúsculo\n";
-        if (!/[a-z]/g.test(pw))
-          message += "A senha deve ter ao menos um caractere minúsculo\n";
-      } else
-        message += "A senha deve conter pelo menos um caractere alfabético\n";
-      if (!/[0-9]/g.test(pw))
-        message += "A senha deve conter pelo menos um número\n";
-      if (!/[^a-zA-Z0-9]/.test(pw))
-        message +=
-          "A senha deve conter ao menos um caractere especial ou simbólico.";
+        if (!/[A-Z]/g.test(pw)) message += "A senha deve ter ao menos um caractere maiúsculo\n";
+        if (!/[a-z]/g.test(pw)) message += "A senha deve ter ao menos um caractere minúsculo\n";
+      } else message += "A senha deve conter pelo menos um caractere alfabético\n";
+      if (!/[0-9]/g.test(pw)) message += "A senha deve conter pelo menos um número\n";
+      if (!/[^a-zA-Z0-9]/.test(pw)) message += "A senha deve conter ao menos um caractere especial ou simbólico.";
       const v = pwInp.validity;
       if (v.badInput || v.typeMismatch) message += "Tipo de entrada indevida\n";
       if (v.patternMismatch) message += "Padrão solicitado não cumprido\n";
-      if (v.tooShort || v.valueMissing)
-        message += "Entrada com falta de caracteres\n";
-      if (v.tooLong)
-        userInp.placeholder += "Entrada com excesso de caracteres\n";
+      if (v.tooShort || v.valueMissing) message += "Entrada com falta de caracteres\n";
+      if (v.tooLong) userInp.placeholder += "Entrada com excesso de caracteres\n";
       pwInp.setCustomValidity(message);
       fillCustomValidityWarn(pwInp.id ?? "", message);
       console.warn(message);
@@ -249,9 +173,7 @@ export function callbackSubmitBtn() {
     }
     return true;
   } catch (e) {
-    console.error(
-      `Error executing callbackSubmitBtn:\n${(e as Error).message}`
-    );
+    console.error(`Error executing callbackSubmitBtn:\n${(e as Error).message}`);
     return false;
   }
 }

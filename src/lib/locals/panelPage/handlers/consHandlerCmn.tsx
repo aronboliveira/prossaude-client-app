@@ -24,7 +24,6 @@ export function checkComponentValidity(JSXEl: JSX.Element, Default: JSX.Element)
   const JSXChildren = JSXEl.type().props;
   return isValidElement(JSXEl) && JSXEl.type !== Fragment && "children" in JSXChildren ? JSXEl : Default;
 }
-
 export async function asyncJSXCall(
   component: (...args1: Array<any>) => JSX.Element | Promise<JSX.Element>,
   called: (...args2: Array<any>) => any,
@@ -56,7 +55,6 @@ export async function asyncJSXCall(
     </>
   );
 }
-
 export function correlateAptMonthDays(
   daySel: targEl,
   dayRefs: Array<targEl>,
@@ -147,7 +145,6 @@ export function correlateAptMonthDays(
     checkForReplaceSel();
   } else inputNotFound(daySel, `argument for ${arguments.callee.name}`, extLine(new Error()));
 }
-
 export function convertWeekdaysToMonthdays(
   weekdays: Array<number>,
   nths: Array<number>,
@@ -175,7 +172,6 @@ export function convertWeekdaysToMonthdays(
   dates.sort((a, b) => a - b);
   return dates;
 }
-
 export function convertMonthdaysToWeekdays(month: number, weekdays: Array<number>): [string[], number[]] {
   month = month - 1;
   const date = new Date(new Date().getFullYear(), month, 1);
@@ -199,7 +195,6 @@ export function convertMonthdaysToWeekdays(month: number, weekdays: Array<number
   const weekDaysInMonthsNames: string[] = weekdaysInMonths.map(weekday => weekDaysMap.get(weekday) ?? "Quarta-feira");
   return [weekDaysInMonthsNames, weekdaysInMonths];
 }
-
 export function correlateWorkingDays(
   workingDayNames: Array<string> = [
     "Quarta-feira",
@@ -306,7 +301,6 @@ export function correlateWorkingDays(
       );
   } else elementNotPopulated(workingDayNames, `arguments for ${arguments.callee.name}`, extLine(new Error()));
 }
-
 export function removeRepeateadWorkingDays(workingDays: [number, number]): [number, number] {
   if (
     Array.isArray(workingDays) &&
@@ -366,7 +360,6 @@ export function removeRepeateadWorkingDays(workingDays: [number, number]): [numb
   } else elementNotPopulated(workingDays, `argument for ${arguments.callee.name}`, extLine(new Error()));
   return workingDays;
 }
-
 export function generateSchedPacData(scope: targEl): { [k: string]: string } {
   const pacData: { [k: string]: string } = {};
   if (scope instanceof Element) {
@@ -411,7 +404,6 @@ export function generateSchedPacData(scope: targEl): { [k: string]: string } {
   } else elementNotFound(scope, "Element for fetching data from new appointment register fields", extLine(new Error()));
   return pacData;
 }
-
 export const rootDlgContext: {
   renderCounts: number;
   aptBtnsRoots: { [k: string]: Root | undefined };
@@ -425,7 +417,6 @@ export const rootDlgContext: {
   addedAptListeners: false,
   addedDayListeners: false,
 };
-
 export function handleRenderRefLost(id: string, prevRef: HTMLElement, userClass: string, timer: number = 100): void {
   try {
     if (typeof id !== "string")
@@ -463,7 +454,6 @@ export function handleRenderRefLost(id: string, prevRef: HTMLElement, userClass:
     console.error(`Error executing handleRenderRefLost:\n${(e as Error).message}`);
   }
 }
-
 export function handleAptBtnClick(ev: MouseEvent, userClass: string): void {
   try {
     console.log("Click listened");
@@ -562,7 +552,6 @@ export function handleAptBtnClick(ev: MouseEvent, userClass: string): void {
     );
   }
 }
-
 export function createAptBtn(
   formData: { [key: string]: string },
   _providerFormData: { [key: string]: string },
@@ -823,7 +812,6 @@ export function handleDragAptBtn(newAppointmentBtn: targEl, userClass: string = 
     });
   } else elementNotFound(newAppointmentBtn, `arguments for ${arguments.callee.name}`, extLine(new Error()));
 }
-
 export function replaceRegstSlot(
   matchedSlot: targEl,
   newAppointmentBtn: HTMLButtonElement,
@@ -980,7 +968,6 @@ export function replaceRegstSlot(
     console.error(`Error executing replaceRegstSlot:\n${(e as Error).message}`);
   }
 }
-
 export function checkRegstBtn(
   regstBtn: targEl,
   scope: HTMLElement | Document = document,
@@ -1065,7 +1052,6 @@ export function checkRegstBtn(
       );
   } else elementNotFound(regstBtn, "Button for registering appointment in handleRegstBtn()", extLine(new Error()));
 }
-
 export function addEraseEvent(eraser: HTMLButtonElement, userClass: string = "estudante"): void {
   if (userClass === "coordenador" || userClass === "supervisor") {
     eraser.addEventListener("click", () => {
@@ -1095,7 +1081,6 @@ export function addEraseEvent(eraser: HTMLButtonElement, userClass: string = "es
     }, 200);
   }
 }
-
 export function replaceBtnSlot(aptBtn: targEl, parent: HTMLElement, caller: HTMLElement): void {
   if (aptBtn instanceof HTMLElement) {
     const relTr = aptBtn.closest("tr")!;
@@ -1122,7 +1107,6 @@ export function replaceBtnSlot(aptBtn: targEl, parent: HTMLElement, caller: HTML
     parent.replaceChild(replaceInp, aptBtn);
   } else console.warn(`No related appointment details button for erasing button id ${caller.id}`);
 }
-
 export function checkConfirmApt(dayCheck: HTMLInputElement): void {
   const relAptBtn = (dayCheck.closest("td") || dayCheck.closest("th"))?.querySelector("[id*=appointmentBtn]");
   if (relAptBtn instanceof HTMLElement) {
@@ -1135,7 +1119,6 @@ export function checkConfirmApt(dayCheck: HTMLInputElement): void {
     }
   } else console.warn(`No related button for day checkbox id ${dayCheck.id}`);
 }
-
 export function handleScheduleChange(
   monthSelector: entryEl | null,
   root: targEl,
@@ -1223,7 +1206,6 @@ export function handleScheduleChange(
     ${(err as Error).message}`);
   }
 }
-
 export function verifyAptCheck(dayCheck: targEl) {
   try {
     if (
@@ -1257,7 +1239,6 @@ export function verifyAptCheck(dayCheck: targEl) {
     console.error(`Error executing verifyAptCheck:\n${(e as Error).message}`);
   }
 }
-
 export function addListenersForSchedTab(
   scope: HTMLElement | Document = document,
   userClass: string,
@@ -1381,7 +1362,6 @@ export function addListenersForSchedTab(
     ${(err as Error).message}`);
   }
 }
-
 export function applyStylesForSchedTab(scope: HTMLElement | Document = document): void {
   try {
     if (!(scope instanceof HTMLElement || scope instanceof Document))
@@ -1392,7 +1372,6 @@ export function applyStylesForSchedTab(scope: HTMLElement | Document = document)
     ${(err as Error).message}`);
   }
 }
-
 export function addListenerForSchedUpdates(monthSelector: targEl): void {
   try {
     if (!(monthSelector instanceof HTMLSelectElement || monthSelector instanceof HTMLInputElement))
@@ -1494,7 +1473,6 @@ export function addListenerForSchedUpdates(monthSelector: targEl): void {
     ${(err as Error).message}`);
   }
 }
-
 export function fillSchedStateValues(month: string) {
   try {
     if (!(typeof month === "string"))

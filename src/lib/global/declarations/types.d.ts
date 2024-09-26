@@ -1,5 +1,4 @@
 import { UndefinedPerson, Man, Woman, Neutro } from "./classes";
-
 export type voidVal = null | undefined;
 export type looseNum = string | number;
 export type primitiveType = looseNum | boolean | voidVal;
@@ -36,7 +35,6 @@ export type errorHandleElType = Element | EventTarget | string | voidVal;
 export type errorHandleArrayType = (Element | primitiveType)[] | NodeList | HTMLCollection | string | voidVal;
 export type errorHandleSpreadType = (Element | EventTarget | primitiveType | voidVal)[];
 export type errorLineExp = targStr | (() => string | undefined);
-
 export interface objInnerTabs {
   numTotalColsCons: number;
   numTotalTabsCons: number;

@@ -10,11 +10,7 @@ import {
   multipleElementsNotFound,
   stringError,
 } from "../../global/handlers/errorHandler";
-
-export function checkInnerColGroups(
-  parentEl: targEl,
-  areAllColGroupsSimilar: boolean = false
-): [number, boolean] {
+export function checkInnerColGroups(parentEl: targEl, areAllColGroupsSimilar: boolean = false): [number, boolean] {
   const validColGroupsChildCount = [];
   const colGroups = Array.from(parentEl?.querySelectorAll("colgroup") ?? []);
 
@@ -26,10 +22,7 @@ export function checkInnerColGroups(
         validColGroupsChildCount.push(colGroups[i].childElementCount);
       else {
         //filtragem para incluir somente as instâncias validadas como colunas
-        validColGroupsChildCount.push(
-          arrColGrpChilds.filter(col => col instanceof HTMLTableColElement)
-            .length
-        );
+        validColGroupsChildCount.push(arrColGrpChilds.filter(col => col instanceof HTMLTableColElement).length);
         console.warn(`Some children of <colgroup> are not HTMLTableColElement.
         Number of valid children obtained: ${validColGroupsChildCount.length}.
         Total of children: ${arrColGrpChilds?.length}`);
@@ -37,17 +30,10 @@ export function checkInnerColGroups(
         //descreve as instâncias achadas, para detalhar quais elementos não foram validados como colunas
         const colsInstances = [];
         arrColGrpChilds.forEach(arrColGrpChild => {
-          const childInstance = `${
-            Object.prototype.toString.call(arrColGrpChild).slice(8, -1) ??
-            "null"
-          }`;
+          const childInstance = `${Object.prototype.toString.call(arrColGrpChild).slice(8, -1) ?? "null"}`;
           colsInstances.push(childInstance);
           if (childInstance !== `HTMLTableColElement`)
-            elementNotFound(
-              arrColGrpChild,
-              "child <col>",
-              extLine(new Error())
-            );
+            elementNotFound(arrColGrpChild, "child <col>", extLine(new Error()));
         });
       }
     }
@@ -57,37 +43,29 @@ export function checkInnerColGroups(
     for (let m = 0; m < validColGroupsChildCount.length; m++) {
       if (m === 0) continue;
       else {
-        if ((validColGroupsChildCount[m] = validColGroupsChildCount[m - 1]))
-          pairedColGroupsValid.push(true);
+        if ((validColGroupsChildCount[m] = validColGroupsChildCount[m - 1])) pairedColGroupsValid.push(true);
         else {
           console.warn(`Erro validando par de Col Groups.
-          Par invalidado: ${validColGroupsChildCount[m] ?? "null"} com ${
-            validColGroupsChildCount[m - 1] ?? "null"
-          }`);
+          Par invalidado: ${validColGroupsChildCount[m] ?? "null"} com ${validColGroupsChildCount[m - 1] ?? "null"}`);
           pairedColGroupsValid.push(false);
         }
       }
     }
 
     //verifica se todos os pares são válidos para, em caso negativo, fornecer warn
-    if (pairedColGroupsValid.every(pairedColGroup => pairedColGroup === true))
-      areAllColGroupsSimilar = true;
-    else
-      console.warn(`Grupos de Colunas não são similares no número de children`);
+    if (pairedColGroupsValid.every(pairedColGroup => pairedColGroup === true)) areAllColGroupsSimilar = true;
+    else console.warn(`Grupos de Colunas não são similares no número de children`);
     areAllColGroupsSimilar = false;
   } else
     multipleElementsNotFound(
       extLine(new Error()),
-      `arguments for checkInnerColGroups(), areColGroupValids: ${
-        areAllColGroupsSimilar ?? false
-      }`,
+      `arguments for checkInnerColGroups(), areColGroupValids: ${areAllColGroupsSimilar ?? false}`,
       parentEl,
       `${JSON.stringify(colGroups) || null}`
     );
 
   return [validColGroupsChildCount?.length ?? 0, areAllColGroupsSimilar];
 }
-
 export function checkTabRowsIds(tab: targEl): string[] {
   const arrTabRowsIds: string[] = [];
 
@@ -96,36 +74,23 @@ export function checkTabRowsIds(tab: targEl): string[] {
         const rowId = tabRow?.id;
         rowId?.match(/^row/)?.toString()
           ? arrTabRowsIds?.push(rowId.slice(3).toLowerCase())
-          : stringError(
-              `obtendo id da row ${tabRow}`,
-              rowId,
-              extLine(new Error())
-            );
+          : stringError(`obtendo id da row ${tabRow}`, rowId, extLine(new Error()));
       })
     : elementNotFound(tab, "tabDC in checkTabRowsIds", extLine(new Error()));
 
   return arrTabRowsIds || [""];
 }
-
-export function changeTabDCutLayout(
-  protocolo: targEl,
-  tabDC: targEl,
-  bodyType: targEl
-): string {
+export function changeTabDCutLayout(protocolo: targEl, tabDC: targEl, bodyType: targEl): string {
   if (
-    (protocolo instanceof HTMLSelectElement ||
-      protocolo instanceof HTMLInputElement) &&
+    (protocolo instanceof HTMLSelectElement || protocolo instanceof HTMLInputElement) &&
     tabDC instanceof HTMLTableElement &&
-    (bodyType instanceof HTMLSelectElement ||
-      bodyType instanceof HTMLInputElement)
+    (bodyType instanceof HTMLSelectElement || bodyType instanceof HTMLInputElement)
   ) {
     const filteredOpsProtocolo = Array.from(protocolo.children)?.filter(
       childProtocolo => childProtocolo instanceof HTMLOptionElement
     );
 
-    if (
-      filteredOpsProtocolo?.length >= Array.from(protocolo.children)?.length
-    ) {
+    if (filteredOpsProtocolo?.length >= Array.from(protocolo.children)?.length) {
       //executa loop para todas as opções de protocolo válidas
       for (let iOp = 0; iOp < filteredOpsProtocolo.length - 1; iOp++) {
         const arrayTabIds = checkTabRowsIds(tabDC);
@@ -135,64 +100,39 @@ export function changeTabDCutLayout(
         e se a filtragem por gênero ocorreu corretamente*/
         if (
           arrayTabIds?.length ===
-            Array.from(tabDC.rows).filter(row =>
-              row.classList.contains("tabRowDCutMed")
-            )?.length &&
+            Array.from(tabDC.rows).filter(row => row.classList.contains("tabRowDCutMed"))?.length &&
           genderedIds?.length > 0
         ) {
           //separa casos por tipo de protocolo
           if ((protocolo as entryEl)?.value.match(/^pollock3$/i)?.toString()) {
-            if (
-              (bodyType.value === "masculino" ||
-                bodyType.value === "feminino") &&
-              genderedIds.length === 3
-            )
+            if ((bodyType.value === "masculino" || bodyType.value === "feminino") && genderedIds.length === 3)
               defineHiddenRows(tabDC, arrayTabIds, genderedIds);
             else if (bodyType.value === "neutro" && genderedIds.length === 5)
               defineHiddenRows(tabDC, arrayTabIds, genderedIds, "nb");
-            else
-              stringError(
-                "validating .value of bodyType",
-                bodyType?.value,
-                extLine(new Error())
-              );
-          } else if (
-            (protocolo as entryEl)?.value.match(/^pollock7$/i)?.toString()
-          ) {
-            Array.from(tabDC.querySelectorAll("tr.tabRowDCutMed"))?.forEach(
-              medTr => {
-                if ((medTr as HTMLElement)?.hidden) {
-                  medTr.removeAttribute("hidden");
-                  const innerInp = medTr.querySelector("input");
-                  if (innerInp) innerInp.setAttribute("required", "");
-                }
+            else stringError("validating .value of bodyType", bodyType?.value, extLine(new Error()));
+          } else if ((protocolo as entryEl)?.value.match(/^pollock7$/i)?.toString()) {
+            Array.from(tabDC.querySelectorAll("tr.tabRowDCutMed"))?.forEach(medTr => {
+              if ((medTr as HTMLElement)?.hidden) {
+                medTr.removeAttribute("hidden");
+                const innerInp = medTr.querySelector("input");
+                if (innerInp) innerInp.setAttribute("required", "");
               }
-            );
+            });
             return "pollock7";
-          } else
-            stringError(
-              "obtaining pollock value",
-              (protocolo as entryEl)?.value,
-              extLine(new Error())
-            );
+          } else stringError("obtaining pollock value", (protocolo as entryEl)?.value, extLine(new Error()));
         } else
           console.warn(
             `Error verifying number and/or id from rows. Row Elements ${
               JSON.stringify(arrayTabIds) || null
             }; Obtained number: ${arrayTabIds?.length}; Expected number: ${
-              Array.from(tabDC.rows).filter(row =>
-                row.classList.contains("tabRowDCutMed")
-              )?.length
+              Array.from(tabDC.rows).filter(row => row.classList.contains("tabRowDCutMed"))?.length
             }
-            Gender-filtered elements ${
-              JSON.stringify(genderedIds) || null
-            }; Obtained number: ${genderedIds?.length}; Expected number: 3`
+            Gender-filtered elements ${JSON.stringify(genderedIds) || null}; Obtained number: ${
+              genderedIds?.length
+            }; Expected number: 3`
           );
       }
-    } else
-      console.warn(
-        `Error checking protocol options. Total of options validated: ${filteredOpsProtocolo.length}`
-      );
+    } else console.warn(`Error checking protocol options. Total of options validated: ${filteredOpsProtocolo.length}`);
   } else
     multipleElementsNotFound(
       extLine(new Error()),
@@ -204,7 +144,6 @@ export function changeTabDCutLayout(
 
   return "pollock3";
 }
-
 export function defineHiddenRows(
   tabDC: targEl,
   arrayTabIds: string[] = [],
@@ -224,13 +163,8 @@ export function defineHiddenRows(
     e definir matchedIds*/
     for (const genId of genderedIds) {
       for (const tabId of arrayTabIds) {
-        if (
-          genId?.toLowerCase() === tabId &&
-          genId.charAt(0).toUpperCase() + genId.slice(1)
-        )
-          matchedIds.push(
-            `row${genId.charAt(0).toUpperCase() + genId.slice(1)}`
-          );
+        if (genId?.toLowerCase() === tabId && genId.charAt(0).toUpperCase() + genId.slice(1))
+          matchedIds.push(`row${genId.charAt(0).toUpperCase() + genId.slice(1)}`);
       }
     }
     /*percorrimento de row para resetar todos as rows para hidden e unrequired*/
@@ -278,11 +212,7 @@ export function defineHiddenRows(
     );
 }
 //correção para limitação da fórmula de PGC
-export function evaluatePGCDecay(
-  person: Person,
-  targInpPGC: targEl,
-  PGC: number = 0
-): [boolean, number] {
+export function evaluatePGCDecay(person: Person, targInpPGC: targEl, PGC: number = 0): [boolean, number] {
   let foundDecayPoint = false;
   if (
     person instanceof Person &&
@@ -321,17 +251,13 @@ export function evaluatePGCDecay(
       if (arrDecreasedPGC?.length > 0) {
         decreasedPerson?.sumDCut > 515
           ? (PGC = 60.5)
-          : (PGC =
-              Math.ceil((Math.max(...arrDecreasedPGC) + 0.05) * 10) / 10 +
-              ((initSumDCut - 260) / 100) * 5);
+          : (PGC = Math.ceil((Math.max(...arrDecreasedPGC) + 0.05) * 10) / 10 + ((initSumDCut - 260) / 100) * 5);
       } else PGC = decreasedPGC;
     }
     /*casos específicos para handling de input anômalo (além do possível para um ser humano), 
       evitando bugs nos listeners devido a NaN e loops de normalização */
     if (decreasedPGC <= PGC && (PGC > 100 || decreasedPerson?.sumDCut > 514)) {
-      console.warn(
-        `Valor anômalo de entrada para sumDCut e/ou PGC. Valor aproximado fornecido`
-      );
+      console.warn(`Valor anômalo de entrada para sumDCut e/ou PGC. Valor aproximado fornecido`);
       foundDecayPoint = true;
       alertPGCRounding(targInpPGC);
       PGC = 60.45 + 0.05 * ((decreasedPerson?.sumDCut ?? 514) - 513);
@@ -348,24 +274,11 @@ export function evaluatePGCDecay(
   if (PGC < 0 || Number.isNaN(PGC) || PGC === Math.abs(Infinity)) PGC = 0;
   return [foundDecayPoint, PGC];
 }
-
 export function alertPGCRounding(targInpPGC: targEl): void {
   if (targInpPGC instanceof HTMLInputElement) {
-    const spanRoundingAlertIcon = document.getElementById(
-      `alert_${(targInpPGC as entryEl).id}`
-    );
-    spanRoundingAlertIcon instanceof HTMLSpanElement &&
-    spanRoundingAlertIcon.hidden === false
+    const spanRoundingAlertIcon = document.getElementById(`alert_${(targInpPGC as entryEl).id}`);
+    spanRoundingAlertIcon instanceof HTMLSpanElement && spanRoundingAlertIcon.hidden === false
       ? (spanRoundingAlertIcon.hidden = true)
-      : elementNotFound(
-          spanRoundingAlertIcon,
-          "spanRoundingAlertIcon",
-          extLine(new Error())
-        );
-  } else
-    inputNotFound(
-      targInpPGC,
-      "targInpPGC in alertPGCRounding",
-      extLine(new Error())
-    );
+      : elementNotFound(spanRoundingAlertIcon, "spanRoundingAlertIcon", extLine(new Error()));
+  } else inputNotFound(targInpPGC, "targInpPGC in alertPGCRounding", extLine(new Error()));
 }
