@@ -3,6 +3,7 @@ import { handleEventReq, validateForm } from "@/lib/global/handlers/gHandlers";
 import { handleSubmit } from "@/pages/api/ts/handlers";
 import { useState } from "react";
 import RecoverAlert from "../../alerts/RecoverAlert";
+import Link from "next/link";
 export default function RecoverForm(): JSX.Element {
   const [shouldShowAlert, setAlert] = useState<boolean>(false);
   return (
@@ -18,8 +19,7 @@ export default function RecoverForm(): JSX.Element {
           ev.preventDefault();
           validation[0] && handleSubmit("recover", validation[2], true);
         })
-      }
-    >
+      }>
       <section id='recover-titles' className='recover-sect'>
         <h1>Recuperação de Senha</h1>
         <p>Forneça as informações solicitadas para prosseguir!</p>
@@ -53,14 +53,13 @@ export default function RecoverForm(): JSX.Element {
           onClick={ev => {
             ev.preventDefault();
             setAlert(true);
-          }}
-        >
+          }}>
           Enviar
         </button>
         <button type='reset' id='login-return' className='btn btn-primary'>
-          <a href='/' id='login-anchor'>
+          <Link href='/' id='login-anchor'>
             Retornar
-          </a>
+          </Link>
         </button>
       </section>
       <div id='modal-div'>{shouldShowAlert && <RecoverAlert dispatch={setAlert} state={shouldShowAlert} />}</div>

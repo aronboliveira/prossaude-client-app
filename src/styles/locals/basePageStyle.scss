@@ -46,11 +46,7 @@
     height: 1vh;
     width: 100vw;
     border-block: 6px ridge #87878773;
-    background: linear-gradient(
-      to right,
-      rgba(104, 146, 131, 0.1),
-      rgba(61, 134, 104, 0.15)
-    );
+    background: linear-gradient(to right, rgba(104, 146, 131, 0.1), rgba(61, 134, 104, 0.15));
   }
   section {
     &:has(> #rootUserInfo) {
@@ -149,11 +145,7 @@
   }
 
   .header-main-container {
-    background: linear-gradient(
-      to right,
-      rgba(193, 214, 207, 0.446),
-      rgba(125, 220, 180, 0.429)
-    );
+    background: linear-gradient(to right, rgba(193, 214, 207, 0.446), rgba(125, 220, 180, 0.429));
     border-block: 0.1rem ridge #87878773;
     border-bottom: 0.2rem ridge #87878754;
   }
@@ -181,11 +173,7 @@
   }
 
   #bgDiv {
-    background: linear-gradient(
-      to right,
-      rgb(78 95 84 / 64%),
-      rgb(78 99 86 / 100%)
-    );
+    background: linear-gradient(to right, rgb(78 95 84 / 64%), rgb(78 99 86 / 100%));
     border-block: 1px ridge #87878773;
     min-width: 100vw;
     min-height: 100vh;
@@ -201,7 +189,6 @@
   #panelBtn {
     box-shadow: 0.2vh 0.2vh 0.2vh rgba(133, 128, 128, 0.671);
     transform: scale(1.2);
-    padding-bottom: 2.1rem;
     &:hover {
       transform: scale(1.2) translate(0, 0.1rem);
     }

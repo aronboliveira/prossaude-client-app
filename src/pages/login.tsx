@@ -9,7 +9,6 @@ export const getServerSideProps = async () => {
     text: "",
   };
   try {
-    console.log("TRYING ON SERVER...");
     const res = await fetch("https://cdn.jsdelivr.net/gh/aronboliveira/my-python@main/fetch_test.py", {
       method: "GET",
       headers: {},

@@ -41,91 +41,94 @@ import FailRegstAlert from "../alerts/FailRegsAlert";
 let accFormData = 0;
 export default function FormDlg({ onClose, userClass = "estudante" }: ConsDlgProps): JSX.Element {
   //display de campos para identificadores de estudante
-  const dlgRef = useRef<nullishDlg>(null);
-  const pacBtnRef = useRef<nullishBtn>(null);
+  const dlgRef = useRef<nullishDlg>(null),
+    pacBtnRef = useRef<nullishBtn>(null);
   //autocompleção
-  const CPFPacInpRef = useRef<nullishInp>(null);
-  const CPFPacBtnRef = useRef<nullishBtn>(null);
-  const switchACConsRef = useRef<nullishInp>(null);
-  const switchAFConsRef = useRef<nullishInp>(null);
-  const telPacInpRef = useRef<nullishInp>(null);
-  const CPFProfBtnRef = useRef<nullishBtn>(null);
-  const hourRef = useRef<nullishInp>(null);
-  const dayRef = useRef<nullishDiv>(null);
-  const exportRef = useRef<nullishBtn>(null);
-  const submitRef = useRef<nullishBtn>(null);
-  const [isDREFillerActive, setDREFiller] = useState<boolean>(false);
-  const toggleDREFiller = () => setDREFiller(!isDREFillerActive);
+  const CPFPacInpRef = useRef<nullishInp>(null),
+    CPFPacBtnRef = useRef<nullishBtn>(null),
+    switchACConsRef = useRef<nullishInp>(null),
+    switchAFConsRef = useRef<nullishInp>(null),
+    telPacInpRef = useRef<nullishInp>(null),
+    CPFProfBtnRef = useRef<nullishBtn>(null),
+    hourRef = useRef<nullishInp>(null),
+    dayRef = useRef<nullishDiv>(null),
+    exportRef = useRef<nullishBtn>(null),
+    submitRef = useRef<nullishBtn>(null),
+    [isDREFillerActive, setDREFiller] = useState<boolean>(false),
+    toggleDREFiller = () => setDREFiller(!isDREFillerActive);
   //display de tabela para pacientes
-  const [shouldDisplayPacList, setPacFiller] = useState<boolean>(false);
-  const togglePacFiller = (s: boolean = false) => setPacFiller(!s);
+  const [shouldDisplayPacList, setPacFiller] = useState<boolean>(false),
+    togglePacFiller = (s: boolean = false) => setPacFiller(!s);
   //autocorreções de input
-  const [isAutocorrectConsOn, setAutocorrectCons] = useState<boolean>(true);
-  const toggleACCons = (s: boolean = false) => setAutocorrectCons(!s);
-  const [isAutofillConsOn, setAutofillCons] = useState<boolean>(true);
-  const toggleAFCons = (s: boolean = false) => setAutofillCons(!s);
+  const [isAutocorrectConsOn, setAutocorrectCons] = useState<boolean>(true),
+    toggleACCons = (s: boolean = false) => setAutocorrectCons(!s),
+    [isAutofillConsOn, setAutofillCons] = useState<boolean>(true),
+    toggleAFCons = (s: boolean = false) => setAutofillCons(!s);
   //fechamento de modal com clique fora da área do mesmo
   const handleClickOutside = (ev: MouseEvent) => {
-    dlgRef.current && isClickOutside(ev, dlgRef.current).some(clickArea => clickArea === true) && onClose();
-  };
-  const callbackCPFPacBtnClick = useCallback(
-    (retrvDataPh: { [key: string]: Object }) => {
-      const matchDataPh = (() => {
-        const matchDataPh = new Map();
-        Object.entries(retrvDataPh).forEach(([key, value]) => {
-          matchDataPh.set(key, value);
-        });
-        return matchDataPh;
-      })();
-      if (dlgRef?.current instanceof Element) {
-        const cpfInp = dlgRef.current.querySelector("input[id*=cpf]") || dlgRef.current.querySelector("input[id*=CPF]");
-        const currentInps = Array.from([
-          ...dlgRef.current.querySelectorAll("input"),
-          ...dlgRef.current.querySelectorAll("select"),
-          ...dlgRef.current.querySelectorAll("textarea"),
-        ]).filter(inp => !/cpf/gi.test(inp.id));
-        if (
-          cpfInp instanceof HTMLInputElement &&
-          currentInps.length > 0 &&
-          currentInps.every(
-            inp =>
-              inp instanceof HTMLInputElement || inp instanceof HTMLTextAreaElement || inp instanceof HTMLSelectElement
-          )
-        ) {
-          const keyFirstLvlMatch = matchDataPh.get(cpfInp.value.replaceAll(/[^\d]/g, ""));
-          for (const inp of currentInps) {
-            let inpTitle = inp.dataset.title;
-            if (inpTitle) {
-              if (inpTitle.match(/[\s-_]/g)) {
-                inpTitle.match(/[\s-_]/g)?.forEach((_: any, i: number) => {
-                  const index = /[\s-_]/g.exec(inpTitle!)!.index;
-                  if (i === 0) {
-                    inpTitle =
-                      inpTitle!.slice(0, index).toLowerCase() +
-                      inpTitle!.charAt(index + 1).toUpperCase() +
-                      inpTitle!.slice(index + 2).toLowerCase();
-                  } else
-                    inpTitle =
-                      inpTitle!.slice(0, index) +
-                      inpTitle!.charAt(index + 1).toUpperCase() +
-                      inpTitle!.slice(index + 2).toLowerCase();
-                });
-              } else inpTitle = inpTitle.toLowerCase();
-              inpTitle = inpTitle
-                .replaceAll(" ", "")
-                .replaceAll("-", "")
-                .replaceAll("_", "")
-                .replaceAll(/D[aeo](?=[A-Z])/g, "")
-                .replaceAll(/[Pp]aciente/g, "");
-              keyFirstLvlMatch[inpTitle] && (inp.value = keyFirstLvlMatch[inpTitle].toString());
-            } else console.warn(`Field ${inp.id || "UNIDENTIFIED"} has no data-title. Could not match data.`);
-          }
-        } else multipleElementsNotFound(extLine(new Error()), `inputs in the dialog id ${dlgRef.current.id}`, cpfInp);
-      } else console.warn(`dlgRef.current not validated in callbackCPFPacBtnClick()`);
-      return matchDataPh;
+      dlgRef.current && isClickOutside(ev, dlgRef.current).some(clickArea => clickArea === true) && onClose();
     },
-    [CPFPacBtnRef]
-  );
+    callbackCPFPacBtnClick = useCallback(
+      (retrvDataPh: { [key: string]: Object }) => {
+        const matchDataPh = (() => {
+          const matchDataPh = new Map();
+          Object.entries(retrvDataPh).forEach(([key, value]) => {
+            matchDataPh.set(key, value);
+          });
+          return matchDataPh;
+        })();
+        if (dlgRef?.current instanceof Element) {
+          const cpfInp =
+              dlgRef.current.querySelector("input[id*=cpf]") || dlgRef.current.querySelector("input[id*=CPF]"),
+            currentInps = Array.from([
+              ...dlgRef.current.querySelectorAll("input"),
+              ...dlgRef.current.querySelectorAll("select"),
+              ...dlgRef.current.querySelectorAll("textarea"),
+            ]).filter(inp => !/cpf/gi.test(inp.id));
+          if (
+            cpfInp instanceof HTMLInputElement &&
+            currentInps.length > 0 &&
+            currentInps.every(
+              inp =>
+                inp instanceof HTMLInputElement ||
+                inp instanceof HTMLTextAreaElement ||
+                inp instanceof HTMLSelectElement,
+            )
+          ) {
+            const keyFirstLvlMatch = matchDataPh.get(cpfInp.value.replaceAll(/[^\d]/g, ""));
+            for (const inp of currentInps) {
+              let inpTitle = inp.dataset.title;
+              if (inpTitle) {
+                if (inpTitle.match(/[\s-_]/g)) {
+                  inpTitle.match(/[\s-_]/g)?.forEach((_: any, i: number) => {
+                    const index = /[\s-_]/g.exec(inpTitle!)!.index;
+                    if (i === 0) {
+                      inpTitle =
+                        inpTitle!.slice(0, index).toLowerCase() +
+                        inpTitle!.charAt(index + 1).toUpperCase() +
+                        inpTitle!.slice(index + 2).toLowerCase();
+                    } else
+                      inpTitle =
+                        inpTitle!.slice(0, index) +
+                        inpTitle!.charAt(index + 1).toUpperCase() +
+                        inpTitle!.slice(index + 2).toLowerCase();
+                  });
+                } else inpTitle = inpTitle.toLowerCase();
+                inpTitle = inpTitle
+                  .replaceAll(" ", "")
+                  .replaceAll("-", "")
+                  .replaceAll("_", "")
+                  .replaceAll(/D[aeo](?=[A-Z])/g, "")
+                  .replaceAll(/[Pp]aciente/g, "");
+                keyFirstLvlMatch[inpTitle] && (inp.value = keyFirstLvlMatch[inpTitle].toString());
+              } else console.warn(`Field ${inp.id || "UNIDENTIFIED"} has no data-title. Could not match data.`);
+            }
+          } else multipleElementsNotFound(extLine(new Error()), `inputs in the dialog id ${dlgRef.current.id}`, cpfInp);
+        } else console.warn(`dlgRef.current not validated in callbackCPFPacBtnClick()`);
+        return matchDataPh;
+      },
+      [CPFPacBtnRef],
+    );
   //ativação de preenchimento de paciente com CPF
   const handleCPFBtnClick = useCallback(() => {
     CPFPacBtnRef?.current instanceof HTMLButtonElement && CPFPacBtnRef.current.id.match(/cpf/gi)
@@ -144,7 +147,7 @@ export default function FormDlg({ onClose, userClass = "estudante" }: ConsDlgPro
         ? setCPFFiller(!isCPFFillerActive)
         : elementNotFound(CPFProfBtnRef.current, "CPFProfBtnRef for useCallback", extLine(new Error()));
     },
-    [dlgRef, CPFProfBtnRef]
+    [dlgRef, CPFProfBtnRef],
   );
   const generateSchedBtn = useCallback(
     (dialog: HTMLDialogElement) => {
@@ -169,12 +172,12 @@ export default function FormDlg({ onClose, userClass = "estudante" }: ConsDlgPro
       } else elementNotPopulated(allEntryEls, "allEntryEls in generateSchedBtn()", extLine(new Error()));
       if (!consVariablesData.rootDlg)
         consVariablesData.rootDlg = createRoot(
-          document.getElementById("rootDlgList") ?? document.getElementById("transfArea")!
+          document.getElementById("rootDlgList") ?? document.getElementById("transfArea")!,
         );
       const newBtn = createAptBtn(formData, providerFormData[accFormData], consVariablesData.rootDlg, userClass);
       handleDragAptBtn(newBtn, userClass);
     },
-    [dlgRef, submitRef]
+    [dlgRef, submitRef],
   );
   const [shouldDisplayFailRegstDlg, setDisplayFailRegstDlg] = useState<boolean>(false);
   const toggleDisplayRegstDlg = (shouldDisplayFailRegstDlg: boolean = true): void => {
@@ -184,7 +187,7 @@ export default function FormDlg({ onClose, userClass = "estudante" }: ConsDlgPro
         submitRef.current,
         dlgRef.current,
         [undefined, shouldDisplayFailRegstDlg, setDisplayFailRegstDlg, "Arraste"],
-        userClass
+        userClass,
       )
     )
       setDisplayFailRegstDlg(!shouldDisplayFailRegstDlg);
@@ -203,7 +206,7 @@ export default function FormDlg({ onClose, userClass = "estudante" }: ConsDlgPro
       history.pushState(
         {},
         "",
-        `${location.origin}${location.pathname}${location.search}`.replaceAll("&new-cons=open", "")
+        `${location.origin}${location.pathname}${location.search}`.replaceAll("&new-cons=open", ""),
       );
       setTimeout(() => {
         history.pushState({}, "", `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#"));
@@ -226,7 +229,7 @@ export default function FormDlg({ onClose, userClass = "estudante" }: ConsDlgPro
       document.getElementById("btnShowAvStuds"),
       document.getElementById("listCPFPacCons"),
       document.getElementById("autoFillDREBtn"),
-      document.getElementById("autoFillCPFRespBtn")
+      document.getElementById("autoFillCPFRespBtn"),
     );
   }, [dlgRef]);
   useEffect(() => {
@@ -247,7 +250,7 @@ export default function FormDlg({ onClose, userClass = "estudante" }: ConsDlgPro
         globalDataProvider.initPersist(
           dlgRef.current,
           // consDataProvider,
-          globalDataProvider
+          globalDataProvider,
         );
       //remodela datalistas com base em membros disponíveis para tipo de consulta
       addListenerAvMembers(dlgRef, true);
@@ -279,7 +282,7 @@ export default function FormDlg({ onClose, userClass = "estudante" }: ConsDlgPro
       inputNotFound(
         switchAFConsRef.current,
         "Switch for toggling autofill in new appointment form",
-        extLine(new Error())
+        extLine(new Error()),
       );
   }, [switchAFConsRef]);
   useEffect(() => {
@@ -293,7 +296,7 @@ export default function FormDlg({ onClose, userClass = "estudante" }: ConsDlgPro
       inputNotFound(
         switchACConsRef.current,
         "Switch for toggling autocorrect in new appointment form",
-        extLine(new Error())
+        extLine(new Error()),
       );
   }, [switchACConsRef]);
   useEffect(() => {
@@ -337,7 +340,7 @@ export default function FormDlg({ onClose, userClass = "estudante" }: ConsDlgPro
         extLine(new Error()),
         "refs in useEffect() for FormDlg",
         exportRef.current,
-        dlgRef.current
+        dlgRef.current,
       );
   }, [exportRef]);
   return (
@@ -345,22 +348,19 @@ export default function FormDlg({ onClose, userClass = "estudante" }: ConsDlgPro
       <ErrorBoundary
         FallbackComponent={() => (
           <ErrorFallbackDlg renderError={new Error(`Erro carregando a janela modal!`)} onClick={onClose} />
-        )}
-      >
+        )}>
         <div role='group' className='flexRNoWBetCt cGap2v widQ600_75v rGapQ4601v' id='headRegstPac'>
           <div
             role='group'
             className='flexNoW flexQ750NoWC cGap1v rGapQ4601v'
-            style={{ marginLeft: "0.5rem", marginTop: "1rem" }}
-          >
+            style={{ marginLeft: "0.5rem", marginTop: "1rem" }}>
             <h2 className='mg-1b noInvert'>
               <strong className='noInvert'>Registro de Consulta</strong>
             </h2>
             <span
               role='group'
               className='form-switch spanRight mg-0b mg-07t pdT05v pdL-3-2rQ750'
-              id='autocorrectDivCons'
-            >
+              id='autocorrectDivCons'>
               <input
                 type='checkbox'
                 className='deActBtn form-check-input'
@@ -398,8 +398,7 @@ export default function FormDlg({ onClose, userClass = "estudante" }: ConsDlgPro
             action='submit_cons_form'
             method='post'
             encType='application/x-www-form-urlencoded'
-            onSubmit={ev => ev.preventDefault()}
-          >
+            onSubmit={ev => ev.preventDefault()}>
             <section className='flexWC' id='inpsRegsPacSec'>
               <div role='group' className='flexWR' id='cpfPacDiv'>
                 <div role='group' className='flexNoWC flexBasis100' id='cpfTitledInpDiv'>
@@ -440,8 +439,7 @@ export default function FormDlg({ onClose, userClass = "estudante" }: ConsDlgPro
                         className='btn btn-primary hBsFormLike'
                         id='autoFillCPFPacBtn'
                         ref={CPFPacBtnRef}
-                        onClick={handleCPFBtnClick}
-                      >
+                        onClick={handleCPFBtnClick}>
                         <small role='textbox'>Preencher Dados com CPF</small>
                       </button>
                     </span>
@@ -576,8 +574,7 @@ export default function FormDlg({ onClose, userClass = "estudante" }: ConsDlgPro
                       formMethod='get'
                       formAction='#'
                       ref={pacBtnRef}
-                      onClick={() => togglePacFiller(shouldDisplayPacList)}
-                    >
+                      onClick={() => togglePacFiller(shouldDisplayPacList)}>
                       <small role='textbox'>Consultar Lista de Pacientes</small>
                     </button>
                   </div>
@@ -799,8 +796,7 @@ export default function FormDlg({ onClose, userClass = "estudante" }: ConsDlgPro
                   name='statusPac-in'
                   data-title='Status Paciente'
                   data-aloc='status-pac'
-                  required
-                >
+                  required>
                   <option value='avaliacao'>Em Avaliação Inicial</option>
                   <option value='tratamento'>Em Tratamento Geral</option>
                   <option value='emergência'>Em emergência</option>
@@ -822,8 +818,7 @@ export default function FormDlg({ onClose, userClass = "estudante" }: ConsDlgPro
                   name='typeCons-in'
                   className='form-select ssPersist'
                   data-title='Tipo da Consulta'
-                  required
-                >
+                  required>
                   <optgroup label='Geral'>
                     <option value='anamnese'>Anamnese e Exame Clínico</option>
                     <option value='retorno'>Retorno e Reavaliação</option>
@@ -883,8 +878,7 @@ export default function FormDlg({ onClose, userClass = "estudante" }: ConsDlgPro
                       formAction='#'
                       className='btn btn-primary hBsFormLike'
                       id='autoFillDREBtn'
-                      onClick={() => toggleDREFiller()}
-                    >
+                      onClick={() => toggleDREFiller()}>
                       <small role='textbox'>Capturar por Identificadores</small>
                     </button>
                   </div>
@@ -926,8 +920,7 @@ export default function FormDlg({ onClose, userClass = "estudante" }: ConsDlgPro
                       className='btn btn-primary hBsFormLike'
                       id='autoFillCPFRespBtn'
                       ref={CPFProfBtnRef}
-                      onClick={() => toggleCPFFiller(CPFProfBtnRef, isCPFFillerActive)}
-                    >
+                      onClick={() => toggleCPFFiller(CPFProfBtnRef, isCPFFillerActive)}>
                       <small role='textbox'>Consultar Lista de Profissionais</small>
                     </button>
                   </div>
@@ -1062,8 +1055,7 @@ export default function FormDlg({ onClose, userClass = "estudante" }: ConsDlgPro
                   name='notes-in'
                   autoCapitalize='true'
                   placeholder='Insira aqui observações adicionais sobre a consulta'
-                  data-title='Notas e Observações'
-                ></textarea>
+                  data-title='Notas e Observações'></textarea>
               </div>
             </section>
             <hr />
@@ -1082,7 +1074,7 @@ export default function FormDlg({ onClose, userClass = "estudante" }: ConsDlgPro
                         //acumulador é alinhado com o de contexto dos diálogos de consulta no handler comum
                         accFormData = document.querySelectorAll(".appointmentBtn").length + 1;
                         providerFormData[accFormData] = generateSchedPacData(
-                          dlgRef.current ?? ev.currentTarget.closest("dialog")
+                          dlgRef.current ?? ev.currentTarget.closest("dialog"),
                         );
                         generateSchedBtn(dlgRef.current ?? ev.currentTarget.closest("dialog")!);
                         // handleSubmit("cons", validation[2], true);
@@ -1093,7 +1085,7 @@ export default function FormDlg({ onClose, userClass = "estudante" }: ConsDlgPro
                           //acumulador é alinhado com o de contexto dos diálogos de consulta no handler comum
                           accFormData = document.querySelectorAll(".appointmentBtn").length + 1;
                           providerFormData[accFormData] = generateSchedPacData(
-                            dlgRef.current ?? ev.currentTarget.closest("dialog")
+                            dlgRef.current ?? ev.currentTarget.closest("dialog"),
                           );
                           generateSchedBtn(dlgRef.current ?? ev.currentTarget.closest("dialog")!);
                           handleSubmit("cons", validation[2], true);
@@ -1101,8 +1093,7 @@ export default function FormDlg({ onClose, userClass = "estudante" }: ConsDlgPro
                         } else ev.preventDefault();
                       }
                     });
-                  }}
-                >
+                  }}>
                   <small role='textbox'>
                     <em>
                       <strong>Finalizar</strong>
@@ -1116,8 +1107,7 @@ export default function FormDlg({ onClose, userClass = "estudante" }: ConsDlgPro
                   id='btnExportRegst'
                   className='btn btn-primary widFull'
                   ref={exportRef}
-                  title='Gere um .xlsx com os dados preenchidos'
-                >
+                  title='Gere um .xlsx com os dados preenchidos'>
                   <small role='textbox'>
                     <em className='bolded'>Gerar Planilha</em>
                   </small>

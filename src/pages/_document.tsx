@@ -4,7 +4,7 @@ import Document, { Html, Head, Main, NextScript, DocumentContext } from "next/do
 import Script from "next/script";
 import path from "path";
 import { promises as fs } from "fs";
-export async function getStaticProps() {
+export async function getServerSideProps(): Promise<any> {
   const packageJsonPath = path.join(process.cwd(), "../../package.json");
   const packageJson = JSON.parse(await fs.readFile(packageJsonPath, "utf-8"));
   return {
@@ -64,8 +64,7 @@ export default function MyDocument({ deps }: { deps: any }): JSX.Element {
           rel='stylesheet'
           integrity='sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN'
           crossOrigin='anonymous'
-          id='bootstrapLink'
-        ></link>
+          id='bootstrapLink'></link>
       </Head>
       <body>
         <Main />

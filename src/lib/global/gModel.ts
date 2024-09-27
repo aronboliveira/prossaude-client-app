@@ -1,6 +1,6 @@
 import { cursorCheckTimer } from "./handlers/gHandlers";
 import { fadeElement } from "./gStyleScript";
-import type { entryEl, textEl, targStr, targEl } from "./declarations/types";
+import type { entryEl, textEl, targStr, targEl, nullishForm } from "./declarations/types";
 //nesse file estão presentes principalmente as funções relacionadas à exigência de modelo textual e de visualização
 import {
   extLine,
@@ -22,7 +22,7 @@ export function numberLimit(inpEl: targEl): void {
     ) {
       if (inpEl.value?.match(/[=.,;~/|"!@#$%&*¬°ªº§¹²³£¢(){}[\]]/g)) {
         const wrongMatchIndex = inpEl.value.indexOf(
-          inpEl.value.match(/[=.,;~/|"!@#$%&*¬°ªº§¹²³£¢(){}[\]]/g)?.[0] ?? ""
+          inpEl.value.match(/[=.,;~/|"!@#$%&*¬°ªº§¹²³£¢(){}[\]]/g)?.[0] ?? "",
         );
         inpEl.value = inpEl.value.slice(0, wrongMatchIndex ?? 0) + inpEl.value.slice(wrongMatchIndex + 1 ?? 0);
       }
@@ -204,7 +204,7 @@ export function checkAllGenConts(...els: targEl[]): boolean {
   if (
     Array.isArray(els) &&
     els?.every(
-      el => el instanceof HTMLSelectElement || el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement
+      el => el instanceof HTMLSelectElement || el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement,
     )
   )
     return true;
@@ -218,7 +218,7 @@ export function fluxGen(arrGenConts: entryEl[], genIniValue: targStr = "masculin
       genCont =>
         genCont instanceof HTMLSelectElement ||
         genCont instanceof HTMLInputElement ||
-        genCont instanceof HTMLTextAreaElement
+        genCont instanceof HTMLTextAreaElement,
     ) &&
     typeof genIniValue === "string"
   ) {
@@ -364,7 +364,7 @@ export function hideStgTransHorm(genTrans: targEl): boolean {
 }
 export function filterIdsByGender(
   arrayIds: string[] = ["peit", "abd", "coxa"],
-  bodyType: string = "masculino"
+  bodyType: string = "masculino",
 ): string[] {
   if (Array.isArray(arrayIds) && arrayIds?.every(prop => typeof prop === "string") && typeof bodyType === "string") {
     switch (bodyType) {
@@ -394,7 +394,7 @@ export function correctCursorNextWords(
   isCursorAutoMoved: boolean = false,
   isUndoUppercase: boolean = false,
   match: string | null = "",
-  textElement: Element
+  textElement: Element,
 ): [string, boolean] | void {
   let text = (textElement as entryEl)?.value || textElement.textContent || "";
   let isFixAfterDCursorExec = false;
@@ -447,7 +447,7 @@ export function fixCursorPosition(
   textElement: Element,
   range: Range,
   selection: Selection | null,
-  shouldSetEnd: boolean = false
+  shouldSetEnd: boolean = false,
 ): void {
   range.setStart(textElement, 0);
   if (shouldSetEnd === true) range.setEnd(textElement, 1);
@@ -461,7 +461,7 @@ export function fixFirstLetter(
   textElement: Element,
   range: Range,
   selection: Selection | null,
-  shouldSetEnd: boolean = false
+  shouldSetEnd: boolean = false,
 ): string {
   let contText = (textElement as entryEl).value || textElement.textContent || "";
   const firstLetterMatch = fstLet?.match(regex);
@@ -525,7 +525,7 @@ export function fixUnproperUppercases(text: string = "", match: string = "", con
   }
   const textAfterRepetitions = text.slice(
     upperCasesRepetitionsIndex + 1 + loweredRepetitions.length - addAcumulator,
-    text.length + 1
+    text.length + 1,
   );
   const textArray = Array.from(text);
   textArray.splice(upperCasesRepetitionsIndex + 1, loweredRepetitions.length, loweredRepetitions);
@@ -545,7 +545,7 @@ export function fixUnproperUppercases(text: string = "", match: string = "", con
 export function fixForcedUpperCase(
   textElement: Element,
   wordMatch: string[] = [""],
-  wMatchIteration: RegExpMatchArray | string = ""
+  wMatchIteration: RegExpMatchArray | string = "",
 ): string {
   let text = (textElement as textEl).value || textElement.textContent || "";
   const strDlowercase = wMatchIteration.toString();
@@ -564,7 +564,7 @@ export function autoCapitalizeInputs(textEl: targEl, isAutocorrectOn: boolean = 
     if (isAutocorrectOn && text) {
       //inicialização de expressões regex com seus objetos e matches associados
       const newWordMatches = text.match(
-        /\s[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ]?[a-zA-ZáàâäãéèêëíìîïóòôöõúùûüÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ]+\s?[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ]?[a-zA-ZáàâäãéèêëíìîïóòôöõúùûüÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ]*/g
+        /\s[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ]?[a-zA-ZáàâäãéèêëíìîïóòôöõúùûüÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ]+\s?[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ]?[a-zA-ZáàâäãéèêëíìîïóòôöõúùûüÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ]*/g,
       );
       const letterMatchesIniNotD = text.match(/\s[^d]/g);
       const letterMatchesIniD = text.match(/\sd/g);
@@ -573,29 +573,29 @@ export function autoCapitalizeInputs(textEl: targEl, isAutocorrectOn: boolean = 
       const letterMatchesAfterDOp1 = text.match(/\sd[^aeioáàâäãéèêëíìîïóòôöõúùûüAEIOÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ]/g);
       const letterMatchesAfterDOp2 = text.match(/\sd[aeioáàâäãéèêëíìîïóòôöõúùûüAEIOÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ][^sS\s]/g);
       const letterMatchesAfterDOp3 = text.match(
-        /\sd[aeioáàâäãéèêëíìîïóòôöõúùûüAEIOÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ][sS][a-zA-ZáàâäãéèêëíìîïóòôöõúùûüÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ]/g
+        /\sd[aeioáàâäãéèêëíìîïóòôöõúùûüAEIOÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ][sS][a-zA-ZáàâäãéèêëíìîïóòôöõúùûüÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ]/g,
       );
       const lowercasesRegexObj = new RegExp(/[a-záàâäãéèêëíìîïóòôöõúùûü]/g);
       const uppercasesRegexObj = new RegExp(/[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ]/);
       const multipleUppercasesMatches = text.match(/[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ]{2,}/g);
       const multipleUppercasesMatches2 = text.match(/D[a-záàâäãéèêëíìîïóòôöõúùûü][S]\s/g);
       const wrongUppercasesMatchesOp1 = text.match(
-        /[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ][a-záàâäãéèêëíìîïóòôöõúùûü]+[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ]\b/g
+        /[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ][a-záàâäãéèêëíìîïóòôöõúùûü]+[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ]\b/g,
       );
       const wrongUppercasesMatchesOp2 = text.match(
-        /[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ][a-záàâäãéèêëíìîïóòôöõúùûü]+[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ][a-záàâäãéèêëíìîïóòôöõúùûü]+\b/g
+        /[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ][a-záàâäãéèêëíìîïóòôöõúùûü]+[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ][a-záàâäãéèêëíìîïóòôöõúùûü]+\b/g,
       );
       const wrongUppercasesMatchesOp3 = text.match(
-        /[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ][a-záàâäãéèêëíìîïóòôöõúùûü]+[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ]+[a-záàâäãéèêëíìîïóòôöõúùûü]{2,3}\b/g
+        /[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ][a-záàâäãéèêëíìîïóòôöõúùûü]+[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ]+[a-záàâäãéèêëíìîïóòôöõúùûü]{2,3}\b/g,
       );
       const wrongUppercasesMatchesOp4 = text.match(
-        /[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ][a-záàâäãéèêëíìîïóòôöõúùûü][A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ][a-záàâäãéèêëíìîïóòôöõúùûü]+[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ][a-záàâäãéèêëíìîïóòôöõúùûü]+\b/g
+        /[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ][a-záàâäãéèêëíìîïóòôöõúùûü][A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ][a-záàâäãéèêëíìîïóòôöõúùûü]+[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ][a-záàâäãéèêëíìîïóòôöõúùûü]+\b/g,
       );
       const wrongUppercasesMatchesOp5 = text.match(
-        /[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ][a-záàâäãéèêëíìîïóòôöõúùûü]{1,2}[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ][a-záàâäãéèêëíìîïóòôöõúùûü]+[a-záàâäãéèêëíìîïóòôöõúùûüA-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ]+\b/g
+        /[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ][a-záàâäãéèêëíìîïóòôöõúùûü]{1,2}[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ][a-záàâäãéèêëíìîïóòôöõúùûü]+[a-záàâäãéèêëíìîïóòôöõúùûüA-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ]+\b/g,
       );
       const wrongUppercasesMatchesOp6 = text.match(
-        /[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ][a-záàâäãéèêëíìîïóòôöõúùûü]+[a-záàâäãéèêëíìîïóòôöõúùûü]+[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ]+[a-záàâäãéèêëíìîïóòôöõúùûü][a-záàâäãéèêëíìîïóòôöõúùûü]+\b/g
+        /[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ][a-záàâäãéèêëíìîïóòôöõúùûü]+[a-záàâäãéèêëíìîïóòôöõúùûü]+[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ]+[a-záàâäãéèêëíìîïóòôöõúùûü][a-záàâäãéèêëíìîïóòôöõúùûü]+\b/g,
       );
       const wrongUppercasesMatchesOp7 = text.match(/D[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ][sS]/g);
       const wrongUppercasesMatchesOp8 = text.match(/D[AEIOÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ][^sS]/g);
@@ -641,7 +641,7 @@ export function autoCapitalizeInputs(textEl: targEl, isAutocorrectOn: boolean = 
                     isCursorAutoMoved,
                     isUndoUppercase,
                     wrongStartMatch,
-                    textEl
+                    textEl,
                   );
                 });
               }
@@ -662,7 +662,7 @@ export function autoCapitalizeInputs(textEl: targEl, isAutocorrectOn: boolean = 
                     isCursorAutoMoved,
                     isUndoUppercase,
                     wrongStartMatch,
-                    textEl
+                    textEl,
                   );
                   textEl.value = wrongStartCorrection(textEl.value, wrongStartMatch) ?? "";
                 } else if (
@@ -719,7 +719,7 @@ export function autoCapitalizeInputs(textEl: targEl, isAutocorrectOn: boolean = 
                               isCursorAutoMoved,
                               isUndoUppercase,
                               wrongStartMatch,
-                              textEl
+                              textEl,
                             );
                           } else if (iD === 1) {
                             filteredArrayD.splice(iD, 1, mappedArrayD[1]);
@@ -728,7 +728,7 @@ export function autoCapitalizeInputs(textEl: targEl, isAutocorrectOn: boolean = 
                               isCursorAutoMoved,
                               isUndoUppercase,
                               wrongStartMatch,
-                              textEl
+                              textEl,
                             );
                             if (textEl.value)
                               textEl.value = textEl.value.replace(new RegExp(filteredArrayD[iD], "g"), remadeStringD);
@@ -739,7 +739,7 @@ export function autoCapitalizeInputs(textEl: targEl, isAutocorrectOn: boolean = 
                               isCursorAutoMoved,
                               isUndoUppercase,
                               wrongStartMatch,
-                              textEl
+                              textEl,
                             );
                           }
                         }
@@ -795,7 +795,7 @@ export function autoCapitalizeInputs(textEl: targEl, isAutocorrectOn: boolean = 
                     isCursorAutoMoved,
                     isUndoUppercase,
                     wrongStartMatch,
-                    textEl
+                    textEl,
                   );
                   if (range.endOffset >= 1) fixCursorPosition(textEl, range, selection, true);
                 }
@@ -809,7 +809,7 @@ export function autoCapitalizeInputs(textEl: targEl, isAutocorrectOn: boolean = 
                     isCursorAutoMoved,
                     isUndoUppercase,
                     wrongStartMatch,
-                    textEl
+                    textEl,
                   );
                   if (range.endOffset >= 1) fixCursorPosition(textEl, range, selection, true);
                 }
@@ -845,7 +845,7 @@ export function autoCapitalizeInputs(textEl: targEl, isAutocorrectOn: boolean = 
                     isCursorAutoMoved,
                     isUndoUppercase,
                     wrongStartMatch,
-                    textEl
+                    textEl,
                   );
                 }
               }
@@ -1028,5 +1028,93 @@ export function modelScripts(): void {
     });
   } catch (e) {
     console.error(`Error executing modelScripts:\n${(e as Error).message}`);
+  }
+}
+export function assignFormAttrs(fr: nullishForm): void {
+  if (!(fr instanceof HTMLFormElement)) throw new Error(`Failed to validate Form Reference`);
+  try {
+    const metaCs = document.querySelector('meta[charset*="utf-"]') ?? document.querySelector('meta[charset*="UTF-"]');
+    if (!(metaCs instanceof HTMLMetaElement)) throw new Error(`Failed to fetch HTMLMetaElement for Charset`);
+    const cs = /utf\-16/gi.test(metaCs.outerHTML) ? "utf-16" : "utf-8";
+    fr.acceptCharset = cs;
+  } catch (e) {
+    console.error(
+      `Error executing procedure for defining Accept Charset for ${fr.id || fr.className || fr.tagName}:${
+        (e as Error).message
+      }`,
+    );
+  }
+  try {
+    let els = "",
+      len = 0;
+    [
+      ...fr.querySelectorAll("button"),
+      ...fr.querySelectorAll("fieldset"),
+      ...fr.querySelectorAll("input"),
+      ...fr.querySelectorAll("object"),
+      ...fr.querySelectorAll("output"),
+      ...fr.querySelectorAll("select"),
+      ...fr.querySelectorAll("textarea"),
+    ].forEach((el, i) => {
+      try {
+        if (!(el instanceof HTMLElement) || el.id === "") return;
+        if (els === "") els = `#${el.id}`;
+        else els += `, #${el.id}`;
+        len += 1;
+        if (!el || !fr) return;
+        el.dataset.form = `#${fr.id}`;
+        if (el instanceof HTMLInputElement) {
+          if (el.formAction === "") el.formAction = fr.action;
+          if (el.formMethod === "") el.formMethod = fr.method;
+          if (el.formEnctype === "") el.formEnctype = fr.enctype;
+          if (!el.formNoValidate) el.formNoValidate = fr.noValidate;
+        } else if (el instanceof HTMLSelectElement || el instanceof HTMLTextAreaElement) {
+          el.dataset.formAction = fr.action;
+          el.dataset.formMethod = fr.method;
+          el.dataset.formEnctype = fr.enctype;
+          el.dataset.formNoValidate = fr.noValidate.toString();
+        }
+        if (fr.id !== "") el.dataset.form = fr.id;
+        if (
+          (el instanceof HTMLFieldSetElement || el instanceof HTMLObjectElement || el instanceof HTMLButtonElement) &&
+          el.id !== "" &&
+          el.name === ""
+        )
+          el.name = el.id.replace(/([A-Z])/g, m => (m === el.id.charAt(0) ? m.toLowerCase() : `_${m.toLowerCase()}`));
+      } catch (e) {
+        console.error(`Error executing iteration ${i} for adding ids do elements list:\n${(e as Error).message}`);
+      }
+      try {
+        if (!(el instanceof HTMLInputElement || el instanceof HTMLSelectElement || el instanceof HTMLTextAreaElement))
+          throw new Error(`Failed to validate Input Reference`);
+        try {
+          const rlb = el.labels ? el.labels[0] : null;
+          if (!(rlb instanceof HTMLLabelElement)) throw new Error(`Failed to validate Label Reference`);
+          if (rlb.htmlFor !== el.id) rlb.htmlFor = el.id;
+        } catch (e) {
+          console.error(`Erroel executing procedure for fixing Label htmlFor:\n${(e as Error).message}`);
+        }
+        if (!el.labels) throw new Error(`Failed to read labels NodeList for Input Reference.`);
+        if (!el.labels[0]) throw new Error(`Failed to read any label in the Labels NodeList`);
+        el.labels.forEach((lab, i) => {
+          try {
+            if (lab.id === "") return;
+            if (!el) throw new Error(`Lost reference to the input`);
+            if (i === 0) el.dataset.labels = `${lab.id}`;
+            else el.dataset.labels += `, ${lab.id}`;
+          } catch (e) {
+            console.error(
+              `Error executing iteration ${i} for ${el.id || el.className || el.tagName}:\n${(e as Error).message}`,
+            );
+          }
+        });
+      } catch (e) {
+        console.error(`Error executing procedure to define Dataset Label:\n${(e as Error).message}`);
+      }
+    });
+    fr.dataset.elements = els;
+    fr.dataset.len = len.toString();
+  } catch (e) {
+    console.error(`Failed to execute assignFormAttrs: ${(e as Error).name} : ${(e as Error).message}`);
   }
 }
