@@ -5,32 +5,16 @@ import { handleLinkChanges } from "@/lib/global/handlers/gRoutingHandlers";
 import { odProps } from "@/pages/od";
 import { pageCases, targEl } from "@/lib/global/declarations/types";
 import { useEffect, useState } from "react";
-import {
-  addListenerExportBtn,
-  getGlobalEls,
-  watchLabels,
-} from "@/lib/global/gController";
-import {
-  clearPhDates,
-  dinamicGridAdjust,
-  equalizeFlexSibilings,
-} from "@/lib/global/gStyleScript";
-import {
-  deactTextInput,
-  syncAriaStates,
-} from "@/lib/global/handlers/gHandlers";
+import { addListenerExportBtn, getGlobalEls, watchLabels } from "@/lib/global/gController";
+import { clearPhDates, dinamicGridAdjust, equalizeFlexSibilings } from "@/lib/global/gStyleScript";
+import { deactTextInput, syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { modelScripts } from "@/lib/global/gModel";
-export default function Watcher({
-  routeCase,
-}: {
-  routeCase?: pageCases;
-}): JSX.Element {
+let isFetching = false;
+export default function Watcher({ routeCase }: { routeCase?: pageCases }): JSX.Element {
   const [handled, setHandle] = useState<boolean>(false);
   useEffect(() => {
     const handleResize = () => {
-      equalizeFlexSibilings(document.querySelectorAll("[class*='flexTwin']"), [
-        ["width", "px"],
-      ]);
+      equalizeFlexSibilings(document.querySelectorAll("[class*='flexTwin']"), [["width", "px"]]);
     };
     syncAriaStates(document.querySelectorAll("*"));
     watchLabels();
@@ -38,13 +22,8 @@ export default function Watcher({
     else if (routeCase === "base") handleLinkChanges("base", "Base Page Style");
     else if (routeCase === "ag") {
       handleLinkChanges("ag", "AG Page Style");
-      agProps.agIsAutoCorrectOn = getGlobalEls(
-        agProps.agIsAutoCorrectOn,
-        "num"
-      );
-      equalizeFlexSibilings(document.querySelectorAll("[class*='flexTwin']"), [
-        ["width", "px"],
-      ]);
+      agProps.agIsAutoCorrectOn = getGlobalEls(agProps.agIsAutoCorrectOn, "num");
+      equalizeFlexSibilings(document.querySelectorAll("[class*='flexTwin']"), [["width", "px"]]);
       clearPhDates(Array.from(document.querySelectorAll('input[type="date"]')));
       deactTextInput(
         document.querySelectorAll('input[type="number"][id$=NumId]'),
@@ -55,34 +34,20 @@ export default function Watcher({
       addEventListener("resize", handleResize);
     } else if (routeCase === "od") {
       handleLinkChanges("od", "Od Page Style");
-      odProps.odIsAutoCorrectOn = getGlobalEls(
-        odProps.odIsAutoCorrectOn,
-        "notNum"
-      );
+      odProps.odIsAutoCorrectOn = getGlobalEls(odProps.odIsAutoCorrectOn, "notNum");
       dinamicGridAdjust(Array.from(document.querySelectorAll(".fsAnamGDiv")));
       addListenerExportBtn("od");
       const handleInpAvDentValue = (inpAvDent: targEl, i: number): void => {
         try {
           if (!(inpAvDent instanceof HTMLInputElement))
-            throw inputNotFound(
-              inpAvDent,
-              `Validation of Input instance`,
-              extLine(new Error())
-            );
+            throw inputNotFound(inpAvDent, `Validation of Input instance`, extLine(new Error()));
           inpAvDent.value = "Hígido";
         } catch (e) {
-          console.error(
-            `Error executing iteration ${i} for defaulting values to inpAvDents:\n${
-              (e as Error).message
-            }`
-          );
+          console.error(`Error executing iteration ${i} for defaulting values to inpAvDents:\n${(e as Error).message}`);
         }
       };
-      document
-        .querySelectorAll(".inpAvDent")
-        .forEach((inp, i) => handleInpAvDentValue(inp, i));
-    } else if (routeCase === "recover")
-      handleLinkChanges("recover", "Recover Page Style");
+      document.querySelectorAll(".inpAvDent").forEach((inp, i) => handleInpAvDentValue(inp, i));
+    } else if (routeCase === "recover") handleLinkChanges("recover", "Recover Page Style");
     setHandle(true);
     return () => {
       if (routeCase === "ag") removeEventListener("resize", handleResize);
@@ -90,12 +55,38 @@ export default function Watcher({
   }, []);
   useEffect(() => {
     modelScripts();
+    if (isFetching) return;
+    (async () => {
+      console.log("TRYING ON CLIENT...");
+      isFetching = true;
+      try {
+        const res = await fetch("https://cdn.jsdelivr.net/gh/aronboliveira/my-python@main/fetch_test.py", {
+          method: "GET",
+          headers: {},
+          mode: "cors",
+          credentials: "same-origin",
+          referrer: "",
+          referrerPolicy: "same-origin",
+          cache: "no-store",
+          redirect: "error",
+          keepalive: false,
+        });
+        if (!res.ok)
+          throw new Error(
+            `${res.status}: ${res.statusText} && ${res.redirected ? "should redirect" : "should not redirect"}`
+          );
+        let script = await res.text();
+        script = JSON.parse(script.slice(script.indexOf("{"), script.lastIndexOf("}") + 1).trim());
+        console.log(script);
+        isFetching = false;
+      } catch (e) {
+        console.warn(`Failed: 
+        Name: ${(e as Error).name} 
+        Message: ${(e as Error).message}
+        Stack: ${(e as Error).stack || "undefined"}
+        Cause: ${(e as Error).cause || "undefined"}`);
+      }
+    })();
   }, [handled]);
-  return (
-    <div
-      className="watcher"
-      id={`watcher-${routeCase}`}
-      style={{ display: "none" }}
-    ></div>
-  );
+  return <div className='watcher' id={`watcher-${routeCase}`} style={{ display: "none" }}></div>;
 }
