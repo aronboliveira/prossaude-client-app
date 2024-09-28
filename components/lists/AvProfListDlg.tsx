@@ -542,7 +542,7 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
               }
             };
             //ajustes em tabela de internos
-            const handleExternalAttempt = () => {
+            const handleExternalAttempt = (): void => {
               try {
                 if (!(tabProfIntRef?.current instanceof HTMLTableElement))
                   throw elementNotFound(

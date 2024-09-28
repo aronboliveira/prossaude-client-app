@@ -5,7 +5,7 @@ import { nullishDlg } from "@/lib/global/declarations/types";
 import { useRef, useEffect } from "react";
 export default function ENTips({ state, dispatch }: DlgProps): JSX.Element {
   const dlgRef = useRef<nullishDlg>(null);
-  const handleEscape = (ev: KeyboardEvent) => {
+  const handleEscape = (ev: KeyboardEvent): void => {
     if (ev.key === "ESCAPE") {
       dispatch(!state);
       !state && dlgRef.current?.close();
@@ -13,62 +13,37 @@ export default function ENTips({ state, dispatch }: DlgProps): JSX.Element {
   };
   //push em history
   useEffect(() => {
-    history.pushState(
-      {},
-      "",
-      `${location.origin}${location.pathname}${location.search}&tips=open`
-    );
+    history.pushState({}, "", `${location.origin}${location.pathname}${location.search}&tips=open`);
     setTimeout(() => {
-      history.pushState(
-        {},
-        "",
-        `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#")
-      );
+      history.pushState({}, "", `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#"));
     }, 300);
-    return () => {
+    return (): void => {
       history.pushState(
         {},
         "",
-        `${location.origin}${location.pathname}${location.search}`.replaceAll(
-          "&tips=open",
-          ""
-        )
+        `${location.origin}${location.pathname}${location.search}`.replaceAll("&tips=open", ""),
       );
       setTimeout(() => {
-        history.pushState(
-          {},
-          "",
-          `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#")
-        );
+        history.pushState({}, "", `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#"));
       }, 300);
     };
   }, []);
   useEffect(() => {
     try {
       if (!(dlgRef.current instanceof HTMLDialogElement))
-        throw elementNotFound(
-          dlgRef.current,
-          `${ENTips.prototype.constructor.name}`,
-          extLine(new Error())
-        );
+        throw elementNotFound(dlgRef.current, `${ENTips.prototype.constructor.name}`, extLine(new Error()));
       dlgRef.current.showModal();
       addEventListener("keypress", handleEscape);
     } catch (e) {
-      console.error(
-        `Error executing useEffect for PanelTips:\n${(e as Error).message}`
-      );
+      console.error(`Error executing useEffect for PanelTips:\n${(e as Error).message}`);
     }
-    return () => removeEventListener("keypress", handleEscape);
+    return (): void => removeEventListener("keypress", handleEscape);
   }, [dlgRef]);
   useEffect(() => {
     try {
       const mathFirstBlock = document.getElementById("mathFirstBlock");
       if (!(mathFirstBlock instanceof HTMLElement))
-        throw elementNotFound(
-          mathFirstBlock,
-          "mathFirstBlock",
-          extLine(new Error())
-        );
+        throw elementNotFound(mathFirstBlock, "mathFirstBlock", extLine(new Error()));
       mathFirstBlock.innerHTML = `
       <math className="italic math-lg">
       <mfrac>
@@ -83,20 +58,12 @@ export default function ENTips({ state, dispatch }: DlgProps): JSX.Element {
     </math>
       `;
     } catch (e) {
-      console.error(
-        `Error executing procedure for adding first math block:\n${
-          (e as Error).message
-        }`
-      );
+      console.error(`Error executing procedure for adding first math block:\n${(e as Error).message}`);
     }
     try {
       const mathSecondBlock = document.getElementById("mathSecondBlock");
       if (!(mathSecondBlock instanceof HTMLElement))
-        throw elementNotFound(
-          mathSecondBlock,
-          "mathSecondBlock",
-          extLine(new Error())
-        );
+        throw elementNotFound(mathSecondBlock, "mathSecondBlock", extLine(new Error()));
       mathSecondBlock.innerHTML = `
       <summary className="noInvert">Fórmula</summary>
       <br />
@@ -141,20 +108,12 @@ export default function ENTips({ state, dispatch }: DlgProps): JSX.Element {
       </math>
       `;
     } catch (e) {
-      console.error(
-        `Error executing procedure for adding second math block:\n${
-          (e as Error).message
-        }`
-      );
+      console.error(`Error executing procedure for adding second math block:\n${(e as Error).message}`);
     }
     try {
       const mathThirdBlock = document.getElementById("mathThirdBlock");
       if (!(mathThirdBlock instanceof HTMLElement))
-        throw elementNotFound(
-          mathThirdBlock,
-          "mathThirdBlock",
-          extLine(new Error())
-        );
+        throw elementNotFound(mathThirdBlock, "mathThirdBlock", extLine(new Error()));
       mathThirdBlock.innerHTML = `
       <math className="italic math-sm">
       <munder>
@@ -182,20 +141,12 @@ export default function ENTips({ state, dispatch }: DlgProps): JSX.Element {
     </math>
       `;
     } catch (e) {
-      console.error(
-        `Error executing procedure for adding third math block:\n${
-          (e as Error).message
-        }`
-      );
+      console.error(`Error executing procedure for adding third math block:\n${(e as Error).message}`);
     }
     try {
       const mathFourthBlock = document.getElementById("mathFourthBlock");
       if (!(mathFourthBlock instanceof HTMLElement))
-        throw elementNotFound(
-          mathFourthBlock,
-          "mathFourthBlock",
-          extLine(new Error())
-        );
+        throw elementNotFound(mathFourthBlock, "mathFourthBlock", extLine(new Error()));
       mathFourthBlock.innerHTML = `
       <math className="italic math-sm">
       <mn>10</mn>
@@ -217,20 +168,12 @@ export default function ENTips({ state, dispatch }: DlgProps): JSX.Element {
     </math>
       `;
     } catch (e) {
-      console.error(
-        `Error executing procedure for adding fourth math block:\n${
-          (e as Error).message
-        }`
-      );
+      console.error(`Error executing procedure for adding fourth math block:\n${(e as Error).message}`);
     }
     try {
       const mathLastBlock = document.getElementById("mathLastBlock");
       if (!(mathLastBlock instanceof HTMLElement))
-        throw elementNotFound(
-          mathLastBlock,
-          "mathLastBlock",
-          extLine(new Error())
-        );
+        throw elementNotFound(mathLastBlock, "mathLastBlock", extLine(new Error()));
       mathLastBlock.innerHTML = `
       <math className="italic math-sm">
       <mi>TMB</mi>
@@ -242,20 +185,12 @@ export default function ENTips({ state, dispatch }: DlgProps): JSX.Element {
     </math>
       `;
     } catch (e) {
-      console.error(
-        `Error executing procedure for adding last math block:\n${
-          (e as Error).message
-        }`
-      );
+      console.error(`Error executing procedure for adding last math block:\n${(e as Error).message}`);
     }
     try {
       const hbFormula = document.getElementById("hbFormula");
       if (!(hbFormula instanceof HTMLElement))
-        throw elementNotFound(
-          hbFormula,
-          `Harris-Benedict formula div`,
-          extLine(new Error())
-        );
+        throw elementNotFound(hbFormula, `Harris-Benedict formula div`, extLine(new Error()));
       hbFormula.innerHTML = `
       <math>
         <munder>
@@ -292,135 +227,122 @@ export default function ENTips({ state, dispatch }: DlgProps): JSX.Element {
     <dialog
       ref={dlgRef}
       onClick={ev => {
-        if (
-          isClickOutside(ev, ev.currentTarget).some(coord => coord === true)
-        ) {
+        if (isClickOutside(ev, ev.currentTarget).some(coord => coord === true)) {
           ev.currentTarget.close();
           dispatch(!state);
         }
       }}
-      className="modal-content-fit defDp wid50v"
-      id="tipsDlg"
-    >
-      <section className="flexNoW flexAlItCt flexJBt">
-        <h3 className="bolded">Manual para controle de formulário</h3>
+      className='modal-content-fit defDp wid50v'
+      id='tipsDlg'>
+      <section className='flexNoW flexAlItCt flexJBt'>
+        <h3 className='bolded'>Manual para controle de formulário</h3>
         <button
-          className="btn btn-close forceInvert"
-          id="tipsClose"
+          className='btn btn-close forceInvert'
+          id='tipsClose'
           onClick={ev => {
             dispatch(!state);
             !state && ev.currentTarget.closest("dialog")?.close();
-          }}
-        ></button>
+          }}></button>
       </section>
-      <hr className="noInvert" />
-      <article className="flexNoWC noInvert">
-        <section className="odTipsSect" id="fillTips">
-          <h4 className="bolded mg-2bv">1. Controle de Entradas</h4>
-          <div className="flexNoWC pdL1v">
-            <p className="dicas" id="dicaUppercase">
+      <hr className='noInvert' />
+      <article className='flexNoWC noInvert'>
+        <section className='odTipsSect' id='fillTips'>
+          <h4 className='bolded mg-2bv'>1. Controle de Entradas</h4>
+          <div className='flexNoWC pdL1v'>
+            <p className='dicas' id='dicaUppercase'>
               <strong>1.1. </strong>
               <em>
-                As primeiras letras, exceto conjunções, são capitalizadas
-                automaticamente por padrão. Outras correções de campos complexos
-                podem precisar de mais texto — Continue digitando!
+                As primeiras letras, exceto conjunções, são capitalizadas automaticamente por padrão. Outras correções
+                de campos complexos podem precisar de mais texto — Continue digitando!
               </em>
             </p>
           </div>
         </section>
-        <hr className="noInvert" />
-        <section className="odTipsSect" id="mathTips">
+        <hr className='noInvert' />
+        <section className='odTipsSect' id='mathTips'>
           <div>
-            <h4 className="bolded mg-2bv noInvert">2. Cálculos</h4>
-            <hr className="noInvert" />
+            <h4 className='bolded mg-2bv noInvert'>2. Cálculos</h4>
+            <hr className='noInvert' />
             <details>
-              <summary className="mg-1b">Siglas</summary>
+              <summary className='mg-1b'>Siglas</summary>
               <small>
                 <ul>
                   <li>
-                    <abbr className="noInvert">C: </abbr>
-                    <dfn className="noInvert">Constante</dfn>
+                    <abbr className='noInvert'>C: </abbr>
+                    <dfn className='noInvert'>Constante</dfn>
                   </li>
                   <li>
-                    <abbr className="noInvert">IMC: </abbr>
-                    <dfn className="noInvert">Índice de Massa Corporal</dfn>
+                    <abbr className='noInvert'>IMC: </abbr>
+                    <dfn className='noInvert'>Índice de Massa Corporal</dfn>
                   </li>
                   <li>
-                    <abbr className="noInvert">PGC: </abbr>
-                    <dfn className="noInvert">
-                      Percentual de Gordura Corporal
-                    </dfn>
+                    <abbr className='noInvert'>PGC: </abbr>
+                    <dfn className='noInvert'>Percentual de Gordura Corporal</dfn>
                   </li>
                   <li>
-                    <abbr className="noInvert">MLG: </abbr>
-                    <dfn className="noInvert">Massa Livre de Gordura</dfn>
+                    <abbr className='noInvert'>MLG: </abbr>
+                    <dfn className='noInvert'>Massa Livre de Gordura</dfn>
                   </li>
                   <li>
-                    <abbr className="noInvert">SDC: </abbr>
-                    <dfn className="noInvert">Soma de Dobras Cutâneas</dfn>
+                    <abbr className='noInvert'>SDC: </abbr>
+                    <dfn className='noInvert'>Soma de Dobras Cutâneas</dfn>
                   </li>
                   <li>
-                    <abbr className="noInvert">TMB: </abbr>
-                    <dfn className="noInvert">Taxa Metabólica Basal</dfn>
+                    <abbr className='noInvert'>TMB: </abbr>
+                    <dfn className='noInvert'>Taxa Metabólica Basal</dfn>
                   </li>
                   <li>
-                    <abbr className="noInvert">GET: </abbr>
-                    <dfn className="noInvert">Gasto Energético Total</dfn>
+                    <abbr className='noInvert'>GET: </abbr>
+                    <dfn className='noInvert'>Gasto Energético Total</dfn>
                   </li>
                 </ul>
               </small>
             </details>
           </div>
           <hr />
-          <div className="gridAt rGap5v">
-            <div className="flexNoWC pdL1v noInvert">
-              <span className="dicas" id="dicaIMC">
+          <div className='gridAt rGap5v'>
+            <div className='flexNoWC pdL1v noInvert'>
+              <span className='dicas' id='dicaIMC'>
                 <strong>2.1. IMC:</strong>
               </span>
               <br />
               <details>
                 <summary>Fórmula</summary>
                 <br />
-                <div id="mathFirstBlock"></div>
+                <div id='mathFirstBlock'></div>
               </details>
             </div>
-            <div className="flexNoWC pdL1v noInvert">
-              <span className="dicas" id="dicaPGC">
+            <div className='flexNoWC pdL1v noInvert'>
+              <span className='dicas' id='dicaPGC'>
                 <strong>2.2. PGC:</strong>
               </span>
               <br />
-              <details className="noInvert" id="mathSecondBlock">
-                <summary className="noInvert">Fórmula</summary>
+              <details className='noInvert' id='mathSecondBlock'>
+                <summary className='noInvert'>Fórmula</summary>
                 <br />
               </details>
               <br />
               <div>
-                <details className="noInvert">
-                  <summary className="mg-1b">Constantes</summary>
+                <details className='noInvert'>
+                  <summary className='mg-1b'>Constantes</summary>
                   <small>
                     <ul>
                       <li>
                         <p>
                           <em>Homem</em>
-                          <span>
-                            : 1.10938; 0.0008267; 0.0000016; 0.0002574
-                          </span>
+                          <span>: 1.10938; 0.0008267; 0.0000016; 0.0002574</span>
                         </p>
                       </li>
                       <li>
                         <p>
                           <em>Mulher</em>
-                          <span>
-                            : 1.0994921; 0.0009929; 0.0000023; 0.0001392
-                          </span>
+                          <span>: 1.0994921; 0.0009929; 0.0000023; 0.0001392</span>
                         </p>
                       </li>
                       <li>
                         <p>
                           <em>Neutro</em>
-                          <span>
-                            : 1.10443605; 0.0009098; 0.00000195; 0.0001983
-                          </span>
+                          <span>: 1.10443605; 0.0009098; 0.00000195; 0.0001983</span>
                         </p>
                       </li>
                     </ul>
@@ -428,8 +350,8 @@ export default function ENTips({ state, dispatch }: DlgProps): JSX.Element {
                 </details>
               </div>
             </div>
-            <div className="flexNoWC pdL1v">
-              <span className="dicas" id="dicaTMB">
+            <div className='flexNoWC pdL1v'>
+              <span className='dicas' id='dicaTMB'>
                 <strong>2.3. TMB:</strong>
               </span>
               <br />
@@ -440,12 +362,12 @@ export default function ENTips({ state, dispatch }: DlgProps): JSX.Element {
                 <details>
                   <br />
                   <summary>Fórmula</summary>
-                  <div id="hbFormula"></div>
+                  <div id='hbFormula'></div>
                   <br />
                 </details>
                 <br />
                 <details>
-                  <summary className="mg-1b">Constantes</summary>
+                  <summary className='mg-1b'>Constantes</summary>
                   <small>
                     <ul>
                       <li>
@@ -478,7 +400,7 @@ export default function ENTips({ state, dispatch }: DlgProps): JSX.Element {
                 <details>
                   <br />
                   <summary>Fórmula</summary>
-                  <div id="mathThirdBlock"></div>
+                  <div id='mathThirdBlock'></div>
                   <br />
                 </details>
                 <br />
@@ -512,15 +434,15 @@ export default function ENTips({ state, dispatch }: DlgProps): JSX.Element {
                 </p>
                 <details>
                   <br />
-                  <summary className="mg-1b">Fórmula</summary>
-                  <div id="mathFourthBlock"></div>
+                  <summary className='mg-1b'>Fórmula</summary>
+                  <div id='mathFourthBlock'></div>
                   <br />
                 </details>
                 <br />
                 <details>
                   <br />
-                  <summary className="mg-1b">Constantes</summary>
-                  <div className="noInvert">
+                  <summary className='mg-1b'>Constantes</summary>
+                  <div className='noInvert'>
                     <small>
                       <ul>
                         <li>
@@ -548,23 +470,23 @@ export default function ENTips({ state, dispatch }: DlgProps): JSX.Element {
                 </details>
               </div>
             </div>
-            <div className="flexNoWC pdL1v noInvert">
-              <span className="dicas" id="dicaGET">
+            <div className='flexNoWC pdL1v noInvert'>
+              <span className='dicas' id='dicaGET'>
                 <strong>2.4. GET:</strong>
               </span>
               <br />
               <details>
                 <br />
                 <summary>Fórmula</summary>
-                <div id="mathLastBlock"></div>
+                <div id='mathLastBlock'></div>
                 <br />
               </details>
               <br />
               <details>
                 <br />
-                <summary className="mg-1b">Fatores</summary>
+                <summary className='mg-1b'>Fatores</summary>
                 <div>
-                  <small className="noInvert">
+                  <small className='noInvert'>
                     <ul>
                       <li>
                         <p>

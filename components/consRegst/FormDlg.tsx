@@ -276,7 +276,7 @@ export default function FormDlg({ onClose, userClass = "estudante" }: ConsDlgPro
   }, [dlgRef]);
   useEffect(() => {
     addEventListener("click", handleClickOutside);
-    return () => removeEventListener("click", handleClickOutside);
+    return (): void => removeEventListener("click", handleClickOutside);
   }, [dlgRef, onClose]);
   useEffect(() => {
     if (

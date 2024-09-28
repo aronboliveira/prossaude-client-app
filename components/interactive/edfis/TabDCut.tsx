@@ -109,7 +109,7 @@ export default function TabDCut(): JSX.Element {
     </ErrorBoundary>
   );
 }
-export const handleSumClick = (ev: React.MouseEvent) => {
+export const handleSumClick = (ev: React.MouseEvent): void => {
   const protocolo = document.getElementById("tabSelectDCutId");
   const rowsDCArray = Array.from(
     document

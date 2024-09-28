@@ -112,13 +112,13 @@ export function dragStart(
       if (move instanceof DragEvent || "dataTransfer" in move) {
         move.dataTransfer?.setData("text/plain", ""); //define a data inicial no container mobilizado
         dragStartChilds(contInQuadrs);
-        const dropHandler = (drop: Event) => {
+        const dropHandler = (drop: Event): void => {
           const quadrsTe = Array.from(document.getElementsByClassName("quadrMainDiv"));
           dragDrop(drop, validSrcEl as Element, quadrsTe, dropHandler);
         };
         quadrsTe.forEach(quadrTo => quadrTo.addEventListener("drop", dropHandler));
       } else if (move instanceof TouchEvent || "touches" in move) {
-        const handleTouchDrag = (ev: TouchEvent) => {
+        const handleTouchDrag = (ev: TouchEvent): void => {
           if (!odIsDragging) return;
           ev.preventDefault();
           const touch = ev.targetTouches[0];
@@ -139,7 +139,7 @@ export function dragStart(
             (validSrcEl as HTMLElement).style.position = "absolute";
             (validSrcEl as HTMLElement).style.zIndex = "100";
           }
-          const handleTouchEnd = (end: TouchEvent) => {
+          const handleTouchEnd = (end: TouchEvent): void => {
             console.log(end);
             if (odIsDragging) {
               try {

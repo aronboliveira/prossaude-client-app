@@ -29,7 +29,7 @@ export default function CepElements(): JSX.Element {
   useEffect(() => {
     equalizeCepElements();
     addEventListener("resize", equalizeCepElements);
-    return () => removeEventListener("resize", equalizeCepElements);
+    return (): void => removeEventListener("resize", equalizeCepElements);
   }, []);
   return (
     <label htmlFor='cepId' className='labelIdentif noInvert flexWC'>

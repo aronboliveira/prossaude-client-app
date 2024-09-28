@@ -1,6 +1,6 @@
 "use client";
 export default function ThDate({ nCol = NaN, last = false }: { nCol: number; last?: boolean }): JSX.Element {
-  const fullName = (() => {
+  const fullName = ((): string => {
     switch (nCol) {
       case 1:
         return "Primeiro";
@@ -33,8 +33,7 @@ export default function ThDate({ nCol = NaN, last = false }: { nCol: number; las
         htmlFor='order_dayfInp'
         contentEditable={true}
         data-row='1'
-        data-col={nCol}
-      ></label>
+        data-col={nCol}></label>
       <div role='group' className='flexAlItCt'>
         <input
           type='date'

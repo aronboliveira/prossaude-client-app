@@ -9,9 +9,7 @@ import GenericErrorComponent from "../../error/GenericErrorComponent";
 import ResetDlg from "../../alerts/ResetDlg";
 export default function ReseterBtn({ renderForm }: ReseterBtnProps): JSX.Element {
   const [shouldDisplayResetDlg, setDisplayResetDlg] = useState(false);
-  const toggleResetSchdDlg = () => {
-    setDisplayResetDlg(!shouldDisplayResetDlg);
-  };
+  const toggleResetSchdDlg = (): void => setDisplayResetDlg(!shouldDisplayResetDlg);
   const resetBtnRef = useRef<nullishBtn>(null);
   useEffect(() => {
     const formBody = document.getElementById("formBodySchedSect") || document.querySelector("form");
@@ -36,8 +34,7 @@ export default function ReseterBtn({ renderForm }: ReseterBtnProps): JSX.Element
         className='btn btn-warning flexAlItCt flexJC flexBasis50 bolded opaquelightEl widFull noInvert'
         name='btnResetSched'
         ref={resetBtnRef}
-        onClick={toggleResetSchdDlg}
-      >
+        onClick={toggleResetSchdDlg}>
         Resetar Formulário
       </button>
       {shouldDisplayResetDlg && (

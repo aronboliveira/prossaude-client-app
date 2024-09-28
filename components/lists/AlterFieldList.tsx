@@ -26,7 +26,7 @@ export default function AlterFieldList({
     formRef = useRef<nullishForm>(null),
     optsRef = useRef<nullishSel>(null),
     [_, setChosenOp] = useState(optsRef.current?.value || null),
-    handleChange = (targ: HTMLSelectElement) => {
+    handleChange = (targ: HTMLSelectElement): void => {
       history.pushState(
         {},
         "",
@@ -50,7 +50,7 @@ export default function AlterFieldList({
         },
         true,
       );
-      const handleKeyDown = (press: KeyboardEvent) => {
+      const handleKeyDown = (press: KeyboardEvent): void => {
         if (press.key === "Escape") {
           dispatch(!state);
         }
@@ -79,7 +79,7 @@ export default function AlterFieldList({
       history.pushState({}, "", `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#"));
     }, 300);
     assignFormAttrs(formRef.current);
-    return () => {
+    return (): void => {
       optsRef.current instanceof HTMLSelectElement
         ? history.pushState(
             {},

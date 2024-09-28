@@ -821,7 +821,7 @@ export function autoCapitalizeInputs(textEl: targEl, isAutocorrectOn: boolean = 
           //statement para fluxo validando match de iniciais
           if (letterMatchesIniD || letterMatchesIniNotD) {
             //IIFE para forçar upper case
-            (() => {
+            ((): void => {
               const DMatch = [
                 ...(letterMatchesAfterDOp1 || []),
                 ...(letterMatchesAfterDOp2 || []),

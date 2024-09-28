@@ -1,4 +1,3 @@
-import { UndefinedPerson, Man, Woman, Neutro } from "./classes";
 export type voidVal = null | undefined;
 export type looseNum = string | number;
 export type primitiveType = looseNum | boolean | voidVal;

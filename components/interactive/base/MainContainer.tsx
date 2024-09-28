@@ -193,7 +193,7 @@ export default function MainContainer(): JSX.Element {
     };
     handleBgResize();
     addEventListener("resize", handleBgResize);
-    return () => removeEventListener("resize", handleBgResize);
+    return (): void => removeEventListener("resize", handleBgResize);
   }, []);
   return (
     <main className='main-container gridAlItCt widFull gridAlItBs750Q gridAuto750Q rGap4v750Q'>

@@ -1,6 +1,6 @@
 import { DlgProps } from "@/lib/global/declarations/interfaces";
 import { aptTypes, formCases, looseNum, panelOpts } from "@/lib/global/declarations/types";
-import { nullishForm, nullishDlg, nullishInp, nullishTab, voidVal, nullishBtn } from "@glSrc/types";
+import { nullishForm, nullishDlg, nullishTab, voidVal, nullishBtn } from "@glSrc/types";
 import { NextRouter } from "next/router";
 import { MutableRefObject, Dispatch, SetStateAction, Component } from "react";
 import { Root } from "react-dom/client";

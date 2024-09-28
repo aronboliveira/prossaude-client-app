@@ -5,7 +5,7 @@ import { nullishBtn } from "@/lib/global/declarations/types";
 import { useEffect, useRef, useState } from "react";
 import ExcludeConsDlg from "../../alerts/ExcludeConsDlg";
 import GenericErrorComponent from "../../error/GenericErrorComponent";
-export default function EraseAptBtn({ userClass = "estudante" }: GlobalFormProps) {
+export default function EraseAptBtn({ userClass = "estudante" }: GlobalFormProps): JSX.Element {
   const [shouldShowExcludeDlg, setDisplayExcludeDlg] = useState(false);
   const btnRef = useRef<nullishBtn>(null);
   useEffect(() => {
@@ -31,8 +31,7 @@ export default function EraseAptBtn({ userClass = "estudante" }: GlobalFormProps
         ref={btnRef}
         onClick={() => {
           (userClass === "coordenador" || userClass === "supervisor") && setDisplayExcludeDlg(!shouldShowExcludeDlg);
-        }}
-      ></button>
+        }}></button>
       {shouldShowExcludeDlg && (
         <ExcludeConsDlg
           setDisplayExcludeDlg={setDisplayExcludeDlg}

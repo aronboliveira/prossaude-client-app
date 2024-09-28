@@ -23,11 +23,11 @@ export default function AvStudListDlg({
     setTimeout(() => {
       history.pushState({}, "", `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#"));
     }, 300);
-    return () => {
+    return (): void => {
       history.pushState(
         {},
         "",
-        `${location.origin}${location.pathname}${location.search}`.replaceAll("&av-stud=open", "")
+        `${location.origin}${location.pathname}${location.search}`.replaceAll("&av-stud=open", ""),
       );
       setTimeout(() => {
         history.pushState({}, "", `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#"));
@@ -39,7 +39,7 @@ export default function AvStudListDlg({
     if (dialogRef?.current instanceof HTMLDialogElement) {
       dialogRef.current.showModal();
       syncAriaStates([...dialogRef.current!.querySelectorAll("*"), dialogRef.current]);
-      const handleKeyDown = (press: KeyboardEvent) => {
+      const handleKeyDown = (press: KeyboardEvent): void => {
         press.key === "Escape" && dispatch(state);
       };
       addEventListener("keydown", handleKeyDown);
@@ -55,16 +55,14 @@ export default function AvStudListDlg({
           ref={dialogRef}
           onClick={ev => {
             isClickOutside(ev, ev.currentTarget).some(coord => coord === true) && dispatch(!state);
-          }}
-        >
+          }}>
           <ErrorBoundary
             FallbackComponent={() => (
               <ErrorFallbackDlg
                 renderError={new Error(`Erro carregando a janela modal!`)}
                 onClick={() => dispatch(!state)}
               />
-            )}
-          >
+            )}>
             <section className='flexRNoWBetCt' id='headStudList'>
               <h2 className='mg-1b noInvert'>
                 <strong>Estudantes Cadastrados</strong>

@@ -61,7 +61,7 @@ export function checkInnerColGroups(parentEl: targEl, areAllColGroupsSimilar: bo
       extLine(new Error()),
       `arguments for checkInnerColGroups(), areColGroupValids: ${areAllColGroupsSimilar ?? false}`,
       parentEl,
-      `${JSON.stringify(colGroups) || null}`
+      `${JSON.stringify(colGroups) || null}`,
     );
 
   return [validColGroupsChildCount?.length ?? 0, areAllColGroupsSimilar];
@@ -87,7 +87,7 @@ export function changeTabDCutLayout(protocolo: targEl, tabDC: targEl, bodyType: 
     (bodyType instanceof HTMLSelectElement || bodyType instanceof HTMLInputElement)
   ) {
     const filteredOpsProtocolo = Array.from(protocolo.children)?.filter(
-      childProtocolo => childProtocolo instanceof HTMLOptionElement
+      childProtocolo => childProtocolo instanceof HTMLOptionElement,
     );
 
     if (filteredOpsProtocolo?.length >= Array.from(protocolo.children)?.length) {
@@ -95,8 +95,8 @@ export function changeTabDCutLayout(protocolo: targEl, tabDC: targEl, bodyType: 
       for (let iOp = 0; iOp < filteredOpsProtocolo.length - 1; iOp++) {
         const arrayTabIds = checkTabRowsIds(tabDC);
         const genderedIds = filterIdsByGender(arrayTabIds, bodyType.value);
-        /*após checagem de ids e filtragem por gênero da pessoa, 
-        valida se de fato as rows sem informação (visuais) não estão sendo capturadas,
+        /*após checagem de ids e filtragem por gênero da pessoa 
+        valida se de fato as rows sem informação (visuais) não estão sendo capturadas
         e se a filtragem por gênero ocorreu corretamente*/
         if (
           arrayTabIds?.length ===
@@ -129,7 +129,7 @@ export function changeTabDCutLayout(protocolo: targEl, tabDC: targEl, bodyType: 
             }
             Gender-filtered elements ${JSON.stringify(genderedIds) || null}; Obtained number: ${
               genderedIds?.length
-            }; Expected number: 3`
+            }; Expected number: 3`,
           );
       }
     } else console.warn(`Error checking protocol options. Total of options validated: ${filteredOpsProtocolo.length}`);
@@ -139,7 +139,7 @@ export function changeTabDCutLayout(protocolo: targEl, tabDC: targEl, bodyType: 
       "validating elements for initial execution of changeTabDCutLayout()",
       protocolo,
       tabDC,
-      bodyType
+      bodyType,
     );
 
   return "pollock3";
@@ -148,7 +148,7 @@ export function defineHiddenRows(
   tabDC: targEl,
   arrayTabIds: string[] = [],
   genderedIds: string[] = [],
-  context: string = "bin"
+  context: string = "bin",
 ): void {
   if (
     tabDC instanceof HTMLTableElement &&
@@ -208,7 +208,7 @@ export function defineHiddenRows(
       tabDC,
       `${JSON.stringify(arrayTabIds) || null}`,
       `${JSON.stringify(genderedIds) || null}`,
-      context
+      context,
     );
 }
 //correção para limitação da fórmula de PGC
@@ -228,7 +228,7 @@ export function evaluatePGCDecay(person: Person, targInpPGC: targEl, PGC: number
       person.weight,
       person.height,
       person.sumDCut,
-      person.atvLvl
+      person.atvLvl,
     );
     decreasedPerson.sumDCut = decreasedPerson.sumDCut - 1;
     let decreasedPGC = decreasedPerson.calcPGC(decreasedPerson)[0],
@@ -254,7 +254,7 @@ export function evaluatePGCDecay(person: Person, targInpPGC: targEl, PGC: number
           : (PGC = Math.ceil((Math.max(...arrDecreasedPGC) + 0.05) * 10) / 10 + ((initSumDCut - 260) / 100) * 5);
       } else PGC = decreasedPGC;
     }
-    /*casos específicos para handling de input anômalo (além do possível para um ser humano), 
+    /*casos específicos para handling de input anômalo (além do possível para um ser humano) 
       evitando bugs nos listeners devido a NaN e loops de normalização */
     if (decreasedPGC <= PGC && (PGC > 100 || decreasedPerson?.sumDCut > 514)) {
       console.warn(`Valor anômalo de entrada para sumDCut e/ou PGC. Valor aproximado fornecido`);
@@ -268,7 +268,7 @@ export function evaluatePGCDecay(person: Person, targInpPGC: targEl, PGC: number
       "argumentos para evaluatePGCDecay",
       `${JSON.stringify(person) || null}`,
       targInpPGC,
-      PGC
+      PGC,
     );
 
   if (PGC < 0 || Number.isNaN(PGC) || PGC === Math.abs(Infinity)) PGC = 0;

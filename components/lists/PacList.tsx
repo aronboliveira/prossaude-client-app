@@ -318,7 +318,7 @@ export default function PacList({
       const handleKeyDown = (press: KeyboardEvent) =>
         press.key === "Escape" && setDisplayRowData(!shouldDisplayRowData);
       addEventListener("keydown", handleKeyDown);
-      return () => removeEventListener("keydown", handleKeyDown);
+      return (): void => removeEventListener("keydown", handleKeyDown);
     } else elementNotFound(sectTabRef.current, "sectTabRef in useEffect()", extLine(new Error()));
   }, [sectTabRef]);
   return (

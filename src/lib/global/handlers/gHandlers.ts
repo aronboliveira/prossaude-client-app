@@ -352,7 +352,7 @@ export function changeToAstDigit(toFileInpBtn: targEl): void {
               fileInp.parentElement
             ) {
               const fileReader = new FileReader();
-              fileReader.onload = load => {
+              fileReader.onload = (load): void => {
                 //definir lógica para carregamento
                 //inicia preparo para evento de carregamento
                 const imgAstDigt = document.createElement("img"); //cria container

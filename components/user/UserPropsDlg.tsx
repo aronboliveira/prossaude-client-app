@@ -7,13 +7,13 @@ import GenericErrorComponent from "../error/GenericErrorComponent";
 import { nullishBtn, nullishDlg, nullishInp, nullishSel } from "@/lib/global/declarations/types";
 import { addEmailExtension, autoCapitalizeInputs, formatTel } from "@/lib/global/gModel";
 import { elementNotFound, extLine, multipleElementsNotFound } from "@/lib/global/handlers/errorHandler";
-export default function UserPropsDlg({ setPropDlg, shouldDisplayPropDlg = true }: UserPropsDlgProps) {
+export default function UserPropsDlg({ setPropDlg, shouldDisplayPropDlg = true }: UserPropsDlgProps): JSX.Element {
   const userPropsDlgRef = useRef<nullishDlg>(null);
   const userPropsBtnRef = useRef<nullishBtn>(null);
   const newUserValueRef = useRef<nullishInp | HTMLSelectElement>(null);
   const userPropsSelRef = useRef<nullishSel>(null);
   const [, setPropValue] = useState<string>("userName");
-  const changeUserProp = (value: string) => {
+  const changeUserProp = (value: string): void => {
     if (!newUserValueRef.current)
       newUserValueRef.current = document.getElementById("userPropsNewValue") as HTMLSelectElement | HTMLInputElement;
     if (
@@ -22,7 +22,11 @@ export default function UserPropsDlg({ setPropDlg, shouldDisplayPropDlg = true }
     ) {
       setPropValue(value);
       newUserValueRef.current.value = "";
-      const replaceInp = (type: string = "text", placeholder: boolean = true, minText: boolean = true) => {
+      const replaceInp = (
+        type: string = "text",
+        placeholder: boolean = true,
+        minText: boolean = true,
+      ): HTMLInputElement => {
         const newInp = document.createElement("input") as HTMLInputElement;
         newInp.classList.add(...["form-control"]);
         Object.assign(newInp, {
@@ -38,7 +42,7 @@ export default function UserPropsDlg({ setPropDlg, shouldDisplayPropDlg = true }
         newUserValueRef.current = newInp;
         return newInp;
       };
-      const replaceSel = () => {
+      const replaceSel = (): HTMLSelectElement => {
         const newSel = document.createElement("select");
         newSel.classList.add(...["form-select"]);
         newSel.id = "userPropsNewValue";
@@ -115,7 +119,7 @@ export default function UserPropsDlg({ setPropDlg, shouldDisplayPropDlg = true }
       extLine(new Error()),
       "Entry elements for changing type of user property input",
       userPropsSelRef.current,
-      newUserValueRef.current
+      newUserValueRef.current,
     );
   };
   useEffect(() => {
@@ -133,8 +137,7 @@ export default function UserPropsDlg({ setPropDlg, shouldDisplayPropDlg = true }
     <ErrorBoundary
       FallbackComponent={() => (
         <GenericErrorComponent message='Erro carregando modal de alteração de dados de usuário!' />
-      )}
-    >
+      )}>
       {shouldDisplayPropDlg && (
         <dialog
           ref={userPropsDlgRef}
@@ -145,8 +148,7 @@ export default function UserPropsDlg({ setPropDlg, shouldDisplayPropDlg = true }
               setPropDlg(!shouldDisplayPropDlg);
               ev.currentTarget.closest("dialog")?.close();
             }
-          }}
-        >
+          }}>
           <section className='flexNoW cGap2v widFull mg-3b'>
             <h3 className='bolded'>Formulário de Alteração</h3>
             <button
@@ -154,8 +156,7 @@ export default function UserPropsDlg({ setPropDlg, shouldDisplayPropDlg = true }
               onClick={() => {
                 setPropDlg(!shouldDisplayPropDlg);
                 userPropsDlgRef.current instanceof HTMLDialogElement && userPropsDlgRef.current?.close();
-              }}
-            ></button>
+              }}></button>
           </section>
           <fieldset className='flexNoWC widFull mg-2bv'>
             <label className='bolded' htmlFor='userPropsOps'>
@@ -165,8 +166,7 @@ export default function UserPropsDlg({ setPropDlg, shouldDisplayPropDlg = true }
               id='userPropsOps'
               className='form-select'
               onChange={() => changeUserProp(newUserValueRef.current!.value)}
-              ref={userPropsSelRef}
-            >
+              ref={userPropsSelRef}>
               <option value='userName'>Nome</option>
               <option value='userClass'>Classe</option>
               <option value='userArea'>Área</option>
@@ -187,8 +187,7 @@ export default function UserPropsDlg({ setPropDlg, shouldDisplayPropDlg = true }
               autoCapitalize='true'
               minLength={2}
               // @ts-ignore
-              ref={newUserValueRef}
-            ></input>
+              ref={newUserValueRef}></input>
           </fieldset>
           <fieldset className='flexNoWC widFull mg-2bv'>
             <label className='bolded' htmlFor='userPropJust'>
@@ -199,8 +198,7 @@ export default function UserPropsDlg({ setPropDlg, shouldDisplayPropDlg = true }
               id='userPropJust'
               className='form-control minText'
               minLength={2}
-              placeholder='Insira aqui a justificativa'
-            ></input>
+              placeholder='Insira aqui a justificativa'></input>
           </fieldset>
           <button
             type='button'
@@ -209,10 +207,9 @@ export default function UserPropsDlg({ setPropDlg, shouldDisplayPropDlg = true }
             ref={userPropsBtnRef}
             onClick={ev => {
               validateForm(ev, ev.currentTarget.closest("dialog")!).then(
-                validation => validation[0] && setPropDlg(!shouldDisplayPropDlg)
+                validation => validation[0] && setPropDlg(!shouldDisplayPropDlg),
               );
-            }}
-          >
+            }}>
             Enviar
           </button>
         </dialog>

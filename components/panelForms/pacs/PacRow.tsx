@@ -38,21 +38,20 @@ export default function PacRow({
   const [shouldDisplayPrevList, setDisplayPrevList] = useState<boolean>(false);
   const [shouldDisplayRowData, setDisplayRowData] = useState<boolean>(false);
   const toggleDisplayRowData = (s: boolean = true) => setDisplayRowData(!s);
-  const togglePacPrevList = (s: boolean = false) => {
+  const togglePacPrevList = (s: boolean = false): void => {
     btnPrevListRef.current instanceof HTMLButtonElement
       ? setDisplayPrevList(!s)
       : elementNotFound(
           btnPrevListRef.current,
           "<button> for toggling Pacient previous appointments in Pacient Table",
-          extLine(new Error())
+          extLine(new Error()),
         );
   };
   return (
     <tr
       id={`avPacs-row${nRow}`}
       data-row={nRow}
-      data-key={`${pac.name.toLowerCase().replaceAll(" ", "_")}__${pac.tel.replaceAll(/[^0-9]/g, "_")}`}
-    >
+      data-key={`${pac.name.toLowerCase().replaceAll(" ", "_")}__${pac.tel.replaceAll(/[^0-9]/g, "_")}`}>
       {userClass === "coordenador" && (
         <th scope='row' className={`tagPhUnfilledTextPac`} data-row={nRow} data-col={1}>
           <output
@@ -61,8 +60,7 @@ export default function PacRow({
             data-title={`UnfilledText Paciente Linha ${nRow} (${pac.name || "Anônimo"})`}
             data-aloc={`cpf-pac`}
             data-row={nRow}
-            data-col={1}
-          >
+            data-col={1}>
             {pac.idf || "Não identificado"}
           </output>
         </th>
@@ -74,8 +72,7 @@ export default function PacRow({
           data-title={`UnfilledText Paciente Linha ${nRow} (${pac.name || "Anônimo"})`}
           data-aloc={`UnfilledText-pac`}
           data-row={nRow}
-          data-col={userClass === "coordenador" ? 2 : 1}
-        >
+          data-col={userClass === "coordenador" ? 2 : 1}>
           {pac.name || "Anônimo"}
         </output>
       </td>
@@ -86,8 +83,7 @@ export default function PacRow({
           data-title={`UnfilledText Paciente Linha ${nRow} (${pac.name || "Anônimo"})`}
           data-aloc={`email-pac`}
           data-row={nRow}
-          data-col={userClass === "coordenador" ? 3 : 2}
-        >
+          data-col={userClass === "coordenador" ? 3 : 2}>
           <address data-row={nRow} data-col={userClass === "coordenador" ? 3 : 2}>
             <a
               href={`mailto:${pac.email}`}
@@ -95,8 +91,7 @@ export default function PacRow({
               rel='nofollow'
               id={`emaila-Pac-row${nRow}`}
               data-row={nRow}
-              data-col={userClass === "coordenador" ? 3 : 2}
-            >
+              data-col={userClass === "coordenador" ? 3 : 2}>
               {pac.email || "Não fornecido"}
             </a>
           </address>
@@ -109,8 +104,7 @@ export default function PacRow({
           data-title={`Telefone Paciente Linha ${nRow} (${pac.name || "Anônimo"})`}
           data-aloc={`UnfilledText-pac`}
           data-row={nRow}
-          data-col={userClass === "coordenador" ? 4 : 3}
-        >
+          data-col={userClass === "coordenador" ? 4 : 3}>
           {pac.tel || "Não fornecido"}
         </output>
       </td>
@@ -121,8 +115,7 @@ export default function PacRow({
           data-title={`Próximo dia de atendimento de Paciente Linha ${nRow} (${pac.name || "Anônimo"})`}
           data-aloc={`UnfilledText-pac`}
           data-row={nRow}
-          data-col={userClass === "coordenador" ? 5 : 4}
-        >
+          data-col={userClass === "coordenador" ? 5 : 4}>
           {pac.next_appointed_day || "Indefinido"}
         </output>
       </td>
@@ -131,16 +124,14 @@ export default function PacRow({
           role='group'
           className='flexAlItCt cGap1v noInvert'
           data-row={nRow}
-          data-col={userClass === "coordenador" ? 6 : 5}
-        >
+          data-col={userClass === "coordenador" ? 6 : 5}>
           <output
             className={`tagPhAvPac tagPhAvPac${nRow} outpInterv`}
             id={`tagP4IntervPac${nRow}`}
             data-title={`Intervalo de Atendimento Paciente Linha ${nRow} (${pac.name || "Anônimo"})`}
             data-aloc={`UnfilledText-pac`}
             data-row={nRow}
-            data-col={userClass === "coordenador" ? 6 : 5}
-          >
+            data-col={userClass === "coordenador" ? 6 : 5}>
             {`${dateISOtoBRL(pac.treatment_beg) || "Não definido"} — ${
               dateISOtoBRL(pac.treatment_end) || "Não definido"
             }`}
@@ -153,16 +144,14 @@ export default function PacRow({
             role='group'
             className='flexAlItCt flexJC cGap1v noInvert'
             data-row={nRow}
-            data-col={userClass === "coordenador" ? 7 : 6}
-          >
+            data-col={userClass === "coordenador" ? 7 : 6}>
             <output
               className={`tagPhAvPac tagPhAvPac${nRow} outpSign`}
               id={`tagP4AstPac${nRow}`}
               data-title={`Assinatura de Paciente Linha ${nRow} (${pac.name || "Anônimo"})`}
               data-aloc={`UnfilledText-pac`}
               data-row={nRow}
-              data-col={userClass === "coordenador" ? 7 : 6}
-            >
+              data-col={userClass === "coordenador" ? 7 : 6}>
               {/* //TODO PRECISA DEFINIR COMO VAI SER FEITA A PASSAGEM DOS FILES */}
               <a className='astAnchor' id={`tagPhAstPac${nRow}`} href='../img/teste-exame-clinico.pdf' download>
                 <svg
@@ -171,8 +160,7 @@ export default function PacRow({
                   height='16'
                   fill='currentColor'
                   className='bi bi-filetype-pdf'
-                  viewBox='0 0 16 16'
-                >
+                  viewBox='0 0 16 16'>
                   <path
                     fillRule='evenodd'
                     d='M14 4.5V14a2 2 0 0 1-2 2h-1v-1h1a1 1 0 0 0 1-1V4.5h-2A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v9H2V2a2 2 0 0 1 2-2h5.5zM1.6 11.85H0v3.999h.791v-1.342h.803q.43 0 .732-.173.305-.175.463-.474a1.4 1.4 0 0 0 .161-.677q0-.375-.158-.677a1.2 1.2 0 0 0-.46-.477q-.3-.18-.732-.179m.545 1.333a.8.8 0 0 1-.085.38.57.57 0 0 1-.238.241.8.8 0 0 1-.375.082H.788V12.48h.66q.327 0 .512.181.185.183.185.522m1.217-1.333v3.999h1.46q.602 0 .998-.237a1.45 1.45 0 0 0 .595-.689q.196-.45.196-1.084 0-.63-.196-1.075a1.43 1.43 0 0 0-.589-.68q-.396-.234-1.005-.234zm.791.645h.563q.371 0 .609.152a.9.9 0 0 1 .354.454q.118.302.118.753a2.3 2.3 0 0 1-.068.592 1.1 1.1 0 0 1-.196.422.8.8 0 0 1-.334.252 1.3 1.3 0 0 1-.483.082h-.563zm3.743 1.763v1.591h-.79V11.85h2.548v.653H7.896v1.117h1.606v.638z'
@@ -188,16 +176,14 @@ export default function PacRow({
           role='group'
           className='flexAlItCt cGap1v noInvert'
           data-row={nRow}
-          data-col={userClass === "coordenador" ? 8 : 7}
-        >
+          data-col={userClass === "coordenador" ? 8 : 7}>
           <output
             className={`outpPacStatus tagPhAvPac tagPhAvPac${nRow} outpStatus`}
             id={`tagP4Status${nRow}`}
             data-title={`Status de Paciente Linha ${nRow} (${pac.name || "Anônimo"})`}
             data-aloc={`status-pac`}
             data-row={nRow}
-            data-col={userClass === "coordenador" ? 8 : 7}
-          >
+            data-col={userClass === "coordenador" ? 8 : 7}>
             {pac.current_status || "Indefinido"}
           </output>
         </div>
@@ -210,8 +196,7 @@ export default function PacRow({
           data-row={nRow}
           data-col={userClass === "coordenador" ? 9 : 8}
           ref={btnPrevListRef}
-          onClick={() => typeof shouldDisplayPrevList === "boolean" && togglePacPrevList(shouldDisplayPrevList)}
-        >
+          onClick={() => typeof shouldDisplayPrevList === "boolean" && togglePacPrevList(shouldDisplayPrevList)}>
           <small role='textbox' className='bolded'>
             Atendimentos Anteriores
           </small>
@@ -233,8 +218,7 @@ export default function PacRow({
             className='btn btn-info btnAffectRegst btnAlterRegst opaquelightEl widFull'
             data-row={nRow}
             data-col={10}
-            onClick={() => toggleDisplayRowData(shouldDisplayRowData)}
-          >
+            onClick={() => toggleDisplayRowData(shouldDisplayRowData)}>
             <span role='textbox' className='bolded fontLightWt'>
               Alterar
             </span>
@@ -256,8 +240,7 @@ export default function PacRow({
               type='button'
               className='btnAloc btnAlocPac btn btn-success widFull flexJC flexAlItCt wsNoW opaquelightEl'
               id={`btnAlocPac${nRow}`}
-              ref={alocBtnRef}
-            >
+              ref={alocBtnRef}>
               <span role='textbox'>Alocar</span>
             </button>
           </div>

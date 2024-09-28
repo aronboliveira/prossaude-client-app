@@ -27,7 +27,7 @@ export default function StudentForm({ mainRoot, userClass = "estudante" }: Globa
     ]);
     const nextDiv = document.getElementById("avPacsTab")?.nextElementSibling;
     if (nextDiv?.id === "" && nextDiv instanceof HTMLDivElement) nextDiv.remove() as void;
-    assignFormAttrs(formRef.current)
+    assignFormAttrs(formRef.current);
   }, []);
   useEffect(() => {
     if (formRef?.current instanceof HTMLFormElement) {
@@ -121,13 +121,12 @@ export default function StudentForm({ mainRoot, userClass = "estudante" }: Globa
         ["supervisor", "coordenador"],
         ...document.getElementsByTagName("input"),
         ...document.getElementsByTagName("button"),
-        ...document.querySelector("form")!.getElementsByTagName("select")
+        ...document.querySelector("form")!.getElementsByTagName("select"),
       );
   }, [formRef]);
   return (
     <ErrorBoundary
-      FallbackComponent={() => <GenericErrorComponent message='Erro carregando formulário para profissionais' />}
-    >
+      FallbackComponent={() => <GenericErrorComponent message='Erro carregando formulário para profissionais' />}>
       {showForm && (
         <form
           id='formAddStud'
@@ -141,10 +140,9 @@ export default function StudentForm({ mainRoot, userClass = "estudante" }: Globa
           onSubmit={ev =>
             (userClass === "coordenador" || userClass === "supervisor") &&
             validateForm(ev, ev.currentTarget).then(validation =>
-              validation[0] ? handleSubmit("studs", validation[2], true) : ev.preventDefault()
+              validation[0] ? handleSubmit("studs", validation[2], true) : ev.preventDefault(),
             )
-          }
-        >
+          }>
           <div role='group' id='formAddStudHDiv' className='mg-3b'>
             <h1 id='titleAddStudHBlock' className='bolded'>
               <strong>Cadastro de Aluno</strong>
@@ -329,8 +327,7 @@ export default function StudentForm({ mainRoot, userClass = "estudante" }: Globa
                 name='area'
                 className='form-select ssPersist'
                 data-title='Área de Atuação do Estudante'
-                required
-              >
+                required>
                 <option value='educacaofisicanut'>Educação Física & Nutrição</option>
                 <option value='odontologia'>Odontologia</option>
                 <option value='psiq'>Psiquiatria & Psicologia</option>
@@ -416,8 +413,7 @@ export default function StudentForm({ mainRoot, userClass = "estudante" }: Globa
                     role='textbox'
                     id='titleQuarta'
                     contentEditable='true'
-                    title='Modifique o rótulo de dia selecionando-o e digitando'
-                  >
+                    title='Modifique o rótulo de dia selecionando-o e digitando'>
                     Quarta-feira
                   </slot>
                   {/* //TODO PRECISA CONCATENAR NOMES DAS CHECKBOXES COM CHECK */}
@@ -435,8 +431,7 @@ export default function StudentForm({ mainRoot, userClass = "estudante" }: Globa
                     role='textbox'
                     id='titleSexta'
                     contentEditable='true'
-                    title='Modifique o rótulo de dia selecionando-o e digitando'
-                  >
+                    title='Modifique o rótulo de dia selecionando-o e digitando'>
                     Sexta-Feira
                   </slot>
                   <input
@@ -453,8 +448,7 @@ export default function StudentForm({ mainRoot, userClass = "estudante" }: Globa
               <button
                 type='submit'
                 id='btnSubmitNewStud'
-                className='btn btn-success flexAlItCt flexJC flexBasis50 widFull noInvert'
-              >
+                className='btn btn-success flexAlItCt flexJC flexBasis50 widFull noInvert'>
                 <strong>Finalizar Cadastro</strong>
               </button>
               <button
@@ -462,8 +456,7 @@ export default function StudentForm({ mainRoot, userClass = "estudante" }: Globa
                 type='button'
                 className='btn btn-primary flexAlItCt flexJC flexBasis50 widFull bolded noInvert'
                 ref={btnExportStudsRef}
-                title='Gere um .xlsx com os dados preenchidos'
-              >
+                title='Gere um .xlsx com os dados preenchidos'>
                 Gerar Planilha
               </button>
               <ReseterBtn

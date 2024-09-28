@@ -332,7 +332,7 @@ export default function ScheduleForm({ mainRoot, userClass = "estudante" }: Sche
       console.error(`Error executing procedure for adding interval to Transference Area:\n${(e as Error).message}`);
     }
     assignFormAttrs(formRef.current);
-    return () => {
+    return (): void => {
       try {
         clearInterval(confInterv);
         clearInterval(regstInterv);
@@ -516,7 +516,7 @@ export default function ScheduleForm({ mainRoot, userClass = "estudante" }: Sche
                             required
                             onChange={
                               userClass === "coordenador" || userClass === "supervisor"
-                                ? () => {
+                                ? (): void => {
                                     try {
                                       const confirmRegst = document.getElementById("confirmDayInp");
                                       const relAptBtn = document.querySelector("[id*=appointmentBtn]");
@@ -546,7 +546,7 @@ export default function ScheduleForm({ mainRoot, userClass = "estudante" }: Sche
                                       console.error(`Error:${(e as Error).message}`);
                                     }
                                   }
-                                : () => {}
+                                : (): void => {}
                             }
                           />
                         </div>
@@ -635,7 +635,7 @@ export default function ScheduleForm({ mainRoot, userClass = "estudante" }: Sche
                         data-title='Primeiro dia de trabalho na semana'
                         onChange={
                           userClass === "coordenador"
-                            ? () => {
+                            ? (): void => {
                                 if (panelFormsVariables.isAutoFillMonthOn)
                                   setListenersForDates(
                                     Array.from<HTMLInputElement>(formRef.current?.querySelectorAll(".dayTabRef") ?? []),
@@ -644,7 +644,7 @@ export default function ScheduleForm({ mainRoot, userClass = "estudante" }: Sche
                                     false,
                                   );
                               }
-                            : () => {}
+                            : (): void => {}
                         }>
                         <option value='Segunda-feira' data-weekday='1'>
                           Segunda-feira
@@ -680,7 +680,7 @@ export default function ScheduleForm({ mainRoot, userClass = "estudante" }: Sche
                         data-title='Segundo dia de trabalho na semana'
                         onChange={
                           userClass === "coordenador"
-                            ? () => {
+                            ? (): void => {
                                 if (panelFormsVariables.isAutoFillMonthOn)
                                   setListenersForDates(
                                     Array.from<HTMLInputElement>(formRef.current?.querySelectorAll(".dayTabRef") ?? []),
@@ -689,7 +689,7 @@ export default function ScheduleForm({ mainRoot, userClass = "estudante" }: Sche
                                     false,
                                   );
                               }
-                            : () => {}
+                            : (): void => {}
                         }>
                         <option value='Segunda-feira' data-weekday='1'>
                           Segunda-feira

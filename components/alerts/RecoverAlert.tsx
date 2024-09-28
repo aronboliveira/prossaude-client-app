@@ -7,20 +7,20 @@ import { DlgProps } from "@/lib/global/declarations/interfaces";
 import { isClickOutside } from "@/lib/global/gStyleScript";
 export default function RecoverAlert({ dispatch, state = true }: DlgProps): JSX.Element {
   const FailRegstDlgRef = useRef<nullishDlg>(null);
-  const toggleClose = () => {
+  const toggleClose = (): void => {
     dispatch(!state);
     if (!state && FailRegstDlgRef.current instanceof HTMLDialogElement) FailRegstDlgRef.current.close();
   };
   useEffect(() => {
     if (state && FailRegstDlgRef.current instanceof HTMLDialogElement) FailRegstDlgRef.current.showModal();
     syncAriaStates([...FailRegstDlgRef.current!.querySelectorAll("*"), FailRegstDlgRef.current!]);
-    const handleKeyDown = (press: KeyboardEvent) => {
+    const handleKeyDown = (press: KeyboardEvent): void => {
       if (press.key === "Escape") {
         toggleClose();
       }
     };
     addEventListener("keydown", handleKeyDown);
-    return () => removeEventListener("keydown", handleKeyDown);
+    return (): void => removeEventListener("keydown", handleKeyDown);
   }, [FailRegstDlgRef]);
   return (
     <>
@@ -35,13 +35,11 @@ export default function RecoverAlert({ dispatch, state = true }: DlgProps): JSX.
               ev.currentTarget.close();
               dispatch(!state);
             }
-          }}
-        >
+          }}>
           <ErrorBoundary
             FallbackComponent={() => (
               <ErrorFallbackDlg renderError={new Error(`Erro carregando a janela modal!`)} onClick={toggleClose} />
-            )}
-          >
+            )}>
             <section role='alert' className='flexNoWC flexJtC flexAlItCt rGap2v'>
               <div role='group' className='flexJtC flexAlItCt flexNoWC wsBs noInvert'>
                 <p>

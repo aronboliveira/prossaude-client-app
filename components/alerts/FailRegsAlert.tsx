@@ -20,10 +20,8 @@ export default function FailRegstAlert({
     if (shouldDisplayFailRegstDlg && FailRegstDlgRef.current instanceof HTMLDialogElement)
       FailRegstDlgRef.current.showModal();
     syncAriaStates([...FailRegstDlgRef.current!.querySelectorAll("*"), FailRegstDlgRef.current!]);
-    const handleKeyDown = (press: KeyboardEvent) => {
-      if (press.key === "Escape") {
-        toggleClose();
-      }
+    const handleKeyDown = (press: KeyboardEvent): void => {
+      if (press.key === "Escape") toggleClose();
     };
     addEventListener("keydown", handleKeyDown);
     return (): void => removeEventListener("keydown", handleKeyDown);

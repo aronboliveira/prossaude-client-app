@@ -355,7 +355,7 @@ export function addListenerForValidities(inps: Array<targEl>, pattern?: RegExp):
           if (inp.value.length > 10) inp.value = inp.value.slice(0, 11);
           if (pattern && !pattern.test(inp.value)) {
             inpValidity = false;
-            inp.onsubmit = () => false;
+            inp.onsubmit = (): boolean => false;
           }
           if (inpValidity === false || !inp.checkValidity()) {
             if (inp.parentElement) {
@@ -387,7 +387,7 @@ export function addListenerForValidities(inps: Array<targEl>, pattern?: RegExp):
             }
           } else {
             inpValidity = true;
-            inp.onsubmit = () => true;
+            inp.onsubmit = (): boolean => true;
             inp.style.color = "initial";
             if (inp.parentElement) {
               const alertSpan = inp.parentElement.querySelector(".spanAlert");
@@ -553,7 +553,7 @@ export function normalizeSizeSb(
     const rem = parseFloat(getComputedStyle(document.documentElement).fontSize);
     els.forEach(el => {
       if (el instanceof HTMLElement) {
-        const normalizeScb = (element: HTMLElement, shouldNormCurrent: boolean = false) => {
+        const normalizeScb = (element: HTMLElement, shouldNormCurrent: boolean = false): void => {
           const iniWid = parseFloat(getComputedStyle(element).width);
           const iniHt = parseFloat(getComputedStyle(element).height);
           const scrollDiv = document.createElement("div") as HTMLDivElement;
@@ -627,12 +627,12 @@ export function convertToHex(
       .toUpperCase()
       .padStart(2, "0")}`;
   };
-  const hslaToRgba = (h: number, s: number, l: number, a: number = 1) => {
+  const hslaToRgba = (h: number, s: number, l: number, a: number = 1): number[] => {
     let r, g, b;
     if (s === 0) {
       r = g = b = l;
     } else {
-      const hue2rgb = (p: number, q: number, t: number) => {
+      const hue2rgb = (p: number, q: number, t: number): number => {
         if (t < 0) t += 1;
         if (t > 1) t -= 1;
         if (t < 1 / 6) return p + (q - p) * 6 * t;
@@ -706,7 +706,7 @@ export function convertToHex(
   }
   return [hexValidations, arrColors];
 }
-export function expandContent(el: targEl) {
+export function expandContent(el: targEl): void {
   if (el instanceof HTMLElement) {
     el.style.opacity = "0";
     el.parentElement!.style.opacity = "0";

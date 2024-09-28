@@ -44,7 +44,7 @@ export default function WatcherEN(): JSX.Element {
       clearInterval(mountInterval);
       !document.getElementById("tabIndPerc") && console.warn(`Could not find tabIndPerc`);
     }, 10000);
-    return () => {
+    return (): void => {
       isExportListening = false;
     };
   }, []);

@@ -19,7 +19,7 @@ export default function StudRow({
     dre: "Não fornecido",
     cpf: "Não fornecido",
   },
-}: StudRowProps) {
+}: StudRowProps): JSX.Element {
   nRow = typeof nRow === "string" ? parseInt(nRow) : nRow;
   const [shouldShowAlterDlg, setAlterDlg] = useState<boolean>(false);
   if (!Number.isFinite(nRow)) nRow = 2;
@@ -33,8 +33,7 @@ export default function StudRow({
             data-title={`cpf-stud-row${nRow}`}
             data-row={nRow}
             data-col='1'
-            data-aloc='cpf-stud'
-          >
+            data-aloc='cpf-stud'>
             {stud.cpf || "Não fornecido"}
           </output>
         </th>
@@ -47,8 +46,7 @@ export default function StudRow({
             data-title={`dre-stud-row${nRow}`}
             data-row={nRow}
             data-col='2'
-            data-aloc='dre-stud'
-          >
+            data-aloc='dre-stud'>
             {stud.dre || "Não fornecido"}
           </output>
         </td>
@@ -60,8 +58,7 @@ export default function StudRow({
           data-title={`name-stud-row${nRow}`}
           data-row={nRow}
           data-col={userClass === "coordenador" ? "3" : "1"}
-          data-aloc='name-stud'
-        >
+          data-aloc='name-stud'>
           {stud.name || "Anônimo"}
         </output>
       </td>
@@ -72,8 +69,7 @@ export default function StudRow({
           data-title={`email-stud-row${nRow}`}
           data-row={nRow}
           data-col={userClass === "coordenador" ? "4" : "2"}
-          data-aloc='email-stud'
-        >
+          data-aloc='email-stud'>
           <address data-row={nRow} data-col={userClass === "coordenador" ? "4" : "2"}>
             <a
               href={`mailto:${stud.email || "null"}`}
@@ -81,8 +77,7 @@ export default function StudRow({
               rel='nofollow'
               id={`emaila-stud-row${nRow}`}
               data-row={nRow}
-              data-col={userClass === "coordenador" ? "4" : "2"}
-            >
+              data-col={userClass === "coordenador" ? "4" : "2"}>
               {`${stud.email || "Não fornecido"}`}
             </a>
           </address>
@@ -95,8 +90,7 @@ export default function StudRow({
           data-title={`email-stud-row${nRow}`}
           data-row={nRow}
           data-col={userClass === "coordenador" ? "5" : "3"}
-          data-aloc='tel-stud'
-        >
+          data-aloc='tel-stud'>
           {`${stud.tel || "Não fornecido"}`}
         </output>
       </td>
@@ -107,8 +101,7 @@ export default function StudRow({
           data-title={`area-stud-row${nRow}`}
           data-row={nRow}
           data-col={userClass === "coordenador" ? "6" : "4"}
-          data-aloc='area-stud'
-        >
+          data-aloc='area-stud'>
           {`${stud.area || "Não definido"}`}
         </output>
       </td>
@@ -119,8 +112,7 @@ export default function StudRow({
           data-title={`day-stud-row${nRow}`}
           data-row={nRow}
           data-col={userClass === "coordenador" ? "7" : "5"}
-          data-aloc='day-stud'
-        >
+          data-aloc='day-stud'>
           {`${stud.day || "Não definido"}`}
         </output>
       </td>
@@ -131,8 +123,7 @@ export default function StudRow({
           data-title={`interv-stud-row${nRow}`}
           data-row={nRow}
           data-col={userClass === "coordenador" ? "8" : "6"}
-          data-aloc='interv-stud'
-        >
+          data-aloc='interv-stud'>
           {`${dateISOtoBRL(stud.start_day) || "Não definido"} — ${dateISOtoBRL(stud.end_day) || "Não definido"}`}
         </output>
       </td>
@@ -145,8 +136,7 @@ export default function StudRow({
               className='btn btn-info btnAffectRegst btnAlterRegst opaquelightEl'
               onClick={() => setAlterDlg(!shouldShowAlterDlg)}
               data-row={nRow}
-              data-col='9'
-            >
+              data-col='9'>
               <small role='textbox' className='bolded fontLightWt' data-row={nRow} data-col='9'>
                 Alterar
               </small>
@@ -166,8 +156,7 @@ export default function StudRow({
             className='btnAloc btnAlocStud btn btn-success widFull'
             id={`btnAlocStud-row${nRow}`}
             data-row={nRow}
-            data-col={userClass === "coordenador" ? "9" : "7"}
-          >
+            data-col={userClass === "coordenador" ? "9" : "7"}>
             <span role='textbox' data-row={nRow} data-col={userClass === "coordenador" ? "9" : "7"}>
               Alocar
             </span>

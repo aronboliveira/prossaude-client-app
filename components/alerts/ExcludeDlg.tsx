@@ -27,7 +27,7 @@ export default function ExcludeDlg({
     };
     assignFormAttrs(formRef.current);
     addEventListener("keydown", handleKeyDown);
-    return () => removeEventListener("keydown", handleKeyDown);
+    return (): void => removeEventListener("keydown", handleKeyDown);
   }, [excludeDlgRef]);
   return (
     <>

@@ -84,7 +84,7 @@ export default function InpRot(props: InpRotProps): JSX.Element {
         id={
           !props.ur && !props.ev
             ? `${props.isMax ? `inp${props.ctx}Max` : `inp${props.ctx}Min`}`
-            : (() => {
+            : ((): any => {
                 if (props.ur) {
                   return props.isMax ? `inp${props.ur.ctx}${props.ctx}Max` : `inp${props.ur.ctx}${props.ctx}Min`;
                 } else if (props.ev) {

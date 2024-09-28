@@ -14,7 +14,7 @@ export default function RegstConsBtn({
   let root: Root | undefined;
   const [shouldDisplayFailRegstDlg, setDisplayFailRegstDlg] = useState(false);
   const RegstBtnRef = useRef<nullishBtn>(null);
-  const toggleDisplayRegstDlg = (rootEl: HTMLElement | voidVal, shouldDisplayFailRegstDlg: boolean = true) => {
+  const toggleDisplayRegstDlg = (rootEl: HTMLElement | voidVal, shouldDisplayFailRegstDlg: boolean = true): void => {
     rootEl instanceof HTMLElement ? (root = createRoot(rootEl)) : (rootEl = document.getElementById("regstDaySubDiv"));
     rootEl instanceof HTMLElement
       ? (root = createRoot(rootEl))
@@ -24,7 +24,7 @@ export default function RegstConsBtn({
         RegstBtnRef.current,
         document,
         [root, shouldDisplayFailRegstDlg, setDisplayFailRegstDlg, secondOp],
-        userClass
+        userClass,
       )
     )
       setDisplayFailRegstDlg(!shouldDisplayFailRegstDlg);
@@ -43,8 +43,7 @@ export default function RegstConsBtn({
         className='btn btn-primary widMin82Q460v hovBlock'
         ref={RegstBtnRef}
         onClick={() => toggleDisplayRegstDlg(rootEl, shouldDisplayFailRegstDlg)}
-        title='Repasse a consulta na Área de Transferência para a agenda'
-      >
+        title='Repasse a consulta na Área de Transferência para a agenda'>
         Agendar Consulta
       </button>
       {shouldDisplayFailRegstDlg && (

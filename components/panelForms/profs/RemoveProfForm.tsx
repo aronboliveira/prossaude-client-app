@@ -216,7 +216,7 @@ export default function RemoveProfForm({ userClass = "estudante" }: GlobalFormPr
             } catch (e) {
               console.error(`Error executing rendering of Table Body Content:\n${(e as Error).message}`);
             }
-            const handleAttempt = () => {
+            const handleAttempt = (): void => {
               try {
                 if (!(tabRef.current instanceof HTMLElement))
                   throw elementNotFound(tabRef.current, `Validation of Table instance`, extLine(new Error()));

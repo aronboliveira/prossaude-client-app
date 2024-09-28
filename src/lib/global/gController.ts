@@ -250,7 +250,7 @@ export function addListenerExportBtn(
             baseUrl = `${location.origin}/${
               !/localhost/g.test(location.origin) ? "." : "."
             }netlify/functions/process_workbook`,
-            fetchProcess = async (wb: WorkBook) => {
+            fetchProcess = async (wb: WorkBook): Promise<void> => {
               console.log("trying to call api...");
               try {
                 const res = await fetch(baseUrl, {
@@ -279,7 +279,7 @@ export function addListenerExportBtn(
               }
             };
           if (namer) {
-            const writeNamedFile = (namer: HTMLElement) => {
+            const writeNamedFile = (namer: HTMLElement): void => {
               if (
                 namer instanceof HTMLInputElement ||
                 namer instanceof HTMLSelectElement ||
@@ -389,18 +389,18 @@ export function addCustomSbListeners(container: targEl, content: targEl): void {
       throw elementNotFound(container, `Main Element for addCustomSbListeners()`, extLine(new Error()));
     if (!(content instanceof HTMLElement))
       throw elementNotFound(content, `Content Element for addCustomSbListeners()`, extLine(new Error()));
-    const updateThumb = () => {
+    const updateThumb = (): void => {
         const percentage = container.clientHeight / content.scrollHeight,
           thumbHeight = percentage * container.clientHeight;
         thumb.style.height = `${thumbHeight}px`;
       },
-      onMouseMove = (e: MouseEvent) => {
+      onMouseMove = (e: MouseEvent): void => {
         if (!isScrolling) return;
         const deltaY = e.clientY - startY,
           percentage = deltaY / container.clientHeight;
         container.scrollTop = percentage * (content.scrollHeight - container.clientHeight);
       },
-      onMouseUp = () => {
+      onMouseUp = (): void => {
         isScrolling = false;
         document.removeEventListener("mousemove", onMouseMove);
         document.removeEventListener("mouseup", onMouseUp);
@@ -445,11 +445,11 @@ export function addCanvasListeners(): void {
     ctx.lineWidth = 4;
     ctx.lineCap = "round";
     ctx.strokeStyle = "#222";
-    const startDrawing = (e: MouseEvent | Touch) => {
+    const startDrawing = (e: MouseEvent | Touch): void => {
         isDrawing = true;
         draw(e);
       },
-      draw = (e: MouseEvent | Touch) => {
+      draw = (e: MouseEvent | Touch): void => {
         try {
           if (!(ctx instanceof CanvasRenderingContext2D))
             throw new Error(`Error getting Canvas Context:
@@ -467,7 +467,7 @@ export function addCanvasListeners(): void {
         ${(e as Error).message}`);
         }
       };
-    const stopDrawing = () => {
+    const stopDrawing = (): void => {
       isDrawing = false;
       ctx?.beginPath();
     };

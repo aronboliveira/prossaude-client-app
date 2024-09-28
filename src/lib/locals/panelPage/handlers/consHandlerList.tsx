@@ -416,7 +416,7 @@ export function filterTabMembers(tab: targEl, area: string): void {
         const outpArea = tr.querySelector('[class*="celArea"]')?.querySelector('output[data-title*="area"]');
 
         if (outpArea instanceof HTMLOutputElement) {
-          if (/educação física(?: \& nutrição)|nutrição|educação física/gi.test(area)) {
+          if (/educação física(?: & nutrição)|nutrição|educação física/gi.test(area)) {
             ["educação", "nutrição"].forEach(areaFrag => {
               if (
                 new RegExp(areaFrag, "gi").test(outpArea.innerText.toLowerCase()) &&

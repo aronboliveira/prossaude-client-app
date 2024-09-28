@@ -8,11 +8,7 @@ import { Root } from "react-dom/client";
 import { camelToKebab, kebabToCamel } from "@/lib/global/gModel";
 import { createRoot } from "react-dom/client";
 import { handleLinkChanges } from "@/lib/global/handlers/gRoutingHandlers";
-import {
-  nullishDiv,
-  panelOpts,
-  voidVal,
-} from "@/lib/global/declarations/types";
+import { nullishDiv, panelOpts, voidVal } from "@/lib/global/declarations/types";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useState, useRef, useEffect, useContext } from "react";
 import DefaultForm from "../DefaultForm";
@@ -25,20 +21,13 @@ import RemoveStudForm from "../../studs/RemoveStudForm";
 import ScheduleForm from "../../schedule/ScheduleForm";
 import StudentForm from "../../studs/StudentForm";
 import Unauthorized from "../Unauthorized";
-import {
-  elementNotFound,
-  extLine,
-  inputNotFound,
-  stringError,
-} from "@/lib/global/handlers/errorHandler";
+import { elementNotFound, extLine, inputNotFound, stringError } from "@/lib/global/handlers/errorHandler";
 import { defUser } from "@/redux/slices/userSlice";
-export let globalDataProvider: DataProvider | voidVal = undefined;
+export let globalDataProvider: DataProvider | voidVal;
 export const panelRoots: { [k: string]: Root | undefined } = {
   mainRoot: undefined,
 };
-export default function SelectPanel({
-  defOp = "agenda",
-}: MainPanelProps): JSX.Element {
+export default function SelectPanel({ defOp = "agenda" }: MainPanelProps): JSX.Element {
   const [selectedOption, setSelectedOption] = useState<string>(defOp);
   const [userClass, setClass] = useState<string>("coordenador");
   const [mounted, setMounted] = useState<boolean>(false);
@@ -48,40 +37,28 @@ export default function SelectPanel({
     try {
       const formRoot = document.getElementById("formRoot");
       if (!(formRoot instanceof HTMLElement))
-        throw elementNotFound(
-          formRoot,
-          `Validation of Form Roots Element in Schedule`,
-          extLine(new Error())
-        );
-      if (!context.roots.formRoot)
-        context.roots.formRoot = createRoot(formRoot);
+        throw elementNotFound(formRoot, `Validation of Form Roots Element in Schedule`, extLine(new Error()));
+      if (!context.roots.formRoot) context.roots.formRoot = createRoot(formRoot);
       context.roots.formRoot.render(
         ((opt: panelOpts) => {
           console.log(`Rendering for ${opt}...`);
           switch (opt) {
             case "registStud":
-              return userClass === "coordenador" ||
-                userClass === "supervisor" ? (
+              return userClass === "coordenador" || userClass === "supervisor" ? (
                 <StudentForm userClass={userClass} />
               ) : (
                 <Unauthorized />
               );
             case "registProf":
-              return userClass === "coordenador" ? (
-                <ProfForm userClass={userClass} />
-              ) : (
-                <Unauthorized />
-              );
+              return userClass === "coordenador" ? <ProfForm userClass={userClass} /> : <Unauthorized />;
             case "removeStud":
-              return userClass === "coordenador" ||
-                userClass === "supervisor" ? (
+              return userClass === "coordenador" || userClass === "supervisor" ? (
                 <RemoveStudForm userClass={userClass} />
               ) : (
                 <Unauthorized />
               );
             case "removeProf":
-              return userClass === "coordenador" ||
-                userClass === "supervisor" ? (
+              return userClass === "coordenador" || userClass === "supervisor" ? (
                 <RemoveProfForm userClass={userClass} />
               ) : (
                 <Unauthorized />
@@ -91,47 +68,28 @@ export default function SelectPanel({
             case "agenda":
               return <ScheduleForm context={false} userClass={userClass} />;
             default:
-              stringError(
-                opt,
-                "opt in renderSelectedForm()",
-                extLine(new Error())
-              );
+              stringError(opt, "opt in renderSelectedForm()", extLine(new Error()));
               return <DefaultForm userClass={userClass} />;
           }
-        })(opt)
+        })(opt),
       );
     } catch (e) {
-      console.error(
-        `Error executing procedure fro rendering on formRoot:\n${
-          (e as Error).message
-        }`
-      );
+      console.error(`Error executing procedure fro rendering on formRoot:\n${(e as Error).message}`);
     }
   };
-  const handlePanelPath = (
-    change: React.ChangeEvent<HTMLSelectElement> | string
-  ): void => {
-    const changeValue =
-      typeof change === "object" && "target" in change
-        ? change.target.value
-        : change;
+  const handlePanelPath = (change: React.ChangeEvent<HTMLSelectElement> | string): void => {
+    const changeValue = typeof change === "object" && "target" in change ? change.target.value : change;
     history.pushState(
       {},
       "",
       `${location.origin}${
-        location.pathname.endsWith("/")
-          ? location.pathname.slice(0, -1)
-          : location.pathname
+        location.pathname.endsWith("/") ? location.pathname.slice(0, -1) : location.pathname
       }?panel=${camelToKebab(changeValue)}`
         .replace("/?", "?")
-        .replace("/#", "#")
+        .replace("/#", "#"),
     );
     setTimeout(() => {
-      history.pushState(
-        {},
-        "",
-        `${location.href}`.replace("/?", "?").replace("/#", "#")
-      );
+      history.pushState({}, "", `${location.href}`.replace("/?", "?").replace("/#", "#"));
     }, 300);
   };
   console.log("USER CLASS LOADED");
@@ -157,24 +115,10 @@ export default function SelectPanel({
         const formRoot = document.getElementById("formRoot");
         const panelSelect = document.getElementById("coordPanelSelect");
         if (!(formRoot instanceof HTMLElement))
-          throw elementNotFound(
-            formRoot,
-            `Validation of Option Selection Element`,
-            extLine(new Error())
-          );
-        if (
-          !(
-            panelSelect instanceof HTMLSelectElement ||
-            panelSelect instanceof HTMLInputElement
-          )
-        )
-          throw inputNotFound(
-            panelSelect,
-            `Validation of Select for panel instance`,
-            extLine(new Error())
-          );
-        if (!context.roots.formRoot)
-          context.roots.formRoot = createRoot(formRoot);
+          throw elementNotFound(formRoot, `Validation of Option Selection Element`, extLine(new Error()));
+        if (!(panelSelect instanceof HTMLSelectElement || panelSelect instanceof HTMLInputElement))
+          throw inputNotFound(panelSelect, `Validation of Select for panel instance`, extLine(new Error()));
+        if (!context.roots.formRoot) context.roots.formRoot = createRoot(formRoot);
         const kebabSearch = kebabToCamel(location.search);
         formRoot.style.transition = "";
         formRoot.style.opacity = "0";
@@ -191,16 +135,12 @@ export default function SelectPanel({
               <StudentForm userClass={userClass} />
             ) : (
               <Unauthorized />
-            )
+            ),
           );
           panelSelect.value = "registStud";
         } else if (/registProf/gi.test(kebabSearch)) {
           context.roots.formRoot.render(
-            userClass === "coordenador" ? (
-              <ProfForm userClass={userClass} />
-            ) : (
-              <Unauthorized />
-            )
+            userClass === "coordenador" ? <ProfForm userClass={userClass} /> : <Unauthorized />,
           );
           panelSelect.value = "registProf";
         } else if (/removeProf/gi.test(kebabSearch)) {
@@ -209,7 +149,7 @@ export default function SelectPanel({
               <RemoveProfForm userClass={userClass} />
             ) : (
               <Unauthorized />
-            )
+            ),
           );
           panelSelect.value = "removeProf";
         } else if (/removeStud/gi.test(kebabSearch)) {
@@ -218,29 +158,21 @@ export default function SelectPanel({
               <RemoveStudForm userClass={userClass} />
             ) : (
               <Unauthorized />
-            )
+            ),
           );
           panelSelect.value = "removeStud";
         } else if (/agenda/gi.test(kebabSearch)) {
-          context.roots.formRoot.render(
-            <ScheduleForm context={false} userClass={userClass} />
-          );
+          context.roots.formRoot.render(<ScheduleForm context={false} userClass={userClass} />);
           panelSelect.value = "agenda";
         } else if (/pacList/gi.test(kebabSearch)) {
           context.roots.formRoot.render(<PacTabForm userClass={userClass} />);
           panelSelect.value = "pacList";
         } else {
-          history.pushState(
-            {},
-            "",
-            `${location.origin}${location.pathname}?panel=${defOp}`
-          );
+          history.pushState({}, "", `${location.origin}${location.pathname}?panel=${defOp}`);
         }
       } catch (e) {
         console.error(
-          `Error executing procedure for adjusting selected panel option based on route:\n${
-            (e as Error).message
-          }`
+          `Error executing procedure for adjusting selected panel option based on route:\n${(e as Error).message}`,
         );
       }
     }, 500);
@@ -249,11 +181,7 @@ export default function SelectPanel({
   useEffect(() => {
     setTimeout(() => {
       const selDiv = document.getElementById("formSelDiv");
-      if (
-        mounted &&
-        selDiv instanceof HTMLElement &&
-        !document.querySelector("select")
-      ) {
+      if (mounted && selDiv instanceof HTMLElement && !document.querySelector("select")) {
         selDiv.innerHTML = ``;
         if (!context.roots.rootSel) context.roots.rootSel = createRoot(selDiv);
         context.roots.rootSel.render(<ErrorMainDiv />);
@@ -261,15 +189,10 @@ export default function SelectPanel({
         setTimeout(() => {
           const selDiv = document.getElementById("formSelDiv");
           if (!document.getElementById("formSelDiv")?.querySelector("select")) {
-            elementNotFound(
-              selDiv,
-              "selDiv during DOM initialization",
-              extLine(new Error())
-            );
+            elementNotFound(selDiv, "selDiv during DOM initialization", extLine(new Error()));
             if (selDiv instanceof HTMLElement) {
               selDiv.innerHTML = ``;
-              if (!context.roots.rootSel)
-                context.roots.rootSel = createRoot(selDiv);
+              if (!context.roots.rootSel) context.roots.rootSel = createRoot(selDiv);
               context.roots.rootSel.render(<ErrorMainDiv />);
             }
           }
@@ -279,13 +202,10 @@ export default function SelectPanel({
   useEffect(() => {
     if (formRootRef.current instanceof HTMLElement) {
       syncAriaStates([
-        ...(
-          document.getElementById("formPanelDiv") ?? document
-        )?.querySelectorAll("*") ?? null,
+        ...((document.getElementById("formPanelDiv") ?? document)?.querySelectorAll("*") ?? null),
         document.getElementById("formPanelDiv")!,
       ]);
-      if (!panelRoots.mainRoot)
-        panelRoots.mainRoot = createRoot(formRootRef.current);
+      if (!panelRoots.mainRoot) panelRoots.mainRoot = createRoot(formRootRef.current);
     }
   }, [mounted]);
   //Snippet para repassar para CSR totalmente (erro ainda não investigado)
@@ -293,22 +213,16 @@ export default function SelectPanel({
     <></>
   ) : (
     <ErrorBoundary
-      FallbackComponent={() => (
-        <GenericErrorComponent message="Error loading Selector for Working Panel" />
-      )}
-    >
-      <div
-        role="group"
-        className="flexWR mg-3b pdL1v900Q pdR1v900Q pdL2v460Q pdR2v460Q noInvert"
-      >
-        <strong id="titlePanelSelect" title="Selecione aqui o painel em tela">
+      FallbackComponent={() => <GenericErrorComponent message='Error loading Selector for Working Panel' />}>
+      <div role='group' className='flexWR mg-3b pdL1v900Q pdR1v900Q pdL2v460Q pdR2v460Q noInvert'>
+        <strong id='titlePanelSelect' title='Selecione aqui o painel em tela'>
           Escolha o Painel de Trabalho
         </strong>
         <select
-          className="form-select"
-          id="coordPanelSelect"
-          name="actv_panel"
-          data-title="Opção de Painel Ativa"
+          className='form-select'
+          id='coordPanelSelect'
+          name='actv_panel'
+          data-title='Opção de Painel Ativa'
           value={selectedOption}
           onChange={change => {
             setSelectedOption(change.target.value);
@@ -328,35 +242,31 @@ export default function SelectPanel({
             }, 300);
           }}
           autoFocus
-          required
-        >
-          <optgroup id="grpRegst" label="Registro">
+          required>
+          <optgroup id='grpRegst' label='Registro'>
             {(userClass === "coordenador" || userClass === "supervisor") && (
-              <option value="registStud">Cadastrar Aluno</option>
+              <option value='registStud'>Cadastrar Aluno</option>
             )}
-            {userClass === "coordenador" && (
-              <option value="registProf">Cadastrar Membro Profissional</option>
-            )}
+            {userClass === "coordenador" && <option value='registProf'>Cadastrar Membro Profissional</option>}
             {(userClass === "coordenador" || userClass === "supervisor") && (
-              <option value="removeStud">Lista de Alunos</option>
+              <option value='removeStud'>Lista de Alunos</option>
             )}
             {(userClass === "coordenador" || userClass === "supervisor") && (
-              <option value="removeProf">Lista de Membros Profissionais</option>
+              <option value='removeProf'>Lista de Membros Profissionais</option>
             )}
-            <option value="pacList">Lista de Pacientes</option>
+            <option value='pacList'>Lista de Pacientes</option>
           </optgroup>
-          <optgroup id="grpDates" label="Datas">
-            <option value="agenda">Agendamento</option>
+          <optgroup id='grpDates' label='Datas'>
+            <option value='agenda'>Agendamento</option>
           </optgroup>
         </select>
       </div>
       <hr />
-      <div role="group" ref={formRootRef} id="formRoot">
+      <div role='group' ref={formRootRef} id='formRoot'>
         <ErrorBoundary
           FallbackComponent={() => (
-            <GenericErrorComponent message="Error rendering Selected Form for Panel" />
-          )}
-        ></ErrorBoundary>
+            <GenericErrorComponent message='Error rendering Selected Form for Panel' />
+          )}></ErrorBoundary>
       </div>
     </ErrorBoundary>
   );
