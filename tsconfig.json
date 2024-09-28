@@ -27,5 +27,14 @@
     "noFallthroughCasesInSwitch": true
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules", "__tests__", "tests"]
+  "exclude": [
+    "node_modules",
+    "__tests__",
+    "tests",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.spec.ts",
+    "**/*.spec.tsx",
+    "**/tests/**"
+  ]
 }
