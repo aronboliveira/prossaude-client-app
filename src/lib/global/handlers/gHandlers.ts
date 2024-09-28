@@ -83,7 +83,7 @@ export function opRadioHandler(keydown: KeyboardEvent | React.KeyboardEvent, rad
           extLine(new Error()),
           `validando radioYes id ${radioYes?.id || "UNDEFINED ID"} or radiosNo id ${radioNo?.id || "UNDEFINED ID"}`,
           radioYes,
-          radioNo
+          radioNo,
         );
     }
   } else console.error(`Error validating KeyboardEvent in opRadioHandler.`);
@@ -143,16 +143,16 @@ export function cpbInpHandler(ev: Event, radio: targEl): void {
                   rad.dataset.required = "true";
                 } catch (e) {
                   console.error(
-                    `Error executing iteration ${i} for updating checkboxes requirements:\n${(e as Error).message}`
+                    `Error executing iteration ${i} for updating checkboxes requirements:\n${(e as Error).message}`,
                   );
                 }
               });
               [
                 ...divAdd.querySelectorAll('input[type="text"]'),
                 ...divAdd.querySelectorAll('input[type="number"]'),
-                ...divAdd?.querySelectorAll('input[type="email"]'),
+                ...divAdd?.querySelectorAll('input[type="email"]') ?? [],
                 ...divAdd.querySelectorAll('input[type="tel"]'),
-                ...divAdd?.querySelectorAll('input[type="date"]'),
+                ...divAdd?.querySelectorAll('input[type="date"]') ?? [],
               ].forEach((inp, i) => {
                 try {
                   if (!(inp instanceof HTMLInputElement))
@@ -160,7 +160,7 @@ export function cpbInpHandler(ev: Event, radio: targEl): void {
                   inp.required = true;
                 } catch (e) {
                   console.error(
-                    `Error executing iteration ${i} for updating text inputs requirements:\n${(e as Error).message}`
+                    `Error executing iteration ${i} for updating text inputs requirements:\n${(e as Error).message}`,
                   );
                 }
               });
@@ -184,16 +184,16 @@ export function cpbInpHandler(ev: Event, radio: targEl): void {
                 delete rad.dataset.required;
               } catch (e) {
                 console.error(
-                  `Error executing iteration ${i} for updating checkboxes requirements:\n${(e as Error).message}`
+                  `Error executing iteration ${i} for updating checkboxes requirements:\n${(e as Error).message}`,
                 );
               }
             });
             [
               ...divAdd.querySelectorAll('input[type="text"]'),
               ...divAdd.querySelectorAll('input[type="number"]'),
-              ...divAdd?.querySelectorAll('input[type="email"]'),
+              ...divAdd?.querySelectorAll('input[type="email"]') ?? [],
               ...divAdd.querySelectorAll('input[type="tel"]'),
-              ...divAdd?.querySelectorAll('input[type="date"]'),
+              ...divAdd?.querySelectorAll('input[type="date"]') ?? [],
             ].forEach((inp, i) => {
               try {
                 if (!(inp instanceof HTMLInputElement))
@@ -201,7 +201,7 @@ export function cpbInpHandler(ev: Event, radio: targEl): void {
                 inp.required = false;
               } catch (e) {
                 console.error(
-                  `Error executing iteration ${i} for updating text inputs requirements:\n${(e as Error).message}`
+                  `Error executing iteration ${i} for updating text inputs requirements:\n${(e as Error).message}`,
                 );
               }
             });
@@ -215,12 +215,12 @@ export function cpbInpHandler(ev: Event, radio: targEl): void {
       "localizando parent elements de Radio",
       radio,
       radio?.parentElement,
-      radio?.parentElement?.parentElement
+      radio?.parentElement?.parentElement,
     );
 }
 export function deactTextInput(
   addressInps: NodeListOf<Element> | Element[],
-  nullRadios: NodeListOf<Element> | Element[]
+  nullRadios: NodeListOf<Element> | Element[],
 ): void {
   addressInps?.length > 0 && addressInps.length === nullRadios.length
     ? nullRadios.forEach(nullRadio => {
@@ -313,7 +313,7 @@ export function changeToAstDigit(toFileInpBtn: targEl): void {
       throw elementNotFound(
         inpAst.parentElement,
         `Validation of Parent Element for field for Signature`,
-        extLine(new Error())
+        extLine(new Error()),
       );
     if (
       /Usar/gi.test(toFileInpBtn.textContent) ||
@@ -409,11 +409,11 @@ export function changeToAstDigit(toFileInpBtn: targEl): void {
               return tratBtn instanceof HTMLElement
                 ? parseNotNaN(getComputedStyle(tratBtn).width.replace("px", "").trim())
                 : 0;
-            })
+            }),
           )}px`;
         } catch (e) {
           console.error(
-            `Error executing iteration ${i} for applying width to Fields for Signatures:\n${(e as Error).message}`
+            `Error executing iteration ${i} for applying width to Fields for Signatures:\n${(e as Error).message}`,
           );
         }
       });
@@ -439,11 +439,11 @@ export function changeToAstDigit(toFileInpBtn: targEl): void {
                 return tratBtn instanceof HTMLElement
                   ? parseNotNaN(getComputedStyle(tratBtn).width.replace("px", "").trim())
                   : 0;
-              })
+              }),
             )}px`;
           } catch (e) {
             console.error(
-              `Error executing iteration ${i} for applying width to Fields for Signatures:\n${(e as Error).message}`
+              `Error executing iteration ${i} for applying width to Fields for Signatures:\n${(e as Error).message}`,
             );
           }
         });
@@ -460,7 +460,6 @@ export function changeToAstDigit(toFileInpBtn: targEl): void {
         addCanvasListeners();
       }
     } else stringError("textContent for toFileInpBtn", toFileInpBtn?.textContent, extLine(new Error()));
-    // //TODO INCLUIR TOKEN ANTI-CSRF QUANDO HOUVER SERVIDOR
   } catch (e) {
     console.error(`Error executing changeToAstDigt:\n${(e as Error).message}`);
   }
@@ -468,7 +467,7 @@ export function changeToAstDigit(toFileInpBtn: targEl): void {
 export function defineLabId(
   labAst: targEl,
   toFileInpBtn: targEl,
-  fileEl: HTMLInputElement | HTMLImageElement | HTMLCanvasElement
+  fileEl: HTMLInputElement | HTMLImageElement | HTMLCanvasElement,
 ): void {
   if (
     toFileInpBtn instanceof HTMLButtonElement &&
@@ -482,7 +481,7 @@ export function defineLabId(
 export function resetarFormulario(
   click: MouseEvent,
   toFileInpBtns: targEl[] | NodeListOf<Element>,
-  resetFormBtn: targEl = click?.target as HTMLElement
+  resetFormBtn: targEl = click?.target as HTMLElement,
 ): void {
   if (
     (click?.target instanceof HTMLButtonElement || resetFormBtn instanceof HTMLButtonElement) &&
@@ -528,7 +527,7 @@ export function resetarFormulario(
       extLine(new Error()),
       "arguments for resetarFormulario()",
       `${JSON.stringify(click?.target)}` || null,
-      `${JSON.stringify(toFileInpBtns)}` || null
+      `${JSON.stringify(toFileInpBtns)}` || null,
     );
 }
 export function enableCPFBtn(cpfBtn: targEl, cpfLength: string = ""): boolean {
@@ -667,7 +666,6 @@ export function syncAriaStates(els: Array<Element> | NodeListOf<Element>): void 
     });
   } else elementNotPopulated(els, "List of elements for synchronizing aria states", extLine(new Error()));
 }
-
 let showTipsDlg = false;
 export function toggleTips(awaitMount: boolean = false): void {
   const odTipsDlg = document.getElementById("tipsDlg");
@@ -700,7 +698,6 @@ export function toggleTips(awaitMount: boolean = false): void {
         }, 2000);
   }
 }
-
 let showConformDlg = false;
 export function toggleConformDlg(): void {
   const conformDlg = document.getElementById("conformDlg");
@@ -729,12 +726,11 @@ export function toggleConformDlg(): void {
   } else
     multipleElementsNotFound("Elements for Dialog for agreement terms", extLine(new Error()), conformDlg, btnConform);
 }
-
 const borderColors: { [k: string]: string } = {};
 export async function validateForm(
   ev: FormEvent | SubmitEvent | rMouseEvent | HTMLFormElement,
   scope: HTMLElement | Document = document,
-  submit: boolean = true
+  submit: boolean = true,
 ): Promise<[boolean, string[], Array<[string, string | File]>]> {
   let targ;
   if (!(ev instanceof HTMLFormElement || "currentTarget" in ev)) throw new Error(`Invalid form reference`);
@@ -771,7 +767,7 @@ export async function validateForm(
       ...form.querySelectorAll("select"),
       ...form.querySelectorAll("canvas"),
     ].forEach(entry => {
-      const displayInvalidity = (valid: boolean = true) => {
+      const displayInvalidity = (valid: boolean = true): void => {
         if (!valid && !(entry instanceof HTMLCanvasElement)) {
           entry.scrollIntoView({ behavior: "smooth" });
           if (!/border-color/g.test(getComputedStyle(entry).transition))
@@ -785,7 +781,7 @@ export async function validateForm(
               (entry.style.borderColor =
                 borderColors[entry.id || entry.name || entry.classList.toString().replaceAll(" ", "_")] ||
                 "rgb(222, 226, 230)"),
-            1000
+            1000,
           );
           if (
             (entry instanceof HTMLInputElement &&
@@ -894,7 +890,7 @@ export async function validateForm(
                   radio =>
                     radio instanceof HTMLInputElement &&
                     radio.type === "radio" &&
-                    (radio.dataset.required === "true" || radio.required)
+                    (radio.dataset.required === "true" || radio.required),
                 ) &&
               !Array.from(radioGroupList)
                 .filter(radio => radio instanceof HTMLInputElement && radio.type === "radio")
@@ -912,12 +908,12 @@ export async function validateForm(
                   checkbox =>
                     checkbox instanceof HTMLInputElement &&
                     checkbox.type === "checkbox" &&
-                    (checkbox.dataset.required === "true" || checkbox.required)
+                    (checkbox.dataset.required === "true" || checkbox.required),
                 ) &&
               !Array.from(cbGrpL)
                 .filter(checkbox => checkbox instanceof HTMLInputElement && checkbox.type === "checkbox")
                 .some(
-                  checkbox => checkbox instanceof HTMLInputElement && checkbox.type === "checkbox" && checkbox.checked
+                  checkbox => checkbox instanceof HTMLInputElement && checkbox.type === "checkbox" && checkbox.checked,
                 )
             ) {
               isValid = false;
@@ -1006,7 +1002,7 @@ export async function validateForm(
                     ]);
               } else {
                 const opChecked = Array.from(radioGroupList).filter(
-                  radio => radio instanceof HTMLInputElement && radio.type === "radio" && radio.checked
+                  radio => radio instanceof HTMLInputElement && radio.type === "radio" && radio.checked,
                 )[0];
                 if (!(opChecked instanceof HTMLInputElement && opChecked.type === "radio")) {
                   validEntries.push([opChecked.id || opChecked.tagName, `undefined`]);
@@ -1049,13 +1045,13 @@ export async function validateForm(
                     res(
                       new File([blob], entry.name || entry.id || entry.dataset.title || entry.tagName, {
                         type: blob.type,
-                      })
+                      }),
                     );
                   } else rej(new Error(`Failed to extract file.`));
                 });
               });
             })().then(file =>
-              validEntries.push([entry.name || entry.id || entry.dataset.title || entry.tagName, file])
+              validEntries.push([entry.name || entry.id || entry.dataset.title || entry.tagName, file]),
             );
           } else validEntries.push([entry.name || entry.id || entry.dataset.title || entry.tagName, entry.value]);
         }
@@ -1074,7 +1070,7 @@ export async function validateForm(
   }
   return [formValidated, invalidEntries.map(invalidIdf => `${invalidIdf} \n`), validEntries];
 }
-export async function submitForm(form: nullishForm, ep: formCases) {
+export async function submitForm(form: nullishForm, ep: formCases): Promise<void> {
   try {
     if (!(form instanceof HTMLFormElement))
       throw elementNotFound(form, `Validation of form instance`, extLine(new Error()));
@@ -1093,7 +1089,7 @@ export async function submitForm(form: nullishForm, ep: formCases) {
             el.type === "reset" ||
             el.type === "button" ||
             el.type === "submit" ||
-            el.type === "image")
+            el.type === "image"),
       )
       .forEach((el, i) => {
         try {
@@ -1114,8 +1110,8 @@ export async function submitForm(form: nullishForm, ep: formCases) {
                               fd.get("family_name") ? regularToSnake(fd.get("family_name")!.toString()) : ""
                             }__${new Date().getFullYear()}${new Date().getMonth() + 1}${new Date().getDate()}`
                           }.jpeg`,
-                          { type: "image/jpeg" }
-                        )
+                          { type: "image/jpeg" },
+                        ),
                       )
                     : rej(new Error(`Failed to extract file.`));
                 });
@@ -1126,7 +1122,7 @@ export async function submitForm(form: nullishForm, ep: formCases) {
               console.warn(`Element ${el.id || el.className || `undefined ${el.tagName}`} has no name prop defined!`);
               if (el.id === "")
                 console.warn(
-                  `Element ${el.className || `undefined ${el.tagName}`} also does not have a id prop defined!`
+                  `Element ${el.className || `undefined ${el.tagName}`} also does not have a id prop defined!`,
                 );
             }
             const idf = el.name || el.id || el.dataset.title || el.className || el.tagName;
@@ -1148,7 +1144,7 @@ export async function submitForm(form: nullishForm, ep: formCases) {
                         return;
                       } else {
                         const checked = Array.from(group).find(
-                          rad => rad instanceof HTMLInputElement && rad.type === "radio" && rad.checked
+                          rad => rad instanceof HTMLInputElement && rad.type === "radio" && rad.checked,
                         ) as HTMLInputElement;
                         if (!checked) {
                           if (fd.get(idf)) return;
@@ -1162,7 +1158,7 @@ export async function submitForm(form: nullishForm, ep: formCases) {
                     return;
                   } else {
                     const checked = Array.from(group).find(
-                      rad => rad instanceof HTMLInputElement && rad.type === "radio" && rad.checked
+                      rad => rad instanceof HTMLInputElement && rad.type === "radio" && rad.checked,
                     ) as HTMLInputElement;
                     if (!checked) {
                       if (fd.get(idf)) return;
@@ -1179,7 +1175,7 @@ export async function submitForm(form: nullishForm, ep: formCases) {
                       return;
                     }
                     console.warn(
-                      `Failed to fetch reference for ancestral using data-parent. Defaulting to parent element`
+                      `Failed to fetch reference for ancestral using data-parent. Defaulting to parent element`,
                     );
                     refAncestral = el.parentElement;
                     if (!refAncestral) {
@@ -1242,7 +1238,7 @@ export async function submitForm(form: nullishForm, ep: formCases) {
           console.error(
             `Error executin iteration ${i} for mapping ${form.id || form.className || form.tagName}:\n${
               (e as Error).message
-            }`
+            }`,
           );
         }
       });
@@ -1259,21 +1255,23 @@ export function handleCondtReq(
     max?: number;
     minNum?: number;
     maxNum?: number;
-  }
+  },
 ): void {
   try {
     if (
       !(
-        el instanceof HTMLInputElement &&
-        (el.type === "text" ||
-          el.type === "number" ||
-          el.type === "email" ||
-          el.type === "password" ||
-          el.type === "tel" ||
-          el.type === "date")
+        (el instanceof HTMLInputElement &&
+          (el.type === "text" ||
+            el.type === "number" ||
+            el.type === "email" ||
+            el.type === "password" ||
+            el.type === "tel" ||
+            el.type === "date")) ||
+        el instanceof HTMLTextAreaElement
       )
     )
       throw inputNotFound(el, `${el?.id || el?.className || el?.tagName}`, extLine(new Error()));
+    if (el.value.length < 2) return;
     if (!(options.pattern && options.min && options.max && options.maxNum && options.minNum))
       throw new Error(`No pattern was given to handleCondtReq`);
     if (
@@ -1298,15 +1296,17 @@ export function handleCondtReq(
         el.maxLength = options.max;
         if (!el.classList.contains("maxText")) el.classList.add("maxText");
       }
-      if (options.minNum) {
-        el.dataset["minnum"] = `${options.minNum}`;
-        el.min = `${options.minNum}`;
-        if (!el.classList.contains("minNum")) el.classList.add("minNum");
-      }
-      if (options.maxNum) {
-        el.dataset["maxnum"] = `${options.maxNum}`;
-        el.max = `${options.maxNum}`;
-        if (!el.classList.contains("maxNum")) el.classList.add("maxNum");
+      if (el instanceof HTMLInputElement) {
+        if (options.minNum) {
+          el.dataset["minnum"] = `${options.minNum}`;
+          el.min = `${options.minNum}`;
+          if (!el.classList.contains("minNum")) el.classList.add("minNum");
+        }
+        if (options.maxNum) {
+          el.dataset["maxnum"] = `${options.maxNum}`;
+          el.max = `${options.maxNum}`;
+          if (!el.classList.contains("maxNum")) el.classList.add("maxNum");
+        }
       }
       if (options.pattern) {
         if (Array.isArray(options.pattern)) {
@@ -1326,8 +1326,10 @@ export function handleCondtReq(
       delete el.dataset["flags"];
       delete el.dataset["minnum"];
       delete el.dataset["maxnum"];
-      el.min = "";
-      el.max = "";
+      if (el instanceof HTMLInputElement) {
+        el.min = "";
+        el.max = "";
+      }
       el.maxLength = 9999;
       el.minLength = 0;
     }

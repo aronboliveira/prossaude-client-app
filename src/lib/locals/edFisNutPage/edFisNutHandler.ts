@@ -61,7 +61,7 @@ export function switchAutoFill(autoFillBtn: targEl, isAutoFillActive: boolean = 
         stringError(
           ".innerText of autoFillBtn",
           autoFillBtn?.innerText ?? "UNDEFINED INNER TEXT",
-          extLine(new Error())
+          extLine(new Error()),
         );
     }
 
@@ -190,7 +190,7 @@ export function validateEvResultNum(evEl: targEl, property: primitiveType = 0): 
 export function matchPersonPropertiesWH(
   person: Person,
   targinpweigth: targEl,
-  targinpheigth: targEl
+  targinpheigth: targEl,
 ): [number, number] {
   if (person && Object.keys(person)?.length > 0) {
     if ("weight" in person && typeof person.weight !== "number" && typeof person.weight !== "string") {
@@ -232,7 +232,7 @@ export function updateIndexesContexts(
   arrGord: [targEl, targEl, targEl],
   arrMetab: [targEl, targEl, targEl],
   factorAtvLvl: number = 1.4,
-  factorAtleta: string = "Peso"
+  factorAtleta: string = "Peso",
 ): [number, number, number, number] {
   let IMC = 0,
     MLG = 0,
@@ -262,14 +262,14 @@ export function updateIndexesContexts(
         person,
         [targInpTMB, formTMBTypeElement],
         [...IMCArray, MLG] ?? [(gordCorpLvl as HTMLInputElement | HTMLSelectElement)?.value || 0, 0, 0],
-        factorAtleta
+        factorAtleta,
       ) || 0;
     TMB >= 0 && factorAtvLvl >= 0
       ? (GET = updateGETContext(person, targInpGET, TMB, factorAtvLvl))
       : console.warn(
           `TMB and/or factorAtvLvl not updated or invalid.
           Obtained TMB: ${TMB ?? 0};
-          Obtained factorAtvLvl: ${factorAtvLvl ?? 0}`
+          Obtained factorAtvLvl: ${factorAtvLvl ?? 0}`,
         );
   } else
     multipleElementsNotFound(
@@ -279,7 +279,7 @@ export function updateIndexesContexts(
       `${arrGord.toString()}`,
       `${arrMetab.toString()}`,
       factorAtvLvl,
-      factorAtleta
+      factorAtleta,
     );
   return [IMC || 0, MLG || 0, TMB || 0, GET || 0];
 }
@@ -287,7 +287,7 @@ export function updateIMCContext(
   arrGord: [targEl, targEl, targEl],
   formTMBTypeElement: targEl,
   IMCArray: [string, number] = ["abaixo", 0],
-  ignoredIndex: string = "NONE"
+  ignoredIndex: string = "NONE",
 ): void {
   let [gordCorpVal = "abaixo", IMC = 0] = IMCArray;
   const [gordCorpLvl, targInpIMC] = arrGord;
@@ -316,7 +316,7 @@ export function updateIMCContext(
       gordCorpLvl,
       targInpIMC,
       formTMBTypeElement,
-      ignoredIndex
+      ignoredIndex,
     );
 }
 export function fluxFormIMC(gordCorpLvl: targEl, formTMBTypeElement: targEl, IMC: number = 0): void {
@@ -368,7 +368,7 @@ export function updateTMBContext(
   person: Person,
   arrTMB: [targEl, targEl],
   IMGMLGArray: [string, number, number] = ["abaixo", 0, 0],
-  factorAtleta: string = "Peso"
+  factorAtleta: string = "Peso",
 ): number {
   let TMB = 0,
     [targInpTMB, formTMBTypeElement] = arrTMB;
@@ -397,7 +397,7 @@ export function updateTMBContext(
       `${person.toString() || null}`,
       `${arrTMB.toString() || null}`,
       `${IMGMLGArray.toString() || null}`,
-      factorAtleta
+      factorAtleta,
     );
 
   return TMB || 0;
@@ -406,7 +406,7 @@ export function updateGETContext(
   person: Person,
   targInpGET: targEl,
   TMB: number = 0,
-  factorAtvLvl: number = 1.4
+  factorAtvLvl: number = 1.4,
 ): number {
   const GET = parseNotNaN(person.calcGET(TMB || 0, factorAtvLvl).toFixed(4), 0, "float") || 0;
   targInpGET instanceof HTMLInputElement || targInpGET instanceof HTMLSelectElement
@@ -421,7 +421,7 @@ export function matchTMBElements(
   formTMBTypeElement: targEl,
   spanFactorAtleta: targEl,
   lockGordCorpLvl: targEl,
-  IMC: number = 0
+  IMC: number = 0,
 ): void {
   if (
     (mainSelect instanceof HTMLSelectElement || mainSelect instanceof HTMLInputElement) &&
@@ -431,7 +431,7 @@ export function matchTMBElements(
     lockGordCorpLvl instanceof HTMLElement
   ) {
     //update em selects secundários (nível de gordura e fórmula)
-    function switchSecSelects(formTMBTypeElement: entryEl, secSelect: entryEl) {
+    const switchSecSelects = (formTMBTypeElement: entryEl, secSelect: entryEl): void => {
       switch (formTMBTypeElement.value) {
         case "harrisBenedict":
           fluxFormIMC(gordCorpLvl, formTMBTypeElement, IMC);
@@ -447,10 +447,10 @@ export function matchTMBElements(
           stringError(
             "argument in the switch for formTMBTypeElement.value",
             formTMBTypeElement?.value,
-            extLine(new Error())
+            extLine(new Error()),
           );
       }
-    }
+    };
 
     //garante coesão de selects primários (nível e fator)
     if (/LvlAtFis/gi.test(mainSelect.id)) {
@@ -569,14 +569,14 @@ export function matchTMBElements(
       spanFactorAtleta,
       gordCorpLvl,
       lockGordCorpLvl,
-      IMC
+      IMC,
     );
 }
 export function updatePGC(
   person: Person,
   parentEl: targEl,
   numRef: number = 1,
-  context: string = "cons"
+  context: string = "cons",
 ): [number, targEl, targEl] {
   let PGC = 0,
     targInpPGC = null,
@@ -617,7 +617,7 @@ export function updatePGC(
       `${person?.toString() || null}`,
       parentEl,
       numRef,
-      context
+      context,
     );
 
   if (PGC < 0) {
@@ -736,7 +736,7 @@ export function addRowAtivFis(count: number = 3, context: string = "Rot"): void 
       textEl.addEventListener("input", () => {
         autoCapitalizeInputs(
           textEl as entryEl,
-          checkAutoCorrect(document.querySelector('button[id^="deactAutocorrectBtn"]'))
+          checkAutoCorrect(document.querySelector('button[id^="deactAutocorrectBtn"]')),
         );
         handleEventReq(textEl as textEl);
       });
@@ -781,8 +781,8 @@ export function switchRowComorb(comorbContainer: targEl, rowCountComorb: number 
       textEl.addEventListener("input", () =>
         autoCapitalizeInputs(
           textEl as textEl,
-          checkAutoCorrect(document.querySelector('button[id^="deactAutocorrectBtn"]'))
-        )
+          checkAutoCorrect(document.querySelector('button[id^="deactAutocorrectBtn"]')),
+        ),
       );
     });
   } else if (comorbContainer?.tagName === "BUTTON" && comorbContainer?.id === "removeComorb") {
@@ -798,7 +798,7 @@ export function switchRowComorb(comorbContainer: targEl, rowCountComorb: number 
 export function switchRequiredCols(
   elements: elCollection,
   numCons: number = 1,
-  areNumConsOpsValid: boolean = true
+  areNumConsOpsValid: boolean = true,
 ): void {
   const [numConsElement, consTablesFs, tabDC] = elements;
   const tabSVi = document.getElementById("tabProgSVi");
@@ -926,7 +926,7 @@ export function switchRequiredCols(
           tabIndPerc,
           numConsElement,
           numCons,
-          areNumConsOpsValid
+          areNumConsOpsValid,
         );
   }
 }
@@ -961,7 +961,7 @@ export function validateTabInpList(inpsNL: NodeListOf<Element> | Array<Element>,
       extLine(new Error()),
       "arguments for validateTabInpList()",
       `${inpsNL.toString() || null}`,
-      nMatrix
+      nMatrix,
     );
   return validInpNL || false;
 }
@@ -969,14 +969,14 @@ export function filterCellsPattern(
   inpCells: NodeListOf<Element> | Element[],
   filterPattern: RegExp,
   columnNum: number = 2,
-  testAtrib: string = "id"
+  testAtrib: string = "id",
 ): Array<Element[]> {
   if (
     Array.from(inpCells)?.every(
       inpCel =>
         inpCel instanceof HTMLInputElement ||
         inpCel instanceof HTMLTextAreaElement ||
-        inpCel instanceof HTMLSelectElement
+        inpCel instanceof HTMLSelectElement,
     ) &&
     filterPattern instanceof RegExp &&
     typeof columnNum === "number" &&
@@ -1005,7 +1005,7 @@ export function filterCellsPattern(
       `${inpCells.toString() || null}`,
       `${filterPattern.toString() || null}`,
       columnNum,
-      testAtrib
+      testAtrib,
     );
   return [[inpCells[0]]];
 }
@@ -1013,7 +1013,7 @@ export function switchNumConsTitles(
   consTitles: elCollection,
   trioEl: targEl,
   numTitledCons: number = 1,
-  numTabs: number = 1
+  numTabs: number = 1,
 ): void {
   if (
     Array.from(consTitles)?.every(consTitle => consTitle instanceof HTMLElement) &&
@@ -1066,7 +1066,7 @@ export function switchNumConsTitles(
           .trim()})`;
       } catch (e) {
         console.error(
-          `Error validating iteration ${i} for renaming titles for Table Progress Inputs:\n${(e as Error).message}`
+          `Error validating iteration ${i} for renaming titles for Table Progress Inputs:\n${(e as Error).message}`,
         );
       }
     });
@@ -1098,13 +1098,13 @@ export function switchNumConsTitles(
       `${consTitles.toString() || null}`,
       trioEl,
       numTitledCons,
-      numTabs
+      numTabs,
     );
 }
 export function createArraysRels(
   arrayRows: HTMLTableRowElement[],
   btnId: string = "",
-  protocolValue: string = "pollock3"
+  protocolValue: string = "pollock3",
 ): number {
   let colAcc = 0;
   if (
@@ -1116,7 +1116,8 @@ export function createArraysRels(
   ) {
     const btnCol = parseNotNaN(btnId?.match(/(?<=_)[0-9]+/)?.toString() ?? "0", 1);
     const targColInps = arrayRows.map(
-      row => Array.from(row.querySelectorAll("input")).filter(inp => inp.id?.match(`_${btnCol.toString()}`) ?? false)[0]
+      row =>
+        Array.from(row.querySelectorAll("input")).filter(inp => inp.id?.match(`_${btnCol.toString()}`) ?? false)[0],
     );
     const inpsIds = targColInps.map(inp => inp?.id);
 
@@ -1143,7 +1144,7 @@ export function createArraysRels(
       "arguments for createArrayRels()",
       `${arrayRows.toString() || null}`,
       btnId,
-      protocolValue
+      protocolValue,
     );
   return colAcc;
 }

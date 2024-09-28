@@ -19,7 +19,7 @@ jest.mock(
     addListenerAvMembers: jest.Mock<any, any, any>;
   } => ({
     addListenerAvMembers: jest.fn() as jest.Mock,
-  })
+  }),
 ) as typeof jest;
 jest.mock(
   "../../../../lib/global/gController",
@@ -27,7 +27,7 @@ jest.mock(
     addListenerExportBtn: jest.Mock<any, any, any>;
   } => ({
     addListenerExportBtn: jest.fn() as jest.Mock,
-  })
+  }),
 ) as typeof jest;
 jest.mock(
   "../../../../lib/global/handlers/gHandlers",
@@ -37,7 +37,7 @@ jest.mock(
   } => ({
     syncAriaStates: jest.fn() as jest.Mock,
     checkRegstBtn: (jest.fn() as jest.Mock).mockReturnValue(false),
-  })
+  }),
 ) as typeof jest;
 jest.mock(
   "../../../../lib/global/gStyleScript",
@@ -45,7 +45,7 @@ jest.mock(
     isClickOutside: jest.Mock<any, any, any>;
   } => ({
     isClickOutside: (jest.fn() as jest.Mock).mockReturnValue([true]),
-  })
+  }),
 ) as typeof jest;
 jest.mock(
   "react-dom/client",
@@ -53,15 +53,15 @@ jest.mock(
     createRoot: jest.Mock<any, any, any>;
   } => ({
     createRoot: jest.fn() as jest.Mock,
-  })
+  }),
 ) as typeof jest;
 jest.mock(
   "../../../../lib/locals/panelPage/consController",
   (): {
-    formData: {};
+    formData: object;
   } => ({
     formData: {},
-  })
+  }),
 ) as typeof jest;
 jest.mock(
   "../../../../lib/locals/panelPage/declarations/interfacesCons",
@@ -71,7 +71,7 @@ jest.mock(
   } => ({
     toggleACCons: jest.fn() as jest.Mock,
     toggleAFCons: jest.fn() as jest.Mock,
-  })
+  }),
 ) as typeof jest;
 jest.mock(
   "../../../../lib/global/gModel",
@@ -83,7 +83,7 @@ jest.mock(
     formatCPF: jest.fn() as jest.Mock,
     formatTel: jest.fn() as jest.Mock,
     addEmailExtension: jest.fn() as jest.Mock,
-  })
+  }),
 ) as typeof jest;
 jest.mock(
   "../../../../lib/global/handlers/gHandlers",
@@ -93,7 +93,7 @@ jest.mock(
   } => ({
     handleCondtReq: jest.fn() as jest.Mock,
     enableCPFBtn: jest.fn() as jest.Mock,
-  })
+  }),
 ) as typeof jest;
 jest.mock(
   "../../../../lib/global/handlers/gHandlers",
@@ -105,7 +105,7 @@ jest.mock(
     validateForm: (jest.fn() as jest.Mock).mockResolvedValue([true, null, {}]),
     generateSchedPacData: jest.fn() as jest.Mock,
     generateSchedBtn: jest.fn() as jest.Mock,
-  })
+  }),
 ) as typeof jest;
 jest.mock(
   "../../../../pages/api/ts/handlers",
@@ -113,11 +113,11 @@ jest.mock(
     handleSubmit: jest.Mock<any, any, any>;
   } => ({
     handleSubmit: jest.fn() as jest.Mock,
-  })
+  }),
 ) as typeof jest;
 jest.mock(
   "../../../../../components/alerts/FailRegsAlert",
-  (): jest.Mock<any, any, any> => jest.fn() as jest.Mock
+  (): jest.Mock<any, any, any> => jest.fn() as jest.Mock,
 ) as typeof jest;
 describe("FormDlg Component", (): void => {
   const defaultProps: ConsDlgProps = {
@@ -125,7 +125,7 @@ describe("FormDlg Component", (): void => {
     userClass: "estudante",
   };
   const renderComponent = (
-    props = {}
+    props = {},
   ): RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement> =>
     render(<FormDlg {...defaultProps} {...props} />);
   test("calls addListenerAvMembers on mount", (): void => {
@@ -152,7 +152,7 @@ describe("FormDlg Component", (): void => {
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
     (
       expect(jest.spyOn<History, "pushState">(window.history, "pushState")) as jest.JestMatchers<jest.SpyInstance>
-    ).toHaveBeenCalledWith<[{}, string, any]>({}, "", expect.any(String));
+    ).toHaveBeenCalledWith<[object, string, any]>({}, "", expect.any(String));
   }) as void;
   test("handles CPF button click and populates form", (): void => {
     const { container }: { container: HTMLElement } = renderComponent() as RenderResult<
@@ -220,7 +220,7 @@ describe("FormDlg Component", (): void => {
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
     (
       expect(
-        screen.getByText<HTMLDialogElement>("Erro carregando a janela modal!")
+        screen.getByText<HTMLDialogElement>("Erro carregando a janela modal!"),
       ) as jest.JestMatchers<jest.SpyInstance>
     ).toBeInTheDocument() as void;
   }) as void;
@@ -240,7 +240,7 @@ describe("FormDlg Component", (): void => {
       HTMLElement
     >) &&
     (expect(
-      screen.getByTitle<HTMLElement>("Correção automática de CPF, Telefone e E-mail")
+      screen.getByTitle<HTMLElement>("Correção automática de CPF, Telefone e E-mail"),
     ).toBeInTheDocument() as void));
   test("clicking the 'Autocorreção' checkbox triggers toggleACCons", (): void => {
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
@@ -291,7 +291,7 @@ describe("FormDlg Component", (): void => {
       screen.getByPlaceholderText<HTMLInputElement>("Preencha com o Telefone (sem código nacional e DDD) de Contato"),
       {
         target: { value: "98765-4321" },
-      }
+      },
     ) as boolean;
     (expect(formatTel) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalled() as void;
     (expect(handleCondtReq) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalled() as void;
@@ -339,7 +339,7 @@ describe("FormDlg Component", (): void => {
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
     (
       expect(
-        screen.getByPlaceholderText<HTMLInputElement>("Preencha com o Nome do Estudante alocado")
+        screen.getByPlaceholderText<HTMLInputElement>("Preencha com o Nome do Estudante alocado"),
       ) as jest.JestMatchers<jest.SpyInstance>
     ).toBeInTheDocument() as void;
     (
@@ -350,7 +350,7 @@ describe("FormDlg Component", (): void => {
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
     (
       expect(
-        screen.getByPlaceholderText<HTMLInputElement>("Preencha com o Nome do Profissional Responsável alocado")
+        screen.getByPlaceholderText<HTMLInputElement>("Preencha com o Nome do Profissional Responsável alocado"),
       ) as jest.JestMatchers<jest.SpyInstance>
     ).toBeInTheDocument() as void;
   }) as void;
@@ -358,14 +358,14 @@ describe("FormDlg Component", (): void => {
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
     (
       expect(
-        screen.getByPlaceholderText<HTMLInputElement>("Insira aqui observações adicionais sobre a consulta")
+        screen.getByPlaceholderText<HTMLInputElement>("Insira aqui observações adicionais sobre a consulta"),
       ) as jest.JestMatchers<jest.SpyInstance>
     ).toBeInTheDocument() as void;
   }) as void;
   test("renders time input and applies hour validation logic", (): void => {
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
     const timeInput = screen.getByTitle<HTMLElement>(
-      "Selecione aqui o horário na agenda (só funcionará para horários tabelados)"
+      "Selecione aqui o horário na agenda (só funcionará para horários tabelados)",
     );
     fireEvent.input(timeInput, { target: { value: "18:00" } }) as boolean;
     (expect(timeInput) as jest.JestMatchers<jest.SpyInstance>).toHaveValue("18:00") as void;
@@ -388,7 +388,7 @@ describe("FormDlg Component", (): void => {
     (expect(validateForm) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalledWith<Parameters<typeof validateForm>>(
       fakeEvent,
       submitBtn,
-      false
+      false,
     ) as void;
     (await validateForm(fakeEvent, submitBtn, false).then((validation): void => {
       (expect(generateSchedPacData) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalled() as void;
@@ -420,12 +420,12 @@ describe("FormDlg Component", (): void => {
     ).toBeInTheDocument() as void));
   test("renders FailRegstAlert when shouldDisplayFailRegstDlg is true", (): void => {
     renderComponent({ shouldDisplayFailRegstDlg: true }) as RenderResult;
-    (expect(FailRegstAlert) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalledWith<[any, {}]>(
+    (expect(FailRegstAlert) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalledWith<[any, object]>(
       expect.objectContaining({
         shouldDisplayFailRegstDlg: true,
         secondOp: "Arraste",
       }),
-      {}
+      {},
     );
   }) as void;
   test("handles export button click", (): void => {

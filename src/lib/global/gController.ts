@@ -9,16 +9,17 @@ import {
   multipleElementsNotFound,
   elementNotPopulated,
 } from "./handlers/errorHandler";
+import { WorkBook } from "xlsx";
 export function getGlobalEls(isAutocorrectOn: boolean = true, context: string = "notNum"): boolean {
-  const textConts = [...document.querySelectorAll("textarea"), ...document.querySelectorAll('input[type="text"]')];
-  const radioInps = Array.from(document.querySelectorAll('input[type="radio"]'));
-  const dateBtns = Array.from(document.querySelectorAll('button[id$="DatBtn"]'));
-  const deactAutocorrectBtns = [
-    ...document.querySelectorAll('button[id^="deactAutocorrectBtn"]'),
-    ...document.querySelectorAll('input[id^="deactAutocorrectBtn"]'),
-  ];
-  const astDigtBtns = Array.from(document.querySelectorAll('button[id$="AstDigtBtn'));
-  const resetFormBtn = document.getElementById("resetFormBtn");
+  const textConts = [...document.querySelectorAll("textarea"), ...document.querySelectorAll('input[type="text"]')],
+    radioInps = Array.from(document.querySelectorAll('input[type="radio"]')),
+    dateBtns = Array.from(document.querySelectorAll('button[id$="DatBtn"]')),
+    deactAutocorrectBtns = [
+      ...document.querySelectorAll('button[id^="deactAutocorrectBtn"]'),
+      ...document.querySelectorAll('input[id^="deactAutocorrectBtn"]'),
+    ],
+    astDigtBtns = Array.from(document.querySelectorAll('button[id$="AstDigtBtn')),
+    resetFormBtn = document.getElementById("resetFormBtn");
   textConts?.length > 0
     ? addListenerTexts(textConts, isAutocorrectOn)
     : elementNotPopulated(textConts, "textConts", extLine(new Error()));
@@ -33,7 +34,7 @@ export function getGlobalEls(isAutocorrectOn: boolean = true, context: string = 
     : elementNotPopulated(astDigtBtns, "astDigtBtns", extLine(new Error()));
   resetFormBtn instanceof HTMLButtonElement
     ? resetFormBtn.addEventListener("click", (click): void =>
-        GlobalHandler.resetarFormulario(click, astDigtBtns, resetFormBtn)
+        GlobalHandler.resetarFormulario(click, astDigtBtns, resetFormBtn),
       )
     : elementNotFound(resetFormBtn, "resetFormBtn", extLine(new Error()));
   if (context === "num") {
@@ -53,14 +54,14 @@ export function addListenerTexts(textConts: targEl[], isAutocorrectOn: boolean =
           ? textCont.addEventListener("input", (): void => {
               isAutocorrectOn = GlobalModel.checkAutoCorrect(
                 document.querySelector('button[id^="deactAutocorrectBtn"]') ||
-                  document.querySelector('input[id^="deactAutocorrectBtn"]')
+                  document.querySelector('input[id^="deactAutocorrectBtn"]'),
               );
               GlobalModel.autoCapitalizeInputs(textCont, isAutocorrectOn);
             })
           : inputNotFound(
               textCont,
               `target textCont id ${JSON.stringify(textCont?.id || "UNIDENTIFIED TEXTCONT")}`,
-              extLine(new Error())
+              extLine(new Error()),
             );
       }
     });
@@ -76,7 +77,7 @@ export function addListenerNumInps(numInps: targEl[]): void {
         : inputNotFound(
             numInp,
             `target numInp id ${JSON.stringify(numInp?.id || "UNIDENTIFIED TEXTCONT")}`,
-            extLine(new Error())
+            extLine(new Error()),
           );
     });
   } else console.error(`Erro validando instâncias em numInps`);
@@ -93,8 +94,8 @@ export function addListenerRadios(radioInps: targEl[], context: string = "od"): 
             radio.addEventListener("change", (): void =>
               GlobalHandler.deactTextInput(
                 document.querySelectorAll('input[type="number"][id$=NumId]'),
-                document.querySelectorAll("input[id$=NullId]")
-              )
+                document.querySelectorAll("input[id$=NullId]"),
+              ),
             );
         }
         // radio.addEventListener("touchstart", GlobalHandler.touchStartHandler);
@@ -114,9 +115,9 @@ export function addListenerDateBtns(dateBtns: targEl[]): void {
   } else console.error(`Erro validando instâncias em dateBtns`);
 }
 export function addListenersGenConts(genElement: targEl, genValue: string = "masculino"): string {
-  const genBirthRel = document.getElementById("genBirthRelId");
-  const genTrans = document.getElementById("genTransId");
-  const genFisAlin = document.getElementById("genFisAlinId");
+  const genBirthRel = document.getElementById("genBirthRelId"),
+    genTrans = document.getElementById("genTransId"),
+    genFisAlin = document.getElementById("genFisAlinId");
   if (GlobalModel.checkAllGenConts(genElement, genBirthRel, genTrans, genFisAlin) && typeof genValue === "string") {
     const arrGenConts = [genElement, genBirthRel, genTrans, genFisAlin] as entryEl[];
     arrGenConts.forEach(genCont => {
@@ -141,7 +142,7 @@ export function addListenerAutocorrectBtns(deactAutocorrectBtns: targEl[], isAut
         : elementNotPopulated(
             deactAutocorrectBtns,
             `target deactAutocorrectBtn id ${deactAutocorrectBtn?.id || "UNDEFINED ID BUTTON"}`,
-            extLine(new Error())
+            extLine(new Error()),
           );
     });
   } else console.error(`Erro validando instâncias em deactAutocorrectBtns`);
@@ -161,12 +162,12 @@ export function addListenerAstDigitBtns(astDigtBtns: targEl[]): void {
 export function addListenerExportBtn(
   context: string = "undefined",
   scope: Document | Element | voidVal = document,
-  namer?: HTMLElement | string | voidVal
+  namer?: HTMLElement | string | voidVal,
 ): targEl {
   const btnExport =
     (scope ?? document).querySelector(`[id*="btnExport"]`) || (scope ?? document).querySelector(`[name*="btnExport"]`);
   Array.from((scope ?? document).querySelectorAll("button")).filter(
-    btn => /btnexport/gi.test(btn.id) || /exportbtn/gi.test(btn.id)
+    btn => /btnexport/gi.test(btn.id) || /exportbtn/gi.test(btn.id),
   )[0];
   if (
     btnExport instanceof HTMLButtonElement ||
@@ -175,42 +176,59 @@ export function addListenerExportBtn(
     btnExport.addEventListener("click", () => {
       try {
         const allEntryEls = [
-          ...(scope ?? document).querySelectorAll("input"),
-          ...(scope ?? document).querySelectorAll("textarea"),
-          ...(scope ?? document).querySelectorAll("select"),
-          ...(scope ?? document).querySelectorAll("output"),
-        ];
-        const arrValues: string[] = [];
-        const arrTitles: string[] = [];
-
+            ...(scope ?? document).querySelectorAll("input"),
+            ...(scope ?? document).querySelectorAll("textarea"),
+            ...(scope ?? document).querySelectorAll("select"),
+            ...(scope ?? document).querySelectorAll("output"),
+          ],
+          arrValues: string[] = [],
+          arrTitles: string[] = [];
         for (const el of allEntryEls) {
-          if (el instanceof HTMLOutputElement) {
-            arrValues.push(el?.innerText || "Nulo");
-          } else if (el instanceof HTMLInputElement && (el.type === "checkbox" || el.type === "radio")) {
+          if (el instanceof HTMLOutputElement) arrValues.push(el?.innerText || "Nulo");
+          else if (el instanceof HTMLInputElement && (el.type === "checkbox" || el.type === "radio"))
             el.checked ? arrValues.push("Sim") : arrValues.push("Não");
-          } else arrValues.push(el?.value || "Nulo");
-          arrTitles.push(el?.dataset?.title || el?.id || el?.name || "Sem_titulo");
+          else arrValues.push(el?.value || "Nulo");
+          arrTitles.push(
+            el?.dataset?.title
+              ?.split("")
+              .map((c, i) => (i === 0 ? c.toUpperCase() : c))
+              .join() ||
+              GlobalModel.textTransformPascal(
+                el?.id
+                  .replace(/[_\-]/g, " ")
+                  .replace(/([A-Z])/g, m => (m === el?.id.charAt(0) ? m : ` ${m}`))
+                  .split("")
+                  .map((c, i) => (i === 0 ? c.toUpperCase() : c))
+                  .join(),
+              ) ||
+              GlobalModel.textTransformPascal(
+                el?.name
+                  .replace(/[_\-]/g, " ")
+                  .replace(/([A-Z])/g, m => (m === el?.name.charAt(0) ? m : ` ${m}`))
+                  .split("")
+                  .map((c, i) => (i === 0 ? c.toUpperCase() : c))
+                  .join(),
+              ) ||
+              "Sem_titulo",
+          );
         }
-
         const editableCite = (scope ?? document).querySelector("#citeNameId");
         arrValues.push(editableCite?.textContent || "Nulo");
         arrTitles.push((editableCite as HTMLElement)?.dataset?.title || "Sem_titulo");
-
         while (arrValues.length > arrTitles.length) arrTitles.push("Sem título");
         while (arrTitles.length > arrValues.length) arrValues.push("Nulo");
-
         if (arrValues.length === arrTitles.length) {
-          const wb = utils.book_new();
-          const dataJSON = arrValues.map((val, i) => ({
-            Campo: arrTitles[i],
-            Valor: val,
-          }));
-          const worksheet = utils.json_to_sheet(dataJSON, undefined);
-          const maxLengths: { [k: string]: number } = {};
+          const wb = utils.book_new(),
+            dataJSON = arrValues.map((val, i) => ({
+              Campo: arrTitles[i],
+              Valor: val,
+            })),
+            worksheet = utils.json_to_sheet(dataJSON, undefined),
+            maxLengths: { [k: string]: number } = {};
           Object.entries(worksheet).forEach(row => {
             row.forEach((cell, i) => {
-              const celLength = cell!.toString().length;
-              (!maxLengths[i] || maxLengths[i] < celLength) && (maxLengths[i] = celLength);
+              const celLength = cell?.toString().length;
+              if (celLength) (!maxLengths[i] || maxLengths[i] < celLength) && (maxLengths[i] = celLength);
             });
           });
           worksheet["!cols"] = Object.keys(maxLengths).map(colIndex => {
@@ -227,8 +245,39 @@ export function addListenerExportBtn(
             fill: { fgColor: { rgb: "#e9720ade" } },
           };
           utils.book_append_sheet(wb, worksheet, "Sheet1", undefined);
-          const date = new Date();
-          const fullDate = `d${date.getDate()}m${date.getMonth() + 1}y${date.getFullYear()}`;
+          const date = new Date(),
+            fullDate = `d${date.getDate()}m${date.getMonth() + 1}y${date.getFullYear()}`,
+            baseUrl = `${location.origin}/${
+              !/localhost/g.test(location.origin) ? "." : "."
+            }netlify/functions/process_workbook`,
+            fetchProcess = async (wb: WorkBook) => {
+              console.log("trying to call api...");
+              try {
+                const res = await fetch(baseUrl, {
+                  method: "POST",
+                  mode: "same-origin",
+                  credentials: "same-origin",
+                  referrer: location.href,
+                  referrerPolicy: "same-origin",
+                  headers: new Headers([["Content-Type", "application/json"]]),
+                  body: JSON.stringify(wb),
+                  cache: "no-store",
+                  keepalive: false,
+                  signal: null,
+                });
+                if (!res.ok)
+                  throw new Error(`
+                Reaching: ${res.url}
+                Redirected: ${res.redirected}
+                Type: ${res.type}
+                Status: ${res.status} => ${res.ok ? "OK" : "NOT OK"}
+                Text: ${res.statusText}
+                `);
+                console.log(res);
+              } catch (e) {
+                console.error(`Error executing fetchProcess:\n${(e as Error).message}`);
+              }
+            };
           if (namer) {
             const writeNamedFile = (namer: HTMLElement) => {
               if (
@@ -236,6 +285,7 @@ export function addListenerExportBtn(
                 namer instanceof HTMLSelectElement ||
                 namer instanceof HTMLTextAreaElement
               ) {
+                fetchProcess(wb);
                 writeFile(
                   wb,
                   `data_${context}_${
@@ -247,9 +297,10 @@ export function addListenerExportBtn(
                       .replaceAll(/[ÚÙÜÛúùüû]/g, "u")
                       .toLowerCase() ?? "noName"
                   }_form_${fullDate}.xlsx`,
-                  undefined
+                  undefined,
                 );
               } else if (namer instanceof HTMLOutputElement) {
+                fetchProcess(wb);
                 writeFile(
                   wb,
                   `data_${context}_${
@@ -261,18 +312,27 @@ export function addListenerExportBtn(
                       .replaceAll(/[ÚÙÜÛúùüû]/g, "u")
                       .toLowerCase() ?? "noName"
                   }_form_${fullDate}.xlsx`,
-                  undefined
+                  undefined,
                 );
               } else if (namer instanceof HTMLElement) {
+                fetchProcess(wb);
                 writeFile(wb, `data_${context}_${namer.textContent?.trim() ?? ""}form_${fullDate}.xlsx`, undefined);
               } else throw new Error(`namer unqualified for naming spreadsheet`);
             };
             if (typeof namer === "string") {
-              if ((scope ?? document).querySelector(namer)) writeNamedFile((scope ?? document).querySelector(namer)!);
-              else throw new Error(`Error validating namer.`);
+              if ((scope ?? document).querySelector(namer)) {
+                fetchProcess(wb);
+                writeNamedFile((scope ?? document).querySelector(namer)!);
+              } else throw new Error(`Error validating namer.`);
             }
-            if (typeof namer === "object") writeNamedFile(namer);
-          } else writeFile(wb, `data_${context}form_${fullDate}.xlsx`, undefined);
+            if (typeof namer === "object") {
+              fetchProcess(wb);
+              writeNamedFile(namer);
+            }
+          } else {
+            fetchProcess(wb);
+            writeFile(wb, `data_${context}form_${fullDate}.xlsx`, undefined);
+          }
         } else throw new Error(`Error validating length of data arrays`);
       } catch (error) {
         console.error("Error generating spreadsheet:", error);
@@ -308,7 +368,7 @@ export function addResetAstListener(): void {
               type: "file",
               id: "inpAstConfirmId",
               accept: "image/*",
-            })
+            }),
           );
           replaceInp.dataset.title = "Assinatura do Paciente";
           replaceInp.classList.add("inpAst", "mg-07t", "form-control");
@@ -330,32 +390,31 @@ export function addCustomSbListeners(container: targEl, content: targEl): void {
     if (!(content instanceof HTMLElement))
       throw elementNotFound(content, `Content Element for addCustomSbListeners()`, extLine(new Error()));
     const updateThumb = () => {
-      const percentage = container.clientHeight / content.scrollHeight;
-      const thumbHeight = percentage * container.clientHeight;
-      thumb.style.height = `${thumbHeight}px`;
-    };
-    const onMouseMove = (e: MouseEvent) => {
-      if (!isScrolling) return;
-      const deltaY = e.clientY - startY;
-      const percentage = deltaY / container.clientHeight;
-      container.scrollTop = percentage * (content.scrollHeight - container.clientHeight);
-    };
-    const onMouseUp = () => {
-      isScrolling = false;
-      document.removeEventListener("mousemove", onMouseMove);
-      document.removeEventListener("mouseup", onMouseUp);
-    };
-    const scrollbar = document.createElement("div") as HTMLDivElement;
-    const thumb = document.createElement("div") as HTMLDivElement;
-    let isScrolling = false;
-    let startY = 0;
-
+        const percentage = container.clientHeight / content.scrollHeight,
+          thumbHeight = percentage * container.clientHeight;
+        thumb.style.height = `${thumbHeight}px`;
+      },
+      onMouseMove = (e: MouseEvent) => {
+        if (!isScrolling) return;
+        const deltaY = e.clientY - startY,
+          percentage = deltaY / container.clientHeight;
+        container.scrollTop = percentage * (content.scrollHeight - container.clientHeight);
+      },
+      onMouseUp = () => {
+        isScrolling = false;
+        document.removeEventListener("mousemove", onMouseMove);
+        document.removeEventListener("mouseup", onMouseUp);
+      },
+      scrollbar = document.createElement("div") as HTMLDivElement,
+      thumb = document.createElement("div") as HTMLDivElement;
+    let isScrolling = false,
+      startY = 0;
     updateThumb();
     scrollbar.classList.add("scrollbar");
     container.appendChild(scrollbar);
     thumb.classList.add("scroll-thumb");
     scrollbar.appendChild(thumb);
-    window.addEventListener("resize", updateThumb);
+    addEventListener("resize", updateThumb);
     thumb.addEventListener("mousedown", e => {
       isScrolling = true;
       startY = e.clientY - thumb.offsetTop;
@@ -367,7 +426,6 @@ export function addCustomSbListeners(container: targEl, content: targEl): void {
     ${(e as Error).message}`);
   }
 }
-
 let isDrawing = false;
 export function addCanvasListeners(): void {
   try {
@@ -388,27 +446,27 @@ export function addCanvasListeners(): void {
     ctx.lineCap = "round";
     ctx.strokeStyle = "#222";
     const startDrawing = (e: MouseEvent | Touch) => {
-      isDrawing = true;
-      draw(e);
-    };
-    const draw = (e: MouseEvent | Touch) => {
-      try {
-        if (!(ctx instanceof CanvasRenderingContext2D))
-          throw new Error(`Error getting Canvas Context:
+        isDrawing = true;
+        draw(e);
+      },
+      draw = (e: MouseEvent | Touch) => {
+        try {
+          if (!(ctx instanceof CanvasRenderingContext2D))
+            throw new Error(`Error getting Canvas Context:
           Obtained Value: ${ctx ?? "nullish"}`);
-        if (!isDrawing) return;
-        const rect = canvas.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        ctx.lineTo(x, y);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.moveTo(x, y);
-      } catch (e) {
-        console.error(`Error executing draw():
+          if (!isDrawing) return;
+          const rect = canvas.getBoundingClientRect(),
+            x = e.clientX - rect.left,
+            y = e.clientY - rect.top;
+          ctx.lineTo(x, y);
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(x, y);
+        } catch (e) {
+          console.error(`Error executing draw():
         ${(e as Error).message}`);
-      }
-    };
+        }
+      };
     const stopDrawing = () => {
       isDrawing = false;
       ctx?.beginPath();

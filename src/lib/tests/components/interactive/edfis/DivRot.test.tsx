@@ -6,11 +6,11 @@ import GenericErrorComponent from "../../../../../../components/error/GenericErr
 import { InpRotProps, RotProps } from "@/lib/global/declarations/interfaces";
 jest.mock(
   "./client/InpRot",
-  (): (() => JSX.Element) => jest.fn((): JSX.Element => <input />) as jest.Mock
+  (): (() => JSX.Element) => jest.fn((): JSX.Element => <input />) as jest.Mock,
 ) as typeof jest;
 jest.mock(
   "../../error/GenericErrorComponent",
-  (): (() => JSX.Element) => jest.fn((): JSX.Element => <div>Error rendering Div for Routine</div>) as jest.Mock
+  (): (() => JSX.Element) => jest.fn((): JSX.Element => <div>Error rendering Div for Routine</div>) as jest.Mock,
 ) as typeof jest;
 describe("DivRot component", (): void => {
   const props = {
@@ -24,39 +24,38 @@ describe("DivRot component", (): void => {
     render(<DivRot {...props} />);
     (
       expect(
-        screen.getByLabelText<HTMLInputElement>(`inp${props.ur?.ctx}${props.ctx}Min`)
+        screen.getByLabelText<HTMLInputElement>(`inp${props.ur?.ctx}${props.ctx}Min`),
       ) as jest.JestMatchers<jest.SpyInstance>
     ).toBeInTheDocument() as void;
     (
       expect(
-        screen.getByLabelText<HTMLInputElement>(`inp${props.ur?.ctx}${props.ctx}Max`)
+        screen.getByLabelText<HTMLInputElement>(`inp${props.ur?.ctx}${props.ctx}Max`),
       ) as jest.JestMatchers<jest.SpyInstance>
     ).toBeInTheDocument() as void;
   }) as void;
   test("renders error boundary on failure", (): void => {
     render(
       <ErrorBoundary
-        FallbackComponent={(): JSX.Element => <GenericErrorComponent message='Error rendering Div for Routine' />}
-      >
+        FallbackComponent={(): JSX.Element => <GenericErrorComponent message='Error rendering Div for Routine' />}>
         <DivRot {...props} />
-      </ErrorBoundary>
+      </ErrorBoundary>,
     ) as RenderResult;
     (
       expect(
-        screen.queryByText<HTMLDivElement>("Error rendering Div for Routine")
+        screen.queryByText<HTMLDivElement>("Error rendering Div for Routine"),
       ) as jest.JestMatchers<jest.SpyInstance>
     ).not.toBeInTheDocument() as void;
   }) as void;
   test("InpRot is called with the correct props", (): void => {
     render(<DivRot {...props} />) as RenderResult;
-    (expect(InpRot) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalledWith<[InpRotProps, {}]>(
+    (expect(InpRot) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalledWith<[InpRotProps, object]>(
       (expect as jest.Expect).objectContaining<[RotProps]>({
         quest: "Faz quantas refeições por dia",
         ctx: props.ctx,
         max: 96,
         maxLength: 4,
       } as any),
-      {}
+      {},
     ) as void;
   }) as void;
 }) as void;

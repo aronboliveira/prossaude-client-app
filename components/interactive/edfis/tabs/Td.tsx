@@ -12,8 +12,7 @@ export default function Td({ nRow, nCol, ctx, lab }: TdProps): JSX.Element {
       id={`tabCelRow${ctx}${nRow}_${nCol}`}
       itemProp={`${lab.toLowerCase()}Num`}
       data-row={nRow}
-      data-col={nCol}
-    >
+      data-col={nCol}>
       {ctx === "IndPerc" ? (
         <div role='group' className={`flexDiv flexDivTab flexAlItCt noInvert div${ctx} div${lab}`}>
           <label
@@ -21,8 +20,7 @@ export default function Td({ nRow, nCol, ctx, lab }: TdProps): JSX.Element {
             id={`lab${pascalLab}${nCol - 1}Cel${nRow}_${nCol}`}
             className={`form-control tabLabProgCons tabLabRow${ctx}${nRow} labInd lab${pascalLab}`}
             data-row={nRow}
-            data-col={nCol}
-          >
+            data-col={nCol}>
             <TabInpProg nRow={nRow} nCol={nCol} ctx={ctx} lab={lab} />
             <p className={`msrProgCons indMsr`}>mm</p>
           </label>
@@ -30,7 +28,7 @@ export default function Td({ nRow, nCol, ctx, lab }: TdProps): JSX.Element {
           <LockTabInd addGroup={["lockTabInd"]} ctx={lab} />
         </div>
       ) : (
-        (() => {
+        ((): JSX.Element => {
           if (ctx === "MedAnt")
             return (
               <label
@@ -38,8 +36,7 @@ export default function Td({ nRow, nCol, ctx, lab }: TdProps): JSX.Element {
                 id={`labInpRow${ctx}${nRow}_${nCol}`}
                 className={`form-control tabLabProgCons tabLabRow${ctx}${nRow}`}
                 data-row={nRow}
-                data-col={nCol}
-              >
+                data-col={nCol}>
                 <TabInpProg nRow={nRow} nCol={nCol} ctx={ctx} lab={lab} />
                 <p className={`msrProgCons`}>mm</p>
               </label>
@@ -51,8 +48,7 @@ export default function Td({ nRow, nCol, ctx, lab }: TdProps): JSX.Element {
                 id={`labInpRow${ctx}${nRow}_${nCol}`}
                 className={`form-control tabLabProgCons tabLabRow${ctx}${nRow}`}
                 data-row={nRow}
-                data-col={nCol}
-              >
+                data-col={nCol}>
                 <TabInpProg nRow={nRow} nCol={nCol} ctx={ctx} lab={lab} />
                 <p className={`msrProgCons${ctx === "DCut" && lab === "Soma" ? " sumMsr" : ""}`}>mm</p>
                 {ctx === "DCut" && lab === "Soma" ? <TabBtnDCut nCol={nCol}></TabBtnDCut> : <></>}

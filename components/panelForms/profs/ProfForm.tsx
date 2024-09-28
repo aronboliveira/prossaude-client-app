@@ -10,7 +10,7 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import GenericErrorComponent from "../../error/GenericErrorComponent";
 import ReseterBtn from "../defs/ReseterBtn";
 import { nullishBtn, nullishForm, nullishInp } from "@/lib/global/declarations/types";
-import { addEmailExtension, autoCapitalizeInputs, formatCPF, formatTel } from "@/lib/global/gModel";
+import { addEmailExtension, assignFormAttrs, autoCapitalizeInputs, formatCPF, formatTel } from "@/lib/global/gModel";
 import { elementNotFound, elementNotPopulated, extLine, inputNotFound } from "@/lib/global/handlers/errorHandler";
 import { handleCondtReq, handleEventReq, validateForm, syncAriaStates } from "@/lib/global/handlers/gHandlers";
 export default function ProfForm({ mainRoot, userClass = "estudante" }: GlobalFormProps): JSX.Element {
@@ -94,6 +94,7 @@ export default function ProfForm({ mainRoot, userClass = "estudante" }: GlobalFo
       //estilização e aria
       callbackNormalizeSizeSb();
       syncAriaStates([...formRef.current!.querySelectorAll("*"), formRef.current]);
+      assignFormAttrs(formRef.current);
     } else elementNotFound(formRef.current, "formRef.current in useEffect()", extLine(new Error()));
   }, [formRef]);
   useEffect(() => {
@@ -116,13 +117,12 @@ export default function ProfForm({ mainRoot, userClass = "estudante" }: GlobalFo
       ["coordenador"],
       ...document.getElementsByTagName("input"),
       ...document.getElementsByTagName("button"),
-      ...document.querySelector("form")!.getElementsByTagName("select")
+      ...document.querySelector("form")!.getElementsByTagName("select"),
     );
   }, [formRef]);
   return (
     <ErrorBoundary
-      FallbackComponent={() => <GenericErrorComponent message='Erro carregando formulário para profissionais' />}
-    >
+      FallbackComponent={() => <GenericErrorComponent message='Erro carregando formulário para profissionais' />}>
       {showForm && (
         <form
           id='formAddProf'
@@ -136,10 +136,9 @@ export default function ProfForm({ mainRoot, userClass = "estudante" }: GlobalFo
           onSubmit={ev =>
             userClass === "coordenador" &&
             validateForm(ev, ev.currentTarget).then(validation =>
-              validation[0] ? handleSubmit("profs", validation[2], true) : ev.preventDefault()
+              validation[0] ? handleSubmit("profs", validation[2], true) : ev.preventDefault(),
             )
-          }
-        >
+          }>
           <div role='group' id='formAddProfHDiv' className='mg-3b'>
             <h1 id='titleAddProfHBlock' className='bolded'>
               <strong id='titleAddProfH'>Cadastro de Profissional</strong>
@@ -292,8 +291,7 @@ export default function ProfForm({ mainRoot, userClass = "estudante" }: GlobalFo
                 id='inpAtuacao'
                 name='area'
                 className='form-select ssPersist'
-                data-title='Área de Atuação do Profissional'
-              >
+                data-title='Área de Atuação do Profissional'>
                 <option value='educacaofisicanut'>Educação Física & Nutrição</option>
                 <option value='odontologia'>Odontologia</option>
                 <option value='psiq'>Psiquiatria & Psicologia</option>
@@ -329,8 +327,7 @@ export default function ProfForm({ mainRoot, userClass = "estudante" }: GlobalFo
               <button
                 type='submit'
                 id='btnSubmitNewProf'
-                className='btn btn-success flexAlItCt flexJC flexBasis50 widFull noInvert'
-              >
+                className='btn btn-success flexAlItCt flexJC flexBasis50 widFull noInvert'>
                 <strong>Finalizar Cadastro</strong>
               </button>
               <button
@@ -339,8 +336,7 @@ export default function ProfForm({ mainRoot, userClass = "estudante" }: GlobalFo
                 name='btnExportProfsForm'
                 className='btn btn-primary flexAlItCt flexJC flexBasis50 widFull bolded noInvert'
                 ref={btnExportProfForm}
-                title='Gere um .xlsx com os dados preenchidos'
-              >
+                title='Gere um .xlsx com os dados preenchidos'>
                 Gerar Planilha
               </button>
               <ReseterBtn

@@ -5,11 +5,11 @@ jest.mock(
   "@/pages/edfis",
   (): {
     callbackTextBodyEl: jest.Mock<any, any, any>;
-    person: {};
+    person: object;
   } => ({
     callbackTextBodyEl: jest.fn() as jest.Mock,
     person: {},
-  })
+  }),
 ) as typeof jest;
 jest.mock(
   "@/lib/global/handlers/errorHandler",
@@ -17,7 +17,7 @@ jest.mock(
     elementNotFound: jest.Mock<any, any, any>;
   } => ({
     elementNotFound: jest.fn() as jest.Mock,
-  })
+  }),
 ) as typeof jest;
 describe("TextBodyType Component", (): void => {
   it("should render the TextBodyType select input", (): void => {

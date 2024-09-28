@@ -5,13 +5,13 @@ jest.mock(
   "../../../../../pages/edfis",
   (): {
     callbackAtvLvlElementNaf: jest.Mock<any, any, any>;
-    person: {};
-    tabProps: {};
+    person: object;
+    tabProps: object;
   } => ({
     callbackAtvLvlElementNaf: jest.fn() as jest.Mock,
     person: {},
     tabProps: {},
-  })
+  }),
 ) as typeof jest;
 describe("SelectLvlAtFis Component", (): void => {
   it("should render the SelectLvlAtFis select input", (): void => {
@@ -34,7 +34,7 @@ describe("SelectLvlAtFis Component", (): void => {
           document.getElementById("nafType"),
         ],
       ],
-      select.id
+      select.id,
     );
   }) as void;
 }) as void;

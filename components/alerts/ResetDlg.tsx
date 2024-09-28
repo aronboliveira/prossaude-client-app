@@ -18,28 +18,28 @@ export default function ResetDlg({
     root = panelRoots.mainRoot;
   }
   const ResetDlgRef = useRef<nullishDlg>(null);
-  const toggleClose = () => {
+  const toggleClose = (): void => {
     setDisplayResetDlg(!shouldDisplayResetDlg);
     if (!shouldDisplayResetDlg && ResetDlgRef.current instanceof HTMLDialogElement) ResetDlgRef.current.close();
   };
-  const resetForm = () => {
+  const resetForm = (): void => {
     document.querySelector("form")!.reset();
     root.render(
       <MainFormPanel
         defOp={((document.getElementById("coordPanelSelect") as HTMLSelectElement)?.value as panelOpts) || "agenda"}
-      />
+      />,
     );
   };
   useEffect(() => {
     if (shouldDisplayResetDlg && ResetDlgRef.current instanceof HTMLDialogElement) ResetDlgRef.current.showModal();
     syncAriaStates([...ResetDlgRef.current!.querySelectorAll("*"), ResetDlgRef.current!]);
-    const handleKeyDown = (press: KeyboardEvent) => {
+    const handleKeyDown = (press: KeyboardEvent): void => {
       if (press.key === "Escape") {
         toggleClose();
       }
     };
     addEventListener("keydown", handleKeyDown);
-    return () => removeEventListener("keydown", handleKeyDown);
+    return (): void => removeEventListener("keydown", handleKeyDown);
   }, [ResetDlgRef]);
   return (
     <>
@@ -54,13 +54,11 @@ export default function ResetDlg({
               ev.currentTarget.close();
               setDisplayResetDlg(!shouldDisplayResetDlg);
             }
-          }}
-        >
+          }}>
           <ErrorBoundary
             FallbackComponent={() => (
               <ErrorFallbackDlg renderError={new Error(`Erro carregando a janela modal!`)} onClick={toggleClose} />
-            )}
-          >
+            )}>
             <section role='alert' className='flexNoW'>
               <button className='btn btn-close forceInvert' onClick={toggleClose}></button>
             </section>
@@ -76,8 +74,7 @@ export default function ResetDlg({
                 onClick={() => {
                   toggleClose();
                   resetForm();
-                }}
-              >
+                }}>
                 Confirmar
               </button>
             </section>

@@ -70,7 +70,7 @@ export default function StudList({
                       throw elementNotFound(
                         tbodyRef.current,
                         `Validation of Table Body Reference`,
-                        extLine(new Error())
+                        extLine(new Error()),
                       );
                     if (tbodyRef.current.querySelector("tr")) return;
                     panelRoots[`${tbodyRef.current.id}`]?.unmount();
@@ -82,8 +82,7 @@ export default function StudList({
                       <ErrorBoundary
                         FallbackComponent={() => (
                           <GenericErrorComponent message='Error reloading replacement for table body' />
-                        )}
-                      >
+                        )}>
                         <caption className='caption-t'>
                           <strong>
                             <small role='textbox' className='noInvert'>
@@ -142,8 +141,7 @@ export default function StudList({
                               className='alocCel'
                               scope='col'
                               data-row='1'
-                              data-col={userClass === "coordenador" ? "9" : "7"}
-                            ></th>
+                              data-col={userClass === "coordenador" ? "9" : "7"}></th>
                           </tr>
                         </thead>
                         <tbody id='avStudsTbody' ref={tbodyRef}>
@@ -155,7 +153,7 @@ export default function StudList({
                             />
                           </span>
                         </tbody>
-                      </ErrorBoundary>
+                      </ErrorBoundary>,
                     );
                     tbodyRef.current = document.getElementById("avStudsTbody") as nullishTabSect;
                     if (!(tbodyRef.current instanceof HTMLElement))
@@ -173,7 +171,7 @@ export default function StudList({
                             key={`stud_row__${i + 2}`}
                             inDlg={true}
                           />
-                        ))
+                        )),
                       );
                     setTimeout(() => {
                       if (tabRef?.current instanceof HTMLTableElement) {
@@ -183,15 +181,13 @@ export default function StudList({
                         elementNotFound(
                           tabRef.current,
                           `tabRef id ${(tabRef?.current as any)?.id || "UNIDENTIFIED"} in useEffect() for tableRef`,
-                          extLine(new Error())
+                          extLine(new Error()),
                         );
                     }, 300);
                   } catch (e) {
                     console.error(
-                      `Error executing scheduled rendering of Table Body Content Replacement:\n${(e as Error).message}`
+                      `Error executing scheduled rendering of Table Body Content Replacement:\n${(e as Error).message}`,
                     );
-                  }
-                  if (document) {
                   }
                 }, 1000);
               } else panelRoots[`${tbodyRef.current.id}`] = createRoot(tbodyRef.current);
@@ -199,10 +195,10 @@ export default function StudList({
                 panelRoots[`${tbodyRef.current.id}`]?.render(
                   studs.map((stud, i) => {
                     return Array.from(tbodyRef.current?.querySelectorAll("output") ?? []).some(
-                      outp => outp.innerText === (stud as StudInfo)["cpf"]
+                      outp => outp.innerText === (stud as StudInfo)["cpf"],
                     ) ||
                       Array.from(tbodyRef.current?.querySelectorAll("tr") ?? []).some(
-                        tr => tr.dataset.key && tbodyRef.current?.querySelector(`tr[data-key=${tr.dataset.key}`)
+                        tr => tr.dataset.key && tbodyRef.current?.querySelector(`tr[data-key=${tr.dataset.key}`),
                       ) ? (
                       <></>
                     ) : (
@@ -215,7 +211,7 @@ export default function StudList({
                         inDlg={true}
                       />
                     );
-                  })
+                  }),
                 );
               setTimeout(() => {
                 if (tabRef?.current instanceof HTMLTableElement) {
@@ -225,7 +221,7 @@ export default function StudList({
                   elementNotFound(
                     tabRef.current,
                     `tabRef id ${(tabRef?.current as any)?.id || "UNIDENTIFIED"} in useEffect() for tableRef`,
-                    extLine(new Error())
+                    extLine(new Error()),
                   );
               }, 300);
               setTimeout(() => {
@@ -233,7 +229,7 @@ export default function StudList({
                   if (!panelRoots[`${document.querySelector("table")!.id}`])
                     panelRoots[`${document.querySelector("table")!.id}`] = createRoot(document.querySelector("table")!);
                   panelRoots[`${document.querySelector("table")!.id}`]?.render(
-                    <GenericErrorComponent message='Failed to render table' />
+                    <GenericErrorComponent message='Failed to render table' />,
                   );
                 }
               }, 5000);
@@ -254,11 +250,11 @@ export default function StudList({
                         "Stud",
                         state,
                         dispatch,
-                        userClass
+                        userClass,
                       );
                     } catch (e) {
                       console.error(
-                        `Error executing iteration ${i} for adding listener for alocation:\n${(e as Error).message}`
+                        `Error executing iteration ${i} for adding listener for alocation:\n${(e as Error).message}`,
                       );
                     }
                   });
@@ -270,28 +266,28 @@ export default function StudList({
                     userClass,
                     ["coordenador"],
                     tabRef.current,
-                    document.getElementById("btnExport")
+                    document.getElementById("btnExport"),
                   );
                 const typeConsSel = mainDlgRef.current?.querySelector("#typeConsSel");
                 if (!(typeConsSel instanceof HTMLSelectElement))
                   throw inputNotFound(
                     typeConsSel,
                     `<select> for getting type of appointment for ${tabRef.current?.id || "UNIDENTIFIED"}`,
-                    extLine(new Error())
+                    extLine(new Error()),
                   );
                 const [selectedOp] = Array.from(typeConsSel.querySelectorAll("option"));
                 if (!(selectedOp instanceof HTMLOptionElement))
                   throw elementNotFound(
                     selectedOp,
                     `<option> for getting type of appointment for ${tabRef.current?.id || "UNIDENTIFIED"}`,
-                    extLine(new Error())
+                    extLine(new Error()),
                   );
                 const relOptgrp = selectedOp.closest("optgroup");
                 if (relOptgrp instanceof HTMLOptGroupElement && relOptgrp.label !== "")
                   filterTabMembers(tabRef.current, relOptgrp.label.toLowerCase().trim());
               } catch (e) {
                 console.error(
-                  `Error executing handleAttempt for filtering of Students Table:\n${(e as Error).message}`
+                  `Error executing handleAttempt for filtering of Students Table:\n${(e as Error).message}`,
                 );
               }
             };

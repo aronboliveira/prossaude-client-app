@@ -1,5 +1,5 @@
 import { Root } from "react-dom/client";
-export const providerFormData: Array<{}> = [];
+export const providerFormData: Array<object> = [];
 export const consVariablesData: {
   rootDlg: Root | undefined;
 } = {

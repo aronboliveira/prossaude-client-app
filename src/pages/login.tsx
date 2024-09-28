@@ -2,7 +2,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import LoginInputs from "../../components/interactive/login/LoginInputs";
 import Watcher from "../../components/interactive/def/Watcher";
 import GenericErrorComponent from "../../components/error/GenericErrorComponent";
-export const getServerSideProps = async () => {
+export const getServerSideProps = async (): Promise<object> => {
   const data = {
     fetch: "",
     status: 404,
@@ -40,9 +40,7 @@ export const getServerSideProps = async () => {
     props: { data },
   };
 };
-export default function LoginPage({ data }: { data: any }): JSX.Element {
-  console.log("TRYING ON SERVER...");
-  console.log(data.fetch);
+export default function LoginPage(): JSX.Element {
   return (
     <ErrorBoundary
       FallbackComponent={() => (

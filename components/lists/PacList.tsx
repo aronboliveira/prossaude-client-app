@@ -68,7 +68,7 @@ export default function PacList({
                       throw elementNotFound(
                         tbodyRef.current,
                         `Validation of Table Body Reference`,
-                        extLine(new Error())
+                        extLine(new Error()),
                       );
                     if (tbodyRef.current.querySelector("tr")) return;
                     panelRoots[`${tbodyRef.current.id}`]?.unmount();
@@ -80,8 +80,7 @@ export default function PacList({
                       <ErrorBoundary
                         FallbackComponent={() => (
                           <GenericErrorComponent message='Error reloading replacement for table body' />
-                        )}
-                      >
+                        )}>
                         <caption className='caption-t'>
                           <strong>
                             <small role='textbox' className='noInvert'>
@@ -157,8 +156,7 @@ export default function PacList({
                                 className='alocCel'
                                 scope='col'
                                 data-row={1}
-                                data-col={userClass === "coordenador" ? 12 : 8}
-                              >
+                                data-col={userClass === "coordenador" ? 12 : 8}>
                                 Alocação
                               </th>
                             )}
@@ -169,8 +167,7 @@ export default function PacList({
                             style={{
                               marginBlock: "2rem",
                               position: "absolute",
-                            }}
-                          >
+                            }}>
                             <Spinner
                               spinnerClass='spinner-border'
                               spinnerColor='text-info'
@@ -178,7 +175,7 @@ export default function PacList({
                             />
                           </span>
                         </tbody>
-                      </ErrorBoundary>
+                      </ErrorBoundary>,
                     );
                     tbodyRef.current = document.querySelector(".pacTbody");
                     if (!(tbodyRef.current instanceof HTMLElement))
@@ -196,7 +193,7 @@ export default function PacList({
                             tabRef={tabPacRef}
                             key={`pac_row__${i + 2}`}
                           />
-                        ))
+                        )),
                       );
                     setTimeout(() => {
                       if (tabPacRef?.current instanceof HTMLTableElement) {
@@ -208,15 +205,13 @@ export default function PacList({
                           `tabPacRef id ${
                             (tabPacRef?.current as any)?.id || "UNIDENTIFIED"
                           } in useEffect() for tableRef`,
-                          extLine(new Error())
+                          extLine(new Error()),
                         );
                     }, 300);
                   } catch (e) {
                     console.error(
-                      `Error executing scheduled rendering of Table Body Content Replacement:\n${(e as Error).message}`
+                      `Error executing scheduled rendering of Table Body Content Replacement:\n${(e as Error).message}`,
                     );
-                  }
-                  if (document) {
                   }
                 }, 1000);
               } else panelRoots[`${tbodyRef.current.id}`] = createRoot(tbodyRef.current);
@@ -224,10 +219,10 @@ export default function PacList({
                 panelRoots[`${tbodyRef.current.id}`]?.render(
                   pacs.map((pac, i) => {
                     return Array.from(tbodyRef.current?.querySelectorAll("output") ?? []).some(
-                      outp => outp.innerText === (pac as PacInfo)["idf"]
+                      outp => outp.innerText === (pac as PacInfo)["idf"],
                     ) ||
                       Array.from(tbodyRef.current?.querySelectorAll("tr") ?? []).some(
-                        tr => tr.dataset.key && tbodyRef.current?.querySelector(`tr[data-key=${tr.dataset.key}`)
+                        tr => tr.dataset.key && tbodyRef.current?.querySelector(`tr[data-key=${tr.dataset.key}`),
                       ) ? (
                       <></>
                     ) : (
@@ -240,7 +235,7 @@ export default function PacList({
                         key={`pac_row__${i + 2}`}
                       />
                     );
-                  })
+                  }),
                 );
               setTimeout(() => {
                 if (tabPacRef?.current instanceof HTMLTableElement) {
@@ -250,7 +245,7 @@ export default function PacList({
                   elementNotFound(
                     tabPacRef.current,
                     `tabPacRef id ${(tabPacRef?.current as any)?.id || "UNIDENTIFIED"} in useEffect() for tableRef`,
-                    extLine(new Error())
+                    extLine(new Error()),
                   );
               }, 300);
               setTimeout(() => {
@@ -258,7 +253,7 @@ export default function PacList({
                   if (!panelRoots[`${document.querySelector("table")!.id}`])
                     panelRoots[`${document.querySelector("table")!.id}`] = createRoot(document.querySelector("table")!);
                   panelRoots[`${document.querySelector("table")!.id}`]?.render(
-                    <GenericErrorComponent message='Failed to render table' />
+                    <GenericErrorComponent message='Failed to render table' />,
                   );
                 }
               }, 5000);
@@ -277,7 +272,7 @@ export default function PacList({
                     userClass,
                     ["coordenador"],
                     sectTabRef.current,
-                    document.getElementById("btnExport")
+                    document.getElementById("btnExport"),
                   );
                 document.querySelectorAll(".outpPacStatus").forEach((status, i) => {
                   try {
@@ -286,7 +281,7 @@ export default function PacList({
                     if (status.innerText.toLowerCase().trim() === "em emergência") status.style.color = `red`;
                   } catch (e) {
                     console.error(
-                      `Error executing iteration ${i} for checking Patient Status:\n${(e as Error).message}`
+                      `Error executing iteration ${i} for checking Patient Status:\n${(e as Error).message}`,
                     );
                   }
                 });
@@ -300,7 +295,7 @@ export default function PacList({
                       console.error(
                         `Error executing iteration ${i} for adding alocation button listener in patients table:\n${
                           (e as Error).message
-                        }`
+                        }`,
                       );
                     }
                   });

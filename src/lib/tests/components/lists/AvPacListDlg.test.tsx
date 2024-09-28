@@ -3,11 +3,11 @@ import AvPacListDlg from "../../../../../components/lists/AvPacListDlg";
 import "@testing-library/jest-dom/extend-expect";
 jest.mock(
   "../../../../../components/consRegst/ErrorFallbackDlg",
-  (): (() => JSX.Element) => (): JSX.Element => <div>ErrorFallbackDlg</div>
+  (): (() => JSX.Element) => (): JSX.Element => <div>ErrorFallbackDlg</div>,
 ) as typeof jest;
 jest.mock(
   "../../../../../components/consRegst/PacList",
-  (): (() => JSX.Element) => (): JSX.Element => <div>PacList</div>
+  (): (() => JSX.Element) => (): JSX.Element => <div>PacList</div>,
 ) as typeof jest;
 describe("AvPacListDlg Component", (): void => {
   const mockDispatch: jest.Mock<any, any, any> = jest.fn() as jest.Mock;
@@ -26,7 +26,11 @@ describe("AvPacListDlg Component", (): void => {
     userClass: "coordenador",
     mainDlgRef: { current: document.createElement("dialog") },
   };
-  const renderComponent = () =>
+  const renderComponent = (): RenderResult<
+    typeof import("@testing-library/dom/types/queries"),
+    HTMLElement,
+    HTMLElement
+  > =>
     render(
       <AvPacListDlg
         {...{
@@ -36,7 +40,7 @@ describe("AvPacListDlg Component", (): void => {
           userClass: "coordenador",
           mainDlgRef: { current: document.createElement("dialog") },
         }}
-      />
+      />,
     );
   test("renders PacList component", async (): Promise<void> => {
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;

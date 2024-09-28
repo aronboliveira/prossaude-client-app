@@ -10,7 +10,7 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import GenericErrorComponent from "../../error/GenericErrorComponent";
 import ReseterBtn from "../defs/ReseterBtn";
 import { nullishBtn, nullishForm, nullishInp } from "@/lib/global/declarations/types";
-import { addEmailExtension, autoCapitalizeInputs, formatCPF, formatTel } from "@/lib/global/gModel";
+import { addEmailExtension, assignFormAttrs, autoCapitalizeInputs, formatCPF, formatTel } from "@/lib/global/gModel";
 import { elementNotFound, elementNotPopulated, extLine, inputNotFound } from "@/lib/global/handlers/errorHandler";
 import { handleCondtReq, handleEventReq, validateForm, syncAriaStates } from "@/lib/global/handlers/gHandlers";
 export default function StudentForm({ mainRoot, userClass = "estudante" }: GlobalFormProps): JSX.Element {
@@ -27,6 +27,7 @@ export default function StudentForm({ mainRoot, userClass = "estudante" }: Globa
     ]);
     const nextDiv = document.getElementById("avPacsTab")?.nextElementSibling;
     if (nextDiv?.id === "" && nextDiv instanceof HTMLDivElement) nextDiv.remove() as void;
+    assignFormAttrs(formRef.current)
   }, []);
   useEffect(() => {
     if (formRef?.current instanceof HTMLFormElement) {

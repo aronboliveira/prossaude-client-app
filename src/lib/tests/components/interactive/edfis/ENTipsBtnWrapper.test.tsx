@@ -4,15 +4,15 @@ import ENTipsBtnWrapper from "../../../../../../components/interactive/edfis/ENT
 import GenericErrorComponent from "../../../../../../components/error/GenericErrorComponent";
 jest.mock(
   "../../../../../components/interactive/edfis/ENTips",
-  (): jest.Mock<JSX.Element, [], any> => jest.fn((): JSX.Element => <div>ENTips Component</div>) as jest.Mock
+  (): jest.Mock<JSX.Element, [], any> => jest.fn((): JSX.Element => <div>ENTips Component</div>) as jest.Mock,
 ) as typeof jest;
 jest.mock(
   "../def/TipsBtn",
-  (): jest.Mock<JSX.Element, [], any> => jest.fn((): JSX.Element => <button>TipsBtn</button>) as jest.Mock
+  (): jest.Mock<JSX.Element, [], any> => jest.fn((): JSX.Element => <button>TipsBtn</button>) as jest.Mock,
 ) as typeof jest;
 jest.mock(
   "../../../../../components/error/GenericErrorComponent",
-  (): jest.Mock<JSX.Element, [], any> => jest.fn((): JSX.Element => <div>Error Loading Tips Button</div>) as jest.Mock
+  (): jest.Mock<JSX.Element, [], any> => jest.fn((): JSX.Element => <div>Error Loading Tips Button</div>) as jest.Mock,
 ) as typeof jest;
 describe("ENTipsBtnWrapper component", (): void => {
   beforeEach((): void => {
@@ -47,7 +47,7 @@ describe("ENTipsBtnWrapper component", (): void => {
   test("toggles ENTips visibility when TipsBtn is clicked", (): void => {
     render(<ENTipsBtnWrapper />) as RenderResult;
     fireEvent.click(screen.getByText<HTMLButtonElement>("TipsBtn"));
-    (expect(ENTips) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalledWith<[any, {}]>(
+    (expect(ENTips) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalledWith<[any, object]>(
       (expect as jest.Expect).objectContaining<{
         state: boolean;
         dispatch: any;
@@ -55,7 +55,7 @@ describe("ENTipsBtnWrapper component", (): void => {
         state: true,
         dispatch: expect.any(Function),
       }),
-      {}
+      {},
     ) as void;
   }) as void;
 }) as void;

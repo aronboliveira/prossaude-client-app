@@ -15,7 +15,7 @@ export function searchCEPXML(cepElement: targEl): number {
     const xmlReq1 = new XMLHttpRequest();
     xmlReq1.open("GET", `https://brasilapi.com.br/api/cep/v2/${cepHifenOutValue}`);
     xmlReq1.send();
-    xmlReq1.onload = () => {
+    xmlReq1.onload = (): void => {
       statusNum = loadCEPXML(xmlReq1, reqAcc);
       if (statusNum === 200) {
         progBar && progMax && uploadCEPLoadBar(cepElement, progBar, initTime, progMax, progValue);
@@ -26,7 +26,7 @@ export function searchCEPXML(cepElement: targEl): number {
         const xmlReq2 = new XMLHttpRequest();
         xmlReq2.open("GET", `https://brasilapi.com.br/api/cep/v1/${cepHifenOutValue}`);
         xmlReq2.send();
-        xmlReq2.onload = () => {
+        xmlReq2.onload = (): void => {
           statusNum = loadCEPXML(xmlReq2, reqAcc);
           if (statusNum === 200) {
             progBar && progMax && uploadCEPLoadBar(cepElement, progBar, initTime, progMax, progValue);
@@ -78,7 +78,7 @@ export async function searchCEP(cepElement: targEl): Promise<string> {
         [
           `https://brasilapi.com.br/api/cep/v2/${cepHifenOutValue}`,
           `https://brasilapi.com.br/api/cep/v1/${cepHifenOutValue}`,
-        ].map(makeCEPRequest)
+        ].map(makeCEPRequest),
       );
       if (res.ok) {
         loadCEP(res);
@@ -153,7 +153,7 @@ export function uploadCEPLoadBar(
   progressBar: targEl = new HTMLProgressElement(),
   initTime: number = 0,
   progMaxInt: number = 100,
-  progValueInt: number = 0
+  progValueInt: number = 0,
 ): void {
   if (
     cepElement instanceof HTMLInputElement &&
@@ -187,7 +187,7 @@ export function uploadCEPLoadBar(
       progressBar,
       initTime,
       progMaxInt,
-      progValueInt
+      progValueInt,
     );
 }
 export function enableCEPBtn(cepBtn: targEl, cepLength: number = 0): boolean {
@@ -244,9 +244,9 @@ export function addMedHistHandler(click: targEv | React.MouseEvent, blockCount: 
             textEl,
             checkAutoCorrect(
               document.querySelector('button[id^="deactAutocorrectBtn"]') ||
-                document.querySelector('input[id^="deactAutocorrectBtn"]')
-            )
-          )
+                document.querySelector('input[id^="deactAutocorrectBtn"]'),
+            ),
+          ),
         );
       });
     } else if (click.currentTarget instanceof HTMLElement && click.currentTarget.classList.contains("removeAntMed")) {

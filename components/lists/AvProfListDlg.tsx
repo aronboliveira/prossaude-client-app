@@ -40,7 +40,7 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
       history.pushState(
         {},
         "",
-        `${location.origin}${location.pathname}${location.search}`.replaceAll("&av-prof=open", "")
+        `${location.origin}${location.pathname}${location.search}`.replaceAll("&av-prof=open", ""),
       );
       setTimeout(() => {
         history.pushState({}, "", `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#"));
@@ -124,13 +124,13 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                       throw elementNotFound(
                         tabProfIntRef.current,
                         `Validation of Table reference`,
-                        extLine(new Error())
+                        extLine(new Error()),
                       );
                     if (!(tbodyIntRef.current instanceof HTMLElement))
                       throw elementNotFound(
                         tbodyIntRef.current,
                         `Validation of Table Body Reference`,
-                        extLine(new Error())
+                        extLine(new Error()),
                       );
                     if (tbodyIntRef.current.querySelector("tr")) return;
                     panelRoots[`${tbodyIntRef.current.id}`]?.unmount();
@@ -142,8 +142,7 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                       <ErrorBoundary
                         FallbackComponent={() => (
                           <GenericErrorComponent message='Error reloading replacement for table body' />
-                        )}
-                      >
+                        )}>
                         <caption className='caption-t'>
                           <hgroup className='noInvert'>
                             <h3 className='noInvert'>
@@ -202,8 +201,7 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                               className='alocCel'
                               scope='col'
                               data-row='1'
-                              data-col={props.userClass === "coordenador" ? "8" : "7"}
-                            ></th>
+                              data-col={props.userClass === "coordenador" ? "8" : "7"}></th>
                           </tr>
                         </thead>
                         <tbody id='profsIntTbody' ref={tbodyIntRef}>
@@ -215,7 +213,7 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                             />
                           </span>
                         </tbody>
-                      </ErrorBoundary>
+                      </ErrorBoundary>,
                     );
                     tbodyIntRef.current = document.getElementById("profsIntTbody") as nullishTabSect;
                     if (!(tbodyIntRef.current instanceof HTMLElement))
@@ -233,7 +231,7 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                             key={`prof_int_row__${i + 2}`}
                             inDlg={true}
                           />
-                        ))
+                        )),
                       );
                     setTimeout(() => {
                       if (tabProfIntRef?.current instanceof HTMLTableElement) {
@@ -245,15 +243,13 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                           `tabProfIntRef id ${
                             (tabProfIntRef?.current as any)?.id || "UNIDENTIFIED"
                           } in useEffect() for tableRef`,
-                          extLine(new Error())
+                          extLine(new Error()),
                         );
                     }, 300);
                   } catch (e) {
                     console.error(
-                      `Error executing scheduled rendering of Table Body Content Replacement:\n${(e as Error).message}`
+                      `Error executing scheduled rendering of Table Body Content Replacement:\n${(e as Error).message}`,
                     );
-                  }
-                  if (document) {
                   }
                 }, 1000);
               } else panelRoots[`${tbodyIntRef.current.id}`] = createRoot(tbodyIntRef.current);
@@ -261,10 +257,10 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                 panelRoots[`${tbodyIntRef.current.id}`]?.render(
                   internalProfs.map((prof, i) => {
                     return Array.from(tbodyIntRef.current?.querySelectorAll("output") ?? []).some(
-                      outp => outp.innerText === (prof as ProfInfo)["idf"]
+                      outp => outp.innerText === (prof as ProfInfo)["idf"],
                     ) ||
                       Array.from(tbodyIntRef.current?.querySelectorAll("tr") ?? []).some(
-                        tr => tr.dataset.key && tbodyIntRef.current?.querySelector(`tr[data-key=${tr.dataset.key}`)
+                        tr => tr.dataset.key && tbodyIntRef.current?.querySelector(`tr[data-key=${tr.dataset.key}`),
                       ) ? (
                       <></>
                     ) : (
@@ -277,7 +273,7 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                         inDlg={true}
                       />
                     );
-                  })
+                  }),
                 );
               setTimeout(() => {
                 if (tabProfIntRef?.current instanceof HTMLTableElement) {
@@ -289,7 +285,7 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                     `tabProfIntRef id ${
                       (tabProfIntRef?.current as any)?.id || "UNIDENTIFIED"
                     } in useEffect() for tableRef`,
-                    extLine(new Error())
+                    extLine(new Error()),
                   );
               }, 300);
               setTimeout(() => {
@@ -297,7 +293,7 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                   if (!panelRoots[`${document.querySelector("table")!.id}`])
                     panelRoots[`${document.querySelector("table")!.id}`] = createRoot(document.querySelector("table")!);
                   panelRoots[`${document.querySelector("table")!.id}`]?.render(
-                    <GenericErrorComponent message='Failed to render table' />
+                    <GenericErrorComponent message='Failed to render table' />,
                   );
                 }
               }, 5000);
@@ -313,13 +309,13 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                       throw elementNotFound(
                         tabProfIntRef.current,
                         `Validation of Table reference`,
-                        extLine(new Error())
+                        extLine(new Error()),
                       );
                     if (!(tbodyExtRef.current instanceof HTMLElement))
                       throw elementNotFound(
                         tbodyExtRef.current,
                         `Validation of Table Body Reference`,
-                        extLine(new Error())
+                        extLine(new Error()),
                       );
                     if (tbodyExtRef.current.querySelector("tr")) return;
                     panelRoots[`${tbodyExtRef.current.id}`]?.unmount();
@@ -331,8 +327,7 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                       <ErrorBoundary
                         FallbackComponent={() => (
                           <GenericErrorComponent message='Error reloading replacement for table body' />
-                        )}
-                      >
+                        )}>
                         <caption className='caption-t'>
                           <hgroup className='noInvert'>
                             <h3 className='noInvert'>
@@ -391,8 +386,7 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                               className='alocCel'
                               scope='col'
                               data-row='1'
-                              data-col={props.userClass === "coordenador" ? "8" : "7"}
-                            ></th>
+                              data-col={props.userClass === "coordenador" ? "8" : "7"}></th>
                           </tr>
                         </thead>
                         <tbody id='profsExtTbody' ref={tbodyExtRef}>
@@ -404,7 +398,7 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                             />
                           </span>
                         </tbody>
-                      </ErrorBoundary>
+                      </ErrorBoundary>,
                     );
                     tbodyExtRef.current = document.getElementById("profsExtTbody") as nullishTabSect;
                     if (!(tbodyExtRef.current instanceof HTMLElement))
@@ -422,7 +416,7 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                             key={`prof_ext_row__${i + 2}`}
                             inDlg={true}
                           />
-                        ))
+                        )),
                       );
                     setTimeout(() => {
                       if (tabProfIntRef?.current instanceof HTMLTableElement) {
@@ -434,15 +428,13 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                           `tabProfIntRef id ${
                             (tabProfIntRef?.current as any)?.id || "UNIDENTIFIED"
                           } in useEffect() for tableRef`,
-                          extLine(new Error())
+                          extLine(new Error()),
                         );
                     }, 300);
                   } catch (e) {
                     console.error(
-                      `Error executing scheduled rendering of Table Body Content Replacement:\n${(e as Error).message}`
+                      `Error executing scheduled rendering of Table Body Content Replacement:\n${(e as Error).message}`,
                     );
-                  }
-                  if (document) {
                   }
                 }, 1000);
               } else panelRoots[`${tbodyExtRef.current.id}`] = createRoot(tbodyExtRef.current);
@@ -450,10 +442,10 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                 panelRoots[`${tbodyExtRef.current.id}`]?.render(
                   externalProfs.map((prof, i) => {
                     return Array.from(tbodyExtRef.current?.querySelectorAll("output") ?? []).some(
-                      outp => outp.innerText === (prof as ProfInfo)["idf"]
+                      outp => outp.innerText === (prof as ProfInfo)["idf"],
                     ) ||
                       Array.from(tbodyExtRef.current?.querySelectorAll("tr") ?? []).some(
-                        tr => tr.dataset.key && tbodyExtRef.current?.querySelector(`tr[data-key=${tr.dataset.key}`)
+                        tr => tr.dataset.key && tbodyExtRef.current?.querySelector(`tr[data-key=${tr.dataset.key}`),
                       ) ? (
                       <></>
                     ) : (
@@ -466,7 +458,7 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                         inDlg={true}
                       />
                     );
-                  })
+                  }),
                 );
               setTimeout(() => {
                 if (tabProfIntRef?.current instanceof HTMLTableElement) {
@@ -478,7 +470,7 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                     `tabProfIntRef id ${
                       (tabProfIntRef?.current as any)?.id || "UNIDENTIFIED"
                     } in useEffect() for tableRef`,
-                    extLine(new Error())
+                    extLine(new Error()),
                   );
               }, 300);
               setTimeout(() => {
@@ -486,7 +478,7 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                   if (!panelRoots[`${document.querySelector("table")!.id}`])
                     panelRoots[`${document.querySelector("table")!.id}`] = createRoot(document.querySelector("table")!);
                   panelRoots[`${document.querySelector("table")!.id}`]?.render(
-                    <GenericErrorComponent message='Failed to render table' />
+                    <GenericErrorComponent message='Failed to render table' />,
                   );
                 }
               }, 5000);
@@ -502,7 +494,7 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                     `tabProfExtRef id ${
                       (tabProfExtRef?.current as any)?.id || "UNIDENTIFIED"
                     } in useEffect() for tableRef`,
-                    extLine(new Error())
+                    extLine(new Error()),
                   );
                 fillTabAttr(tabProfExtRef.current);
                 equalizeTabCells(tabProfExtRef.current);
@@ -516,13 +508,13 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                         "Prof",
                         props.state,
                         props.dispatch,
-                        props.userClass
+                        props.userClass,
                       );
                     } catch (e) {
                       console.error(
                         `Error executing iteration ${i} for adding alocation listener to external professionals table:\n${
                           (e as Error).message
-                        }`
+                        }`,
                       );
                     }
                   });
@@ -531,16 +523,16 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                   throw inputNotFound(
                     typeConsSel,
                     `<select> for getting type of appointment for ${tabProfExtRef.current?.id || "UNIDENTIFIED"}`,
-                    extLine(new Error())
+                    extLine(new Error()),
                   );
                 const [selectedOp] = Array.from(typeConsSel.querySelectorAll("option")).filter(
-                  opt => opt.selected === true
+                  opt => opt.selected === true,
                 );
                 if (!(selectedOp instanceof HTMLOptionElement))
                   throw elementNotFound(
                     selectedOp,
                     `<option> for getting type of appointment for ${tabProfExtRef.current?.id || "UNIDENTIFIED"}`,
-                    extLine(new Error())
+                    extLine(new Error()),
                   );
                 const relOptgrp = selectedOp.closest("optgroup");
                 if (relOptgrp instanceof HTMLOptGroupElement && relOptgrp.label !== "")
@@ -556,7 +548,7 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                   throw elementNotFound(
                     tabProfIntRef.current,
                     `Table id ${(tabProfIntRef?.current as any)?.id || "UNIDENTIFIED"}`,
-                    extLine(new Error())
+                    extLine(new Error()),
                   );
                 fillTabAttr(tabProfIntRef.current);
                 equalizeTabCells(tabProfIntRef.current);
@@ -570,13 +562,13 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                         "Prof",
                         props.state,
                         props.dispatch,
-                        props.userClass
+                        props.userClass,
                       );
                     } catch (e) {
                       console.error(
                         `Error executing iteration ${i} for adding alocation listener to external professionals table:\n${
                           (e as Error).message
-                        }`
+                        }`,
                       );
                     }
                   });
@@ -585,16 +577,16 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                   throw inputNotFound(
                     typeConsSel,
                     `<select> for getting type of appointment for ${tabProfIntRef.current?.id || "UNIDENTIFIED"}`,
-                    extLine(new Error())
+                    extLine(new Error()),
                   );
                 const [selectedOp] = Array.from(typeConsSel.querySelectorAll("option")).filter(
-                  opt => opt.selected === true
+                  opt => opt.selected === true,
                 );
                 if (!(selectedOp instanceof HTMLOptionElement))
                   throw elementNotFound(
                     selectedOp,
                     `<option> for getting type of appointment for ${tabProfIntRef.current?.id || "UNIDENTIFIED"}`,
-                    extLine(new Error())
+                    extLine(new Error()),
                   );
                 const relOptgrp = selectedOp.closest("optgroup");
                 if (relOptgrp instanceof HTMLOptGroupElement && relOptgrp.label !== "")
@@ -603,7 +595,7 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                   throw elementNotFound(
                     secttabProfIntRef.current,
                     "secttabProfIntRef in useEffect()",
-                    extLine(new Error())
+                    extLine(new Error()),
                   );
                 checkLocalIntervs(secttabProfIntRef.current);
                 strikeEntries(secttabProfIntRef.current);
@@ -624,11 +616,11 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
           .finally(() => {
             setTimeout(
               () => syncAriaStates([...(dialogRef.current?.querySelectorAll("*") ?? []), dialogRef.current!]),
-              1200
+              1200,
             );
             setTimeout(
               () => syncAriaStates([...(dialogRef.current?.querySelectorAll("*") ?? []), dialogRef.current!]),
-              3000
+              3000,
             );
           });
       }, 300);
@@ -645,16 +637,14 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
           ref={dialogRef}
           onClick={ev => {
             isClickOutside(ev, ev.currentTarget).some(coord => coord === true) && props.dispatch(!props.state);
-          }}
-        >
+          }}>
           <ErrorBoundary
             FallbackComponent={() => (
               <ErrorFallbackDlg
                 renderError={new Error(`Erro carregando a janela modal!`)}
                 onClick={props.dispatch(props.state)}
               />
-            )}
-          >
+            )}>
             <section className='flexRNoWBetCt widFull' id='headProfList'>
               <h2 className='mg-1b noInvert'>
                 <strong>Profissionais Cadastrados</strong>
@@ -665,8 +655,7 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
               <table
                 className='table table-striped table-responsive table-hover tabProfs'
                 id='avProfsIntTab'
-                ref={tabProfIntRef}
-              >
+                ref={tabProfIntRef}>
                 <caption className='caption-t'>
                   <hgroup className='noInvert'>
                     <h3 className='noInvert'>
@@ -725,8 +714,7 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                       className='alocCel'
                       scope='col'
                       data-row='1'
-                      data-col={props.userClass === "coordenador" ? "8" : "7"}
-                    ></th>
+                      data-col={props.userClass === "coordenador" ? "8" : "7"}></th>
                   </tr>
                 </thead>
                 <tbody id='profsIntTbody' ref={tbodyIntRef}>
@@ -742,8 +730,7 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
               <table
                 className='table table-striped table-responsive table-hover tabProfs'
                 id='avProfsExtTab'
-                ref={tabProfExtRef}
-              >
+                ref={tabProfExtRef}>
                 <caption className='caption-t'>
                   <hgroup className='noInvert'>
                     <h3 className='noInvert'>
@@ -802,8 +789,7 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                       className='alocCel'
                       scope='col'
                       data-row='1'
-                      data-col={props.userClass === "coordenador" ? "8" : "7"}
-                    ></th>
+                      data-col={props.userClass === "coordenador" ? "8" : "7"}></th>
                   </tr>
                 </thead>
                 <tbody id='profsExtTbody' ref={tbodyExtRef}>

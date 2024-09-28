@@ -281,7 +281,7 @@ export default function SelectPanel({
       syncAriaStates([
         ...(
           document.getElementById("formPanelDiv") ?? document
-        )?.querySelectorAll("*"),
+        )?.querySelectorAll("*") ?? null,
         document.getElementById("formPanelDiv")!,
       ]);
       if (!panelRoots.mainRoot)

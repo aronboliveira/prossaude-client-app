@@ -23,11 +23,11 @@ export default function AvPacListDlg({
     setTimeout(() => {
       history.pushState({}, "", `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#"));
     }, 300);
-    return () => {
+    return (): void => {
       history.pushState(
         {},
         "",
-        `${location.origin}${location.pathname}${location.search}`.replaceAll("&av-pac=open", "")
+        `${location.origin}${location.pathname}${location.search}`.replaceAll("&av-pac=open", ""),
       );
       setTimeout(() => {
         history.pushState({}, "", `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#"));
@@ -55,16 +55,14 @@ export default function AvPacListDlg({
           ref={dialogRef}
           onClick={ev => {
             isClickOutside(ev, ev.currentTarget).some(coord => coord === true) && dispatch(!state);
-          }}
-        >
+          }}>
           <ErrorBoundary
             FallbackComponent={() => (
               <ErrorFallbackDlg
                 renderError={new Error(`Erro carregando a janela modal!`)}
                 onClick={() => dispatch(state)}
               />
-            )}
-          >
+            )}>
             <section className='flexRNoWBetCt widFull' id='headPacList'>
               <h2 className='mg-1b noInvert'>
                 <strong>Pacientes Cadastrados</strong>

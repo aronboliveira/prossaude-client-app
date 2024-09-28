@@ -15,7 +15,7 @@ export default function ExcludeConsDlg({
 }: ExcludeConsDlgProps): JSX.Element {
   const excludeDlgRef = useRef<nullishDlg>(null);
   const confirmRef = useRef<nullishBtn>(null);
-  const toggleClose = () => {
+  const toggleClose = (): void => {
     setDisplayExcludeDlg(!shouldDisplayExcludeDlg);
     if (!shouldDisplayExcludeDlg && excludeDlgRef.current instanceof HTMLDialogElement) excludeDlgRef.current.close();
   };
@@ -31,15 +31,15 @@ export default function ExcludeConsDlg({
           toggleClose();
         }
       },
-      true
+      true,
     );
-    const handleKeyDown = (press: KeyboardEvent) => {
+    const handleKeyDown = (press: KeyboardEvent): void => {
       if (press.key === "Escape") {
         toggleClose();
       }
     };
     addEventListener("keydown", handleKeyDown);
-    return () => removeEventListener("keydown", handleKeyDown);
+    return (): void => removeEventListener("keydown", handleKeyDown);
   }, [excludeDlgRef]);
   useEffect(() => {
     try {
@@ -47,7 +47,7 @@ export default function ExcludeConsDlg({
         throw elementNotFound(
           confirmRef.current,
           `Button for confirming exclusion related to ${btn?.id ?? "UNIDENTIFIED"}`,
-          extLine(new Error())
+          extLine(new Error()),
         );
       (userClass === "coordenador" || userClass === "supervisor") && addEraseEvent(btn!, userClass);
     } catch (err) {
@@ -68,13 +68,11 @@ export default function ExcludeConsDlg({
               ev.currentTarget.close();
               setDisplayExcludeDlg(!shouldDisplayExcludeDlg);
             }
-          }}
-        >
+          }}>
           <ErrorBoundary
             FallbackComponent={() => (
               <ErrorFallbackDlg renderError={new Error(`Erro carregando a janela modal!`)} onClick={toggleClose} />
-            )}
-          >
+            )}>
             <section role='alert' className='flexNoWC flexJC rGap2v'>
               <div role='group' className='flexJC flexAlItCt flexNoWC wsBs noInvert'>
                 <h3>Confirmar remoção?</h3>

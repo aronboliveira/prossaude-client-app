@@ -35,7 +35,7 @@ export function showInspSpanSub(ev: rMouseEvent): void {
         extLine(new Error()),
         "parentElement and/or validSibiling in showInspSpanSub",
         ev.currentTarget?.parentElement,
-        validSibling
+        validSibling,
       );
   } catch (e) {
     console.error(`Error executing showInspSpanSub:\n${(e as Error).message}`);
@@ -97,7 +97,7 @@ let odIsDragging = false,
   odOffsetY = 0;
 export function dragStart(
   move: DragEvent | TouchEvent | React.DragEvent | React.TouchEvent,
-  quadrsTe: Element[]
+  quadrsTe: Element[],
 ): void {
   try {
     let validSrcEl =
@@ -129,7 +129,7 @@ export function dragStart(
         validSrcEl.addEventListener("touchstart", ev => {
           odIsDragging = true;
           odFbTouch = Array.from(ev.touches).find(
-            touch => touch.target instanceof HTMLElement && touch.target.classList.contains("appointmentBtn")
+            touch => touch.target instanceof HTMLElement && touch.target.classList.contains("appointmentBtn"),
           ) as any;
           if (!(odFbTouch instanceof Touch)) odFbTouch = ev.touches[0];
           if (odFbTouch) {
@@ -146,7 +146,7 @@ export function dragStart(
                 const targ = odFbTouch;
                 if (!(targ instanceof Touch)) throw new Error(`Failed to fetch touch target`);
                 const validTargEl = Array.from(end.targetTouches).find(
-                  touch => touch instanceof HTMLElement && touch.classList.contains("quadrAvDent")
+                  touch => touch instanceof HTMLElement && touch.classList.contains("quadrAvDent"),
                 );
                 if (
                   validSrcEl instanceof HTMLElement &&
@@ -172,7 +172,7 @@ export function dragStart(
                     extLine(new Error()),
                     "arguments for dragDrop",
                     end.touches[0].identifier,
-                    (validSrcEl as any)?.tagName
+                    (validSrcEl as any)?.tagName,
                   );
               } catch (e) {
                 console.error(`Error executing handleTouchEnd:\n${(e as Error).message}`);
@@ -212,7 +212,7 @@ export function dragDrop(
   drop: Event,
   srcEl: targEl,
   quadrsTe: Element[],
-  dropHandler: (drop: DragEvent) => void
+  dropHandler: (drop: DragEvent) => void,
 ): void {
   let validSrcEl = srcEl || (drop.target as HTMLElement);
   let validTargEl = drop.currentTarget;
@@ -241,7 +241,7 @@ export function dragDrop(
     quadrTo =>
       drop instanceof DragEvent &&
       //@ts-ignore
-      quadrTo.removeEventListener("drop", dropHandler)
+      quadrTo.removeEventListener("drop", dropHandler),
   );
   dragEnd(validSrcEl);
 }
@@ -296,7 +296,7 @@ export function resetLabels(quadrBtn: targEl): void {
       "arguments for resetLabels",
       quadrBtn,
       parentDiv,
-      `${JSON.stringify(innerDivInps) || null}`
+      `${JSON.stringify(innerDivInps) || null}`,
     );
   }
 }
@@ -338,7 +338,7 @@ export function addSubDivTrat(click: Event | React.MouseEvent, addSubDivBtn: tar
         tratBtn.addEventListener("click", click =>
           tratBtn instanceof HTMLButtonElement
             ? addSubDivTrat(click, tratBtn, blockCount)
-            : elementNotFound(tratBtn, "tratContainer", extLine(new Error()))
+            : elementNotFound(tratBtn, "tratContainer", extLine(new Error())),
         );
       });
       [...newBlock.querySelectorAll('input[type="text"]'), ...newBlock.querySelectorAll("textarea")].forEach(
@@ -346,10 +346,10 @@ export function addSubDivTrat(click: Event | React.MouseEvent, addSubDivBtn: tar
           textCont.addEventListener("input", () =>
             autoCapitalizeInputs(
               textCont as textEl,
-              checkAutoCorrect(document.querySelector('button[id^="deactAutocorrectBtn"]'))
-            )
+              checkAutoCorrect(document.querySelector('button[id^="deactAutocorrectBtn"]')),
+            ),
           );
-        }
+        },
       );
       newBlock.querySelectorAll('button[id$="AstDigtBtn')?.forEach(astDigtBtn => {
         astDigtBtn.addEventListener("click", ev => changeToAstDigit(ev.currentTarget as HTMLButtonElement));

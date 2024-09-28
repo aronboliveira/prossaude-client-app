@@ -10,7 +10,7 @@ export default function DREFiller({ forwardedRef, userClass }: FillerProps): JSX
   const btnStudListRef = useRef<nullishBtn>(null);
   const fillerDivRef = useRef<nullishDiv>(null);
   const [shouldDisplayStudList, setStudListDisplay] = useState<boolean>(false);
-  const toggleStudListDisplay = (s: boolean = false) => setStudListDisplay(!s);
+  const toggleStudListDisplay = (s: boolean = false): void => setStudListDisplay(!s);
   useEffect(() => {
     /av-stud=open/gi.test(location.search) && setStudListDisplay(true);
   }, []);
@@ -93,8 +93,7 @@ export default function DREFiller({ forwardedRef, userClass }: FillerProps): JSX
             className='btn btn-primary hBsFormLike'
             ref={btnStudListRef}
             onClick={() => toggleStudListDisplay(shouldDisplayStudList)}
-            style={{ fontSize: "0.9rem" }}
-          >
+            style={{ fontSize: "0.9rem" }}>
             Consultar Lista de Estudantes
           </button>
           {shouldDisplayStudList ? (

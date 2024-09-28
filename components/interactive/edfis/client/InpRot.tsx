@@ -8,7 +8,7 @@ import { useEffect, useRef } from "react";
 import GenericErrorComponent from "../../../error/GenericErrorComponent";
 export default function InpRot(props: InpRotProps): JSX.Element {
   const inpRef = useRef<nullishInp>(null);
-  const title = (() => {
+  const title = ((): string => {
     let mainCtx: mainContextRot = "Diário";
     switch (props.ctx) {
       case "RefDia":
@@ -43,28 +43,20 @@ export default function InpRot(props: InpRotProps): JSX.Element {
       if (!(inpRef.current instanceof HTMLInputElement))
         throw inputNotFound(
           inpRef.current,
-          `Validation of Input Reference for ${
-            props.grp || "Undefined Group"
-          } ${props.ctx || "Undefined Context"}`,
-          extLine(new Error())
+          `Validation of Input Reference for ${props.grp || "Undefined Group"} ${props.ctx || "Undefined Context"}`,
+          extLine(new Error()),
         );
-      if (props.flags && props.flags !== "")
-        inpRef.current.dataset.flags = props.flags;
+      if (props.flags && props.flags !== "") inpRef.current.dataset.flags = props.flags;
     } catch (e) {
       console.error(`Error executing useEffect:\n${(e as Error).message}`);
     }
   }, []);
   return (
     <ErrorBoundary
-      FallbackComponent={() => (
-        <GenericErrorComponent
-          message={`Error rendering Input for ${props.quest}`}
-        />
-      )}
-    >
+      FallbackComponent={() => <GenericErrorComponent message={`Error rendering Input for ${props.quest}`} />}>
       <span>
         {props.ctx === "UrInterv" || props.ctx === "EvInterv"
-          ? (() => {
+          ? ((): string | undefined => {
               if (props.ctx === "UrInterv") {
                 return props.isMax
                   ? "Qual é o intervalo máximo (em horas) entre cada micção?"
@@ -75,43 +67,29 @@ export default function InpRot(props: InpRotProps): JSX.Element {
                   : "Qual é o intervalo mínimo (em horas) entre evacuações?";
               }
             })()
-          : (() =>
-              props.isMax
-                ? `${props.quest}, no máximo?`
-                : `${props.quest}, no mínimo?`)()}
+          : ((): string | undefined => (props.isMax ? `${props.quest}, no máximo?` : `${props.quest}, no mínimo?`))()}
       </span>
       <input
-        type="number"
+        type='number'
         ref={inpRef}
         minLength={props.minLength ? props.minLength : 1}
         maxLength={props.maxLength}
-        min={props.min ? props.min : (() => (props.isMax ? 1 : 0))()}
+        min={props.min ? props.min : ((): number => (props.isMax ? 1 : 0))()}
         max={props.max}
-        className={`form-control noInvert inp${
-          props.grp
-        }Rot inp${props.ctx.replace("Dia", "")} inp${
+        className={`form-control noInvert inp${props.grp}Rot inp${props.ctx.replace("Dia", "")} inp${
           props.ctx
-        } minText maxText minNum maxNum patternText${
-          /interv/gi.test(props.ctx) && " float sevenCharLongNum"
-        }${props.ur ? " inpUr inpUrDia" : ""}${
-          props.ev ? " inpEv inpEvDia" : ""
-        }`}
+        } minText maxText minNum maxNum patternText${/interv/gi.test(props.ctx) && " float sevenCharLongNum"}${
+          props.ur ? " inpUr inpUrDia" : ""
+        }${props.ev ? " inpEv inpEvDia" : ""}`}
         id={
           !props.ur && !props.ev
             ? `${props.isMax ? `inp${props.ctx}Max` : `inp${props.ctx}Min`}`
             : (() => {
                 if (props.ur) {
-                  return props.isMax
-                    ? `inp${props.ur.ctx}${props.ctx}Max`
-                    : `inp${props.ur.ctx}${props.ctx}Min`;
+                  return props.isMax ? `inp${props.ur.ctx}${props.ctx}Max` : `inp${props.ur.ctx}${props.ctx}Min`;
                 } else if (props.ev) {
-                  return props.isMax
-                    ? `inp${props.ev.ctx}${props.ctx}Max`
-                    : `inp${props.ev.ctx}${props.ctx}Min`;
-                } else
-                  return props.isMax
-                    ? `inp${props.ctx}Max`
-                    : `inp${props.ctx}Min`;
+                  return props.isMax ? `inp${props.ev.ctx}${props.ctx}Max` : `inp${props.ev.ctx}${props.ctx}Min`;
+                } else return props.isMax ? `inp${props.ctx}Max` : `inp${props.ctx}Min`;
               })()
         }
         name={`${props.ctx.slice(0, 1).toLowerCase()}${props.ctx
@@ -122,7 +100,7 @@ export default function InpRot(props: InpRotProps): JSX.Element {
         data-title={title}
         data-reqlength={props.minLength ? props.minLength : 1}
         data-maxlength={props.maxLength}
-        data-minnum={props.min ? props.min : (() => (props.isMax ? 1 : 0))()}
+        data-minnum={props.min ? props.min : ((): number => (props.isMax ? 1 : 0))()}
         data-maxnum={props.max}
         data-pattern={props.pattern ? props.pattern : "^[\\d,.]+$"}
         onInput={ev => handleEventReq(ev.currentTarget)}

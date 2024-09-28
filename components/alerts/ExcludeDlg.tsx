@@ -14,7 +14,7 @@ export default function ExcludeDlg({
 }: ExcludeDlgProps): JSX.Element {
   const excludeDlgRef = useRef<nullishDlg>(null);
   const formRef = useRef<nullishForm>(null);
-  const toggleClose = () => {
+  const toggleClose = (): void => {
     setDisplayExcludeDlg(!shouldDisplayExcludeDlg);
     if (!shouldDisplayExcludeDlg && excludeDlgRef.current instanceof HTMLDialogElement) excludeDlgRef.current.close();
   };
@@ -22,7 +22,7 @@ export default function ExcludeDlg({
     if (shouldDisplayExcludeDlg && excludeDlgRef.current instanceof HTMLDialogElement)
       excludeDlgRef.current.showModal();
     syncAriaStates([...excludeDlgRef.current!.querySelectorAll("*"), excludeDlgRef.current!]);
-    const handleKeyDown = (press: KeyboardEvent) => {
+    const handleKeyDown = (press: KeyboardEvent): void => {
       press.key === "Escape" && toggleClose();
     };
     assignFormAttrs(formRef.current);

@@ -7,10 +7,10 @@ import Cookies from "js-cookie";
 import { defCurrSemester } from "@/redux/slices/userSlice";
 export function decodeToken(
   token: string,
-  UNDER_TEST: boolean = false
+  UNDER_TEST: boolean = false,
 ): {
   ok: boolean;
-  res: Object;
+  res: object;
 } {
   try {
     if (!UNDER_TEST) {
@@ -53,7 +53,7 @@ export async function handleLogin(
   ev: rMouseEvent,
   userData: FormData | [string, string],
   UNDER_TEST: boolean = true,
-  router?: NextRouter
+  router?: NextRouter,
 ): Promise<void> {
   let status = 404,
     resData;
@@ -112,7 +112,7 @@ export async function handleLogin(
           "Content-Type": "application/json",
         },
         body: JSON.stringify(
-          Array.isArray(userData) ? userData.map(entry => [entry[0], entry[1]]) : userData.entries()
+          Array.isArray(userData) ? userData.map(entry => [entry[0], entry[1]]) : userData.entries(),
         ),
       });
       if (!res.ok) {
@@ -172,7 +172,7 @@ export async function handleLogin(
 export async function handleSubmit(
   apiRoute: formCases,
   formData: FormData | Array<[string, string | File]> | { [k: string]: string | File } | Map<string, string | File>,
-  UNDER_TEST: boolean = true
+  UNDER_TEST: boolean = true,
 ): Promise<void> {
   try {
     if (typeof apiRoute !== "string") throw new Error(`Error validating apiRoute type`);
@@ -194,7 +194,7 @@ export async function handleSubmit(
     )
       throw new Error(`Invalidating route for API argumented to handler`);
     if (typeof UNDER_TEST !== "boolean") throw new Error(`Error validating typeof UNDER_TEST`);
-    const body = (() => {
+    const body = ((): string => {
       if (Array.isArray(formData)) return JSON.stringify(formData.map(entry => [entry[0], entry[1]]));
       else {
         return formData instanceof Map ? JSON.stringify(formData.entries()) : JSON.stringify(formData);
@@ -220,9 +220,9 @@ export async function handleSubmit(
 export async function handleFetch(
   apiRoute: formCases,
   apiSufix: fetchSuffixes,
-  UNDER_TEST: boolean = true
+  UNDER_TEST: boolean = true,
 ): Promise<(ProfInfo | StudInfo | PacInfo)[]> {
-  const arrJSONResTest: (ProfInfo | StudInfo | PacInfo)[] = (() => {
+  const arrJSONResTest: (ProfInfo | StudInfo | PacInfo)[] = ((): any => {
     switch (apiRoute) {
       case "profs":
         return [

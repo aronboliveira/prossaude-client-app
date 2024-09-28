@@ -21,12 +21,10 @@ export default function PanelPage({ data }: { data: any }): JSX.Element {
           <div
             role='group'
             className='flexNoW flexNoWC600Q flexAlItCt cGap1v flexAlItSt600Q form-control contFitW'
-            id='wrapperUserInfo'
-          >
+            id='wrapperUserInfo'>
             <section
               className='form-control noMargin widThird flexNoW rGap2v flexBasis25 mg-0bQ460 widMinFit mg-0b600Q noInvert'
-              id='sectUserInfo'
-            >
+              id='sectUserInfo'>
               <div role='group' className='widFull flexNoW cGap2v rGap1v flexQ460NoWC wsNoW' id='rootUserInfo'>
                 <UserProfilePanelWrapper />
               </div>
@@ -50,7 +48,7 @@ export default function PanelPage({ data }: { data: any }): JSX.Element {
     </ErrorBoundary>
   );
 }
-export async function getStaticProps() {
+export async function getStaticProps(): Promise<object> {
   try {
     const res = await fetch("/api-path");
     if (!res.ok) throw new Error(`Failed to fetch`);

@@ -1,13 +1,20 @@
 "use client";
 import { handleEventReq, validateForm } from "@/lib/global/handlers/gHandlers";
 import { handleSubmit } from "@/pages/api/ts/handlers";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import RecoverAlert from "../../alerts/RecoverAlert";
 import Link from "next/link";
+import { nullishForm } from "@/lib/global/declarations/types";
+import { assignFormAttrs } from "@/lib/global/gModel";
 export default function RecoverForm(): JSX.Element {
-  const [shouldShowAlert, setAlert] = useState<boolean>(false);
+  const formRef = useRef<nullishForm>(null),
+    [shouldShowAlert, setAlert] = useState<boolean>(false);
+  useEffect(() => {
+    assignFormAttrs(formRef.current);
+  }, []);
   return (
     <form
+      ref={formRef}
       id='recover-form'
       name='recover_form'
       method='post'

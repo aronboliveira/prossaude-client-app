@@ -25,7 +25,7 @@ import { useRef, useEffect } from "react";  export default function PanelTips({ 
         `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#")
       );
     }, 300);
-    return () => {
+    return (): void => {
       history.pushState(
         {},
         "",
@@ -58,7 +58,7 @@ import { useRef, useEffect } from "react";  export default function PanelTips({ 
         `Error executing useEffect for PanelTips:\n${(e as Error).message}`
       );
     }
-    return () => removeEventListener("keypress", handleEscape);
+    return (): void => removeEventListener("keypress", handleEscape);
   }, [dlgRef]);
   return !state ? (
     <></>

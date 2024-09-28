@@ -11,7 +11,7 @@ export default function FailRegstAlert({
   secondOp = "Arraste",
 }: FailedRegstProps): JSX.Element {
   const FailRegstDlgRef = useRef<nullishDlg>(null);
-  const toggleClose = () => {
+  const toggleClose = (): void => {
     setDisplayFailRegstDlg(!shouldDisplayFailRegstDlg);
     if (!shouldDisplayFailRegstDlg && FailRegstDlgRef.current instanceof HTMLDialogElement)
       FailRegstDlgRef.current.close();
@@ -26,7 +26,7 @@ export default function FailRegstAlert({
       }
     };
     addEventListener("keydown", handleKeyDown);
-    return () => removeEventListener("keydown", handleKeyDown);
+    return (): void => removeEventListener("keydown", handleKeyDown);
   }, [FailRegstDlgRef]);
   return (
     <>
@@ -41,13 +41,11 @@ export default function FailRegstAlert({
               ev.currentTarget.close();
               setDisplayFailRegstDlg(!shouldDisplayFailRegstDlg);
             }
-          }}
-        >
+          }}>
           <ErrorBoundary
             FallbackComponent={() => (
               <ErrorFallbackDlg renderError={new Error(`Erro carregando a janela modal!`)} onClick={toggleClose} />
-            )}
-          >
+            )}>
             <section role='alert' className='flexNoWC flexJtC flexAlItCt rGap2v'>
               <div role='group' className='flexJtC flexAlItCt flexNoWC wsBs noInvert'>
                 <h3 className='wsBs'>

@@ -52,7 +52,7 @@ export const clickAttempt: {
   lastClickX: 0,
   lastClickY: 0,
 };
-export function evaluateClickMovements(ev: rMouseEvent) {
+export function evaluateClickMovements(ev: rMouseEvent): (string | boolean)[] {
   let suspicious = true;
   try {
     if (!("movementX" in ev)) throw new Error(`Invalid instance for Event`);
@@ -89,7 +89,7 @@ export const tryDetails: {
   attempts: 0,
   timeAcc: 0,
 };
-export function callbackSubmitBtn() {
+export function callbackSubmitBtn(): boolean {
   try {
     tryDetails.attempts += 1;
     if (tryDetails.attempts > 0) {

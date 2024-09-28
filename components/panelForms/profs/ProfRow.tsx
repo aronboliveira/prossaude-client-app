@@ -20,7 +20,7 @@ export default function ProfRow({
     idf: "Não fornecido",
     external: false,
   },
-}: ProfRowProps) {
+}: ProfRowProps): JSX.Element {
   nRow = typeof nRow === "string" ? parseInt(nRow) : nRow;
   const [shouldShowAlterDlg, setAlterDlg] = useState<boolean>(false);
   if (!Number.isFinite(nRow)) nRow = 2;
@@ -32,8 +32,7 @@ export default function ProfRow({
             className={`outputAvProf outputAvProf${nRow - 1}`}
             id={`outpCPFProf-row${nRow}`}
             data-title={`Identificador ${nRow}`}
-            data-aloc='cpf-prof'
-          >
+            data-aloc='cpf-prof'>
             {prof.idf || "Não fornecido"}
           </output>
         </th>
@@ -43,8 +42,7 @@ export default function ProfRow({
           className={`outputAvProf outputAvProf${nRow - 1}`}
           id={`outpNameProf-row${nRow}`}
           data-title={`Nome do Profissional ${nRow}`}
-          data-aloc='name-prof'
-        >
+          data-aloc='name-prof'>
           {prof.name || "Anônimo"}
         </output>
       </td>
@@ -56,8 +54,7 @@ export default function ProfRow({
             data-title={`Externo ${nRow}`}
             data-row={nRow}
             data-col={userClass === "coordenador" ? "3" : "2"}
-            data-aloc='external-prof'
-          >
+            data-aloc='external-prof'>
             {external ? "Externo" : "Interno"}
           </output>
         </td>
@@ -65,16 +62,14 @@ export default function ProfRow({
       <td
         className='celEmailProf'
         data-row={nRow}
-        data-col={userClass === "coordenador" ? (inDlg ? "4" : "3") : inDlg ? "3" : "2"}
-      >
+        data-col={userClass === "coordenador" ? (inDlg ? "4" : "3") : inDlg ? "3" : "2"}>
         <output
           className={`outputAvProf outputAvProf outputAvProf${nRow - 1}`}
           id={`outpEmailProf-row${nRow}`}
           data-title={`Email ${nRow}`}
           data-aloc='email-prof'
           data-row={nRow}
-          data-col={userClass === "coordenador" ? (inDlg ? "4" : "3") : inDlg ? "3" : "2"}
-        >
+          data-col={userClass === "coordenador" ? (inDlg ? "4" : "3") : inDlg ? "3" : "2"}>
           <address data-row={nRow} data-col={userClass === "coordenador" ? (inDlg ? "4" : "3") : inDlg ? "3" : "2"}>
             <a
               href={`mailto:${prof.email || "null"}`}
@@ -82,8 +77,7 @@ export default function ProfRow({
               rel='nofollow'
               id={`emaila-prof-row${nRow}`}
               data-row={nRow}
-              data-col={userClass === "coordenador" ? (inDlg ? "4" : "3") : inDlg ? "3" : "2"}
-            >
+              data-col={userClass === "coordenador" ? (inDlg ? "4" : "3") : inDlg ? "3" : "2"}>
               {`${prof.email || "Não fornecido"}`}
             </a>
           </address>
@@ -92,64 +86,56 @@ export default function ProfRow({
       <td
         className='celTelProf'
         data-row={nRow}
-        data-col={userClass === "coordenador" ? (inDlg ? "5" : "4") : inDlg ? "4" : "3"}
-      >
+        data-col={userClass === "coordenador" ? (inDlg ? "5" : "4") : inDlg ? "4" : "3"}>
         <output
           className={`outputAv outputAvProf outputAvProf${nRow - 1}`}
           id={`outpTelProf-row${nRow}`}
           data-title={`Telefone ${nRow}`}
           data-aloc='tel-prof'
           data-row={nRow}
-          data-col={userClass === "coordenador" ? (inDlg ? "5" : "4") : inDlg ? "5" : "4"}
-        >
+          data-col={userClass === "coordenador" ? (inDlg ? "5" : "4") : inDlg ? "5" : "4"}>
           {`${prof.tel || "Não fornecido"}`}
         </output>
       </td>
       <td
         className='celAreaProf'
         data-row={nRow}
-        data-col={userClass === "coordenador" ? (inDlg ? "6" : "5") : inDlg ? "5" : "4"}
-      >
+        data-col={userClass === "coordenador" ? (inDlg ? "6" : "5") : inDlg ? "5" : "4"}>
         <output
           className={`outputAvProf outputAvProf${nRow - 1}`}
           id={`outpAreaProf-row${nRow}`}
           data-title={`Área de atuação${nRow}`}
           data-aloc='area-prof'
           data-row={nRow}
-          data-col={userClass === "coordenador" ? (inDlg ? "6" : "5") : inDlg ? "5" : "4"}
-        >
+          data-col={userClass === "coordenador" ? (inDlg ? "6" : "5") : inDlg ? "5" : "4"}>
           {`${prof.area || "Não definido"}`}
         </output>
       </td>
       <td
         className='celDayProf'
         data-row={nRow}
-        data-col={userClass === "coordenador" ? (inDlg ? "7" : "6") : inDlg ? "6" : "5"}
-      >
+        data-col={userClass === "coordenador" ? (inDlg ? "7" : "6") : inDlg ? "6" : "5"}>
         <output
           className={`outputAvProf outputAvProf${nRow - 1}`}
           id={`outpDayProf-row${nRow}`}
           data-title={`Dia de atividade${nRow}`}
           data-aloc='day-prof'
           data-row={nRow}
-          data-col={userClass === "coordenador" ? (inDlg ? "7" : "6") : inDlg ? "6" : "5"}
-        >
+          data-col={userClass === "coordenador" ? (inDlg ? "7" : "6") : inDlg ? "6" : "5"}>
           {`${prof.day || "Não definido"}`}
         </output>
       </td>
       <td
         className='celIntervProf'
         data-row={nRow}
-        data-col={userClass === "coordenador" ? (inDlg ? "8" : "7") : inDlg ? "7" : "6"}
-      >
+        data-col={userClass === "coordenador" ? (inDlg ? "8" : "7") : inDlg ? "7" : "6"}>
         <output
           className={`outputAvProf outputAvProf outputAvProf${nRow - 1}`}
           id={`outpIntervProf-row${nRow}`}
           data-title={`Intervalo de Atividade ${nRow}`}
           data-aloc='interv-prof'
           data-row={nRow}
-          data-col={userClass === "coordenador" ? (inDlg ? "8" : "7") : inDlg ? "7" : "6"}
-        >
+          data-col={userClass === "coordenador" ? (inDlg ? "8" : "7") : inDlg ? "7" : "6"}>
           {`${dateISOtoBRL(prof.start_day) || "Não definido"} — ${dateISOtoBRL(prof.end_day) || "Não definido"}`}
         </output>
       </td>
@@ -162,8 +148,7 @@ export default function ProfRow({
               className='btn btn-info btnAffectRegst btnAlterRegst opaquelightEl'
               onClick={() => setAlterDlg(!shouldShowAlterDlg)}
               data-row={nRow}
-              data-col='9'
-            >
+              data-col='9'>
               <small role='textbox' className='bolded fontLightWt'>
                 Alterar
               </small>

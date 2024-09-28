@@ -33,7 +33,7 @@ export async function setListenersForDates(
   dateInps: Array<targEl>,
   monthStateSelector: targEl,
   isAutoFillMonthOn = true,
-  isInitialSet = true
+  isInitialSet = true,
 ): Promise<[RegExp, (workingDays: [number, number], month?: string) => void]> {
   if (Array.isArray(dateInps) && dateInps.length > 0 && dateInps.every(inp => inp instanceof HTMLElement)) {
     if (
@@ -79,8 +79,8 @@ export async function setListenersForDates(
       const year = `${new Date().getFullYear()}`;
       const handleMonthChange = (
         workingDays: [number, number],
-        month: string = `${(new Date().getMonth() + 1).toString().padStart(2, "0")}`
-      ) => {
+        month: string = `${(new Date().getMonth() + 1).toString().padStart(2, "0")}`,
+      ): void => {
         //criação dos padrões de mês aceitos com base nas options disponíveis
         if (monthMap.get(monthStateSelector.value.slice(0, 3))) {
           //define as datas iniciais e pattern, com base em ano e mês (extraído da chave do map associado ao select)
@@ -99,8 +99,8 @@ export async function setListenersForDates(
             [1, 2, 3, 4],
             parseNotNaN(
               (parseNotNaN(monthMap.get(monthStateSelector.value) || "01") - 1).toString() ||
-                new Date().getMonth().toString()
-            )
+                new Date().getMonth().toString(),
+            ),
           );
           if (monthdates.length >= dateInps.length - 1) {
             const lastConsDayConts = Array.from(document.getElementsByClassName("lastConsDayCont"));
@@ -115,9 +115,9 @@ export async function setListenersForDates(
                     ? elementNotFound(
                         lastConsDayCont,
                         `column for last day appointments, length of monthdates ${monthdates?.length || 0}`,
-                        extLine(new Error())
+                        extLine(new Error()),
                       )
-                    : (() => {
+                    : ((): void => {
                         lastConsDayCont.hidden = false;
                         lastConsDayCont.style.display = "table-cell";
                       })();
@@ -126,7 +126,7 @@ export async function setListenersForDates(
                 elementNotFound(
                   lastConsDayCont,
                   `Element in the fifth column id ${lastConsDayCont?.id || "UNDEFINED"}`,
-                  extLine(new Error())
+                  extLine(new Error()),
                 );
             });
             const mainConsDaysCont = document.getElementById(`mainConsDaysCont`);
@@ -136,14 +136,14 @@ export async function setListenersForDates(
               consDayConts.length === dateInps.length
                 ? (lengthRef = consDayConts.length)
                 : console.warn(
-                    `Error comparing length of containers for appointment days and number of inputs for them`
+                    `Error comparing length of containers for appointment days and number of inputs for them`,
                   );
               //ATRIBUIÇÃO AUTOMÁTICA DE DATAS AQUI
               for (let w = 0; w < lengthRef; w++) {
                 if (typeof monthdates[w] === "number" && dateInps[w] instanceof HTMLInputElement) {
                   (dateInps[w] as HTMLInputElement).value = `${(dateInps[w] as HTMLInputElement).value.slice(
                     0,
-                    8
+                    8,
                   )}${monthdates[w].toString().padStart(2, "0")}`;
                 } else {
                   inputNotFound(dateInps[w], "dateInps in the conversion from monthdates", extLine(new Error()));
@@ -160,33 +160,33 @@ export async function setListenersForDates(
                   : inputNotFound(
                       daySel,
                       "Selector for day inclusion in setListeneresForDates()",
-                      extLine(new Error())
+                      extLine(new Error()),
                     );
               }
             } else
               elementNotFound(
                 mainConsDaysCont,
                 "Main container for columns for appointment days",
-                extLine(new Error())
+                extLine(new Error()),
               );
           } else
             console.error(
-              `Error checking similarity of length between available month days relative to nth weekdays. Aborting Proccess.`
+              `Error checking similarity of length between available month days relative to nth weekdays. Aborting Proccess.`,
             );
           correlateAptMonthDays(
             document.querySelector("#changeDaySel"),
             Array.from(document.querySelectorAll(".dayTabRef")),
-            true
+            true,
           );
           addListenerForValidities(dateInps, new RegExp(`^${year}-${month}-[0-9]{2}$`));
           const [weekDayNames] = convertMonthdaysToWeekdays(
             parseNotNaN(monthMap.get(`${monthStateSelector.value}`) || new Date().getMonth().toString()),
-            workingDays
+            workingDays,
           );
           correlateWorkingDays(weekDayNames, dateInps.length);
         } else
           console.error(
-            `Undefined match between de month <select> value and the map for available months. Aborting routine.`
+            `Undefined match between de month <select> value and the map for available months. Aborting routine.`,
           );
       };
       if (isInitialSet === true) {
@@ -202,7 +202,7 @@ export async function setListenersForDates(
             : inputNotFound(
                 toggleAutoFillMonth,
                 "Input for toggling month autofill on month selector change",
-                extLine(new Error())
+                extLine(new Error()),
               );
           if (isAutoFillMonthOn) {
             numMonth = monthMap.get(monthStateSelector.value.slice(0, 3));
@@ -230,14 +230,14 @@ export function hideLastDay(daySel: HTMLSelectElement | HTMLInputElement): void 
     (daySel.lastElementChild as HTMLElement).style.display = "none";
   }
 }
-export function correlateDayOpts(dateInps: targEl[], dateSel: targEl, userClass: string = "estudante") {
+export function correlateDayOpts(dateInps: targEl[], dateSel: targEl, userClass: string = "estudante"): void {
   if (
     Array.isArray(dateInps) &&
     dateInps.length > 0 &&
     dateInps.every(dateInp => dateInp instanceof HTMLElement) &&
     dateSel instanceof HTMLSelectElement
   ) {
-    const includeOp = (dateInp: HTMLInputElement, dateInpValues: string[]) => {
+    const includeOp = (dateInp: HTMLInputElement, dateInpValues: string[]): string[] => {
       const newOp = document.createElement("option");
       newOp.value = dateInp.value;
       newOp.id = `op_${dateInp.value}`;
@@ -254,7 +254,7 @@ export function correlateDayOpts(dateInps: targEl[], dateSel: targEl, userClass:
             ])
             .filter(sorted => Number.isFinite(sorted[1]) && sorted[1] > 0)
             .sort((a, b) => a[1] - b[1])[0][0]
-        }`
+        }`,
       );
       sorted ? sorted.insertAdjacentElement("afterend", newOp) : dateSel.prepend(newOp);
       const [year, month, day] = dateInp.value.split("-");
@@ -344,7 +344,7 @@ export function correlateDayOpts(dateInps: targEl[], dateSel: targEl, userClass:
               if (dateLabel instanceof HTMLElement) {
                 dateLabel.textContent = `${dateLabel.textContent!.slice(
                   0,
-                  dateLabel.textContent!.indexOf(" ") + 1
+                  dateLabel.textContent!.indexOf(" ") + 1,
                 )}${mapOrderWeekdays.get(new Date(dateInp.value + "T00:00:00").getDay())}`;
                 /sábado/gi.test(dateLabel.textContent) || /domingo/gi.test(dateLabel.textContent)
                   ? (dateLabel.textContent = dateLabel.textContent.replace("Primeira", "Primeiro"))

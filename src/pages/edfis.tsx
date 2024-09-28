@@ -92,17 +92,12 @@ export const tabProps: ENTabsProps = {
   targInpSumDCut: undefined,
 };
 export const person = new Person("masculino", 0, 0, 0, 0, "leve");
-// setInterval(() => {
-//   console.log(person);
-//   console.log(tabProps);
-// }, 2000);
-const MemoAge = memo(AgeElement);
-const MemoLoc = memo(ConfirmLocId);
+const MemoAge = memo(AgeElement),
+  MemoLoc = memo(ConfirmLocId);
 export default function EdFisNutPage(): JSX.Element {
   return (
     <ErrorBoundary
-      FallbackComponent={() => <GenericErrorComponent message='Error loading form Physical Education and Nutrition' />}
-    >
+      FallbackComponent={() => <GenericErrorComponent message='Error loading form Physical Education and Nutrition' />}>
       <div id='bgDiv'>
         <header>
           <div role='group' className='pad1pc'>
@@ -136,10 +131,9 @@ export default function EdFisNutPage(): JSX.Element {
             autoComplete='on'
             onSubmit={ev =>
               validateForm(ev).then(validation =>
-                validation[0] ? handleSubmit("ed", validation[2], true) : ev.preventDefault()
+                validation[0] ? handleSubmit("ed", validation[2], true) : ev.preventDefault(),
               )
-            }
-          >
+            }>
             <fieldset name='fsAnamGName' id='fsAnamGId' className='fsMain'>
               <legend className='legMain form-padded' id='fsAnamGLeg'>
                 Identificação
@@ -205,8 +199,7 @@ export default function EdFisNutPage(): JSX.Element {
                     <label
                       htmlFor='inpDiur'
                       id='labDiur'
-                      className='form-control noInvert labAlimRot fitSpaced labUr labUrInterval widMax900q80vw noInvert'
-                    >
+                      className='form-control noInvert labAlimRot fitSpaced labUr labUrInterval widMax900q80vw noInvert'>
                       <InpDiur />
                       <p className='msrProgCons noInvert'>ml/dia</p>
                     </label>
@@ -348,8 +341,7 @@ export default function EdFisNutPage(): JSX.Element {
                     <label
                       htmlFor='confirmLocId'
                       className='labConfirm labDivConfirm2 pdT2pc900Q htFull900Q flexNoWC bolded widHalf900Q noInvert'
-                      id='labConfirmLoc'
-                    >
+                      id='labConfirmLoc'>
                       <span>Local:</span>
                       <MemoLoc />
                     </label>
@@ -417,7 +409,7 @@ export function exeAutoFill(targ: targEl, isAutoFillActive: boolean = true, cont
         [gordCorpLvl, tabProps.targInpIMC, tabProps.targInpMLG],
         [tabProps.targInpTMB, tabProps.targInpGET, formTMBTypeElement],
         tabProps.factorAtvLvl,
-        tabProps.factorAtleta
+        tabProps.factorAtleta,
       );
       [tabProps.IMC, tabProps.MLG, tabProps.TMB, tabProps.GET] = arrIndexes;
       [person.weight, person.height] = matchPersonPropertiesWH(person, tabProps.targInpWeigth, tabProps.targInpHeigth);
@@ -444,7 +436,9 @@ export function exeAutoFill(targ: targEl, isAutoFillActive: boolean = true, cont
       if (
         arrtargInps.every(
           targ =>
-            targ instanceof HTMLInputElement || targ instanceof HTMLSelectElement || targ instanceof HTMLTextAreaElement
+            targ instanceof HTMLInputElement ||
+            targ instanceof HTMLSelectElement ||
+            targ instanceof HTMLTextAreaElement,
         )
       ) {
         (tabProps.targInpIMC as entryEl).value = tabProps.IMC.toString();
@@ -454,7 +448,7 @@ export function exeAutoFill(targ: targEl, isAutoFillActive: boolean = true, cont
         (tabProps.targInpPGC as entryEl).value = tabProps.PGC.toString();
       } else
         console.error(
-          `Error validating instances of arrtargInps in exeAutoFill(). Values for respective <input> Elements not updated.`
+          `Error validating instances of arrtargInps in exeAutoFill(). Values for respective <input> Elements not updated.`,
         );
       return (
         [
@@ -471,7 +465,7 @@ export function exeAutoFill(targ: targEl, isAutoFillActive: boolean = true, cont
         targ,
         isAutoFillActive,
         `${JSON.stringify(person)}`,
-        context
+        context,
       );
       arrIndexes = [tabProps.IMC, tabProps.MLG, tabProps.TMB, tabProps.GET, tabProps.PGC];
       arrtargInps = [
@@ -579,7 +573,7 @@ export function callbackAtvLvlElementNaf(contextData: [number[], targEl[]], main
         formTMBTypeElement,
         document.getElementById("spanFactorAtleta"),
         document.getElementById("lockGordCorpLvl"),
-        tabProps.IMC || 0
+        tabProps.IMC || 0,
       );
       person.atvLvl = updateAtvLvl(atvLvlElement, nafType, person.atvLvl);
       //retorna factorAtvLvl(número para ser utilizado, com base no .atvLvl)
@@ -594,7 +588,7 @@ export function callbackAtvLvlElementNaf(contextData: [number[], targEl[]], main
         formTMBTypeElement,
         document.getElementById("spanFactorAtleta"),
         document.getElementById("lockGordCorpLvl"),
-        tabProps.IMC || 0
+        tabProps.IMC || 0,
       );
       person.atvLvl = updateAtvLvl(nafType, atvLvlElement, person.atvLvl);
       //retorna factorAtvLvl(número para ser utilizado, com base no .atvLvl)
@@ -614,7 +608,7 @@ export function callbackAtvLvlElementNaf(contextData: [number[], targEl[]], main
 export function handleCallbackWHS(
   contextComp: [contextAutofill, contextAutofillNums],
   inpWHS: targEl,
-  isAutoFillActive: boolean = true
+  isAutoFillActive: boolean = true,
 ): [number, autofillResult] {
   tabProps.numCol = contextComp[1][0];
   let prop = 0,

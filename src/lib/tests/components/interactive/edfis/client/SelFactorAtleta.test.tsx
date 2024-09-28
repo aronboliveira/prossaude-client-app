@@ -5,11 +5,11 @@ jest.mock(
   "../../../../../pages/edfis",
   (): {
     handleCallbackWHS: jest.Mock<any, any, any>;
-    tabProps: {};
+    tabProps: object;
   } => ({
     handleCallbackWHS: jest.fn() as jest.Mock,
     tabProps: {},
-  })
+  }),
 ) as typeof jest;
 describe("SelFactorAtleta Component", (): void => {
   it("should render the SelFactorAtleta select input", (): void => {
@@ -49,7 +49,7 @@ describe("SelFactorAtleta Component", (): void => {
         ],
       ],
       select,
-      tabProps.isAutoFillActive
+      tabProps.isAutoFillActive,
     ) as any;
   }) as void;
 }) as void;

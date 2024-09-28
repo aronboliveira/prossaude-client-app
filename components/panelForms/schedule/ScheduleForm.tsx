@@ -37,6 +37,7 @@ import {
 import { syncAriaStates, validateForm } from "../../../src/lib/global/handlers/gHandlers";
 import { scheduleReset, panelFormsVariables, sessionScheduleState } from "../panelFormsData";
 import FormDlg from "../../consRegst/FormDlg";
+import { assignFormAttrs } from "@/lib/global/gModel";
 export const scheduleProps: { autoSaving: boolean } = {
   autoSaving: true,
 };
@@ -54,7 +55,7 @@ export default function ScheduleForm({ mainRoot, userClass = "estudante" }: Sche
         ],
         [true, 1],
         true,
-        [document.getElementById("formBodySchedSect")]
+        [document.getElementById("formBodySchedSect")],
       );
     }
   };
@@ -75,7 +76,7 @@ export default function ScheduleForm({ mainRoot, userClass = "estudante" }: Sche
         elementNotFound(
           registDayBtn,
           "Button for completing day of appointment in schedule form",
-          extLine(new Error())
+          extLine(new Error()),
         );
       //adição de listeners para drag events
       const dayChecks = form.querySelectorAll('input[class*="apptCheck"]');
@@ -103,7 +104,7 @@ export default function ScheduleForm({ mainRoot, userClass = "estudante" }: Sche
             inp.type === "number" ||
             inp.type === "date" ||
             inp.type === "search" ||
-            inp.type === "hour"
+            inp.type === "hour",
         ),
         ...form.querySelectorAll("select"),
         ...form.querySelectorAll("textarea"),
@@ -130,7 +131,7 @@ export default function ScheduleForm({ mainRoot, userClass = "estudante" }: Sche
       ],
       [true, 1],
       true,
-      [document.getElementById("formBodySchedSect")]
+      [document.getElementById("formBodySchedSect")],
     );
     const daysCont = document.getElementById("mainConsDaysCont");
     if (daysCont instanceof HTMLElement) scheduleReset[`outerHTML`] = daysCont.outerHTML;
@@ -159,11 +160,11 @@ export default function ScheduleForm({ mainRoot, userClass = "estudante" }: Sche
           if (!(formRef.current instanceof HTMLFormElement))
             throw elementNotFound(formRef.current, `Validation of Form instance`, extLine(new Error()));
           validateForm(formRef.current, formRef.current).then(validation =>
-            handleSubmit("schedule", validation[2], true)
+            handleSubmit("schedule", validation[2], true),
           );
         } catch (e) {
           console.error(
-            `Error executing interval for saving schedule at ${new Date().getMinutes()}:\n${(e as Error).message}`
+            `Error executing interval for saving schedule at ${new Date().getMinutes()}:\n${(e as Error).message}`,
           );
         }
       }, 60000);
@@ -193,7 +194,7 @@ export default function ScheduleForm({ mainRoot, userClass = "estudante" }: Sche
       elementNotFound(
         workingDefinitionsRef.current,
         "workingDefinitionsRef.current in useEffect()",
-        extLine(new Error())
+        extLine(new Error()),
       );
   }, [workingDefinitionsRef]);
   useEffect(() => {
@@ -204,21 +205,21 @@ export default function ScheduleForm({ mainRoot, userClass = "estudante" }: Sche
         inpDates,
         document.getElementById("monthSelector"),
         panelFormsVariables.isAutoFillMonthOn,
-        true
+        true,
       ).then(([monthPattern]) => {
         addListenerForValidities(inpDates, monthPattern);
       });
       correlateDayOpts(
         Array.from(document.querySelectorAll(".dayTabRef")),
         document.getElementById("changeDaySel"),
-        userClass
+        userClass,
       );
     } else {
       inputNotFound(
         monthRef.current,
         `monthRef in useEffect()
         parentForm present: ${formRef instanceof HTMLFormElement}`,
-        extLine(new Error())
+        extLine(new Error()),
       );
     }
   }, [monthRef]);
@@ -244,7 +245,7 @@ export default function ScheduleForm({ mainRoot, userClass = "estudante" }: Sche
         ["supervisor", "coordenador"],
         document.getElementById("confirmDayInp"),
         ...document.querySelectorAll(".apptCheck"),
-        ...document.querySelectorAll(".eraseAptBtn")
+        ...document.querySelectorAll(".eraseAptBtn"),
       );
       handleClientPermissions(
         userClass,
@@ -252,7 +253,7 @@ export default function ScheduleForm({ mainRoot, userClass = "estudante" }: Sche
         document.getElementById("firstWorkingDay"),
         document.getElementById("secondWorkingDay"),
         document.getElementById("btnResetTab"),
-        ...document.querySelectorAll(".dayTabRef")
+        ...document.querySelectorAll(".dayTabRef"),
       );
     }
   }, [formRef, userClass]);
@@ -330,6 +331,7 @@ export default function ScheduleForm({ mainRoot, userClass = "estudante" }: Sche
     } catch (e) {
       console.error(`Error executing procedure for adding interval to Transference Area:\n${(e as Error).message}`);
     }
+    assignFormAttrs(formRef.current);
     return () => {
       try {
         clearInterval(confInterv);
@@ -354,12 +356,10 @@ export default function ScheduleForm({ mainRoot, userClass = "estudante" }: Sche
             action='schedule_form'
             method='post'
             target='_top'
-            ref={formRef}
-          >
+            ref={formRef}>
             <section
               id='formHSchedSect'
-              className='mg-3b widMaxFullView ovFlAut-fix flexNoW flexQ900NoWC flexAlItCt cGap2v rGapQ9002v noInvert'
-            >
+              className='mg-3b widMaxFullView ovFlAut-fix flexNoW flexQ900NoWC flexAlItCt cGap2v rGapQ9002v noInvert'>
               <h1 id='hSched' className='wsBs bolded'>
                 <strong>Atendimento Diário</strong>
               </h1>
@@ -368,8 +368,7 @@ export default function ScheduleForm({ mainRoot, userClass = "estudante" }: Sche
                 className='btn btn-success widFull900Q widQ460MinFull htMaxBSControl forceInvert bolded'
                 id='addAppointBtn'
                 onClick={toggleForm}
-                title='Preencha um formulário para gerar a ficha de uma nova consulta'
-              >
+                title='Preencha um formulário para gerar a ficha de uma nova consulta'>
                 Adicionar Consulta
               </button>
             </section>
@@ -384,13 +383,11 @@ export default function ScheduleForm({ mainRoot, userClass = "estudante" }: Sche
                 <section className='flexJC flexAlItSt flexNoWC flexBasis75 padR5v'>
                   <fieldset
                     className='flexJSt flexAlItCt flexBasis75 cGap2v ancestorTwins flexTwin-height widQ900MinFull flexQ460NoWC'
-                    id='schedHourFs'
-                  >
+                    id='schedHourFs'>
                     <div
                       role='group'
                       className='flexLineDiv flexQ900NoWC widQ460MinFull widHalf900Q rGapQ900null'
-                      id='changeDayDiv'
-                    >
+                      id='changeDayDiv'>
                       <label className='boldLabel mg-09t' htmlFor='changeDaySel'>
                         Dia de Inclusão:
                       </label>
@@ -398,14 +395,12 @@ export default function ScheduleForm({ mainRoot, userClass = "estudante" }: Sche
                         className='form-select widMin75Q460v ssPersist'
                         id='changeDaySel'
                         title='Selecione aqui o dia para inclusão dentre os encaixados automaticamente na agenda'
-                        data-title='Dia de trabalho para Inclusão'
-                      ></select>
+                        data-title='Dia de trabalho para Inclusão'></select>
                     </div>
                     <div
                       role='group'
                       className='flexLineDiv flexQ900NoWC widQ460MinFull alSfSt widHalf900Q rGapQ900null'
-                      id='hourDayDiv'
-                    >
+                      id='hourDayDiv'>
                       <label className='boldLabel mg-09t' id='labHourDay' htmlFor='hourDayInp'>
                         Horário do Dia:
                       </label>
@@ -502,13 +497,11 @@ export default function ScheduleForm({ mainRoot, userClass = "estudante" }: Sche
                   </fieldset>
                   <fieldset
                     className='flexJSt flexAlItCt flexBasis25 cGap2v ancestorTwins flexTwin-height'
-                    id='schedTabFs'
-                  >
+                    id='schedTabFs'>
                     <div
                       role='group'
                       className='flexLineDiv flexAlItCt900Q flexQ460NoWC flexAlItSt460Q widQ460MinFull flexTwin-height rGapQ2v'
-                      id='confirmDayMainDiv'
-                    >
+                      id='confirmDayMainDiv'>
                       <div role='group' className='flexNoW flexQ460NoWC cGap1v noInvert'>
                         <label className='boldLabel' id='labConfirmDay' htmlFor='confirmDayInp'>
                           Consulta Confirmada:
@@ -536,7 +529,7 @@ export default function ScheduleForm({ mainRoot, userClass = "estudante" }: Sche
                                         throw elementNotFound(
                                           confirmRegst,
                                           `Validation of confirmRegst instance`,
-                                          extLine(new Error())
+                                          extLine(new Error()),
                                         );
                                       if (!(relAptBtn instanceof HTMLElement)) {
                                         console.warn(`No related button for day checkbox id ${confirmRegst.id}`);
@@ -570,13 +563,11 @@ export default function ScheduleForm({ mainRoot, userClass = "estudante" }: Sche
                 </section>
                 <section
                   className='flexJC flexAlItCt flexNoW flexBasis25 form-control transfArea cGap1v noInvert'
-                  id='transfArea'
-                >
+                  id='transfArea'>
                   <slot
                     id='replaceSlot'
                     className='opaqueEl ssPersist'
-                    title='Aqui é incluído o botão de uma consulta recém-criada'
-                  >
+                    title='Aqui é incluído o botão de uma consulta recém-criada'>
                     Área de transferência
                   </slot>
                   <button
@@ -602,13 +593,13 @@ export default function ScheduleForm({ mainRoot, userClass = "estudante" }: Sche
                                 color: "#0981714d",
                                 title: "Aqui é incluído o botão de uma consulta recém-criada",
                               }),
-                              transfArea.querySelector('[id*="appointmentBtn"]')!
+                              transfArea.querySelector('[id*="appointmentBtn"]')!,
                             );
                           } else {
                             elementNotFound(
                               transfArea,
                               "Element for appointment transference slot in handleDragAptBtn()",
-                              extLine(new Error())
+                              extLine(new Error()),
                             );
                             if (!transfArea.querySelector("slot")) {
                               transfArea.appendChild(
@@ -617,22 +608,20 @@ export default function ScheduleForm({ mainRoot, userClass = "estudante" }: Sche
                                   textContent: "Área de transferência",
                                   className: "opaqueEl",
                                   color: "#0981714d",
-                                })
+                                }),
                               );
                             }
                           }
                         }
                       }
-                    }}
-                  ></button>
+                    }}></button>
                 </section>
               </section>
               <hr />
               <section
                 className='flexLineDiv flexQ460NoWC widQ460MinFull widQ900MinFull flexTwin-height widHalf'
                 id='workingDefinitionsDiv'
-                ref={workingDefinitionsRef}
-              >
+                ref={workingDefinitionsRef}>
                 <div role='group' className='flexAlItCt flexJSe flexAlItSt flexNoWC flexBasis75 widQ900MinFull'>
                   <div role='group' className='flexJBt cGap2v flexQ460NoWC widQ900MinFull flexJtSb900Q'>
                     <div role='group' className='flexJBt cGap1v flexAlItBs flexQ900NoWC widHalf900Q'>
@@ -652,12 +641,11 @@ export default function ScheduleForm({ mainRoot, userClass = "estudante" }: Sche
                                     Array.from<HTMLInputElement>(formRef.current?.querySelectorAll(".dayTabRef") ?? []),
                                     document.getElementById("monthSelector"),
                                     panelFormsVariables.isAutoFillMonthOn,
-                                    false
+                                    false,
                                   );
                               }
                             : () => {}
-                        }
-                      >
+                        }>
                         <option value='Segunda-feira' data-weekday='1'>
                           Segunda-feira
                         </option>
@@ -698,12 +686,11 @@ export default function ScheduleForm({ mainRoot, userClass = "estudante" }: Sche
                                     Array.from<HTMLInputElement>(formRef.current?.querySelectorAll(".dayTabRef") ?? []),
                                     document.getElementById("monthSelector"),
                                     panelFormsVariables.isAutoFillMonthOn,
-                                    false
+                                    false,
                                   );
                               }
                             : () => {}
-                        }
-                      >
+                        }>
                         <option value='Segunda-feira' data-weekday='1'>
                           Segunda-feira
                         </option>
@@ -730,8 +717,7 @@ export default function ScheduleForm({ mainRoot, userClass = "estudante" }: Sche
                   </div>
                   <div
                     role='group'
-                    className='flexJBt cGap2v flexAlItBs flexAlE900Q flexQ460NoWC flexAlItSt460Q widFull900Q'
-                  >
+                    className='flexJBt cGap2v flexAlItBs flexAlE900Q flexQ460NoWC flexAlItSt460Q widFull900Q'>
                     <div role='group' className='flexJBt cGap1v flexQ900NoWC widHalf900Q'>
                       <label className='boldLabel mg-09t' htmlFor='monthSelector'>
                         Relação de Pacientes do Mês:
@@ -754,14 +740,14 @@ export default function ScheduleForm({ mainRoot, userClass = "estudante" }: Sche
                               throw inputNotFound(
                                 monthSelector,
                                 "Month Selector when handling Month state change",
-                                extLine(new Error())
+                                extLine(new Error()),
                               );
                             const tabRoot = document.getElementById("tbSchedule");
                             if (!(tabRoot instanceof HTMLElement))
                               throw elementNotFound(
                                 tabRoot,
                                 `Table Schedule Root when handling Month state change`,
-                                extLine(new Error())
+                                extLine(new Error()),
                               );
                             if (
                               !(
@@ -770,7 +756,7 @@ export default function ScheduleForm({ mainRoot, userClass = "estudante" }: Sche
                               )
                             )
                               throw new Error(
-                                `Error validating sessionScheduleState using the monthSelector value reference`
+                                `Error validating sessionScheduleState using the monthSelector value reference`,
                               );
                             rootDlgContext.addedAptListeners = false;
                             rootDlgContext.addedDayListeners = false;
@@ -778,7 +764,7 @@ export default function ScheduleForm({ mainRoot, userClass = "estudante" }: Sche
                               monthRef.current,
                               document.getElementById("tbSchedule"),
                               userClass,
-                              panelFormsVariables.isAutoFillMonthOn
+                              panelFormsVariables.isAutoFillMonthOn,
                             );
                             try {
                               const lastConsDayCont = document.querySelector(".lastConsDayCont");
@@ -803,7 +789,7 @@ export default function ScheduleForm({ mainRoot, userClass = "estudante" }: Sche
                                     console.error(
                                       `Error executing iteration ${j} of cicles for checking Last Row Cells:${
                                         (e as Error).message
-                                      }`
+                                      }`,
                                     );
                                   }
                                 });
@@ -823,7 +809,7 @@ export default function ScheduleForm({ mainRoot, userClass = "estudante" }: Sche
                                     console.error(
                                       `Error executing iteration ${j} of cicles for checking Last Row Cells:${
                                         (e as Error).message
-                                      }`
+                                      }`,
                                     );
                                   }
                                 });
@@ -832,15 +818,14 @@ export default function ScheduleForm({ mainRoot, userClass = "estudante" }: Sche
                               console.error(
                                 `Error executing procedure for checking Last Schedule Column display:\n${
                                   (e as Error).message
-                                }`
+                                }`,
                               );
                             }
                           } catch (err) {
                             console.error(`Error handling change on Month Selector:
                             ${(err as Error).message}`);
                           }
-                        }}
-                      >
+                        }}>
                         <option value='jan'>Janeiro</option>
                         <option value='feb'>Fevereiro</option>
                         <option value='mar'>Março</option>
@@ -870,7 +855,7 @@ export default function ScheduleForm({ mainRoot, userClass = "estudante" }: Sche
                               Array.from<HTMLInputElement>(formRef.current?.querySelectorAll(".dayTabRef") ?? []),
                               document.getElementById("monthSelector"),
                               panelFormsVariables.isAutoFillMonthOn,
-                              false
+                              false,
                             );
                         }}
                       />
@@ -886,8 +871,7 @@ export default function ScheduleForm({ mainRoot, userClass = "estudante" }: Sche
             <section id='formBodySchedSect' className='widMaxFullView ovFlAut'>
               <table
                 className='table table-responsive table-striped table-hover form-padded table-transparent'
-                id='mainConsDaysCont'
-              >
+                id='mainConsDaysCont'>
                 <colgroup>
                   {cols.map(nCol => (
                     <col id={`schedule-col-${nCol}`} data-col={nCol} key={`schedule_col__${nCol}`}></col>
@@ -905,7 +889,7 @@ export default function ScheduleForm({ mainRoot, userClass = "estudante" }: Sche
                         <ThDate nCol={nCol} last={true} key={`th_date__${nCol}`} />
                       ) : (
                         <ThDate nCol={nCol} key={`th_date__${nCol}`} />
-                      )
+                      ),
                     )}
                   </tr>
                 </thead>
@@ -930,8 +914,7 @@ export default function ScheduleForm({ mainRoot, userClass = "estudante" }: Sche
                 className='btn btn-success flexAlItCt flexJC flexBasis50 bolded noInvert'
                 name='btnExportSched'
                 ref={btnExportSchedRef}
-                title='Gere um .xlsx com os dados preenchidos'
-              >
+                title='Gere um .xlsx com os dados preenchidos'>
                 Gerar Planilha
               </button>
               <ReseterBtn

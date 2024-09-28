@@ -2,32 +2,40 @@
 import { AlterFieldListProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import { ErrorBoundary } from "react-error-boundary";
 import { isClickOutside } from "@/lib/global/gStyleScript";
-import { nullishDlg, nullishSel } from "@/lib/global/declarations/types";
+import { nullishDlg, nullishForm, nullishSel } from "@/lib/global/declarations/types";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useEffect, useRef, useState } from "react";
 import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
 import GenericErrorComponent from "../error/GenericErrorComponent";
 import { elementNotFound, extLine, inputNotFound } from "@/lib/global/handlers/errorHandler";
-import { addEmailExtension, autoCapitalizeInputs, camelToKebab, formatCPF, formatTel } from "@/lib/global/gModel";
+import {
+  addEmailExtension,
+  assignFormAttrs,
+  autoCapitalizeInputs,
+  camelToKebab,
+  formatCPF,
+  formatTel,
+} from "@/lib/global/gModel";
 export default function AlterFieldList({
   dispatch,
   tabRef,
   name = "anonimo",
   state = true,
 }: AlterFieldListProps): JSX.Element {
-  const alterFieldRef = useRef<nullishDlg>(null);
-  const optsRef = useRef<nullishSel>(null);
-  const [_, setChosenOp] = useState(optsRef.current?.value || null);
-  const handleChange = (targ: HTMLSelectElement) => {
-    history.pushState(
-      {},
-      "",
-      `${location.origin}${location.pathname}${location.search}${camelToKebab(targ.value)}${location.hash}`
-    );
-    setTimeout(() => {
-      history.pushState({}, "", `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#"));
-    }, 300);
-  };
+  const alterFieldRef = useRef<nullishDlg>(null),
+    formRef = useRef<nullishForm>(null),
+    optsRef = useRef<nullishSel>(null),
+    [_, setChosenOp] = useState(optsRef.current?.value || null),
+    handleChange = (targ: HTMLSelectElement) => {
+      history.pushState(
+        {},
+        "",
+        `${location.origin}${location.pathname}${location.search}${camelToKebab(targ.value)}${location.hash}`,
+      );
+      setTimeout(() => {
+        history.pushState({}, "", `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#"));
+      }, 300);
+    };
   useEffect(() => {
     if (alterFieldRef.current instanceof HTMLDialogElement) {
       alterFieldRef.current.showModal();
@@ -40,7 +48,7 @@ export default function AlterFieldList({
             toggleDisplayRowData(state);
           }
         },
-        true
+        true,
       );
       const handleKeyDown = (press: KeyboardEvent) => {
         if (press.key === "Escape") {
@@ -63,13 +71,14 @@ export default function AlterFieldList({
       {},
       "",
       `${location.origin}${location.pathname}${location.search}&alter-dlg=open#${btoa(
-        String.fromCodePoint(...new TextEncoder().encode(name.toLowerCase().replaceAll(" ", "-")))
-      )}`
+        String.fromCodePoint(...new TextEncoder().encode(name.toLowerCase().replaceAll(" ", "-"))),
+      )}`,
     );
     optsRef.current instanceof HTMLSelectElement && handleChange(optsRef.current);
     setTimeout(() => {
       history.pushState({}, "", `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#"));
     }, 300);
+    assignFormAttrs(formRef.current);
     return () => {
       optsRef.current instanceof HTMLSelectElement
         ? history.pushState(
@@ -79,9 +88,9 @@ export default function AlterFieldList({
               .replaceAll(`&alter-dlg=open`, "")
               .replaceAll(
                 `#${btoa(String.fromCodePoint(...new TextEncoder().encode(name.toLowerCase().replaceAll(" ", "-"))))}`,
-                ""
+                "",
               )
-              .replaceAll(`${camelToKebab(optsRef.current.value)}${location.hash}`, "")
+              .replaceAll(`${camelToKebab(optsRef.current.value)}${location.hash}`, ""),
           )
         : history.pushState(
             {},
@@ -89,7 +98,7 @@ export default function AlterFieldList({
             `${location.origin}${location.pathname}${location.search}`
               .replaceAll(`&alter-dlg=open`, "")
               .replaceAll(`#${name.toLowerCase().replaceAll(" ", "-")}`, "")
-              .replaceAll(`${location.hash}`, "")
+              .replaceAll(`${location.hash}`, ""),
           );
       setTimeout(() => {
         history.pushState({}, "", `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#"));
@@ -133,7 +142,7 @@ export default function AlterFieldList({
         });
       if (optsRef.current.childElementCount < headers.length || optsRef.current.childElementCount === 0) {
         console.error(
-          `Error generating options for <select> reflecting headers. Abort process and replacing by <input>`
+          `Error generating options for <select> reflecting headers. Abort process and replacing by <input>`,
         );
         const replaceInp = document.createElement("input") as HTMLInputElement;
         Object.assign(replaceInp, optsRef.current);
@@ -157,16 +166,14 @@ export default function AlterFieldList({
             dispatch(!state);
             ev.currentTarget.closest("dialog")?.close();
           }
-        }}
-      >
+        }}>
         <ErrorBoundary
           FallbackComponent={() => (
             <ErrorFallbackDlg
               renderError={new Error(`Erro carregando a janela modal!`)}
               onClick={() => toggleDisplayRowData(state)}
             />
-          )}
-        >
+          )}>
           <fieldset id='fsAlterFieldStud' className='flexNoWC flexJSt flexAlItSt noInvert'>
             <section className='flexRNoWBetCt widFull' id='headFieldsHead'>
               <h2 className='mg-1b'>
@@ -318,13 +325,12 @@ export default function AlterFieldList({
                         break;
                     }
                   }
-                }}
-              ></select>
+                }}></select>
               <form
+                ref={formRef}
                 className='flexNoW flexAlItCt flexQ900NoWC cGap2v rGap2v widFull'
                 id='sectFieldsBody'
-                name='alter_field'
-              >
+                name='alter_field'>
                 <div role='group' className='flexNoW flexQ460NoWC wid75 cGap2v flexAlItCt pdL03' id='divValueOpt'>
                   <label htmlFor='newValueOpt' className='bolded wsNoW'>
                     Insira o Novo valor:
@@ -339,8 +345,7 @@ export default function AlterFieldList({
                     id='btnConfirmFieldOpt'
                     className='btn btn-success wsNoW'
                     onClick={() => toggleDisplayRowData(state)}
-                    style={{ fontWeight: 600 }}
-                  >
+                    style={{ fontWeight: 600 }}>
                     Confirmar Alteração
                   </button>
                 </div>

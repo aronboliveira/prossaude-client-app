@@ -199,7 +199,7 @@ describe("switchAutocorrect", (): void => {
     expect(elementNotFoundSpy).toHaveBeenCalledWith<[null, string, any]>(
       null,
       "arguments for switchAutocorrect()",
-      expect.any(Error)
+      expect.any(Error),
     );
   }) as void;
 }) as void;
@@ -213,7 +213,7 @@ describe("checkAllGenConts", (): void => {
   }) as void;
   it("should return true if all elements are valid inputs", (): void => {
     expect(
-      gModel.checkAllGenConts(document.createElement("input") as HTMLInputElement, document.createElement("textarea"))
+      gModel.checkAllGenConts(document.createElement("input") as HTMLInputElement, document.createElement("textarea")),
     ).toBe<boolean>(true) as void;
   }) as void;
   it("should call error handler if invalid elements are passed", (): void => {
@@ -249,7 +249,7 @@ describe("fluxGen", (): void => {
     mockGenTrans.value = "intermediario";
     mockGenFisAlin.value = "feminilizado";
     expect(gModel.fluxGen([mockGen, mockGenBirthRel, mockGenTrans, mockGenFisAlin], "feminino")).toBe<Gender>(
-      "feminino"
+      "feminino",
     );
   }) as void;
   it("should call multipleElementsNotFound if elements are invalid", (): void => {
@@ -433,8 +433,8 @@ describe("fixFirstLetter", (): void => {
         /^[a-z]/,
         document.createElement("div") as HTMLDivElement,
         document.createRange(),
-        window.getSelection()
-      )
+        window.getSelection(),
+      ),
     ).toBe<string>("A") as void;
   }) as void;
   it("should return unchanged text if no match is found", (): void => {
@@ -444,8 +444,8 @@ describe("fixFirstLetter", (): void => {
         /^[a-z]/,
         document.createElement("div") as HTMLDivElement,
         document.createRange(),
-        window.getSelection()
-      )
+        window.getSelection(),
+      ),
     ).toBe<string>("A") as void;
   }) as void;
 }) as void;
@@ -477,7 +477,7 @@ describe("fixForcedUpperCase", (): void => {
     const mockElement = document.createElement("div") as HTMLDivElement;
     mockElement.textContent = "sample text";
     expect(
-      gModel.fixForcedUpperCase(document.createElement("div") as HTMLDivElement, ["sample"], "sample")
+      gModel.fixForcedUpperCase(document.createElement("div") as HTMLDivElement, ["sample"], "sample"),
     ).toBe<string>("sample text") as void;
   }) as void;
 }) as void;
@@ -545,10 +545,14 @@ describe("capitalizeFirstLetter", (): void => {
     jest.clearAllMocks() as typeof jest;
   }) as void;
   it("should capitalize the first letter of the string", (): void => {
-    (expect(gModel.capitalizeFirstLetter("example")) as jest.JestMatchers<jest.SpyInstance>).toBe<string>("Example") as void;
+    (expect(gModel.capitalizeFirstLetter("example")) as jest.JestMatchers<jest.SpyInstance>).toBe<string>(
+      "Example",
+    ) as void;
   }) as void;
   it("should handle empty strings", (): void => {
-    (expect(gModel.capitalizeFirstLetter("") as string) as jest.JestMatchers<jest.SpyInstance>).toBe<string>("") as void;
+    (expect(gModel.capitalizeFirstLetter("") as string) as jest.JestMatchers<jest.SpyInstance>).toBe<string>(
+      "",
+    ) as void;
   }) as void;
   it("should call typeError if the argument is not a string", (): void => {
     gModel.capitalizeFirstLetter(null as any) as string;
@@ -564,10 +568,14 @@ describe("textTransformPascal", (): void => {
     jest.clearAllMocks() as typeof jest;
   }) as void;
   it("should transform text to PascalCase", (): void => {
-    (expect(gModel.textTransformPascal("example")) as jest.JestMatchers<jest.SpyInstance>).toBe<string>("Example") as void;
+    (expect(gModel.textTransformPascal("example")) as jest.JestMatchers<jest.SpyInstance>).toBe<string>(
+      "Example",
+    ) as void;
   }) as void;
   it("should handle uppercase strings", (): void => {
-    (expect(gModel.textTransformPascal("EXAMPLE")) as jest.JestMatchers<jest.SpyInstance>).toBe<string>("Example") as void;
+    (expect(gModel.textTransformPascal("EXAMPLE")) as jest.JestMatchers<jest.SpyInstance>).toBe<string>(
+      "Example",
+    ) as void;
   }) as void;
   it("should call typeError if the argument is not a string", (): void => {
     gModel.textTransformPascal(null as any) as string;
@@ -576,18 +584,26 @@ describe("textTransformPascal", (): void => {
 }) as void;
 describe("dateISOtoBRL", (): void => {
   it("should convert ISO date to BRL format", (): void => {
-    (expect(gModel.dateISOtoBRL("2023-09-09") as string) as jest.JestMatchers<jest.SpyInstance>).toBe<brDate>("09/09/2023") as void;
+    (expect(gModel.dateISOtoBRL("2023-09-09") as string) as jest.JestMatchers<jest.SpyInstance>).toBe<brDate>(
+      "09/09/2023",
+    ) as void;
   }) as void;
   it("should return the input if it's already in BRL format", (): void => {
-    (expect(gModel.dateISOtoBRL("09/09/2023") as string) as jest.JestMatchers<jest.SpyInstance>).toBe<brDate>("09/09/2023") as void;
+    (expect(gModel.dateISOtoBRL("09/09/2023") as string) as jest.JestMatchers<jest.SpyInstance>).toBe<brDate>(
+      "09/09/2023",
+    ) as void;
   }) as void;
   it("should handle invalid ISO date input", (): void => {
-    (expect(gModel.dateISOtoBRL("invalid-date") as string) as jest.JestMatchers<jest.SpyInstance>).toBe<brDate>("00/00/0000") as void;
+    (expect(gModel.dateISOtoBRL("invalid-date") as string) as jest.JestMatchers<jest.SpyInstance>).toBe<brDate>(
+      "00/00/0000",
+    ) as void;
   }) as void;
 }) as void;
 describe("camelToKebab", (): void => {
   it("should convert camelCase to kebab-case", (): void => {
-    (expect(gModel.camelToKebab("camelCaseText") as string) as jest.JestMatchers<jest.SpyInstance>).toBe<string>("camel-case-text") as void;
+    (expect(gModel.camelToKebab("camelCaseText") as string) as jest.JestMatchers<jest.SpyInstance>).toBe<string>(
+      "camel-case-text",
+    ) as void;
   }) as void;
   it("should handle empty strings", (): void => {
     (expect(gModel.camelToKebab("") as string) as jest.JestMatchers<jest.SpyInstance>).toBe<string>("") as void;
@@ -596,7 +612,7 @@ describe("camelToKebab", (): void => {
 describe("kebabToCamel", (): void => {
   it("should convert kebab-case to camelCase", (): void => {
     (expect(gModel.kebabToCamel("kebab-case-text") as string) as jest.JestMatchers<jest.SpyInstance>).toBe<string>(
-      "kebabCaseText"
+      "kebabCaseText",
     ) as void;
   }) as void;
   it("should handle empty strings", (): void => {
@@ -606,12 +622,12 @@ describe("kebabToCamel", (): void => {
 describe("regularToSnake", (): void => {
   it("should convert regular text to snake-case", (): void => {
     (expect(gModel.regularToSnake("Regular Text") as string) as jest.JestMatchers<jest.SpyInstance>).toBe<string>(
-      "regular-text"
+      "regular-text",
     ) as void;
   }) as void;
   it("should handle already snake-cased text", (): void => {
     (expect(gModel.regularToSnake("regular-text") as string) as jest.JestMatchers<jest.SpyInstance>).toBe<string>(
-      "regular-text"
+      "regular-text",
     ) as void;
   }) as void;
 }) as void;
@@ -644,5 +660,78 @@ describe("modelScripts", (): void => {
     const a = document.querySelector<HTMLAnchorElement>("a");
     (expect(a?.rel) as jest.JestMatchers<jest.SpyInstance>).toContain<AnchorRel>("noopener") as void;
     (expect(a?.rel) as jest.JestMatchers<jest.SpyInstance>).toContain<AnchorRel>("noreferrer") as void;
+  }) as void;
+}) as void;
+describe("assignFormAttrs", (): void => {
+  let form: HTMLFormElement,
+    input: HTMLInputElement,
+    select: HTMLSelectElement,
+    textarea: HTMLTextAreaElement,
+    button: HTMLButtonElement;
+  beforeEach((): void => {
+    form = document.createElement("form");
+    form.id = "testForm";
+    form.action = "/submit";
+    form.method = "POST";
+    form.enctype = "multipart/form-data";
+    form.noValidate = true;
+    const metaCharset = document.createElement("meta");
+    metaCharset.setAttribute("charset", "utf-8") as void;
+    document.head.appendChild<HTMLMetaElement>(metaCharset);
+    input = document.createElement("input");
+    input.id = "input1";
+    form.appendChild<HTMLInputElement>(input);
+    select = document.createElement("select");
+    select.id = "select1";
+    form.appendChild<HTMLSelectElement>(select);
+    textarea = document.createElement("textarea");
+    textarea.id = "textarea1";
+    form.appendChild<HTMLTextAreaElement>(textarea);
+    button = document.createElement("button");
+    button.id = "button1";
+    form.appendChild<HTMLButtonElement>(button);
+    document.body.appendChild<HTMLFormElement>(form);
+  }) as void;
+  afterEach((): void => {
+    document.body.innerHTML = "";
+    document.head.innerHTML = "";
+  }) as void;
+  it("should throw an error if the passed argument is not a form element", (): void => {
+    (expect(() => gModel.assignFormAttrs(null) as void) as jest.JestMatchers<jest.SpyInstance>).toThrow(
+      "Failed to validate Form Reference",
+    ) as void;
+  }) as void;
+  it("should set acceptCharset to utf-8 based on meta charset tag", (): void => {
+    gModel.assignFormAttrs(form) as void;
+    (expect(form.acceptCharset) as jest.JestMatchers<jest.SpyInstance>).toBe("utf-8") as void;
+  }) as void;
+  it("should assign form attributes to input elements", (): void => {
+    gModel.assignFormAttrs(form) as void;
+    (expect(input.formAction) as jest.JestMatchers<jest.SpyInstance>).toBe(form.action) as void;
+    (expect(input.formMethod) as jest.JestMatchers<jest.SpyInstance>).toBe(form.method) as void;
+    (expect(input.formEnctype) as jest.JestMatchers<jest.SpyInstance>).toBe(form.enctype) as void;
+    (expect(input.formNoValidate) as jest.JestMatchers<jest.SpyInstance>).toBe(form.noValidate) as void;
+  }) as void;
+  it("should assign dataset attributes to form elements", (): void => {
+    gModel.assignFormAttrs(form);
+    (expect(input.dataset.form) as jest.JestMatchers<jest.SpyInstance>).toBe(form.id) as void;
+    (expect(select.dataset.form) as jest.JestMatchers<jest.SpyInstance>).toBe(form.id) as void;
+    (expect(textarea.dataset.form) as jest.JestMatchers<jest.SpyInstance>).toBe(form.id) as void;
+    (expect(button.dataset.form) as jest.JestMatchers<jest.SpyInstance>).toBe(form.id) as void;
+  }) as void;
+  it("should assign placeholder based on label content", (): void => {
+    const label = document.createElement("label");
+    label.setAttribute("for", input.id);
+    label.innerText = "Nome:";
+    form.appendChild<HTMLLabelElement>(label);
+    gModel.assignFormAttrs(form) as void;
+    (expect(input.placeholder) as jest.JestMatchers<jest.SpyInstance>).toBe("Preencha aqui o nome") as void;
+  }) as void;
+  it("should assign unique ids to labels without ids", (): void => {
+    const label = document.createElement("label");
+    label.htmlFor = input.id;
+    form.appendChild<HTMLLabelElement>(label);
+    gModel.assignFormAttrs(form) as void;
+    (expect(label.id) as jest.JestMatchers<jest.SpyInstance>).toBe(`${input.id}_lab`) as void;
   }) as void;
 }) as void;

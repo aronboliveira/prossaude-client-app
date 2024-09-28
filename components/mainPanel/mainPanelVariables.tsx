@@ -3,7 +3,7 @@ export const mainPanelVariables = {
 };
 export const resetErrorBoundary = (
   ResetComponent: (props: { [k: string]: any }) => JSX.Element,
-  props: {}
+  props: object,
 ): JSX.Element | void => {
   console.log(mainPanelVariables.tryAcc);
   return mainPanelVariables.tryAcc < 2

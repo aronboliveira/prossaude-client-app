@@ -39,3 +39,5 @@ statistics.gs
 statistics.mjs
 src/pages/api/django
 src/pages/api/sql
+# Local Netlify folder
+.netlify

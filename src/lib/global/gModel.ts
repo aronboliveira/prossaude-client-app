@@ -514,7 +514,7 @@ export function fixUnproperUppercases(text: string = "", match: string = "", con
 
   loweredRepetitions = match.toLowerCase().slice(1);
   if (spaceMatches) {
-    if (context === "NoD" || context === "YesDCont" || context == 0 || context === 2 || !context) {
+    if (context === "NoD" || context === "YesDCont" || context === 0 || context === 2 || !context) {
       if (context === "YesDCont" || context === 2) {
         const lowercasesMatches = text.match(/[a-záàâäãéèêëíìîïóòôöõúùûü]/g);
         if (lowercasesMatches) addAcumulator += lowercasesMatches.length;
@@ -529,7 +529,7 @@ export function fixUnproperUppercases(text: string = "", match: string = "", con
   );
   const textArray = Array.from(text);
   textArray.splice(upperCasesRepetitionsIndex + 1, loweredRepetitions.length, loweredRepetitions);
-  if (context === "NoD" || context == 0 || !context)
+  if (context === "NoD" || context === 0 || !context)
     text = textBeforeRepetitions + match.slice(0, 1) + loweredRepetitions + textAfterRepetitions;
   else if (context === "YesDVal") {
     const upperlowercombD = text.match(/D[a-záàâäãéèêëíìîïóòôöõúùûü][sS]?[\s]/);
@@ -626,7 +626,7 @@ export function autoCapitalizeInputs(textEl: targEl, isAutocorrectOn: boolean = 
           textEl.classList.contains("autocorrectAll")
         ) {
           //IIFE para encapsular correção de inícios incorretos de entrada
-          (() => {
+          ((): void => {
             if (wrongCharsMatchesOp1 || wrongCharsMatchesOp2 || wrongCharsMatchesOp3) {
               const wrongCharsMatches = [
                 ...(wrongCharsMatchesOp1 || []),
@@ -652,7 +652,7 @@ export function autoCapitalizeInputs(textEl: targEl, isAutocorrectOn: boolean = 
           if (newWordMatches) {
             newWordMatches.forEach((): void => {
               //IIFE para capitalizar palavras após a primeira
-              (() => {
+              ((): void => {
                 if (letterMatchesIniNotD && !letterMatchesIniD) {
                   letterMatchesIniNotD.forEach(letterMatch => {
                     remadeText = fixNextWordsIniNotD(remadeText, letterMatch);
@@ -670,7 +670,7 @@ export function autoCapitalizeInputs(textEl: targEl, isAutocorrectOn: boolean = 
                   (!letterMatchesIniNotD && letterMatchesIniD)
                 ) {
                   //IIFE para correção focada em conjunção com D
-                  (() => {
+                  ((): void => {
                     let letterMatchesAfterD: string[] = [];
                     if (
                       !letterNotMatchesAfterD &&
@@ -700,9 +700,8 @@ export function autoCapitalizeInputs(textEl: targEl, isAutocorrectOn: boolean = 
                         ...(letterMatchesAfterDOp3 || []),
                       ];
                     }
-
                     //IIFE para capitalização focada em iniciais D
-                    (() => {
+                    ((): void => {
                       letterMatchesAfterD?.forEach(letterMatchD => {
                         remadeText = fixNextWordsAfterD(remadeText, letterMatchD);
                       });
@@ -750,11 +749,10 @@ export function autoCapitalizeInputs(textEl: targEl, isAutocorrectOn: boolean = 
               })();
             });
           }
-
           //statement para correção de múltiplos upper cases
           if (multipleUppercasesMatches || multipleUppercasesMatches2) {
             //IIFE para encapsular correção de múltiplos upper cases
-            (() => {
+            ((): void => {
               const unproperUppercases = [
                 ...(multipleUppercasesMatches || []),
                 ...(wrongUppercasesMatchesOp1 || []),
@@ -764,13 +762,11 @@ export function autoCapitalizeInputs(textEl: targEl, isAutocorrectOn: boolean = 
                 ...(wrongUppercasesMatchesOp5 || []),
                 ...(wrongUppercasesMatchesOp6 || []),
               ];
-
               const unproperDUppercases = [
                 ...(wrongUppercasesMatchesOp7 || []),
                 ...(wrongUppercasesMatchesOp8 || []),
                 ...(wrongUppercasesMatchesOp9 || []),
               ];
-
               unproperUppercases.forEach(multipleUppercasesMatch => {
                 if (text && multipleUppercasesMatch) {
                   text = fixUnproperUppercases(text, multipleUppercasesMatch, "NoD");
@@ -800,7 +796,6 @@ export function autoCapitalizeInputs(textEl: targEl, isAutocorrectOn: boolean = 
                   if (range.endOffset >= 1) fixCursorPosition(textEl, range, selection, true);
                 }
               });
-
               unproperDUppercases.forEach(multipleUppercasesMatch => {
                 if (text && multipleUppercasesMatch) {
                   textEl.value = fixUnproperUppercases(text, multipleUppercasesMatch, "YesDVal");
@@ -816,7 +811,6 @@ export function autoCapitalizeInputs(textEl: targEl, isAutocorrectOn: boolean = 
               });
             })();
           }
-
           //statement para controle de combinação após entrada com inicial D
           if (
             letterMatchesIniD &&
@@ -824,7 +818,6 @@ export function autoCapitalizeInputs(textEl: targEl, isAutocorrectOn: boolean = 
             !(letterMatchesAfterDOp1 || letterMatchesAfterDOp2 || letterMatchesAfterDOp3)
           )
             letterNotMatchesAfterD = [];
-
           //statement para fluxo validando match de iniciais
           if (letterMatchesIniD || letterMatchesIniNotD) {
             //IIFE para forçar upper case
@@ -851,17 +844,12 @@ export function autoCapitalizeInputs(textEl: targEl, isAutocorrectOn: boolean = 
               }
             })();
           }
-
           //IIFE para fazer correções adicionais no final da edição automática
-          (() => {
+          ((): void => {
             if (wrongCharsMatchesOp1) textEl.value = textEl.value?.replaceAll(wrongCharsRegexOp1, "") ?? null;
-
             if (wrongCharsMatchesOp2) textEl.value = textEl.value?.replaceAll(wrongCharsRegexOp2, "") ?? null;
-
             if (wrongCharsMatchesOp3) textEl.value = textEl.value?.replaceAll(wrongCharsRegexOp3, "") ?? null;
-
             if (text.match(/\s[\s]+/g)) textEl.value = textEl.value?.replaceAll(/\s[\s]+/g, " ") ?? null;
-
             if (text.match(/^[a-záàâäãéèêëíìîïóòôöõúùûü]/))
               textEl.value = text.slice(0, 1).toUpperCase() + text.slice(1);
           })();
@@ -1086,28 +1074,65 @@ export function assignFormAttrs(fr: nullishForm): void {
       }
       try {
         if (!(el instanceof HTMLInputElement || el instanceof HTMLSelectElement || el instanceof HTMLTextAreaElement))
-          throw new Error(`Failed to validate Input Reference`);
+          return;
         try {
-          const rlb = el.labels ? el.labels[0] : null;
-          if (!(rlb instanceof HTMLLabelElement)) throw new Error(`Failed to validate Label Reference`);
-          if (rlb.htmlFor !== el.id) rlb.htmlFor = el.id;
-        } catch (e) {
-          console.error(`Erroel executing procedure for fixing Label htmlFor:\n${(e as Error).message}`);
-        }
-        if (!el.labels) throw new Error(`Failed to read labels NodeList for Input Reference.`);
-        if (!el.labels[0]) throw new Error(`Failed to read any label in the Labels NodeList`);
-        el.labels.forEach((lab, i) => {
-          try {
-            if (lab.id === "") return;
-            if (!el) throw new Error(`Lost reference to the input`);
-            if (i === 0) el.dataset.labels = `${lab.id}`;
-            else el.dataset.labels += `, ${lab.id}`;
-          } catch (e) {
-            console.error(
-              `Error executing iteration ${i} for ${el.id || el.className || el.tagName}:\n${(e as Error).message}`,
-            );
+          if (el.labels) {
+            el.labels.forEach((lab, i) => {
+              try {
+                if (lab instanceof HTMLLabelElement && lab.htmlFor !== el.id) lab.htmlFor = el.id;
+                const idf = el.id || el.name;
+                if (lab.id === "" && idf !== "" && el.labels)
+                  lab.id = el.labels.length === 1 ? `${idf}_lab` : `${idf}_lab_${i + 1}`;
+                if (!el) throw new Error(`Lost reference to the input`);
+                if (i === 0) el.dataset.labels = `${lab.id}`;
+                else el.dataset.labels += `, ${lab.id}`;
+              } catch (e) {
+                console.error(
+                  `Error executing iteration ${i} for ${el.id || el.className || el.tagName}:\n${(e as Error).message}`,
+                );
+              }
+            });
+            if (!(el instanceof HTMLSelectElement) && el.placeholder === "") {
+              const clearArticles = (txt: string): string => {
+                  if (/cidade/gi.test(txt)) txt = txt.replace(/o\scidade/g, "a cidade");
+                  if (/nacionalidade/gi.test(txt)) txt = txt.replace(/o\snacionalidade/g, "a nacionalidade");
+                  if (/naturalidade/gi.test(txt)) txt = txt.replace(/o\snaturalidade/g, "a naturalidade");
+                  if (/[oa]\s\w*ções/gi.test(txt)) txt = txt.replace(/([oa])\s(\w*)ções/g, "$1s $2ções");
+                  if (/os\sescovações/g.test(txt)) txt = txt.replace(/os\sescovações/g, "as escovações");
+                  return txt;
+                },
+                modelLabelHeader = (txt: string): string => {
+                  if (txt.endsWith(":")) txt = txt.slice(0, -1);
+                  if (/, se/g.test(txt.slice(1))) txt = txt.slice(0, txt.indexOf(", se"));
+                  txt = txt.toLowerCase();
+                  const acrs = /cep|cpf|ddd|dre/gi;
+                  if (acrs.test(txt)) txt = txt.replace(acrs, m => m.toUpperCase());
+                  if (/\:.*/g.test(txt)) txt = txt.slice(0, txt.indexOf(":"));
+                  if (txt.includes("se estrangeiro, ")) txt = txt.replace(/se estrangeiro,\s/g, "");
+                  if (txt.includes("informe o ")) txt = txt.replace(/informe\so\s/g, "");
+                  if (/cidade/gi.test(txt)) txt = txt.replace(/o\scidade/g, "a cidade");
+                  if (/nacionalidade/gi.test(txt)) txt = txt.replace(/o\snacionalidade/g, "a nacionalidade");
+                  if (/naturalidade/gi.test(txt)) txt = txt.replace(/o\snaturalidade/g, "a naturalidade");
+                  if (/[oa]\s\w*ções/gi.test(txt)) txt = txt.replace(/([oa])\s(\w*)ções/g, "$1s $2ções");
+                  if (/os\sescovações/g.test(txt)) txt = txt.replace(/os\sescovações/g, "as escovações");
+                  return txt;
+                };
+              if (el.labels[0] && el.labels[0].htmlFor === el.id) {
+                el.placeholder = `Preencha aqui o ${modelLabelHeader(el.labels[0].innerText)}`;
+                el.placeholder = clearArticles(el.placeholder);
+                if (
+                  !el.labels[0].innerText
+                    .toLowerCase()
+                    .includes(el.placeholder.toLowerCase().replace(/preencha aqui [oa]s?\s/g, ""))
+                )
+                  el.placeholder = "";
+                if (el.id === "streetId") el.placeholder = "";
+              }
+            }
           }
-        });
+        } catch (e) {
+          console.error(`Error executing procedure for fixing Label htmlFor:\n${(e as Error).message}`);
+        }
       } catch (e) {
         console.error(`Error executing procedure to define Dataset Label:\n${(e as Error).message}`);
       }

@@ -29,8 +29,8 @@ import {
   inputNotFound,
   multipleElementsNotFound,
 } from "@/lib/global/handlers/errorHandler";
-import { nullishBtn, nullishDiv, nullishDlg, nullishInp } from "@/lib/global/declarations/types";
-import { addEmailExtension, autoCapitalizeInputs, formatCPF, formatTel } from "@/lib/global/gModel";
+import { nullishBtn, nullishDiv, nullishDlg, nullishForm, nullishInp } from "@/lib/global/declarations/types";
+import { addEmailExtension, assignFormAttrs, autoCapitalizeInputs, formatCPF, formatTel } from "@/lib/global/gModel";
 import { enableCPFBtn, handleCondtReq, validateForm, syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import ListFirstNameCons from "./ListFirstNameCons";
 import ListCPFPacCons from "./ListCPFPacCons";
@@ -54,6 +54,7 @@ export default function FormDlg({ onClose, userClass = "estudante" }: ConsDlgPro
     dayRef = useRef<nullishDiv>(null),
     exportRef = useRef<nullishBtn>(null),
     submitRef = useRef<nullishBtn>(null),
+    formRef = useRef<nullishForm>(null),
     [isDREFillerActive, setDREFiller] = useState<boolean>(false),
     toggleDREFiller = () => setDREFiller(!isDREFillerActive);
   //display de tabela para pacientes
@@ -69,7 +70,7 @@ export default function FormDlg({ onClose, userClass = "estudante" }: ConsDlgPro
       dlgRef.current && isClickOutside(ev, dlgRef.current).some(clickArea => clickArea === true) && onClose();
     },
     callbackCPFPacBtnClick = useCallback(
-      (retrvDataPh: { [key: string]: Object }) => {
+      (retrvDataPh: { [key: string]: object }) => {
         const matchDataPh = (() => {
           const matchDataPh = new Map();
           Object.entries(retrvDataPh).forEach(([key, value]) => {
@@ -140,58 +141,63 @@ export default function FormDlg({ onClose, userClass = "estudante" }: ConsDlgPro
       : elementNotFound(CPFPacBtnRef.current, "argument for handleCPFBtnClick", extLine(new Error()));
   }, [dlgRef, CPFPacBtnRef]);
   //ativação de preenchimento de Profisional com tabela
-  const [isCPFFillerActive, setCPFFiller] = useState<boolean>(false);
-  const toggleCPFFiller = useCallback(
-    (CPFProfBtnRef: MutableRefObject<nullishBtn>, isCPFFillerActive: boolean) => {
-      CPFProfBtnRef?.current instanceof HTMLButtonElement
-        ? setCPFFiller(!isCPFFillerActive)
-        : elementNotFound(CPFProfBtnRef.current, "CPFProfBtnRef for useCallback", extLine(new Error()));
-    },
-    [dlgRef, CPFProfBtnRef],
-  );
-  const generateSchedBtn = useCallback(
-    (dialog: HTMLDialogElement) => {
-      const allEntryEls = [
-        ...dialog.querySelectorAll("input"),
-        ...dialog.querySelectorAll("textarea"),
-        ...dialog.querySelectorAll("select"),
-      ];
-      if (allEntryEls.length > 0) {
-        allEntryEls.forEach(entry => {
-          formData[
-            `${
-              entry?.id
-                .replace(/first/gi, "")
-                .replace("Pac", "")
-                .replace(/type/gi, "")
-                .replace(/sel/gi, "")
-                .toLowerCase() ?? "no-id"
-            }`
-          ] = entry.value || "Anônimo";
-        });
-      } else elementNotPopulated(allEntryEls, "allEntryEls in generateSchedBtn()", extLine(new Error()));
-      if (!consVariablesData.rootDlg)
-        consVariablesData.rootDlg = createRoot(
-          document.getElementById("rootDlgList") ?? document.getElementById("transfArea")!,
+  const [isCPFFillerActive, setCPFFiller] = useState<boolean>(false),
+    toggleCPFFiller = useCallback(
+      (CPFProfBtnRef: MutableRefObject<nullishBtn>, isCPFFillerActive: boolean) => {
+        CPFProfBtnRef?.current instanceof HTMLButtonElement
+          ? setCPFFiller(!isCPFFillerActive)
+          : elementNotFound(CPFProfBtnRef.current, "CPFProfBtnRef for useCallback", extLine(new Error()));
+      },
+      [dlgRef, CPFProfBtnRef],
+    ),
+    generateSchedBtn = useCallback(
+      (dialog: HTMLDialogElement) => {
+        const allEntryEls = [
+          ...dialog.querySelectorAll("input"),
+          ...dialog.querySelectorAll("textarea"),
+          ...dialog.querySelectorAll("select"),
+        ];
+        if (allEntryEls.length > 0) {
+          allEntryEls.forEach(entry => {
+            formData[
+              `${
+                entry?.id
+                  .replace(/first/gi, "")
+                  .replace("Pac", "")
+                  .replace(/type/gi, "")
+                  .replace(/sel/gi, "")
+                  .toLowerCase() ?? "no-id"
+              }`
+            ] = entry.value || "Anônimo";
+          });
+        } else elementNotPopulated(allEntryEls, "allEntryEls in generateSchedBtn()", extLine(new Error()));
+        if (!consVariablesData.rootDlg)
+          consVariablesData.rootDlg = createRoot(
+            document.getElementById("rootDlgList") ?? document.getElementById("transfArea")!,
+          );
+        const newBtn = createAptBtn(
+          formData,
+          providerFormData[accFormData] as any,
+          consVariablesData.rootDlg,
+          userClass,
         );
-      const newBtn = createAptBtn(formData, providerFormData[accFormData], consVariablesData.rootDlg, userClass);
-      handleDragAptBtn(newBtn, userClass);
-    },
-    [dlgRef, submitRef],
-  );
-  const [shouldDisplayFailRegstDlg, setDisplayFailRegstDlg] = useState<boolean>(false);
-  const toggleDisplayRegstDlg = (shouldDisplayFailRegstDlg: boolean = true): void => {
-    if (
-      dlgRef.current instanceof HTMLElement &&
-      !checkRegstBtn(
-        submitRef.current,
-        dlgRef.current,
-        [undefined, shouldDisplayFailRegstDlg, setDisplayFailRegstDlg, "Arraste"],
-        userClass,
+        handleDragAptBtn(newBtn, userClass);
+      },
+      [dlgRef, submitRef],
+    ),
+    [shouldDisplayFailRegstDlg, setDisplayFailRegstDlg] = useState<boolean>(false),
+    toggleDisplayRegstDlg = (shouldDisplayFailRegstDlg: boolean = true): void => {
+      if (
+        dlgRef.current instanceof HTMLElement &&
+        !checkRegstBtn(
+          submitRef.current,
+          dlgRef.current,
+          [undefined, shouldDisplayFailRegstDlg, setDisplayFailRegstDlg, "Arraste"],
+          userClass,
+        )
       )
-    )
-      setDisplayFailRegstDlg(!shouldDisplayFailRegstDlg);
-  };
+        setDisplayFailRegstDlg(!shouldDisplayFailRegstDlg);
+    };
   //push em history
   useEffect(() => {
     !/new-cons=open/g.test(location.search) &&
@@ -202,6 +208,7 @@ export default function FormDlg({ onClose, userClass = "estudante" }: ConsDlgPro
     setTimeout(() => {
       history.pushState({}, "", `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#"));
     }, 300);
+    assignFormAttrs(formRef.current);
     return () => {
       history.pushState(
         {},
@@ -392,6 +399,7 @@ export default function FormDlg({ onClose, userClass = "estudante" }: ConsDlgPro
         <fieldset className='flexNoWC'>
           <hr />
           <form
+            ref={formRef}
             className='flexWC'
             id='bodyRegsPac'
             name='cons_form'

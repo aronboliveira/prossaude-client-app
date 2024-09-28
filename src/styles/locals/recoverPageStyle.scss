@@ -2,14 +2,11 @@
 .recoverBody {
   background-size: cover;
   padding-inline: 1rem;
-  background-image: radial-gradient(
-      rgba(240, 238, 238, 0.807),
-      rgba(240, 231, 231, 0.961)
-    ),
+  background-image: radial-gradient(rgba(240, 238, 238, 0.807), rgba(240, 231, 231, 0.961)),
     url(/_next/static/media/PROS_Saude_Modelo1-Final.a6947219.jpg);
   #bgDiv {
     min-height: fit-content;
-    margin-top: 20%;
+    margin-top: 10rem;
   }
   #recover-form {
     padding-top: 1rem;

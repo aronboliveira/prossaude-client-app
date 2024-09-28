@@ -6,6 +6,7 @@ import { nullishBtn, nullishForm } from "@/lib/global/declarations/types";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useEffect, useRef, useState, useCallback } from "react";
 import PacList from "../../lists/PacList";
+import { assignFormAttrs } from "@/lib/global/gModel";
 export default function PacTabForm({ userClass = "estudante" }: GlobalFormProps): JSX.Element {
   const [shouldDisplayRowData, setDisplayRowData] = useState<boolean>(false);
   const formRef = useRef<nullishForm>(null);
@@ -19,11 +20,12 @@ export default function PacTabForm({ userClass = "estudante" }: GlobalFormProps)
       ],
       [false, 0],
       true,
-      [document.getElementById("sectPacsTab")]
+      [document.getElementById("sectPacsTab")],
     );
     document.querySelector("table")!.style.minHeight = "revert";
     const nextDiv = document.getElementById("sectsPacsTab")?.nextElementSibling;
     if (nextDiv?.id === "" && nextDiv instanceof HTMLDivElement) nextDiv.remove() as void;
+    assignFormAttrs(formRef.current);
   }, []);
   useEffect(() => {
     if (formRef?.current instanceof HTMLFormElement) {
@@ -32,12 +34,12 @@ export default function PacTabForm({ userClass = "estudante" }: GlobalFormProps)
         ? addListenerExportBtn(
             "tab_Pacissionais",
             formRef.current,
-            document.getElementById("titleTabPacs") || formRef.current
+            document.getElementById("titleTabPacs") || formRef.current,
           )
         : elementNotFound(
             btnExportTabPacs,
             "<button> for triggering generation of spreadsheet in the table for checking pacients",
-            extLine(new Error())
+            extLine(new Error()),
           );
       callbackNormalizeSizesSb();
       syncAriaStates([...formRef.current!.querySelectorAll("*"), formRef.current]);
@@ -51,8 +53,7 @@ export default function PacTabForm({ userClass = "estudante" }: GlobalFormProps)
       action='patients_table'
       method='get'
       target='_top'
-      ref={formRef}
-    >
+      ref={formRef}>
       <div role='group' className='wsBs flexNoWC cGap1v'>
         <h1 className='mg-3b bolded'>
           <strong id='titleTabPacs'>Tabela de Pacientes Registrados</strong>
@@ -79,8 +80,7 @@ export default function PacTabForm({ userClass = "estudante" }: GlobalFormProps)
         className='btn btn-success flexAlItCt flexJC flexBasis50 bolded widQ460FullW'
         name='btnExportPacsTab'
         ref={btnExportPacsTabRef}
-        title='Gere um .xlsx com os dados preenchidos'
-      >
+        title='Gere um .xlsx com os dados preenchidos'>
         Gerar Planilha
       </button>
     </form>

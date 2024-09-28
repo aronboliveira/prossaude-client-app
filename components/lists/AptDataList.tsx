@@ -34,7 +34,7 @@ export default function AptDataList({
                 data={data}
                 btnId={btnId}
                 userClass={userClass}
-              />
+              />,
             );
     } catch (e) {
       console.warn(`Error rendering AptDataList:
@@ -56,7 +56,10 @@ export default function AptDataList({
     if (aptDlgRef.current instanceof HTMLDialogElement) {
       aptDlgRef.current.showModal();
       aptDlgRef.current.addEventListener("click", function (this: HTMLDialogElement, click) {
-        if (isClickOutside(click, this).some(coord => coord === true)) {
+        if (
+          click.currentTarget &&
+          isClickOutside(click, click.currentTarget as HTMLElement).some(coord => coord === true)
+        ) {
           !isDirectRender ? setDisplayAptList(!shouldDisplayAptList) : renderDirectly();
         }
       });
@@ -67,7 +70,7 @@ export default function AptDataList({
             `spreadsheet_${data.cpf}_${data.date}`,
             aptDlgRef.current,
             (aptDlgRef.current.querySelector(`[id*="outpNamePac"]`) as HTMLOutputElement) ??
-              (aptDlgRef.current as HTMLElement)
+              (aptDlgRef.current as HTMLElement),
           )
         : elementNotFound(btnExport, "Button for generating spreadsheet in appointment modal", extLine(new Error()));
       transferBtn instanceof HTMLButtonElement
@@ -100,8 +103,7 @@ export default function AptDataList({
           onClick={ev => {
             if (isClickOutside(ev, ev.currentTarget).some(coords => coords === true))
               setDisplayAptList(!shouldDisplayAptList);
-          }}
-        >
+          }}>
           <ErrorBoundary
             FallbackComponent={() => (
               <ErrorFallbackDlg
@@ -110,8 +112,7 @@ export default function AptDataList({
                   !isDirectRender ? setDisplayAptList(!shouldDisplayAptList) : renderDirectly();
                 }}
               />
-            )}
-          >
+            )}>
             <div role='group' className='flexRNoWBetCt cGap2v widQ460_120v' id='headRegstPac'>
               <h2 className='mg-1b'>
                 <strong>Registro de Consulta</strong>
@@ -120,8 +121,7 @@ export default function AptDataList({
                 className='btn btn-close forceInvert'
                 onClick={() => {
                   !isDirectRender ? setDisplayAptList(!shouldDisplayAptList) : renderDirectly();
-                }}
-              ></button>
+                }}></button>
             </div>
             <table className='table table-striped table-responsive table-hover tabApt'>
               <caption className='caption-t'>
@@ -159,8 +159,9 @@ export default function AptDataList({
                       <output
                         id={`outpCPFPac${data.cpf || "Unidentified"}_${data.date || "0000-00-00"}`}
                         name={`CPFPac${data.cpf || "Unidentified"}_${data.date || "0000-00-00"}-out`}
-                        data-title={`CPF Paciente ${data.name || "Anônimo"}-out`}
-                      >{`${data.cpf || "000.000.000-00"}`}</output>
+                        data-title={`CPF Paciente ${data.name || "Anônimo"}-out`}>{`${
+                        data.cpf || "000.000.000-00"
+                      }`}</output>
                     </td>
                   </tr>
                 )}
@@ -174,8 +175,9 @@ export default function AptDataList({
                     <output
                       id={`outpNamePac${data.cpf || "Unidentified"}_${data.date || "0000-00-00"}`}
                       name={`namePac${data.cpf || "Unidentified"}_${data.date || "0000-00-00"}-out`}
-                      data-title={`Nome Paciente ${data.name || "Anônimo"}_${data.date || "0000-00-00"}-out`}
-                    >{`${data.name || "Anônimo"}`}</output>
+                      data-title={`Nome Paciente ${data.name || "Anônimo"}_${data.date || "0000-00-00"}-out`}>{`${
+                      data.name || "Anônimo"
+                    }`}</output>
                   </td>
                 </tr>
                 <tr className='rowTelPacCons'>
@@ -188,8 +190,9 @@ export default function AptDataList({
                     <output
                       id={`outpTelPac${data.cpf || "Unidentified"}_${data.date || "0000-00-00"}`}
                       name={`namePac${data.cpf || "Unidentified"}_${data.date || "0000-00-00"}-out`}
-                      data-title={`Nome Paciente ${data.name || "Anônimo"}_${data.date || "0000-00-00"}-out`}
-                    >{`${data.tel || "00 00 0000-0000"}`}</output>
+                      data-title={`Nome Paciente ${data.name || "Anônimo"}_${data.date || "0000-00-00"}-out`}>{`${
+                      data.tel || "00 00 0000-0000"
+                    }`}</output>
                   </td>
                 </tr>
                 <tr className='rowEmailPacCons'>
@@ -202,8 +205,9 @@ export default function AptDataList({
                     <output
                       id={`outpEmailPac${data.cpf || "Unidentified"}_${data.date || "0000-00-00"}`}
                       name={`emailPac${data.cpf || "Unidentified"}_${data.date || "0000-00-00"}-out`}
-                      data-title={`Nome Paciente ${data.name || "Anônimo"}_${data.date || "0000-00-00"}-out`}
-                    >{`${data.email || "Não preenchido"}`}</output>
+                      data-title={`Nome Paciente ${data.name || "Anônimo"}_${data.date || "0000-00-00"}-out`}>{`${
+                      data.email || "Não preenchido"
+                    }`}</output>
                   </td>
                 </tr>
                 <tr className='rowTypeCons'>
@@ -218,8 +222,7 @@ export default function AptDataList({
                       name={`typeCons${data.cpf || "Unidentified"}_${data.date || "0000-00-00"}-out`}
                       data-title={`Tipo da Consulta Paciente ${data.name || "Anônimo"}_${
                         data.date || "0000-00-00"
-                      }-out`}
-                    >{`${
+                      }-out`}>{`${
                       data.typecons?.slice(0, 1).toUpperCase() + data.typecons?.slice(1, data.typecons.length) ||
                       "Indefinida"
                     }`}</output>
@@ -237,8 +240,7 @@ export default function AptDataList({
                       name={`relStud${data.cpf || "Unidentified"}_${data.date || "0000-00-00"}-out`}
                       data-title={`Nome do Estudante Alocado Paciente ${data.name || "Anônimo"}_${
                         data.date || "0000-00-00"
-                      }-out`}
-                    >{`${data.relstud || "Indefinido"}`}</output>
+                      }-out`}>{`${data.relstud || "Indefinido"}`}</output>
                   </td>
                 </tr>
                 <tr className='rowProfCons'>
@@ -253,8 +255,7 @@ export default function AptDataList({
                       name={`relProf${data.cpf || "Unidentified"}_${data.date || "0000-00-00"}`}
                       data-title={`Nome do Profissional Alocado Paciente ${data.name || "Anônimo"}_${
                         data.date || "0000-00-00"
-                      }-out`}
-                    >{`${data.relprof || "Indefinido"}`}</output>
+                      }-out`}>{`${data.relprof || "Indefinido"}`}</output>
                   </td>
                 </tr>
                 <tr className='rowNotes'>
@@ -267,8 +268,9 @@ export default function AptDataList({
                     <output
                       id={`outpNotesCons${data.cpf || "Unidentified"}_${data.date || "0000-00-00"}-out`}
                       name={`notes${data.cpf || "Unidentified"}_${data.date || "0000-00-00"}-out`}
-                      data-title={`Notas Paciente ${data.name || "Anônimo"}_${data.date || "0000-00-00"}-out`}
-                    >{`${data.notes || "Não preenchido"}`}</output>
+                      data-title={`Notas Paciente ${data.name || "Anônimo"}_${data.date || "0000-00-00"}-out`}>{`${
+                      data.notes || "Não preenchido"
+                    }`}</output>
                   </td>
                 </tr>
                 <tr className='confirmCons'>
@@ -281,8 +283,9 @@ export default function AptDataList({
                     <output
                       id={`outpConfirmCons${data.cpf || "Unidentified"}_${data.date || "0000-00-00"}-out`}
                       name={`confirm${data.cpf || "Unidentified"}_${data.date || "0000-00-00"}-out`}
-                      data-title={`Confirmação Paciente ${data.name || "Anônimo"}_${data.date || "0000-00-00"}-out`}
-                    >{`${data.confirm || "Não"}`}</output>
+                      data-title={`Confirmação Paciente ${data.name || "Anônimo"}_${
+                        data.date || "0000-00-00"
+                      }-out`}>{`${data.confirm || "Não"}`}</output>
                   </td>
                 </tr>
               </tbody>
@@ -292,8 +295,7 @@ export default function AptDataList({
                 type='button'
                 id={`btnExport${data.cpf || "Unidentified"}_${data.date || "0000-00-00"}}`}
                 name={`btnExport${data.cpf || "Unidentified"}_${data.date || "0000-00-00"}`}
-                className='btn btn-info opaqueLightEl widFull'
-              >
+                className='btn btn-info opaqueLightEl widFull'>
                 <small role='textbox'>
                   <em>Gerar Planilha</em>
                 </small>

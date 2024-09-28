@@ -35,7 +35,7 @@ export function checkIntervDate(arrEls: Array<targEl>): void {
 }
 export function checkLocalIntervs(mainRef: HTMLElement): void {
   const btnsAloc = Array.from(mainRef.querySelectorAll("[id*='btnAloc']")).filter(
-    btn => btn instanceof HTMLButtonElement
+    btn => btn instanceof HTMLButtonElement,
   );
   btnsAloc.length > 0
     ? checkIntervDate(btnsAloc)
@@ -45,7 +45,7 @@ export function transferDataAloc(
   btn: targEl,
   mainAncestral: HTMLElement,
   ancestral: Exclude<HTMLElement, HTMLTableElement>,
-  pattern: personAbrvClasses = "stud"
+  pattern: personAbrvClasses = "stud",
 ): boolean {
   if (btn instanceof HTMLButtonElement) {
     //alocação ocorre aqui
@@ -135,8 +135,6 @@ export function transferDataAloc(
           return entry;
         });
       const outpData: { [key: string]: Array<string[]> } = Object.fromEntries(arrFinalData);
-      console.log("OUTPDATA");
-      console.log(outpData);
       const allInps = [
         ...ancestral!.querySelectorAll("input"),
         ...ancestral!.querySelectorAll("textarea"),
@@ -173,33 +171,33 @@ export function transferDataAloc(
             ancestral!.querySelector(`select[id*=${patternBefore.replace("cpf", "CPF")}]`) ||
             ancestral!.querySelector(
               `input[id*=${patternAfter.replace("cpf", "CPF")}] 
-               `
+               `,
             ),
           //nacional
           ancestral!.querySelector(`input[data-aloc*="nac-${pattern}"]`) ||
             ancestral!.querySelector(
-              `input[data-title*="Nacional ${pattern.slice(0, 1).toUpperCase()}${pattern.slice(1, pattern.length)}"]`
+              `input[data-title*="Nacional ${pattern.slice(0, 1).toUpperCase()}${pattern.slice(1, pattern.length)}"]`,
             ) ||
             ancestral!.querySelector(
-              `input[id*="nac${pattern.slice(0, 1).toUpperCase()}${pattern.slice(1, pattern.length)}"]`
+              `input[id*="nac${pattern.slice(0, 1).toUpperCase()}${pattern.slice(1, pattern.length)}"]`,
             ),
           //tel
           ancestral!.querySelector(`input[data-aloc*="tel-${pattern}"]`) ||
             ancestral!.querySelector(
-              `input[data-title*="Tel ${pattern.slice(0, 1).toUpperCase()}${pattern.slice(1, pattern.length)}"]`
+              `input[data-title*="Tel ${pattern.slice(0, 1).toUpperCase()}${pattern.slice(1, pattern.length)}"]`,
             ),
           //ddd
           ancestral!.querySelector(`input[data-aloc*="ddd-${pattern}"]`) ||
             ancestral!.querySelector(
-              `input[data-title*="DDD ${pattern.slice(0, 1).toUpperCase()}${pattern.slice(1, pattern.length)}"]`
+              `input[data-title*="DDD ${pattern.slice(0, 1).toUpperCase()}${pattern.slice(1, pattern.length)}"]`,
             ),
           //email
           ancestral!.querySelector(`input[data-aloc*="email-${pattern}"]`) ||
             ancestral!.querySelector(
-              `input[id*="email-${pattern.slice(0, 1).toUpperCase()}${pattern.slice(1, pattern.length)}"]`
+              `input[id*="email-${pattern.slice(0, 1).toUpperCase()}${pattern.slice(1, pattern.length)}"]`,
             ) ||
             ancestral!.querySelector(
-              `input[data-title*="Email ${pattern.slice(0, 1).toUpperCase()}${pattern.slice(1, pattern.length)}"]`
+              `input[data-title*="Email ${pattern.slice(0, 1).toUpperCase()}${pattern.slice(1, pattern.length)}"]`,
             ),
         ];
         if (pattern === "stud") {
@@ -209,7 +207,7 @@ export function transferDataAloc(
               ancestral!.querySelector(`input[id*=${patternBefore.replace("dre", "DRE")}] `) ||
               ancestral!.querySelector(`select[id*=${patternBefore.replace("dre", "DRE")}]`) ||
               ancestral!.querySelector(`select[id*=${patternAfter.replace("dre", "DRE")}]`) ||
-              ancestral!.querySelector(`input[id*=${patternAfter.replace("dre", "DRE")}]`)
+              ancestral!.querySelector(`input[id*=${patternAfter.replace("dre", "DRE")}]`),
           );
         }
         if (pattern === "pac") {
@@ -232,10 +230,9 @@ export function transferDataAloc(
               ancestral!.querySelector(`select[data-title*=Status]`) ||
               ancestral!.querySelector(`input[data-aloc*="status"]`) ||
               ancestral!.querySelector(`input[id*=status]`) ||
-              ancestral!.querySelector(`input[data-title*=Status]`)
+              ancestral!.querySelector(`input[data-title*=Status]`),
           );
         }
-        console.log(matchedInps.map(match => match?.id || match?.tagName || "null"));
         matchedInps.forEach(matchedInp => {
           if (matchedInp) {
             Object.keys(outpData).forEach(key => {
@@ -254,8 +251,6 @@ export function transferDataAloc(
                 ) {
                   // @ts-ignore
                   matchedInp.value = outpData[`${key}`];
-                  key === "status" && console.log([matchedInp.id, matchedInp.dataset.title, matchedInp.dataset.aloc]);
-                  console.log(outpData[`${key}`]);
                 }
               }
             });
@@ -278,7 +273,7 @@ export function addListenerAlocation(
   context: personAbrvUpperClasses | personAbrvClasses = "Stud",
   state: boolean = true,
   dispatch: (state: boolean) => void,
-  userClass: string = "estudante"
+  userClass: string = "estudante",
 ): void {
   if (alocBtn instanceof HTMLButtonElement && parentRef instanceof HTMLElement) {
     const tabs = parentRef.querySelectorAll(`table[id*=av${context}]`);
@@ -291,7 +286,7 @@ export function addListenerAlocation(
                 tab?.id || "UNIDENTIFIED"
               } and buttons for alocation are not equal. This might result in misleading data.
             Computed number of buttons: ${btnAloc.length};
-            Computed number of rows (-1): ${tab.rows.length - 1}`
+            Computed number of rows (-1): ${tab.rows.length - 1}`,
             );
           btnAloc.forEach(btn => {
             (userClass === "coordenador" || userClass === "supervisor") &&
@@ -310,12 +305,12 @@ export function addListenerAlocation(
       extLine(new Error()),
       "refs dependencies for useEffect() in AvStudListDlg()",
       alocBtn,
-      parentRef
+      parentRef,
     );
 }
 export function addListenerAvMembers(
   dialogRef: MutableRefObject<nullishDlg | HTMLDivElement>,
-  shouldAddListener: boolean = true
+  shouldAddListener: boolean = true,
 ): void {
   const typeCons = document.getElementById("typeConsSel");
   if (typeCons instanceof HTMLSelectElement) {
@@ -339,7 +334,7 @@ export function filterAvMembers(
   gAvStudsOpGrps: NodeListOf<HTMLOptGroupElement>,
   gAvProfsOpGrps: NodeListOf<HTMLOptGroupElement>,
   gAvCPFStudsOpGrps?: NodeListOf<HTMLOptGroupElement>,
-  gAvDREStudsOpGrps?: NodeListOf<HTMLOptGroupElement>
+  gAvDREStudsOpGrps?: NodeListOf<HTMLOptGroupElement>,
 ): void {
   const studName = document.getElementById("relStudName");
   const profName = document.getElementById("relProfName");
@@ -360,7 +355,7 @@ export function filterAvMembers(
       const selectedTypeConsGrpLab = Array.from(typeCons.querySelectorAll("option"))
         .find(option => option.selected === true)
         ?.closest("optgroup")?.label;
-      const hideOptions = (optgroup: HTMLOptGroupElement) => {
+      const hideOptions = (optgroup: HTMLOptGroupElement): void => {
         const closestList = optgroup.closest("datalist")!;
         if (optgroup.label !== selectedTypeConsGrpLab && selectedTypeConsGrpLab !== "Geral")
           closestList.removeChild(optgroup);
@@ -405,7 +400,7 @@ export function filterAvMembers(
       avStuds,
       avStudsCPF,
       avStudsDRE,
-      avProfs
+      avProfs,
     );
 }
 export function filterTabMembers(tab: targEl, area: string): void {
@@ -433,7 +428,7 @@ export function filterTabMembers(tab: targEl, area: string): void {
                   : elementNotFound(
                       btnAloc,
                       `btn for alocation in <tr> ${tr?.id || "UNIDENTIFIED"}`,
-                      extLine(new Error())
+                      extLine(new Error()),
                     );
               }
             });
@@ -447,7 +442,7 @@ export function filterTabMembers(tab: targEl, area: string): void {
           elementNotFound(
             outpArea,
             `<output> for defining working field in <tr> id ${tr?.id || "UNIDENTIFIED"}`,
-            extLine(new Error())
+            extLine(new Error()),
           );
       });
     } else {
@@ -489,7 +484,7 @@ export function fillTabAttr(tab: targEl, context: string = "pac"): void {
                   .querySelector("thead")
                   ?.querySelector("tr")
                   ?.getElementsByTagName("th")
-                  [celCount]?.innerText?.replace(" ", "-")}`
+                  [celCount]?.innerText?.replace(" ", "-")}`,
               );
             }
             if (/tagPh/gi.test(attribute.value)) {

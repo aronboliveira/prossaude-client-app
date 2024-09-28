@@ -15,6 +15,7 @@ import StudRow from "./StudRow";
 import { nullishBtn, nullishForm, nullishTab, nullishTabSect } from "@/lib/global/declarations/types";
 import { GlobalFormProps, StudInfo } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import { strikeEntries } from "@/lib/locals/panelPage/consStyleScript";
+import { assignFormAttrs } from "@/lib/global/gModel";
 export default function RemoveStudForm({ userClass = "estudante" }: GlobalFormProps): JSX.Element {
   const studs: StudInfo[] = [];
   const formRef = useRef<nullishForm>(null);
@@ -30,7 +31,7 @@ export default function RemoveStudForm({ userClass = "estudante" }: GlobalFormPr
       ],
       [false, 0],
       true,
-      [document.getElementById("sectStudsTab")]
+      [document.getElementById("sectStudsTab")],
     );
     document.querySelector("table")!.style.minHeight = "revert";
   }, []);
@@ -74,7 +75,7 @@ export default function RemoveStudForm({ userClass = "estudante" }: GlobalFormPr
                       throw elementNotFound(
                         tbodyRef.current,
                         `Validation of Table Body Reference`,
-                        extLine(new Error())
+                        extLine(new Error()),
                       );
                     if (tbodyRef.current.querySelector("tr")) return;
                     panelRoots[`${tbodyRef.current.id}`]?.unmount();
@@ -86,8 +87,7 @@ export default function RemoveStudForm({ userClass = "estudante" }: GlobalFormPr
                       <ErrorBoundary
                         FallbackComponent={() => (
                           <GenericErrorComponent message='Error reloading replacement for table body' />
-                        )}
-                      >
+                        )}>
                         <caption className='caption-t'>
                           <strong>
                             <small role='textbox'>
@@ -135,7 +135,7 @@ export default function RemoveStudForm({ userClass = "estudante" }: GlobalFormPr
                             />
                           </span>
                         </tbody>
-                      </ErrorBoundary>
+                      </ErrorBoundary>,
                     );
                     tbodyRef.current = document.getElementById("studsTbody") as nullishTabSect;
                     if (!(tbodyRef.current instanceof HTMLElement))
@@ -152,7 +152,7 @@ export default function RemoveStudForm({ userClass = "estudante" }: GlobalFormPr
                             tabRef={tabRef}
                             key={`stud_row__${i + 2}`}
                           />
-                        ))
+                        )),
                       );
                     setTimeout(() => {
                       if (tabRef?.current instanceof HTMLTableElement) {
@@ -162,15 +162,13 @@ export default function RemoveStudForm({ userClass = "estudante" }: GlobalFormPr
                         elementNotFound(
                           tabRef.current,
                           `tabRef id ${(tabRef?.current as any)?.id || "UNIDENTIFIED"} in useEffect() for tableRef`,
-                          extLine(new Error())
+                          extLine(new Error()),
                         );
                     }, 300);
                   } catch (e) {
                     console.error(
-                      `Error executing scheduled rendering of Table Body Content Replacement:\n${(e as Error).message}`
+                      `Error executing scheduled rendering of Table Body Content Replacement:\n${(e as Error).message}`,
                     );
-                  }
-                  if (document) {
                   }
                 }, 1000);
               } else panelRoots[`${tbodyRef.current.id}`] = createRoot(tbodyRef.current);
@@ -178,10 +176,10 @@ export default function RemoveStudForm({ userClass = "estudante" }: GlobalFormPr
                 panelRoots[`${tbodyRef.current.id}`]?.render(
                   studs.map((stud, i) => {
                     return Array.from(tbodyRef.current?.querySelectorAll("output") ?? []).some(
-                      outp => outp.innerText === (stud as StudInfo)["cpf"]
+                      outp => outp.innerText === (stud as StudInfo)["cpf"],
                     ) ||
                       Array.from(tbodyRef.current?.querySelectorAll("tr") ?? []).some(
-                        tr => tr.dataset.key && tbodyRef.current?.querySelector(`tr[data-key=${tr.dataset.key}`)
+                        tr => tr.dataset.key && tbodyRef.current?.querySelector(`tr[data-key=${tr.dataset.key}`),
                       ) ? (
                       <></>
                     ) : (
@@ -193,7 +191,7 @@ export default function RemoveStudForm({ userClass = "estudante" }: GlobalFormPr
                         key={`stud_row__${i + 2}`}
                       />
                     );
-                  })
+                  }),
                 );
               setTimeout(() => {
                 if (tabRef?.current instanceof HTMLTableElement) {
@@ -203,7 +201,7 @@ export default function RemoveStudForm({ userClass = "estudante" }: GlobalFormPr
                   elementNotFound(
                     tabRef.current,
                     `tabRef id ${(tabRef?.current as any)?.id || "UNIDENTIFIED"} in useEffect() for tableRef`,
-                    extLine(new Error())
+                    extLine(new Error()),
                   );
               }, 300);
               setTimeout(() => {
@@ -211,7 +209,7 @@ export default function RemoveStudForm({ userClass = "estudante" }: GlobalFormPr
                   if (!panelRoots[`${document.querySelector("table")!.id}`])
                     panelRoots[`${document.querySelector("table")!.id}`] = createRoot(document.querySelector("table")!);
                   panelRoots[`${document.querySelector("table")!.id}`]?.render(
-                    <GenericErrorComponent message='Failed to render table' />
+                    <GenericErrorComponent message='Failed to render table' />,
                   );
                 }
               }, 5000);
@@ -229,7 +227,7 @@ export default function RemoveStudForm({ userClass = "estudante" }: GlobalFormPr
                     userClass,
                     ["coordenador"],
                     tabRef.current,
-                    document.getElementById("btnExport")
+                    document.getElementById("btnExport"),
                   );
               } catch (e) {
                 console.error(`Error executing handleAttempt for Professionals table:\n${(e as Error).message}`);
@@ -245,6 +243,7 @@ export default function RemoveStudForm({ userClass = "estudante" }: GlobalFormPr
             setTimeout(() => syncAriaStates([...(tabRef.current?.querySelectorAll("*") ?? []), tabRef.current!]), 3000);
           });
       }, 300);
+      assignFormAttrs(formRef.current);
     } catch (e) {
       console.error(`Error executing useEffect for Table Body Reference:\n${(e as Error).message}`);
     }
@@ -256,12 +255,12 @@ export default function RemoveStudForm({ userClass = "estudante" }: GlobalFormPr
         ? addListenerExportBtn(
             "tab_Estudantes",
             formRef.current,
-            document.getElementById("titleTabStuds") || formRef.current
+            document.getElementById("titleTabStuds") || formRef.current,
           )
         : elementNotFound(
             btnExportTabStuds,
             "<button> for triggering generation of spreadsheet in the table for checking students",
-            extLine(new Error())
+            extLine(new Error()),
           );
       callbackNormalizeSizeSb();
       syncAriaStates([...formRef.current!.querySelectorAll("*"), formRef.current]);
@@ -273,7 +272,7 @@ export default function RemoveStudForm({ userClass = "estudante" }: GlobalFormPr
         userClass,
         ["coordenador", "supervisor"],
         tabRef.current,
-        document.getElementById("btnExport")
+        document.getElementById("btnExport"),
       );
     }
   }, [tabRef]);
@@ -286,8 +285,7 @@ export default function RemoveStudForm({ userClass = "estudante" }: GlobalFormPr
       method='get'
       target='_top'
       ref={formRef}
-      className='form-padded-nosb wid101'
-    >
+      className='form-padded-nosb wid101'>
       <div role='group' className='wsBs flexNoWC cGap1v'>
         <h1 className='mg-3b bolded'>
           <strong id='titleTabStuds'>Tabela de Estudantes Registrados</strong>
@@ -350,8 +348,7 @@ export default function RemoveStudForm({ userClass = "estudante" }: GlobalFormPr
         className='btn btn-success flexAlItCt flexJC flexBasis50 bolded widQ460FullW'
         name='btnExportTabStuds'
         ref={btnExportTabStudsRef}
-        title='Gere um .xlsx com os dados preenchidos'
-      >
+        title='Gere um .xlsx com os dados preenchidos'>
         Gerar Planilha
       </button>
     </form>

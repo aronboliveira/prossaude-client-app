@@ -16,7 +16,7 @@ export function dinamicGridAdjust(gridDivs: Array<targEl>): void {
             const nColumns = (gridDiv.style.gridTemplateColumns || getComputedStyle(gridDiv).gridTemplateColumns)
               .trim()
               .split(/\s+/g).length;
-            !isNaN(nColumns) && nColumns > 0
+            !isFinite(nColumns) && nColumns > 0
               ? (gridDiv.style.width = (25 * (nColumns + 1)).toFixed(1) + "vw")
               : console.warn(`nColumns returned as NaN or not a natural number. Value obtained: ${nColumns}`);
             break;
@@ -47,7 +47,7 @@ export function dinamicGridAdjust(gridDivs: Array<targEl>): void {
 }
 export function equalizeFlexSibilings(
   flexEls: Array<targEl> | NodeListOf<Element>,
-  contexts: Array<Array<string>> = [["width", "px"]]
+  contexts: Array<Array<string>> = [["width", "px"]],
 ): void {
   if (flexEls.length > 0) {
     flexEls.forEach(el => {
@@ -95,7 +95,7 @@ export function equalizeFlexSibilings(
         console.warn(`Error calling equalizeFlexSibilings() for Element id ${el?.id}:
         Instance of current Element: ${el instanceof HTMLElement}
         Instance of previousElementSibling: ${Object.prototype.toString.call(el?.previousElementSibling).slice(8, -1)};
-        Match as flexTwin: ${/flexTwin/gi.test(el?.classList?.toString()!)}
+        Match as flexTwin: ${/flexTwin/gi.test(el?.classList?.toString() ?? "")}
         Display value: ${getComputedStyle(el!)?.display}.`);
     });
   } else console.warn(`Failed to equalize flex siblings`);
@@ -106,11 +106,11 @@ export function equalizeTabCells(tab: HTMLTableElement | null): void {
     if (parentEl instanceof HTMLElement) {
       const relatedTabs = parentEl.querySelectorAll("table");
       const largestTabWid = Math.max(
-        ...Array.from(relatedTabs)?.map(cel => {
+        ...(Array.from(relatedTabs) ?? []).map(cel => {
           let relTab = parseFloat(getComputedStyle(cel).width);
           if (Number.isNaN(relTab) || Math.abs(relTab) === Infinity || relTab < 0) relTab = 0;
           return relTab;
-        })
+        }),
       )?.toString();
       for (const relTab of relatedTabs) {
         relTab.style.minWidth = largestTabWid;
@@ -136,7 +136,7 @@ export function equalizeTabCells(tab: HTMLTableElement | null): void {
                   let widCell = parseFloat(getComputedStyle(cel).width);
                   if (Number.isNaN(widCell) || Math.abs(widCell) === Infinity || widCell < 0) widCell = 0;
                   return widCell;
-                })
+                }),
               );
               for (const cel of tabCells) {
                 Object.assign(cel.style, {
@@ -152,7 +152,7 @@ export function equalizeTabCells(tab: HTMLTableElement | null): void {
             } else elementNotPopulated(tabCells, "tabCells in equalizeTabCells()", extLine(new Error()));
             if (Number.isNaN(widCell) || Math.abs(widCell) === Infinity || widCell < 0) widCell = 0;
             return widCell;
-          })
+          }),
         );
         for (const cel of tabCells) {
           Object.assign(cel.style, {
@@ -191,7 +191,7 @@ export function highlightChange(el: targEl, color: string = "red", context: stri
   if (el instanceof HTMLElement && typeof color === "string") {
     const iniColor = "rgb(222, 226, 230)";
     const iniFontColor = "rgb(33, 37, 41)";
-    const pulseBColor = (el: HTMLElement) => {
+    const pulseBColor = (el: HTMLElement): void => {
       setTimeout(() => {
         el.style.borderColor = color;
         setTimeout(() => {
@@ -205,7 +205,7 @@ export function highlightChange(el: targEl, color: string = "red", context: stri
         }, 500);
       }, 250);
     };
-    const pulseFColor = (el: HTMLElement) => {
+    const pulseFColor = (el: HTMLElement): void => {
       setTimeout(() => {
         el.style.color = color;
         setTimeout(() => {
@@ -238,7 +238,7 @@ export function highlightChange(el: targEl, color: string = "red", context: stri
 export function switchBtnBS(
   bsBtns: Array<targEl>,
   bsClasses: Array<string> = ["btn-warning"],
-  bsClassesToRemove: Array<string> = ["btn-success"]
+  bsClassesToRemove: Array<string> = ["btn-success"],
 ): void {
   if (Array.isArray(bsBtns) && bsBtns.every(btn => btn instanceof HTMLElement)) {
     bsBtns.forEach(bsBtn => {
@@ -259,7 +259,7 @@ export function switchBtnBS(
             const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
             path.setAttribute(
               "d",
-              "M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.553.553 0 0 1-1.1 0z"
+              "M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.553.553 0 0 1-1.1 0z",
             );
             svg.appendChild(path);
             bsBtn.appendChild(svg);
@@ -280,7 +280,7 @@ export function switchBtnBS(
 }
 export function clearDefInvalidMsg(
   form: HTMLFormElement | null,
-  inps: (HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement | null)[]
+  inps: (HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement | null)[],
 ): void {
   if (Array.isArray(inps) && inps.every(inp => inp instanceof HTMLElement)) {
     const inpsValidity: boolean[] = [];
@@ -343,7 +343,7 @@ export function fillCustomValidityWarn(inpId: string, customMsg: string = "Campo
     elementNotFound(
       warnEl,
       `warnEl id ${(warnEl as any)?.id || "UNDEFINED"} in fillCustomValidityWarn()`,
-      extLine(new Error())
+      extLine(new Error()),
     );
 }
 export function addListenerForValidities(inps: Array<targEl>, pattern?: RegExp): boolean {
@@ -479,7 +479,7 @@ export function equalizeWidWithPhs(els: Array<targEl>): void {
                   )
                     console.warn(
                       `Failed to apply Placeholder equalization for ${el.id || "UNIDENTIFIED"} in equalizeWidWithPhs()`,
-                      extLine(new Error())
+                      extLine(new Error()),
                     );
                 });
             } else {
@@ -501,13 +501,13 @@ export function equalizeWidWithPhs(els: Array<targEl>): void {
             )
               console.warn(
                 `Failed to apply Placeholder equalization for ${el.id || "UNIDENTIFIED"} in equalizeWidWithPhs()`,
-                extLine(new Error())
+                extLine(new Error()),
               );
           } else
             console.warn(
               `No <${
                 options[0]?.tagName.toLowerCase() ?? "UNDEFINED TAG"
-              }> found for <${el.tagName.toLowerCase()}> id ${el?.id || "UNIDENTIFIED"} in equalizeWidWithPhs()`
+              }> found for <${el.tagName.toLowerCase()}> id ${el?.id || "UNIDENTIFIED"} in equalizeWidWithPhs()`,
             );
         } else if (el instanceof HTMLInputElement && (el.type === "date" || el.type === "hour")) {
           el.style.minWidth = `${
@@ -516,7 +516,7 @@ export function equalizeWidWithPhs(els: Array<targEl>): void {
           if (parseFloat(getComputedStyle(el).width) < 16)
             console.warn(
               `Failed to apply Placeholder equalization for ${el.id || "UNIDENTIFIED"} in equalizeWidWithPhs()`,
-              extLine(new Error())
+              extLine(new Error()),
             );
         } else if (
           !(el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement || el instanceof HTMLSelectElement)
@@ -547,7 +547,7 @@ export function normalizeSizeSb(
   els: Array<targEl>,
   includeChilds: [boolean, number] = [true, 1],
   includeHeight: boolean = false,
-  elsToCurrent?: Array<targEl>
+  elsToCurrent?: Array<targEl>,
 ): void {
   if (Array.isArray(els) && els.length > 0 && els.every(el => el instanceof HTMLElement)) {
     const rem = parseFloat(getComputedStyle(document.documentElement).fontSize);
@@ -577,7 +577,7 @@ export function normalizeSizeSb(
                 elementNotFound(
                   elsToCurrent[c],
                   "Element for defining current width in scrollbar normalization",
-                  extLine(new Error())
+                  extLine(new Error()),
                 );
             }
           }
@@ -592,7 +592,7 @@ export function normalizeSizeSb(
             if (
               safeAcc < includeChilds[1] &&
               Array.from(el.children).some(
-                child => getComputedStyle(child).overflow === "auto" && child.classList.contains("form-padded")
+                child => getComputedStyle(child).overflow === "auto" && child.classList.contains("form-padded"),
               )
             ) {
               Array.from(el.children)
@@ -616,7 +616,7 @@ export function normalizeSizeSb(
     elementNotPopulated(els, "Elements for normalization of size based on scrollbar display", extLine(new Error()));
 }
 export function convertToHex(
-  arrColors: Array<[string, Map<string, string>]>
+  arrColors: Array<[string, Map<string, string>]>,
 ): [Array<boolean>, Array<[string, Map<string, string>]>] {
   const hexValidations: Array<boolean> = [];
   const rgbaToHex = (numValues: number[], alpha: number = 1): string => {
@@ -676,7 +676,7 @@ export function convertToHex(
               hslaNumValues[0],
               hslaNumValues[1] / 100,
               hslaNumValues[2] / 100,
-              hslaNumValues[3]
+              hslaNumValues[3],
             );
             arrColors[j][1].set(key, rgbaToHex(rgbaNumValues, rgbaNumValues[3]));
             propsValidations.push(true);

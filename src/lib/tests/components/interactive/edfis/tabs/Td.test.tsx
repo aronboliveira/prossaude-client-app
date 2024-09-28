@@ -4,13 +4,13 @@ import TabInpProg from "../../../../../../../components/interactive/edfis/client
 import TabBtnInd from "../../../../../../../components/interactive/edfis/client/tabs/TabBtnInd";
 import LockTabInd from "../../../../../../../components/interactive/edfis/tabs/LobTackInd";
 jest.mock("../../../../../../components/interactive/edfis/client/tabs/TabBtnInd", (): (() => JSX.Element) =>
-  jest.fn((): JSX.Element => <div>TabBtnInd</div>)
+  jest.fn((): JSX.Element => <div>TabBtnInd</div>),
 ) as typeof jest;
 jest.mock("../../../../../../components/interactive/edfis/client/tabs/TabBtnInd", (): (() => JSX.Element) =>
-  jest.fn((): JSX.Element => <div>TabInpProg</div>)
+  jest.fn((): JSX.Element => <div>TabInpProg</div>),
 ) as typeof jest;
 jest.mock("../../../../../../components/interactive/edfis/tabs/LobTackInd", (): (() => JSX.Element) =>
-  jest.fn((): JSX.Element => <div>LockTabInd</div>)
+  jest.fn((): JSX.Element => <div>LockTabInd</div>),
 ) as typeof jest;
 describe("Td Component", (): void => {
   it("should render with IndPerc context", () => {
@@ -18,12 +18,12 @@ describe("Td Component", (): void => {
     const td = screen.getByRole("cell") as HTMLTableCellElement;
     (expect(td) as jest.JestMatchers<jest.SpyInstance>).toBeInTheDocument() as void;
     (expect(td.querySelector("label")) as jest.JestMatchers<jest.SpyInstance>).toBeInTheDocument() as void;
-    (expect(TabInpProg) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalledWith<[any, {}]>(
+    (expect(TabInpProg) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalledWith<[any, object]>(
       (expect as jest.Expect).objectContaining<{
         ctx: string;
         lab: string;
       }>({ ctx: "IndPerc", lab: "IMC" }),
-      {}
+      {},
     );
     (expect(TabBtnInd) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalled() as void;
     (expect(LockTabInd) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalled() as void;
@@ -40,7 +40,7 @@ describe("Td Component", (): void => {
         ctx: string;
         lab: string;
       }>({ ctx: "MedAnt", lab: "Peso" }),
-      {}) as jest.JestMatchers<jest.SpyInstance>
+      {}) as jest.JestMatchers<jest.SpyInstance>,
     ) as void;
   }) as void;
 }) as void;

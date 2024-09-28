@@ -15,8 +15,8 @@ import {
 } from "../../global/handlers/errorHandler";
 import { autofillResult, entryEl, targEl } from "../../global/declarations/types";
 export const defaultResult: autofillResult = [0, [0, 0, 0], [0, 0, 0, 0, 0], []];
-export const formatValue = (targ: entryEl, numValue: number | string = "0", fix: number = 4) => {
-  const placeComma = (numValue: number | string) => {
+export const formatValue = (targ: entryEl, numValue: number | string = "0", fix: number = 4): void => {
+  const placeComma = (numValue: number | string): string => {
     return `${numValue.toString().slice(0, numValue.toString().lastIndexOf("."))},${numValue
       .toString()
       .slice(numValue.toString().lastIndexOf(".") + 1)}`;
@@ -80,7 +80,7 @@ export function validateTitlesForTargs(numCons: number = 1): targEl[] {
         `Title Row for fields about ${stringAtt}`,
         titleEl,
         titleEl?.textContent || "null",
-        extLine(new Error())
+        extLine(new Error()),
       );
   });
   arrTargs.length < 8 && console.error(`Invalid Elements for arrTargs: ${arrTargs.toString()}`);
@@ -104,7 +104,7 @@ export function addListenerComorbBtns(rowCountComorb: number = 3): [number, Elem
 export function addListenerInnerTabs(
   consTablesFs: targEl,
   numColsCons: number = 1,
-  areColGroupsSimilar: boolean = false
+  areColGroupsSimilar: boolean = false,
 ): [number, boolean] {
   if (
     consTablesFs instanceof HTMLElement &&
@@ -127,7 +127,7 @@ export function addListenerInnerTabs(
         "arguments for callbackInnerTabs()",
         consTablesFs,
         numColsCons,
-        areColGroupsSimilar
+        areColGroupsSimilar,
       );
   } else
     multipleElementsNotFound(
@@ -135,19 +135,19 @@ export function addListenerInnerTabs(
       "arguments for addListenerInnerTabs()",
       consTablesFs,
       numColsCons,
-      areColGroupsSimilar
+      areColGroupsSimilar,
     );
   return [numColsCons || 0, areColGroupsSimilar || false] || [1, false];
 }
 export function addListenerTrioReadNumCons(
   consTablesFs: targEl,
   numTotalColsCons: number = 1,
-  numTotalTabsCons: number = 1
+  numTotalTabsCons: number = 1,
 ): targEl {
   const trioReadNumCons = document.getElementById("trioReadNumCons");
   if (
     consTablesFs instanceof HTMLElement &&
-    typeof numTotalColsCons == "number" &&
+    typeof numTotalColsCons === "number" &&
     typeof numTotalTabsCons === "number"
   ) {
     trioReadNumCons instanceof HTMLInputElement && trioReadNumCons.type === "number"
@@ -161,7 +161,7 @@ export function addListenerTrioReadNumCons(
       "arguments for addListenerTrioReadNumCons()",
       consTablesFs,
       numTotalColsCons,
-      numTotalTabsCons
+      numTotalTabsCons,
     );
   return trioReadNumCons;
 }
@@ -169,13 +169,13 @@ export function callbackTrioReadNumCons(
   consTablesFs: targEl,
   trioReadNumCons: targEl,
   numTotalColsCons: number = 1,
-  numTotalTabsCons: number = 1
+  numTotalTabsCons: number = 1,
 ): Element[] {
   const numConsTextHeadCels = Array.from(document.getElementsByClassName("numConsTextHeadCel"));
   if (
     consTablesFs instanceof HTMLElement &&
     (trioReadNumCons instanceof HTMLInputElement || trioReadNumCons instanceof HTMLSelectElement) &&
-    typeof numTotalColsCons == "number" &&
+    typeof numTotalColsCons === "number" &&
     typeof numTotalTabsCons === "number"
   ) {
     if (
@@ -193,12 +193,12 @@ export function callbackTrioReadNumCons(
           numConsTextHeadCels,
           trioReadNumCons,
           numTotalTitledColsCons,
-          numTotalTabsCons
+          numTotalTabsCons,
         )
       : elementNotPopulated(
           numConsTextHeadCels,
           "numConsTextHeadCels in callbackTrioReadNumCons()",
-          extLine(new Error())
+          extLine(new Error()),
         );
     numConsTextHeadCels.forEach(numConsCel => {
       highlightChange(numConsCel, "rgba(250, 30, 0, 0.3)");
@@ -210,7 +210,7 @@ export function callbackTrioReadNumCons(
       consTablesFs,
       trioReadNumCons,
       numTotalColsCons,
-      numTotalTabsCons
+      numTotalTabsCons,
     );
   return numConsTextHeadCels;
 }
@@ -238,7 +238,7 @@ export function addListenerProtocolo(protocolo: targEl, tabDC: targEl, textBodyt
       "arguments for addListenerProtocolo",
       protocolo,
       tabDC,
-      textBodytype
+      textBodytype,
     );
   return prVal;
 }

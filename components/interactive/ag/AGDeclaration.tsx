@@ -7,10 +7,7 @@ import { nullishDlg } from "@/lib/global/declarations/types";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useEffect, useRef } from "react";
 import GenericErrorComponent from "../../error/GenericErrorComponent";
-export default function AGDeclaration({
-  state,
-  dispatch,
-}: DlgProps): JSX.Element {
+export default function AGDeclaration({ state, dispatch }: DlgProps): JSX.Element {
   const mainRef = useRef<nullishDlg>(null);
   const handleKp = (kp: KeyboardEvent) => {
     if (kp.key === "ESCAPE") {
@@ -20,33 +17,18 @@ export default function AGDeclaration({
   };
   //push em history
   useEffect(() => {
-    history.pushState(
-      {},
-      "",
-      `${location.origin}${location.pathname}${location.search}&conform=open`
-    );
+    history.pushState({}, "", `${location.origin}${location.pathname}${location.search}&conform=open`);
     setTimeout(() => {
-      history.pushState(
-        {},
-        "",
-        `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#")
-      );
+      history.pushState({}, "", `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#"));
     }, 300);
     return () => {
       history.pushState(
         {},
         "",
-        `${location.origin}${location.pathname}${location.search}`.replaceAll(
-          "&conform=open",
-          ""
-        )
+        `${location.origin}${location.pathname}${location.search}`.replaceAll("&conform=open", ""),
       );
       setTimeout(() => {
-        history.pushState(
-          {},
-          "",
-          `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#")
-        );
+        history.pushState({}, "", `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#"));
       }, 300);
     };
   }, []);
@@ -56,14 +38,10 @@ export default function AGDeclaration({
         throw elementNotFound(
           mainRef.current,
           `Main Reference for ${AGDeclaration.prototype.constructor.name}`,
-          extLine(new Error())
+          extLine(new Error()),
         );
-      syncAriaStates([
-        mainRef.current,
-        ...mainRef.current.querySelectorAll("*"),
-      ]);
-      mainRef.current instanceof HTMLDialogElement &&
-        mainRef.current.showModal();
+      syncAriaStates([mainRef.current, ...mainRef.current.querySelectorAll("*")]);
+      mainRef.current instanceof HTMLDialogElement && mainRef.current.showModal();
       addEventListener("keypress", handleKp);
       return () => removeEventListener("keypress", handleKp);
     } catch (e) {
@@ -73,24 +51,17 @@ export default function AGDeclaration({
   return !state ? (
     <></>
   ) : (
-    <ErrorBoundary
-      FallbackComponent={() => (
-        <GenericErrorComponent message="Erro carregando modal de declaração" />
-      )}
-    >
+    <ErrorBoundary FallbackComponent={() => <GenericErrorComponent message='Erro carregando modal de declaração' />}>
       <dialog
-        id="conformDlg"
-        className="modal-content-stk2 defDp"
+        id='conformDlg'
+        className='modal-content-stk2 defDp'
         ref={mainRef}
         onClick={ev => {
-          if (
-            isClickOutside(ev, ev.currentTarget).some(coord => coord == true)
-          ) {
+          if (isClickOutside(ev, ev.currentTarget).some(coord => coord === true)) {
             dispatch(!state);
             !state && ev.currentTarget.close();
           }
-        }}
-      >
+        }}>
         <h3>TERMOS DE CONCORDÂNCIA</h3>
         <p>Texto</p>
       </dialog>

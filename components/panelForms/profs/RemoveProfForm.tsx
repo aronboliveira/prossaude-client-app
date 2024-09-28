@@ -15,6 +15,7 @@ import Spinner from "../../icons/Spinner";
 import { nullishBtn, nullishForm, nullishTab, nullishTabSect } from "@/lib/global/declarations/types";
 import { GlobalFormProps, ProfInfo } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import { strikeEntries } from "@/lib/locals/panelPage/consStyleScript";
+import { assignFormAttrs } from "@/lib/global/gModel";
 export default function RemoveProfForm({ userClass = "estudante" }: GlobalFormProps): JSX.Element {
   const profs: ProfInfo[] = [];
   const formRef = useRef<nullishForm>(null);
@@ -30,7 +31,7 @@ export default function RemoveProfForm({ userClass = "estudante" }: GlobalFormPr
       ],
       [false, 0],
       true,
-      [document.getElementById("sectProfsTab")]
+      [document.getElementById("sectProfsTab")],
     );
     document.querySelector("table")!.style.minHeight = "revert";
     const nextDiv = document.getElementById("avPacsTab")?.nextElementSibling;
@@ -75,7 +76,7 @@ export default function RemoveProfForm({ userClass = "estudante" }: GlobalFormPr
                       throw elementNotFound(
                         tbodyRef.current,
                         `Validation of Table Body Reference`,
-                        extLine(new Error())
+                        extLine(new Error()),
                       );
                     if (tbodyRef.current.querySelector("tr")) return;
                     panelRoots[`${tbodyRef.current.id}`]?.unmount();
@@ -87,8 +88,7 @@ export default function RemoveProfForm({ userClass = "estudante" }: GlobalFormPr
                       <ErrorBoundary
                         FallbackComponent={() => (
                           <GenericErrorComponent message='Error reloading replacement for table body' />
-                        )}
-                      >
+                        )}>
                         <caption className='caption-t'>
                           <strong>
                             <small role='textbox'>
@@ -135,7 +135,7 @@ export default function RemoveProfForm({ userClass = "estudante" }: GlobalFormPr
                             />
                           </span>
                         </tbody>
-                      </ErrorBoundary>
+                      </ErrorBoundary>,
                     );
                     tbodyRef.current = document.getElementById("profsTbody") as nullishTabSect;
                     if (!(tbodyRef.current instanceof HTMLElement))
@@ -152,7 +152,7 @@ export default function RemoveProfForm({ userClass = "estudante" }: GlobalFormPr
                             tabRef={tabRef}
                             key={`prof_row__${i + 2}`}
                           />
-                        ))
+                        )),
                       );
                     setTimeout(() => {
                       if (tabRef?.current instanceof HTMLTableElement) {
@@ -162,15 +162,13 @@ export default function RemoveProfForm({ userClass = "estudante" }: GlobalFormPr
                         elementNotFound(
                           tabRef.current,
                           `tabRef id ${(tabRef?.current as any)?.id || "UNIDENTIFIED"} in useEffect() for tableRef`,
-                          extLine(new Error())
+                          extLine(new Error()),
                         );
                     }, 300);
                   } catch (e) {
                     console.error(
-                      `Error executing scheduled rendering of Table Body Content Replacement:\n${(e as Error).message}`
+                      `Error executing scheduled rendering of Table Body Content Replacement:\n${(e as Error).message}`,
                     );
-                  }
-                  if (document) {
                   }
                 }, 1000);
               } else panelRoots[`${tbodyRef.current.id}`] = createRoot(tbodyRef.current);
@@ -178,10 +176,10 @@ export default function RemoveProfForm({ userClass = "estudante" }: GlobalFormPr
                 panelRoots[`${tbodyRef.current.id}`]?.render(
                   profs.map((prof, i) => {
                     return Array.from(tbodyRef.current?.querySelectorAll("output") ?? []).some(
-                      outp => outp.innerText === (prof as ProfInfo)["idf"]
+                      outp => outp.innerText === (prof as ProfInfo)["idf"],
                     ) ||
                       Array.from(tbodyRef.current?.querySelectorAll("tr") ?? []).some(
-                        tr => tr.dataset.key && tbodyRef.current?.querySelector(`tr[data-key=${tr.dataset.key}`)
+                        tr => tr.dataset.key && tbodyRef.current?.querySelector(`tr[data-key=${tr.dataset.key}`),
                       ) ? (
                       <></>
                     ) : (
@@ -193,7 +191,7 @@ export default function RemoveProfForm({ userClass = "estudante" }: GlobalFormPr
                         key={`prof_row__${i + 2}`}
                       />
                     );
-                  })
+                  }),
                 );
               setTimeout(() => {
                 if (tabRef?.current instanceof HTMLTableElement) {
@@ -203,7 +201,7 @@ export default function RemoveProfForm({ userClass = "estudante" }: GlobalFormPr
                   elementNotFound(
                     tabRef.current,
                     `tabRef id ${(tabRef?.current as any)?.id || "UNIDENTIFIED"} in useEffect() for tableRef`,
-                    extLine(new Error())
+                    extLine(new Error()),
                   );
               }, 300);
               setTimeout(() => {
@@ -211,7 +209,7 @@ export default function RemoveProfForm({ userClass = "estudante" }: GlobalFormPr
                   if (!panelRoots[`${document.querySelector("table")!.id}`])
                     panelRoots[`${document.querySelector("table")!.id}`] = createRoot(document.querySelector("table")!);
                   panelRoots[`${document.querySelector("table")!.id}`]?.render(
-                    <GenericErrorComponent message='Failed to render table' />
+                    <GenericErrorComponent message='Failed to render table' />,
                   );
                 }
               }, 5000);
@@ -229,7 +227,7 @@ export default function RemoveProfForm({ userClass = "estudante" }: GlobalFormPr
                     userClass,
                     ["coordenador"],
                     tabRef.current,
-                    document.getElementById("btnExport")
+                    document.getElementById("btnExport"),
                   );
               } catch (e) {
                 console.error(`Error executing handleAttempt for Professionals table:\n${(e as Error).message}`);
@@ -256,15 +254,16 @@ export default function RemoveProfForm({ userClass = "estudante" }: GlobalFormPr
         ? addListenerExportBtn(
             "tab_Profissionais",
             formRef.current,
-            document.getElementById("titleTabProfs") || formRef.current
+            document.getElementById("titleTabProfs") || formRef.current,
           )
         : elementNotFound(
             btnExportTabProfs,
             "<button> for triggering generation of spreadsheet in the table for checking professionals",
-            extLine(new Error())
+            extLine(new Error()),
           );
       callbackNormalizeSizesSb();
       syncAriaStates([...formRef.current!.querySelectorAll("*"), formRef.current]);
+      assignFormAttrs(formRef.current);
     } else elementNotFound(formRef?.current, "formRef.current in useEffect() for RemoveProfForm", extLine(new Error()));
   }, [formRef]);
   useEffect(() => {
@@ -273,7 +272,7 @@ export default function RemoveProfForm({ userClass = "estudante" }: GlobalFormPr
         userClass,
         ["coordenador", "supervisor"],
         tabRef.current,
-        document.getElementById("btnExport")
+        document.getElementById("btnExport"),
       );
     }
   }, [tabRef]);
@@ -287,8 +286,7 @@ export default function RemoveProfForm({ userClass = "estudante" }: GlobalFormPr
       method='get'
       target='_top'
       autoComplete='on'
-      ref={formRef}
-    >
+      ref={formRef}>
       <div role='group' className='wsBs flexNoWC cGap1v'>
         <h1 className='mg-3b bolded'>
           <strong id='titleTabProfs'>Tabela de Profissionais Registrados</strong>
@@ -356,8 +354,7 @@ export default function RemoveProfForm({ userClass = "estudante" }: GlobalFormPr
         className='btn btn-success flexAlItCt flexJC flexBasis50 bolded widQ460FullW'
         name='btnExportProfsTab'
         ref={btnExportProfsTabRef}
-        title='Gere um .xlsx com os dados preenchidos'
-      >
+        title='Gere um .xlsx com os dados preenchidos'>
         Gerar Planilha
       </button>
     </form>

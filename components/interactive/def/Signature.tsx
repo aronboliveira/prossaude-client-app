@@ -18,11 +18,7 @@ export default function Signature(): JSX.Element {
   const draw = (e: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
     try {
       if (!(canvasRef.current instanceof HTMLCanvasElement))
-        throw elementNotFound(
-          canvasRef.current,
-          `Validation of Canvas Ref Instance`,
-          extLine(new Error())
-        );
+        throw elementNotFound(canvasRef.current, `Validation of Canvas Ref Instance`, extLine(new Error()));
       if (!(ctx instanceof CanvasRenderingContext2D))
         throw new Error(`Error getting Canvas Context:
         Obtained Value: ${ctx ?? "nullish"}`);
@@ -42,11 +38,7 @@ export default function Signature(): JSX.Element {
   const drawTouch = (e: React.TouchEvent<HTMLCanvasElement>) => {
     try {
       if (!(canvasRef.current instanceof HTMLCanvasElement))
-        throw elementNotFound(
-          canvasRef.current,
-          `Validation of Canvas Ref Instance`,
-          extLine(new Error())
-        );
+        throw elementNotFound(canvasRef.current, `Validation of Canvas Ref Instance`, extLine(new Error()));
       if (!(ctx instanceof CanvasRenderingContext2D))
         throw new Error(`Error getting Canvas Context:
         Obtained Value: ${ctx ?? "nullish"}`);
@@ -72,62 +64,38 @@ export default function Signature(): JSX.Element {
     const equalizeCanvas = (): void => {
       try {
         if (!(canvasRef.current instanceof HTMLCanvasElement))
-          throw elementNotFound(
-            canvasRef.current,
-            `Validation of Canvas Instance`,
-            extLine(new Error())
-          );
-        equalizeCanvas();
+          throw elementNotFound(canvasRef.current, `Validation of Canvas Instance`, extLine(new Error()));
+        try {
+          if (!(canvasRef.current instanceof HTMLCanvasElement))
+            throw elementNotFound(canvasRef.current, `Validation of Canvas Reference Instance`, extLine(new Error()));
+          canvasRef.current.height = 80;
+          ctx = canvasRef.current.getContext("2d");
+          if (!ctx)
+            throw new Error(`Error validating canvasRef.current context:
+              Obtained value: ${ctx ?? "nullish"}`);
+          ctx.fillRect(10, canvasRef.current.height - 10, canvasRef.current.width - 20, 1.5);
+          ctx.lineWidth = 4;
+          ctx.lineCap = "round";
+          ctx.strokeStyle = "#222";
+        } catch (e) {
+          console.error(`Error executing procedure for defining context for Canvas:\n${(e as Error).message}`);
+        }
       } catch (e) {
         console.error(
-          `Error executing equalizeCanvas for ${
-            Signature.prototype.constructor.name
-          }:${(e as Error).message}`
+          `Error executing equalizeCanvas for ${Signature.prototype.constructor.name}:${(e as Error).message}`,
         );
       }
     };
     equalizeCanvas();
     addEventListener("resize", equalizeCanvas);
-    try {
-      if (!(canvasRef.current instanceof HTMLCanvasElement))
-        throw elementNotFound(
-          canvasRef.current,
-          `Validation of Canvas Reference Instance`,
-          extLine(new Error())
-        );
-      canvasRef.current.height = 80;
-      ctx = canvasRef.current.getContext("2d");
-      if (!ctx)
-        throw new Error(`Error validating canvasRef.current context:
-        Obtained value: ${ctx ?? "nullish"}`);
-      ctx.fillRect(
-        10,
-        canvasRef.current.height - 10,
-        canvasRef.current.width - 20,
-        1.5
-      );
-      ctx.lineWidth = 4;
-      ctx.lineCap = "round";
-      ctx.strokeStyle = "#222";
-    } catch (e) {
-      console.error(
-        `Error executing procedure for defining context for Canvas:\n${
-          (e as Error).message
-        }`
-      );
-    }
     return removeEventListener("resize", equalizeCanvas);
   }, []);
   return (
-    <div className="divSub divConfirm flexEl" id="divConfirm3" role="group">
-      <span
-        role="group"
-        id="spanAstPct"
-        className="labConfirm labAst widHalf bolded"
-      >
+    <div className='divSub divConfirm flexEl' id='divConfirm3' role='group'>
+      <span role='group' id='spanAstPct' className='labConfirm labAst widHalf bolded'>
         <span>Assinatura do Paciente:</span>
         <canvas
-          id="inpAstConfirmId"
+          id='inpAstConfirmId'
           ref={canvasRef}
           onMouseDown={startDrawing}
           onMouseMove={draw}
@@ -136,17 +104,15 @@ export default function Signature(): JSX.Element {
           onTouchStart={startDrawingTouch}
           onTouchMove={drawTouch}
           onTouchEnd={stopDrawing}
-          data-name="signature"
-        ></canvas>
+          data-name='signature'></canvas>
         <button
-          type="button"
-          className="astDigtBtn autocorrect confirmBtn btn btn-secondary"
-          id="confirmAstDigtBtn"
-          onClick={ev => changeToAstDigit(ev.currentTarget)}
-        >
+          type='button'
+          className='astDigtBtn autocorrect confirmBtn btn btn-secondary'
+          id='confirmAstDigtBtn'
+          onClick={ev => changeToAstDigit(ev.currentTarget)}>
           Usar Assinatura Digital
         </button>
-        <button type="button" className="btn btn-secondary" id="resetAstBtn">
+        <button type='button' className='btn btn-secondary' id='resetAstBtn'>
           Resetar
         </button>
       </span>

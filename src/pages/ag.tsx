@@ -48,8 +48,8 @@ import TelPrim from "../../components/interactive/ag/TelPrim";
 import TelSec from "../../components/interactive/ag/TelSec";
 import Uf from "../../components/interactive/ag/Uf";
 import Watcher from "../../components/interactive/def/Watcher";
-const MemoAge = memo(AgeElement);
-const MemoLoc = memo(ConfirmLocId);
+const MemoAge = memo(AgeElement),
+  MemoLoc = memo(ConfirmLocId);
 export const agProps = {
   agIsAutoCorrectOn: true,
 };
@@ -85,10 +85,9 @@ export default function AGPage(): JSX.Element {
             autoComplete='on'
             onSubmit={ev =>
               validateForm(ev).then(validation =>
-                validation[0] ? handleSubmit("ag", validation[2], true) : ev.preventDefault()
+                validation[0] ? handleSubmit("ag", validation[2], true) : ev.preventDefault(),
               )
-            }
-          >
+            }>
             <fieldset name='fsAnamGName' id='fsAnamGIdId' className='fsMain'>
               <legend id='fsAnamGLeg' className='legMain form-padded'>
                 Identificação
@@ -99,8 +98,7 @@ export default function AGPage(): JSX.Element {
                   <div
                     className='fsAnamGDiv alItSt900Q flexQ900NoWC flexAlItE noAdj flexNoWR flexTwin-width'
                     role='group'
-                    id='divIdentif_2'
-                  >
+                    id='divIdentif_2'>
                     <SocialName />
                     <span role='group' className='fsAnamGSpan flexAlItCt col' id='fsAnamGSpanCPF'>
                       <label htmlFor='inpCPF' className='labelIdentif'>
@@ -116,8 +114,7 @@ export default function AGPage(): JSX.Element {
                           id='statusPac'
                           name='statusPac-in'
                           data-title='Status Paciente'
-                          required
-                        >
+                          required>
                           <option value='avaliacao'>Em Avaliação Inicial</option>
                           <option value='tratamento'>Em Tratamento Geral</option>
                           <option value='emergência'>Em Emergência</option>
@@ -136,8 +133,7 @@ export default function AGPage(): JSX.Element {
                   <div
                     className='divMain fsAnamGDiv alItSt900Q flexQ900NoWC gridAlItE gridTwoCol noGapDiv noEqualize'
                     id='fsAnamGDiv2'
-                    role='group'
-                  >
+                    role='group'>
                     <span role='group' className='spanMain fsAnamGSpan' id='fsAnamGSpan16'>
                       <label htmlFor='telAreaCodeId' className='labelIdentif'>
                         <span>DDD:</span>
@@ -199,8 +195,7 @@ export default function AGPage(): JSX.Element {
                 <div
                   className='divMain fsAnamGDiv alItSt900Q flexQ900NoWC gridAlItE gridTwoCol widFull900Q noEqualize'
                   id='fsAnamGDiv3'
-                  role='group'
-                >
+                  role='group'>
                   <span role='group' className='fsAnamGSpan' id='fsAnamGSpan6'>
                     <label htmlFor='countryId' className='labelIdentif noInvert'>
                       <span>Nacionalidade:</span>
@@ -329,8 +324,7 @@ export default function AGPage(): JSX.Element {
                     name='history'
                     maxLength={1000}
                     placeholder='Escreva aqui a história'
-                    data-title='historia_doencas'
-                  ></textarea>
+                    data-title='historia_doencas'></textarea>
                 </span>
                 <hr />
               </section>
@@ -537,8 +531,7 @@ export default function AGPage(): JSX.Element {
                       <span
                         role='group'
                         className='spanSub spanSubFsAnamGRad spanDivAddHiv spanDivAddDatHiv'
-                        id='spanDatDiagHiv'
-                      >
+                        id='spanDatDiagHiv'>
                         Data do Diagnóstico:
                       </span>
                       <input
@@ -553,8 +546,7 @@ export default function AGPage(): JSX.Element {
                       <span
                         role='group'
                         className='spanSub spanSubFsAnamGRad spanDivAddHiv spanDivAddDatHiv'
-                        id='spanExamHiv'
-                      >
+                        id='spanExamHiv'>
                         Data do Último Exame:
                       </span>
                       <input
@@ -854,8 +846,7 @@ export default function AGPage(): JSX.Element {
                       name='other_d'
                       maxLength={1000}
                       placeholder='Qual ou quais?'
-                      data-title='Descrição – Outras Doenças'
-                    ></textarea>
+                      data-title='Descrição – Outras Doenças'></textarea>
                   </span>
                 </div>
               </fieldset>
@@ -879,8 +870,7 @@ export default function AGPage(): JSX.Element {
                       <div
                         className='divAdd gridThreeCol divAntFamCheck'
                         role='list'
-                        style={{ marginBlock: "0.5rem", padding: "0.5rem" }}
-                      >
+                        style={{ marginBlock: "0.5rem", padding: "0.5rem" }}>
                         <span role='listitem' className='cbDoencaSubt'>
                           <input
                             type='checkbox'
@@ -1127,8 +1117,7 @@ export default function AGPage(): JSX.Element {
                       maxLength={1000}
                       placeholder='Qual ou quais?'
                       className='divAdd form-control'
-                      data-title='Descrição — Doces e/ou Corantes'
-                    ></textarea>
+                      data-title='Descrição — Doces e/ou Corantes'></textarea>
                     <br role='presentation' />
                   </span>
                 </div>
@@ -1144,8 +1133,7 @@ export default function AGPage(): JSX.Element {
                     <label
                       htmlFor='confirmLocId'
                       className='labConfirm labDivConfirm2 pdT2pc900Q htFull900Q flexNoWC bolded widHalf900Q noInvert'
-                      id='labConfirmLoc'
-                    >
+                      id='labConfirmLoc'>
                       Local:
                       <MemoLoc />
                     </label>
@@ -1218,7 +1206,7 @@ export function handleDivAddShow(targ: targEl): void {
         (targ instanceof HTMLElement &&
           document.getElementById(`divAdd${targ.id.replace("ant", "").replace("Id", "")}`)) ||
         "null"
-      }`
+      }`,
     );
   }
 }

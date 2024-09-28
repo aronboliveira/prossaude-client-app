@@ -28,7 +28,7 @@ export async function asyncJSXCall(
   component: (...args1: Array<any>) => JSX.Element | Promise<JSX.Element>,
   called: (...args2: Array<any>) => any,
   argumentsComponent: Array<any> = [],
-  argumentsCalled: Array<any> = []
+  argumentsCalled: Array<any> = [],
 ): Promise<JSX.Element> {
   try {
     if ((typeof component === "function" || typeof component === "object") && typeof called === "function") {
@@ -42,8 +42,8 @@ export async function asyncJSXCall(
       multipleElementsNotFound(
         extLine(new Error()),
         "arguments for asyncJSXCall",
-        `${JSON.stringify((component as Function | null)?.name || component.constructor.name)}`,
-        `${JSON.stringify(called?.name)}`
+        `${JSON.stringify((component as () => any | null)?.name || component.constructor.name)}`,
+        `${JSON.stringify(called?.name)}`,
       );
     throw new Error(`Validating arguments for ${arguments.callee.name}`);
   } catch (err) {
@@ -58,13 +58,13 @@ export async function asyncJSXCall(
 export function correlateAptMonthDays(
   daySel: targEl,
   dayRefs: Array<targEl>,
-  shouldClearOptions: boolean = true
+  shouldClearOptions: boolean = true,
 ): void {
   if (
     daySel instanceof HTMLSelectElement ||
     (daySel instanceof HTMLInputElement && (daySel.type === "number" || daySel.type === "text"))
   ) {
-    const checkForReplaceSel = (hasDuplicates: boolean = false) => {
+    const checkForReplaceSel = (hasDuplicates: boolean = false): void => {
       if (
         daySel.childElementCount < document.querySelector("table")!.querySelectorAll("col").length - 1 ||
         hasDuplicates
@@ -97,7 +97,7 @@ export function correlateAptMonthDays(
       });
       if (
         Array.from(document.getElementsByClassName("lastConsDayCont")).some(
-          cont => (cont as HTMLElement).style.display === "none" || (cont as HTMLElement).hidden === true
+          cont => (cont as HTMLElement).style.display === "none" || (cont as HTMLElement).hidden === true,
         )
       )
         listDays.pop();
@@ -113,19 +113,19 @@ export function correlateAptMonthDays(
       let hasDuplicates = false;
       listDays.forEach((listedDay, i) => {
         counterOp++;
-        const newDayOp = (() => {
+        const newDayOp = ((): HTMLOptionElement => {
           const newDayOp = document.createElement("option");
           newDayOp.id = `${daySel?.id || "day"}Op${counterOp}-${newDayOp.value}`;
           if (navigator.language === "en-US") {
             newDayOp.value = listedDay;
             newDayOp.textContent = `${listedDay.slice(-5, -3)}/${listedDay.slice(
               -2,
-              listedDay.length
+              listedDay.length,
             )}/${listedDay.slice(0, 4)}`;
           } else
             newDayOp.textContent = `${listedDay.slice(-2, listedDay.length)}/${listedDay.slice(
               -5,
-              -3
+              -3,
             )}/${listedDay.slice(0, 4)}`;
           return newDayOp;
         })();
@@ -148,7 +148,7 @@ export function correlateAptMonthDays(
 export function convertWeekdaysToMonthdays(
   weekdays: Array<number>,
   nths: Array<number>,
-  month: number = new Date().getMonth()
+  month: number = new Date().getMonth(),
 ): Array<number> {
   const dates: number[] = [];
   dates.fill(1, 0, nths.length * weekdays.length);
@@ -207,7 +207,7 @@ export function correlateWorkingDays(
     "Sexta-feira",
     "Quarta-feira",
   ],
-  numColumnsRef: number
+  numColumnsRef: number,
 ): void {
   if (
     Array.isArray(workingDayNames) &&
@@ -257,16 +257,16 @@ export function correlateWorkingDays(
       labConsWeekdays.forEach((lab, i) => {
         lab.textContent = `${repeatedWorderWeekDays[i][1] ?? `${i}orderbrk`} ${workingDayNames[i] ?? `${i}daybrk`}`;
         lab.id = `${orderMap.get(i) ?? `${i}orderbrk`}_${revWeekDaysMap.get(
-          workingDayNames[i] ?? `${i}daybrk`
+          workingDayNames[i] ?? `${i}daybrk`,
         )}_plus_1fLab`;
         if (lab instanceof HTMLLabelElement)
           lab.htmlFor = `_${orderMap.get(i) ?? `${i}orderbrk`}_${revWeekDaysMap.get(
-            workingDayNames[i] ?? `${i}daybrk`
+            workingDayNames[i] ?? `${i}daybrk`,
           )}_plus_1fInp`;
         const labeledInp = lab.parentElement!.querySelector(".dayTabRef");
         if (labeledInp instanceof HTMLElement)
           labeledInp.id = `_${orderMap.get(i) ?? `${i}orderbrk`}_${revWeekDaysMap.get(
-            workingDayNames[i] ?? `${i}daybrk`
+            workingDayNames[i] ?? `${i}daybrk`,
           )}_plus_1fInp`;
       });
       for (const lab of labConsWeekdays) {
@@ -297,7 +297,7 @@ export function correlateWorkingDays(
       elementNotPopulated(
         labConsWeekdays,
         `Labels for appointments working days when comparing to the number of columns ${numColumnsRef} and working days ${workingDayNames.length} references`,
-        extLine(new Error())
+        extLine(new Error()),
       );
   } else elementNotPopulated(workingDayNames, `arguments for ${arguments.callee.name}`, extLine(new Error()));
 }
@@ -314,10 +314,10 @@ export function removeRepeateadWorkingDays(workingDays: [number, number]): [numb
       (secondOrderWorkDay instanceof HTMLSelectElement || secondOrderWorkDay instanceof HTMLInputElement)
     ) {
       const selectedFirstOpWeekday = Array.from(firstOrderWorkDay.querySelectorAll("option")).find(
-        option => option.value === firstOrderWorkDay.value
+        option => option.value === firstOrderWorkDay.value,
       );
       const selectedSecondOpWeekday = Array.from(secondOrderWorkDay.querySelectorAll("option")).find(
-        option => option.value === secondOrderWorkDay.value
+        option => option.value === secondOrderWorkDay.value,
       );
       if (selectedFirstOpWeekday instanceof HTMLOptionElement && selectedSecondOpWeekday instanceof HTMLOptionElement) {
         workingDays = [
@@ -348,14 +348,14 @@ export function removeRepeateadWorkingDays(workingDays: [number, number]): [numb
           extLine(new Error()),
           "selected options for reflecting select values for working weekdays",
           selectedFirstOpWeekday,
-          selectedSecondOpWeekday
+          selectedSecondOpWeekday,
         );
     } else
       multipleElementsNotFound(
         extLine(new Error()),
         "Entry elements for defining working weekdays",
         firstOrderWorkDay,
-        secondOrderWorkDay
+        secondOrderWorkDay,
       );
   } else elementNotPopulated(workingDays, `argument for ${arguments.callee.name}`, extLine(new Error()));
   return workingDays;
@@ -365,7 +365,7 @@ export function generateSchedPacData(scope: targEl): { [k: string]: string } {
   if (scope instanceof Element) {
     [
       ...Array.from(scope?.querySelectorAll("input")).filter(input => !(input.role === "switch")),
-      ...scope?.querySelectorAll("select"),
+      ...(scope?.querySelectorAll("select") ?? []),
       ...scope.querySelectorAll("textarea"),
     ].forEach(entry => {
       entry instanceof HTMLInputElement && entry.type === "checkbox"
@@ -441,12 +441,12 @@ export function handleRenderRefLost(id: string, prevRef: HTMLElement, userClass:
             data={
               providerFormData[rootDlgContext.aptBtnsIdx[`${prevRef.id}`]] ||
               Array.from(providerFormData.values()).find(
-                formData => (formData as any).time === prevRef.id.replace("appointmentBtn-", "")
+                formData => (formData as any).time === prevRef.id.replace("appointmentBtn-", ""),
               )
             }
             btnId={prevRef.id}
             userClass={userClass}
-          />
+          />,
         );
       }
     }, timer);
@@ -465,7 +465,7 @@ export function handleAptBtnClick(ev: MouseEvent, userClass: string): void {
           "undefined"
         }\n Id Found -> ${
           (ev.currentTarget instanceof HTMLElement && ev.currentTarget.id) || ev.currentTarget || "undefined"
-        }`
+        }`,
       );
     if (!consVariablesData.rootDlg) {
       const rootDlg = document.getElementById("rootDlgList");
@@ -487,18 +487,19 @@ export function handleAptBtnClick(ev: MouseEvent, userClass: string): void {
           data={
             providerFormData[rootDlgContext.aptBtnsIdx[`${ev.currentTarget.id}`]] ||
             Array.from(providerFormData.values()).find(
-              formData => (formData as any).time === (ev.currentTarget as HTMLElement).id.replace("appointmentBtn-", "")
+              formData =>
+                (formData as any).time === (ev.currentTarget as HTMLElement).id.replace("appointmentBtn-", ""),
             )
           }
           btnId={ev.currentTarget.id}
           userClass={userClass}
-        />
+        />,
       );
       handleRenderRefLost("rootDlgList", ev.currentTarget, userClass);
     } else {
       if (
         !document.getElementById(
-          `rootDlgList-${rootDlgContext.aptBtnsRoots[`${ev.currentTarget.id}`] ?? "null"}-${ev.currentTarget.id}`
+          `rootDlgList-${rootDlgContext.aptBtnsRoots[`${ev.currentTarget.id}`] ?? "null"}-${ev.currentTarget.id}`,
         )
       ) {
         const newRoot = document.createElement("div") as HTMLDivElement;
@@ -515,32 +516,33 @@ export function handleAptBtnClick(ev: MouseEvent, userClass: string): void {
       }
       if (!rootDlgContext.aptBtnsRoots[`${ev.currentTarget.id}`]) {
         const targRoot = document.getElementById(
-          `rootDlgList-${rootDlgContext.aptBtnsRoots[`${ev.currentTarget.id}`] ?? "null"}-${ev.currentTarget.id}`
+          `rootDlgList-${rootDlgContext.aptBtnsRoots[`${ev.currentTarget.id}`] ?? "null"}-${ev.currentTarget.id}`,
         );
         if (!(targRoot instanceof HTMLElement))
           throw elementNotFound(
             targRoot,
             `Target Dialog Root for ${ev.currentTarget.id || ev.currentTarget.tagName}`,
-            extLine(new Error())
+            extLine(new Error()),
           );
         rootDlgContext.aptBtnsRoots[`${ev.currentTarget.id}`] = createRoot(targRoot);
       }
       console.log(
         `Attempt to render in ${`rootDlgList-${rootDlgContext.aptBtnsRoots[`${ev.currentTarget.id}`] ?? "null"}-${
           ev.currentTarget.id
-        }`}`
+        }`}`,
       );
       rootDlgContext.aptBtnsRoots[`${ev.currentTarget.id}`]!.render(
         <ProviderAptDatList
           data={
             providerFormData[rootDlgContext.aptBtnsIdx[`${ev.currentTarget.id}`]] ||
             Array.from(providerFormData.values()).find(
-              formData => (formData as any).time === (ev.currentTarget as HTMLElement).id.replace("appointmentBtn-", "")
+              formData =>
+                (formData as any).time === (ev.currentTarget as HTMLElement).id.replace("appointmentBtn-", ""),
             )
           }
           btnId={ev.currentTarget.id}
           userClass={userClass}
-        />
+        />,
       );
       handleRenderRefLost("rootDlgList", ev.currentTarget, userClass);
     }
@@ -548,7 +550,7 @@ export function handleAptBtnClick(ev: MouseEvent, userClass: string): void {
     console.error(
       `Error executing callback for ${
         (ev.currentTarget instanceof HTMLElement && ev.currentTarget.tagName) || "unidentified Node"
-      } type ${ev.type}:\n${(e as Error).message}`
+      } type ${ev.type}:\n${(e as Error).message}`,
     );
   }
 }
@@ -556,7 +558,7 @@ export function createAptBtn(
   formData: { [key: string]: string },
   _providerFormData: { [key: string]: string },
   rootedDlg: Root | voidVal,
-  userClass: string
+  userClass: string,
 ): targEl {
   const apppointBtn = document.getElementById("addAppointBtn");
   if (apppointBtn?.parentElement instanceof HTMLElement) {
@@ -615,7 +617,7 @@ export function createAptBtn(
         elementNotFound(
           `${JSON.stringify(rootedDlg)}`,
           "Dialog root for placing tabled list about registered appointment",
-          extLine(new Error())
+          extLine(new Error()),
         );
     } else {
       transfArea && transfArea.querySelector(".appointmentBtn")
@@ -624,7 +626,7 @@ export function createAptBtn(
             extLine(new Error()),
             "Elements for placing appointment in transfer area in createAptBtn()",
             transfArea,
-            replaceSlot
+            replaceSlot,
           );
     }
     return newAppointmentBtn;
@@ -640,7 +642,7 @@ let isDragging = false,
 export function handleDragAptBtn(newAppointmentBtn: targEl, userClass: string = "estudante"): void {
   if (newAppointmentBtn instanceof HTMLButtonElement) {
     const slots = Array.from(document.getElementsByClassName("consSlot")).filter(
-      slot => slot instanceof HTMLSlotElement
+      slot => slot instanceof HTMLSlotElement,
     );
     const slotsCoords = slots.map(slot => {
       const rect = slot.getBoundingClientRect();
@@ -651,7 +653,7 @@ export function handleDragAptBtn(newAppointmentBtn: targEl, userClass: string = 
           upperRightVert: [rect.x + rect.width, rect.y],
           lowerLeftVert: [rect.x, rect.y + rect.height],
           lowerRightVert: [rect.x + rect.width, rect.y + rect.height],
-        }
+        },
       );
     });
     newAppointmentBtn.addEventListener("dragend", end => {
@@ -681,7 +683,7 @@ export function handleDragAptBtn(newAppointmentBtn: targEl, userClass: string = 
               throw elementNotFound(
                 newAppointmentBtn,
                 `New Appointment Button in touchstart callback`,
-                extLine(new Error())
+                extLine(new Error()),
               );
             replaceRegstSlot(matchedSlot, newAppointmentBtn, slots, userClass);
             try {
@@ -690,14 +692,14 @@ export function handleDragAptBtn(newAppointmentBtn: targEl, userClass: string = 
                 throw inputNotFound(
                   monthSelector,
                   `monthSelector for updating session schedule state after dragend`,
-                  extLine(new Error())
+                  extLine(new Error()),
                 );
               const tbody = document.getElementById("tbSchedule");
               if (!(tbody instanceof HTMLElement))
                 throw elementNotFound(
                   tbody,
                   `tbody for updating session schedule state after dragend`,
-                  extLine(new Error())
+                  extLine(new Error()),
                 );
               //atualização no drop (associada com replaceregstslot)
               sessionScheduleState[monthSelector.value] = tbody.innerHTML;
@@ -715,7 +717,7 @@ export function handleDragAptBtn(newAppointmentBtn: targEl, userClass: string = 
     newAppointmentBtn.addEventListener("touchstart", ev => {
       isDragging = true;
       fbTouch = Array.from(ev.touches).find(
-        touch => touch.target instanceof HTMLElement && touch.target.classList.contains("appointmentBtn")
+        touch => touch.target instanceof HTMLElement && touch.target.classList.contains("appointmentBtn"),
       ) as any;
       if (
         !(newAppointmentBtn instanceof HTMLButtonElement) &&
@@ -735,7 +737,7 @@ export function handleDragAptBtn(newAppointmentBtn: targEl, userClass: string = 
         (newAppointmentBtn as HTMLButtonElement).style.position = "absolute";
         (newAppointmentBtn as HTMLButtonElement).style.zIndex = "50";
       }
-      const handleTouchDrag = (ev: TouchEvent) => {
+      const handleTouchDrag = (ev: TouchEvent): void => {
         if (!isDragging) return;
         ev.preventDefault();
         const touch = ev.targetTouches[0];
@@ -743,7 +745,7 @@ export function handleDragAptBtn(newAppointmentBtn: targEl, userClass: string = 
         offsetY = touch.clientY - initialY;
         (newAppointmentBtn as HTMLButtonElement).style.transform = `translate(${offsetX}px, ${offsetY}px)`;
       };
-      const handleTouchEnd = (end: TouchEvent) => {
+      const handleTouchEnd = (end: TouchEvent): void => {
         console.log(end);
         if (isDragging) {
           try {
@@ -780,14 +782,14 @@ export function handleDragAptBtn(newAppointmentBtn: targEl, userClass: string = 
                     throw inputNotFound(
                       monthSelector,
                       `monthSelector for updating session schedule state after dragend`,
-                      extLine(new Error())
+                      extLine(new Error()),
                     );
                   const tbody = document.getElementById("tbSchedule");
                   if (!(tbody instanceof HTMLElement))
                     throw elementNotFound(
                       tbody,
                       `tbody for updating session schedule state after dragend`,
-                      extLine(new Error())
+                      extLine(new Error()),
                     );
                   sessionScheduleState[monthSelector.value] = tbody.innerHTML;
                 } catch (e) {
@@ -816,7 +818,7 @@ export function replaceRegstSlot(
   matchedSlot: targEl,
   newAppointmentBtn: HTMLButtonElement,
   slots: Array<Element>,
-  userClass: string = "estudante"
+  userClass: string = "estudante",
 ): void {
   try {
     if (!(matchedSlot instanceof HTMLElement)) throw elementNotFound(matchedSlot, `Matched Slot`, extLine(new Error()));
@@ -838,7 +840,7 @@ export function replaceRegstSlot(
       newAppointmentBtn.style.width = "100%";
       matchedSlot.replaceChild(
         newAppointmentBtn,
-        matchedSlot.querySelector(".slotableDay") ?? matchedSlot.children[0] ?? matchedSlot.parentElement!.children[0]
+        matchedSlot.querySelector(".slotableDay") ?? matchedSlot.children[0] ?? matchedSlot.parentElement!.children[0],
       );
       setTimeout(() => {
         try {
@@ -871,21 +873,21 @@ export function replaceRegstSlot(
                   className: "opaqueEl",
                   color: "#0981714d",
                 }),
-                transfArea.querySelector("button")!
+                transfArea.querySelector("button")!,
               )
             : transfArea.appendChild(
                 Object.assign(document.createElement("slot"), {
                   id: "replaceSlot",
                   textContent: "Área de transferência",
                   className: "opaqueEl",
-                })
+                }),
               );
         }
       } else
         elementNotFound(
           transfArea,
           "Element for appointment transference slot in handleDragAptBtn()",
-          extLine(new Error())
+          extLine(new Error()),
         );
       const regstBtn = document.getElementById("regstDayBtn");
       if (regstBtn instanceof HTMLButtonElement) regstBtn.disabled = true;
@@ -911,10 +913,10 @@ export function replaceRegstSlot(
       for (let s = 0; s < noMatchSlots.length; s++) {
         const relTr = matchedSlot.closest("tr")!;
         const trCels = [...relTr.querySelectorAll("th"), ...relTr.querySelectorAll("td")].filter(
-          cel => cel instanceof HTMLElement
+          cel => cel instanceof HTMLElement,
         );
         const slotNum = Array.from(relTr.querySelectorAll(".consSlot")).findIndex(slot =>
-          slot.isSameNode(noMatchSlots[s])
+          slot.isSameNode(noMatchSlots[s]),
         );
         if (
           !noMatchSlots[s].hasChildNodes() ||
@@ -972,7 +974,7 @@ export function checkRegstBtn(
   regstBtn: targEl,
   scope: HTMLElement | Document = document,
   failProps: [Root | undefined, boolean, Dispatch<SetStateAction<boolean>>, string],
-  userClass: string = "estudante"
+  userClass: string = "estudante",
 ): boolean | undefined {
   if (regstBtn instanceof HTMLButtonElement) {
     const daySel =
@@ -997,7 +999,7 @@ export function checkRegstBtn(
 
     //isso é só pra checar o número de colunas com datas nos headers
     const shownDayTabRefs = Array.from(dayTabRefs).filter(
-      ref => ref instanceof HTMLElement && !(ref.hidden === true || ref.style.display === "none")
+      ref => ref instanceof HTMLElement && !(ref.hidden === true || ref.style.display === "none"),
     );
     if (
       (daySel instanceof HTMLSelectElement || daySel instanceof HTMLInputElement) &&
@@ -1037,7 +1039,7 @@ export function checkRegstBtn(
           "Elements for matching new appointment button",
           matchedPhInp,
           matchedSlot,
-          newAppointmentBtn
+          newAppointmentBtn,
         );
         if (typeof failProps[0] === "object" && "_internalRoot" in failProps[0]) return false;
       }
@@ -1048,7 +1050,7 @@ export function checkRegstBtn(
         daySel,
         hourInp,
         confirmInp,
-        ...shownDayTabRefs
+        ...shownDayTabRefs,
       );
   } else elementNotFound(regstBtn, "Button for registering appointment in handleRegstBtn()", extLine(new Error()));
 }
@@ -1061,7 +1063,7 @@ export function addEraseEvent(eraser: HTMLButtonElement, userClass: string = "es
         : elementNotFound(
             relCel,
             `Table cell related to button for erasing day/hour appointment id ${eraser.id}`,
-            extLine(new Error())
+            extLine(new Error()),
           );
     });
     setInterval((interv: any) => {
@@ -1098,7 +1100,7 @@ export function replaceBtnSlot(aptBtn: targEl, parent: HTMLElement, caller: HTML
       return slot.isEqualNode(aptBtn.parentElement!) ? i + 1 : -1;
     });
     const trCels = [...relTr.querySelectorAll("th"), ...relTr.querySelectorAll("td")].filter(
-      cel => cel instanceof HTMLElement
+      cel => cel instanceof HTMLElement,
     );
     const replaceInp = document.createElement("input") as HTMLInputElement;
     replaceInp.classList.add(...["slotableDay", "opaque-bluish", "wid100", "form-control", "transparent-el"]);
@@ -1123,7 +1125,7 @@ export function handleScheduleChange(
   monthSelector: entryEl | null,
   root: targEl,
   userClass: string,
-  isAutoFillMonthOn: boolean = true
+  isAutoFillMonthOn: boolean = true,
 ): void {
   try {
     if (!(monthSelector instanceof HTMLSelectElement || monthSelector instanceof HTMLInputElement))
@@ -1134,13 +1136,13 @@ export function handleScheduleChange(
         sessionScheduleState,
         "sessionScheduleMap",
         12,
-        extLine(new Error())
+        extLine(new Error()),
       );
     if (!sessionScheduleState.hasOwnProperty(monthSelector.value))
       throw stringError(
         "validating value of Month Selector for Session Map",
         monthSelector.value,
-        extLine(new Error())
+        extLine(new Error()),
       );
     if (!(root instanceof HTMLElement || (root instanceof Object && "_internalRoot" in root)))
       throw elementNotFound(root, "Root for schedule tab", extLine(new Error()));
@@ -1177,7 +1179,7 @@ export function handleScheduleChange(
         throw elementNotPopulated(
           stateScheduleValues.toString(),
           "Array for states of .values in Schedule Table",
-          extLine(new Error())
+          extLine(new Error()),
         );
       const entries = [
         ...document.getElementsByTagName("input"),
@@ -1206,7 +1208,7 @@ export function handleScheduleChange(
     ${(err as Error).message}`);
   }
 }
-export function verifyAptCheck(dayCheck: targEl) {
+export function verifyAptCheck(dayCheck: targEl): void {
   try {
     if (
       dayCheck instanceof HTMLInputElement &&
@@ -1219,7 +1221,7 @@ export function verifyAptCheck(dayCheck: targEl) {
           throw elementNotFound(
             relSlot,
             `Slot related to Day Check id ${dayCheck.id || dayCheck.tagName}`,
-            extLine(new Error())
+            extLine(new Error()),
           );
         const relBtn =
           relSlot.querySelector(".appointmentBtn") ?? relSlot.querySelector('button[id^="appointmentBtn"]');
@@ -1227,7 +1229,7 @@ export function verifyAptCheck(dayCheck: targEl) {
           throw elementNotFound(
             relBtn,
             `Appointment Button related to ${dayCheck.id || dayCheck.tagName}`,
-            extLine(new Error())
+            extLine(new Error()),
           );
         if (relBtn.classList.contains("btn-info")) relBtn.classList.remove("btn-info");
         relBtn.classList.add("btn-success");
@@ -1242,14 +1244,14 @@ export function verifyAptCheck(dayCheck: targEl) {
 export function addListenersForSchedTab(
   scope: HTMLElement | Document = document,
   userClass: string,
-  isAutoFillMonthOn: boolean
+  isAutoFillMonthOn: boolean,
 ): void {
   try {
     if (!(scope instanceof HTMLElement || scope instanceof Document))
       throw elementNotFound(
         scope,
         "Root for Schedule Table when adding listeners after month state change",
-        extLine(new Error())
+        extLine(new Error()),
       );
     if (
       !(
@@ -1260,7 +1262,7 @@ export function addListenersForSchedTab(
       throw stringError(
         "Validating userClass for adding listeners when handling month change",
         userClass,
-        extLine(new Error())
+        extLine(new Error()),
       );
     if (!(typeof isAutoFillMonthOn === "boolean"))
       throw new Error(`Error validating type of isAutofillMonthOn when applying listeners after month state change`);
@@ -1268,7 +1270,7 @@ export function addListenersForSchedTab(
     const aptInterv = setInterval(interv => {
       try {
         const appointmentBtns = Array.from(document.querySelectorAll(".appointmentBtn")).filter(
-          aptBtn => aptBtn instanceof HTMLButtonElement
+          aptBtn => aptBtn instanceof HTMLButtonElement,
         );
         if (
           !(
@@ -1287,7 +1289,7 @@ export function addListenersForSchedTab(
             userClass,
             ["supervisor", "coordenador"],
             ...document.getElementsByClassName("apptCheck"),
-            ...document.getElementsByClassName("eraseAptBtn")
+            ...document.getElementsByClassName("eraseAptBtn"),
           );
           handleClientPermissions(userClass, ["coordenador"], ...document.getElementsByClassName("dayTabRef"));
         }
@@ -1303,7 +1305,7 @@ export function addListenersForSchedTab(
       console.log("Cleared Appointment Interval");
       try {
         const appointmentBtns = Array.from(document.querySelectorAll(".appointmentBtn")).filter(
-          aptBtn => aptBtn instanceof HTMLButtonElement
+          aptBtn => aptBtn instanceof HTMLButtonElement,
         );
         if (
           !(
@@ -1337,7 +1339,7 @@ export function addListenersForSchedTab(
             userClass,
             ["supervisor", "coordenador"],
             ...document.getElementsByClassName("apptCheck"),
-            ...document.getElementsByClassName("eraseAptBtn")
+            ...document.getElementsByClassName("eraseAptBtn"),
           );
           handleClientPermissions(userClass, ["coordenador"], ...document.getElementsByClassName("dayTabRef"));
         }
@@ -1378,7 +1380,7 @@ export function addListenerForSchedUpdates(monthSelector: targEl): void {
       throw inputNotFound(
         monthSelector,
         `Fetch for Month Selector when applying listeners to Schedule Table Section updates`,
-        extLine(new Error())
+        extLine(new Error()),
       );
     const tabSect = document.getElementById("tbSchedule");
     if (!(tabSect instanceof HTMLElement))
@@ -1392,21 +1394,21 @@ export function addListenerForSchedUpdates(monthSelector: targEl): void {
       throw elementNotPopulated(
         tabSectEntryEls,
         "List for Entry Elements in the Schedule Table Section",
-        extLine(new Error())
+        extLine(new Error()),
       );
     const slots = Array.from(tabSect.getElementsByTagName("slot"));
     if (!(slots.length > 0))
       throw elementNotPopulated(slots, `Fetch for Slots in the Schedule Table Section`, extLine(new Error()));
     if (!sessionScheduleState.hasOwnProperty(monthSelector.value))
       throw new Error(
-        `Error comparing value of Month Selector and properties of Session Schedule States object when applying listeners to Schedule Table Section updates`
+        `Error comparing value of Month Selector and properties of Session Schedule States object when applying listeners to Schedule Table Section updates`,
       );
     const tbodyTab = document.getElementById("tbSchedule");
     if (!(tbodyTab instanceof HTMLElement))
       throw elementNotFound(tbodyTab, `Fetch for Schedule Table Body`, extLine(new Error()));
     //atualização real do state na renderização inicial da agenda, baseado no mês automaticamente aplicado
     //timeout para garantir que todas as outras funções de montagem dinâmica foram aplicadas antes de ler o state
-    const setEntryValueState = (el: entryEl) => {
+    const setEntryValueState = (el: entryEl): void => {
       setTimeout(() => {
         try {
           const relMonthArrEntries = sessionScheduleState[`${monthSelector.value}Values`];
@@ -1415,7 +1417,7 @@ export function addListenerForSchedUpdates(monthSelector: targEl): void {
               "checking type of property in sessionScheduleState index",
               relMonthArrEntries.toString(),
               "Array",
-              extLine(new Error())
+              extLine(new Error()),
             );
           const arrEntry = relMonthArrEntries.find(entry => entry[0] === el.id);
           if (!Array.isArray(arrEntry))
@@ -1423,7 +1425,7 @@ export function addListenerForSchedUpdates(monthSelector: targEl): void {
               "checking type of property in relMonthArrEntries index",
               arrEntry,
               "Array",
-              extLine(new Error())
+              extLine(new Error()),
             );
           el instanceof HTMLInputElement && (el.type === "checkbox" || el.type === "radio")
             ? (arrEntry[1] = el.checked.toString())
@@ -1432,7 +1434,7 @@ export function addListenerForSchedUpdates(monthSelector: targEl): void {
           console.warn(`Error matching input with available data in sessionScheduleState:
           Obtained relatedArray: ${sessionScheduleState[`${monthSelector.value}Values`]}
           Obtained entryArray: ${(sessionScheduleState[`${monthSelector.value}Values`] as Array<any>)?.find(
-            entry => entry[0] === el.id
+            entry => entry[0] === el.id,
           )}
           Obtained element: ${el ?? "nullish"}
           ${(err as Error).message}`);
@@ -1445,20 +1447,20 @@ export function addListenerForSchedUpdates(monthSelector: targEl): void {
         tabSectEntryEls[e] instanceof HTMLSelectElement &&
           tabSectEntryEls[e].addEventListener(
             "change",
-            function (this: HTMLSelectElement, event: Event) {
+            function (this: HTMLSelectElement, event: Event): void {
               event.stopPropagation();
               sessionScheduleState[monthSelector.value] = tbodyTab.innerHTML;
               setEntryValueState(this as HTMLSelectElement);
-            }.bind(tabSectEntryEls[e] as HTMLSelectElement)
+            }.bind(tabSectEntryEls[e] as HTMLSelectElement),
           );
         (tabSectEntryEls[e] instanceof HTMLInputElement || tabSectEntryEls instanceof HTMLTextAreaElement) &&
           tabSectEntryEls[e].addEventListener(
             "input",
-            function (this: HTMLInputElement | HTMLTextAreaElement, event: Event) {
+            function (this: HTMLInputElement | HTMLTextAreaElement, event: Event): void {
               event.stopPropagation();
               sessionScheduleState[monthSelector.value] = tbodyTab.innerHTML;
               setEntryValueState(this as HTMLInputElement);
-            }.bind(tabSectEntryEls[e] as HTMLInputElement | HTMLTextAreaElement)
+            }.bind(tabSectEntryEls[e] as HTMLInputElement | HTMLTextAreaElement),
           );
       }
       for (let s = 0; s < slots.length; s++) {
@@ -1473,7 +1475,7 @@ export function addListenerForSchedUpdates(monthSelector: targEl): void {
     ${(err as Error).message}`);
   }
 }
-export function fillSchedStateValues(month: string) {
+export function fillSchedStateValues(month: string): void {
   try {
     if (!(typeof month === "string"))
       throw stringError(`validating month string in fillSchedStateValues`, month, extLine(new Error()));
@@ -1482,7 +1484,7 @@ export function fillSchedStateValues(month: string) {
       throw elementNotFound(
         tbodySched,
         `Table Body for Schedule when initializating state for month ${month}`,
-        extLine(new Error())
+        extLine(new Error()),
       );
     sessionScheduleState[month] = tbodySched.innerHTML;
     const entriesData = [
@@ -1494,18 +1496,18 @@ export function fillSchedStateValues(month: string) {
         entry =>
           entry instanceof HTMLInputElement ||
           entry instanceof HTMLSelectElement ||
-          entry instanceof HTMLTextAreaElement
+          entry instanceof HTMLTextAreaElement,
       )
       .map(entry =>
         entry instanceof HTMLInputElement && (entry.type === "checkbox" || entry.type === "radio")
           ? [entry.id || entry.name, entry.checked.toString()]
-          : [entry.id || entry.name, entry.value]
+          : [entry.id || entry.name, entry.value],
       );
     if (entriesData.length < 1)
       throw elementNotPopulated(
         entriesData.flat(1),
         `Populating array of entries data for month ${month}`,
-        extLine(new Error())
+        extLine(new Error()),
       );
     sessionScheduleState[`${month}Values`] = entriesData as Array<[string, string]>;
   } catch (err) {

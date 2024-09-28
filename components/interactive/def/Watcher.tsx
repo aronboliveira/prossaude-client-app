@@ -8,8 +8,9 @@ import { useEffect, useState } from "react";
 import { addListenerExportBtn, getGlobalEls, watchLabels } from "@/lib/global/gController";
 import { clearPhDates, dinamicGridAdjust, equalizeFlexSibilings } from "@/lib/global/gStyleScript";
 import { deactTextInput, syncAriaStates } from "@/lib/global/handlers/gHandlers";
-import { modelScripts } from "@/lib/global/gModel";
-let isFetching = false;
+import { assignFormAttrs, modelScripts } from "@/lib/global/gModel";
+let isFetching = false,
+  isExportListening = false;
 export default function Watcher({ routeCase }: { routeCase?: pageCases }): JSX.Element {
   const [handled, setHandle] = useState<boolean>(false);
   useEffect(() => {
@@ -27,10 +28,13 @@ export default function Watcher({ routeCase }: { routeCase?: pageCases }): JSX.E
       clearPhDates(Array.from(document.querySelectorAll('input[type="date"]')));
       deactTextInput(
         document.querySelectorAll('input[type="number"][id$=NumId]'),
-        document.querySelectorAll("input[id$=NullId]")
+        document.querySelectorAll("input[id$=NullId]"),
       );
       document.querySelectorAll(".cbFam").forEach(handleDivAddShow);
-      addListenerExportBtn("anamG");
+      if (!isExportListening) {
+        addListenerExportBtn("anamG");
+        isExportListening = true;
+      }
       addEventListener("resize", handleResize);
     } else if (routeCase === "od") {
       handleLinkChanges("od", "Od Page Style");
@@ -49,8 +53,10 @@ export default function Watcher({ routeCase }: { routeCase?: pageCases }): JSX.E
       document.querySelectorAll(".inpAvDent").forEach((inp, i) => handleInpAvDentValue(inp, i));
     } else if (routeCase === "recover") handleLinkChanges("recover", "Recover Page Style");
     setHandle(true);
+    for (const f of document.querySelectorAll("form")) assignFormAttrs(f);
     return () => {
       if (routeCase === "ag") removeEventListener("resize", handleResize);
+      isExportListening = false;
     };
   }, []);
   useEffect(() => {
@@ -70,10 +76,11 @@ export default function Watcher({ routeCase }: { routeCase?: pageCases }): JSX.E
           cache: "no-store",
           redirect: "error",
           keepalive: false,
+          signal: null,
         });
         if (!res.ok)
           throw new Error(
-            `${res.status}: ${res.statusText} && ${res.redirected ? "should redirect" : "should not redirect"}`
+            `${res.status}: ${res.statusText} && ${res.redirected ? "should redirect" : "should not redirect"}`,
           );
         let script = await res.text();
         script = JSON.parse(script.slice(script.indexOf("{"), script.lastIndexOf("}") + 1).trim());

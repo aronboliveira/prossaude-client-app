@@ -7,6 +7,7 @@ import { useEffect, useRef } from "react";
 import { elementNotFound, extLine, inputNotFound, multipleElementsNotFound } from "@/lib/global/handlers/errorHandler";
 import { callbackShowPw, callbackSubmitBtn, evaluateClickMovements } from "@/lib/locals/loginPage/loginController";
 import Link from "next/link";
+import { assignFormAttrs } from "@/lib/global/gModel";
 export default function LoginInputs(): JSX.Element {
   const anchorRef = useRef<nullishAnchor>(null);
   useEffect(() => {
@@ -23,6 +24,7 @@ export default function LoginInputs(): JSX.Element {
     }
     const form = document.querySelector("form");
     const inps = Array.from(document.querySelectorAll("input"));
+    assignFormAttrs(form);
     form instanceof HTMLFormElement && inps.length > 0
       ? clearDefInvalidMsg(form, inps)
       : multipleElementsNotFound(

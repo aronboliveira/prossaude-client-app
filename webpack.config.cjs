@@ -1,12 +1,12 @@
-const path = require("path");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const { CleanWebpackPlugin } = require("clean-webpack-plugin");
-const CopyWebpackPlugin = require("copy-webpack-plugin");
-const HtmlReplaceWebpackPlugin = require("html-replace-webpack-plugin");
-const { SubresourceIntegrityPlugin } = require("webpack-subresource-integrity");
-const webpack = require("webpack");
-const packageJson = require("./package.json");
+const path = require("path"),
+  MiniCssExtractPlugin = require("mini-css-extract-plugin"),
+  HtmlWebpackPlugin = require("html-webpack-plugin"),
+  { CleanWebpackPlugin } = require("clean-webpack-plugin"),
+  CopyWebpackPlugin = require("copy-webpack-plugin"),
+  HtmlReplaceWebpackPlugin = require("html-replace-webpack-plugin"),
+  { SubresourceIntegrityPlugin } = require("webpack-subresource-integrity"),
+  webpack = require("webpack"),
+  packageJson = require("./package.json");
 module.exports = {
   mode: "production",
   entry: "./src/pages/_document.tsx",

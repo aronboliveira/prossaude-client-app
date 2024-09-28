@@ -19,7 +19,7 @@ export class Person {
     weight: number = 0,
     height: number = 0,
     sumDCut: number = 0,
-    atvLvl: string = "leve"
+    atvLvl: string = "leve",
   ) {
     this.gen = gen;
     this.age = age;
@@ -30,9 +30,7 @@ export class Person {
   }
   checkAtvLvl(personInfo: Person | string): number {
     if (
-      (personInfo instanceof Person &&
-        "atvLvl" in personInfo &&
-        this.atvLvl !== "") ||
+      (personInfo instanceof Person && "atvLvl" in personInfo && this.atvLvl !== "") ||
       typeof personInfo === "string"
     ) {
       if (typeof personInfo === "string") this.atvLvl = personInfo;
@@ -51,18 +49,14 @@ export class Person {
           console.error(
             `Error validating case. Obtained this.atvLvl: ${
               this.atvLvl ?? "null"
-            }; Accepted values: sedentário || leve || moderado || intenso || muitoIntenso`
+            }; Accepted values: sedentário || leve || moderado || intenso || muitoIntenso`,
           );
       }
     } else {
       console.error(
-        `Error validating instance of person. Obtained value: ${
-          personInfo ?? "null"
-        }; instance ${
+        `Error validating instance of person. Obtained value: ${personInfo ?? "null"}; instance ${
           Object.prototype.toString.call(personInfo).slice(8, -1) ?? "null"
-        }; Value of Nível of Atividade Física obtained: ${
-          this.atvLvl ?? "null"
-        }`
+        }; Value of Nível of Atividade Física obtained: ${this.atvLvl ?? "null"}`,
       );
       return 0;
     }
@@ -78,9 +72,7 @@ export class Person {
           "height" in this &&
           typeof this.height === "number" &&
           this.height >= 0) ||
-        (Array.isArray(personInfo) &&
-          typeof personInfo[0] === "number" &&
-          typeof personInfo[1] === "number")
+        (Array.isArray(personInfo) && typeof personInfo[0] === "number" && typeof personInfo[1] === "number")
       ) {
         if (Array.isArray(personInfo)) {
           [this.weight, this.height] = personInfo;
@@ -94,28 +86,19 @@ export class Person {
           else if (IMC >= 30 && IMC < 35) return ["obeso1", IMC];
           else if (IMC >= 35 && IMC < 40) return ["obeso2", IMC];
           else if (IMC > 40) return ["obeso3", IMC];
-          else
-            throw new Error(
-              `Error classifying IMC. Obtained value: ${
-                IMC ?? 0
-              }; Values have to be positive.`
-            );
+          else throw new Error(`Error classifying IMC. Obtained value: ${IMC ?? 0}; Values have to be positive.`);
         } else
           throw new Error(
-            `Error calculating IMC. Used values: Weight ${
-              this.weight ?? 0
-            } and Height ${this.height ?? 0}`
+            `Error calculating IMC. Used values: Weight ${this.weight ?? 0} and Height ${this.height ?? 0}`,
           );
       } else
         throw new Error(
           `Error validating data for person. 
-          Element person: ${
-            Object.prototype.toString.call(personInfo).slice(8, -1) ?? "null"
-          }; 
+          Element person: ${Object.prototype.toString.call(personInfo).slice(8, -1) ?? "null"}; 
           Weight present: ${"weight" in personInfo ?? false};
           Weight obtained: ${this.weight ?? 0};
           Height present: ${"height" in personInfo ?? false};
-          Height obtained: ${this.height ?? 0}`
+          Height obtained: ${this.height ?? 0}`,
         );
     } catch (IMCError) {
       console.error((IMCError as Error).message);
@@ -123,18 +106,9 @@ export class Person {
     return ["", 0];
   }
   calcPGC(person: Person): [number, number] {
-    if (
-      person instanceof Person &&
-      "sumDCut" in person &&
-      typeof this.sumDCut === "number" &&
-      this.sumDCut >= 0
-    ) {
+    if (person instanceof Person && "sumDCut" in person && typeof this.sumDCut === "number" && this.sumDCut >= 0) {
       if (person.gen === "masculino") {
-        let DC =
-          1.10938 -
-          0.0008267 * this.sumDCut +
-          0.0000016 * this.sumDCut ** 2 -
-          0.0002574 * person.age;
+        let DC = 1.10938 - 0.0008267 * this.sumDCut + 0.0000016 * this.sumDCut ** 2 - 0.0002574 * person.age;
         if (DC <= 0 || Number.isNaN(DC)) DC = 0.01;
         let PGC = 495 / DC - 450;
         if (PGC <= 0 || Number.isNaN(PGC)) PGC = 0.01;
@@ -143,11 +117,7 @@ export class Person {
         if (Number.isNaN(MLG) || MLG === Math.abs(Infinity)) MLG = 0;
         return [PGC, MLG];
       } else if (person.gen === "feminino") {
-        let DC =
-          1.0994921 -
-          0.0009929 * this.sumDCut +
-          0.0000023 * this.sumDCut ** 2 -
-          0.0001392 * person.age;
+        let DC = 1.0994921 - 0.0009929 * this.sumDCut + 0.0000023 * this.sumDCut ** 2 - 0.0001392 * person.age;
         if (DC <= 0 || Number.isNaN(DC)) DC = 0.01;
         let PGC = 495 / DC - 450;
         if (PGC <= 0 || Number.isNaN(PGC)) PGC = 0.01;
@@ -156,11 +126,7 @@ export class Person {
         if (Number.isNaN(MLG) || MLG === Math.abs(Infinity)) MLG = 0;
         return [PGC, MLG];
       } else if (person.gen === "neutro") {
-        let DC =
-          1.10443605 -
-          0.0009098 * this.sumDCut +
-          0.00000195 * this.sumDCut ** 2 -
-          0.0001983 * person.age;
+        let DC = 1.10443605 - 0.0009098 * this.sumDCut + 0.00000195 * this.sumDCut ** 2 - 0.0001983 * person.age;
         if (DC <= 0 || Number.isNaN(DC)) DC = 0.01;
 
         let PGC = 495 / DC - 450;
@@ -173,7 +139,7 @@ export class Person {
         console.error(
           `Invalid instance of object. Obtained instance: ${
             Object.prototype.toString.call(person).slice(8, -1) ?? "null"
-          }`
+          }`,
         );
     } else
       console.warn(`Error validating .sumDCut:
@@ -182,12 +148,7 @@ export class Person {
       Obtained value: ${this.sumDCut ?? 0}`);
     return [0, 0];
   }
-  calcTMB(
-    person: Person,
-    IMC: number = 0,
-    MLG: number = 0,
-    factorAtleta: string = "Peso"
-  ): [string, number] {
+  calcTMB(person: Person, IMC: number = 0, MLG: number = 0, factorAtleta: string = "Peso"): [string, number] {
     if (factorAtleta === "peso") factorAtleta = "Peso";
     if (factorAtleta === "mlg") factorAtleta = "MLG";
     try {
@@ -200,18 +161,14 @@ export class Person {
         typeof MLG === "number" &&
         typeof factorAtleta === "string"
       ) {
-        if (
-          this.atvLvl === "muitoIntenso" &&
-          (factorAtleta === "MLG" || factorAtleta === "Peso")
-        ) {
+        if (this.atvLvl === "muitoIntenso" && (factorAtleta === "MLG" || factorAtleta === "Peso")) {
           if (factorAtleta === "MLG") {
             if (MLG && MLG >= 0) return ["tinsley", 25.9 * MLG + 284];
             else
               throw new Error(`Error validating MLG.
               Obtained value: ${MLG ?? 0}`);
           } else if (factorAtleta === "Peso") {
-            if ("weight" in person && this.weight >= 0)
-              return ["tinsley", 24.8 * this.weight + 10];
+            if ("weight" in person && this.weight >= 0) return ["tinsley", 24.8 * this.weight + 10];
             else
               throw new Error(`Error validating weight.
               Obtained value: ${this.weight ?? 0}`);
@@ -222,66 +179,36 @@ export class Person {
           this.atvLvl === "moderado" ||
           this.atvLvl === "intenso"
         ) {
-          if (
-            "weight" in person &&
-            this.weight >= 0 &&
-            "height" in person &&
-            this.height >= 0 &&
-            "age" in person
-          ) {
+          if ("weight" in person && this.weight >= 0 && "height" in person && this.height >= 0 && "age" in person) {
             if (IMC < 25.0 && IMC >= 0) {
               if (person.gen === "masculino")
-                return [
-                  "harrisBenedict",
-                  66 +
-                    (13.8 * this.weight + 5.0 * this.height - 6.8 * this.age),
-                ];
+                return ["harrisBenedict", 66 + (13.8 * this.weight + 5.0 * this.height - 6.8 * this.age)];
               else if (person.gen === "feminino")
-                return [
-                  "harrisBenedict",
-                  655 +
-                    (9.6 * this.weight + 1.9 * this.height - 4.7 * this.age),
-                ];
+                return ["harrisBenedict", 655 + (9.6 * this.weight + 1.9 * this.height - 4.7 * this.age)];
               else if (person.gen === "neutro")
-                return [
-                  "harrisBenedict",
-                  360.5 +
-                    (11.7 * this.weight + 3.45 * this.height - 5.75 * this.age),
-                ];
+                return ["harrisBenedict", 360.5 + (11.7 * this.weight + 3.45 * this.height - 5.75 * this.age)];
               else
                 throw new Error(
                   `Error validating instance of Person. Obtained instance: ${
-                    Object.prototype.toString.call(person).slice(8, -1) ??
-                    "null"
-                  }`
+                    Object.prototype.toString.call(person).slice(8, -1) ?? "null"
+                  }`,
                 );
             } else if (IMC >= 25.0) {
               if (person.gen === "masculino")
-                return [
-                  "mifflinStJeor",
-                  10 * this.weight + 6.25 * this.height - 5.0 * this.age + 5,
-                ];
+                return ["mifflinStJeor", 10 * this.weight + 6.25 * this.height - 5.0 * this.age + 5];
               else if (person.gen === "feminino")
-                return [
-                  "mifflinStJeor",
-                  10 * this.weight + 6.25 * this.height - 5.0 * this.age - 161,
-                ];
+                return ["mifflinStJeor", 10 * this.weight + 6.25 * this.height - 5.0 * this.age - 161];
               else if (person.gen === "neutro")
-                return [
-                  "mifflinStJeor",
-                  10 * this.weight + 6.25 * this.height - 5.0 * this.age - 78,
-                ];
+                return ["mifflinStJeor", 10 * this.weight + 6.25 * this.height - 5.0 * this.age - 78];
               else
                 throw new Error(
                   `Error validating instance of Person. Obtained instance: ${Object.prototype.toString
                     .call(person)
-                    .slice(8, -1)}`
+                    .slice(8, -1)}`,
                 );
             } else
               throw new Error(
-                `Error validating IMC. IMC obtained: ${
-                  IMC ?? 0
-                }; Valor deve ser númerico, positivo e float`
+                `Error validating IMC. IMC obtained: ${IMC ?? 0}; Valor deve ser númerico, positivo e float`,
               );
           } else
             throw new Error(`Error validating properties of person.
@@ -295,17 +222,13 @@ export class Person {
           throw new Error(
             `Error validating atvLvl and/or factorAtleta.
             atvLvl obtained: ${this.atvLvl ?? "null"}
-            Fator obtained: ${
-              factorAtleta ?? "null"
-            }; Fatores válidos: "MLG" || "Peso"`
+            Fator obtained: ${factorAtleta ?? "null"}; Fatores válidos: "MLG" || "Peso"`,
           );
         }
       } else {
         throw new Error(`Error validating person.
         Elemento: ${person ?? "null"};
-        instance: ${
-          Object.prototype.toString.call(person).slice(8, -1) ?? "null"
-        };
+        instance: ${Object.prototype.toString.call(person).slice(8, -1) ?? "null"};
         atvLvl present: ${"atvLvl" in person ?? false};
         Value of atvLvl obtained: ${this.atvLvl ?? "null"};
         Primitive type of .atvLvl: ${typeof this.atvLvl};
@@ -328,7 +251,7 @@ export class Person {
   }
 }
 export class UniqueMap extends Map {
-  set(key: any, value: any) {
+  set(key: any, value: any): this {
     try {
       if (this.has(key)) {
         if (Number.isNaN(key)) {
@@ -338,9 +261,7 @@ export class UniqueMap extends Map {
         } else throw new Error(`NaN values are not qualified.`);
       } else throw new Error(`Map already has specified key.`);
     } catch (err) {
-      console.error(
-        `Error adding entry to UniqueMap: ${(err as Error).message}`
-      );
+      console.error(`Error adding entry to UniqueMap: ${(err as Error).message}`);
     }
     return this;
   }
