@@ -9,6 +9,7 @@ export default function LocComp(): JSX.Element {
       className='form-control inpIdentif noInvert inpLocNum halfL'
       min='1'
       autoComplete='address-level4'
+      data-xls='Complemento no Endereço'
       data-title='comp_casa'
       placeholder='Digite o complemento'
       onInput={ev =>

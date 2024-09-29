@@ -8,6 +8,7 @@ export default function Street(): JSX.Element {
       id='streetId'
       className='form-control autocorrect inpIdentif noInvert minText'
       autoComplete='address-level3'
+      data-xls='Endereço'
       data-title='endereco'
       minLength={3}
       data-reqlength='3'

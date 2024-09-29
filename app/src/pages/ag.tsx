@@ -324,7 +324,8 @@ export default function AGPage(): JSX.Element {
                     name='history'
                     maxLength={1000}
                     placeholder='Escreva aqui a história'
-                    data-title='historia_doencas'></textarea>
+                    data-title='historia_doencas'
+                    data-xls='História de Queixas'></textarea>
                 </span>
                 <hr />
               </section>
@@ -953,8 +954,9 @@ export default function AGPage(): JSX.Element {
                               name='dislipFamGeralName'
                               id='dislipFamGeralId'
                               className='cpbOp famOp opDislip opDislipFam opDislipTypeFam'
+                              data-xls='Dislipidemia geral'
                               data-title='dislip_geral'
-                            />{" "}
+                            />
                             Geral
                           </span>
                           <span role='listitem' className='cbDoencaSubt'>
@@ -963,8 +965,9 @@ export default function AGPage(): JSX.Element {
                               name='dislipFamIsolName'
                               id='dislipFamIsolId'
                               className='cpbOp famOp opDislip opDislipFam opDislipTypeFam'
+                              data-xls='Dislipidemia isolada'
                               data-title='dislip_isolada'
-                            />{" "}
+                            />
                             Isolada
                           </span>
                           <span role='listitem' className='cbDoencaSubt'>
@@ -973,8 +976,9 @@ export default function AGPage(): JSX.Element {
                               name='dislipFamMixName'
                               id='dislipFamMixId'
                               className='cpbOp famOp opDislip opDislipFam opDislipTypeFam'
+                              data-xls='Dislipidemia Mista'
                               data-title='dislip_mista'
-                            />{" "}
+                            />
                             Mista | Combinada
                           </span>
                           <span role='listitem' className='cbDoencaSubt'>
@@ -983,8 +987,9 @@ export default function AGPage(): JSX.Element {
                               name='dislipFamHipoName'
                               id='dislipFamHipoId'
                               className='cpbOp famOp opDislip opDislipFam opDislipTypeFam'
+                              data-xls='Dislipidemia por hipoalfalipoproteinemia'
                               data-title='dislip_hipoalfa'
-                            />{" "}
+                            />
                             Hipoalfalipoproteinemia
                           </span>
                           <span role='listitem' className='cbDoencaSubt'>
@@ -993,8 +998,9 @@ export default function AGPage(): JSX.Element {
                               name='dislipFamHiperName'
                               id='dislipFamHiperId'
                               className='cpbOp famOp opDislip opDislipFam opDislipTypeFam'
+                              data-xls='Dislipidemia por Hipertrigliceridemia'
                               data-title='dislip_hipertrig'
-                            />{" "}
+                            />
                             Hipertrigliceridemia
                           </span>
                         </div>

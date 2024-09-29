@@ -15,6 +15,7 @@ export default function ConfirmLocId(): JSX.Element {
       name='confirmLocName'
       id='confirmLocId'
       className='inpConfirm form-control noInvert'
+      data-xls='Local de Assinatura'
       data-title='assinatura_local'
       required
       onInput={ev => {

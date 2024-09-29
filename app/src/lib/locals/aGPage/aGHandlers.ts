@@ -211,7 +211,7 @@ export function addMedHistHandler(click: targEv | React.MouseEvent, blockCount: 
         innerHTML: `
               <span role="group" class="divAntMedSpan spanMain spanAntMedText" id="antMedSpanInp${blockCount}">
                 <label for="antMedId${blockCount}" class="antMedLabel">${blockCount}&#41
-                  <input type="text" name="antMedName${blockCount}" id="antMedId${blockCount}" class="form-control autocorrect autocorrectFirst inpAntMed antMedText" data-title="desc_tratamento${blockCount}" />
+                  <input type="text" name="antMedName${blockCount}" id="antMedId${blockCount}" class="form-control autocorrect autocorrectFirst inpAntMed antMedText" data-title="desc_tratamento${blockCount}" data-xls="Descrição de Tratamento ${blockCount}" placeholder="Preencha aqui sobre o tratamento ${blockCount}" />
                 </label>
               </span>
               <span role="group" class="divAntMedSpan spanMain spanAntMedDate" id="antMedSpanMainDate${blockCount}">
@@ -219,9 +219,9 @@ export function addMedHistHandler(click: targEv | React.MouseEvent, blockCount: 
                   <div role="group" class="antMedDiv">
                     <label for="antMedDateIniId${blockCount}" class="antMedLabel"></label>
                     <div role="group" class="antMedDateDiv flexDiv">
-                      <input type="date" name="antMedDateIniName${blockCount}" id="antMedDateIniId${blockCount}" class="form-control inpDate antMedDate inpAntMed" data-title="data_ini_tratamento${blockCount}" required /> 
+                      <input type="date" name="antMedDateIniName${blockCount}" id="antMedDateIniId${blockCount}" class="form-control inpDate antMedDate inpAntMed" data-title="data_ini_tratamento${blockCount}" data-xls="Início de Tratamento ${blockCount}" required /> 
                       <span role="textbox">até</span>
-                      <input type="date" name="antMedDateEndName${blockCount}" id="antMedDateEndId${blockCount}" class="form-control inpDate antMedDate inpAntMed" data-title="data_end_tratamento${blockCount}" required />
+                      <input type="date" name="antMedDateEndName${blockCount}" id="antMedDateEndId${blockCount}" class="form-control inpDate antMedDate inpAntMed" data-title="data_end_tratamento${blockCount}" data-xls="Termino de Tratamento ${blockCount}" required />
                       <label for="antMedDateEndId${blockCount}" class="antMedLabel"></label>
                       <button type="button" class="datBtn atualTratBtn btn btn-secondary" id="atualTrat${blockCount}DatBtn">
                         Usar data atual

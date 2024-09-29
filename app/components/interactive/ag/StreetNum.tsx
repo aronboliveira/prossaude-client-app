@@ -9,6 +9,7 @@ export default function StreetNum(): JSX.Element {
       className='form-control inpIdentif noInvert inpLocNum halfL'
       min='1'
       autoComplete='address-level4'
+      data-xls='Número no Endereço'
       data-title='num_rua'
       placeholder='Preencha o número'
       onInput={ev =>

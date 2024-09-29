@@ -34,6 +34,7 @@ export default function HeaderDate(): JSX.Element {
         className='form-control d-ibl minCurrDate'
         id='dateHeader'
         placeholder='Date'
+        data-xls='Data de preenchimento'
         data-title='data_cabecalho'
         ref={dateRef}
       />

@@ -31,6 +31,7 @@ export default function ConfirmDate(): JSX.Element {
           id='confirmDatId'
           className='inpConfirm inpDate form-control noInvert minCurrDate'
           data-title='assinatura_data'
+          data-xls='Data de Assinatura'
           required
           ref={dateRef}
         />

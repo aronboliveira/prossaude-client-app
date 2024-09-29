@@ -41,6 +41,7 @@ export default function CepElements(): JSX.Element {
         className='form-control inpIdentif noInvert minText maxText patternText'
         minLength={3}
         maxLength={11}
+        data-xls='CEP'
         data-title='cep'
         data-reqlength='3'
         data-maxlength='11'
