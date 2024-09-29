@@ -14,7 +14,7 @@ let isFetching = false,
 export default function Watcher({ routeCase }: { routeCase?: pageCases }): JSX.Element {
   const [handled, setHandle] = useState<boolean>(false);
   useEffect(() => {
-    const handleResize = () => {
+    const handleResize = (): void => {
       equalizeFlexSibilings(document.querySelectorAll("[class*='flexTwin']"), [["width", "px"]]);
     };
     syncAriaStates(document.querySelectorAll("*"));
@@ -54,7 +54,7 @@ export default function Watcher({ routeCase }: { routeCase?: pageCases }): JSX.E
     } else if (routeCase === "recover") handleLinkChanges("recover", "Recover Page Style");
     setHandle(true);
     for (const f of document.querySelectorAll("form")) assignFormAttrs(f);
-    return () => {
+    return (): void => {
       if (routeCase === "ag") removeEventListener("resize", handleResize);
       isExportListening = false;
     };
@@ -62,7 +62,7 @@ export default function Watcher({ routeCase }: { routeCase?: pageCases }): JSX.E
   useEffect(() => {
     modelScripts();
     if (isFetching) return;
-    (async () => {
+    (async (): Promise<void> => {
       console.log("TRYING ON CLIENT...");
       isFetching = true;
       try {

@@ -33,14 +33,14 @@ export default function SelectPanel({ defOp = "agenda" }: MainPanelProps): JSX.E
   const [mounted, setMounted] = useState<boolean>(false);
   const formRootRef = useRef<nullishDiv>(null);
   const context = useContext<AppRootContextType>(AppRootContext);
-  const renderSelectPanel = (opt: panelOpts) => {
+  const renderSelectPanel = (opt: panelOpts): void => {
     try {
       const formRoot = document.getElementById("formRoot");
       if (!(formRoot instanceof HTMLElement))
         throw elementNotFound(formRoot, `Validation of Form Roots Element in Schedule`, extLine(new Error()));
       if (!context.roots.formRoot) context.roots.formRoot = createRoot(formRoot);
       context.roots.formRoot.render(
-        ((opt: panelOpts) => {
+        ((opt: panelOpts): JSX.Element => {
           console.log(`Rendering for ${opt}...`);
           switch (opt) {
             case "registStud":

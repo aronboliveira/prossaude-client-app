@@ -7,15 +7,15 @@ let ctx: CanvasRenderingContext2D | null = null;
 export default function Signature(): JSX.Element {
   const canvasRef = useRef<nullishCanvas>(null);
   const [isDrawing, setDrawing] = useState<boolean>(false);
-  const startDrawing = (e: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
+  const startDrawing = (e: React.MouseEvent<HTMLCanvasElement, MouseEvent>): void => {
     setDrawing(true);
     draw(e);
   };
-  const startDrawingTouch = (e: React.TouchEvent<HTMLCanvasElement>) => {
+  const startDrawingTouch = (e: React.TouchEvent<HTMLCanvasElement>): void => {
     setDrawing(true);
     drawTouch(e);
   };
-  const draw = (e: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
+  const draw = (e: React.MouseEvent<HTMLCanvasElement, MouseEvent>): void => {
     try {
       if (!(canvasRef.current instanceof HTMLCanvasElement))
         throw elementNotFound(canvasRef.current, `Validation of Canvas Ref Instance`, extLine(new Error()));
@@ -35,7 +35,7 @@ export default function Signature(): JSX.Element {
       ${(e as Error).message}`);
     }
   };
-  const drawTouch = (e: React.TouchEvent<HTMLCanvasElement>) => {
+  const drawTouch = (e: React.TouchEvent<HTMLCanvasElement>): void => {
     try {
       if (!(canvasRef.current instanceof HTMLCanvasElement))
         throw elementNotFound(canvasRef.current, `Validation of Canvas Ref Instance`, extLine(new Error()));
@@ -56,7 +56,7 @@ export default function Signature(): JSX.Element {
       ${(e as Error).message}`);
     }
   };
-  const stopDrawing = () => {
+  const stopDrawing = (): void => {
     setDrawing(false);
     ctx?.beginPath();
   };

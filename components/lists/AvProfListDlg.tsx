@@ -55,7 +55,7 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
         press.key === "Escape" && props.dispatch(!props.state);
       };
       addEventListener("keydown", handleKeyDown);
-      return () => removeEventListener("keydown", handleKeyDown);
+      return (): void => removeEventListener("keydown", handleKeyDown);
     } else elementNotFound(dialogRef.current, "dialogElement in AvStudListDlg", extLine(new Error()));
   }, [props.mainDlgRef]);
   useEffect(() => {
@@ -486,7 +486,7 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
               console.error(`Error executing rendering of Table Body Content:\n${(e as Error).message}`);
             }
             //ajustes em tabela de externos
-            const handleInternalAttempt = () => {
+            const handleInternalAttempt = (): void => {
               try {
                 if (!(tabProfExtRef?.current instanceof HTMLTableElement))
                   throw elementNotFound(

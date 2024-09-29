@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from "react";
-import { nullishForm, nullishDlg, nullishInp, nullishTab, voidVal } from "@glSrc/types";
+import { nullishForm } from "@glSrc/types";
 export interface FormData {
   [key: string]: any;
 }

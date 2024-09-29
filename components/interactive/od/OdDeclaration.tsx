@@ -9,7 +9,7 @@ import { useEffect, useRef } from "react";
 import GenericErrorComponent from "../../error/GenericErrorComponent";
 export default function OdDeclaration({ state, dispatch }: DlgProps): JSX.Element {
   const mainRef = useRef<nullishDlg>(null);
-  const handleKp = (kp: KeyboardEvent) => {
+  const handleKp = (kp: KeyboardEvent): void => {
     if (kp.key === "ESCAPE") {
       dispatch(!state);
       !state && mainRef.current?.close();

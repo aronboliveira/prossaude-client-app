@@ -43,7 +43,7 @@ export default function AvStudListDlg({
         press.key === "Escape" && dispatch(state);
       };
       addEventListener("keydown", handleKeyDown);
-      return () => removeEventListener("keydown", handleKeyDown);
+      return (): void => removeEventListener("keydown", handleKeyDown);
     } else elementNotFound(dialogRef.current, "dialogElement in AvStudListDlg", extLine(new Error()));
   }, [forwardedRef, dialogRef]);
   return (

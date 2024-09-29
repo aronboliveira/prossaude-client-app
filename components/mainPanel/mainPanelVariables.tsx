@@ -7,12 +7,12 @@ export const resetErrorBoundary = (
 ): JSX.Element | void => {
   console.log(mainPanelVariables.tryAcc);
   return mainPanelVariables.tryAcc < 2
-    ? (() => {
+    ? ((): void => {
         mainPanelVariables.tryAcc++;
         (props as any).mainRoot.render(<ResetComponent props={props} />);
       })()
-    : (() => {
-        window.location.reload();
+    : ((): void => {
+        location.reload();
         mainPanelVariables.tryAcc = 0;
       })();
 };

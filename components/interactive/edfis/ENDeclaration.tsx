@@ -8,7 +8,7 @@ import { useEffect, useRef } from "react";
 import GenericErrorComponent from "../../error/GenericErrorComponent";
 export default function ENDeclaration({ state, dispatch }: DlgProps): JSX.Element {
   const mainRef = useRef<nullishDlg>(null);
-  const handleKp = (kp: KeyboardEvent) => {
+  const handleKp = (kp: KeyboardEvent): void => {
     if (kp.key === "ESCAPE") {
       dispatch(!state);
       !state && mainRef.current?.close();
@@ -20,7 +20,7 @@ export default function ENDeclaration({ state, dispatch }: DlgProps): JSX.Elemen
     setTimeout(() => {
       history.pushState({}, "", `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#"));
     }, 300);
-    return () => {
+    return (): void => {
       history.pushState(
         {},
         "",
@@ -42,7 +42,7 @@ export default function ENDeclaration({ state, dispatch }: DlgProps): JSX.Elemen
       syncAriaStates([mainRef.current, ...mainRef.current.querySelectorAll("*")]);
       mainRef.current instanceof HTMLDialogElement && mainRef.current.showModal();
       addEventListener("keypress", handleKp);
-      return () => removeEventListener("keypress", handleKp);
+      return (): void => removeEventListener("keypress", handleKp);
     } catch (e) {
       console.error(`Error executing useEffect:\n${(e as Error).message}`);
     }

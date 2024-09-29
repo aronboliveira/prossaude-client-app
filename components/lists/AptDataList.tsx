@@ -21,7 +21,7 @@ export default function AptDataList({
   if (!transfArea) console.warn(`Transfer area was not found by AptDataList.`);
   const transferBtn = document.querySelector(`[id*="${btnId}"]`);
   const aptDlgRef = useRef<nullishDlg>(null);
-  const renderDirectly = () => {
+  const renderDirectly = (): void => {
     try {
       shouldDisplayAptList = !shouldDisplayAptList;
       if (consVariablesData.rootDlg)
@@ -80,15 +80,14 @@ export default function AptDataList({
             shouldDisplayAptList ? aptDlgRef.current?.showModal() : aptDlgRef.current?.close();
           })
         : elementNotFound(transferBtn, "transferBtn for AptDataList", extLine(new Error()));
-      const handleKeyDown = (press: KeyboardEvent) => {
+      const handleKeyDown = (press: KeyboardEvent): void => {
         if (press.key === "Escape") {
           !isDirectRender ? setDisplayAptList(!shouldDisplayAptList) : renderDirectly();
         }
       };
       document.addEventListener("keydown", handleKeyDown);
-      return () => {
+      return (): void =>
         document.removeEventListener("keydown", handleKeyDown);
-      };
     }
   }, [aptDlgRef]);
   return !shouldDisplayAptList ? (

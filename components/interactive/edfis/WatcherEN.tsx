@@ -36,7 +36,6 @@ export default function WatcherEN(): JSX.Element {
       if (document.getElementById("tabIndPerc")) {
         setMounted(true);
         clearInterval(interv);
-        return;
       }
     }, 200);
     setTimeout(() => {

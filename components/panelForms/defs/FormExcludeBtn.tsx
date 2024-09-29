@@ -1,6 +1,6 @@
 import { ErrorBoundary } from "react-error-boundary";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
-import { nullishBtn } from "@/lib/global/declarations/types";
+import { formCases, nullishBtn } from "@/lib/global/declarations/types";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useEffect, useRef, useState } from "react";
 import ExcludeDlg from "../../alerts/ExcludeDlg";
@@ -29,7 +29,7 @@ export default function FormExcludeBtn({ context = "Stud" }: { context: string }
       </button>
       {shouldDisplayExcludeDlg && (
         <ExcludeDlg
-          route={`${(() => {
+          route={`${((): formCases => {
             if (context === "Stud") return "studs";
             else if (context === "Prof") return "profs";
             else if (context === "Pac") return "patients";

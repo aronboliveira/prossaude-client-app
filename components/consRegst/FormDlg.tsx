@@ -71,7 +71,7 @@ export default function FormDlg({ onClose, userClass = "estudante" }: ConsDlgPro
     },
     callbackCPFPacBtnClick = useCallback(
       (retrvDataPh: { [key: string]: object }) => {
-        const matchDataPh = (() => {
+        const matchDataPh = ((): Map<any,any> => {
           const matchDataPh = new Map();
           Object.entries(retrvDataPh).forEach(([key, value]) => {
             matchDataPh.set(key, value);
@@ -209,7 +209,7 @@ export default function FormDlg({ onClose, userClass = "estudante" }: ConsDlgPro
       history.pushState({}, "", `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#"));
     }, 300);
     assignFormAttrs(formRef.current);
-    return () => {
+    return (): void => {
       history.pushState(
         {},
         "",
@@ -222,7 +222,7 @@ export default function FormDlg({ onClose, userClass = "estudante" }: ConsDlgPro
   }, []);
   useEffect(() => {
     if (dlgRef?.current instanceof HTMLDialogElement) {
-      (() => {
+      ((): void => {
         dlgRef.current.showModal();
       })();
       syncAriaStates([...dlgRef.current!.querySelectorAll("*"), dlgRef.current]);
@@ -263,15 +263,14 @@ export default function FormDlg({ onClose, userClass = "estudante" }: ConsDlgPro
       addListenerAvMembers(dlgRef, true);
       //estilização e aria
       syncAriaStates([...dlgRef.current!.querySelectorAll("*"), dlgRef.current]);
-      const handleKeyDown = (press: KeyboardEvent) => {
+      const handleKeyDown = (press: KeyboardEvent): void => {
         if (press.key === "Escape") {
           onClose();
         }
       };
       addEventListener("keydown", handleKeyDown);
-      return () => {
+      return (): void =>
         removeEventListener("keydown", handleKeyDown);
-      };
     }
   }, [dlgRef]);
   useEffect(() => {

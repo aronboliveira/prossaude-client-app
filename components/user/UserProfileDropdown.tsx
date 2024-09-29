@@ -10,11 +10,11 @@ import { UserState } from "@/lib/locals/basePage/declarations/serverInterfaces";
 export default function UserProfileDropdown({ user, router }: UserProfileDropdownProps): JSX.Element {
   const poRef = useRef<HTMLDivElement | null>(null);
   const [shouldDisplayContact, setContact] = useState<boolean>(false);
-  const toggleContact = () => setContact(!shouldDisplayContact);
+  const toggleContact = (): void => setContact(!shouldDisplayContact);
   const [shouldDisplayPropDlg, setPropDlg] = useState<boolean>(false);
   const togglePropDlg = (): void => setPropDlg(!shouldDisplayPropDlg);
   const [shouldDisplayUserDlg, setUserDlg] = useState<boolean>(false);
-  const [_, setUser] = useState<Readonly<User> | UserState | null>(user);
+  const [, setUser] = useState<Readonly<User> | UserState | null>(user);
   const [userClass, setClass] = useState<string>(user.loadedData.privilege);
   const [userArea, setArea] = useState<string>(user.loadedData.area);
   const [userEmail, setEmail] = useState<string>(user.loadedData.email);

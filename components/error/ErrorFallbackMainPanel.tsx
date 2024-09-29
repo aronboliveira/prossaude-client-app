@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import MainFormPanel from "../mainPanel/MainFormPanel";
 import { mainPanelVariables, resetErrorBoundary } from "../mainPanel/mainPanelVariables";
 export default function ErrorFallbackMainPanel(props: ErrorFallbackMainPanelProps): JSX.Element {
-  const [_, setPanelValue] = useState(props.defOp);
+  const [, setPanelValue] = useState(props.defOp);
   const selectRef = useRef<nullishSel>(null);
   const mainArticleRef = useRef<HTMLElement | null>(null);
   useEffect(() => {
@@ -24,7 +24,7 @@ export default function ErrorFallbackMainPanel(props: ErrorFallbackMainPanelProp
         onChange={() => {
           setPanelValue(
             (selectRef.current?.value as panelOpts) ||
-              (document.getElementById("coordPanelSelect") as HTMLSelectElement).value
+              (document.getElementById("coordPanelSelect") as HTMLSelectElement).value,
           );
           props.mainRoot.render(
             <ErrorBoundary
@@ -36,19 +36,17 @@ export default function ErrorFallbackMainPanel(props: ErrorFallbackMainPanelProp
                   resetErrorBoundary={() => resetErrorBoundary(() => <MainFormPanel {...props} />, props)}
                   defOp={props.defOp}
                 />
-              )}
-            >
+              )}>
               <MainFormPanel
                 defOp={
                   (selectRef.current?.value as panelOpts) ||
                   (document.getElementById("coordPanelSelect") as HTMLSelectElement).value!
                 }
               />
-            </ErrorBoundary>
+            </ErrorBoundary>,
           );
         }}
-        autoFocus
-      >
+        autoFocus>
         <optgroup id='grpRegst' label='Registro'>
           <option value='registStud'>Cadastrar Aluno</option>
           <option value='registProf'>Cadastrar Membro Profissional</option>
@@ -75,8 +73,7 @@ export default function ErrorFallbackMainPanel(props: ErrorFallbackMainPanelProp
         onClick={() => {
           props.resetErrorBoundary(props.mainRoot, "student", mainPanelVariables.tryAcc);
           mainPanelVariables.tryAcc++;
-        }}
-      >
+        }}>
         Tentar novamente
       </button>
     </article>

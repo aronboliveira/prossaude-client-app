@@ -260,7 +260,7 @@ export default function PacList({
             } catch (e) {
               console.error(`Error executing rendering of Table Body Content:\n${(e as Error).message}`);
             }
-            const handleAttempt = () => {
+            const handleAttempt = (): void => {
               try {
                 if (!(sectTabRef?.current instanceof HTMLElement))
                   throw elementNotFound(sectTabRef.current, "sectTabRef in useEffect()", extLine(new Error()));
@@ -315,7 +315,7 @@ export default function PacList({
   }, []);
   useEffect(() => {
     if (sectTabRef?.current instanceof HTMLElement) {
-      const handleKeyDown = (press: KeyboardEvent) =>
+      const handleKeyDown = (press: KeyboardEvent): boolean | void =>
         press.key === "Escape" && setDisplayRowData(!shouldDisplayRowData);
       addEventListener("keydown", handleKeyDown);
       return (): void => removeEventListener("keydown", handleKeyDown);

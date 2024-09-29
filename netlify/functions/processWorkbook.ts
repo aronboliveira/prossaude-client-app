@@ -3,7 +3,12 @@ function processWorkbook(wb: any): any {
   console.log(wb);
   return wb;
 }
-const handler: Handler = async (event: any) => {
+const handler: Handler = async (
+  event: any,
+): Promise<{
+  statusCode: number;
+  body: string;
+}> => {
   let wb;
   try {
     wb = JSON.parse(event.body as string);
@@ -20,5 +25,4 @@ const handler: Handler = async (event: any) => {
     body: JSON.stringify(processedWb),
   };
 };
-
 export { handler };

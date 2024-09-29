@@ -6,7 +6,7 @@ import { textTransformPascal } from "@/lib/global/gModel";
 import { handleCondtReq, handleEventReq } from "@/lib/global/handlers/gHandlers";
 export default function TabInpProg({ nRow, nCol, ctx, lab }: TdProps): JSX.Element {
   const pascalLab = textTransformPascal(lab);
-  const fullName = (() => {
+  const fullName = ((): string => {
     switch (lab) {
       case "Abdominal":
         return "Abdominais";
@@ -48,7 +48,7 @@ export default function TabInpProg({ nRow, nCol, ctx, lab }: TdProps): JSX.Eleme
   })();
   let medAntCase = "";
   if (ctx === "MedAnt") {
-    medAntCase = (() => {
+    medAntCase = ((): string => {
       switch (lab) {
         case "Peso":
           return "Weigth";
@@ -107,7 +107,7 @@ export default function TabInpProg({ nRow, nCol, ctx, lab }: TdProps): JSX.Eleme
                     });
               }
             }
-          : ev => {
+          : (ev): void => {
               if (ev.currentTarget.required) handleEventReq(ev.currentTarget);
               else {
                 ev.currentTarget.type === "number"

@@ -25,7 +25,7 @@ export default function AlterFieldList({
   const alterFieldRef = useRef<nullishDlg>(null),
     formRef = useRef<nullishForm>(null),
     optsRef = useRef<nullishSel>(null),
-    [_, setChosenOp] = useState(optsRef.current?.value || null),
+    [, setChosenOp] = useState(optsRef.current?.value || null),
     handleChange = (targ: HTMLSelectElement): void => {
       history.pushState(
         {},
@@ -56,15 +56,11 @@ export default function AlterFieldList({
         }
       };
       document.addEventListener("keydown", handleKeyDown);
-      return () => {
-        document.removeEventListener("keydown", handleKeyDown);
-      };
+      return (): void => document.removeEventListener("keydown", handleKeyDown);
     } else
       elementNotFound(alterFieldRef.current, "Reference for Previous appointments list dialog", extLine(new Error()));
   }, [alterFieldRef]);
-  const toggleDisplayRowData = (state: boolean = true) => {
-    dispatch(!state);
-  };
+  const toggleDisplayRowData = (state: boolean = true): void => dispatch(!state);
   //push em history
   useEffect(() => {
     history.pushState(

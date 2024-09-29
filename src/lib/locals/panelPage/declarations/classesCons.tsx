@@ -1,9 +1,4 @@
-import {
-  elementNotFound,
-  extLine,
-  inputNotFound,
-  stringError,
-} from "../../../global/handlers/errorHandler";
+import { elementNotFound, extLine, inputNotFound, stringError } from "../../../global/handlers/errorHandler";
 import {
   checkConfirmApt,
   handleAptBtnClick,
@@ -21,32 +16,19 @@ export class DataProvider {
     this.#sessionDataState = _dataSessionState;
     addEventListener("beforeunload", () => {
       this.#sessionDataState = {};
-      [
-        "formSched",
-        "formAddStud",
-        "formAddProf",
-        "regstPacDlg",
-        "CPFFillerDiv",
-      ].forEach(form => {
+      ["formSched", "formAddStud", "formAddProf", "regstPacDlg", "CPFFillerDiv"].forEach(form => {
         sessionStorage.getItem(form) && sessionStorage.setItem(form, "");
       });
     });
   }
-  initPersist(
-    element: HTMLElement,
-    gscopeProvider: DataProvider,
-    userClass: string = "student"
-  ) {
+  initPersist(element: HTMLElement, gscopeProvider: DataProvider, userClass: string = "student"): void {
     setTimeout(() => {
       // console.log("Initing persistence...");
-      if (sessionStorage[element.id])
-        gscopeProvider.parseSessionStorage(element, element.id, userClass);
+      if (sessionStorage[element.id]) gscopeProvider.parseSessionStorage(element, element.id, userClass);
       else
         setTimeout(
-          () =>
-            sessionStorage[element.id] &&
-            gscopeProvider.parseSessionStorage(element, element.id, userClass),
-          300
+          () => sessionStorage[element.id] && gscopeProvider.parseSessionStorage(element, element.id, userClass),
+          300,
         );
     }, 100);
     //timeout for checking if element is out of DOM and then sets interval for keeping check in DOM
@@ -58,13 +40,9 @@ export class DataProvider {
       }
       clearFlags[`${element.id}`] = true;
       const persistInterv = setInterval(interv => {
-        if (
-          !clearFlags[`${element.id}`] ||
-          !this.checkForm(element.id, interv)
-        ) {
+        if (!clearFlags[`${element.id}`] || !this.checkForm(element.id, interv))
           setTimeout(() => clearInterval(interv), 200);
-          return;
-        } else this.checkForPersist(element);
+        else this.checkForPersist(element);
       }, 1_000);
       this.checkForPersist(element);
       try {
@@ -73,67 +51,45 @@ export class DataProvider {
           throw inputNotFound(
             panelSelect,
             "Panel selector when fetching for session storage cicles",
-            extLine(new Error())
+            extLine(new Error()),
           );
         let isTargPanelRendered = true;
         const handleSessionPanelChange = (elementId: string): void => {
           try {
             const scope = document.getElementById(elementId);
             if (!(scope instanceof HTMLElement)) {
-              console.warn(
-                `Could not find scopped element for handling panel change`
-              );
+              console.warn(`Could not find scopped element for handling panel change`);
               clearInterval(persistInterv);
               return;
             }
             const persisters = sessionStorage.getItem(elementId);
             if (!persisters)
-              throw stringError(
-                `Persisting elements for ${elementId}`,
-                persisters,
-                extLine(new Error())
-              );
-            this.initStorageParsing(
-              document.getElementById(elementId)!,
-              elementId
-            );
+              throw stringError(`Persisting elements for ${elementId}`, persisters, extLine(new Error()));
+            this.initStorageParsing(document.getElementById(elementId)!, elementId);
           } catch (err) {
             console.error(`Error handling Panel Change:
                 ${(err as Error).message};`);
           }
-          !this.checkForm(elementId)
-            ? (isTargPanelRendered = false)
-            : (isTargPanelRendered = true);
+          !this.checkForm(elementId) ? (isTargPanelRendered = false) : (isTargPanelRendered = true);
           !isTargPanelRendered &&
-            (() => {
-              panelSelect.removeEventListener("change", () =>
-                handleSessionPanelChange(elementId)
-              );
-              console.warn(
-                `event listener removido para handleSessionPanelChange`
-              );
+            ((): void => {
+              panelSelect.removeEventListener("change", () => handleSessionPanelChange(elementId));
+              console.warn(`event listener removido para handleSessionPanelChange`);
             })();
         };
-        panelSelect.addEventListener("change", () =>
-          handleSessionPanelChange(element.id)
-        );
+        panelSelect.addEventListener("change", () => handleSessionPanelChange(element.id));
       } catch (err) {
         console.error(`Error on initiation of Panel Change Listening:
             ${(err as Error).message}`);
       }
     }, 500);
   }
-  initStorageParsing(
-    scope: HTMLElement | Document = document,
-    scopeRef: string
-  ): void {
+  initStorageParsing(scope: HTMLElement | Document = document, scopeRef: string): void {
     const persisters = sessionStorage.getItem(scopeRef);
     if (persisters) {
       console.log("Init storage parsing...");
       Object.entries(JSON.parse(persisters)).forEach(entry => {
-        const fetchedEl =
-          scope.querySelector(`#${entry[0]}`) ||
-          document.querySelector(`#${entry[0]}`);
+        const fetchedEl = scope.querySelector(`#${entry[0]}`) || document.querySelector(`#${entry[0]}`);
         if (
           (fetchedEl instanceof HTMLInputElement &&
             !(
@@ -151,9 +107,7 @@ export class DataProvider {
           fetchedEl instanceof HTMLInputElement &&
           (fetchedEl.type === "radio" || fetchedEl.type === "checkbox")
         ) {
-          entry[1] === "true" || entry[1] === true
-            ? (fetchedEl.checked = true)
-            : (fetchedEl.checked = false);
+          entry[1] === "true" || entry[1] === true ? (fetchedEl.checked = true) : (fetchedEl.checked = false);
         } else if (fetchedEl instanceof HTMLElement) {
           // console.log(
           //   `HTML string parsed at init for ${
@@ -165,45 +119,29 @@ export class DataProvider {
           if (fetchedEl.classList.contains("consSlot")) {
             const aptBtn = fetchedEl.querySelector(".appointmentBtn");
             if (aptBtn) {
-              aptBtn.addEventListener("click", ev =>
-                handleAptBtnClick(ev as MouseEvent, user.userClass)
-              );
+              aptBtn.addEventListener("click", ev => handleAptBtnClick(ev as MouseEvent, user.userClass));
             }
-            const user = localStorage.getItem("activeUser")
-              ? JSON.parse(localStorage.getItem("activeUser")!)
-              : defUser;
-            if (
-              user.userClass === "coordenador" ||
-              user.userClass === "supervisor"
-            ) {
+            const user = localStorage.getItem("activeUser") ? JSON.parse(localStorage.getItem("activeUser")!) : defUser;
+            if (user.userClass === "coordenador" || user.userClass === "supervisor") {
               const eraser = fetchedEl.querySelector(".btn-close");
               if (eraser) {
                 eraser.addEventListener("click", () => {
                   const relCel = eraser.closest("slot");
                   relCel instanceof HTMLElement && eraser instanceof HTMLElement
-                    ? replaceBtnSlot(
-                        relCel.querySelector("[id*=appointmentBtn]"),
-                        relCel,
-                        eraser
-                      )
+                    ? replaceBtnSlot(relCel.querySelector("[id*=appointmentBtn]"), relCel, eraser)
                     : elementNotFound(
                         relCel,
                         `Table cell related to button for erasing day/hour appointment id ${eraser.id}`,
-                        extLine(new Error())
+                        extLine(new Error()),
                       );
                 });
               }
               const dayCheck = fetchedEl.querySelector(".apptCheck");
               if (dayCheck) {
                 dayCheck.addEventListener("change", () => {
-                  dayCheck instanceof HTMLInputElement &&
-                  (dayCheck.type === "checkbox" || dayCheck.type === "radio")
+                  dayCheck instanceof HTMLInputElement && (dayCheck.type === "checkbox" || dayCheck.type === "radio")
                     ? checkConfirmApt(dayCheck)
-                    : inputNotFound(
-                        dayCheck,
-                        `dayCheck id ${dayCheck?.id || "UNIDENTIFIED"}`,
-                        extLine(new Error())
-                      );
+                    : inputNotFound(dayCheck, `dayCheck id ${dayCheck?.id || "UNIDENTIFIED"}`, extLine(new Error()));
                 });
                 verifyAptCheck(dayCheck);
               }
@@ -213,20 +151,12 @@ export class DataProvider {
       });
     }
   }
-  parseSessionStorage(
-    scope: HTMLElement | Document = document,
-    scopeRef: string,
-    userClass: string = "student"
-  ): void {
-    const persisters =
-      sessionStorage.getItem(scopeRef) ||
-      JSON.stringify(this.#sessionDataState);
+  parseSessionStorage(scope: HTMLElement | Document = document, scopeRef: string, userClass: string = "student"): void {
+    const persisters = sessionStorage.getItem(scopeRef) || JSON.stringify(this.#sessionDataState);
     if (persisters) {
       console.log("Parsing session storage...");
       Object.entries(JSON.parse(persisters)).forEach(entry => {
-        const fetchedEl =
-          scope.querySelector(`#${entry[0]}`) ||
-          document.querySelector(`#${entry[0]}`);
+        const fetchedEl = scope.querySelector(`#${entry[0]}`) || document.querySelector(`#${entry[0]}`);
         if (
           (fetchedEl instanceof HTMLInputElement &&
             !(
@@ -244,20 +174,17 @@ export class DataProvider {
           fetchedEl instanceof HTMLInputElement &&
           (fetchedEl.type === "radio" || fetchedEl.type === "checkbox")
         ) {
-          entry[1] === "true" || entry[1] === true
-            ? (fetchedEl.checked = true)
-            : (fetchedEl.checked = false);
+          entry[1] === "true" || entry[1] === true ? (fetchedEl.checked = true) : (fetchedEl.checked = false);
         } else if (fetchedEl instanceof HTMLElement) {
           fetchedEl.innerHTML = entry[1] as string;
           const monthSelector = document.getElementById("monthSelector");
-          (monthSelector instanceof HTMLSelectElement ||
-            monthSelector instanceof HTMLInputElement) &&
+          (monthSelector instanceof HTMLSelectElement || monthSelector instanceof HTMLInputElement) &&
             userClass &&
             handleScheduleChange(
               monthSelector,
               document.getElementById("tbSchedule"),
               userClass,
-              panelFormsVariables.isAutoFillMonthOn
+              panelFormsVariables.isAutoFillMonthOn,
             );
           // console.log(
           //   `innerHTML parsed for ${
@@ -274,20 +201,14 @@ export class DataProvider {
   } {
     this.#sessionDataState = DataProvider.persistSessionEntries(scope);
     scope instanceof HTMLElement
-      ? sessionStorage.setItem(
-          `${scope.id}`,
-          JSON.stringify(this.#sessionDataState)
-        )
+      ? sessionStorage.setItem(`${scope.id}`, JSON.stringify(this.#sessionDataState))
       : console.log("Failed to fetch scope when checking for persistence...");
     return this.#sessionDataState;
   }
   static persistSessionEntries(scope: HTMLElement | Document = document): {
     [k: string]: string;
   } {
-    const persisters = [
-      ...scope.querySelectorAll(".ssPersist"),
-      ...scope.querySelectorAll(".lcPersist"),
-    ];
+    const persisters = [...scope.querySelectorAll(".ssPersist"), ...scope.querySelectorAll(".lcPersist")];
     const sessionData: { [key: string]: string } = {};
     // console.log("Persisting session entries...");
     for (const persister of persisters) {
@@ -304,19 +225,11 @@ export class DataProvider {
         persister instanceof HTMLSelectElement
       )
         sessionData[`${persister.id || persister.name}`] = persister.value;
-      else if (
-        persister instanceof HTMLInputElement &&
-        (persister.type === "radio" || persister.type === "checkbox")
-      )
-        sessionData[`${persister.id || persister.name}`] =
-          persister.checked.toString();
+      else if (persister instanceof HTMLInputElement && (persister.type === "radio" || persister.type === "checkbox"))
+        sessionData[`${persister.id || persister.name}`] = persister.checked.toString();
       else if (persister instanceof HTMLElement) {
-        sessionData[
-          `${
-            persister.id ||
-            (persister instanceof HTMLSlotElement && persister.name)
-          }`
-        ] = persister.innerHTML;
+        sessionData[`${persister.id || (persister instanceof HTMLSlotElement && persister.name)}`] =
+          persister.innerHTML;
         // console.log(
         //   `InnerHTML assigned to session data id ${
         //     persister.id ||
