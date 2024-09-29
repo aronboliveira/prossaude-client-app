@@ -1,0 +1,868 @@
+/* EN Page Style */
+
+$swhite: rgba(255, 255, 255, 0.9);
+
+:root {
+  --bs-shadow: 0.2vh 0.2vh 0.2vh grey;
+}
+
+.edfisNutBody {
+  *:not(table) {
+    scrollbar-width: thin;
+  }
+
+  label.form-control,
+  span.form-control,
+  .biBtn:is(.countAtFis),
+  .form-control.tabInpProgIndPerc,
+  .divLock,
+  .legAtFis,
+  .lockTabInd,
+  .spanLock,
+  #fsComorbLeg {
+    display: flex;
+    &:not(#fsComorbLeg) {
+      align-items: center;
+    }
+  }
+
+  label.form-control,
+  span.form-control,
+  .form-control.tabInpProgIndPerc,
+  .divLock,
+  .lockTabInd,
+  .spanLock {
+    justify-content: space-between;
+  }
+
+  canvas {
+    &#inpAstConfirmId {
+      max-height: 4.461rem;
+      min-width: 17.9rem;
+    }
+  }
+
+  fieldset {
+    &:not(#fsProgConsId) {
+      + hr,
+      > hr {
+        max-width: 93vw;
+        min-width: 93vw;
+        width: 93vw;
+      }
+    }
+  }
+
+  form {
+    :first-child {
+      :last-child:is(section) {
+        :last-child:is(div) {
+          &:last-child {
+            padding-bottom: 2vh;
+          }
+        }
+      }
+    }
+  }
+
+  $radioSpacing: 0.8rem;
+
+  input {
+    &[type="date"] {
+      &.form-control {
+        &.tabInpComorb {
+          width: 100%;
+          max-width: 100%;
+        }
+      }
+    }
+    &[type="radio"] {
+      &:not(.form-check-input) {
+        margin-right: $radioSpacing;
+        &:not(.opProtUr) {
+          transform: scale(1.3) translateY(0.05rem);
+        }
+        opacity: 0.4;
+        &:checked {
+          opacity: 1;
+        }
+        + label {
+          &:first-of-type {
+            margin-right: $radioSpacing;
+          }
+        }
+      }
+    }
+  }
+
+  label {
+    font-weight: 500;
+    &.form-control {
+      text-align: end;
+    }
+    &[for="inpElimUrIntervaloMax"] {
+      margin-left: 0;
+    }
+    &[for="inpElimUrCor"] {
+      width: max-content;
+    }
+    &[for="genFisAlinId"] {
+      padding-left: 0;
+      padding-top: 0;
+    }
+  }
+
+  main {
+    margin-inline: 1vw;
+  }
+
+  select {
+    max-width: 94.75vw;
+  }
+
+  table {
+    caption {
+      caption-side: top;
+      font-weight: bold;
+      align-content: center;
+      vertical-align: middle;
+      flex-wrap: wrap;
+      white-space: normal;
+      width: 100%;
+      width: 100%;
+      padding: 0;
+      margin-bottom: 0.5rem;
+      font-size: calc(1.275rem + 0.3vw);
+      line-height: inherit;
+      padding-inline-start: 2px;
+      padding-inline-end: 2px;
+    }
+    td {
+      &:has(.tabInpProgSomaDCut) {
+        min-width: 15rem;
+      }
+    }
+  }
+
+  .btn {
+    &.btn-secondary {
+      &:not(:has(svg)):not(.datBtn) {
+        height: 2.45rem;
+      }
+    }
+  }
+
+  .hRot {
+    font-weight: bold;
+  }
+
+  .consLab,
+  .divLab {
+    margin-bottom: 2vh;
+  }
+
+  .divLock,
+  .spanLock {
+    background-color: transparent;
+    padding-right: 2%;
+    padding-left: 2%;
+    svg {
+      line {
+        stroke: grey;
+      }
+      path {
+        &.svg-lock-hook,
+        &.svg-unlock-hook {
+          fill: grey;
+        }
+        &.svg-lock-body,
+        &.svg-unlock-body {
+          stroke: grey;
+          fill: url(#gradiente-lock);
+        }
+      }
+    }
+  }
+
+  .flexDiv {
+    &.divRot,
+    &.flexDivProg {
+      justify-content: start;
+    }
+  }
+
+  .form-control.tabInpProg,
+  .form-control.tabLabProgCons,
+  .form-select.lockSelect,
+  #inpDiur,
+  #protUrLvl {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  $inpRotWidFix: 25.75rem;
+
+  .inpRefDia,
+  .inpAgua,
+  .inpUrDia,
+  #inpElimUrCor,
+  #inpElimEvDiaMax {
+    min-width: $inpRotWidFix;
+  }
+
+  .inpUrInterval {
+    max-width: $inpRotWidFix;
+  }
+
+  .tabLabProgCons {
+    width: 100%;
+  }
+
+  .msrProgCons,
+  .spanLock,
+  .divTab {
+    border-radius: var(--bs-border-radius);
+  }
+
+  .msrProgCons,
+  .spanLock {
+    margin: 0;
+    padding-left: 1vw;
+    padding: 0.375rem 0.75rem;
+    line-height: 1.5;
+    color: var(--bs-body-color);
+    background-color: var(--bs-body-bg);
+    box-shadow: 0.2vh 0.2vh 0.2vh grey;
+    background-clip: padding-box;
+    border: var(--bs-border-width) solid var(--bs-border-color);
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    &.sumMsr,
+    &.indMsr {
+      border-radius: 0;
+    }
+  }
+
+  .numConsTextHeadCel,
+  .tabCelProgCons {
+    text-align: center;
+  }
+
+  .tabProgCons {
+    td,
+    th,
+    tr,
+    tbody,
+    thead,
+    tfoot {
+      border-style: solid;
+    }
+  }
+
+  table,
+  .lockTabInd {
+    width: 100%;
+  }
+
+  .btn-secondary {
+    &.tabBtn {
+      border-bottom-left-radius: 0;
+      border-top-left-radius: 0;
+      &:not(.tabBtnSum) {
+        border-radius: 0;
+      }
+    }
+  }
+
+  .bi {
+    &.bi-plus {
+      transform: scale(1.2) translateX(0.1rem);
+    }
+    &.bi-dash {
+      transform: scale(1.2) translateX(-0.4rem);
+    }
+  }
+
+  .biBtn {
+    &:is(.countAtFis),
+    &:is(.countComorb) {
+      padding-right: 0.125rem;
+      padding-left: 0.125rem;
+      height: 2.3vh;
+      &:is(.addAtFis),
+      &:is(.addComorb) {
+        padding-left: 0.375rem;
+      }
+    }
+  }
+
+  .consInp,
+  .form-select.labelIdentif,
+  .inpAlimRot,
+  .inpIdentif {
+    margin-top: 1vh;
+  }
+
+  .divTab {
+    overflow: auto;
+    resize: vertical;
+  }
+
+  .form-control {
+    &.tabInpProg:not(.tabInpProgSumDCut) {
+      min-width: 10vw;
+    }
+    &.tabInpProgSumDCut {
+      min-width: 8ch;
+    }
+    &.tabInpProgIndPerc {
+      width: 88%;
+    }
+    &.tabLabProgCons {
+      min-width: 10rem;
+    }
+    &.tabLabProg,
+    &.tabLabProgCons,
+    &.labUr {
+      border: none;
+      border-color: transparent;
+      padding: 0;
+      &#labDiur {
+        box-shadow: 0 0 0 0 transparent;
+        width: 1rem;
+        background-color: transparent;
+      }
+    }
+  }
+
+  .flexDiv {
+    &.flexDivTab {
+      min-width: 17.5rem;
+      box-shadow: var(--bs-shadow);
+    }
+    &.divRot {
+      + hr {
+        margin-block: 1.5rem;
+        margin-left: 0.5rem;
+        width: 93vw;
+      }
+    }
+  }
+
+  .flexDivProg {
+    column-gap: 1.5vw;
+  }
+
+  .hRot {
+    font-size: calc(1.275rem + 0.3vw);
+    padding-bottom: 1vh;
+  }
+
+  .labAlimRot {
+    .msrProgCons {
+      margin-top: 1vh;
+    }
+  }
+
+  .legAtFis,
+  .tabAtFis,
+  .tabLegProgCons,
+  label[for="inpElimUrCor"] {
+    white-space: nowrap;
+  }
+
+  .spanAlimRot {
+    &:has(input[type="radio"]) {
+      margin-top: 1rem;
+      input {
+        margin-top: 0.25rem;
+      }
+    }
+  }
+
+  .spanLock {
+    height: 100%;
+  }
+
+  .switchDiv {
+    margin: 0;
+    padding: 0 0 0.5rem 0;
+    &.divTab {
+      resize: none;
+      overflow: visible;
+    }
+    ~ hr {
+      width: 93vw;
+      margin-left: 0.5rem;
+    }
+  }
+
+  .tabInpProg {
+    border: solid 1px #dee2e6;
+  }
+
+  .tabLabProgCons {
+    &.form-control {
+      border-top-right-radius: 0.5rem;
+      border-bottom-right-radius: 0.5rem;
+    }
+    border-top-right-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+  }
+
+  .tabLabRowDCut9 {
+    border-top-right-radius: 5vw;
+  }
+
+  .tabRowComorb {
+    width: 90vw;
+    .tabCelComorb {
+      &[id$="_1"] {
+        max-width: 1.5ch;
+        padding-right: 0;
+        + td {
+          padding-left: 1rem;
+          min-width: 60vw;
+        }
+      }
+      input {
+        &[type="date"] {
+          max-width: 21vw;
+        }
+      }
+    }
+  }
+
+  .tabRowProgCons {
+    .tabCelProgCons {
+      &[id$="_1"] {
+        max-width: 15ch;
+      }
+    }
+  }
+
+  .tdNum {
+    vertical-align: middle;
+  }
+
+  .tabAtFisRotPop {
+    overflow: auto;
+  }
+
+  #autoFillBtn {
+    margin-right: 0.25rem;
+  }
+
+  #confirmLocId {
+    min-width: 12.5rem;
+  }
+
+  #deactAutocorrectBtnPac {
+    margin-right: 0.25rem;
+  }
+
+  #divAddProtUr {
+    margin-top: 0.1rem;
+  }
+
+  #divAtFisRot {
+    .bi {
+      &.bi-plus {
+        transform: scale(1.2) translate(-0.2rem, 0.14rem);
+      }
+      &.bi-dash {
+        transform: scale(1.2) translate(-0.5rem, 0.14rem);
+      }
+    }
+  }
+
+  #divConfirm {
+    + hr {
+      min-width: 93vw;
+    }
+  }
+
+  #divLvlAtFis {
+    margin-bottom: 2vh;
+  }
+
+  #divProgCons {
+    align-items: start;
+  }
+
+  #divProgSels,
+  #divTabDobrCut,
+  #divTabMedAnt,
+  #divTabSVi,
+  #fsHabRotId,
+  div:has(#tabAtFisRot) {
+    ~ hr {
+      width: 93vw;
+      margin-left: 0.5rem;
+      opacity: 0.25;
+    }
+  }
+
+  $inpProgWidFixReg: 14.8rem;
+
+  #formCalcTMBType {
+    width: calc($inpProgWidFixReg + 1.5rem);
+  }
+
+  #fsAnamGId {
+    margin-left: 0;
+  }
+
+  #fsAnamGLeg {
+    padding-left: 0.5rem;
+  }
+
+  #fsComorbLeg {
+    + div {
+      padding-left: 0;
+    }
+  }
+
+  #fsHabRotLeg,
+  h2.hRot {
+    margin-left: 0.5rem;
+  }
+
+  #fsProgConsId {
+    hr {
+      transform: translateX(-0.5rem);
+    }
+  }
+
+  #genDiv {
+    select {
+      min-width: calc($inpRotWidFix - 10rem);
+      max-width: calc($inpRotWidFix + 7.5rem);
+    }
+  }
+
+  #protUrDiv {
+    min-width: 25ch;
+    width: 33%;
+  }
+
+  #labProtUrLvl {
+    width: 21ch;
+    margin-top: 0.3rem;
+    #protUrLvl {
+      min-width: 10ch;
+    }
+  }
+
+  #spanDiur {
+    display: inline-block;
+    width: 14.5rem;
+  }
+
+  #tipsBtn {
+    margin-bottom: 0.5rem;
+  }
+
+  #nafType {
+    width: $inpProgWidFixReg;
+  }
+
+  #selectNumCons {
+    width: $inpProgWidFixReg;
+    margin-right: 0.1rem;
+  }
+
+  #selectLvlAtFis {
+    max-width: 26.4rem;
+    min-width: 33vw;
+    margin-left: 0.75rem;
+  }
+
+  #tabSelectDCutId {
+    width: 12rem;
+  }
+
+  #trioReadNumCons {
+    width: calc($inpProgWidFixReg + 6.5rem);
+  }
+}
+
+@media screen and (min-width: 1000px) {
+  .edfisNutBody {
+    #protUrDiv {
+      transform: translateX(5rem);
+    }
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .edfisNutBody {
+    #inpElimUrCor {
+      min-width: 33vw;
+      max-width: 33vw;
+    }
+    #protUrDiv {
+      transform: translateX(5rem);
+    }
+  }
+}
+
+@media screen and (min-width: 901px) {
+  $firstColProgMargR: 0.5rem;
+  .edfisNutBody {
+    .tabCelIndPerc {
+      &:has(label[id*="labImc"]) {
+        .indMsr {
+          padding-right: 1.4rem;
+        }
+      }
+    }
+
+    #divProgType {
+      .divLab {
+        &:first-of-type {
+          margin-right: $firstColProgMargR;
+        }
+      }
+    }
+
+    #inpElimUrDiaMin,
+    #inpElimUrIntervaloMin,
+    #inpElimEvDiaMin,
+    #inpElimEvIntervaloMin {
+      width: 26.5rem;
+      max-width: 75vw;
+    }
+
+    #inpDiur {
+      width: 15rem;
+    }
+
+    #selectNumCons {
+      margin-right: $firstColProgMargR;
+    }
+  }
+}
+
+@media screen and (min-width: 901px) {
+  .edfisNutBody {
+    .tabBtnProgCons {
+      &.tabBtnInd {
+        transform: scale(1.05) translateY(0.03rem);
+      }
+      &.tabBtnSum {
+        transform: scale(1.002) translateY(0.053rem);
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .edfisNutBody {
+    label {
+      &[for="inpElimUrIntervaloMax"] {
+        padding-left: 1rem;
+        margin-left: 0.05rem;
+        transform: translateX(-5px);
+      }
+    }
+    div {
+      &.switchDiv {
+        padding-top: 0.75rem;
+      }
+      &.divLab {
+        &:has(#nafType),
+        &:has(#textBodytype) {
+          margin-bottom: 2rem;
+        }
+        &:has(#formCalcTMBType) {
+          transform: translateX(-0.5rem);
+        }
+      }
+    }
+
+    table,
+    tr {
+      max-width: 90vw;
+    }
+
+    .btn {
+      &.btn-secondary {
+        &:not(:has(svg)):not(.datBtn) {
+          margin-bottom: 0.05rem;
+          &.tabBtnSum {
+            height: 2.4rem;
+          }
+          &.tabBtnInd {
+            height: 2.43rem;
+          }
+        }
+      }
+    }
+
+    .flexDiv {
+      &.divRot {
+        flex-direction: column;
+      }
+    }
+
+    .flexDivProg {
+      column-gap: 2.5vw;
+    }
+
+    .form-control {
+      &#labDiur {
+        width: 70vw;
+        min-width: 70vw;
+      }
+    }
+
+    .form-control.tabInpProg,
+    .form-control.tabLabProgCons,
+    #bgDiv {
+      width: 100%;
+    }
+
+    .inpUrInterval {
+      max-width: unset;
+    }
+
+    .labAlimRot {
+      min-width: 79.2vw;
+    }
+
+    .legMain {
+      padding-left: 0.5rem;
+    }
+
+    .tabCelIndPerc {
+      &:has(.bi) {
+        > div {
+          padding-right: 0.45rem;
+        }
+      }
+      .tabBtnInd {
+        transform: scale(1.04) translateY(0.7px);
+      }
+    }
+
+    .tdInpComorb {
+      grid-row: span 1;
+      grid-column: span 2;
+    }
+
+    [id^="sumDCBtn"] {
+      transform: translateY(1.3px);
+    }
+
+    #confirmAstDigtBtn {
+      margin-right: 0;
+    }
+
+    $inpGenWidFix: calc(0.4rem + 76.5vw);
+    $inpProgWidFix: 14.7rem;
+
+    #formCalcTMBType {
+      width: calc($inpProgWidFix + 1.5rem);
+    }
+
+    #genId,
+    #genBirthRelId,
+    #genDiv select {
+      width: $inpGenWidFix;
+      max-width: $inpGenWidFix;
+    }
+
+    #inpDiur {
+      margin-left: 0;
+      min-width: calc($inpGenWidFix - 18.87vw + 5rem);
+    }
+
+    #inpElimUrCor {
+      min-width: unset;
+      max-width: unset;
+    }
+
+    #nafType {
+      width: $inpProgWidFix;
+    }
+
+    #protUrDiv {
+      transform: translateX(0);
+    }
+
+    #selectNumCons {
+      width: $inpProgWidFix;
+      margin-right: 0.1rem;
+    }
+
+    #spanDiur {
+      width: 80vw;
+    }
+
+    #tipsBtn {
+      margin-bottom: 1.5rem;
+    }
+
+    #trioReadNumCons {
+      width: calc($inpProgWidFix + 6.5rem);
+    }
+  }
+}
+
+@media screen and (max-width: 550px) {
+  .edfisNutBody {
+    .flexDiv {
+      &.flexDivProg {
+        &:not(#divProgCons) {
+          flex-wrap: wrap;
+          align-content: flex-start;
+          justify-content: left;
+        }
+      }
+    }
+    #divProgSels {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-items: left;
+      padding-left: 0.5rem;
+    }
+    #protUrDiv {
+      width: 75%;
+    }
+  }
+}
+
+@media screen and (max-width: 460px) {
+  .edfisNutBody {
+    div {
+      &.divLab {
+        &:has(#nafType),
+        &:has(#textBodytype) {
+          margin-bottom: 1rem;
+        }
+      }
+    }
+    .divProgCons {
+      align-items: flex-start;
+    }
+    .inpAlimRot,
+    .inpRefDia,
+    .inpUrDia,
+    #inpElimEvDiaMax {
+      min-width: unset;
+    }
+    #inpDiur {
+      min-width: calc(0.4rem + 48.5vw - 18.87vw + 5rem);
+    }
+    #selectLvlAtFis {
+      max-width: 72.5vw;
+      margin-left: 0;
+    }
+    #trioReadNumCons {
+      max-width: 63vw;
+    }
+  }
+}
