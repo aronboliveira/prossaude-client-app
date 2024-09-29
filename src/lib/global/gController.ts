@@ -185,21 +185,29 @@ export function addListenerExportBtn(
           arrTitles: string[] = [];
         for (const el of allEntryEls) {
           if (el instanceof HTMLOutputElement) arrValues.push(el?.innerText || "Nulo");
-          else if (el instanceof HTMLInputElement && (el.type === "checkbox" || el.type === "radio"))
-            el.checked ? arrValues.push("Sim") : arrValues.push("Não");
-          else arrValues.push(el?.value || "Nulo");
+          else if (el instanceof HTMLInputElement && (el.type === "checkbox" || el.type === "radio")) {
+            if (el.role === "switch" || el.parentElement?.classList.contains("form-switch")) continue;
+            else el.checked ? arrValues.push("Sim") : arrValues.push("Não");
+          } else arrValues.push(el?.value || "Nulo");
           arrTitles.push(
-            el?.dataset?.title
+            el?.dataset?.xls
               ?.split("")
               .map((c, i) => (i === 0 ? c.toUpperCase() : c))
-              .join() ||
+              .join("")
+              .replace(/_/g, " ") ||
+              el?.dataset?.title
+                ?.split("")
+                .map((c, i) => (i === 0 ? c.toUpperCase() : c))
+                .join("")
+                .replace(/_/g, " ") ||
               GlobalModel.textTransformPascal(
                 el?.id
                   .replace(/[_\-]/g, " ")
                   .replace(/([A-Z])/g, m => (m === el?.id.charAt(0) ? m : ` ${m}`))
                   .split("")
                   .map((c, i) => (i === 0 ? c.toUpperCase() : c))
-                  .join(),
+                  .join("")
+                  .replace(/_/g, " "),
               ) ||
               GlobalModel.textTransformPascal(
                 el?.name
@@ -207,14 +215,17 @@ export function addListenerExportBtn(
                   .replace(/([A-Z])/g, m => (m === el?.name.charAt(0) ? m : ` ${m}`))
                   .split("")
                   .map((c, i) => (i === 0 ? c.toUpperCase() : c))
-                  .join(),
+                  .join("")
+                  .replace(/_/g, " "),
               ) ||
-              "Sem_titulo",
+              `Sem Título (${el?.id || el?.name || el?.className || el?.tagName})`,
           );
         }
         const editableCite = (scope ?? document).querySelector("#citeNameId");
-        arrValues.push(editableCite?.textContent || "Nulo");
-        arrTitles.push((editableCite as HTMLElement)?.dataset?.title || "Sem_titulo");
+        if (editableCite) {
+          arrValues.push(editableCite?.textContent || "Nulo");
+          arrTitles.push((editableCite as HTMLElement)?.dataset?.title || "Sem_titulo");
+        }
         while (arrValues.length > arrTitles.length) arrTitles.push("Sem título");
         while (arrTitles.length > arrValues.length) arrValues.push("Nulo");
         if (arrValues.length === arrTitles.length) {

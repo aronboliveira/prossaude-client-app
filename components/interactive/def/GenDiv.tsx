@@ -32,6 +32,7 @@ export default function GenDiv({ flux = false }: { flux?: boolean }): JSX.Elemen
             id='genId'
             className='form-select inpIdentif noInvert'
             data-title='genero'
+            data-xls='Gênero'
             required
             onChange={ev => {
               if (flux === true) {
@@ -93,6 +94,7 @@ export default function GenDiv({ flux = false }: { flux?: boolean }): JSX.Elemen
             name='gen_birth_rel'
             id='genBirthRelId'
             className='form-select inpIdentif noInvert'
+            data-xls='Identidade de Gênero relativa à nascença'
             data-title='identidade_genero_nascenca'
             required
             onChange={() => {
@@ -162,6 +164,7 @@ export default function GenDiv({ flux = false }: { flux?: boolean }): JSX.Elemen
             id='genTransId'
             className='form-select inpIdentif noInvert'
             data-title='stg_transicao_hormonal'
+            data-xls='Estágio de Transição Hormonal (inválido se cis)'
             onChange={() => {
               const genId = document.getElementById("genId");
               const genBirthRel = document.getElementById("genBirthRelId");
@@ -232,6 +235,7 @@ export default function GenDiv({ flux = false }: { flux?: boolean }): JSX.Elemen
             id='genFisAlinId'
             className='form-select inpIdentif noInvert'
             data-title='corpo_align'
+            data-xls='Alinhamento de características físicas predominante'
             onChange={() => {
               const genId = document.getElementById("genId");
               const genBirthRel = document.getElementById("genBirthRelId");

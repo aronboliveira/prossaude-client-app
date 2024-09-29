@@ -9,14 +9,13 @@ import { addListenerExportBtn, getGlobalEls, watchLabels } from "@/lib/global/gC
 import { clearPhDates, dinamicGridAdjust, equalizeFlexSibilings } from "@/lib/global/gStyleScript";
 import { deactTextInput, syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { assignFormAttrs, modelScripts } from "@/lib/global/gModel";
-let isFetching = false,
-  isExportListening = false;
+let isFetching = false;
 export default function Watcher({ routeCase }: { routeCase?: pageCases }): JSX.Element {
   const [handled, setHandle] = useState<boolean>(false);
+  const [isExportListening, setExport] = useState<boolean>(false);
   useEffect(() => {
-    const handleResize = (): void => {
+    const handleResize = (): void =>
       equalizeFlexSibilings(document.querySelectorAll("[class*='flexTwin']"), [["width", "px"]]);
-    };
     syncAriaStates(document.querySelectorAll("*"));
     watchLabels();
     if (routeCase === "login") handleLinkChanges("login", "Login Page Style");
@@ -33,7 +32,7 @@ export default function Watcher({ routeCase }: { routeCase?: pageCases }): JSX.E
       document.querySelectorAll(".cbFam").forEach(handleDivAddShow);
       if (!isExportListening) {
         addListenerExportBtn("anamG");
-        isExportListening = true;
+        setExport(true);
       }
       addEventListener("resize", handleResize);
     } else if (routeCase === "od") {
@@ -56,7 +55,6 @@ export default function Watcher({ routeCase }: { routeCase?: pageCases }): JSX.E
     for (const f of document.querySelectorAll("form")) assignFormAttrs(f);
     return (): void => {
       if (routeCase === "ag") removeEventListener("resize", handleResize);
-      isExportListening = false;
     };
   }, []);
   useEffect(() => {
