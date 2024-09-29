@@ -21,7 +21,7 @@ export default function OdDeclaration({ state, dispatch }: DlgProps): JSX.Elemen
     setTimeout(() => {
       history.pushState({}, "", `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#"));
     }, 300);
-    return () => {
+    return (): void => {
       history.pushState(
         {},
         "",
@@ -43,7 +43,7 @@ export default function OdDeclaration({ state, dispatch }: DlgProps): JSX.Elemen
       syncAriaStates([mainRef.current, ...mainRef.current.querySelectorAll("*")]);
       mainRef.current instanceof HTMLDialogElement && mainRef.current.showModal();
       addEventListener("keypress", handleKp);
-      return () => removeEventListener("keypress", handleKp);
+      return (): void => removeEventListener("keypress", handleKp);
     } catch (e) {
       console.error(`Error executing useEffect:\n${(e as Error).message}`);
     }

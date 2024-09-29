@@ -7,9 +7,8 @@ import ExcludeDlg from "../../alerts/ExcludeDlg";
 import GenericErrorComponent from "../../error/GenericErrorComponent";
 export default function FormExcludeBtn({ context = "Stud" }: { context: string }): JSX.Element {
   const [shouldDisplayExcludeDlg, setDisplayExcludeDlg] = useState(false);
-  const toggleDisplayExcludeDlg = (shouldDisplayExcludeDlg: boolean = true) => {
+  const toggleDisplayExcludeDlg = (shouldDisplayExcludeDlg: boolean = true): void =>
     setDisplayExcludeDlg(!shouldDisplayExcludeDlg);
-  };
   const excludeBtnRef = useRef<nullishBtn>(null);
   useEffect(() => {
     if (excludeBtnRef.current instanceof HTMLButtonElement)
@@ -23,8 +22,7 @@ export default function FormExcludeBtn({ context = "Stud" }: { context: string }
         id={`btnExclude${context}`}
         className='btn btn-danger opaqueEl btnAffectRegst btnExcRegst widFull'
         ref={excludeBtnRef}
-        onClick={() => toggleDisplayExcludeDlg(shouldDisplayExcludeDlg)}
-      >
+        onClick={() => toggleDisplayExcludeDlg(shouldDisplayExcludeDlg)}>
         <small role='textbox' className='bolded'>
           Excluir
         </small>

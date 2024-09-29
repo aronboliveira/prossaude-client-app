@@ -1,5 +1,4 @@
-import { MutableRefObject, Dispatch, SetStateAction } from "react";
-import { Root } from "react-dom/client";
+import { Dispatch, SetStateAction } from "react";
 import { nullishForm, nullishDlg, nullishInp, nullishTab, voidVal } from "@glSrc/types";
 export interface FormData {
   [key: string]: any;

@@ -141,7 +141,7 @@ export default function ScheduleForm({ mainRoot, userClass = "estudante" }: Sche
         if (daysCont instanceof HTMLElement) scheduleReset[`outerHTML`] = daysCont.outerHTML;
       }, 200);
     addEventListener("resize", handleResize);
-    return () => removeEventListener("resize", handleResize);
+    return (): void => removeEventListener("resize", handleResize);
   }, []);
   useEffect(() => {
     /new-cons=open/gi.test(location.search) && setTogglePress(true);
@@ -168,7 +168,7 @@ export default function ScheduleForm({ mainRoot, userClass = "estudante" }: Sche
           );
         }
       }, 60000);
-      return () => clearInterval(saveInterv);
+      return (): void => clearInterval(saveInterv);
     } else elementNotFound(formRef.current, `formRef for useEffect() in ${ScheduleForm.name}`, extLine(new Error()));
   }, [formRef]);
   useEffect(() => {

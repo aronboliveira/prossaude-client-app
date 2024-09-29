@@ -39,11 +39,11 @@ export default function AvPacListDlg({
     if (dialogRef?.current instanceof HTMLDialogElement) {
       dialogRef.current.showModal();
       syncAriaStates([...dialogRef.current!.querySelectorAll("*"), dialogRef.current]);
-      const handleKeyDown = (press: KeyboardEvent) => {
+      const handleKeyDown = (press: KeyboardEvent): void => {
         press.key === "Escape" && setDisplayRowData(!shouldDisplayRowData);
       };
       addEventListener("keydown", handleKeyDown);
-      return () => removeEventListener("keydown", handleKeyDown);
+      return (): void => removeEventListener("keydown", handleKeyDown);
     } else elementNotFound(dialogRef.current, "dialogElement in AvStudListDlg", extLine(new Error()));
   }, [dialogRef]);
   return (

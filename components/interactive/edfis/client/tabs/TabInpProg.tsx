@@ -88,7 +88,7 @@ export default function TabInpProg({ nRow, nCol, ctx, lab }: TdProps): JSX.Eleme
       required={nCol === 2 ? true : false}
       onInput={
         lab === "IMC" || lab === "MLG" || lab === "PGC" || lab === "TMB" || lab === "GET"
-          ? ev => {
+          ? (ev): void => {
               handleIndEv(ev, lab);
               if (ev.currentTarget.required) handleEventReq(ev.currentTarget);
               else {
@@ -128,7 +128,7 @@ export default function TabInpProg({ nRow, nCol, ctx, lab }: TdProps): JSX.Eleme
       }
     />
   ) : (
-    (() => {
+    ((): JSX.Element => {
       if (ctx === "MedAnt") {
         return (
           <input
@@ -186,7 +186,7 @@ export default function TabInpProg({ nRow, nCol, ctx, lab }: TdProps): JSX.Eleme
                   ],
                 ],
                 ev.currentTarget,
-                tabProps.isAutoFillActive
+                tabProps.isAutoFillActive,
               );
             }}
           />

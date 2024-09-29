@@ -56,17 +56,17 @@ export default function FormDlg({ onClose, userClass = "estudante" }: ConsDlgPro
     submitRef = useRef<nullishBtn>(null),
     formRef = useRef<nullishForm>(null),
     [isDREFillerActive, setDREFiller] = useState<boolean>(false),
-    toggleDREFiller = () => setDREFiller(!isDREFillerActive);
+    toggleDREFiller = (): void => setDREFiller(!isDREFillerActive);
   //display de tabela para pacientes
   const [shouldDisplayPacList, setPacFiller] = useState<boolean>(false),
-    togglePacFiller = (s: boolean = false) => setPacFiller(!s);
+    togglePacFiller = (s: boolean = false): void => setPacFiller(!s);
   //autocorreções de input
   const [isAutocorrectConsOn, setAutocorrectCons] = useState<boolean>(true),
-    toggleACCons = (s: boolean = false) => setAutocorrectCons(!s),
+    toggleACCons = (s: boolean = false): void => setAutocorrectCons(!s),
     [isAutofillConsOn, setAutofillCons] = useState<boolean>(true),
-    toggleAFCons = (s: boolean = false) => setAutofillCons(!s);
+    toggleAFCons = (s: boolean = false): void => setAutofillCons(!s);
   //fechamento de modal com clique fora da área do mesmo
-  const handleClickOutside = (ev: MouseEvent) => {
+  const handleClickOutside = (ev: MouseEvent): void => {
       dlgRef.current && isClickOutside(ev, dlgRef.current).some(clickArea => clickArea === true) && onClose();
     },
     callbackCPFPacBtnClick = useCallback(

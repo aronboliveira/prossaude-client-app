@@ -2,7 +2,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import LoginInputs from "../../components/interactive/login/LoginInputs";
 import Watcher from "../../components/interactive/def/Watcher";
 import GenericErrorComponent from "../../components/error/GenericErrorComponent";
-export const getServerSideProps = async (): Promise<object> => {
+export const getStaticProps = async (): Promise<object> => {
   const data = {
     fetch: "",
     status: 404,

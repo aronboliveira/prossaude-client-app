@@ -1,7 +1,7 @@
 import { HistoricRowProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import { dateISOtoBRL } from "@/lib/global/gModel";
 export default function PrevConsRow({ historic, nRow, name = "Anônimo" }: HistoricRowProps): JSX.Element {
-  const typeFullName = (() => {
+  const typeFullName = ((): string => {
     switch (historic.type) {
       case "acompanhamento":
         return "Acompanhamento Geral";
@@ -54,8 +54,7 @@ export default function PrevConsRow({ historic, nRow, name = "Anônimo" }: Histo
           id={`outpNamePrevCons-${nRow}`}
           data-title={`Nome de Paciente no Histórico ${nRow}`}
           data-row={nRow}
-          data-col={1}
-        >
+          data-col={1}>
           {name}
         </output>
       </td>
@@ -65,8 +64,7 @@ export default function PrevConsRow({ historic, nRow, name = "Anônimo" }: Histo
           id={`outpDatePrevCons-${nRow}`}
           data-title={`Data de Consulta no Histórico ${nRow}`}
           data-row={nRow}
-          data-col={2}
-        >
+          data-col={2}>
           {dateISOtoBRL(historic.day)}
         </output>
       </td>
@@ -76,8 +74,7 @@ export default function PrevConsRow({ historic, nRow, name = "Anônimo" }: Histo
           id={`outpTypePrevCons-${nRow}`}
           data-title={`Tipo de Consulta no Histórico ${nRow}`}
           data-row={nRow}
-          data-col={3}
-        >
+          data-col={3}>
           {typeFullName}
         </output>
       </td>
@@ -87,8 +84,7 @@ export default function PrevConsRow({ historic, nRow, name = "Anônimo" }: Histo
           id={`outpProfPrevCons-${nRow}`}
           data-title={`Estudante de Consulta no Histórico ${nRow}`}
           data-row={nRow}
-          data-col={4}
-        >
+          data-col={4}>
           {historic.prof || "Anônimo"}
         </output>
       </td>
@@ -99,8 +95,7 @@ export default function PrevConsRow({ historic, nRow, name = "Anônimo" }: Histo
           //TODO AQUI TEM QUE SER REPASSADO PELO BANCO ALGUM IDENTIFICADOR...
           data-title={`Estudante de Consulta no Histórico ${nRow}`}
           data-row={nRow}
-          data-col={5}
-        >
+          data-col={5}>
           {historic.stud || "Anônimo"}
         </output>
       </td>
@@ -110,8 +105,7 @@ export default function PrevConsRow({ historic, nRow, name = "Anônimo" }: Histo
           id={`outpNotesPrevCons-${nRow}`}
           data-title={`Notas de Consulta no Histórico ${nRow} (${typeFullName})`}
           data-row={nRow}
-          data-col={6}
-        >
+          data-col={6}>
           {historic.notes || "Sem observações"}
         </output>
       </td>

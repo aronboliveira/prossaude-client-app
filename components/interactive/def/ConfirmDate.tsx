@@ -6,54 +6,35 @@ export default function ConfirmDate(): JSX.Element {
   const dateRef = useRef<nullishInp>(null);
   const btnRef = useRef<nullishBtn>(null);
   useEffect(() => {
-    const equalizeBtn = () => {
-      btnRef.current ??= document.getElementById(
-        "headerDatBtn"
-      ) as HTMLButtonElement;
-      dateRef.current ??= document.getElementById(
-        "dateHeader"
-      ) as HTMLInputElement;
-      const dateWidth = parseNotNaN(
-        getComputedStyle(dateRef.current).width.replace("px", "").trim()
-      );
-      const btnWidth = parseNotNaN(
-        getComputedStyle(btnRef.current).width.replace("px", "").trim()
-      );
+    const equalizeBtn = (): void => {
+      btnRef.current ??= document.getElementById("headerDatBtn") as HTMLButtonElement;
+      dateRef.current ??= document.getElementById("dateHeader") as HTMLInputElement;
+      const dateWidth = parseNotNaN(getComputedStyle(dateRef.current).width.replace("px", "").trim());
+      const btnWidth = parseNotNaN(getComputedStyle(btnRef.current).width.replace("px", "").trim());
       if (dateWidth > btnWidth) btnRef.current.style.width = `${dateWidth}px`;
-      else if (dateWidth < btnWidth)
-        dateRef.current.style.width = `${btnWidth}px`;
+      else if (dateWidth < btnWidth) dateRef.current.style.width = `${btnWidth}px`;
     };
     equalizeBtn();
     addEventListener("resize", equalizeBtn);
-    return () => removeEventListener("resize", equalizeBtn);
+    return (): void => removeEventListener("resize", equalizeBtn);
   }, []);
   return (
     <label
-      htmlFor="confirmDatId"
-      className="labConfirm labDivConfirm2 pdT2pc900Q htFull900Q flexNoWC htHalf900Q bolded"
-      id="labConfirmDate"
-    >
+      htmlFor='confirmDatId'
+      className='labConfirm labDivConfirm2 pdT2pc900Q htFull900Q flexNoWC htHalf900Q bolded'
+      id='labConfirmDate'>
       <span>Data:</span>
-      <div
-        className="widFull flexQ900NoW htFull900Q"
-        id="divConfirmDat"
-        role="group"
-      >
+      <div className='widFull flexQ900NoW htFull900Q' id='divConfirmDat' role='group'>
         <input
-          type="date"
-          name="confirmDatName"
-          id="confirmDatId"
-          className="inpConfirm inpDate form-control noInvert minCurrDate"
-          data-title="assinatura_data"
+          type='date'
+          name='confirmDatName'
+          id='confirmDatId'
+          className='inpConfirm inpDate form-control noInvert minCurrDate'
+          data-title='assinatura_data'
           required
           ref={dateRef}
         />
-        <button
-          type="button"
-          className="datBtn confirmBtn btn btn-secondary widFull"
-          id="confirmDatBtn"
-          ref={btnRef}
-        >
+        <button type='button' className='datBtn confirmBtn btn btn-secondary widFull' id='confirmDatBtn' ref={btnRef}>
           Usar data atual
         </button>
       </div>

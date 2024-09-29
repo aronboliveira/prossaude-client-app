@@ -37,7 +37,7 @@ export default function PacRow({
   const alocBtnRef = useRef<nullishBtn>(null);
   const [shouldDisplayPrevList, setDisplayPrevList] = useState<boolean>(false);
   const [shouldDisplayRowData, setDisplayRowData] = useState<boolean>(false);
-  const toggleDisplayRowData = (s: boolean = true) => setDisplayRowData(!s);
+  const toggleDisplayRowData = (s: boolean = true): void => setDisplayRowData(!s);
   const togglePacPrevList = (s: boolean = false): void => {
     btnPrevListRef.current instanceof HTMLButtonElement
       ? setDisplayPrevList(!s)

@@ -2,7 +2,7 @@
 import { HrCelProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import EraseAptBtn from "./EraseAptBtn";
 export default function TdBSchedTab({ userClass, mainRoot, nHr, nRow, nCol, last = false }: HrCelProps): JSX.Element {
-  const dayOrder = (() => {
+  const dayOrder = ((): string => {
     switch (nCol) {
       case 1:
         return "Primeiro";
@@ -28,7 +28,7 @@ export default function TdBSchedTab({ userClass, mainRoot, nHr, nRow, nCol, last
         return "Indefinido";
     }
   })();
-  const hourOrder = (() => {
+  const hourOrder = ((): string => {
     switch (nRow) {
       case 1:
         return "Primeiro";
@@ -48,8 +48,7 @@ export default function TdBSchedTab({ userClass, mainRoot, nHr, nRow, nCol, last
         className={`consSlot lcPersist htFull wid90 flexNoW cGap2v slot${nHr}`}
         id={`slot_${nHr}-00_${nCol}`}
         data-row={nRow}
-        data-col={nCol}
-      >
+        data-col={nCol}>
         <input
           className={`transparent-el lcPersist slotableDay opaque-bluish wid100 form-control inp${nHr}-00 inp-text-${nHr}-00`}
           placeholder='Horário Livre'

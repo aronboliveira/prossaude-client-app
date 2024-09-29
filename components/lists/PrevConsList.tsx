@@ -31,13 +31,13 @@ export default function PrevConsList({
       {},
       "",
       `${location.origin}${location.pathname}${location.search}&prev-cons=open#${btoa(
-        String.fromCodePoint(...new TextEncoder().encode(name.toLowerCase().replaceAll(" ", "-")))
-      )}`
+        String.fromCodePoint(...new TextEncoder().encode(name.toLowerCase().replaceAll(" ", "-"))),
+      )}`,
     );
     setTimeout(() => {
       history.pushState({}, "", `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#"));
     }, 300);
-    return () => {
+    return (): void => {
       history.pushState(
         {},
         "",
@@ -45,8 +45,8 @@ export default function PrevConsList({
           .replaceAll(`&prev-cons=open`, "")
           .replaceAll(
             `#${btoa(String.fromCodePoint(...new TextEncoder().encode(name.toLowerCase().replaceAll(" ", "-"))))}`,
-            ""
-          )
+            "",
+          ),
       );
       setTimeout(() => {
         history.pushState({}, "", `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#"));
@@ -60,7 +60,7 @@ export default function PrevConsList({
     } else
       elementNotFound(prevConsDlgRef.current, "Reference for Previous appointments list dialog", extLine(new Error()));
   }, [prevConsDlgRef]);
-  const togglePrevConsDisplay = (state: boolean = true) => dispatch(!state);
+  const togglePrevConsDisplay = (state: boolean = true): void => dispatch(!state);
   return (
     <ErrorBoundary FallbackComponent={() => <GenericErrorComponent message='Erro carregando modal' />}>
       <dialog
@@ -72,16 +72,14 @@ export default function PrevConsList({
             ev.currentTarget.close();
             dispatch(!state);
           }
-        }}
-      >
+        }}>
         <ErrorBoundary
           FallbackComponent={() => (
             <ErrorFallbackDlg
               renderError={new Error(`Erro carregando a janela modal!`)}
               onClick={() => togglePrevConsDisplay(state)}
             />
-          )}
-        >
+          )}>
           <section className='flexRNoWBetCt widFull' id='headPrevConsList'>
             <h2 className='mg-1b'>
               <strong>Consultas Anteriores</strong>
@@ -92,8 +90,7 @@ export default function PrevConsList({
             <table
               className='table table-striped table-responsive table-hover tabPacs'
               id='avPacsTab'
-              ref={prevConsTabRef}
-            >
+              ref={prevConsTabRef}>
               <caption className='caption-t'>
                 <strong>
                   <small role='textbox'>

@@ -6,7 +6,7 @@ import { person, tabProps } from "@/pages/edfis";
 import { useState, useEffect, useRef } from "react";
 import { validateEvResultNum } from "@/lib/locals/edFisNutPage/edFisNutHandler";
 import { multipleElementsNotFound, extLine } from "@/lib/global/handlers/errorHandler";
-export default function AgeElement() {
+export default function AgeElement(): JSX.Element {
   const [value, setValue] = useState<string>("");
   const [prevValue, setPreValue] = useState<string>("");
   const inpRef = useRef<nullishInp>(null);
@@ -70,7 +70,7 @@ export default function AgeElement() {
                 tabProps.targInpPGC,
               ],
             ].toString()}`,
-            tabProps.isAutoFillActive
+            tabProps.isAutoFillActive,
           );
         }
         handleEventReq(ev.currentTarget);

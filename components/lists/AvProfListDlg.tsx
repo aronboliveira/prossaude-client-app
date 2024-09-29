@@ -36,7 +36,7 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
     setTimeout(() => {
       history.pushState({}, "", `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#"));
     }, 300);
-    return () => {
+    return (): void => {
       history.pushState(
         {},
         "",
@@ -51,7 +51,7 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
   useEffect(() => {
     if (dialogRef.current instanceof HTMLDialogElement) {
       dialogRef.current!.showModal();
-      const handleKeyDown = (press: KeyboardEvent) => {
+      const handleKeyDown = (press: KeyboardEvent): void => {
         press.key === "Escape" && props.dispatch(!props.state);
       };
       addEventListener("keydown", handleKeyDown);

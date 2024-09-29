@@ -1,22 +1,22 @@
-{
-  "extends": ["next/core-web-vitals", "eslint:recommended", "plugin:@typescript-eslint/recommended"],
-  "env": {
-    "browser": true,
-    "es2022": true,
-    "node": true,
-    "es6": true
+module.exports = {
+  extends: ["next/core-web-vitals", "eslint:recommended", "plugin:@typescript-eslint/recommended"],
+  env: {
+    browser: true,
+    es2022: true,
+    node: true,
+    es6: true,
   },
-  "parser": "@typescript-eslint/parser",
-  "parserOptions": {
-    "ecmaVersion": 2022,
-    "sourceType": "module",
-    "ecmaFeatures": {
-      "jsx": true,
-      "globalReturn": false,
-      "impliedStrict": true
-    }
+  parser: "@typescript-eslint/parser",
+  parserOptions: {
+    ecmaVersion: 2022,
+    sourceType: "module",
+    ecmaFeatures: {
+      jsx: true,
+      globalReturn: false,
+      impliedStrict: true,
+    },
   },
-  "rules": {
+  rules: {
     "no-cond-assign": "error",
     "no-with": "error",
     "no-useless-constructor": "error",
@@ -42,12 +42,12 @@
     "no-eq-null": "warn",
     "no-console": "off",
     "no-prototype-builtins": "off",
-    "yoda": "warn",
-    "eqeqeq": 2,
+    yoda: "warn",
+    eqeqeq: "error",
     "require-jsdoc": "off",
     "valid-jsdoc": "off",
     "prefer-template": "off",
-    "strict": "warn",
+    strict: "warn",
     "spaced-comment": "off",
     "block-scoped-var": "warn",
     "vars-on-top": "warn",
@@ -55,8 +55,7 @@
     "no-var": "warn",
     "prefer-const": "warn",
     "require-await": "warn",
-    "quotes": "off",
-    "semi": "warn",
+    semi: "warn",
     "comma-dangle": "off",
     "no-useless-return": "warn",
     "prefer-rest-params": "warn",
@@ -87,6 +86,18 @@
     "@typescript-eslint/no-var-requires": "off",
     "@typescript-eslint/ban-ts-comment": "off",
     "@next/next/no-html-link-for-pages": "off",
-    "@next/next/no-img-element": "off"
-  }
+    "@next/next/no-img-element": "off",
+  },
+};
+if (process.env.NODE_ENV === "production") {
+  module.exports.rules["no-console"] = "warn";
+  module.exports.rules["no-useless-escape"] = "off";
+  module.exports.rules["no-unused-vars"] = "off";
+  module.exports.rules["no-useless-return"] = "off";
+  module.exports.rules["require-await"] = "off";
+  module.exports.rules["prefer-const"] = "off";
+  module.exports.rules["vars-on-top"] = "off";
+  module.exports.rules["no-var"] = "off";
+  module.exports.rules["@typescript-eslint/no-unused-vars"] = "off";
+  module.exports.rules["@typescript-eslint/explicit-function-return-type"] = "off";
 }
