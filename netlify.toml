@@ -3,7 +3,7 @@
   publish = "build"
 
 [functions]
-  directory = "/src/pages/api/netlify/functions"
+  directory = "netlify/functions/"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"

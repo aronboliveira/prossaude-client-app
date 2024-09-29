@@ -8,7 +8,7 @@ import { createRoot } from "react-dom/client";
 import { formData } from "@/lib/locals/panelPage/consController";
 import { globalDataProvider } from "../panelForms/defs/client/SelectPanel";
 import { handleClientPermissions } from "@/lib/locals/panelPage/handlers/consHandlerUsers";
-import { handleSubmit } from "@/pages/api/ts/handlers";
+import { handleSubmit } from "@/lib/locals/panelPage/handlers/handlers";
 import { isClickOutside } from "@/lib/global/gStyleScript";
 import { providerFormData } from "./consVariables";
 import AvPacListDlg from "../lists/AvPacListDlg";

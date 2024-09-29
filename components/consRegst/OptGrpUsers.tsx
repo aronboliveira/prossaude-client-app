@@ -3,7 +3,7 @@ import { formCases, nullishOptGrp, validAreas } from "@/lib/global/declarations/
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { UserProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
-import { handleFetch } from "@/pages/api/ts/handlers";
+import { handleFetch } from "@/lib/locals/panelPage/handlers/handlers";
 import { useEffect, useRef } from "react";
 import { panelRoots } from "../panelForms/defs/client/SelectPanel";
 import { createRoot } from "react-dom/client";
@@ -51,13 +51,12 @@ export default function OptGrpUsers({ grp, area }: { grp: formCases; area: valid
                   <ErrorBoundary
                     FallbackComponent={() => (
                       <GenericErrorComponent message='Error reloading replacement for opt group' />
-                    )}
-                  >
+                    )}>
                     <></>
-                  </ErrorBoundary>
+                  </ErrorBoundary>,
                 );
                 optGrpRef.current = document.getElementById(
-                  `OptGrp${textTransformPascal(grp)}${area}`
+                  `OptGrp${textTransformPascal(grp)}${area}`,
                 ) as nullishOptGrp;
                 if (!(optGrpRef.current instanceof HTMLElement))
                   throw elementNotFound(optGrpRef.current, `Validation of replaced tbody`, extLine(new Error()));
@@ -71,12 +70,12 @@ export default function OptGrpUsers({ grp, area }: { grp: formCases; area: valid
                           <option value={user.name} key={`${area}-${grp}__${i}`}>
                             {user.area}
                           </option>
-                        )
-                    )
+                        ),
+                    ),
                   );
               } catch (e) {
                 console.error(
-                  `Error executing scheduled rendering of Optgroup Content Replacement:\n${(e as Error).message}`
+                  `Error executing scheduled rendering of Optgroup Content Replacement:\n${(e as Error).message}`,
                 );
               }
             }, 1000);
@@ -89,19 +88,19 @@ export default function OptGrpUsers({ grp, area }: { grp: formCases; area: valid
                     <option value={user.name} key={`${area}-${grp}__${i}`}>
                       {user.area}
                     </option>
-                  )
-              )
+                  ),
+              ),
             );
         })
         .catch(e => console.error(`Failed to fetch from Patients Table for filling First Name DL: ${e.message}`))
         .finally(() => {
           setTimeout(
             () => syncAriaStates([...(optGrpRef.current?.querySelectorAll("*") ?? []), optGrpRef.current!]),
-            1200
+            1200,
           );
           setTimeout(
             () => syncAriaStates([...(optGrpRef.current?.querySelectorAll("*") ?? []), optGrpRef.current!]),
-            3000
+            3000,
           );
         });
     } catch (e) {

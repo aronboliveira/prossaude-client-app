@@ -6,7 +6,7 @@ import ContactDlg from "./ContactDlg";
 import UserPropsDlg from "./UserPropsDlg";
 import Link from "next/link";
 import { User } from "@/lib/global/declarations/classes";
-import { UserState } from "@/pages/api/ts/serverInterfaces";
+import { UserState } from "@/lib/locals/basePage/declarations/serverInterfaces";
 export default function UserProfileDropdown({ user, router }: UserProfileDropdownProps): JSX.Element {
   const poRef = useRef<HTMLDivElement | null>(null);
   const [shouldDisplayContact, setContact] = useState<boolean>(false);

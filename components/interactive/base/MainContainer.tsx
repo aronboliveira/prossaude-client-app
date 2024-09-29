@@ -11,7 +11,7 @@ import { useEffect, useContext } from "react";
 import { useRouter } from "next/router";
 import UserProfilePanel from "../../user/UserProfilePanel";
 import { defUser } from "@/redux/slices/userSlice";
-import { UserState } from "@/pages/api/ts/serverInterfaces";
+import { UserState } from "@/lib/locals/basePage/declarations/serverInterfaces";
 import Link from "next/link";
 let baseRootUser: targEl;
 export let experimentalUser: UserState = defUser;

@@ -1,7 +1,7 @@
 "use client";
 import { basePath } from "../../../src/pages";
 import { clearDefInvalidMsg, resetPhs } from "@/lib/global/gStyleScript";
-import { handleLogin } from "@/pages/api/ts/handlers";
+import { handleLogin } from "@/lib/locals/panelPage/handlers/handlers";
 import { nullishAnchor } from "@/lib/global/declarations/types";
 import { useEffect, useRef } from "react";
 import { elementNotFound, extLine, inputNotFound, multipleElementsNotFound } from "@/lib/global/handlers/errorHandler";

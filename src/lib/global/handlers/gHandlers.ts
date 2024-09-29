@@ -20,7 +20,7 @@ import {
   stringError,
   elementNotPopulated,
 } from "./errorHandler";
-import { handleSubmit } from "@/pages/api/ts/handlers";
+import { handleSubmit } from "@/lib/locals/panelPage/handlers/handlers";
 //function for facilitating conversion of types when passing properties to DOM elements
 export function updateSimpleProperty(el: targEl): primitiveType {
   if (el instanceof HTMLInputElement) {
@@ -150,9 +150,9 @@ export function cpbInpHandler(ev: Event, radio: targEl): void {
               [
                 ...divAdd.querySelectorAll('input[type="text"]'),
                 ...divAdd.querySelectorAll('input[type="number"]'),
-                ...divAdd?.querySelectorAll('input[type="email"]') ?? [],
+                ...(divAdd?.querySelectorAll('input[type="email"]') ?? []),
                 ...divAdd.querySelectorAll('input[type="tel"]'),
-                ...divAdd?.querySelectorAll('input[type="date"]') ?? [],
+                ...(divAdd?.querySelectorAll('input[type="date"]') ?? []),
               ].forEach((inp, i) => {
                 try {
                   if (!(inp instanceof HTMLInputElement))
@@ -191,9 +191,9 @@ export function cpbInpHandler(ev: Event, radio: targEl): void {
             [
               ...divAdd.querySelectorAll('input[type="text"]'),
               ...divAdd.querySelectorAll('input[type="number"]'),
-              ...divAdd?.querySelectorAll('input[type="email"]') ?? [],
+              ...(divAdd?.querySelectorAll('input[type="email"]') ?? []),
               ...divAdd.querySelectorAll('input[type="tel"]'),
-              ...divAdd?.querySelectorAll('input[type="date"]') ?? [],
+              ...(divAdd?.querySelectorAll('input[type="date"]') ?? []),
             ].forEach((inp, i) => {
               try {
                 if (!(inp instanceof HTMLInputElement))

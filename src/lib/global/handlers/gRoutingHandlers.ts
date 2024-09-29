@@ -1,6 +1,6 @@
 import { elementNotFound, extLine } from "./errorHandler";
 import { pageCases, pageStyleCases } from "../declarations/types";
-import { decodeToken } from "@/pages/api/ts/handlers";
+import { decodeToken } from "@/lib/locals/panelPage/handlers/handlers";
 import { pageProps } from "../vars";
 export function handleLinkChanges(componentCase: pageCases, styleFlag: pageStyleCases): void {
   try {
@@ -23,7 +23,7 @@ export function handleLinkChanges(componentCase: pageCases, styleFlag: pageStyle
           Object.assign(document.createElement("meta"), {
             charSet: "UTF-8",
             id: "charsetMeta",
-          })
+          }),
         );
       if (!head.querySelector('meta[name="viewport"]'))
         head.prepend(
@@ -31,7 +31,7 @@ export function handleLinkChanges(componentCase: pageCases, styleFlag: pageStyle
             name: "viewport",
             content: "width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=3.0, user-scalable=yes",
             id: "viewportMeta",
-          })
+          }),
         );
       if (!head.querySelector('meta[content="IE=edge"]') && !head.querySelector('meta[content="IE=Edge"]')) {
         head.prepend(
@@ -39,7 +39,7 @@ export function handleLinkChanges(componentCase: pageCases, styleFlag: pageStyle
             httEquip: "X-UA-Compatible",
             content: "IE=edge",
             id: "edgeMeta",
-          })
+          }),
         );
       }
       if (head.hasChildNodes() && head.lastElementChild && head.firstElementChild) {
@@ -107,7 +107,7 @@ export function handleLinkChanges(componentCase: pageCases, styleFlag: pageStyle
                   href="${origin}/apple-touch-icon-ipad-retina-152x152-precomposed.png"
                 />
                 <!-- End of automatic insertion -->
-                `
+                `,
               );
             document.body.className = "loginBody";
             break;
@@ -151,7 +151,7 @@ export function handleLinkChanges(componentCase: pageCases, styleFlag: pageStyle
                   href="${origin}/img/apple-touch-icon-ipad-retina-152x152-precomposed.png"
                 />
                 <!-- End of automatic insertion -->
-              `
+              `,
               );
             document.body.className = "baseBody";
             break;
@@ -195,7 +195,7 @@ export function handleLinkChanges(componentCase: pageCases, styleFlag: pageStyle
                   href="${origin}/img/apple-touch-icon-ipad-retina-152x152-precomposed.png"
                 />
                 <!-- End of automatic insertion -->
-                `
+                `,
               );
             document.body.className = "agBody";
             break;
@@ -239,7 +239,7 @@ export function handleLinkChanges(componentCase: pageCases, styleFlag: pageStyle
                   href="${origin}/img/apple-touch-icon-ipad-retina-152x152-precomposed.png"
                 />
                 <!-- End of automatic insertion -->
-                `
+                `,
               );
             document.body.className = "edfisNutBody";
             break;
@@ -283,7 +283,7 @@ export function handleLinkChanges(componentCase: pageCases, styleFlag: pageStyle
                   href="${origin}/img/apple-touch-icon-ipad-retina-152x152-precomposed.png"
                 />
                 <!-- End of automatic insertion -->
-              `
+              `,
               );
             document.body.className = "odBody";
             break;
@@ -327,7 +327,7 @@ export function handleLinkChanges(componentCase: pageCases, styleFlag: pageStyle
                   href="${origin}/img/apple-touch-icon-ipad-retina-152x152-precomposed.png"
                 />
                 <!-- End of automatic insertion -->
-                `
+                `,
               );
             document.body.className = "panelBody";
             break;
@@ -371,7 +371,7 @@ export function handleLinkChanges(componentCase: pageCases, styleFlag: pageStyle
                   href="${origin}/img/apple-touch-icon-ipad-retina-152x152-precomposed.png"
                 />
                 <!-- End of automatic insertion -->
-                `
+                `,
               );
             document.body.className = "recoverBody";
             break;

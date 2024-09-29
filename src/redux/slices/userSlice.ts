@@ -10,12 +10,10 @@ import {
   UserPrivilegeAction,
   UserState,
   UserStringAction,
-} from "@/pages/api/ts/serverInterfaces";
+} from "@/lib/locals/basePage/declarations/serverInterfaces";
 import { createSlice } from "@reduxjs/toolkit/react";
 export const defCurrSemester =
-  new Date().getMonth() < 6
-    ? `${new Date().getFullYear()}.1`
-    : `${new Date().getFullYear()}.2`;
+  new Date().getMonth() < 6 ? `${new Date().getFullYear()}.1` : `${new Date().getFullYear()}.2`;
 export const defUser = {
   loadedData: {
     id: "",
@@ -85,8 +83,7 @@ export const userSlice = createSlice({
       (s as { loadedData: StudentTokenPayload }).loadedData.id = a.payload.v;
     },
     setUserExternal(s: UserState, a: UserBooleanAction): void {
-      (s as { loadedData: ProfessionalTokenPayload }).loadedData.external =
-        a.payload.v;
+      (s as { loadedData: ProfessionalTokenPayload }).loadedData.external = a.payload.v;
     },
   },
 });

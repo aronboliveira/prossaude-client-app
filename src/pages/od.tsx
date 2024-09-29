@@ -1,5 +1,5 @@
 import { ErrorBoundary } from "react-error-boundary";
-import { handleSubmit } from "./api/ts/handlers";
+import { handleSubmit } from "../lib/locals/panelPage/handlers/handlers";
 import { memo } from "react";
 import { validateForm } from "@/lib/global/handlers/gHandlers";
 import ConfirmDate from "../../components/interactive/def/ConfirmDate";
@@ -57,10 +57,9 @@ export default function OdPage(): JSX.Element {
             autoComplete='on'
             onSubmit={ev =>
               validateForm(ev).then(validation =>
-                validation[0] ? handleSubmit("od", validation[2], true) : ev.preventDefault()
+                validation[0] ? handleSubmit("od", validation[2], true) : ev.preventDefault(),
               )
-            }
-          >
+            }>
             <fieldset name='fsAnamGName' id='fsAnamGId' className='fsMain'>
               <legend id='fsAnamGLeg' className='legMain form-padded'>
                 Identificação
@@ -109,8 +108,7 @@ export default function OdPage(): JSX.Element {
                 className='taPlan form-control'
                 placeholder='Escreva o Plano de Tratamento aqui'
                 data-title='Plano de Tratamento'
-                required
-              ></textarea>
+                required></textarea>
             </fieldset>
             <br role='presentation' />
             <hr />
@@ -124,8 +122,7 @@ export default function OdPage(): JSX.Element {
                     <label
                       htmlFor='confirmLocId'
                       className='labConfirm labDivConfirm2 pdT2pc900Q htFull900Q flexNoWC bolded widHalf900Q noInvert'
-                      id='labConfirmLoc'
-                    >
+                      id='labConfirmLoc'>
                       Local:
                       <MemoLoc />
                     </label>

@@ -249,7 +249,7 @@ export function addListenerExportBtn(
             fullDate = `d${date.getDate()}m${date.getMonth() + 1}y${date.getFullYear()}`,
             baseUrl = `${location.origin}/${
               !/localhost/g.test(location.origin) ? "." : "."
-            }netlify/functions/process_workbook`,
+            }netlify/functions/processWorkbook`,
             fetchProcess = async (wb: WorkBook): Promise<void> => {
               console.log("trying to call api...");
               try {

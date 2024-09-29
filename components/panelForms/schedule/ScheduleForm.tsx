@@ -5,7 +5,7 @@ import { addListenerExportBtn } from "../../../src/lib/global/gController";
 import { fillScheduleState } from "../../../src/lib/locals/panelPage/consController";
 import { globalDataProvider, panelRoots } from "../defs/client/SelectPanel";
 import { handleClientPermissions } from "../../../src/lib/locals/panelPage/handlers/consHandlerUsers";
-import { handleSubmit } from "@/pages/api/ts/handlers";
+import { handleSubmit } from "@/lib/locals/panelPage/handlers/handlers";
 import { useState, useRef, useEffect, useCallback, JSX } from "react";
 import GenericErrorComponent from "../../error/GenericErrorComponent";
 import RegstConsBtn from "./RegstConsBtn";

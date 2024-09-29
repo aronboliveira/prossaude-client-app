@@ -3,7 +3,7 @@ import { nullishDl } from "@/lib/global/declarations/types";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { PersonProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
-import { handleFetch } from "@/pages/api/ts/handlers";
+import { handleFetch } from "@/lib/locals/panelPage/handlers/handlers";
 import { useEffect, useRef } from "react";
 import { panelRoots } from "../panelForms/defs/client/SelectPanel";
 import { createRoot } from "react-dom/client";
@@ -42,10 +42,9 @@ export default function ListFirstNameCons({ first = false }: { first?: boolean }
                   <ErrorBoundary
                     FallbackComponent={() => (
                       <GenericErrorComponent message='Error reloading replacement for data list' />
-                    )}
-                  >
+                    )}>
                     <></>
-                  </ErrorBoundary>
+                  </ErrorBoundary>,
                 );
                 dlRef.current = document.getElementById("listFirstNameCons") as nullishDl;
                 if (!(dlRef.current instanceof HTMLElement))
@@ -58,13 +57,12 @@ export default function ListFirstNameCons({ first = false }: { first?: boolean }
                         value={
                           first ? pac.name.slice(0, pac.name.indexOf(" ")) : pac.name.slice(pac.name.indexOf(" ") + 1)
                         }
-                        key={`${first ? "first" : "family"}-name-pac__${i}`}
-                      ></option>
-                    ))
+                        key={`${first ? "first" : "family"}-name-pac__${i}`}></option>
+                    )),
                   );
               } catch (e) {
                 console.error(
-                  `Error executing scheduled rendering of Data List Content Replacement:\n${(e as Error).message}`
+                  `Error executing scheduled rendering of Data List Content Replacement:\n${(e as Error).message}`,
                 );
               }
             }, 1000);
@@ -74,9 +72,8 @@ export default function ListFirstNameCons({ first = false }: { first?: boolean }
               pacs.map((pac, i) => (
                 <option
                   value={first ? pac.name.slice(0, pac.name.indexOf(" ")) : pac.name.slice(pac.name.indexOf(" ") + 1)}
-                  key={`${first ? "first" : "family"}-name-pac__${i}`}
-                ></option>
-              ))
+                  key={`${first ? "first" : "family"}-name-pac__${i}`}></option>
+              )),
             );
         })
         .catch(e => console.error(`Failed to fetch from Patients Table for filling First Name DL: ${e.message}`))
@@ -86,7 +83,7 @@ export default function ListFirstNameCons({ first = false }: { first?: boolean }
         });
     } catch (e) {
       console.error(
-        `Error executing useEffect for ${ListFirstNameCons.prototype.constructor.name}:${(e as Error).message}`
+        `Error executing useEffect for ${ListFirstNameCons.prototype.constructor.name}:${(e as Error).message}`,
       );
     }
   }, []);

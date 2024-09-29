@@ -9,7 +9,7 @@ import {
   fillTabAttr,
   filterTabMembers,
 } from "@/lib/locals/panelPage/handlers/consHandlerList";
-import { handleFetch } from "@/pages/api/ts/handlers";
+import { handleFetch } from "@/lib/locals/panelPage/handlers/handlers";
 import { nullishTab, nullishTabSect } from "@/lib/global/declarations/types";
 import { panelRoots } from "../panelForms/defs/client/SelectPanel";
 import { useRef, useEffect } from "react";

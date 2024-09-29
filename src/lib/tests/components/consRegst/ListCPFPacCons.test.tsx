@@ -1,6 +1,6 @@
 import { render, screen, waitFor, RenderResult } from "@testing-library/react";
 import ListCPFPacCons from "../../../../../components/consRegst/ListCPFPacCons";
-import { handleFetch } from "../../../../pages/api/ts/handlers";
+import { handleFetch } from "../../../locals/panelPage/handlers/handlers";
 import { syncAriaStates } from "../../../../lib/global/handlers/gHandlers";
 import { createRoot } from "react-dom/client";
 import { elementNotFound, extLine } from "../../../../lib/global/handlers/errorHandler";
@@ -15,7 +15,7 @@ jest.mock(
       render: jest.fn() as jest.Mock,
       unmount: jest.fn() as jest.Mock,
     }),
-  })
+  }),
 ) as typeof jest;
 jest.mock(
   "../../../../pages/api/ts/handlers",
@@ -26,7 +26,7 @@ jest.mock(
       { name: "John Doe", idf: "123", tel: "111-1111", email: "johndoe@example.com" },
       { name: "Jane Doe", idf: "456", tel: "222-2222", email: "janedoe@example.com" },
     ]),
-  })
+  }),
 ) as typeof jest;
 jest.mock(
   "../../../../lib/global/handlers/gHandlers",
@@ -34,7 +34,7 @@ jest.mock(
     syncAriaStates: jest.Mock<any, any, any>;
   } => ({
     syncAriaStates: jest.fn() as jest.Mock,
-  })
+  }),
 ) as typeof jest;
 jest.mock(
   "../../../../lib/global/handlers/errorHandler",
@@ -44,7 +44,7 @@ jest.mock(
   } => ({
     elementNotFound: jest.fn() as jest.Mock,
     extLine: jest.fn() as jest.Mock,
-  })
+  }),
 ) as typeof jest;
 describe("ListCPFPacCons Component", (): void => {
   const renderComponent = (): RenderResult<
@@ -64,7 +64,7 @@ describe("ListCPFPacCons Component", (): void => {
       (expect(handleFetch) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalledWith<Parameters<typeof handleFetch>>(
         "patients",
         "_table",
-        true
+        true,
       ) as void;
       const options = screen.getAllByRole<HTMLOptionElement>("option");
       (expect(options) as jest.JestMatchers<jest.SpyInstance>).toHaveLength(2) as void;
@@ -85,11 +85,11 @@ describe("ListCPFPacCons Component", (): void => {
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
     await waitFor((): void => (expect(handleFetch) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalled() as void);
     (expect(createRoot) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalledWith<Parameters<typeof createRoot>>(
-      screen.getByRole<HTMLElement>("listbox")
+      screen.getByRole<HTMLElement>("listbox"),
     ) as void;
     (await waitFor((): void => {
       (expect(screen.getAllByRole<HTMLOptionElement>("option")) as jest.JestMatchers<jest.SpyInstance>).toHaveLength(
-        2
+        2,
       ) as void;
     })) as void;
   }) as void;
@@ -112,7 +112,7 @@ describe("ListCPFPacCons Component", (): void => {
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
     (await waitFor((): void => {
       (expect(consoleErrorSpy) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalledWith<any[]>(
-        expect.stringContaining("Failed to fetch from Patients Table for filling First Name DL: Fetch failed")
+        expect.stringContaining("Failed to fetch from Patients Table for filling First Name DL: Fetch failed"),
       );
     })) as void;
     consoleErrorSpy.mockRestore() as void;

@@ -1,6 +1,6 @@
 import { RenderResult, render, screen, waitFor } from "@testing-library/react";
 import AvProfListDlg from "../../../../../components/lists/AvProfListDlg";
-import { handleFetch } from "../../../../pages/api/ts/handlers";
+import { handleFetch } from "../../../locals/panelPage/handlers/handlers";
 import { panelRoots } from "../../../../../components/panelForms/defs/client/SelectPanel";
 import { createRoot } from "react-dom/client";
 import { MutableRefObject } from "react";
@@ -18,11 +18,11 @@ jest.mock("../../../../../pages/api/ts/handlers", (): { handleFetch: jest.Mock<a
 })) as typeof jest;
 jest.mock(
   "../../../../../components/consRegst/ErrorFallbackDlg",
-  (): (() => JSX.Element) => (): JSX.Element => <div>ErrorFallbackDlg</div>
+  (): (() => JSX.Element) => (): JSX.Element => <div>ErrorFallbackDlg</div>,
 ) as typeof jest;
 jest.mock(
   "../../../../../components/icons/Spinner",
-  (): (() => JSX.Element) => (): JSX.Element => <div>Spinner</div>
+  (): (() => JSX.Element) => (): JSX.Element => <div>Spinner</div>,
 ) as typeof jest;
 describe("AvProfListDlg useEffect tests", (): void => {
   const mockDispatch = jest.fn() as jest.Mock;
@@ -69,7 +69,7 @@ describe("AvProfListDlg useEffect tests", (): void => {
   test("handles rendering of internal and external professionals", async (): Promise<void> => {
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
     await waitFor((): void =>
-      expect(handleFetch).toHaveBeenCalledWith<Parameters<typeof handleFetch>>("profs", "_table", true)
+      expect(handleFetch).toHaveBeenCalledWith<Parameters<typeof handleFetch>>("profs", "_table", true),
     );
     expect(screen.getByText<HTMLElement>(/Prof1/i)).toBeInTheDocument() as void;
     expect(screen.getByText<HTMLElement>(/Prof2/i)).toBeInTheDocument() as void;
@@ -99,7 +99,7 @@ describe("AvProfListDlg useEffect tests", (): void => {
     (handleFetch as jest.Mock).mockRejectedValueOnce(new Error("Failed to fetch"));
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
     await waitFor(
-      (): void => expect(screen.getByText<HTMLDialogElement>(/ErrorFallbackDlg/i)).toBeInTheDocument() as void
+      (): void => expect(screen.getByText<HTMLDialogElement>(/ErrorFallbackDlg/i)).toBeInTheDocument() as void,
     );
   }) as void;
   test("validates table elements and triggers table adjustments", async (): Promise<void> => {
@@ -108,12 +108,12 @@ describe("AvProfListDlg useEffect tests", (): void => {
       expect(
         screen
           .getByRole<HTMLTableElement>("table", { name: /Membros Internos/i })
-          .querySelectorAll<HTMLTableCellElement>("th").length
+          .querySelectorAll<HTMLTableCellElement>("th").length,
       ).toBeGreaterThan(0);
       expect(
         screen
           .getByRole<HTMLTableElement>("table", { name: /Membros Externos/i })
-          .querySelectorAll<HTMLTableCellElement>("th").length
+          .querySelectorAll<HTMLTableCellElement>("th").length,
       ).toBeGreaterThan(0);
     })) as void;
   }) as void;
@@ -121,7 +121,7 @@ describe("AvProfListDlg useEffect tests", (): void => {
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
     fireEvent.keyDown(document, { key: "Escape" }) as boolean;
     await waitFor((): void =>
-      expect(mockDispatch).toHaveBeenCalledWith<Parameters<typeof mockDispatch>>(!defaultProps.state)
+      expect(mockDispatch).toHaveBeenCalledWith<Parameters<typeof mockDispatch>>(!defaultProps.state),
     );
   }) as void;
 }) as void;

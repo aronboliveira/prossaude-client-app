@@ -3,7 +3,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import { Person } from "@/lib/global/declarations/classes";
 import { changeTabDCutLayout } from "@/lib/locals/edFisNutPage/edFisNutModel";
 import { defaultResult } from "@/lib/locals/edFisNutPage/edFisNutController";
-import { handleSubmit } from "./api/ts/handlers";
+import { handleSubmit } from "../lib/locals/panelPage/handlers/handlers";
 import { memo } from "react";
 import { parseNotNaN } from "@/lib/global/gModel";
 import { validateForm } from "@/lib/global/handlers/gHandlers";

@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { User } from "@/lib/global/declarations/classes";
-import { LoadedUserState } from "@/pages/api/ts/serverInterfaces";
+import { LoadedUserState } from "@/lib/locals/basePage/declarations/serverInterfaces";
 import { experimentalUser } from "../../../components/interactive/base/MainContainer";
 export const activeUserSlice = createSlice({
   name: "user",

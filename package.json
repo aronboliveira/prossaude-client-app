@@ -17,6 +17,7 @@
     "@babel/core": "^7.24.7",
     "@babel/plugin-transform-runtime": "^7.24.7",
     "@babel/preset-env": "^7.24.7",
+    "@netlify/functions": "^2.8.1",
     "@reduxjs/toolkit": "^2.2.7",
     "@types/js-cookie": "^3.0.6",
     "@types/node": "^20.14.9",

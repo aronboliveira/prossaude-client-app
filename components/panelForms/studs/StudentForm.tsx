@@ -4,7 +4,7 @@ import { addListenerExportBtn } from "@/lib/global/gController";
 import { clearPhDates, normalizeSizeSb } from "@/lib/global/gStyleScript";
 import { globalDataProvider, panelRoots } from "../defs/client/SelectPanel";
 import { handleClientPermissions } from "@/lib/locals/panelPage/handlers/consHandlerUsers";
-import { handleSubmit } from "@/pages/api/ts/handlers";
+import { handleSubmit } from "@/lib/locals/panelPage/handlers/handlers";
 import { panelFormsVariables } from "../panelFormsData";
 import { useEffect, useRef, useState, useCallback } from "react";
 import GenericErrorComponent from "../../error/GenericErrorComponent";

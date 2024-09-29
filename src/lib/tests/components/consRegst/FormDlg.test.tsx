@@ -9,7 +9,7 @@ import { checkRegstBtn, generateSchedPacData } from "../../../../lib/locals/pane
 import { formatCPF, formatTel, addEmailExtension } from "../../../../lib/global/gModel";
 import { handleCondtReq, enableCPFBtn } from "../../../../lib/global/handlers/gHandlers";
 import { validateForm } from "../../../../lib/global/handlers/gHandlers";
-import { handleSubmit } from "../../../../pages/api/ts/handlers";
+import { handleSubmit } from "../../../locals/panelPage/handlers/handlers";
 import FailRegstAlert from "../../../../../components/alerts/FailRegsAlert";
 import "@testing-library/jest-dom/extend-expect";
 import { CSSColor } from "../../testVars";

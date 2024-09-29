@@ -3,7 +3,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import { createRoot } from "react-dom/client";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { equalizeTabCells } from "@/lib/global/gStyleScript";
-import { handleFetch } from "@/pages/api/ts/handlers";
+import { handleFetch } from "@/lib/locals/panelPage/handlers/handlers";
 import { panelRoots } from "../panelForms/defs/client/SelectPanel";
 import { strikeEntries } from "@/lib/locals/panelPage/consStyleScript";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";

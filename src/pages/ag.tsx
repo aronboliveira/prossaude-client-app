@@ -1,6 +1,6 @@
 import { ErrorBoundary } from "react-error-boundary";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
-import { handleSubmit } from "./api/ts/handlers";
+import { handleSubmit } from "../lib/locals/panelPage/handlers/handlers";
 import { memo } from "react";
 import { targEl } from "@/lib/global/declarations/types";
 import { validateForm } from "@/lib/global/handlers/gHandlers";

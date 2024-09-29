@@ -3,7 +3,7 @@ import { nullishDl } from "@/lib/global/declarations/types";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { PacInfo } from "@/lib/locals/panelPage/declarations/interfacesCons";
-import { handleFetch } from "@/pages/api/ts/handlers";
+import { handleFetch } from "@/lib/locals/panelPage/handlers/handlers";
 import { useEffect, useRef } from "react";
 import { panelRoots } from "../panelForms/defs/client/SelectPanel";
 import { createRoot } from "react-dom/client";
@@ -49,10 +49,9 @@ export default function ListCPFPacCons(): JSX.Element {
                   <ErrorBoundary
                     FallbackComponent={() => (
                       <GenericErrorComponent message='Error reloading replacement for data list' />
-                    )}
-                  >
+                    )}>
                     <></>
-                  </ErrorBoundary>
+                  </ErrorBoundary>,
                 );
                 dlRef.current = document.getElementById("listCPFPacCons") as nullishDl;
                 if (!(dlRef.current instanceof HTMLElement))
@@ -64,11 +63,11 @@ export default function ListCPFPacCons(): JSX.Element {
                       <option value={pac.idf} key={`cpf-pac__${i}`}>
                         {pac.name}
                       </option>
-                    ))
+                    )),
                   );
               } catch (e) {
                 console.error(
-                  `Error executing scheduled rendering of Data List Content Replacement:\n${(e as Error).message}`
+                  `Error executing scheduled rendering of Data List Content Replacement:\n${(e as Error).message}`,
                 );
               }
             }, 1000);
@@ -79,7 +78,7 @@ export default function ListCPFPacCons(): JSX.Element {
                 <option value={pac.idf} key={`cpf-pac__${i}`}>
                   {pac.name}
                 </option>
-              ))
+              )),
             );
         })
         .catch(e => console.error(`Failed to fetch from Patients Table for filling First Name DL: ${e.message}`))
@@ -89,7 +88,7 @@ export default function ListCPFPacCons(): JSX.Element {
         });
     } catch (e) {
       console.error(
-        `Error executing useEffect for ${ListCPFPacCons.prototype.constructor.name}:${(e as Error).message}`
+        `Error executing useEffect for ${ListCPFPacCons.prototype.constructor.name}:${(e as Error).message}`,
       );
     }
   }, []);

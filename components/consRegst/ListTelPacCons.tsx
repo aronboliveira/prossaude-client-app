@@ -3,7 +3,7 @@ import { nullishDl } from "@/lib/global/declarations/types";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { PersonProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
-import { handleFetch } from "@/pages/api/ts/handlers";
+import { handleFetch } from "@/lib/locals/panelPage/handlers/handlers";
 import { useEffect, useRef } from "react";
 import { panelRoots } from "../panelForms/defs/client/SelectPanel";
 import { createRoot } from "react-dom/client";
@@ -42,10 +42,9 @@ export default function ListTelPacCons(): JSX.Element {
                   <ErrorBoundary
                     FallbackComponent={() => (
                       <GenericErrorComponent message='Error reloading replacement for data list' />
-                    )}
-                  >
+                    )}>
                     <></>
-                  </ErrorBoundary>
+                  </ErrorBoundary>,
                 );
                 dlRef.current = document.getElementById("listTelPacCons") as nullishDl;
                 if (!(dlRef.current instanceof HTMLElement))
@@ -58,15 +57,14 @@ export default function ListTelPacCons(): JSX.Element {
                         value={
                           /\s/g.test(pac.tel.trim()) ? pac.tel.trim().slice(pac.tel.lastIndexOf(" ")) : pac.tel.trim()
                         }
-                        key={`tel-pac__${i}`}
-                      >
+                        key={`tel-pac__${i}`}>
                         {pac.name}
                       </option>
-                    ))
+                    )),
                   );
               } catch (e) {
                 console.error(
-                  `Error executing scheduled rendering of Data List Content Replacement:\n${(e as Error).message}`
+                  `Error executing scheduled rendering of Data List Content Replacement:\n${(e as Error).message}`,
                 );
               }
             }, 1000);
@@ -78,11 +76,10 @@ export default function ListTelPacCons(): JSX.Element {
                   value={
                     /\s/g.test(pac.tel.trim()) ? pac.tel.trim().slice(pac.tel.lastIndexOf(" ") + 1) : pac.tel.trim()
                   }
-                  key={`tel-pac__${i}`}
-                >
+                  key={`tel-pac__${i}`}>
                   {pac.name}
                 </option>
-              ))
+              )),
             );
         })
         .catch(e => console.error(`Failed to fetch from Patients Table for filling First Name DL: ${e.message}`))
@@ -92,7 +89,7 @@ export default function ListTelPacCons(): JSX.Element {
         });
     } catch (e) {
       console.error(
-        `Error executing useEffect for ${ListTelPacCons.prototype.constructor.name}:${(e as Error).message}`
+        `Error executing useEffect for ${ListTelPacCons.prototype.constructor.name}:${(e as Error).message}`,
       );
     }
   }, []);

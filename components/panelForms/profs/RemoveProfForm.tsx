@@ -5,7 +5,7 @@ import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { equalizeTabCells, normalizeSizeSb } from "@/lib/global/gStyleScript";
 import { fillTabAttr } from "@/lib/locals/panelPage/handlers/consHandlerList";
 import { handleClientPermissions } from "@/lib/locals/panelPage/handlers/consHandlerUsers";
-import { handleFetch } from "@/pages/api/ts/handlers";
+import { handleFetch } from "@/lib/locals/panelPage/handlers/handlers";
 import { panelRoots } from "../defs/client/SelectPanel";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useEffect, useRef, useCallback } from "react";
