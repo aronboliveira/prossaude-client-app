@@ -1099,7 +1099,16 @@ export function assignFormAttrs(fr: nullishForm): void {
                   if (/naturalidade/gi.test(txt)) txt = txt.replace(/o\snaturalidade/g, "a naturalidade");
                   if (/[oa]\s\w*ções/gi.test(txt)) txt = txt.replace(/([oa])\s(\w*)ções/g, "$1s $2ções");
                   if (/os\sescovações/g.test(txt)) txt = txt.replace(/os\sescovações/g, "as escovações");
-                  return txt;
+                  if (/\so\singere|\so\sfaz|\so\squant[ao]s?/g.test(txt))
+                    txt = txt.replace(/\so\singere|\so\sfaz|\so\squant[ao]s?/g, "");
+                  if (/o qual é/g.test(txt)) txt = txt.replace(/o qual é/g, "qual é");
+                  if (/o evacua quantas/g.test(txt)) txt = txt.replace(/o evacua quantas/g, "quantas evacuações por");
+                  if (/evacuações por vezes por dia/g.test(txt))
+                    txt = txt.replace(/evacuações por vezes por dia/g, "evacuações por dia");
+                  if (/micções por dia(?<!quantas)/g.test(txt))
+                    txt = txt.replace(/micções por dia(?<!quantas)/g, "quantas micções por dia");
+                  if (txt.endsWith(",")) txt = txt.slice(0, -1);
+                  return txt.trim();
                 },
                 modelLabelHeader = (txt: string): string => {
                   if (txt.endsWith(":")) txt = txt.slice(0, -1);
@@ -1107,7 +1116,8 @@ export function assignFormAttrs(fr: nullishForm): void {
                   txt = txt.toLowerCase();
                   const acrs = /cep|cpf|ddd|dre/gi;
                   if (acrs.test(txt)) txt = txt.replace(acrs, m => m.toUpperCase());
-                  if (/\:.*/g.test(txt)) txt = txt.slice(0, txt.indexOf(":"));
+                  if (/\:.*/g.test(txt)) txt = txt.slice(0, txt.lastIndexOf(":"));
+                  if (/\?.*/g.test(txt)) txt = txt.slice(0, txt.lastIndexOf("?"));
                   if (txt.includes("se estrangeiro, ")) txt = txt.replace(/se estrangeiro,\s/g, "");
                   if (txt.includes("informe o ")) txt = txt.replace(/informe\so\s/g, "");
                   if (/cidade/gi.test(txt)) txt = txt.replace(/o\scidade/g, "a cidade");
@@ -1115,15 +1125,21 @@ export function assignFormAttrs(fr: nullishForm): void {
                   if (/naturalidade/gi.test(txt)) txt = txt.replace(/o\snaturalidade/g, "a naturalidade");
                   if (/[oa]\s\w*ções/gi.test(txt)) txt = txt.replace(/([oa])\s(\w*)ções/g, "$1s $2ções");
                   if (/os\sescovações/g.test(txt)) txt = txt.replace(/os\sescovações/g, "as escovações");
-                  return txt;
+                  if (/no mínimo|no máximo/g.test(txt)) txt = txt.replace(/no mínimo|no máximo/g, "");
+                  if (txt.endsWith(",")) txt = txt.slice(0, -1);
+                  return txt.trim();
                 };
               if (el.labels[0] && el.labels[0].htmlFor === el.id) {
                 el.placeholder = `Preencha aqui o ${modelLabelHeader(el.labels[0].innerText)}`;
                 el.placeholder = clearArticles(el.placeholder);
                 if (
+                  !(
+                    el.labels[0].innerText.toLowerCase().includes("evacua") &&
+                    el.labels[0].innerText.includes("por dia")
+                  ) &&
                   !el.labels[0].innerText
                     .toLowerCase()
-                    .includes(el.placeholder.toLowerCase().replace(/preencha aqui [oa]s?\s/g, ""))
+                    .includes(el.placeholder.toLowerCase().replace(/preencha aqui\s?[oa]?s?\s?/g, ""))
                 )
                   el.placeholder = "";
                 if (el.id === "streetId") el.placeholder = "";

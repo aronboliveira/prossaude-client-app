@@ -247,8 +247,8 @@ export function addListenerExportBtn(
           utils.book_append_sheet(wb, worksheet, "Sheet1", undefined);
           const date = new Date(),
             fullDate = `d${date.getDate()}m${date.getMonth() + 1}y${date.getFullYear()}`,
-            baseUrl = `${location.origin}/${
-              !/localhost/g.test(location.origin) ? "." : "."
+            baseUrl = `${
+              !/localhost/g.test(location.origin) ? `${location.origin}/.` : "/"
             }netlify/functions/processWorkbook`,
             fetchProcess = async (wb: WorkBook): Promise<void> => {
               console.log("trying to call api...");

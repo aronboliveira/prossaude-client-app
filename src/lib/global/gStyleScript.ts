@@ -328,9 +328,10 @@ export function fillCustomValidityWarn(inpId: string, customMsg: string = "Campo
         relatedInp = warnEl.parentElement?.previousElementSibling;
         if (!relatedInp) throw new Error();
       } else {
-        const rectLeft = relatedInp.getBoundingClientRect().left + window.scrollX;
+        const rectLeft = relatedInp.getBoundingClientRect().left + scrollX;
         warnEl.style.position = "relative";
-        warnEl.style.left = rectLeft / 2 + "px";
+        if (innerWidth > 1250) warnEl.style.left = rectLeft / 3 + "px";
+        else warnEl.style.left = rectLeft / 2 + "px";
       }
     } catch (err) {
       console.error(`Error finding related Input`);
