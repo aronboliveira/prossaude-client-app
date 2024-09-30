@@ -201,14 +201,13 @@ export default function ScheduleForm({ mainRoot, userClass = "estudante" }: Sche
     if (formRef.current instanceof HTMLFormElement && monthRef?.current instanceof HTMLSelectElement) {
       //adição de listeners para autoajuste de opções e validação de datas
       const inpDates = Array.from<HTMLInputElement>(formRef.current!.querySelectorAll(".dayTabRef"));
-      setListenersForDates(
+      const [monthPattern] = setListenersForDates(
         inpDates,
         document.getElementById("monthSelector"),
         panelFormsVariables.isAutoFillMonthOn,
         true,
-      ).then(([monthPattern]) => {
-        addListenerForValidities(inpDates, monthPattern);
-      });
+      );
+      addListenerForValidities(inpDates, monthPattern);
       correlateDayOpts(
         Array.from(document.querySelectorAll(".dayTabRef")),
         document.getElementById("changeDaySel"),
@@ -914,6 +913,7 @@ export default function ScheduleForm({ mainRoot, userClass = "estudante" }: Sche
                 className='btn btn-success flexAlItCt flexJC flexBasis50 bolded noInvert'
                 name='btnExportSched'
                 ref={btnExportSchedRef}
+                data-active='false'
                 title='Gere um .xlsx com os dados preenchidos'>
                 Gerar Planilha
               </button>

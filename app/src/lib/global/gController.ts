@@ -173,28 +173,43 @@ export function addListenerExportBtn(
     btnExport instanceof HTMLButtonElement ||
     (btnExport instanceof HTMLInputElement && (btnExport.type === "radio" || btnExport.type === "checkbox"))
   ) {
-    btnExport.addEventListener("click", () => {
-      try {
-        const allEntryEls = [
-            ...(scope ?? document).querySelectorAll("input"),
+    if (!btnExport.dataset.active || btnExport.dataset.active !== "true") {
+      btnExport.addEventListener("click", () => {
+        const elsDefs: {
+          [k: string]: {
+            title: string | undefined;
+            v: string | undefined;
+            type: "s" | "b" | "n" | "d" | "i" | undefined;
+          };
+        } = {};
+        try {
+          let v: string | ArrayBuffer | null = "Não preenchido",
+            type: "s" | "b" | "n" | "d" | "i" | undefined;
+          const allEntryEls = [
+            ...Array.from((scope ?? document).querySelectorAll("input")).filter(
+              el =>
+                !(
+                  el instanceof HTMLInputElement &&
+                  (el.type === "checkbox" || el.type === "radio") &&
+                  (el.role === "switch" ||
+                    el.parentElement?.classList.contains("form-switch") ||
+                    el.labels?.[0]?.innerText?.toLowerCase().includes("cálculo automático") ||
+                    el.labels?.[0]?.innerText?.toLowerCase().includes("autocorreção"))
+                ),
+            ),
             ...(scope ?? document).querySelectorAll("textarea"),
             ...(scope ?? document).querySelectorAll("select"),
             ...(scope ?? document).querySelectorAll("output"),
-          ],
-          arrValues: string[] = [],
-          arrTitles: string[] = [];
-        for (const el of allEntryEls) {
-          if (el instanceof HTMLOutputElement) arrValues.push(el?.innerText || "Nulo");
-          else if (el instanceof HTMLInputElement && (el.type === "checkbox" || el.type === "radio")) {
-            if (el.role === "switch" || el.parentElement?.classList.contains("form-switch")) continue;
-            else el.checked ? arrValues.push("Sim") : arrValues.push("Não");
-          } else arrValues.push(el?.value || "Nulo");
-          arrTitles.push(
-            el?.dataset?.xls
-              ?.split("")
-              .map((c, i) => (i === 0 ? c.toUpperCase() : c))
-              .join("")
-              .replace(/_/g, " ") ||
+            ...(scope ?? document).querySelectorAll("canvas"),
+          ];
+          let acc = 1;
+          for (const el of allEntryEls) {
+            const title =
+              el?.dataset?.xls
+                ?.split("")
+                .map((c, i) => (i === 0 ? c.toUpperCase() : c))
+                .join("")
+                .replace(/_/g, " ") ||
               el?.dataset?.title
                 ?.split("")
                 .map((c, i) => (i === 0 ? c.toUpperCase() : c))
@@ -209,53 +224,76 @@ export function addListenerExportBtn(
                   .join("")
                   .replace(/_/g, " "),
               ) ||
-              GlobalModel.textTransformPascal(
-                el?.name
-                  .replace(/[_\-]/g, " ")
-                  .replace(/([A-Z])/g, m => (m === el?.name.charAt(0) ? m : ` ${m}`))
-                  .split("")
-                  .map((c, i) => (i === 0 ? c.toUpperCase() : c))
-                  .join("")
-                  .replace(/_/g, " "),
-              ) ||
-              `Sem Título (${el?.id || el?.name || el?.className || el?.tagName})`,
-          );
-        }
-        const editableCite = (scope ?? document).querySelector("#citeNameId");
-        if (editableCite) {
-          arrValues.push(editableCite?.textContent || "Nulo");
-          arrTitles.push((editableCite as HTMLElement)?.dataset?.title || "Sem_titulo");
-        }
-        while (arrValues.length > arrTitles.length) arrTitles.push("Sem título");
-        while (arrTitles.length > arrValues.length) arrValues.push("Nulo");
-        if (arrValues.length === arrTitles.length) {
+              (!(el instanceof HTMLCanvasElement) &&
+                GlobalModel.textTransformPascal(
+                  el?.name
+                    .replace(/[_\-]/g, " ")
+                    .replace(/([A-Z])/g, m => (m === el?.name.charAt(0) ? m : ` ${m}`))
+                    .split("")
+                    .map((c, i) => (i === 0 ? c.toUpperCase() : c))
+                    .join("")
+                    .replace(/_/g, " "),
+                )) ||
+              `Sem Título (${
+                el?.id || (!(el instanceof HTMLCanvasElement) && el?.name) || el?.className || el?.tagName
+              }`;
+            if (el instanceof HTMLOutputElement) {
+              v = el.innerText || "Não preenchido";
+              type = "s";
+            } else if (el instanceof HTMLTextAreaElement || el instanceof HTMLSelectElement) {
+              v = el.value || "Não preenchido";
+              type = "s";
+            } else if (el instanceof HTMLInputElement) {
+              if (el.type === "checkbox" || el.type === "radio") {
+                type = "b";
+                v = el.checked ? "Sim" : "Não";
+              } else if (el.type === "number") {
+                type = "n";
+                if (v !== "Não preenchido") {
+                  v = v?.replace(/[^0-9]/g, "") ?? "Não preenchido";
+                  if (v !== "" && !Number.isFinite(Number(v))) v = "#ERRO -> Número inválido";
+                }
+              } else if (el.type === "file") {
+                type = "i";
+                const file = el.files?.[0];
+                if (file) {
+                  const rd = new FileReader();
+                  rd.onload = (): string | ArrayBuffer | null => (v = rd.result);
+                  rd.readAsDataURL(file);
+                } else v = "Não preenchido";
+              } else if (el.type === "date") type = "d";
+              else type = "s";
+            } else if (el instanceof HTMLCanvasElement) {
+              type = "i";
+              v = el.toDataURL("image/png");
+            }
+            elsDefs[
+              el.id ||
+                (!(el instanceof HTMLCanvasElement) && el.name) ||
+                el.dataset.title?.replace(/\s/g, "__") ||
+                el.className.replace(/\s/g, "__") ||
+                el.tagName
+            ] = { title, v, type };
+            acc += 1;
+          }
           const wb = utils.book_new(),
-            dataJSON = arrValues.map((val, i) => ({
-              Campo: arrTitles[i],
-              Valor: val,
+            dataJSON = Object.entries(elsDefs).map(([k, v], i) => ({
+              Campo: v.title || k || `#ERRO -> Chave Elemento ${i + 1}`,
+              Valor: v.v || `#ERRO -> Valor Elemento ${i + 1}`,
             })),
             worksheet = utils.json_to_sheet(dataJSON, undefined),
             maxLengths: { [k: string]: number } = {};
           Object.entries(worksheet).forEach(row => {
-            row.forEach((cell, i) => {
-              const celLength = cell?.toString().length;
-              if (celLength) (!maxLengths[i] || maxLengths[i] < celLength) && (maxLengths[i] = celLength);
+            row.forEach((c, i) => {
+              const len = c?.toString().length;
+              if (len) (!maxLengths[i] || maxLengths[i] < len) && (maxLengths[i] = len);
             });
           });
-          worksheet["!cols"] = Object.keys(maxLengths).map(colIndex => {
-            return { width: maxLengths[colIndex] + 30 };
+          worksheet["!cols"] = Object.keys(maxLengths).map(i => {
+            return { width: maxLengths[i] + 50 };
           });
-          const A1 = utils.encode_cell({ r: 0, c: 0 });
-          worksheet[A1].s = {
-            font: { bold: true },
-            fill: { fgColor: { rgb: "#e9720ade" } },
-          };
-          const B1 = utils.encode_cell({ r: 0, c: 1 });
-          worksheet[B1].s = {
-            font: { bold: true },
-            fill: { fgColor: { rgb: "#e9720ade" } },
-          };
-          utils.book_append_sheet(wb, worksheet, "Sheet1", undefined);
+          console.log(worksheet);
+          utils.book_append_sheet(wb, worksheet, "Formulário Exportado", undefined);
           const date = new Date(),
             fullDate = `d${date.getDate()}m${date.getMonth() + 1}y${date.getFullYear()}`,
             baseUrl = `${
@@ -278,12 +316,12 @@ export function addListenerExportBtn(
                 });
                 if (!res.ok)
                   throw new Error(`
-                Reaching: ${res.url}
-                Redirected: ${res.redirected}
-                Type: ${res.type}
-                Status: ${res.status} => ${res.ok ? "OK" : "NOT OK"}
-                Text: ${res.statusText}
-                `);
+                  Reaching: ${res.url}
+                  Redirected: ${res.redirected}
+                  Type: ${res.type}
+                  Status: ${res.status} => ${res.ok ? "OK" : "NOT OK"}
+                  Text: ${res.statusText}
+                  `);
                 console.log(res);
               } catch (e) {
                 console.error(`Error executing fetchProcess:\n${(e as Error).message}`);
@@ -344,11 +382,12 @@ export function addListenerExportBtn(
             fetchProcess(wb);
             writeFile(wb, `data_${context}form_${fullDate}.xlsx`, undefined);
           }
-        } else throw new Error(`Error validating length of data arrays`);
-      } catch (error) {
-        console.error("Error generating spreadsheet:", error);
-      }
-    });
+        } catch (error) {
+          console.error("Error generating spreadsheet:", error);
+        }
+      });
+      btnExport.dataset.active = "true";
+    }
   } else elementNotFound(btnExport, "argument for addListenerExportBtn()", extLine(new Error()));
   return btnExport;
 }

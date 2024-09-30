@@ -1,3 +1,4 @@
+import React from "react";
 import { RenderResult, render, screen } from "@testing-library/react";
 import TabMedAnt from "../../../../../../components/interactive/edfis/TabMedAnt";
 import Col from "../../../../../../components/interactive/edfis/tabs/Col";
@@ -6,24 +7,24 @@ import Td from "../../../../../../components/error/GenericErrorComponent";
 import GenericErrorComponent from "../../../../../../components/error/GenericErrorComponent";
 jest.mock(
   "../../../../../components/interactive/edfis/tabs/Col",
-  (): jest.Mock<JSX.Element, [], any> => jest.fn((): JSX.Element => <col />) as jest.Mock
+  (): jest.Mock<JSX.Element, [], any> => jest.fn((): JSX.Element => <col />) as jest.Mock,
 ) as typeof jest;
 jest.mock(
   "../../../../../components/error/GenericErrorComponent",
-  (): jest.Mock<JSX.Element, [], any> => jest.fn((): JSX.Element => <th />) as jest.Mock
+  (): jest.Mock<JSX.Element, [], any> => jest.fn((): JSX.Element => <th />) as jest.Mock,
 ) as typeof jest;
 jest.mock(
   "../../../../../components/error/GenericErrorComponent",
-  (): jest.Mock<JSX.Element, [], any> => jest.fn((): JSX.Element => <td />) as jest.Mock
+  (): jest.Mock<JSX.Element, [], any> => jest.fn((): JSX.Element => <td />) as jest.Mock,
 ) as typeof jest;
 jest.mock(
   "../../../../../components/error/GenericErrorComponent",
   (): jest.Mock<JSX.Element, [], any> =>
-    jest.fn((): JSX.Element => <div>Error rendering Table for Measures</div>) as jest.Mock
+    jest.fn((): JSX.Element => <div>Error rendering Table for Measures</div>) as jest.Mock,
 ) as typeof jest;
 jest.mock(
   "../../../../../components/interactive/edfis/client/tabs/WatcherTab",
-  (): jest.Mock<JSX.Element, [], any> => jest.fn((): JSX.Element => <div>WatcherTab Component</div>) as jest.Mock
+  (): jest.Mock<JSX.Element, [], any> => jest.fn((): JSX.Element => <div>WatcherTab Component</div>) as jest.Mock,
 ) as typeof jest;
 describe("TabMedAnt component", (): void => {
   test("renders table caption", (): void => {

@@ -336,6 +336,7 @@ export default function ProfForm({ mainRoot, userClass = "estudante" }: GlobalFo
                 name='btnExportProfsForm'
                 className='btn btn-primary flexAlItCt flexJC flexBasis50 widFull bolded noInvert'
                 ref={btnExportProfForm}
+                data-active='false'
                 title='Gere um .xlsx com os dados preenchidos'>
                 Gerar Planilha
               </button>

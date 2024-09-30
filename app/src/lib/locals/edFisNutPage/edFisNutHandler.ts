@@ -714,15 +714,15 @@ export function addRowAtivFis(count: number = 3, context: string = "Rot"): void 
       count - 1
     }&#41</td>
     <td class="tabCelAtFis tabCelAtFis${context} tabCelLeft" id="tabCelRowAtFis${context}${count}_2" itemprop="celAtFis${context}">
-      <input type="text" class="tabInpAtFis${context} tabInpRowAtFis${context}2 form-control minText" id="tabInpRowAtFis${context}${count}_1" itemprop="inpAtFis${context}" data-title="Atividade_Fisica_${title}_Nome_1" data-reqlength="3" required />
+      <input type="text" class="tabInpAtFis${context} tabInpRowAtFis${context}2 form-control minText" id="tabInpRowAtFis${context}${count}_1" itemprop="inpAtFis${context}" data-xls="Nome da Atividade Física ${title} ${count - 1}" data-title="Atividade_Fisica_${title}_Nome_${count - 1}" data-reqlength="3" required />
     <td class="tabCelAtFis tabCelAtFis${context} tabCelLeft" id="tabCelRowAtFis${context}${count}_3" itemprop="celAtFis${context}">
-      <input type="number" min-length="1" max-length"5" min="0" max="255" class="inpAtivFis tabInpAtFis${context} tabInpRowAtFis${context}2 form-control minText maxText minNum maxNum patternText" id="tabInpRowAtFis${context}${count}_2" itemprop="inpAtFis${context}" data-title="Atividade_Fisica_${title}_NSemana_1" data-reqlength="1" data-maxlength='3' data-minnum="0" data-maxnum="255" required />
+      <input type="number" min-length="1" max-length"5" min="0" max="255" class="inpAtivFis tabInpAtFis${context} tabInpRowAtFis${context}2 form-control minText maxText minNum maxNum patternText" id="tabInpRowAtFis${context}${count}_2" itemprop="inpAtFis${context}" data-xls="Número de Semanas para a Atividade Física Proposta ${count - 1}" data-title="Atividade_Fisica_${title}_NSemana_${count - 1}" data-reqlength="1" data-maxlength='3' data-minnum="0" data-maxnum="255" required />
     </td>
     <td class="tabCelAtFis tabCelAtFis${context}" id="tabCelRowAtFis${context}${count}_4" itemprop="celAtFis${context}">
-      <input type="number" min-length="1" max-length="7" min="0" max="255" class="tabInpAtFis${context} tabInpRowAtFis${context}2 form-control minText maxText minNum maxNum patternText" id="tabInpRowAtFis${context}${count}_3" itemprop="inpAtFis${context}" data-title="Atividade_Fisica_${title}_SessãoMin_1" data-reqlength="1" data-maxlength="3" data-minnum="0" data-maxnum="65535"required />
+      <input type="number" min-length="1" max-length="7" min="0" max="255" class="tabInpAtFis${context} tabInpRowAtFis${context}2 form-control minText maxText minNum maxNum patternText" id="tabInpRowAtFis${context}${count}_3" itemprop="inpAtFis${context}" data-xls='Tempo de Sessão Mínimo para Atividade Física ${title} ${count - 1}' data-title="Atividade_Fisica_${title}_SessãoMin_${count - 1}" data-reqlength="1" data-maxlength="3" data-minnum="0" data-maxnum="65535"required />
     </td>
     <td class="tabCelAtFis tabCelAtFis${context} tabCelRight" id="tabCelRowAtFis${context}${count}_5" itemprop="celAtFis${context}">
-      <input type="number" min-length="1" max-length="7" min="0" max="255" class="tabInpAtFis${context} tabInpRowAtFis${context}2 form-control minText maxText minNum maxNum patternText" id="tabInpRowAtFis${context}${count}_4" itemprop="inpAtFis${context}" data-title="Atividade_Fisica_${title}_Meses_1" data-reqlength="1" data-maxlength="3" data-minnum="0" data-maxnum="65535" required />
+      <input type="number" min-length="1" max-length="7" min="0" max="255" class="tabInpAtFis${context} tabInpRowAtFis${context}2 form-control minText maxText minNum maxNum patternText" id="tabInpRowAtFis${context}${count}_4" itemprop="inpAtFis${context}" data-xls="Número de Meses para a Atividade Física ${title} ${count -1}" data-title="Atividade_Fisica_${title}_Meses_${count - 1}" data-reqlength="1" data-maxlength="3" data-minnum="0" data-maxnum="65535" required />
     </td>
       `;
     tBodyContainer.appendChild(newRow);
@@ -770,10 +770,10 @@ export function switchRowComorb(comorbContainer: targEl, rowCountComorb: number 
       rowCountComorb - 1
     }</td>
     <td class="tabCelComorb tabCelLeft tabCelRowComorb${rowCountComorb}" id="tabCelRowComorb${rowCountComorb}_2">
-      <input type="text" class="tabInpComorb tabInpRowComorb${rowCountComorb} form-control noInvert" id="tablInpRowComorb${rowCountComorb}_2" data-title="Comorbidade_Nome_${rowCountComorb}" required />
+      <input type="text" class="tabInpComorb tabInpRowComorb${rowCountComorb} form-control noInvert" id="tablInpRowComorb${rowCountComorb}_2" data-title="Comorbidade_${rowCountComorb}_nome" required />
     </td>
     <td class="tabCelComorb tabCelRight tabCelRowComorb${rowCountComorb}" id="tabCelRowComorb${rowCountComorb}_3">
-      <input type="date" class="tabInpComorb tabInpRowComorb${rowCountComorb} form-control noInvert maxCurrDate" id="tablInpRowComorb${rowCountComorb}_3" data-title="Comorbidade_Data_${rowCountComorb}" required />
+      <input type="date" class="tabInpComorb tabInpRowComorb${rowCountComorb} form-control noInvert maxCurrDate" id="tablInpRowComorb${rowCountComorb}_3" data-title="Comorbidade_${rowCountComorb}_data_de_Diagnostico" required />
     </td>
     `;
     parentTab.appendChild(newComorbRow);

@@ -29,12 +29,12 @@ export function strikeEntries(mainRef: HTMLElement): void {
     ? strikeNulls(inAndOutEls)
     : elementNotPopulated(inAndOutEls, "inAndOutEls in useEffect() for sectTabRef", extLine(new Error()));
 }
-export async function setListenersForDates(
+export function setListenersForDates(
   dateInps: Array<targEl>,
   monthStateSelector: targEl,
   isAutoFillMonthOn = true,
   isInitialSet = true,
-): Promise<[RegExp, (workingDays: [number, number], month?: string) => void]> {
+): [RegExp, (workingDays: [number, number], month?: string) => void] {
   if (Array.isArray(dateInps) && dateInps.length > 0 && dateInps.every(inp => inp instanceof HTMLElement)) {
     if (
       monthStateSelector instanceof HTMLSelectElement ||

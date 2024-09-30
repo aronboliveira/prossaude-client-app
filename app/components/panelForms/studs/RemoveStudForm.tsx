@@ -348,6 +348,7 @@ export default function RemoveStudForm({ userClass = "estudante" }: GlobalFormPr
         className='btn btn-success flexAlItCt flexJC flexBasis50 bolded widQ460FullW'
         name='btnExportTabStuds'
         ref={btnExportTabStudsRef}
+        data-active='false'
         title='Gere um .xlsx com os dados preenchidos'>
         Gerar Planilha
       </button>

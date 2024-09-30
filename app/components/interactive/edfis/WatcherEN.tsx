@@ -9,9 +9,9 @@ import { clearPhDates, dinamicGridAdjust, equalizeFlexSibilings } from "@/lib/gl
 import { elementNotFound, extLine, inputNotFound, maxNumberError } from "@/lib/global/handlers/errorHandler";
 import { handleCondtReq, syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { addListenerInnerTabs, validateTitlesForTargs } from "@/lib/locals/edFisNutPage/edFisNutController";
-let isExportListening = false;
 export default function WatcherEN(): JSX.Element {
   const [mounted, setMounted] = useState<boolean>(false);
+  const [isExportListening, setExport] = useState<boolean>(false);
   useEffect(() => {
     const selFactorAtleta = document.getElementById("selFactorAtleta"),
       genElement = document.getElementById("genId");
@@ -23,9 +23,9 @@ export default function WatcherEN(): JSX.Element {
         : "masculino";
     tabProps.edIsAutoCorrectOn = getGlobalEls(tabProps.edIsAutoCorrectOn, "num");
     handleLinkChanges("ed", "EN Page Style");
-    if (!isExportListening === false) {
+    if (!isExportListening) {
       addListenerExportBtn("edFisNut");
-      isExportListening = true;
+      setExport(true);
     }
     dinamicGridAdjust(Array.from(document.querySelectorAll(".fsAnamGDiv")));
     for (const f of document.querySelectorAll("form")) assignFormAttrs(f);
@@ -43,9 +43,6 @@ export default function WatcherEN(): JSX.Element {
       clearInterval(mountInterval);
       !document.getElementById("tabIndPerc") && console.warn(`Could not find tabIndPerc`);
     }, 10000);
-    return (): void => {
-      isExportListening = false;
-    };
   }, []);
   useEffect(() => {
     if (mounted && document.getElementsByTagName("table").length > 3) {

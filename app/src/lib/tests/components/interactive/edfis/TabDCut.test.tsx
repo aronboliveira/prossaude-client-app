@@ -1,3 +1,4 @@
+import React from "react";
 import { RenderResult, render, screen } from "@testing-library/react";
 import TabDCut from "../../../../../../components/interactive/edfis/TabDCut";
 import GenericErrorComponent from "../../../../../../components/error/GenericErrorComponent";
@@ -6,24 +7,24 @@ import Th from "../../../../../../components/interactive/edfis/tabs/Th";
 import Td from "../../../../../../components/interactive/edfis/tabs/Td";
 jest.mock(
   "../../../../../components/interactive/edfis/tabs/Col",
-  (): jest.Mock<JSX.Element, [], any> => jest.fn((): JSX.Element => <col />) as jest.Mock
+  (): jest.Mock<JSX.Element, [], any> => jest.fn((): JSX.Element => <col />) as jest.Mock,
 ) as typeof jest;
 jest.mock(
   "../../../../../components/interactive/edfis/tabs/Th",
-  (): jest.Mock<JSX.Element, [], any> => jest.fn((): JSX.Element => <th />) as jest.Mock
+  (): jest.Mock<JSX.Element, [], any> => jest.fn((): JSX.Element => <th />) as jest.Mock,
 ) as typeof jest;
 jest.mock(
   "../../../../../components/interactive/edfis/tabs/Td",
-  (): jest.Mock<JSX.Element, [], any> => jest.fn((): JSX.Element => <td />) as jest.Mock
+  (): jest.Mock<JSX.Element, [], any> => jest.fn((): JSX.Element => <td />) as jest.Mock,
 ) as typeof jest;
 jest.mock(
   "../../../../../components/error/GenericErrorComponent",
   (): jest.Mock<JSX.Element, [], any> =>
-    jest.fn((): JSX.Element => <div>Error rendering Table for Skin Folds</div>) as jest.Mock
+    jest.fn((): JSX.Element => <div>Error rendering Table for Skin Folds</div>) as jest.Mock,
 ) as typeof jest;
 jest.mock(
   "./client/tabs/WatcherTab",
-  (): jest.Mock<JSX.Element, [], any> => jest.fn((): JSX.Element => <div>WatcherTab Component</div>) as jest.Mock
+  (): jest.Mock<JSX.Element, [], any> => jest.fn((): JSX.Element => <div>WatcherTab Component</div>) as jest.Mock,
 );
 describe("TabDCut component", (): void => {
   test("renders table caption", (): void => {
@@ -42,7 +43,7 @@ describe("TabDCut component", (): void => {
     render(<GenericErrorComponent message='Error' />) as RenderResult;
     (
       expect(
-        screen.getByText<HTMLElement>("Error rendering Table for Skin Folds")
+        screen.getByText<HTMLElement>("Error rendering Table for Skin Folds"),
       ) as jest.JestMatchers<jest.SpyInstance>
     ).toBeInTheDocument() as void;
   }) as void;

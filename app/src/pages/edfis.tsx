@@ -65,6 +65,9 @@ import {
   updatePGC,
   validateEvResultNum,
 } from "@/lib/locals/edFisNutPage/edFisNutHandler";
+import TbodyComorb from "../../components/interactive/edfis/TbodyComorb";
+import TbodyAtFisProps from "../../components/interactive/edfis/TbodyAtFisProps";
+import TbodyAtFisRot from "../../components/interactive/edfis/TbodyAtFisRot";
 export const tabProps: ENTabsProps = {
   edIsAutoCorrectOn: true,
   isAutoFillActive: true,
@@ -151,7 +154,9 @@ export default function EdFisNutPage(): JSX.Element {
               </section>
             </fieldset>
             <hr />
-            <TabComorb />
+            <TabComorb>
+              <TbodyComorb />
+            </TabComorb>
             <hr />
             <fieldset name='fsHabRotName' id='fsHabRotId' className='fsMain'>
               <legend className='hRot legMain forceInvert' id='fsHabRotLeg'>
@@ -259,10 +264,14 @@ export default function EdFisNutPage(): JSX.Element {
                   <strong>Nível de Atividade Física:</strong>
                   <SelectLvlAtFis />
                 </span>
-                <TabAtFirsRot />
+                <TabAtFirsRot>
+                  <TbodyAtFisRot />
+                </TabAtFirsRot>
                 <br role='presentation' />
                 <hr />
-                <TabAtFirsProp />
+                <TabAtFirsProp>
+                  <TbodyAtFisProps />
+                </TabAtFirsProp>
               </div>
               <br role='presentation' />
             </fieldset>

@@ -48,6 +48,7 @@ import TelPrim from "../../components/interactive/ag/TelPrim";
 import TelSec from "../../components/interactive/ag/TelSec";
 import Uf from "../../components/interactive/ag/Uf";
 import Watcher from "../../components/interactive/def/Watcher";
+import AntMedContainer from "../../components/interactive/ag/AntMedContainer";
 const MemoAge = memo(AgeElement),
   MemoLoc = memo(ConfirmLocId);
 export const agProps = {
@@ -351,7 +352,7 @@ export default function AGPage(): JSX.Element {
                         id='hepAId'
                         className='cpbOp indivOp opHep'
                         data-title='Hepatite A'
-                      />{" "}
+                      />
                       A
                     </span>
                     <span role='listitem' className='cbDoencaSubt'>
@@ -361,7 +362,7 @@ export default function AGPage(): JSX.Element {
                         id='hepBId'
                         className='cpbOp indivOp opHep'
                         data-title='Hepatite B'
-                      />{" "}
+                      />
                       B
                     </span>
                     <span role='listitem' className='cbDoencaSubt'>
@@ -371,7 +372,7 @@ export default function AGPage(): JSX.Element {
                         id='hepCId'
                         className='cpbOp indivOp opHep'
                         data-title='Hepatite C'
-                      />{" "}
+                      />
                       C
                     </span>
                     <span role='listitem' className='cbDoencaSubt'>
@@ -381,7 +382,7 @@ export default function AGPage(): JSX.Element {
                         id='hepDId'
                         className='cpbOp indivOp opHep'
                         data-title='Hepatite D'
-                      />{" "}
+                      />
                       D
                     </span>
                     <span role='listitem' className='cbDoencaSubt'>
@@ -391,7 +392,7 @@ export default function AGPage(): JSX.Element {
                         id='hepEId'
                         className='cpbOp indivOp opHep'
                         data-title='Hepatite E'
-                      />{" "}
+                      />
                       E
                     </span>
                     <span role='listitem' className='cbDoencaSubt'>
@@ -401,7 +402,7 @@ export default function AGPage(): JSX.Element {
                         id='hepInfcId'
                         className='cpbOp indivOp opHep'
                         data-title='Hepatite por outras infecções'
-                      />{" "}
+                      />
                       Induzida por Outras Infecções
                     </span>
                     <span role='listitem' className='cbDoencaSubt'>
@@ -411,7 +412,7 @@ export default function AGPage(): JSX.Element {
                         id='hepImunId'
                         className='cpbOp indivOp opHep'
                         data-title='Hepatite Autoimune'
-                      />{" "}
+                      />
                       Autoimune
                     </span>
                     <span role='listitem' className='cbDoencaSubt'>
@@ -421,7 +422,7 @@ export default function AGPage(): JSX.Element {
                         id='hepOncId'
                         className='cpbOp indivOp opHep'
                         data-title='Hepatite Oncológica'
-                      />{" "}
+                      />
                       Oncológica
                     </span>
                     <span role='listitem' className='cbDoencaSubt'>
@@ -431,7 +432,7 @@ export default function AGPage(): JSX.Element {
                         id='hepAlcId'
                         className='cpbOp indivOp opHep'
                         data-title='Hepatite Alcoólica'
-                      />{" "}
+                      />
                       Alcoólica
                     </span>
                     <span role='listitem' className='cbDoencaSubt'>
@@ -441,7 +442,7 @@ export default function AGPage(): JSX.Element {
                         id='hepDrgId'
                         className='cpbOp indivOp opHep'
                         data-title='Hepatite por intoxicação'
-                      />{" "}
+                      />
                       Induzida por Toxinas, Medicamentos ou Outra(s) Droga(s)
                     </span>
                   </div>
@@ -454,7 +455,7 @@ export default function AGPage(): JSX.Element {
                         id='diabTipo1Id'
                         className='cpbOp indivOp opDiab opDiabIndiv'
                         data-title='Diabetes tipo 1'
-                      />{" "}
+                      />
                       Tipo 1
                     </span>
                     <span role='listitem' className='cbDoencaSubt'>
@@ -464,7 +465,7 @@ export default function AGPage(): JSX.Element {
                         id='diabTipo2Id'
                         className='cpbOp indivOp opDiab opDiabIndiv'
                         data-title='Diabetes tipo 2'
-                      />{" "}
+                      />
                       Tipo 2
                     </span>
                     <span role='listitem' className='cbDoencaSubt'>
@@ -474,7 +475,7 @@ export default function AGPage(): JSX.Element {
                         id='diabGestId'
                         className='cpbOp indivOp opDiab opDiabIndiv'
                         data-title='Diabetes Gestacional'
-                      />{" "}
+                      />
                       Gestacional
                     </span>
                     <span role='listitem' className='cbDoencaSubt'>
@@ -484,7 +485,7 @@ export default function AGPage(): JSX.Element {
                         id='diabInsId'
                         className='cpbOp indivOp opDiab opDiabIndiv'
                         data-title='Diabetes Insipidus'
-                      />{" "}
+                      />
                       Insípido
                     </span>
                     <span role='listitem' className='cbDoencaSubt'>
@@ -494,7 +495,7 @@ export default function AGPage(): JSX.Element {
                         id='diabLadaId'
                         className='cpbOp indivOp opDiab opDiabIndiv'
                         data-title='Diabetes LADA'
-                      />{" "}
+                      />
                       LADA
                     </span>
                     <span role='listitem' className='cbDoencaSubt'>
@@ -504,7 +505,7 @@ export default function AGPage(): JSX.Element {
                         id='diabModyId'
                         className='cpbOp indivOp opDiab opDiabIndiv'
                         data-title='Diabetes MODY'
-                      />{" "}
+                      />
                       MODY
                     </span>
                   </div>
@@ -594,7 +595,6 @@ export default function AGPage(): JSX.Element {
                   <RadioPair name='fumo' fullName='É fumante' ctx={true} required={true} />
                   <div className='divAdd gridTwoCol switchedDiv' id='divAddFumo' role='group'>
                     <span role='group' className='spanSub spanSubFsAnamGRad form-check' id='spanFumSubs'>
-                      {" "}
                       <strong>Nível:</strong>
                       <br role='presentation' />
                       <span role='list' className='cbDoencaSubt' id='spanLvlFumo'>
@@ -608,7 +608,7 @@ export default function AGPage(): JSX.Element {
                             data-value='leve'
                             data-group='true'
                             data-parent='#spanLvlFumo'
-                          />{" "}
+                          />
                           Leve
                         </div>
                         <div role='listitem'>
@@ -621,7 +621,7 @@ export default function AGPage(): JSX.Element {
                             data-value='moderado'
                             data-group='true'
                             data-parent='#spanLvlFumo'
-                          />{" "}
+                          />
                           Moderado
                         </div>
                         <div role='listitem'>
@@ -634,7 +634,7 @@ export default function AGPage(): JSX.Element {
                             data-value='alto'
                             data-group='true'
                             data-parent='#spanLvlFumo'
-                          />{" "}
+                          />
                           Alto
                         </div>
                       </span>
@@ -706,7 +706,7 @@ export default function AGPage(): JSX.Element {
                       id='GrvAtId'
                       className='radOp radAdd radGrv'
                       data-title='gravidez_atual'
-                    />{" "}
+                    />
                     Atual
                     <input
                       type='checkbox'
@@ -714,7 +714,7 @@ export default function AGPage(): JSX.Element {
                       id='GrvPasId'
                       className='radOp radAdd radGrv'
                       data-title='gravidez_passada'
-                    />{" "}
+                    />
                     Passada
                   </div>
                   <RadioPair
@@ -879,7 +879,7 @@ export default function AGPage(): JSX.Element {
                             id='diabFamTipo1Id'
                             className='cpbOp famOp opDiab opDiabFam opDiabTypeFam'
                             data-title='familia_diabetes1'
-                          />{" "}
+                          />
                           Tipo 1
                         </span>
                         <span role='listitem' className='cbDoencaSubt'>
@@ -889,7 +889,7 @@ export default function AGPage(): JSX.Element {
                             id='diabFamTipo2Id'
                             className='cpbOp famOp opDiab opDiabFam opDiabTypeFam'
                             data-title='familia_diabetes2'
-                          />{" "}
+                          />
                           Tipo 2
                         </span>
                         <span role='listitem' className='cbDoencaSubt'>
@@ -899,7 +899,7 @@ export default function AGPage(): JSX.Element {
                             id='diabFamGestId'
                             className='cpbOp famOp opDiab opDiabFam opDiabTypeFam'
                             data-title='familia_diabetes_gestacional'
-                          />{" "}
+                          />
                           Gestacional
                         </span>
                         <span role='listitem' className='cbDoencaSubt'>
@@ -909,7 +909,7 @@ export default function AGPage(): JSX.Element {
                             id='diabFamInsId'
                             className='cpbOp famOp opDiab opDiabFam opDiabTypeFam'
                             data-title='familia_diabetes_insipida'
-                          />{" "}
+                          />
                           Insípido
                         </span>
                         <span role='listitem' className='cbDoencaSubt'>
@@ -919,7 +919,7 @@ export default function AGPage(): JSX.Element {
                             id='diabFamLadaId'
                             className='cpbOp famOp opDiab opDiabFam opDiabTypeFam'
                             data-title='familia_diabetes_lada'
-                          />{" "}
+                          />
                           LADA
                         </span>
                         <span role='listitem' className='cbDoencaSubt'>
@@ -929,7 +929,7 @@ export default function AGPage(): JSX.Element {
                             id='diabFamModyId'
                             className='cpbOp famOp opDiab opDiabFam opDiabTypeFam'
                             data-title='familia_diabetes_mody'
-                          />{" "}
+                          />
                           MODY
                         </span>
                       </div>
@@ -1038,7 +1038,9 @@ export default function AGPage(): JSX.Element {
                   </section>
                   <hr />
                 </fieldset>
-                <AntMedFs />
+                <AntMedFs>
+                  <AntMedContainer />
+                </AntMedFs>
               </section>
               <hr />
               <fieldset className='sectionMain sectionConfirm noInvert' id='fsAnamGFreqSectId'>

@@ -456,6 +456,7 @@ export default function StudentForm({ mainRoot, userClass = "estudante" }: Globa
                 type='button'
                 className='btn btn-primary flexAlItCt flexJC flexBasis50 widFull bolded noInvert'
                 ref={btnExportStudsRef}
+                data-active='false'
                 title='Gere um .xlsx com os dados preenchidos'>
                 Gerar Planilha
               </button>

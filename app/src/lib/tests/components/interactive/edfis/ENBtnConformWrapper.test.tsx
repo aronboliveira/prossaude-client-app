@@ -1,11 +1,12 @@
+import React from "react";
 import { render, screen, fireEvent, RenderResult } from "@testing-library/react";
 import ENBtnConformWrapper from "../../../../../../components/interactive/edfis/ENBtnConformWrapper";
 jest.mock("../def/BtnConform", (): (() => JSX.Element) =>
-  jest.fn((): JSX.Element => <button>Conform</button>)
+  jest.fn((): JSX.Element => <button>Conform</button>),
 ) as typeof jest;
 jest.mock("./ENDeclaration", () => jest.fn(() => <div>EN Declaration</div>));
 jest.mock("../../error/GenericErrorComponent", (): (() => JSX.Element) =>
-  jest.fn((): JSX.Element => <div>Error rendering Button for Agreement</div>)
+  jest.fn((): JSX.Element => <div>Error rendering Button for Agreement</div>),
 ) as typeof jest;
 describe("ENBtnConformWrapper component", (): void => {
   test("renders without errors", (): void => {
@@ -37,7 +38,7 @@ describe("ENBtnConformWrapper component", (): void => {
     render(<ENBtnConformWrapper />) as RenderResult;
     (
       expect(
-        screen.queryByText<HTMLElement>("Error rendering Button for Agreement")
+        screen.queryByText<HTMLElement>("Error rendering Button for Agreement"),
       ) as jest.JestMatchers<jest.SpyInstance>
     ).not.toBeInTheDocument() as void;
   }) as void;

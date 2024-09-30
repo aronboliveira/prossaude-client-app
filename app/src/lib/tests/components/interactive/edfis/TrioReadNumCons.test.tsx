@@ -1,3 +1,4 @@
+import React from "react";
 import { render, screen, fireEvent, RenderResult } from "@testing-library/react";
 import { elementNotPopulated } from "../../../../global/handlers/errorHandler";
 import { syncAriaStates } from "../../../../global/handlers/gHandlers";
@@ -13,7 +14,7 @@ jest.mock(
   } => ({
     elementNotFound: jest.fn() as jest.Mock,
     elementNotPopulated: jest.fn() as jest.Mock,
-  })
+  }),
 ) as typeof jest;
 jest.mock(
   "../../../../lib/global/handlers/gHandlers",
@@ -21,7 +22,7 @@ jest.mock(
     syncAriaStates: jest.Mock<any, any, any>;
   } => ({
     syncAriaStates: jest.fn() as jest.Mock,
-  })
+  }),
 ) as typeof jest;
 jest.mock(
   "../../../../lib/global/gStyleScript",
@@ -29,7 +30,7 @@ jest.mock(
     highlightChange: jest.Mock<any, any, any>;
   } => ({
     highlightChange: jest.fn() as jest.Mock,
-  })
+  }),
 ) as typeof jest;
 jest.mock(
   "../../../../lib/global/gModel",
@@ -37,7 +38,7 @@ jest.mock(
     parseNotNaN: jest.Mock<any, any, any>;
   } => ({
     parseNotNaN: jest.fn((val: string): number => parseFloat(val)) as jest.Mock,
-  })
+  }),
 ) as typeof jest;
 jest.mock(
   "../../../../lib/locals/edFisNutPage/edFisNutHandler",
@@ -45,7 +46,7 @@ jest.mock(
     switchNumConsTitles: jest.Mock<any, any, any>;
   } => ({
     switchNumConsTitles: jest.fn() as jest.Mock,
-  })
+  }),
 ) as typeof jest;
 describe("TrioReadNumCons component", (): void => {
   beforeEach((): void => {
@@ -55,12 +56,12 @@ describe("TrioReadNumCons component", (): void => {
     render(<TrioReadNumCons />) as RenderResult;
     (
       expect(
-        screen.getByText<HTMLLabelElement>("Número inicial da Consulta em Leitura:")
+        screen.getByText<HTMLLabelElement>("Número inicial da Consulta em Leitura:"),
       ) as jest.JestMatchers<jest.SpyInstance>
     ).toBeInTheDocument() as void;
     (
       expect(
-        screen.getByLabelText<HTMLInputElement>("Número inicial da Consulta em Leitura:")
+        screen.getByLabelText<HTMLInputElement>("Número inicial da Consulta em Leitura:"),
       ) as jest.JestMatchers<jest.SpyInstance>
     ).toBeInTheDocument() as void;
   }) as void;
@@ -73,7 +74,7 @@ describe("TrioReadNumCons component", (): void => {
     const input = screen.getByLabelText<HTMLInputElement>("Número inicial da Consulta em Leitura:");
     fireEvent.input(input, { target: { value: "100" } }) as boolean;
     (expect(parseNotNaN) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalledWith<Parameters<typeof parseNotNaN>>(
-      "100"
+      "100",
     ) as void;
     (expect(switchNumConsTitles) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalled() as void;
     (expect(highlightChange) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalled() as void;

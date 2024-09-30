@@ -86,8 +86,7 @@ export default function AptDataList({
         }
       };
       document.addEventListener("keydown", handleKeyDown);
-      return (): void =>
-        document.removeEventListener("keydown", handleKeyDown);
+      return (): void => document.removeEventListener("keydown", handleKeyDown);
     }
   }, [aptDlgRef]);
   return !shouldDisplayAptList ? (
@@ -294,6 +293,7 @@ export default function AptDataList({
                 type='button'
                 id={`btnExport${data.cpf || "Unidentified"}_${data.date || "0000-00-00"}}`}
                 name={`btnExport${data.cpf || "Unidentified"}_${data.date || "0000-00-00"}`}
+                data-active='false'
                 className='btn btn-info opaqueLightEl widFull'>
                 <small role='textbox'>
                   <em>Gerar Planilha</em>

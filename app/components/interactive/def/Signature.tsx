@@ -95,6 +95,7 @@ export default function Signature(): JSX.Element {
       <span role='group' id='spanAstPct' className='labConfirm labAst widHalf bolded'>
         <span>Assinatura do Paciente:</span>
         <canvas
+          data-xls='Assinatura de Concordância do Paciente:'
           id='inpAstConfirmId'
           ref={canvasRef}
           onMouseDown={startDrawing}
