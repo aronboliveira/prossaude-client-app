@@ -1113,6 +1113,7 @@ export default function FormDlg({ onClose, userClass = "estudante" }: ConsDlgPro
                   type='button'
                   id='btnExportRegst'
                   className='btn btn-primary widFull'
+                  data-active='false'
                   ref={exportRef}
                   title='Gere um .xlsx com os dados preenchidos'>
                   <small role='textbox'>

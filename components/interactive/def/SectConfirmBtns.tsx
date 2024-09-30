@@ -11,8 +11,7 @@ export default function SectConfirmBtns(): JSX.Element {
         className='confirmBut btn btn-success forceInvert'
         formAction='_self'
         formMethod='POST'
-        accessKey='enter'
-      >
+        accessKey='enter'>
         Submeter
       </button>
       <button
@@ -41,7 +40,7 @@ export default function SectConfirmBtns(): JSX.Element {
                   type: "file",
                   id: "inpAstConfirmId",
                   accept: "image/*",
-                })
+                }),
               );
               replaceInp.dataset.title = "Assinatura do Paciente";
               replaceInp.classList.add("inpAst", "mg-07t", "form-control");
@@ -50,19 +49,18 @@ export default function SectConfirmBtns(): JSX.Element {
           } catch (e2) {
             console.error(`Error handling click on Reset signature button`);
           }
-        }}
-      >
+        }}>
         Resetar
       </button>
       <button
         type='button'
         id='btnExport'
+        data-active='false'
         className='btn btn-secondary forceInvert'
         style={{
           backgroundColor: "rgba(0, 0, 255, 0.904)",
           borderColor: "rgba(0, 0, 255, 0.904)",
-        }}
-      >
+        }}>
         Gerar Planilha
       </button>
     </section>

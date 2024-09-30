@@ -1,3 +1,4 @@
+import React from "react";
 import { render, screen, fireEvent, RenderResult } from "@testing-library/react";
 import { elementNotFound } from "../../../../global/handlers/errorHandler";
 import ENTips from "../../../../../../components/interactive/edfis/ENTips";
@@ -7,7 +8,7 @@ jest.mock(
     elementNotFound: jest.Mock<any, any, any>;
   } => ({
     elementNotFound: jest.fn() as jest.Mock,
-  })
+  }),
 ) as typeof jest;
 jest.mock(
   "../../../../lib/global/gStyleScript",
@@ -15,7 +16,7 @@ jest.mock(
     isClickOutside: jest.Mock<boolean[], [], any>;
   } => ({
     isClickOutside: jest.fn((): boolean[] => [true]) as jest.Mock,
-  })
+  }),
 ) as typeof jest;
 describe("ENTips component", (): void => {
   const mockDispatch = jest.fn();
@@ -70,7 +71,7 @@ describe("ENTips component", (): void => {
       expect(document.getElementById("mathLastBlock")?.innerHTML) as jest.JestMatchers<jest.SpyInstance>
     ).toContain<string>("<math") as void;
     (expect(document.getElementById("hbFormula")?.innerHTML) as jest.JestMatchers<jest.SpyInstance>).toContain<string>(
-      "<math"
+      "<math",
     ) as void;
   }) as void;
   test("throws error when elements are not found", (): void => {

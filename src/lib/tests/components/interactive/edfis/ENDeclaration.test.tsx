@@ -1,9 +1,10 @@
+import React from "react";
 import { render, screen, fireEvent, RenderResult } from "@testing-library/react";
 import ENDeclaration from "../../../../../../components/interactive/edfis/ENDeclaration";
 jest.mock(
   "../../../../../components/error/GenericErrorComponent",
   (): jest.Mock<JSX.Element, [], JSX.Element> =>
-    jest.fn((): JSX.Element => <div>Erro carregando modal de declaração</div>) as jest.Mock
+    jest.fn((): JSX.Element => <div>Erro carregando modal de declaração</div>) as jest.Mock,
 ) as typeof jest;
 jest.mock(
   "@/lib/global/handlers/errorHandler",
@@ -11,7 +12,7 @@ jest.mock(
     elementNotFound: jest.Mock<any, any, any>;
   } => ({
     elementNotFound: jest.fn() as jest.Mock,
-  })
+  }),
 ) as typeof jest;
 describe("ENDeclaration component", (): void => {
   const props: {
@@ -44,7 +45,7 @@ describe("ENDeclaration component", (): void => {
     render(<ENDeclaration {...props} />) as RenderResult;
     (
       expect(
-        screen.queryByText<HTMLElement>("Erro carregando modal de declaração")
+        screen.queryByText<HTMLElement>("Erro carregando modal de declaração"),
       ) as jest.JestMatchers<jest.SpyInstance>
     ).not.toBeInTheDocument() as void;
   }) as void;

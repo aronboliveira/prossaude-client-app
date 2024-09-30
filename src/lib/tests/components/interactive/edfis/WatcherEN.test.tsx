@@ -1,3 +1,4 @@
+import React from "react";
 import { render, screen, fireEvent, RenderResult } from "@testing-library/react";
 import { maxNumberError } from "../../../../global/handlers/errorHandler";
 import { syncAriaStates, handleCondtReq } from "../../../../global/handlers/gHandlers";
@@ -16,7 +17,7 @@ jest.mock(
     elementNotFound: jest.fn() as jest.Mock,
     inputNotFound: jest.fn() as jest.Mock,
     maxNumberError: jest.fn() as jest.Mock,
-  })
+  }),
 ) as typeof jest;
 jest.mock(
   "../../../../lib/global/handlers/gHandlers",
@@ -26,7 +27,7 @@ jest.mock(
   } => ({
     syncAriaStates: jest.fn() as jest.Mock,
     handleCondtReq: jest.fn() as jest.Mock,
-  })
+  }),
 ) as typeof jest;
 jest.mock(
   "../../../../lib/global/gModel",
@@ -34,7 +35,7 @@ jest.mock(
     parseNotNaN: jest.Mock<number, [val: string], any>;
   } => ({
     parseNotNaN: jest.fn((val: string): number => parseFloat(val)),
-  })
+  }),
 ) as typeof jest;
 jest.mock(
   "../../../../lib/global/gController",
@@ -46,7 +47,7 @@ jest.mock(
     addListenerExportBtn: jest.fn() as jest.Mock,
     getGlobalEls: jest.fn() as jest.Mock,
     watchLabels: jest.fn() as jest.Mock,
-  })
+  }),
 ) as typeof jest;
 jest.mock(
   "../../../../lib/global/gStyleScript",
@@ -58,7 +59,7 @@ jest.mock(
     clearPhDates: jest.fn() as jest.Mock,
     dinamicGridAdjust: jest.fn() as jest.Mock,
     equalizeFlexSibilings: jest.fn() as jest.Mock,
-  })
+  }),
 ) as typeof jest;
 jest.mock(
   "../../../../lib/locals/edFisNutPage/edFisNutController",
@@ -68,7 +69,7 @@ jest.mock(
   } => ({
     addListenerInnerTabs: jest.fn() as jest.Mock,
     validateTitlesForTargs: jest.fn() as jest.Mock,
-  })
+  }),
 ) as typeof jest;
 describe("WatcherEN component", (): void => {
   beforeEach((): void => {

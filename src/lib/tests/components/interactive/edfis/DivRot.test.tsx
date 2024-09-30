@@ -1,8 +1,10 @@
+import React from "react";
 import { RenderResult, render, screen } from "@testing-library/react";
 import { ErrorBoundary } from "react-error-boundary";
 import DivRot from "../../../../../../components/interactive/edfis/DivRot";
 import InpRot from "../../../../../../components/interactive/edfis/client/InpRot";
 import GenericErrorComponent from "../../../../../../components/error/GenericErrorComponent";
+//@ts-ignore
 import { InpRotProps, RotProps } from "@/lib/global/declarations/interfaces";
 jest.mock(
   "./client/InpRot",

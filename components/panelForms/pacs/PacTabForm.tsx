@@ -80,6 +80,7 @@ export default function PacTabForm({ userClass = "estudante" }: GlobalFormProps)
         className='btn btn-success flexAlItCt flexJC flexBasis50 bolded widQ460FullW'
         name='btnExportPacsTab'
         ref={btnExportPacsTabRef}
+        data-active='false'
         title='Gere um .xlsx com os dados preenchidos'>
         Gerar Planilha
       </button>

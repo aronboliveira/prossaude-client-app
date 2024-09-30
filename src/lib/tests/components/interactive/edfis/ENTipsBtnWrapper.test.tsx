@@ -2,6 +2,7 @@ import { render, screen, fireEvent, RenderResult } from "@testing-library/react"
 import ENTips from "../../../../../../components/interactive/edfis/ENTips";
 import ENTipsBtnWrapper from "../../../../../../components/interactive/edfis/ENTipsBtnWrapper";
 import GenericErrorComponent from "../../../../../../components/error/GenericErrorComponent";
+import React from "react";
 jest.mock(
   "../../../../../components/interactive/edfis/ENTips",
   (): jest.Mock<JSX.Element, [], any> => jest.fn((): JSX.Element => <div>ENTips Component</div>) as jest.Mock,

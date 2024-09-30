@@ -354,6 +354,7 @@ export default function RemoveProfForm({ userClass = "estudante" }: GlobalFormPr
         className='btn btn-success flexAlItCt flexJC flexBasis50 bolded widQ460FullW'
         name='btnExportProfsTab'
         ref={btnExportProfsTabRef}
+        data-active='false'
         title='Gere um .xlsx com os dados preenchidos'>
         Gerar Planilha
       </button>
