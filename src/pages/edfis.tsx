@@ -4,7 +4,6 @@ import { Person } from "@/lib/global/declarations/classes";
 import { changeTabDCutLayout } from "@/lib/locals/edFisNutPage/edFisNutModel";
 import { defaultResult } from "@/lib/locals/edFisNutPage/edFisNutController";
 import { handleSubmit } from "../lib/locals/panelPage/handlers/handlers";
-import { memo } from "react";
 import { parseNotNaN } from "@/lib/global/gModel";
 import { validateForm } from "@/lib/global/handlers/gHandlers";
 import AgeElement from "../../components/interactive/edfis/defaulted/AgeElement";
@@ -95,8 +94,6 @@ export const tabProps: ENTabsProps = {
   targInpSumDCut: undefined,
 };
 export const person = new Person("masculino", 0, 0, 0, 0, "leve");
-const MemoAge = memo(AgeElement),
-  MemoLoc = memo(ConfirmLocId);
 export default function EdFisNutPage(): JSX.Element {
   return (
     <ErrorBoundary
@@ -147,7 +144,7 @@ export default function EdFisNutPage(): JSX.Element {
                 <span role='group' className='fsAnamGSpan' id='fsAnamGSpan12'>
                   <label htmlFor='dateAgeId' className='labelIdentif'>
                     Idade:
-                    <MemoAge />
+                    <AgeElement />
                   </label>
                 </span>
                 <GenDiv flux={true} />
@@ -352,7 +349,7 @@ export default function EdFisNutPage(): JSX.Element {
                       className='labConfirm labDivConfirm2 pdT2pc900Q htFull900Q flexNoWC bolded widHalf900Q noInvert'
                       id='labConfirmLoc'>
                       <span>Local:</span>
-                      <MemoLoc />
+                      <ConfirmLocId />
                     </label>
                     <ConfirmDate />
                     <hr />

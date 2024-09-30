@@ -1,5 +1,4 @@
 import { jwtDecode } from "jwt-decode";
-import { NextRouter } from "next/router";
 import { rMouseEvent, formCases, fetchSuffixes } from "@/lib/global/declarations/types";
 import { PacInfo, ProfInfo, StudInfo } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import { ProfessionalTokenPayload, StudentTokenPayload } from "../../basePage/declarations/serverInterfaces";
@@ -53,58 +52,13 @@ export async function handleLogin(
   ev: rMouseEvent,
   userData: FormData | [string, string],
   UNDER_TEST: boolean = true,
-  router?: NextRouter,
-): Promise<void> {
+): Promise<{ valid: boolean; message: string }> {
   let status = 404,
     resData;
-  const resSpan = document.getElementById("res-span") || document.getElementById("pwWarn");
   try {
     if (typeof ev !== "object") throw new Error(`Error validating typeof ev`);
     if (typeof UNDER_TEST !== "boolean") throw new Error(`Error validating typeof UNDER_TEST`);
     ev.preventDefault();
-    const targ =
-      ev.currentTarget instanceof HTMLButtonElement && ev.currentTarget.querySelector("a")
-        ? ev.currentTarget.querySelector("a")!
-        : ev.currentTarget;
-    const exeLogin = (): void => {
-      const spin = (resSpan: HTMLElement): void => {
-        resSpan.innerHTML = `
-        <div class="spinner-border text-info" role="status">
-          <span class="visually-hidden">Logging in...</span>
-        </div>
-        `;
-        const form = resSpan.closest("form");
-        if (form instanceof HTMLElement) {
-          form.style.opacity = "0.3";
-          form.style.filter = "grayscale(40%)";
-        }
-        if (innerWidth <= 460) {
-          resSpan.style.position = "fixed";
-          resSpan.style.top = "35vh";
-          resSpan.style.left = "35vw";
-          resSpan.style.transform = "scale(5)";
-        } else {
-          resSpan.style.position = "fixed";
-          resSpan.style.top = "33vh";
-          resSpan.style.left = "50vw";
-          resSpan.style.transform = "scale(9)";
-        }
-      };
-      if (typeof router === "object" && "beforePopState" in router && "push" in router) {
-        router.beforePopState(() => {
-          resSpan && spin(resSpan);
-          return true;
-        });
-        setTimeout(() => {
-          targ instanceof HTMLAnchorElement ? router.push(targ.href) : router.push("/base");
-        }, 1000);
-      } else {
-        resSpan && spin(resSpan);
-        setTimeout(() => {
-          targ instanceof HTMLAnchorElement ? (location.href = targ.href) : (location.href = "/base");
-        }, 1000);
-      }
-    };
     if (!UNDER_TEST) {
       const res = await fetch("../api/django/check_user_validity", {
         method: "POST",
@@ -120,23 +74,27 @@ export async function handleLogin(
         throw new Error(`Error validating user from API`);
       }
       const data = await res.json();
-      if (res.status !== 200 && resSpan instanceof HTMLElement) {
-        resSpan.innerText = `Failed to validate login: Error code ${res.status}`;
+      if (res.status !== 200) {
         console.warn(`Error on processing HTTP Response:\n`);
         console.warn(data);
         status = res.status;
         resData = data;
-        return;
+        return {
+          valid: false,
+          message: `Failed to validate login: Error code ${res.status}`,
+        };
       }
       console.log(`Fetch was sucessfull: ${res.status}\nJSON Data:`);
       console.log(data);
       if (!("access" in data)) {
-        if (resSpan) resSpan.innerText = `Failed to validate login: Error processing server response.`;
         console.warn(`Error on processing JSONified HTTP Response:\n`);
         console.warn(data);
         status = res.status;
         resData = data;
-        return;
+        return {
+          valid: false,
+          message: `Failed to validate login: Error processing server response.`,
+        };
       }
       Cookies.set("accessToken", data.access, {
         secure: true,
@@ -150,23 +108,34 @@ export async function handleLogin(
       });
       const { ok, res: user } = decodeToken(data);
       if (!ok) {
-        if (resSpan) resSpan.innerText = `Failed to validate login: Error validating token.`;
         console.warn(`Error processing tokens :\n`);
         console.warn(user);
         status = res.status;
         resData = data;
-        return;
+        return {
+          valid: false,
+          message: `Failed to validate login: Error validating token.`,
+        };
       }
       localStorage.setItem("activeUser", JSON.stringify(user));
-      exeLogin();
+      return {
+        valid: true,
+        message: `Loading...`,
+      };
     } else {
       localStorage.setItem("activeUser", JSON.stringify(decodeToken("", true).res));
-      exeLogin();
+      return {
+        valid: true,
+        message: `Loading...`,
+      };
     }
   } catch (e) {
     console.error(`Error executing handleFetchStuds:\n${(e as Error).message}`);
-    if (resSpan) resSpan.innerText = `Failed to validate login: Error code ${status}`;
     console.warn(`Error on processing HTTP Response:\n${resData}`);
+    return {
+      valid: false,
+      message: `Failed to validate login: Error code ${status}`,
+    };
   }
 }
 export async function handleSubmit(

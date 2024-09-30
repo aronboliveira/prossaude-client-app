@@ -521,14 +521,16 @@ export function addCanvasListeners(): void {
       isDrawing = false;
       ctx?.beginPath();
     };
-    canvas.addEventListener("mousedown", e => startDrawing(e));
-    canvas.addEventListener("touchstart", e => startDrawing(e.touches[0]));
-    canvas.addEventListener("mousemove", e => {
-      draw(e);
-    });
-    canvas.addEventListener("touchmove", e => {
-      draw(e.touches[0]);
-    });
+    canvas.addEventListener("mousedown", startDrawing);
+    canvas.addEventListener("touchstart", e => startDrawing(e.touches[0]), { passive: true });
+    canvas.addEventListener("mousemove", draw, { capture: true });
+    canvas.addEventListener(
+      "touchmove",
+      e => {
+        draw(e.touches[0]);
+      },
+      { passive: true },
+    );
     canvas.addEventListener("mouseup", stopDrawing);
     canvas.addEventListener("mouseout", stopDrawing);
     canvas.addEventListener("touchend", stopDrawing);

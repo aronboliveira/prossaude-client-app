@@ -10,7 +10,7 @@ import { createRoot } from "react-dom/client";
 import { handleLinkChanges } from "@/lib/global/handlers/gRoutingHandlers";
 import { nullishDiv, panelOpts, voidVal } from "@/lib/global/declarations/types";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
-import { useState, useRef, useEffect, useContext } from "react";
+import { useState, useRef, useEffect, useContext, useCallback } from "react";
 import DefaultForm from "../DefaultForm";
 import ErrorMainDiv from "../../../error/ErrorMainDiv";
 import GenericErrorComponent from "../../../error/GenericErrorComponent";
@@ -27,13 +27,14 @@ export let globalDataProvider: DataProvider | voidVal;
 export const panelRoots: { [k: string]: Root | undefined } = {
   mainRoot: undefined,
 };
+
 export default function SelectPanel({ defOp = "agenda" }: MainPanelProps): JSX.Element {
   const [selectedOption, setSelectedOption] = useState<string>(defOp);
   const [userClass, setClass] = useState<string>("coordenador");
   const [mounted, setMounted] = useState<boolean>(false);
   const formRootRef = useRef<nullishDiv>(null);
   const context = useContext<AppRootContextType>(AppRootContext);
-  const renderSelectPanel = (opt: panelOpts): void => {
+  const renderSelectPanel = useCallback((opt: panelOpts): void => {
     try {
       const formRoot = document.getElementById("formRoot");
       if (!(formRoot instanceof HTMLElement))
@@ -76,7 +77,7 @@ export default function SelectPanel({ defOp = "agenda" }: MainPanelProps): JSX.E
     } catch (e) {
       console.error(`Error executing procedure fro rendering on formRoot:\n${(e as Error).message}`);
     }
-  };
+  }, []);
   const handlePanelPath = (change: React.ChangeEvent<HTMLSelectElement> | string): void => {
     const changeValue = typeof change === "object" && "target" in change ? change.target.value : change;
     history.pushState(
@@ -92,9 +93,8 @@ export default function SelectPanel({ defOp = "agenda" }: MainPanelProps): JSX.E
       history.pushState({}, "", `${location.href}`.replace("/?", "?").replace("/#", "#"));
     }, 300);
   };
-  console.log("USER CLASS LOADED");
-  console.log(userClass);
   useEffect(() => {
+    alert("Essa seção do sistema ainda não possui servidor ativo.\nUtilize apenas como teste de interface.");
     const privilege = localStorage.getItem("activeUser")
       ? JSON.parse(localStorage.getItem("activeUser")!).loadedData?.privilege
       : defUser.loadedData.privilege;

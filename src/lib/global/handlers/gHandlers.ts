@@ -302,7 +302,7 @@ export function changeToAstDigit(toFileInpBtn: targEl): void {
         searchPreviousSiblings(toFileInpBtn, "inpAst") ??
         toFileInpBtn.parentElement?.querySelector(".inpAst")
       : toFileInpBtn.previousElementSibling ??
-        toFileInpBtn.parentElement!.querySelector("#inpAstConfirmId") ??
+        toFileInpBtn.parentElement?.querySelector("#inpAstConfirmId") ??
         searchPreviousSiblings(toFileInpBtn, "inpAst") ??
         searchPreviousSiblings(toFileInpBtn, "imgAstDigit");
     if (
@@ -315,13 +315,10 @@ export function changeToAstDigit(toFileInpBtn: targEl): void {
         `Validation of Parent Element for field for Signature`,
         extLine(new Error()),
       );
-    if (
-      /Usar/gi.test(toFileInpBtn.textContent) ||
-      inpAst instanceof HTMLCanvasElement ||
-      (inpAst instanceof HTMLInputElement && inpAst.type === "text")
-    ) {
-      toFileInpBtn.textContent = "Retornar à Assinatura Escrita";
-      const fileInp = document.createElement("input") as HTMLInputElement;
+    if (inpAst instanceof HTMLCanvasElement || /Usar/gi.test(toFileInpBtn.innerText)) {
+      console.log("Case usar");
+      toFileInpBtn.innerText = "Retornar à Assinatura Escrita";
+      const fileInp = document.createElement("input");
       fileInp.classList.add("inpAst", "mg-07t", "form-control");
       if (toFileInpBtn.classList.contains("tratBtn")) {
         fileInp.classList.add("inpTrat", "tratAst");
@@ -337,69 +334,66 @@ export function changeToAstDigit(toFileInpBtn: targEl): void {
       fileInp.type = "file";
       fileInp.accept = "image/*";
       fileInp.required = true;
+      console.log("replacing to file input...");
       inpAst.parentElement.replaceChild(fileInp, inpAst);
-      fileInp.type === "file" &&
-        fileInp.addEventListener("change", chose => {
-          try {
-            let imgFile;
-            if (fileInp?.files) imgFile = fileInp.files[0];
-            if (
-              chose?.target instanceof HTMLInputElement &&
-              fileInp?.files &&
-              fileInp.files?.length > 0 &&
-              imgFile &&
-              imgFile.type?.startsWith("image") &&
-              fileInp.parentElement
-            ) {
-              const fileReader = new FileReader();
-              fileReader.onload = (load): void => {
-                //definir lógica para carregamento
-                //inicia preparo para evento de carregamento
-                const imgAstDigt = document.createElement("img"); //cria container
-                fileInp.id = inpAst.id;
-                fileInp.className = inpAst.className;
-                Object.assign(imgAstDigt, {
-                  src: load.target?.result, //checa a url do file que será carregado
-                  innerHTML: "",
-                  id: fileInp.id,
-                  className: fileInp.className,
-                  alt: "Assinatura Digital",
-                  decoding: "async",
-                  loading: "eager",
-                  crossorigin: "anonymous",
-                  style: {
-                    maxWidth: "300px",
-                    maxHeight: "200px",
-                    overflow: "auto",
-                  },
-                });
-                if (fileInp.classList.contains("inpTrat")) {
-                  imgAstDigt.style.height = "100%";
-                  imgAstDigt.style.maxHeight = "100%";
-                  imgAstDigt.style.width = "100%";
-                  imgAstDigt.style.maxHeight = "100%";
-                } else {
-                  imgAstDigt.style.maxWidth = "18.75rem";
-                  imgAstDigt.style.maxHeight = "12.5rem";
-                }
-                imgAstDigt.style.overflow = "auto";
-                fileInp.parentElement?.replaceChild(imgAstDigt, fileInp);
-                !fileInp.classList.contains("inpTrat") &&
-                  defineLabId(document.querySelector(".labAst"), toFileInpBtn, imgAstDigt);
-              };
-              fileReader.readAsDataURL(imgFile); //lê o file baseado na src carregada
-            } else
-              throw new Error(`Error on selecting the file and/or finding the parent Element for the file input.
+      fileInp.addEventListener("change", chose => {
+        try {
+          let imgFile;
+          if (fileInp?.files) imgFile = fileInp.files[0];
+          if (
+            chose?.target instanceof HTMLInputElement &&
+            fileInp?.files &&
+            fileInp.parentElement &&
+            fileInp.files?.length > 0 &&
+            imgFile?.type?.startsWith("image")
+          ) {
+            const fileReader = new FileReader();
+            fileReader.onload = (load): void => {
+              const imgAstDigt = document.createElement("img");
+              fileInp.id = inpAst.id;
+              fileInp.className = inpAst.className;
+              Object.assign(imgAstDigt, {
+                src: load.target?.result ?? "Error",
+                innerHTML: "",
+                id: fileInp.id,
+                className: fileInp.className,
+                alt: "Assinatura Digital",
+                decoding: "async",
+                loading: "eager",
+                crossorigin: "anonymous",
+                style: {
+                  maxWidth: "300px",
+                  maxHeight: "200px",
+                  overflow: "auto",
+                },
+              });
+              if (fileInp.classList.contains("inpTrat")) {
+                imgAstDigt.style.height = "100%";
+                imgAstDigt.style.maxHeight = "100%";
+                imgAstDigt.style.width = "100%";
+                imgAstDigt.style.maxHeight = "100%";
+              } else {
+                imgAstDigt.style.maxWidth = "18.75rem";
+                imgAstDigt.style.maxHeight = "12.5rem";
+              }
+              imgAstDigt.style.overflow = "auto";
+              fileInp.parentElement?.replaceChild(imgAstDigt, fileInp);
+              !fileInp.classList.contains("inpTrat") &&
+                defineLabId(document.querySelector(".labAst"), toFileInpBtn, imgAstDigt);
+            };
+            fileReader.readAsDataURL(imgFile);
+          } else
+            throw new Error(`Error on selecting the file and/or finding the parent Element for the file input.
             chose.target: ${chose?.target ?? "UNDEFINED CHOSE"};
             fileInp: ${fileInp ?? "UNDEFINED INP"};
             files: ${fileInp?.files ?? "UNDEFINED FILES"};
             parentElement: ${fileInp?.parentElement ?? "UNDEFINED PARENT"}; 
             imgFile: ${imgFile ?? "UNDEFINED IMAGE"}; 
             imgFile.type: ${imgFile?.type ?? "UNDEFINED TYPE"};`);
-          } catch (error) {
-            console.error((error as Error).message);
-          }
-        });
+        } catch (error) {
+          console.error((error as Error).message);
+        }
+      });
       [...document.querySelectorAll(".inpAst"), ...document.querySelectorAll(".tratBtn")].forEach((fileInp, i) => {
         try {
           if (!(fileInp instanceof HTMLElement))
@@ -417,11 +411,9 @@ export function changeToAstDigit(toFileInpBtn: targEl): void {
           );
         }
       });
-    } else if (
-      /Retornar/gi.test(toFileInpBtn.textContent) ||
-      !(inpAst instanceof HTMLCanvasElement || (inpAst instanceof HTMLInputElement && inpAst.type === "text"))
-    ) {
-      toFileInpBtn.textContent = "Usar Assinatura Digital";
+    } else if (!(inpAst instanceof HTMLCanvasElement) || /Retornar/gi.test(toFileInpBtn.innerText)) {
+      console.log("Case retornar");
+      toFileInpBtn.innerText = "Usar Assinatura Digital";
       if (toFileInpBtn.classList.contains("tratBtn")) {
         const textInp = document.createElement("input") as HTMLInputElement;
         textInp.id = inpAst.id;
@@ -429,6 +421,7 @@ export function changeToAstDigit(toFileInpBtn: targEl): void {
         textInp.dataset.title =
           inpAst.dataset.title || `Assinatura do Tratamento ${document.querySelectorAll(".tratAst").length + 1}`;
         textInp.required = true;
+        console.log("replacing to canvas...");
         inpAst.parentElement.replaceChild(textInp, inpAst);
         document.querySelectorAll(".inpAst").forEach((fileInp, i) => {
           try {
@@ -456,6 +449,7 @@ export function changeToAstDigit(toFileInpBtn: targEl): void {
         fileInp.dataset.title = "Assinatura do Paciente";
         defineLabId(document.querySelector(".labAst"), toFileInpBtn, fileInp as any);
         toFileInpBtn.previousElementSibling?.removeAttribute("hidden");
+        console.log("replacing to canvas...");
         inpAst.parentElement.replaceChild(fileInp, inpAst);
         addCanvasListeners();
       }
