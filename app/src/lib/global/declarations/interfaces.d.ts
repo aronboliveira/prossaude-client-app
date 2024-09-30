@@ -121,8 +121,8 @@ export interface TdProps extends TabCelProps {
 }
 export interface ColProps extends Omit<ThProps, "nRow"> {}
 export interface SpinnerComponentProps {
-  spinnerClass: "spinner-border" | "spinner-grow";
-  spinnerColor:
+  spinnerClass?: "spinner-border" | "spinner-grow";
+  spinnerColor?:
     | "text-danger"
     | "text-primary"
     | "text-secondary"
@@ -132,5 +132,6 @@ export interface SpinnerComponentProps {
     | "text-light"
     | "text-dark"
     | "";
-  message: string;
+  message?: string;
+  fs?: boolean;
 }

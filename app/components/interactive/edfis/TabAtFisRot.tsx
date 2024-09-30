@@ -7,16 +7,19 @@ import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { addRowAtivFis, removeRowAtivFis } from "@/lib/locals/edFisNutPage/edFisNutHandler";
 export default function TabAtFirsRot({ children = <></> }: { children: JSX.Element }): JSX.Element {
   const mainRef = useRef<nullishDiv>(null);
-  const [blockCount, setBlockCount] = useReducer((s: number, a: PayloadCounterAction) => {
-    switch (a.type) {
-      case "INCREMENT":
-        return s + 1;
-      case "DECREMENT":
-        return s > 3 ? s - 1 : s;
-      default:
-        return s;
-    }
-  }, 3);
+  const [blockCount, setBlockCount] = useReducer<(s: number, a: PayloadCounterAction) => number>(
+    (s: number, a: PayloadCounterAction) => {
+      switch (a.type) {
+        case "INCREMENT":
+          return s + 1;
+        case "DECREMENT":
+          return s > 3 ? s - 1 : s;
+        default:
+          return s;
+      }
+    },
+    3,
+  );
   useEffect(() => {
     try {
       if (!(mainRef.current instanceof HTMLElement))

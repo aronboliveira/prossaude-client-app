@@ -1796,6 +1796,22 @@ td,
   min-height: 1.5rem;
 }
 
+.spinner {
+  &::before {
+    content: "";
+    position: absolute;
+    top: -1.1vw;
+    left: -1.1vw;
+    right: -1.1vw;
+    bottom: -1.1vw;
+    border-width: 1vw 0 1vw 1vw;
+    border-right-color: #a6cad5;
+    border-radius: 150%;
+    z-index: -1;
+    background-color: transparent;
+  }
+}
+
 .stLab {
   font-weight: 500;
   margin-bottom: 1vh;
