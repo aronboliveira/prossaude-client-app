@@ -1,47 +1,47 @@
 "use client";
 import { HrCelProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import EraseAptBtn from "./EraseAptBtn";
-export default function TdBSchedTab({ userClass, mainRoot, nHr, nRow, nCol, last = false }: HrCelProps): JSX.Element {
+export default function TdBSchedTab({ nHr, nRow, nCol, last = false }: HrCelProps): JSX.Element {
   const dayOrder = ((): string => {
-    switch (nCol) {
-      case 1:
-        return "Primeiro";
-      case 2:
-        return "Segundo";
-      case 3:
-        return "Terceiro";
-      case 4:
-        return "Quarto";
-      case 5:
-        return "Quinto";
-      case 6:
-        return "Sexto";
-      case 7:
-        return "Sétimo";
-      case 8:
-        return "Oitavo";
-      case 9:
-        return "Nono (ignorar se 01)";
-      case 10:
-        return "Décimo";
-      default:
-        return "Indefinido";
-    }
-  })();
-  const hourOrder = ((): string => {
-    switch (nRow) {
-      case 1:
-        return "Primeiro";
-      case 2:
-        return "Segundo";
-      case 3:
-        return "Terceiro";
-      case 4:
-        return "Quarto";
-      default:
-        return "Indefinido";
-    }
-  })();
+      switch (nCol) {
+        case 1:
+          return "Primeiro";
+        case 2:
+          return "Segundo";
+        case 3:
+          return "Terceiro";
+        case 4:
+          return "Quarto";
+        case 5:
+          return "Quinto";
+        case 6:
+          return "Sexto";
+        case 7:
+          return "Sétimo";
+        case 8:
+          return "Oitavo";
+        case 9:
+          return "Nono (ignorar se 01)";
+        case 10:
+          return "Décimo";
+        default:
+          return "Indefinido";
+      }
+    })(),
+    hourOrder = ((): string => {
+      switch (nRow) {
+        case 1:
+          return "Primeiro";
+        case 2:
+          return "Segundo";
+        case 3:
+          return "Terceiro";
+        case 4:
+          return "Quarto";
+        default:
+          return "Indefinido";
+      }
+    })();
   return (
     <td className={`tabCel${last ? " lastConsDayCont" : ""}`} data-col={nCol} data-row={nRow}>
       <slot
@@ -69,7 +69,7 @@ export default function TdBSchedTab({ userClass, mainRoot, nHr, nRow, nCol, last
             data-row={nRow}
             data-col={nCol}
           />
-          <EraseAptBtn userClass={userClass} mainRoot={mainRoot} />
+          <EraseAptBtn />
         </div>
       </slot>
     </td>

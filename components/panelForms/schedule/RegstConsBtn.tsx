@@ -4,32 +4,32 @@ import { checkRegstBtn } from "@/lib/locals/panelPage/handlers/consHandlerCmn";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { nullishBtn, voidVal } from "@/lib/global/declarations/types";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import FailRegstAlert from "../../alerts/FailRegsAlert";
-export default function RegstConsBtn({
-  rootEl,
-  secondOp = "Arraste",
-  userClass = "estudante",
-}: RegsConstBtnProps): JSX.Element {
+import { PanelCtx } from "../defs/client/SelectLoader";
+export default function RegstConsBtn({ rootEl, secondOp = "Arraste" }: RegsConstBtnProps): JSX.Element {
   let root: Root | undefined;
-  const [shouldDisplayFailRegstDlg, setDisplayFailRegstDlg] = useState(false);
-  const RegstBtnRef = useRef<nullishBtn>(null);
-  const toggleDisplayRegstDlg = (rootEl: HTMLElement | voidVal, shouldDisplayFailRegstDlg: boolean = true): void => {
-    rootEl instanceof HTMLElement ? (root = createRoot(rootEl)) : (rootEl = document.getElementById("regstDaySubDiv"));
-    rootEl instanceof HTMLElement
-      ? (root = createRoot(rootEl))
-      : elementNotFound(rootEl, "Root for placing failed register for new appointment", extLine(new Error()));
-    if (
-      !checkRegstBtn(
-        RegstBtnRef.current,
-        document,
-        [root, shouldDisplayFailRegstDlg, setDisplayFailRegstDlg, secondOp],
-        userClass,
+  const [shouldDisplayFailRegstDlg, setDisplayFailRegstDlg] = useState<boolean>(false),
+    userClass = useContext(PanelCtx).userClass,
+    RegstBtnRef = useRef<nullishBtn>(null),
+    toggleDisplayRegstDlg = (rootEl: HTMLElement | voidVal, shouldDisplayFailRegstDlg: boolean = true): void => {
+      rootEl instanceof HTMLElement
+        ? (root = createRoot(rootEl))
+        : (rootEl = document.getElementById("regstDaySubDiv"));
+      rootEl instanceof HTMLElement
+        ? (root = createRoot(rootEl))
+        : elementNotFound(rootEl, "Root for placing failed register for new appointment", extLine(new Error()));
+      if (
+        !checkRegstBtn(
+          RegstBtnRef.current,
+          document,
+          [root, shouldDisplayFailRegstDlg, setDisplayFailRegstDlg, secondOp],
+          userClass,
+        )
       )
-    )
-      setDisplayFailRegstDlg(!shouldDisplayFailRegstDlg);
-    root = undefined;
-  };
+        setDisplayFailRegstDlg(!shouldDisplayFailRegstDlg);
+      root = undefined;
+    };
   useEffect(() => {
     RegstBtnRef.current instanceof HTMLButtonElement
       ? syncAriaStates([document.getElementById("regstDayBtn")!])

@@ -4,15 +4,16 @@ import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { ExcludeConsDlgProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import { addEraseEvent } from "@/lib/locals/panelPage/handlers/consHandlerCmn";
-import { useEffect, useRef } from "react";
+import { useContext, useEffect, useRef } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
+import { PanelCtx } from "../panelForms/defs/client/SelectLoader";
 export default function ExcludeConsDlg({
   setDisplayExcludeDlg,
   shouldDisplayExcludeDlg = true,
   btn,
-  userClass = "estudante",
 }: ExcludeConsDlgProps): JSX.Element {
+  const userClass = useContext(PanelCtx).userClass;
   const excludeDlgRef = useRef<nullishDlg>(null);
   const confirmRef = useRef<nullishBtn>(null);
   const toggleClose = (): void => {

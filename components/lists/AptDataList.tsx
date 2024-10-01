@@ -7,16 +7,17 @@ import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { isClickOutside } from "@/lib/global/gStyleScript";
 import { nullishDlg } from "@/lib/global/declarations/types";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
-import { useEffect, useRef } from "react";
+import { useContext, useEffect, useRef } from "react";
 import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
+import { PanelCtx } from "../panelForms/defs/client/SelectLoader";
 export default function AptDataList({
   setDisplayAptList,
   data,
   btnId,
   shouldDisplayAptList,
-  userClass,
   isDirectRender = false,
 }: AptDataListProps): JSX.Element {
+  const userClass = useContext(PanelCtx).userClass;
   const transfArea = document.getElementById("transfArea")!;
   if (!transfArea) console.warn(`Transfer area was not found by AptDataList.`);
   const transferBtn = document.querySelector(`[id*="${btnId}"]`);
@@ -33,7 +34,6 @@ export default function AptDataList({
                 shouldDisplayAptList={shouldDisplayAptList}
                 data={data}
                 btnId={btnId}
-                userClass={userClass}
               />,
             );
     } catch (e) {

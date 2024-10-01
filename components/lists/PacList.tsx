@@ -7,7 +7,7 @@ import { handleFetch } from "@/lib/locals/panelPage/handlers/handlers";
 import { panelRoots } from "../panelForms/defs/client/SelectPanel";
 import { strikeEntries } from "@/lib/locals/panelPage/consStyleScript";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
-import { useEffect, useRef } from "react";
+import { useContext, useEffect, useRef } from "react";
 import GenericErrorComponent from "../error/GenericErrorComponent";
 import PacRow from "../panelForms/pacs/PacRow";
 import Spinner from "../icons/Spinner";
@@ -15,18 +15,19 @@ import { nullishHtEl, nullishTab, nullishTabSect } from "@/lib/global/declaratio
 import { PacInfo, PacListProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import { addListenerAlocation, checkLocalIntervs, fillTabAttr } from "@/lib/locals/panelPage/handlers/consHandlerList";
 import { handleClientPermissions } from "@/lib/locals/panelPage/handlers/consHandlerUsers";
+import { PanelCtx } from "../panelForms/defs/client/SelectLoader";
 export default function PacList({
   shouldDisplayRowData,
   setDisplayRowData,
   dispatch,
   shouldShowAlocBtn = true,
   state = true,
-  userClass = "estudante",
 }: PacListProps): JSX.Element {
-  const pacs: PacInfo[] = [];
-  const tabPacRef = useRef<nullishTab>(null);
-  const sectTabRef = useRef<nullishHtEl>(null);
-  const tbodyRef = useRef<nullishTabSect>(null);
+  const userClass = useContext(PanelCtx).userClass,
+    pacs: PacInfo[] = [],
+    tabPacRef = useRef<nullishTab>(null),
+    sectTabRef = useRef<nullishHtEl>(null),
+    tbodyRef = useRef<nullishTabSect>(null);
   useEffect(() => {
     try {
       if (!(tbodyRef.current instanceof HTMLTableSectionElement))
@@ -188,7 +189,6 @@ export default function PacList({
                           <PacRow
                             nRow={i + 2}
                             pac={pac}
-                            userClass={userClass}
                             shouldShowAlocBtn={shouldShowAlocBtn}
                             tabRef={tabPacRef}
                             key={`pac_row__${i + 2}`}
@@ -229,7 +229,6 @@ export default function PacList({
                       <PacRow
                         nRow={i + 2}
                         pac={pac}
-                        userClass={userClass}
                         shouldShowAlocBtn={shouldShowAlocBtn}
                         tabRef={tabPacRef}
                         key={`pac_row__${i + 2}`}

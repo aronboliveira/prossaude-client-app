@@ -1,13 +1,13 @@
 import { StudRowProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import { dateISOtoBRL } from "@/lib/global/gModel";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import AlterFieldList from "../../lists/AlterFieldList";
 import FormExcludeBtn from "../defs/FormExcludeBtn";
+import { PanelCtx } from "../defs/client/SelectLoader";
 export default function StudRow({
   tabRef,
   nRow,
   inDlg = false,
-  userClass = "estudante",
   stud = {
     name: "Anônimo",
     email: "Não fornecido",
@@ -21,7 +21,8 @@ export default function StudRow({
   },
 }: StudRowProps): JSX.Element {
   nRow = typeof nRow === "string" ? parseInt(nRow) : nRow;
-  const [shouldShowAlterDlg, setAlterDlg] = useState<boolean>(false);
+  const [shouldShowAlterDlg, setAlterDlg] = useState<boolean>(false),
+    userClass = useContext(PanelCtx).userClass;
   if (!Number.isFinite(nRow)) nRow = 2;
   return (
     <tr id={`avStuds-row${nRow}`} data-row={nRow}>

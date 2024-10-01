@@ -9,9 +9,7 @@ import { assignFormAttrs } from "@/lib/global/gModel";
 export default function RecoverForm(): JSX.Element {
   const formRef = useRef<nullishForm>(null),
     [shouldShowAlert, setAlert] = useState<boolean>(false);
-  useEffect(() => {
-    assignFormAttrs(formRef.current);
-  }, []);
+  useEffect(() => assignFormAttrs(formRef.current), []);
   return (
     <form
       ref={formRef}

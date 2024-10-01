@@ -15,7 +15,7 @@ export interface UserProfile {
   userTel: string;
 }
 export interface GlobalFormProps {
-  userClass: userClasses;
+  userClass?: userClasses;
   mainRoot?: Root;
 }
 export interface MainPanelProps {
@@ -41,7 +41,7 @@ export interface PanelFormProps {
 }
 export interface BtnAddPacPros {
   context: boolean;
-  userClass: userClasses;
+  userClass?: userClasses;
 }
 export interface ConsDlgProps extends Omit<BtnAddPacPros, "context"> {
   onClose: () => void;
@@ -51,7 +51,7 @@ export interface FormDlgProps extends ConsDlgProps {
 }
 export interface FillerProps {
   forwardedRef: MutableRefObject<nullishDlg>;
-  userClass: userClasses;
+  userClass?: userClasses;
 }
 export interface AvStudListDlgProps extends FillerProps, DlgProps {}
 export interface StudListProps extends GlobalFormProps, Partial<DlgProps> {
@@ -86,20 +86,20 @@ export interface AlterFieldListProps extends DlgProps {
 export interface ProviderAptDataListProps {
   [key: string]: any;
   btnId: string;
-  userClass: userClasses;
+  userClass?: userClasses;
 }
 export interface AptDataListProps {
   setDisplayAptList: Dispatch<SetStateAction<boolean>>;
   data: { [key: string]: any };
   btnId: string;
   shouldDisplayAptList: boolean;
-  userClass: userClasses;
+  userClass?: userClasses;
   isDirectRender?: boolean;
 }
 export interface RegsConstBtnProps {
   rootEl: HTMLElement | voidVal;
   secondOp: string;
-  userClass: userClasses;
+  userClass?: userClasses;
 }
 export interface ExcludeDlgProps {
   setDisplayExcludeDlg: Dispatch<SetStateAction<boolean>>;
@@ -108,7 +108,7 @@ export interface ExcludeDlgProps {
 }
 export interface ExcludeConsDlgProps extends Omit<ExcludeDlgProps, "route"> {
   btn: nullishBtn;
-  userClass: userClasses;
+  userClass?: userClasses;
 }
 export interface FailedRegstProps {
   setDisplayFailRegstDlg: Dispatch<SetStateAction<boolean>>;

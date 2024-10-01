@@ -15,7 +15,7 @@ import AvPacListDlg from "../lists/AvPacListDlg";
 import AvProfListDlg from "../lists/AvProfListDlg";
 import DREFiller from "./DREFiller";
 import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
-import { useEffect, useRef, useCallback, useState, MutableRefObject } from "react";
+import { useEffect, useRef, useCallback, useState, MutableRefObject, useContext } from "react";
 import {
   checkRegstBtn,
   createAptBtn,
@@ -38,10 +38,12 @@ import OptGrpUsers from "./OptGrpUsers";
 import ListTelPacCons from "./ListTelPacCons";
 import ListEmailPacCons from "./ListEmailPacCons";
 import FailRegstAlert from "../alerts/FailRegsAlert";
+import { PanelCtx } from "../panelForms/defs/client/SelectLoader";
 let accFormData = 0;
-export default function FormDlg({ onClose, userClass = "estudante" }: ConsDlgProps): JSX.Element {
+export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
   //display de campos para identificadores de estudante
-  const dlgRef = useRef<nullishDlg>(null),
+  const userClass = useContext(PanelCtx).userClass,
+  dlgRef = useRef<nullishDlg>(null),
     pacBtnRef = useRef<nullishBtn>(null);
   //autocompleção
   const CPFPacInpRef = useRef<nullishInp>(null),
@@ -592,7 +594,6 @@ export default function FormDlg({ onClose, userClass = "estudante" }: ConsDlgPro
                     state={shouldDisplayPacList}
                     mainDlgRef={dlgRef}
                     shouldShowAlocBtn={true}
-                    userClass={userClass}
                   />
                 )}
               </div>
@@ -890,7 +891,7 @@ export default function FormDlg({ onClose, userClass = "estudante" }: ConsDlgPro
                     </button>
                   </div>
                 </div>
-                {isDREFillerActive && <DREFiller forwardedRef={dlgRef} userClass={userClass} />}
+                {isDREFillerActive && <DREFiller forwardedRef={dlgRef} />}
                 <div role='group' className='flexNoWC flexBasis100' id='respTitledInpDiv'>
                   <label className='stLab' id='hRelResp' htmlFor='relProfName'>
                     Professor ou Profissional Responsável alocado:
@@ -938,7 +939,6 @@ export default function FormDlg({ onClose, userClass = "estudante" }: ConsDlgPro
                     state={isCPFFillerActive}
                     mainDlgRef={dlgRef}
                     btnProf={CPFPacBtnRef.current}
-                    userClass={userClass}
                   />
                 )}
               </div>

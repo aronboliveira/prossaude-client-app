@@ -1,8 +1,10 @@
 import { ProviderAptDataListProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import AptDataList from "./AptDataList";
-export default function ProviderAptDatList({ data, btnId, userClass }: ProviderAptDataListProps): JSX.Element {
-  const [shouldDisplayAptList, setDisplayAptList] = useState(true);
+import { PanelCtx } from "../panelForms/defs/client/SelectLoader";
+export default function ProviderAptDatList({ data, btnId }: ProviderAptDataListProps): JSX.Element {
+  const [shouldDisplayAptList, setDisplayAptList] = useState(true),
+    userClass = useContext(PanelCtx).userClass;
   return !shouldDisplayAptList ? (
     <></>
   ) : (
@@ -13,7 +15,6 @@ export default function ProviderAptDatList({ data, btnId, userClass }: ProviderA
           data={data}
           btnId={btnId}
           shouldDisplayAptList={shouldDisplayAptList}
-          userClass={userClass}
         />
       )}
     </div>

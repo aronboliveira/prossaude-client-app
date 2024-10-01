@@ -6,7 +6,7 @@ import { fillScheduleState } from "../../../src/lib/locals/panelPage/consControl
 import { globalDataProvider, panelRoots } from "../defs/client/SelectPanel";
 import { handleClientPermissions } from "../../../src/lib/locals/panelPage/handlers/consHandlerUsers";
 import { handleSubmit } from "@/lib/locals/panelPage/handlers/handlers";
-import { useState, useRef, useEffect, useCallback, JSX } from "react";
+import { useState, useRef, useEffect, useCallback, JSX, useContext } from "react";
 import GenericErrorComponent from "../../error/GenericErrorComponent";
 import RegstConsBtn from "./RegstConsBtn";
 import ReseterBtn from "../defs/ReseterBtn";
@@ -38,27 +38,29 @@ import { syncAriaStates, validateForm } from "../../../src/lib/global/handlers/g
 import { scheduleReset, panelFormsVariables, sessionScheduleState } from "../panelFormsData";
 import FormDlg from "../../consRegst/FormDlg";
 import { assignFormAttrs } from "@/lib/global/gModel";
+import { PanelCtx } from "../defs/client/SelectLoader";
 export const scheduleProps: { autoSaving: boolean } = {
   autoSaving: true,
 };
-export default function ScheduleForm({ mainRoot, userClass = "estudante" }: ScheduleFormProps): JSX.Element {
-  const cols = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-  const hours: validSchedHours[] = [18, 19, 20, 21];
-  const handleResize = (): void => {
-    if (innerWidth === 900 || innerWidth === 600 || innerWidth === 460) {
-      normalizeSizeSb(
-        [
-          ...document.querySelectorAll(".form-padded"),
-          ...document.querySelectorAll(".ovFlAut"),
-          ...document.querySelectorAll("[scrollbar-width=none]"),
-          ...document.querySelectorAll("table"),
-        ],
-        [true, 1],
-        true,
-        [document.getElementById("formBodySchedSect")],
-      );
-    }
-  };
+export default function ScheduleForm({ mainRoot }: ScheduleFormProps): JSX.Element {
+  const cols = [1, 2, 3, 4, 5, 6, 7, 8, 9],
+    hours: validSchedHours[] = [18, 19, 20, 21],
+    userClass = useContext(PanelCtx).userClass,
+    handleResize = (): void => {
+      if (innerWidth === 900 || innerWidth === 600 || innerWidth === 460) {
+        normalizeSizeSb(
+          [
+            ...document.querySelectorAll(".form-padded"),
+            ...document.querySelectorAll(".ovFlAut"),
+            ...document.querySelectorAll("[scrollbar-width=none]"),
+            ...document.querySelectorAll("table"),
+          ],
+          [true, 1],
+          true,
+          [document.getElementById("formBodySchedSect")],
+        );
+      }
+    };
   const [showForm] = useState(true);
   const formRef = useRef<nullishForm>(null);
   const workingDefinitionsRef = useRef<HTMLDivElement | null>(null);
@@ -554,7 +556,6 @@ export default function ScheduleForm({ mainRoot, userClass = "estudante" }: Sche
                         <RegstConsBtn
                           rootEl={document.getElementById("regstDaySubDiv") as HTMLElement}
                           secondOp={"Arraste"}
-                          userClass={userClass}
                         />
                       </div>
                     </div>
@@ -894,13 +895,7 @@ export default function ScheduleForm({ mainRoot, userClass = "estudante" }: Sche
                 </thead>
                 <tbody id='tbSchedule'>
                   {hours.map((nHr, i) => (
-                    <TrBSchedTab
-                      userClass={userClass}
-                      mainRoot={mainRoot}
-                      nHr={nHr}
-                      nRow={i + 1}
-                      key={`tr_${i + 1}__${nHr}`}
-                    />
+                    <TrBSchedTab mainRoot={mainRoot} nHr={nHr} nRow={i + 1} key={`tr_${i + 1}__${nHr}`} />
                   ))}
                 </tbody>
               </table>
@@ -919,7 +914,7 @@ export default function ScheduleForm({ mainRoot, userClass = "estudante" }: Sche
               </button>
               <ReseterBtn
                 root={panelRoots.mainRoot!}
-                renderForm={<ScheduleForm mainRoot={mainRoot} userClass={userClass} context={false} />}
+                renderForm={<ScheduleForm mainRoot={mainRoot} context={false} />}
               />
             </div>
             <div role='group' id='pacDiv'>
@@ -927,7 +922,7 @@ export default function ScheduleForm({ mainRoot, userClass = "estudante" }: Sche
             </div>
           </form>
           <footer className='d-no' id='scheduleFooter'></footer>
-          <div>{pressState ? <FormDlg onClose={toggleForm} userClass={userClass} /> : <></>}</div>
+          <div>{pressState ? <FormDlg onClose={toggleForm} /> : <></>}</div>
         </div>
       )}
     </ErrorBoundary>

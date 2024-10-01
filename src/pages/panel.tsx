@@ -5,8 +5,7 @@ import TipsBtnWrapper from "../../components/interactive/panel/TipsBtnWrapper";
 import UserProfilePanelWrapper from "../../components/interactive/panel/UserProfilePanelWrapper";
 export const fillScheduleState = { acc: 0 };
 export const formData: { [key: string]: string } = {};
-export default function PanelPage({ data }: { data: any }): JSX.Element {
-  console.log(!data && "No fetched static data");
+export default function PanelPage(): JSX.Element {
   return (
     <ErrorBoundary FallbackComponent={() => <GenericErrorComponent message='Error rendering Panel Page' />}>
       <div role='group' className='pad1pc' id='bgDiv'>
@@ -35,7 +34,7 @@ export default function PanelPage({ data }: { data: any }): JSX.Element {
         <main>
           <section className='flexColumn' id='registSect'>
             <div role='group' id='panelDiv'>
-              <MainFormPanel defOp={"agenda"} />
+              <MainFormPanel />
               <div role='group' id='pacDiv' className='form-padded'></div>
             </div>
           </section>
@@ -47,22 +46,4 @@ export default function PanelPage({ data }: { data: any }): JSX.Element {
       </canvas>
     </ErrorBoundary>
   );
-}
-export async function getStaticProps(): Promise<object> {
-  try {
-    const res = await fetch("/api-path");
-    if (!res.ok) throw new Error(`Failed to fetch`);
-    const data = await res.json();
-    return {
-      props: {
-        data,
-      },
-      revalidate: 300,
-    };
-  } catch (e) {
-    console.error(`Error fetching static props:\n${(e as Error).message}`);
-    return {
-      props: {},
-    };
-  }
 }

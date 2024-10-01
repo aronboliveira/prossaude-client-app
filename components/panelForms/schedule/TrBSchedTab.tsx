@@ -1,8 +1,11 @@
 "use client";
 import { HrRowProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import TdBSchedTab from "./TdBSchedTab";
-export default function TrBSchedTab({ userClass, mainRoot, nHr, nRow }: HrRowProps): JSX.Element {
-  const cols = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+import { useContext } from "react";
+import { PanelCtx } from "../defs/client/SelectLoader";
+export default function TrBSchedTab({ mainRoot, nHr, nRow }: HrRowProps): JSX.Element {
+  const cols = [1, 2, 3, 4, 5, 6, 7, 8, 9],
+    userClass = useContext(PanelCtx).userClass;
   return (
     <tr id={`tr${nHr}`} data-row={nRow}>
       <td className='tabCel' data-col='0' data-row={nRow}>
@@ -15,7 +18,6 @@ export default function TrBSchedTab({ userClass, mainRoot, nHr, nRow }: HrRowPro
           <TdBSchedTab
             nCol={nCol}
             nRow={nRow}
-            userClass={userClass}
             nHr={nHr}
             mainRoot={mainRoot}
             last={true}
@@ -25,12 +27,11 @@ export default function TrBSchedTab({ userClass, mainRoot, nHr, nRow }: HrRowPro
           <TdBSchedTab
             nCol={nCol}
             nRow={nRow}
-            userClass={userClass}
             nHr={nHr}
             mainRoot={mainRoot}
             key={`td_schedule__${nRow}-${nCol}-${nHr}`}
           />
-        )
+        ),
       )}
     </tr>
   );
