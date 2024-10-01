@@ -5,13 +5,11 @@ import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { isClickOutside } from "@/lib/global/gStyleScript";
 import { nullishDlg } from "@/lib/global/declarations/types";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
 import PacList from "./PacList";
-import { PanelCtx } from "../panelForms/defs/client/SelectLoader";
 export default function AvPacListDlg({ dispatch, state, shouldShowAlocBtn }: AvPacListDlgProps): JSX.Element {
   const [shouldDisplayRowData, setDisplayRowData] = useState<boolean>(false),
-    userClass = useContext(PanelCtx).userClass,
     dialogRef = useRef<nullishDlg>(null);
   //push em history
   useEffect(() => {

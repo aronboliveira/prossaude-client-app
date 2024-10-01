@@ -1,5 +1,4 @@
 import { ErrorBoundary } from "react-error-boundary";
-import { GlobalFormProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import { addListenerExportBtn } from "@/lib/global/gController";
 import { clearPhDates, normalizeSizeSb } from "@/lib/global/gStyleScript";
 import { globalDataProvider, panelRoots } from "../defs/client/SelectPanel";

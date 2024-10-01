@@ -1,10 +1,8 @@
 "use client";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import FormDlg from "./FormDlg";
-import { PanelCtx } from "../panelForms/defs/client/SelectLoader";
 export default function BtnAddPac(): JSX.Element {
-  const userClass = useContext(PanelCtx).userClass;
   const [pressState, setTogglePress] = useState<boolean>(false);
   const toggleForm = (): void => setTogglePress(() => !pressState);
   useEffect(() => {

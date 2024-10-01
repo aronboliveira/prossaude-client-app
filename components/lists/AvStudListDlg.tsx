@@ -5,13 +5,11 @@ import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { isClickOutside } from "@/lib/global/gStyleScript";
 import { nullishDlg } from "@/lib/global/declarations/types";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
-import { useContext, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
 import StudList from "./StudList";
-import { PanelCtx } from "../panelForms/defs/client/SelectLoader";
 export default function AvStudListDlg({ forwardedRef, dispatch, state = false }: AvStudListDlgProps): JSX.Element {
-  const userClass = useContext(PanelCtx).userClass,
-    dialogRef = useRef<nullishDlg>(null),
+  const dialogRef = useRef<nullishDlg>(null),
     sectTabRef = useRef<HTMLElement | null>(null);
   //push em history
   useEffect(() => {
