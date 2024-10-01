@@ -1,3 +1,8 @@
+import { nlDsb, queryableNode, rMouseEvent, voidVal } from "./types";
+import { WorkBook, utils, writeFile } from "xlsx";
+import { textTransformPascal } from "../gModel";
+import { exportSignaler } from "../gController";
+import JSZip from "jszip";
 export interface UndefinedPerson {
   gen: string;
   age: number;
@@ -315,5 +320,517 @@ export class User {
   }
   get userTel(): string {
     return this.#userTel;
+  }
+}
+export class ClickEvaluator {
+  #shouldEvaluateTime: boolean = false;
+  #shouldEvaluateClient: boolean = false;
+  #clientAttempt: number = 0;
+  #lastClickTime: number = 0;
+  #lastClickX: number = 0;
+  #lastClickY: number = 0;
+  public get shouldEvaluateTime(): boolean {
+    return this.#shouldEvaluateTime;
+  }
+  public get shouldEvaluateClient(): boolean {
+    return this.#shouldEvaluateClient;
+  }
+  public get clientAttempt(): number {
+    return this.#clientAttempt;
+  }
+  public get lastClickTime(): number {
+    return this.#lastClickTime;
+  }
+  public get lastClickX(): number {
+    return this.#lastClickX;
+  }
+  public get lastClickY(): number {
+    return this.#lastClickY;
+  }
+  #setLastClickTime(time: number): void {
+    this.#lastClickTime = time;
+  }
+  #setLastClickCoordinates(x: number, y: number): void {
+    this.#lastClickX = x;
+    this.#lastClickY = y;
+  }
+  #incrementClientAttempt(): void {
+    this.#clientAttempt += 1;
+  }
+  #enableEvaluateTime(): void {
+    this.#shouldEvaluateTime = true;
+  }
+  #enableEvaluateClient(): void {
+    this.#shouldEvaluateClient = true;
+  }
+  #isTrustedEvent(ev: rMouseEvent): boolean {
+    return ev.isTrusted;
+  }
+  #isMouseMovementZero(ev: rMouseEvent): boolean {
+    return ev.movementX === 0 && ev.movementY === 0;
+  }
+  #isSuspiciousTimeInterval(): boolean {
+    return new Date().getTime() - this.#lastClickTime < 100;
+  }
+  #isSuspiciousClientMovement(ev: rMouseEvent): boolean {
+    return this.#clientAttempt > 1 && ev.clientX === this.#lastClickX && ev.clientY === this.#lastClickY;
+  }
+  public evaluateClickMovements(ev: rMouseEvent): [string, boolean] {
+    let suspicious = true;
+    try {
+      if (!("movementX" in ev)) throw new Error("Invalid instance for Event");
+      if (!this.#isTrustedEvent(ev)) {
+        return [
+          navigator.language.startsWith("pt-")
+            ? "Evento de mouse não confiável. Por favor aguarde para tentar novamente."
+            : "Mouse event not trusted. Please wait and try again.",
+          suspicious,
+        ];
+      }
+      if (!this.#isMouseMovementZero(ev)) {
+        return [
+          navigator.language.startsWith("pt-")
+            ? "Movimento de mouse não confiável. Por favor aguarde para tentar novamente."
+            : "Mouse movement not trusted. Please wait and try again.",
+          suspicious,
+        ];
+      }
+      if (this.#shouldEvaluateTime && this.#isSuspiciousTimeInterval()) {
+        return [
+          navigator.language.startsWith("pt-")
+            ? "Intervalo de movimento do mouse não confiável. Por favor aguarde para tentar novamente."
+            : "Mouse interval tracked as suspicious. Please retry later.",
+          suspicious,
+        ];
+      }
+      this.#enableEvaluateTime();
+      this.#setLastClickTime(new Date().getTime());
+      if (this.#shouldEvaluateClient && this.#isSuspiciousClientMovement(ev)) {
+        return [
+          navigator.language.startsWith("pt-")
+            ? "Deslocamento de mouse não confiável. Por favor aguarde para tentar novamente."
+            : "Mouse pattern tracked as suspicious. Please wait and try again.",
+          suspicious,
+        ];
+      }
+      this.#enableEvaluateClient();
+      this.#incrementClientAttempt();
+      this.#setLastClickCoordinates(ev.clientX, ev.clientY);
+      suspicious = false;
+      return ["Attempt validated.", suspicious];
+    } catch (e) {
+      console.error(`Error executing evaluateClickMovements: ${(e as Error).message}`);
+      return [
+        navigator.language.startsWith("pt-")
+          ? "Não foi possível validar a solicitação. Por favor aguarde para tentar novamente."
+          : "It wasn't possible to validate the request. Please wait for trying again.",
+        suspicious,
+      ];
+    }
+  }
+}
+export class ExportHandler {
+  #exports: number = 0;
+  #timer: number = 360000;
+  #currTime: number = this.#timer;
+  #abortControl: AbortController;
+  constructor() {
+    this.#abortControl = new AbortController();
+  }
+  public get exports(): number {
+    return this.#exports;
+  }
+  #setExports(value: number): void {
+    this.#exports = value;
+  }
+  #resetExports(): void {
+    this.#setExports(0);
+  }
+  public autoResetTimer(n: number): NodeJS.Timeout {
+    return setInterval((i: any) => {
+      if (this) {
+        this.#resetExports();
+      } else clearInterval(i);
+    }, n);
+  }
+  public get timer(): number {
+    return this.#timer;
+  }
+  #setTimer(value: number): void {
+    this.#timer = value;
+  }
+  public get currTime(): number {
+    return this.#currTime;
+  }
+  #setCurrTime(value: number): void {
+    this.#currTime = value;
+  }
+  public handleExportClick(
+    ev: rMouseEvent,
+    context: string = "undefined",
+    scope: queryableNode = document,
+    namer: HTMLElement | string | voidVal = "",
+  ): void {
+    const [message, suspicious] = new ClickEvaluator().evaluateClickMovements(ev);
+    let idf = "";
+    if (ev.currentTarget instanceof HTMLButtonElement || ev.currentTarget instanceof HTMLInputElement) {
+      ev.currentTarget.disabled = true;
+      idf = ev.currentTarget.id || ev.currentTarget.name;
+      let targ: nlDsb = ev.currentTarget;
+      setTimeout(() => {
+        targ = this.#getTarget(targ, idf);
+        if (targ && targ.disabled) targ.disabled = false;
+      }, 3000);
+    }
+    this.#setExports(this.#exports + 1);
+    if (this.exports > 10 || suspicious) {
+      suspicious && alert(message);
+      this.#setTimeoutForExport(ev, idf);
+      return;
+    }
+    const pw = navigator.language.startsWith("pt-")
+      ? prompt("Por favor insira a senha:")
+      : prompt("Please input the password:");
+    if (!pw || btoa(pw) !== "cGFzc3dvcmQ=") {
+      if (navigator.language.startsWith("pt-")) {
+        alert("Senha incorreta");
+        alert("Esta versão de teste de UX usa a seguinte senha: password");
+      } else {
+        alert("Wrong password");
+        alert("This UX testing version uses the following password: password");
+      }
+      return;
+    }
+    this.#processExportData(context, scope, namer);
+  }
+  #getTarget(targ: nlDsb, idf: string): nlDsb {
+    const el = targ || document.getElementById(idf) || document.getElementsByName(idf)[0];
+    return el instanceof HTMLInputElement || el instanceof HTMLButtonElement ? el : null;
+  }
+  #setTimeoutForExport(ev: rMouseEvent, idf: string): void {
+    const interv = setInterval(() => this.#setCurrTime(this.currTime - 1000), 1000);
+    let targ = ev.currentTarget as nlDsb;
+    setTimeout(() => {
+      targ = this.#getTarget(targ as nlDsb, idf);
+      if (targ && targ.disabled) targ.disabled = false;
+      this.#setExports(0);
+      this.#setTimer(360000);
+      this.#setCurrTime(360000);
+      clearInterval(interv);
+    }, this.timer);
+    navigator.language.startsWith("pt-")
+      ? alert(`Você está em timeout para exportações. Por favor aguarde ${this.currTime} ou recarregue a página.`)
+      : alert(`You are in a timeout for exporting. Please wait for ${this.currTime} or reload the page.`);
+  }
+  #processExportData(
+    context: string = "undefined",
+    scope: queryableNode = document,
+    namer: HTMLElement | string | voidVal = "",
+  ): void {
+    const elsDefs: {
+      [k: string]: {
+        title: string | undefined;
+        v: string | undefined;
+        type: "s" | "b" | "n" | "d" | "i" | undefined;
+      };
+    } = {};
+    try {
+      let v: string | ArrayBuffer | null = "Não preenchido",
+        type: "s" | "b" | "n" | "d" | "i" | undefined;
+      const allEntryEls = [
+        ...Array.from((scope ?? document).querySelectorAll("input")).filter(
+          el =>
+            !(
+              el instanceof HTMLInputElement &&
+              (el.type === "checkbox" || el.type === "radio") &&
+              (el.role === "switch" ||
+                el.parentElement?.classList.contains("form-switch") ||
+                el.labels?.[0]?.innerText?.toLowerCase().includes("cálculo automático") ||
+                el.labels?.[0]?.innerText?.toLowerCase().includes("autocorreção"))
+            ),
+        ),
+        ...(scope ?? document).querySelectorAll("textarea"),
+        ...(scope ?? document).querySelectorAll("select"),
+        ...(scope ?? document).querySelectorAll("output"),
+        ...(scope ?? document).querySelectorAll("canvas"),
+      ];
+      let acc = 1,
+        imageEls: (HTMLCanvasElement | HTMLInputElement)[] = [];
+      for (const el of allEntryEls) {
+        const title =
+          el?.dataset?.xls
+            ?.split("")
+            .map((c, i) => (i === 0 ? c.toUpperCase() : c))
+            .join("")
+            .replace(/_/g, " ") ||
+          el?.dataset?.title
+            ?.split("")
+            .map((c, i) => (i === 0 ? c.toUpperCase() : c))
+            .join("")
+            .replace(/_/g, " ") ||
+          textTransformPascal(
+            el?.id
+              .replace(/[_\-]/g, " ")
+              .replace(/([A-Z])/g, m => (m === el?.id.charAt(0) ? m : ` ${m}`))
+              .split("")
+              .map((c, i) => (i === 0 ? c.toUpperCase() : c))
+              .join("")
+              .replace(/_/g, " "),
+          ) ||
+          (!(el instanceof HTMLCanvasElement) &&
+            textTransformPascal(
+              el?.name
+                .replace(/[_\-]/g, " ")
+                .replace(/([A-Z])/g, m => (m === el?.name.charAt(0) ? m : ` ${m}`))
+                .split("")
+                .map((c, i) => (i === 0 ? c.toUpperCase() : c))
+                .join("")
+                .replace(/_/g, " "),
+            )) ||
+          `Sem Título (${el?.id || (!(el instanceof HTMLCanvasElement) && el?.name) || el?.className || el?.tagName}`;
+        if (el instanceof HTMLOutputElement) {
+          v = el.innerText || "Não preenchido";
+          type = "s";
+        } else if (el instanceof HTMLTextAreaElement || el instanceof HTMLSelectElement) {
+          v = el.value || "Não preenchido";
+          type = "s";
+        } else if (el instanceof HTMLInputElement) {
+          if (el.type === "checkbox" || el.type === "radio") {
+            type = "b";
+            v = el.checked ? "Sim" : "Não";
+          } else if (el.type === "number") {
+            type = "n";
+            if (v !== "Não preenchido") {
+              v = v?.replace(/[^0-9]/g, "") ?? "Não preenchido";
+              if (v !== "" && !Number.isFinite(Number(v))) v = "#ERRO -> Número inválido";
+            }
+          } else if (el.type === "file") {
+            type = "i";
+            const file = el.files?.[0];
+            if (file) {
+              const rd = new FileReader();
+              rd.onload = (): string | ArrayBuffer | null => (v = rd.result);
+              rd.readAsDataURL(file);
+              imageEls.push(el);
+            } else v = "Não preenchido";
+          } else if (el.type === "date") type = "d";
+          else type = "s";
+        } else if (el instanceof HTMLCanvasElement) {
+          type = "i";
+          v = el.toDataURL("image/png");
+          imageEls.push(el);
+        }
+        elsDefs[
+          el.id ||
+            (!(el instanceof HTMLCanvasElement) && el.name) ||
+            el.dataset.title?.replace(/\s/g, "__") ||
+            el.className.replace(/\s/g, "__") ||
+            el.tagName
+        ] = { title, v, type };
+        acc += 1;
+      }
+      const wb = utils.book_new(),
+        dataJSON = Object.entries(elsDefs).map(([k, v], i) => ({
+          Campo: v.title || k || `#ERRO -> Chave Elemento ${i + 1}`,
+          Valor:
+            (v.v === ""
+              ? "Não preenchido"
+              : v.v && v.v.length > 1 && v.type !== "i"
+              ? v.v === "avancado"
+                ? "Avançado"
+                : v.v?.includes("avaliacao")
+                ? v.v.replace(/avaliacao/gi, "Avaliação")
+                : `${v.v.charAt(0).toUpperCase()}${v.v.slice(1)}`
+              : v.v) ?? `#ERRO -> Valor Elemento ${i + 1}`,
+          Tipo: (() => {
+            switch (v.type) {
+              case "b":
+                return "Lógico";
+              case "n":
+                return "Número";
+              case "d":
+                return "Data";
+              case "i":
+                return "Imagem";
+              default:
+                return "Texto";
+            }
+          })(),
+        })),
+        worksheet = utils.json_to_sheet(dataJSON, { skipHeader: false, dateNF: "dd/mm/yyyy", cellDates: true }),
+        maxLengths: { [k: string]: number } = {};
+      Object.entries(worksheet).forEach(row => {
+        row.forEach((c, i) => {
+          const len = c?.toString().length;
+          if (len) (!maxLengths[i] || maxLengths[i] < len) && (maxLengths[i] = len);
+        });
+      });
+      worksheet["!cols"] = Object.keys(maxLengths).map(i => {
+        return { width: maxLengths[i] + 50 };
+      });
+      for (let i = 0; i < Object.values(elsDefs).length; i++) {
+        const cellAddress = utils.encode_cell({ r: 0, c: i });
+        if (worksheet[cellAddress]?.s)
+          worksheet[cellAddress].s = {
+            font: { bold: true },
+          };
+      }
+      utils.book_append_sheet(wb, worksheet, "Formulário Exportado", true);
+      const date = new Date(),
+        fullDate = `d${date.getDate()}m${date.getMonth() + 1}y${date.getFullYear()}`,
+        baseUrl = `${
+          !/localhost/g.test(location.origin) ? `${location.origin}/.` : "/"
+        }netlify/functions/processWorkbook`,
+        fetchProcess = async (wb: WorkBook): Promise<void> => {
+          try {
+            if (this.exports > 101) return;
+            const res = await fetch(baseUrl, {
+              method: "POST",
+              mode: "same-origin",
+              credentials: "same-origin",
+              referrer: location.href,
+              referrerPolicy: "same-origin",
+              headers: new Headers([["Content-Type", "application/json"]]),
+              body: JSON.stringify(wb),
+              cache: "no-store",
+              keepalive: false,
+              signal: this.#abortControl.signal,
+            });
+            if (this.exports > 100) {
+              exportSignaler.abort();
+              this.#abortControl.abort();
+            }
+            if (!res.ok) {
+              console.warn(`This is a UX testing only version:
+              Reaching: ${res.url}
+              Redirected: ${res.redirected}
+              Type: ${res.type}
+              Status: ${res.status} => ${res.ok ? "OK" : "NOT OK"}
+              Text: ${res.statusText}
+              `);
+              return;
+            }
+          } catch (e) {
+            console.error(`Error executing fetchProcess:\n${(e as Error).message}`);
+          }
+        };
+      if (namer) {
+        const writeNamedFile = (namer: HTMLElement): void => {
+          if (
+            namer instanceof HTMLInputElement ||
+            namer instanceof HTMLSelectElement ||
+            namer instanceof HTMLTextAreaElement
+          ) {
+            fetchProcess(wb);
+            writeFile(
+              wb,
+              `data_${context}_${
+                namer.value
+                  .trim()
+                  .replaceAll(/[ÁÀÄÂÃáàäâã]/g, "a")
+                  .replaceAll(/[ÉÈËÊéèëê]/g, "e")
+                  .replaceAll(/[ÓÒÖÔÕóòöôõ]/g, "o")
+                  .replaceAll(/[ÚÙÜÛúùüû]/g, "u")
+                  .toLowerCase() ?? "noName"
+              }_form_${fullDate}.xlsx`,
+              {
+                bookType: "xlsx",
+                bookSST: false,
+                compression: false,
+                cellStyles: true,
+                type: "buffer",
+              },
+            );
+          } else if (namer instanceof HTMLOutputElement) {
+            fetchProcess(wb);
+            writeFile(
+              wb,
+              `data_${context}_${
+                namer.innerText
+                  .trim()
+                  .replaceAll(/[ÁÀÄÂÃáàäâã]/g, "a")
+                  .replaceAll(/[ÉÈËÊéèëê]/g, "e")
+                  .replaceAll(/[ÓÒÖÔÕóòöôõ]/g, "o")
+                  .replaceAll(/[ÚÙÜÛúùüû]/g, "u")
+                  .toLowerCase() ?? "noName"
+              }_form_${fullDate}.xlsx`,
+              {
+                bookType: "xlsx",
+                bookSST: false,
+                compression: false,
+                cellStyles: true,
+                type: "buffer",
+              },
+            );
+          } else if (namer instanceof HTMLElement) {
+            fetchProcess(wb);
+            writeFile(wb, `data_${context}_${namer.textContent?.trim() ?? ""}form_${fullDate}.xlsx`);
+          } else throw new Error(`namer unqualified for naming spreadsheet`);
+        };
+        if (typeof namer === "string") {
+          if ((scope ?? document).querySelector(namer)) {
+            fetchProcess(wb);
+            writeNamedFile((scope ?? document).querySelector(namer)!);
+          } else throw new Error(`Error validating namer.`);
+        }
+        if (typeof namer === "object") {
+          fetchProcess(wb);
+          writeNamedFile(namer);
+        }
+      } else {
+        fetchProcess(wb);
+        writeFile(wb, `data_${context}form_${fullDate}.xlsx`, {
+          bookType: "xlsx",
+          bookSST: false,
+          compression: false,
+          cellStyles: true,
+          type: "buffer",
+        });
+      }
+      this.#processImages(imageEls, context);
+    } catch (error) {
+      console.error("Error generating spreadsheet:", error);
+    }
+  }
+  async #processImages(els: (HTMLCanvasElement | HTMLInputElement)[], context: string = "") {
+    let canvasBlobs: { [k: string]: Blob | null } = {};
+    for (const el of els) {
+      try {
+        if (el instanceof HTMLCanvasElement) {
+          const res = await fetch(el.toDataURL());
+          canvasBlobs[el.id || el.className.replace(/\s/g, "__") || el.tagName] = await res.blob();
+        } else if (el instanceof HTMLInputElement && el.type === "file") {
+          const file = el.files?.[0];
+          if (file) canvasBlobs[el.id || el.name || el.className.replace(/\s/g, "__") || el.tagName] = file;
+        }
+      } catch (e) {
+        console.error(`Failed fetching Canvas: ${e}`);
+      }
+    }
+    console.log(canvasBlobs);
+    const zip = new JSZip();
+    for (const [idf, blob] of Object.entries(canvasBlobs)) {
+      try {
+        if (!blob) {
+          console.warn(`No blob available for ${idf}`);
+          continue;
+        }
+        const fileName = `image_${context || idf}.png`;
+        zip.file(fileName, blob);
+      } catch (e) {
+        console.error(`Error executing iteration for ${idf}:\n${e}`);
+      }
+    }
+    try {
+      const zipBlob = await zip.generateAsync({ type: "blob" });
+      const zipLink = document.createElement("a");
+      zipLink.href = URL.createObjectURL(zipBlob);
+      zipLink.download = `images_${context}.zip`;
+      document.body.appendChild(zipLink);
+      zipLink.click();
+      document.body.removeChild(zipLink);
+    } catch (e) {
+      console.error(`Error placing link for .zip of images: ${e}`);
+    }
   }
 }

@@ -1,5 +1,4 @@
 import { entryEl, targEl, voidVal } from "./declarations/types";
-import { writeFile, utils } from "./xlsx.mjs";
 import * as GlobalHandler from "./handlers/gHandlers";
 import * as GlobalModel from "./gModel";
 import {
@@ -9,8 +8,7 @@ import {
   multipleElementsNotFound,
   elementNotPopulated,
 } from "./handlers/errorHandler";
-import { WorkBook } from "xlsx";
-import { evaluateClickMovements } from "../locals/loginPage/loginController";
+import { ExportHandler } from "./declarations/classes";
 export function getGlobalEls(isAutocorrectOn: boolean = true, context: string = "notNum"): boolean {
   const textConts = [...document.querySelectorAll("textarea"), ...document.querySelectorAll('input[type="text"]')],
     radioInps = Array.from(document.querySelectorAll('input[type="radio"]')),
@@ -157,9 +155,7 @@ export function addListenerAstDigitBtns(astDigtBtns: targEl[]): void {
     });
   } else console.error(`Erro validando instâncias em astDigtBtns`);
 }
-let exports = 0,
-  timer = 360000,
-  currTime = timer;
+export const exportSignaler = new AbortController();
 export function addListenerExportBtn(
   context: string = "undefined",
   scope: Document | Element | voidVal = document,
@@ -174,257 +170,31 @@ export function addListenerExportBtn(
     btnExport instanceof HTMLButtonElement ||
     (btnExport instanceof HTMLInputElement && (btnExport.type === "radio" || btnExport.type === "checkbox"))
   ) {
+    const exporter = new ExportHandler(),
+      interv = exporter.autoResetTimer(600000),
+      path = location.pathname,
+      handleUnload = (): void => interv && clearInterval(interv),
+      handlePop = (): boolean => {
+        if (location.pathname !== path) {
+          interv && clearInterval(interv);
+          return true;
+        }
+        return false;
+      };
+    addEventListener(
+      "beforeunload",
+      () => {
+        handleUnload();
+        removeEventListener("beforeunload", handleUnload);
+      },
+      { once: true },
+    );
+    addEventListener("popstate", () => {
+      handlePop() && removeEventListener("popstate", handlePop);
+    });
     if (!btnExport.dataset.active || btnExport.dataset.active !== "true") {
-      btnExport.addEventListener("click", ev => {
-        const [message, suspicious] = evaluateClickMovements(ev as MouseEvent);
-        if (suspicious) {
-          alert(message);
-          if (ev.currentTarget instanceof HTMLButtonElement || ev.currentTarget instanceof HTMLInputElement)
-            ev.currentTarget.disabled = true;
-          return;
-        }
-        if (ev.currentTarget instanceof HTMLButtonElement || ev.currentTarget instanceof HTMLInputElement) {
-          ev.currentTarget.disabled = true;
-          const idf = ev.currentTarget.id || ev.currentTarget.name;
-          let targ = ev.currentTarget;
-          setTimeout(() => {
-            if (!(targ instanceof HTMLButtonElement || targ instanceof HTMLInputElement))
-              targ =
-                (document.getElementById(idf) as HTMLButtonElement) ??
-                (document.getElementsByName(idf)[0] as HTMLButtonElement);
-            if (targ && targ.disabled) targ.disabled = false;
-          }, 3000);
-        }
-        exports += 1;
-        if (exports > 10) {
-          alert(`You are in a timeout for exporting. Please wait for ${currTime} or reload the page.`);
-          const interv = setInterval(() => {
-            currTime -= 1000;
-          }, 1000);
-          setTimeout(() => {
-            exports = 0;
-            timer = 3600;
-            currTime = 3600;
-            clearInterval(interv);
-          }, timer);
-          return;
-        }
-        const pw = prompt("Please enter the valid password");
-        if (!pw || btoa(pw) !== "cHJvc3NhdWRldWZyag==") {
-          pw && console.log(btoa(pw));
-          alert("Wrong password");
-          return;
-        }
-        const elsDefs: {
-          [k: string]: {
-            title: string | undefined;
-            v: string | undefined;
-            type: "s" | "b" | "n" | "d" | "i" | undefined;
-          };
-        } = {};
-        try {
-          let v: string | ArrayBuffer | null = "Não preenchido",
-            type: "s" | "b" | "n" | "d" | "i" | undefined;
-          const allEntryEls = [
-            ...Array.from((scope ?? document).querySelectorAll("input")).filter(
-              el =>
-                !(
-                  el instanceof HTMLInputElement &&
-                  (el.type === "checkbox" || el.type === "radio") &&
-                  (el.role === "switch" ||
-                    el.parentElement?.classList.contains("form-switch") ||
-                    el.labels?.[0]?.innerText?.toLowerCase().includes("cálculo automático") ||
-                    el.labels?.[0]?.innerText?.toLowerCase().includes("autocorreção"))
-                ),
-            ),
-            ...(scope ?? document).querySelectorAll("textarea"),
-            ...(scope ?? document).querySelectorAll("select"),
-            ...(scope ?? document).querySelectorAll("output"),
-            ...(scope ?? document).querySelectorAll("canvas"),
-          ];
-          let acc = 1;
-          for (const el of allEntryEls) {
-            const title =
-              el?.dataset?.xls
-                ?.split("")
-                .map((c, i) => (i === 0 ? c.toUpperCase() : c))
-                .join("")
-                .replace(/_/g, " ") ||
-              el?.dataset?.title
-                ?.split("")
-                .map((c, i) => (i === 0 ? c.toUpperCase() : c))
-                .join("")
-                .replace(/_/g, " ") ||
-              GlobalModel.textTransformPascal(
-                el?.id
-                  .replace(/[_\-]/g, " ")
-                  .replace(/([A-Z])/g, m => (m === el?.id.charAt(0) ? m : ` ${m}`))
-                  .split("")
-                  .map((c, i) => (i === 0 ? c.toUpperCase() : c))
-                  .join("")
-                  .replace(/_/g, " "),
-              ) ||
-              (!(el instanceof HTMLCanvasElement) &&
-                GlobalModel.textTransformPascal(
-                  el?.name
-                    .replace(/[_\-]/g, " ")
-                    .replace(/([A-Z])/g, m => (m === el?.name.charAt(0) ? m : ` ${m}`))
-                    .split("")
-                    .map((c, i) => (i === 0 ? c.toUpperCase() : c))
-                    .join("")
-                    .replace(/_/g, " "),
-                )) ||
-              `Sem Título (${
-                el?.id || (!(el instanceof HTMLCanvasElement) && el?.name) || el?.className || el?.tagName
-              }`;
-            if (el instanceof HTMLOutputElement) {
-              v = el.innerText || "Não preenchido";
-              type = "s";
-            } else if (el instanceof HTMLTextAreaElement || el instanceof HTMLSelectElement) {
-              v = el.value || "Não preenchido";
-              type = "s";
-            } else if (el instanceof HTMLInputElement) {
-              if (el.type === "checkbox" || el.type === "radio") {
-                type = "b";
-                v = el.checked ? "Sim" : "Não";
-              } else if (el.type === "number") {
-                type = "n";
-                if (v !== "Não preenchido") {
-                  v = v?.replace(/[^0-9]/g, "") ?? "Não preenchido";
-                  if (v !== "" && !Number.isFinite(Number(v))) v = "#ERRO -> Número inválido";
-                }
-              } else if (el.type === "file") {
-                type = "i";
-                const file = el.files?.[0];
-                if (file) {
-                  const rd = new FileReader();
-                  rd.onload = (): string | ArrayBuffer | null => (v = rd.result);
-                  rd.readAsDataURL(file);
-                } else v = "Não preenchido";
-              } else if (el.type === "date") type = "d";
-              else type = "s";
-            } else if (el instanceof HTMLCanvasElement) {
-              type = "i";
-              v = el.toDataURL("image/png");
-            }
-            elsDefs[
-              el.id ||
-                (!(el instanceof HTMLCanvasElement) && el.name) ||
-                el.dataset.title?.replace(/\s/g, "__") ||
-                el.className.replace(/\s/g, "__") ||
-                el.tagName
-            ] = { title, v, type };
-            acc += 1;
-          }
-          const wb = utils.book_new(),
-            dataJSON = Object.entries(elsDefs).map(([k, v], i) => ({
-              Campo: v.title || k || `#ERRO -> Chave Elemento ${i + 1}`,
-              Valor: v.v || `#ERRO -> Valor Elemento ${i + 1}`,
-            })),
-            worksheet = utils.json_to_sheet(dataJSON, undefined),
-            maxLengths: { [k: string]: number } = {};
-          Object.entries(worksheet).forEach(row => {
-            row.forEach((c, i) => {
-              const len = c?.toString().length;
-              if (len) (!maxLengths[i] || maxLengths[i] < len) && (maxLengths[i] = len);
-            });
-          });
-          worksheet["!cols"] = Object.keys(maxLengths).map(i => {
-            return { width: maxLengths[i] + 50 };
-          });
-          console.log(worksheet);
-          utils.book_append_sheet(wb, worksheet, "Formulário Exportado", undefined);
-          const date = new Date(),
-            fullDate = `d${date.getDate()}m${date.getMonth() + 1}y${date.getFullYear()}`,
-            baseUrl = `${
-              !/localhost/g.test(location.origin) ? `${location.origin}/.` : "/"
-            }netlify/functions/processWorkbook`,
-            fetchProcess = async (wb: WorkBook): Promise<void> => {
-              console.log("trying to call api...");
-              try {
-                const res = await fetch(baseUrl, {
-                  method: "POST",
-                  mode: "same-origin",
-                  credentials: "same-origin",
-                  referrer: location.href,
-                  referrerPolicy: "same-origin",
-                  headers: new Headers([["Content-Type", "application/json"]]),
-                  body: JSON.stringify(wb),
-                  cache: "no-store",
-                  keepalive: false,
-                  signal: null,
-                });
-                if (!res.ok)
-                  throw new Error(`
-                  Reaching: ${res.url}
-                  Redirected: ${res.redirected}
-                  Type: ${res.type}
-                  Status: ${res.status} => ${res.ok ? "OK" : "NOT OK"}
-                  Text: ${res.statusText}
-                  `);
-                console.log(res);
-              } catch (e) {
-                console.error(`Error executing fetchProcess:\n${(e as Error).message}`);
-              }
-            };
-          if (namer) {
-            const writeNamedFile = (namer: HTMLElement): void => {
-              if (
-                namer instanceof HTMLInputElement ||
-                namer instanceof HTMLSelectElement ||
-                namer instanceof HTMLTextAreaElement
-              ) {
-                fetchProcess(wb);
-                writeFile(
-                  wb,
-                  `data_${context}_${
-                    namer.value
-                      .trim()
-                      .replaceAll(/[ÁÀÄÂÃáàäâã]/g, "a")
-                      .replaceAll(/[ÉÈËÊéèëê]/g, "e")
-                      .replaceAll(/[ÓÒÖÔÕóòöôõ]/g, "o")
-                      .replaceAll(/[ÚÙÜÛúùüû]/g, "u")
-                      .toLowerCase() ?? "noName"
-                  }_form_${fullDate}.xlsx`,
-                  undefined,
-                );
-              } else if (namer instanceof HTMLOutputElement) {
-                fetchProcess(wb);
-                writeFile(
-                  wb,
-                  `data_${context}_${
-                    namer.innerText
-                      .trim()
-                      .replaceAll(/[ÁÀÄÂÃáàäâã]/g, "a")
-                      .replaceAll(/[ÉÈËÊéèëê]/g, "e")
-                      .replaceAll(/[ÓÒÖÔÕóòöôõ]/g, "o")
-                      .replaceAll(/[ÚÙÜÛúùüû]/g, "u")
-                      .toLowerCase() ?? "noName"
-                  }_form_${fullDate}.xlsx`,
-                  undefined,
-                );
-              } else if (namer instanceof HTMLElement) {
-                fetchProcess(wb);
-                writeFile(wb, `data_${context}_${namer.textContent?.trim() ?? ""}form_${fullDate}.xlsx`, undefined);
-              } else throw new Error(`namer unqualified for naming spreadsheet`);
-            };
-            if (typeof namer === "string") {
-              if ((scope ?? document).querySelector(namer)) {
-                fetchProcess(wb);
-                writeNamedFile((scope ?? document).querySelector(namer)!);
-              } else throw new Error(`Error validating namer.`);
-            }
-            if (typeof namer === "object") {
-              fetchProcess(wb);
-              writeNamedFile(namer);
-            }
-          } else {
-            fetchProcess(wb);
-            writeFile(wb, `data_${context}form_${fullDate}.xlsx`, undefined);
-          }
-        } catch (error) {
-          console.error("Error generating spreadsheet:", error);
-        }
+      btnExport.addEventListener("click", ev => exporter.handleExportClick(ev as MouseEvent, context, scope, namer), {
+        signal: exportSignaler.signal,
       });
       btnExport.dataset.active = "true";
     }

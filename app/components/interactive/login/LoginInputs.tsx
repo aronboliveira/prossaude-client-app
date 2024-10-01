@@ -5,11 +5,12 @@ import { handleLogin } from "@/lib/locals/panelPage/handlers/handlers";
 import { nullishAnchor, nullishForm, nullishHtEl, nullishSpan } from "@/lib/global/declarations/types";
 import { useEffect, useRef, useState } from "react";
 import { elementNotFound, extLine, inputNotFound, multipleElementsNotFound } from "@/lib/global/handlers/errorHandler";
-import { callbackShowPw, callbackSubmitBtn, evaluateClickMovements } from "@/lib/locals/loginPage/loginController";
+import { callbackShowPw, callbackSubmitBtn } from "@/lib/locals/loginPage/loginController";
 import Link from "next/link";
 import { assignFormAttrs } from "@/lib/global/gModel";
 import Spinner from "../../icons/Spinner";
 import { useRouter } from "next/router";
+import { ClickEvaluator } from "@/lib/global/declarations/classes";
 export default function LoginInputs(): JSX.Element {
   const anchorRef = useRef<nullishAnchor>(null),
     formRef = useRef<nullishForm>(null),
@@ -30,9 +31,13 @@ export default function LoginInputs(): JSX.Element {
         };
         if (typeof router === "object" && "beforePopState" in router && "push" in router) {
           spin();
-          alert(
-            "This is a client only, static, test execution. The login will be forwarded regardless of the form validity.",
-          );
+          navigator.language.startsWith("pt-")
+            ? alert(
+                "Esta é apenas uma versão de teste estático do sistema. O login irá prosseguir independente da validez do formulário.",
+              )
+            : alert(
+                "This is a client only, static, test execution. The login will be forwarded regardless of the form validity.",
+              );
           router.beforePopState(() => {
             return true;
           });
@@ -57,9 +62,13 @@ export default function LoginInputs(): JSX.Element {
           }, 1200);
         } else {
           spin();
-          alert(
-            "This is a client only, static, test execution. The login will be forwarded regardless of the form validity.",
-          );
+          navigator.language.startsWith("pt-")
+            ? alert(
+                "Esta é apenas uma versão de teste estático do sistema. O login irá prosseguir independente da validez do formulário.",
+              )
+            : alert(
+                "This is a client only, static, test execution. The login will be forwarded regardless of the form validity.",
+              );
           setTimeout(() => (location.href = "/base"), 1000);
         }
       } catch (e) {
@@ -227,7 +236,7 @@ export default function LoginInputs(): JSX.Element {
                     console.error(`Error reading password value:${(e as Error).message}`);
                   }
                   loginForm.append("password", pw);
-                  const [message, suspicious] = evaluateClickMovements(ev);
+                  const [message, suspicious] = new ClickEvaluator().evaluateClickMovements(ev);
                   if (suspicious || !callbackSubmitBtn) {
                     alert(message);
                     const parent = ev.currentTarget.parentElement;
@@ -249,9 +258,13 @@ export default function LoginInputs(): JSX.Element {
                       res.valid ? exeLogin(spanRef.current) : setMsg(res.message);
                     });
                   }, 300);
-                  alert(
-                    "This is a client only, static, test execution. The login will be forwarded regardless of the form validity.",
-                  );
+                  navigator.language.startsWith("pt-")
+                    ? alert(
+                        "Esta é apenas uma versão de teste estático do sistema. O login irá prosseguir independente da validez do formulário.",
+                      )
+                    : alert(
+                        "This is a client only, static, test execution. The login will be forwarded regardless of the form validity.",
+                      );
                 }}>
                 Avançar
               </Link>
