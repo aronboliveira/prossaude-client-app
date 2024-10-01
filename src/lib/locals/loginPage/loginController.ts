@@ -1,5 +1,5 @@
 import { checkPasswordPattern } from "../../global/gModel";
-import { rMouseEvent, targEl } from "../../global/declarations/types";
+import { targEl } from "../../global/declarations/types";
 import { fillCustomValidityWarn, highlightChange } from "../../global/gStyleScript";
 import { extLine, elementNotFound, inputNotFound } from "../../global/handlers/errorHandler";
 export function addListenerShowPw(): targEl {
@@ -52,36 +52,6 @@ export const clickAttempt: {
   lastClickX: 0,
   lastClickY: 0,
 };
-export function evaluateClickMovements(ev: rMouseEvent): (string | boolean)[] {
-  let suspicious = true;
-  try {
-    if (!("movementX" in ev)) throw new Error(`Invalid instance for Event`);
-    if (!ev.isTrusted) return ["Evento de mouse não confiável. Por favor aguarde para tentar novamente.", suspicious];
-    if (!(ev.movementX === 0 && ev.movementY === 0))
-      return ["Movimento de mouse não confiável. Por favor aguarde para tentar novamente.", suspicious];
-    if (clickAttempt.shouldEvaluateTime) {
-      const now = new Date().getTime();
-      if (now - clickAttempt.lastClickTime < 100)
-        return ["Mouse interval tracked as suspicious. Please retry later.", suspicious];
-      else clickAttempt.lastClickTime = now;
-    }
-    clickAttempt.shouldEvaluateTime = true;
-    if (
-      clickAttempt.shouldEvaluateClient &&
-      clickAttempt.clientAttempt > 1 &&
-      ev.clientX === clickAttempt.lastClickX &&
-      ev.clientY === clickAttempt.lastClickY
-    )
-      return ["Deslocamento de mouse não confiável. Por favor aguarde para tentar novamente.", suspicious];
-    clickAttempt.shouldEvaluateClient = true;
-    clickAttempt.clientAttempt += 1;
-    suspicious = false;
-    return ["Attempt validated.", suspicious];
-  } catch (e) {
-    console.error(`Error executing evaluateClickMovements:${(e as Error).message}`);
-    return ["Não foi possível validar a solicitação. Por favor aguarde para tentar novamente.", suspicious];
-  }
-}
 export const tryDetails: {
   attempts: number;
   timeAcc: number;

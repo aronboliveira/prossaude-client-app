@@ -1,7 +1,9 @@
+import React from "react";
 import { render, screen, fireEvent, RenderResult } from "@testing-library/react";
 import LoginInputs from "../../../../../../components/interactive/login/LoginInputs";
 import { clearDefInvalidMsg, resetPhs } from "../../../../../lib/global/gStyleScript";
-import { handleLogin } from "../../../../../pages/api/ts/handlers";
+import { handleLogin } from "../../../../../lib/locals/panelPage/handlers/handlers";
+import "@testing-library/jest-dom/extend-expect";
 jest.mock(
   "../../../../../lib/global/gStyleScript",
   (): {
@@ -10,17 +12,15 @@ jest.mock(
   } => ({
     clearDefInvalidMsg: jest.fn() as jest.Mock as jest.Mock,
     resetPhs: jest.fn() as jest.Mock as jest.Mock,
-  })
+  }),
 ) as typeof jest;
 jest.mock(
   "../../../../../lib/locals/loginPage/loginController",
   (): {
-    evaluateClickMovements: jest.Mock<any, any, any>;
     callbackSubmitBtn: jest.Mock<any, any, any>;
   } => ({
-    evaluateClickMovements: (jest.fn() as jest.Mock).mockReturnValue(["Test message", false]) as jest.Mock,
     callbackSubmitBtn: jest.fn() as jest.Mock as jest.Mock,
-  })
+  }),
 ) as typeof jest;
 jest.mock(
   "../../../../../pages/api/ts/handlers",
@@ -28,7 +28,7 @@ jest.mock(
     handleLogin: jest.Mock<any, any, any>;
   } => ({
     handleLogin: jest.fn() as jest.Mock as jest.Mock,
-  })
+  }),
 ) as typeof jest;
 describe("LoginInputs Component", (): void => {
   it("should render input fields and submit button", (): void => {
