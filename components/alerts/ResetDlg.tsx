@@ -1,7 +1,7 @@
 import { ErrorBoundary } from "react-error-boundary";
 import { ResetDlgProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import { createRoot } from "react-dom/client";
-import { nullishDlg, panelOpts } from "@/lib/global/declarations/types";
+import { nullishDlg } from "@/lib/global/declarations/types";
 import { panelRoots } from "../panelForms/defs/client/SelectPanel";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useEffect, useRef } from "react";
@@ -24,11 +24,7 @@ export default function ResetDlg({
   };
   const resetForm = (): void => {
     document.querySelector("form")!.reset();
-    root.render(
-      <MainFormPanel
-        defOp={((document.getElementById("coordPanelSelect") as HTMLSelectElement)?.value as panelOpts) || "agenda"}
-      />,
-    );
+    root.render(<MainFormPanel />);
   };
   useEffect(() => {
     if (shouldDisplayResetDlg && ResetDlgRef.current instanceof HTMLDialogElement) ResetDlgRef.current.showModal();

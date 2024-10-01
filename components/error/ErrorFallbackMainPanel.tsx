@@ -33,16 +33,11 @@ export default function ErrorFallbackMainPanel(props: ErrorFallbackMainPanelProp
                   mainRoot={props.mainRoot}
                   tryAcc={mainPanelVariables.tryAcc}
                   renderError={props.renderError}
-                  resetErrorBoundary={() => resetErrorBoundary(() => <MainFormPanel {...props} />, props)}
+                  resetErrorBoundary={() => resetErrorBoundary(() => <MainFormPanel />, props)}
                   defOp={props.defOp}
                 />
               )}>
-              <MainFormPanel
-                defOp={
-                  (selectRef.current?.value as panelOpts) ||
-                  (document.getElementById("coordPanelSelect") as HTMLSelectElement).value!
-                }
-              />
+              <MainFormPanel />
             </ErrorBoundary>,
           );
         }}
