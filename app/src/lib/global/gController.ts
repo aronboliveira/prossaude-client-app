@@ -10,6 +10,7 @@ import {
   elementNotPopulated,
 } from "./handlers/errorHandler";
 import { WorkBook } from "xlsx";
+import { evaluateClickMovements } from "../locals/loginPage/loginController";
 export function getGlobalEls(isAutocorrectOn: boolean = true, context: string = "notNum"): boolean {
   const textConts = [...document.querySelectorAll("textarea"), ...document.querySelectorAll('input[type="text"]')],
     radioInps = Array.from(document.querySelectorAll('input[type="radio"]')),
@@ -156,6 +157,9 @@ export function addListenerAstDigitBtns(astDigtBtns: targEl[]): void {
     });
   } else console.error(`Erro validando instâncias em astDigtBtns`);
 }
+let exports = 0,
+  timer = 360000,
+  currTime = timer;
 export function addListenerExportBtn(
   context: string = "undefined",
   scope: Document | Element | voidVal = document,
@@ -171,7 +175,46 @@ export function addListenerExportBtn(
     (btnExport instanceof HTMLInputElement && (btnExport.type === "radio" || btnExport.type === "checkbox"))
   ) {
     if (!btnExport.dataset.active || btnExport.dataset.active !== "true") {
-      btnExport.addEventListener("click", () => {
+      btnExport.addEventListener("click", ev => {
+        const [message, suspicious] = evaluateClickMovements(ev as MouseEvent);
+        if (suspicious) {
+          alert(message);
+          if (ev.currentTarget instanceof HTMLButtonElement || ev.currentTarget instanceof HTMLInputElement)
+            ev.currentTarget.disabled = true;
+          return;
+        }
+        if (ev.currentTarget instanceof HTMLButtonElement || ev.currentTarget instanceof HTMLInputElement) {
+          ev.currentTarget.disabled = true;
+          const idf = ev.currentTarget.id || ev.currentTarget.name;
+          let targ = ev.currentTarget;
+          setTimeout(() => {
+            if (!(targ instanceof HTMLButtonElement || targ instanceof HTMLInputElement))
+              targ =
+                (document.getElementById(idf) as HTMLButtonElement) ??
+                (document.getElementsByName(idf)[0] as HTMLButtonElement);
+            if (targ && targ.disabled) targ.disabled = false;
+          }, 3000);
+        }
+        exports += 1;
+        if (exports > 10) {
+          alert(`You are in a timeout for exporting. Please wait for ${currTime} or reload the page.`);
+          const interv = setInterval(() => {
+            currTime -= 1000;
+          }, 1000);
+          setTimeout(() => {
+            exports = 0;
+            timer = 3600;
+            currTime = 3600;
+            clearInterval(interv);
+          }, timer);
+          return;
+        }
+        const pw = prompt("Please enter the valid password");
+        if (!pw || btoa(pw) !== "cHJvc3NhdWRldWZyag==") {
+          pw && console.log(btoa(pw));
+          alert("Wrong password");
+          return;
+        }
         const elsDefs: {
           [k: string]: {
             title: string | undefined;
