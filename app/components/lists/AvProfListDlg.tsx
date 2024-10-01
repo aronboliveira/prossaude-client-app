@@ -7,7 +7,7 @@ import { handleFetch } from "@/lib/locals/panelPage/handlers/handlers";
 import { panelRoots } from "../panelForms/defs/client/SelectPanel";
 import { strikeEntries } from "@/lib/locals/panelPage/consStyleScript";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
-import { useEffect, useRef } from "react";
+import { useContext, useEffect, useRef } from "react";
 import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
 import GenericErrorComponent from "../error/GenericErrorComponent";
 import ProfRow from "../panelForms/profs/ProfRow";
@@ -20,15 +20,17 @@ import {
   fillTabAttr,
   filterTabMembers,
 } from "@/lib/locals/panelPage/handlers/consHandlerList";
+import { PanelCtx } from "../panelForms/defs/client/SelectLoader";
 export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
-  const internalProfs: ProfInfo[] = [];
-  const externalProfs: ProfInfo[] = [];
-  const dialogRef = useRef<nullishDlg>(null);
-  const tabProfIntRef = useRef<nullishTab>(null);
-  const tabProfExtRef = useRef<nullishTab>(null);
-  const tbodyIntRef = useRef<nullishTabSect>(null);
-  const tbodyExtRef = useRef<nullishTabSect>(null);
-  const secttabProfIntRef = useRef<nullishHtEl>(null);
+  const userClass = useContext(PanelCtx).userClass,
+    internalProfs: ProfInfo[] = [],
+    externalProfs: ProfInfo[] = [],
+    dialogRef = useRef<nullishDlg>(null),
+    tabProfIntRef = useRef<nullishTab>(null),
+    tabProfExtRef = useRef<nullishTab>(null),
+    tbodyIntRef = useRef<nullishTabSect>(null),
+    tbodyExtRef = useRef<nullishTabSect>(null),
+    secttabProfIntRef = useRef<nullishHtEl>(null);
   //push em history
   useEffect(() => {
     !/av-prof=open/gi.test(location.search) &&
@@ -170,38 +172,38 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                           <col data-row='1' data-col='5'></col>
                           <col data-row='1' data-col='6'></col>
                           <col data-row='1' data-col='7'></col>
-                          {props.userClass === "coordenador" && <col data-row='1' data-col='8'></col>}
+                          {userClass === "coordenador" && <col data-row='1' data-col='8'></col>}
                         </colgroup>
                         <thead className='thead-dark'>
                           <tr id='avProfsInt-row1' data-row='1'>
-                            {props.userClass === "coordenador" && (
+                            {userClass === "coordenador" && (
                               <th scope='col' data-row='1' data-col='1'>
                                 Identificador
                               </th>
                             )}
-                            <th scope='col' data-row='1' data-col={props.userClass === "coordenador" ? "2" : "1"}>
+                            <th scope='col' data-row='1' data-col={userClass === "coordenador" ? "2" : "1"}>
                               Nome
                             </th>
-                            <th scope='col' data-row='1' data-col={props.userClass === "coordenador" ? "3" : "2"}>
+                            <th scope='col' data-row='1' data-col={userClass === "coordenador" ? "3" : "2"}>
                               E-mail
                             </th>
-                            <th scope='col' data-row='1' data-col={props.userClass === "coordenador" ? "4" : "3"}>
+                            <th scope='col' data-row='1' data-col={userClass === "coordenador" ? "4" : "3"}>
                               Telefone
                             </th>
-                            <th scope='col' data-row='1' data-col={props.userClass === "coordenador" ? "5" : "4"}>
+                            <th scope='col' data-row='1' data-col={userClass === "coordenador" ? "5" : "4"}>
                               Área de Atuação
                             </th>
-                            <th scope='col' data-row='1' data-col={props.userClass === "coordenador" ? "6" : "5"}>
+                            <th scope='col' data-row='1' data-col={userClass === "coordenador" ? "6" : "5"}>
                               Dia de Trablho
                             </th>
-                            <th scope='col' data-row='1' data-col={props.userClass === "coordenador" ? "7" : "6"}>
+                            <th scope='col' data-row='1' data-col={userClass === "coordenador" ? "7" : "6"}>
                               Período de Participação
                             </th>
                             <th
                               className='alocCel'
                               scope='col'
                               data-row='1'
-                              data-col={props.userClass === "coordenador" ? "8" : "7"}></th>
+                              data-col={userClass === "coordenador" ? "8" : "7"}></th>
                           </tr>
                         </thead>
                         <tbody id='profsIntTbody' ref={tbodyIntRef}>
@@ -226,7 +228,6 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                           <ProfRow
                             nRow={i + 2}
                             prof={prof}
-                            userClass={props.userClass}
                             tabRef={tabProfIntRef}
                             key={`prof_int_row__${i + 2}`}
                             inDlg={true}
@@ -267,7 +268,6 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                       <ProfRow
                         nRow={i + 2}
                         prof={prof}
-                        userClass={props.userClass}
                         tabRef={tabProfIntRef}
                         key={`prof_int_row__${i + 2}`}
                         inDlg={true}
@@ -355,38 +355,38 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                           <col data-row='1' data-col='5'></col>
                           <col data-row='1' data-col='6'></col>
                           <col data-row='1' data-col='7'></col>
-                          {props.userClass === "coordenador" && <col data-row='1' data-col='8'></col>}
+                          {userClass === "coordenador" && <col data-row='1' data-col='8'></col>}
                         </colgroup>
                         <thead className='thead-dark'>
                           <tr id='avProfsExt-row1' data-row='1'>
-                            {props.userClass === "coordenador" && (
+                            {userClass === "coordenador" && (
                               <th scope='col' data-row='1' data-col='1'>
                                 Identificador
                               </th>
                             )}
-                            <th scope='col' data-row='1' data-col={props.userClass === "coordenador" ? "2" : "1"}>
+                            <th scope='col' data-row='1' data-col={userClass === "coordenador" ? "2" : "1"}>
                               Nome
                             </th>
-                            <th scope='col' data-row='1' data-col={props.userClass === "coordenador" ? "3" : "2"}>
+                            <th scope='col' data-row='1' data-col={userClass === "coordenador" ? "3" : "2"}>
                               E-mail
                             </th>
-                            <th scope='col' data-row='1' data-col={props.userClass === "coordenador" ? "4" : "3"}>
+                            <th scope='col' data-row='1' data-col={userClass === "coordenador" ? "4" : "3"}>
                               Telefone
                             </th>
-                            <th scope='col' data-row='1' data-col={props.userClass === "coordenador" ? "5" : "4"}>
+                            <th scope='col' data-row='1' data-col={userClass === "coordenador" ? "5" : "4"}>
                               Área de Atuação
                             </th>
-                            <th scope='col' data-row='1' data-col={props.userClass === "coordenador" ? "6" : "5"}>
+                            <th scope='col' data-row='1' data-col={userClass === "coordenador" ? "6" : "5"}>
                               Dia de Trablho
                             </th>
-                            <th scope='col' data-row='1' data-col={props.userClass === "coordenador" ? "7" : "6"}>
+                            <th scope='col' data-row='1' data-col={userClass === "coordenador" ? "7" : "6"}>
                               Período de Participação
                             </th>
                             <th
                               className='alocCel'
                               scope='col'
                               data-row='1'
-                              data-col={props.userClass === "coordenador" ? "8" : "7"}></th>
+                              data-col={userClass === "coordenador" ? "8" : "7"}></th>
                           </tr>
                         </thead>
                         <tbody id='profsExtTbody' ref={tbodyExtRef}>
@@ -411,7 +411,6 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                           <ProfRow
                             nRow={i + 2}
                             prof={prof}
-                            userClass={props.userClass}
                             tabRef={tabProfIntRef}
                             key={`prof_ext_row__${i + 2}`}
                             inDlg={true}
@@ -452,7 +451,6 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                       <ProfRow
                         nRow={i + 2}
                         prof={prof}
-                        userClass={props.userClass}
                         tabRef={tabProfIntRef}
                         key={`prof_ext_row__${i + 2}`}
                         inDlg={true}
@@ -508,7 +506,7 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                         "Prof",
                         props.state,
                         props.dispatch,
-                        props.userClass,
+                        userClass,
                       );
                     } catch (e) {
                       console.error(
@@ -562,7 +560,7 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                         "Prof",
                         props.state,
                         props.dispatch,
-                        props.userClass,
+                        userClass,
                       );
                     } catch (e) {
                       console.error(
@@ -683,38 +681,38 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                   <col data-row='1' data-col='5'></col>
                   <col data-row='1' data-col='6'></col>
                   <col data-row='1' data-col='7'></col>
-                  {props.userClass === "coordenador" && <col data-row='1' data-col='8'></col>}
+                  {userClass === "coordenador" && <col data-row='1' data-col='8'></col>}
                 </colgroup>
                 <thead className='thead-dark'>
                   <tr id='avProfsInt-row1' data-row='1'>
-                    {props.userClass === "coordenador" && (
+                    {userClass === "coordenador" && (
                       <th scope='col' data-row='1' data-col='1'>
                         Identificador
                       </th>
                     )}
-                    <th scope='col' data-row='1' data-col={props.userClass === "coordenador" ? "2" : "1"}>
+                    <th scope='col' data-row='1' data-col={userClass === "coordenador" ? "2" : "1"}>
                       Nome
                     </th>
-                    <th scope='col' data-row='1' data-col={props.userClass === "coordenador" ? "3" : "2"}>
+                    <th scope='col' data-row='1' data-col={userClass === "coordenador" ? "3" : "2"}>
                       E-mail
                     </th>
-                    <th scope='col' data-row='1' data-col={props.userClass === "coordenador" ? "4" : "3"}>
+                    <th scope='col' data-row='1' data-col={userClass === "coordenador" ? "4" : "3"}>
                       Telefone
                     </th>
-                    <th scope='col' data-row='1' data-col={props.userClass === "coordenador" ? "5" : "4"}>
+                    <th scope='col' data-row='1' data-col={userClass === "coordenador" ? "5" : "4"}>
                       Área de Atuação
                     </th>
-                    <th scope='col' data-row='1' data-col={props.userClass === "coordenador" ? "6" : "5"}>
+                    <th scope='col' data-row='1' data-col={userClass === "coordenador" ? "6" : "5"}>
                       Dia de Trablho
                     </th>
-                    <th scope='col' data-row='1' data-col={props.userClass === "coordenador" ? "7" : "6"}>
+                    <th scope='col' data-row='1' data-col={userClass === "coordenador" ? "7" : "6"}>
                       Período de Participação
                     </th>
                     <th
                       className='alocCel'
                       scope='col'
                       data-row='1'
-                      data-col={props.userClass === "coordenador" ? "8" : "7"}></th>
+                      data-col={userClass === "coordenador" ? "8" : "7"}></th>
                   </tr>
                 </thead>
                 <tbody id='profsIntTbody' ref={tbodyIntRef}>
@@ -758,38 +756,38 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                   <col data-row='1' data-col='5'></col>
                   <col data-row='1' data-col='6'></col>
                   <col data-row='1' data-col='7'></col>
-                  {props.userClass === "coordenador" && <col data-row='1' data-col='8'></col>}
+                  {userClass === "coordenador" && <col data-row='1' data-col='8'></col>}
                 </colgroup>
                 <thead className='thead-dark'>
                   <tr id='avProfsExt-row1' data-row='1'>
-                    {props.userClass === "coordenador" && (
+                    {userClass === "coordenador" && (
                       <th scope='col' data-row='1' data-col='1'>
                         Identificador
                       </th>
                     )}
-                    <th scope='col' data-row='1' data-col={props.userClass === "coordenador" ? "2" : "1"}>
+                    <th scope='col' data-row='1' data-col={userClass === "coordenador" ? "2" : "1"}>
                       Nome
                     </th>
-                    <th scope='col' data-row='1' data-col={props.userClass === "coordenador" ? "3" : "2"}>
+                    <th scope='col' data-row='1' data-col={userClass === "coordenador" ? "3" : "2"}>
                       E-mail
                     </th>
-                    <th scope='col' data-row='1' data-col={props.userClass === "coordenador" ? "4" : "3"}>
+                    <th scope='col' data-row='1' data-col={userClass === "coordenador" ? "4" : "3"}>
                       Telefone
                     </th>
-                    <th scope='col' data-row='1' data-col={props.userClass === "coordenador" ? "5" : "4"}>
+                    <th scope='col' data-row='1' data-col={userClass === "coordenador" ? "5" : "4"}>
                       Área de Atuação
                     </th>
-                    <th scope='col' data-row='1' data-col={props.userClass === "coordenador" ? "6" : "5"}>
+                    <th scope='col' data-row='1' data-col={userClass === "coordenador" ? "6" : "5"}>
                       Dia de Trablho
                     </th>
-                    <th scope='col' data-row='1' data-col={props.userClass === "coordenador" ? "7" : "6"}>
+                    <th scope='col' data-row='1' data-col={userClass === "coordenador" ? "7" : "6"}>
                       Período de Participação
                     </th>
                     <th
                       className='alocCel'
                       scope='col'
                       data-row='1'
-                      data-col={props.userClass === "coordenador" ? "8" : "7"}></th>
+                      data-col={userClass === "coordenador" ? "8" : "7"}></th>
                   </tr>
                 </thead>
                 <tbody id='profsExtTbody' ref={tbodyExtRef}>

@@ -3,10 +3,11 @@ import { PacRowProps } from "@/lib/locals/panelPage/declarations/interfacesCons"
 import { dateISOtoBRL } from "@/lib/global/gModel";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { nullishBtn } from "@/lib/global/declarations/types";
-import { useState, useRef } from "react";
+import { useState, useRef, useContext } from "react";
 import AlterFieldList from "../../lists/AlterFieldList";
 import FormExcludeBtn from "../defs/FormExcludeBtn";
 import PrevConsList from "../../lists/PrevConsList";
+import { PanelCtx } from "../defs/client/SelectLoader";
 export default function PacRow({
   tabRef,
   pac = {
@@ -30,23 +31,23 @@ export default function PacRow({
     ],
   },
   nRow = -1,
-  userClass = "estudante",
   shouldShowAlocBtn = false,
 }: PacRowProps): JSX.Element {
-  const btnPrevListRef = useRef<nullishBtn>(null);
-  const alocBtnRef = useRef<nullishBtn>(null);
-  const [shouldDisplayPrevList, setDisplayPrevList] = useState<boolean>(false);
-  const [shouldDisplayRowData, setDisplayRowData] = useState<boolean>(false);
-  const toggleDisplayRowData = (s: boolean = true): void => setDisplayRowData(!s);
-  const togglePacPrevList = (s: boolean = false): void => {
-    btnPrevListRef.current instanceof HTMLButtonElement
-      ? setDisplayPrevList(!s)
-      : elementNotFound(
-          btnPrevListRef.current,
-          "<button> for toggling Pacient previous appointments in Pacient Table",
-          extLine(new Error()),
-        );
-  };
+  const userClass = useContext(PanelCtx).userClass,
+    btnPrevListRef = useRef<nullishBtn>(null),
+    alocBtnRef = useRef<nullishBtn>(null),
+    [shouldDisplayPrevList, setDisplayPrevList] = useState<boolean>(false),
+    [shouldDisplayRowData, setDisplayRowData] = useState<boolean>(false),
+    toggleDisplayRowData = (s: boolean = true): void => setDisplayRowData(!s),
+    togglePacPrevList = (s: boolean = false): void => {
+      btnPrevListRef.current instanceof HTMLButtonElement
+        ? setDisplayPrevList(!s)
+        : elementNotFound(
+            btnPrevListRef.current,
+            "<button> for toggling Pacient previous appointments in Pacient Table",
+            extLine(new Error()),
+          );
+    };
   return (
     <tr
       id={`avPacs-row${nRow}`}

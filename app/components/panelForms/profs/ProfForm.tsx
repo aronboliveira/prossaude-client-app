@@ -6,34 +6,36 @@ import { globalDataProvider, panelRoots } from "../defs/client/SelectPanel";
 import { handleClientPermissions } from "@/lib/locals/panelPage/handlers/consHandlerUsers";
 import { handleSubmit } from "@/lib/locals/panelPage/handlers/handlers";
 import { panelFormsVariables } from "../panelFormsData";
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback, useContext } from "react";
 import GenericErrorComponent from "../../error/GenericErrorComponent";
 import ReseterBtn from "../defs/ReseterBtn";
 import { nullishBtn, nullishForm, nullishInp } from "@/lib/global/declarations/types";
 import { addEmailExtension, assignFormAttrs, autoCapitalizeInputs, formatCPF, formatTel } from "@/lib/global/gModel";
 import { elementNotFound, elementNotPopulated, extLine, inputNotFound } from "@/lib/global/handlers/errorHandler";
 import { handleCondtReq, handleEventReq, validateForm, syncAriaStates } from "@/lib/global/handlers/gHandlers";
-export default function ProfForm({ mainRoot, userClass = "estudante" }: GlobalFormProps): JSX.Element {
-  const [showForm] = useState(true);
-  const formRef = useRef<nullishForm>(null);
-  const CPFProfRef = useRef<nullishInp>(null);
-  const telProfRef = useRef<nullishInp>(null);
-  const btnExportProfForm = useRef<nullishBtn>(null);
-  const callbackNormalizeSizeSb = useCallback(() => {
-    normalizeSizeSb([
-      ...document.querySelectorAll(".form-padded"),
-      ...document.querySelectorAll(".ovFlAut"),
-      ...document.querySelectorAll("[scrollbar-width=none]"),
-    ]);
-  }, []);
+import { PanelCtx } from "../defs/client/SelectLoader";
+export default function ProfForm({ mainRoot }: GlobalFormProps): JSX.Element {
+  const userClass = useContext(PanelCtx).userClass,
+    [showForm] = useState(true),
+    formRef = useRef<nullishForm>(null),
+    CPFProfRef = useRef<nullishInp>(null),
+    telProfRef = useRef<nullishInp>(null),
+    btnExportProfForm = useRef<nullishBtn>(null),
+    callbackNormalizeSizeSb = useCallback(() => {
+      normalizeSizeSb([
+        ...document.querySelectorAll(".form-padded"),
+        ...document.querySelectorAll(".ovFlAut"),
+        ...document.querySelectorAll("[scrollbar-width=none]"),
+      ]);
+    }, []);
   useEffect(() => {
     if (formRef?.current instanceof HTMLFormElement) {
       globalDataProvider && globalDataProvider.initPersist(formRef.current, globalDataProvider);
-      const emailInput = formRef.current.querySelector("#inpEmailProf");
-      const nameInput = formRef.current.querySelector("#inpNameProf");
-      const dateInputs = Array.from(formRef.current.querySelectorAll('input[type="date"]'));
-      const toggleAutocorrect = document.getElementById("deactAutocorrectBtnProf");
-      const toggleAutoFill = document.getElementById("deactAutofilltBtnProf");
+      const emailInput = formRef.current.querySelector("#inpEmailProf"),
+        nameInput = formRef.current.querySelector("#inpNameProf"),
+        dateInputs = Array.from(formRef.current.querySelectorAll('input[type="date"]')),
+        toggleAutocorrect = document.getElementById("deactAutocorrectBtnProf"),
+        toggleAutoFill = document.getElementById("deactAutofilltBtnProf");
       //adição de listeners para autocorreção
       if (toggleAutoFill instanceof HTMLInputElement) {
         toggleAutoFill.checked = true;
@@ -340,10 +342,7 @@ export default function ProfForm({ mainRoot, userClass = "estudante" }: GlobalFo
                 title='Gere um .xlsx com os dados preenchidos'>
                 Gerar Planilha
               </button>
-              <ReseterBtn
-                root={panelRoots.mainRoot!}
-                renderForm={<ProfForm mainRoot={mainRoot} userClass={userClass} />}
-              />
+              <ReseterBtn root={panelRoots.mainRoot!} renderForm={<ProfForm mainRoot={mainRoot} />} />
             </div>
           </fieldset>
         </form>

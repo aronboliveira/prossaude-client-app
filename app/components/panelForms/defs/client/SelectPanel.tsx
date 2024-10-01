@@ -10,7 +10,7 @@ import { createRoot } from "react-dom/client";
 import { handleLinkChanges } from "@/lib/global/handlers/gRoutingHandlers";
 import { nullishDiv, panelOpts, voidVal } from "@/lib/global/declarations/types";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
-import { useState, useRef, useEffect, useContext, useCallback } from "react";
+import { useState, useRef, useEffect, useContext } from "react";
 import DefaultForm from "../DefaultForm";
 import ErrorMainDiv from "../../../error/ErrorMainDiv";
 import GenericErrorComponent from "../../../error/GenericErrorComponent";
@@ -18,23 +18,36 @@ import PacTabForm from "../../pacs/PacTabForm";
 import ProfForm from "../../profs/ProfForm";
 import RemoveProfForm from "../../profs/RemoveProfForm";
 import RemoveStudForm from "../../studs/RemoveStudForm";
-import ScheduleForm from "../../schedule/ScheduleForm";
 import StudentForm from "../../studs/StudentForm";
 import Unauthorized from "../Unauthorized";
 import { elementNotFound, extLine, inputNotFound, stringError } from "@/lib/global/handlers/errorHandler";
 import { defUser } from "@/redux/slices/userSlice";
+import ScheduleLoader from "../../schedule/ScheduleLoader";
+import { PanelCtx } from "./SelectLoader";
 export let globalDataProvider: DataProvider | voidVal;
 export const panelRoots: { [k: string]: Root | undefined } = {
   mainRoot: undefined,
 };
-
 export default function SelectPanel({ defOp = "agenda" }: MainPanelProps): JSX.Element {
+  const { userClass, setUserClass: setPrivilege } = useContext(PanelCtx);
+  console.log("render user class " + userClass);
   const [selectedOption, setSelectedOption] = useState<string>(defOp);
-  const [userClass, setClass] = useState<string>("coordenador");
   const [mounted, setMounted] = useState<boolean>(false);
   const formRootRef = useRef<nullishDiv>(null);
   const context = useContext<AppRootContextType>(AppRootContext);
-  const renderSelectPanel = useCallback((opt: panelOpts): void => {
+  useEffect(() => {
+    const privilege = localStorage.getItem("activeUser")
+      ? JSON.parse(localStorage.getItem("activeUser")!).loadedData?.privilege
+      : defUser.loadedData.privilege;
+    let translatedPrivilege = "estudante";
+    if (privilege === "coordinator") translatedPrivilege = "coordenador";
+    else translatedPrivilege = privilege;
+    setPrivilege(translatedPrivilege);
+    setMounted(true);
+  }, []);
+  const renderSelectPanel = (opt: panelOpts): void => {
+    console.log("User class in render:");
+    console.log(userClass);
     try {
       const formRoot = document.getElementById("formRoot");
       if (!(formRoot instanceof HTMLElement))
@@ -45,39 +58,27 @@ export default function SelectPanel({ defOp = "agenda" }: MainPanelProps): JSX.E
           console.log(`Rendering for ${opt}...`);
           switch (opt) {
             case "registStud":
-              return userClass === "coordenador" || userClass === "supervisor" ? (
-                <StudentForm userClass={userClass} />
-              ) : (
-                <Unauthorized />
-              );
+              return userClass === "coordenador" || userClass === "supervisor" ? <StudentForm /> : <Unauthorized />;
             case "registProf":
-              return userClass === "coordenador" ? <ProfForm userClass={userClass} /> : <Unauthorized />;
+              return userClass === "coordenador" ? <ProfForm /> : <Unauthorized />;
             case "removeStud":
-              return userClass === "coordenador" || userClass === "supervisor" ? (
-                <RemoveStudForm userClass={userClass} />
-              ) : (
-                <Unauthorized />
-              );
+              return userClass === "coordenador" || userClass === "supervisor" ? <RemoveStudForm /> : <Unauthorized />;
             case "removeProf":
-              return userClass === "coordenador" || userClass === "supervisor" ? (
-                <RemoveProfForm userClass={userClass} />
-              ) : (
-                <Unauthorized />
-              );
+              return userClass === "coordenador" || userClass === "supervisor" ? <RemoveProfForm /> : <Unauthorized />;
             case "pacList":
-              return <PacTabForm userClass={userClass} />;
+              return <PacTabForm />;
             case "agenda":
-              return <ScheduleForm context={false} userClass={userClass} />;
+              return <ScheduleLoader />;
             default:
               stringError(opt, "opt in renderSelectedForm()", extLine(new Error()));
-              return <DefaultForm userClass={userClass} />;
+              return <DefaultForm />;
           }
         })(opt),
       );
     } catch (e) {
       console.error(`Error executing procedure fro rendering on formRoot:\n${(e as Error).message}`);
     }
-  }, []);
+  };
   const handlePanelPath = (change: React.ChangeEvent<HTMLSelectElement> | string): void => {
     const changeValue = typeof change === "object" && "target" in change ? change.target.value : change;
     history.pushState(
@@ -93,17 +94,6 @@ export default function SelectPanel({ defOp = "agenda" }: MainPanelProps): JSX.E
       history.pushState({}, "", `${location.href}`.replace("/?", "?").replace("/#", "#"));
     }, 300);
   };
-  useEffect(() => {
-    alert("Essa seção do sistema ainda não possui servidor ativo.\nUtilize apenas como teste de interface.");
-    const privilege = localStorage.getItem("activeUser")
-      ? JSON.parse(localStorage.getItem("activeUser")!).loadedData?.privilege
-      : defUser.loadedData.privilege;
-    let translatedPrivilege = "estudante";
-    if (privilege === "coordinator") translatedPrivilege = "coordenador";
-    else translatedPrivilege = privilege;
-    setClass(translatedPrivilege);
-    setMounted(true);
-  }, []);
   useEffect(() => {
     globalDataProvider = new DataProvider(sessionStorage);
     handleLinkChanges("panel", "Panel Page Style");
@@ -131,41 +121,27 @@ export default function SelectPanel({ defOp = "agenda" }: MainPanelProps): JSX.E
         }, 300);
         if (/registStud/gi.test(kebabSearch)) {
           context.roots.formRoot.render(
-            userClass === "coordenador" || userClass === "supervisor" ? (
-              <StudentForm userClass={userClass} />
-            ) : (
-              <Unauthorized />
-            ),
+            userClass === "coordenador" || userClass === "supervisor" ? <StudentForm /> : <Unauthorized />,
           );
           panelSelect.value = "registStud";
         } else if (/registProf/gi.test(kebabSearch)) {
-          context.roots.formRoot.render(
-            userClass === "coordenador" ? <ProfForm userClass={userClass} /> : <Unauthorized />,
-          );
+          context.roots.formRoot.render(userClass === "coordenador" ? <ProfForm /> : <Unauthorized />);
           panelSelect.value = "registProf";
         } else if (/removeProf/gi.test(kebabSearch)) {
           context.roots.formRoot.render(
-            userClass === "coordenador" || userClass === "supervisor" ? (
-              <RemoveProfForm userClass={userClass} />
-            ) : (
-              <Unauthorized />
-            ),
+            userClass === "coordenador" || userClass === "supervisor" ? <RemoveProfForm /> : <Unauthorized />,
           );
           panelSelect.value = "removeProf";
         } else if (/removeStud/gi.test(kebabSearch)) {
           context.roots.formRoot.render(
-            userClass === "coordenador" || userClass === "supervisor" ? (
-              <RemoveStudForm userClass={userClass} />
-            ) : (
-              <Unauthorized />
-            ),
+            userClass === "coordenador" || userClass === "supervisor" ? <RemoveStudForm /> : <Unauthorized />,
           );
           panelSelect.value = "removeStud";
         } else if (/agenda/gi.test(kebabSearch)) {
-          context.roots.formRoot.render(<ScheduleForm context={false} userClass={userClass} />);
+          context.roots.formRoot.render(<ScheduleLoader />);
           panelSelect.value = "agenda";
         } else if (/pacList/gi.test(kebabSearch)) {
-          context.roots.formRoot.render(<PacTabForm userClass={userClass} />);
+          context.roots.formRoot.render(<PacTabForm />);
           panelSelect.value = "pacList";
         } else {
           history.pushState({}, "", `${location.origin}${location.pathname}?panel=${defOp}`);

@@ -1,7 +1,10 @@
+import React from "react";
 import { render, fireEvent, RenderResult } from "@testing-library/react";
 import PacRow from "../../../../../../components/panelForms/pacs/PacRow";
+//@ts-ignore
 import { nullishTab } from "@/lib/global/declarations/types";
 import { useRef, MutableRefObject } from "react";
+//@ts-ignore
 import { PacInfo } from "@/lib/locals/panelPage/declarations/interfacesCons";
 jest.mock(
   "@/lib/global/handlers/errorHandler",
@@ -11,7 +14,7 @@ jest.mock(
   } => ({
     elementNotFound: jest.fn() as jest.Mock,
     extLine: jest.fn() as jest.Mock,
-  })
+  }),
 ) as typeof jest;
 jest.mock(
   "@/lib/global/gModel",
@@ -19,7 +22,7 @@ jest.mock(
     dateISOtoBRL: jest.Mock<any, any, any>;
   } => ({
     dateISOtoBRL: jest.fn() as jest.Mock,
-  })
+  }),
 ) as typeof jest;
 describe("PacRow Component", (): void => {
   const defaultPac = {
@@ -54,19 +57,19 @@ describe("PacRow Component", (): void => {
               nRow={0}
               userClass='estudante'
               shouldShowAlocBtn={false}
-            />
+            />,
           ) as RenderResult
-        ).getByText(/Anônimo/i)
+        ).getByText(/Anônimo/i),
       ) as jest.JestMatchers<HTMLElement>
     ).toBeInTheDocument() as void;
   }) as void;
   test("click on 'Atendimentos Anteriores' button", (): void => {
     const tabRef: MutableRefObject<nullishTab> = useRef<nullishTab>(null);
     const renderResult = render(
-      <PacRow tabRef={tabRef} pac={defaultPac as PacInfo} nRow={0} userClass='estudante' shouldShowAlocBtn={false} />
+      <PacRow tabRef={tabRef} pac={defaultPac as PacInfo} nRow={0} userClass='estudante' shouldShowAlocBtn={false} />,
     ) as RenderResult;
     expect(
-      fireEvent.click(renderResult.getByText(/Atendimentos Anteriores/i) as HTMLButtonElement) as boolean
+      fireEvent.click(renderResult.getByText(/Atendimentos Anteriores/i) as HTMLButtonElement) as boolean,
     ).toBe<boolean>(true) as void;
   }) as void;
 }) as void;

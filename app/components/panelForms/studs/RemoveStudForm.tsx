@@ -8,15 +8,17 @@ import { handleClientPermissions } from "@/lib/locals/panelPage/handlers/consHan
 import { handleFetch } from "@/lib/locals/panelPage/handlers/handlers";
 import { panelRoots } from "../defs/client/SelectPanel";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef, useCallback, useContext } from "react";
 import GenericErrorComponent from "../../error/GenericErrorComponent";
 import Spinner from "../../icons/Spinner";
 import StudRow from "./StudRow";
 import { nullishBtn, nullishForm, nullishTab, nullishTabSect } from "@/lib/global/declarations/types";
-import { GlobalFormProps, StudInfo } from "@/lib/locals/panelPage/declarations/interfacesCons";
+import { StudInfo } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import { strikeEntries } from "@/lib/locals/panelPage/consStyleScript";
 import { assignFormAttrs } from "@/lib/global/gModel";
-export default function RemoveStudForm({ userClass = "estudante" }: GlobalFormProps): JSX.Element {
+import { PanelCtx } from "../defs/client/SelectLoader";
+export default function RemoveStudForm(): JSX.Element {
+  const userClass = useContext(PanelCtx).userClass;
   const studs: StudInfo[] = [];
   const formRef = useRef<nullishForm>(null);
   const tabRef = useRef<nullishTab>(null);
@@ -145,13 +147,7 @@ export default function RemoveStudForm({ userClass = "estudante" }: GlobalFormPr
                     if (!tbodyRef.current.querySelector("tr"))
                       panelRoots[`${tbodyRef.current.id}`]?.render(
                         studs.map((stud, i) => (
-                          <StudRow
-                            nRow={i + 2}
-                            stud={stud}
-                            userClass={userClass}
-                            tabRef={tabRef}
-                            key={`stud_row__${i + 2}`}
-                          />
+                          <StudRow nRow={i + 2} stud={stud} tabRef={tabRef} key={`stud_row__${i + 2}`} />
                         )),
                       );
                     setTimeout(() => {
@@ -183,13 +179,7 @@ export default function RemoveStudForm({ userClass = "estudante" }: GlobalFormPr
                       ) ? (
                       <></>
                     ) : (
-                      <StudRow
-                        nRow={i + 2}
-                        stud={stud}
-                        userClass={userClass}
-                        tabRef={tabRef}
-                        key={`stud_row__${i + 2}`}
-                      />
+                      <StudRow nRow={i + 2} stud={stud} tabRef={tabRef} key={`stud_row__${i + 2}`} />
                     );
                   }),
                 );

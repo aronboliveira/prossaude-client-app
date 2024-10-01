@@ -19,6 +19,7 @@ import {
   PseudoBool,
   xlsHandler,
 } from "../testVars";
+//@ts-ignore
 import { targEl } from "@/lib/global/declarations/types";
 describe("getGlobalEls", (): void => {
   let addListenerTextsSpy: jest.SpyInstance,

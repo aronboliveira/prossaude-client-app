@@ -29,9 +29,6 @@ export function getGlobalEls(isAutocorrectOn: boolean = true, context: string = 
   dateBtns?.length > 0
     ? addListenerDateBtns(dateBtns)
     : elementNotPopulated(dateBtns, "dateBtns", extLine(new Error()));
-  astDigtBtns?.length > 0
-    ? addListenerAstDigitBtns(astDigtBtns)
-    : elementNotPopulated(astDigtBtns, "astDigtBtns", extLine(new Error()));
   resetFormBtn instanceof HTMLButtonElement
     ? resetFormBtn.addEventListener("click", (click): void =>
         GlobalHandler.resetarFormulario(click, astDigtBtns, resetFormBtn),
@@ -429,7 +426,7 @@ export function addResetAstListener(): void {
       }
     });
   } catch (e) {
-    console.error(`Error executing addResetAstListener():
+    console.error(`Error executing addResetAstListener:
     ${(e as Error).message}`);
   }
 }
@@ -482,9 +479,9 @@ export function addCanvasListeners(): void {
     const canvas = document.getElementById("inpAstConfirmId");
     if (!(canvas instanceof HTMLCanvasElement))
       throw elementNotFound(canvas, `Canvas for executing addCanvasListeners()`, extLine(new Error()));
-    canvas.width = innerWidth;
+    canvas.width = innerWidth / 3.5;
     addEventListener("resize", () => {
-      canvas.width = innerWidth;
+      canvas.width = innerWidth / 3.5;
     });
     canvas.height = 80;
     const ctx = canvas.getContext("2d");
@@ -535,7 +532,7 @@ export function addCanvasListeners(): void {
     canvas.addEventListener("mouseout", stopDrawing);
     canvas.addEventListener("touchend", stopDrawing);
   } catch (e) {
-    console.error(`Error executing addCanvasListteners():
+    console.error(`Error executing addCanvasListteners:
     ${(e as Error).message}`);
   }
 }

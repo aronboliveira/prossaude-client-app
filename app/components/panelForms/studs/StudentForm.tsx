@@ -6,14 +6,16 @@ import { globalDataProvider, panelRoots } from "../defs/client/SelectPanel";
 import { handleClientPermissions } from "@/lib/locals/panelPage/handlers/consHandlerUsers";
 import { handleSubmit } from "@/lib/locals/panelPage/handlers/handlers";
 import { panelFormsVariables } from "../panelFormsData";
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback, useContext } from "react";
 import GenericErrorComponent from "../../error/GenericErrorComponent";
 import ReseterBtn from "../defs/ReseterBtn";
 import { nullishBtn, nullishForm, nullishInp } from "@/lib/global/declarations/types";
 import { addEmailExtension, assignFormAttrs, autoCapitalizeInputs, formatCPF, formatTel } from "@/lib/global/gModel";
 import { elementNotFound, elementNotPopulated, extLine, inputNotFound } from "@/lib/global/handlers/errorHandler";
 import { handleCondtReq, handleEventReq, validateForm, syncAriaStates } from "@/lib/global/handlers/gHandlers";
-export default function StudentForm({ mainRoot, userClass = "estudante" }: GlobalFormProps): JSX.Element {
+import { PanelCtx } from "../defs/client/SelectLoader";
+export default function StudentForm(): JSX.Element {
+  const userClass = useContext(PanelCtx).userClass;
   const [showForm] = useState<boolean>(true);
   const formRef = useRef<nullishForm>(null);
   const CPFStudRef = useRef<nullishInp>(null);
@@ -460,10 +462,7 @@ export default function StudentForm({ mainRoot, userClass = "estudante" }: Globa
                 title='Gere um .xlsx com os dados preenchidos'>
                 Gerar Planilha
               </button>
-              <ReseterBtn
-                root={panelRoots.mainRoot!}
-                renderForm={<StudentForm mainRoot={mainRoot} userClass={userClass} />}
-              />
+              <ReseterBtn root={panelRoots.mainRoot!} renderForm={<StudentForm />} />
             </div>
           </fieldset>
         </form>

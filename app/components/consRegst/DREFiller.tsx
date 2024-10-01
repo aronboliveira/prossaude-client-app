@@ -3,10 +3,12 @@ import { FillerProps } from "@/lib/locals/panelPage/declarations/interfacesCons"
 import { addListenerAvMembers } from "@/lib/locals/panelPage/handlers/consHandlerList";
 import { globalDataProvider } from "../panelForms/defs/client/SelectPanel";
 import { nullishBtn, nullishDiv } from "@/lib/global/declarations/types";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import AvStudListDlg from "../lists/AvStudListDlg";
 import { handleCondtReq, syncAriaStates } from "@/lib/global/handlers/gHandlers";
-export default function DREFiller({ forwardedRef, userClass }: FillerProps): JSX.Element {
+import { PanelCtx } from "../panelForms/defs/client/SelectLoader";
+export default function DREFiller({ forwardedRef }: FillerProps): JSX.Element {
+  const userClass = useContext(PanelCtx).userClass;
   const btnStudListRef = useRef<nullishBtn>(null);
   const fillerDivRef = useRef<nullishDiv>(null);
   const [shouldDisplayStudList, setStudListDisplay] = useState<boolean>(false);
@@ -97,12 +99,7 @@ export default function DREFiller({ forwardedRef, userClass }: FillerProps): JSX
             Consultar Lista de Estudantes
           </button>
           {shouldDisplayStudList ? (
-            <AvStudListDlg
-              forwardedRef={forwardedRef}
-              dispatch={setStudListDisplay}
-              state={shouldDisplayStudList}
-              userClass={userClass}
-            />
+            <AvStudListDlg forwardedRef={forwardedRef} dispatch={setStudListDisplay} state={shouldDisplayStudList} />
           ) : (
             <></>
           )}

@@ -1,13 +1,14 @@
-import { GlobalFormProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import { addListenerExportBtn } from "@/lib/global/gController";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { normalizeSizeSb } from "@/lib/global/gStyleScript";
 import { nullishBtn, nullishForm } from "@/lib/global/declarations/types";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback, useContext } from "react";
 import PacList from "../../lists/PacList";
 import { assignFormAttrs } from "@/lib/global/gModel";
-export default function PacTabForm({ userClass = "estudante" }: GlobalFormProps): JSX.Element {
+import { PanelCtx } from "../defs/client/SelectLoader";
+export default function PacTabForm(): JSX.Element {
+  const userClass = useContext(PanelCtx).userClass;
   const [shouldDisplayRowData, setDisplayRowData] = useState<boolean>(false);
   const formRef = useRef<nullishForm>(null);
   const btnExportPacsTabRef = useRef<nullishBtn>(null);
@@ -70,7 +71,6 @@ export default function PacTabForm({ userClass = "estudante" }: GlobalFormProps)
           setDisplayRowData={setDisplayRowData}
           shouldDisplayRowData={shouldDisplayRowData}
           shouldShowAlocBtn={false}
-          userClass={userClass}
         />
         <div role='group' className='form-padded pdL0 widQ460FullW '></div>
       </section>

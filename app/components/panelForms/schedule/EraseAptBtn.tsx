@@ -1,13 +1,14 @@
 import { ErrorBoundary } from "react-error-boundary";
-import { GlobalFormProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { nullishBtn } from "@/lib/global/declarations/types";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import ExcludeConsDlg from "../../alerts/ExcludeConsDlg";
 import GenericErrorComponent from "../../error/GenericErrorComponent";
-export default function EraseAptBtn({ userClass = "estudante" }: GlobalFormProps): JSX.Element {
-  const [shouldShowExcludeDlg, setDisplayExcludeDlg] = useState(false);
-  const btnRef = useRef<nullishBtn>(null);
+import { PanelCtx } from "../defs/client/SelectLoader";
+export default function EraseAptBtn(): JSX.Element {
+  const [shouldShowExcludeDlg, setDisplayExcludeDlg] = useState(false),
+    btnRef = useRef<nullishBtn>(null),
+    userClass = useContext(PanelCtx).userClass;
   useEffect(() => {
     try {
       if (!(btnRef.current instanceof HTMLButtonElement))
@@ -37,7 +38,6 @@ export default function EraseAptBtn({ userClass = "estudante" }: GlobalFormProps
           setDisplayExcludeDlg={setDisplayExcludeDlg}
           shouldDisplayExcludeDlg={shouldShowExcludeDlg}
           btn={btnRef.current}
-          userClass={userClass}
         />
       )}
     </ErrorBoundary>

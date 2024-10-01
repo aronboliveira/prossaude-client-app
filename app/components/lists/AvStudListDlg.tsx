@@ -5,17 +5,14 @@ import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { isClickOutside } from "@/lib/global/gStyleScript";
 import { nullishDlg } from "@/lib/global/declarations/types";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
-import { useEffect, useRef } from "react";
+import { useContext, useEffect, useRef } from "react";
 import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
 import StudList from "./StudList";
-export default function AvStudListDlg({
-  forwardedRef,
-  dispatch,
-  state = false,
-  userClass = "estudante",
-}: AvStudListDlgProps): JSX.Element {
-  const dialogRef = useRef<nullishDlg>(null);
-  const sectTabRef = useRef<HTMLElement | null>(null);
+import { PanelCtx } from "../panelForms/defs/client/SelectLoader";
+export default function AvStudListDlg({ forwardedRef, dispatch, state = false }: AvStudListDlgProps): JSX.Element {
+  const userClass = useContext(PanelCtx).userClass,
+    dialogRef = useRef<nullishDlg>(null),
+    sectTabRef = useRef<HTMLElement | null>(null);
   //push em history
   useEffect(() => {
     !/av-stud=open/gi.test(location.search) &&
@@ -70,7 +67,7 @@ export default function AvStudListDlg({
               <button className='btn btn-close forceInvert' onClick={() => dispatch(!state)}></button>
             </section>
             <section className='form-padded' id='sectStudsTab' ref={sectTabRef}>
-              <StudList userClass={userClass} mainDlgRef={forwardedRef} state={state} dispatch={dispatch} />
+              <StudList mainDlgRef={forwardedRef} state={state} dispatch={dispatch} />
             </section>
           </ErrorBoundary>
         </dialog>

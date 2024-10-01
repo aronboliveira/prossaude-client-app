@@ -8,15 +8,17 @@ import { handleClientPermissions } from "@/lib/locals/panelPage/handlers/consHan
 import { handleFetch } from "@/lib/locals/panelPage/handlers/handlers";
 import { panelRoots } from "../defs/client/SelectPanel";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef, useCallback, useContext } from "react";
 import GenericErrorComponent from "../../error/GenericErrorComponent";
 import ProfRow from "./ProfRow";
 import Spinner from "../../icons/Spinner";
 import { nullishBtn, nullishForm, nullishTab, nullishTabSect } from "@/lib/global/declarations/types";
-import { GlobalFormProps, ProfInfo } from "@/lib/locals/panelPage/declarations/interfacesCons";
+import { ProfInfo } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import { strikeEntries } from "@/lib/locals/panelPage/consStyleScript";
 import { assignFormAttrs } from "@/lib/global/gModel";
-export default function RemoveProfForm({ userClass = "estudante" }: GlobalFormProps): JSX.Element {
+import { PanelCtx } from "../defs/client/SelectLoader";
+export default function RemoveProfForm(): JSX.Element {
+  const userClass = useContext(PanelCtx).userClass;
   const profs: ProfInfo[] = [];
   const formRef = useRef<nullishForm>(null);
   const tabRef = useRef<nullishTab>(null);
@@ -145,13 +147,7 @@ export default function RemoveProfForm({ userClass = "estudante" }: GlobalFormPr
                     if (!tbodyRef.current.querySelector("tr"))
                       panelRoots[`${tbodyRef.current.id}`]?.render(
                         profs.map((prof, i) => (
-                          <ProfRow
-                            nRow={i + 2}
-                            prof={prof}
-                            userClass={userClass}
-                            tabRef={tabRef}
-                            key={`prof_row__${i + 2}`}
-                          />
+                          <ProfRow nRow={i + 2} prof={prof} tabRef={tabRef} key={`prof_row__${i + 2}`} />
                         )),
                       );
                     setTimeout(() => {
@@ -183,13 +179,7 @@ export default function RemoveProfForm({ userClass = "estudante" }: GlobalFormPr
                       ) ? (
                       <></>
                     ) : (
-                      <ProfRow
-                        nRow={i + 2}
-                        prof={prof}
-                        userClass={userClass}
-                        tabRef={tabRef}
-                        key={`prof_row__${i + 2}`}
-                      />
+                      <ProfRow nRow={i + 2} prof={prof} tabRef={tabRef} key={`prof_row__${i + 2}`} />
                     );
                   }),
                 );

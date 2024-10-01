@@ -12,7 +12,7 @@ import {
 import { handleFetch } from "@/lib/locals/panelPage/handlers/handlers";
 import { nullishTab, nullishTabSect } from "@/lib/global/declarations/types";
 import { panelRoots } from "../panelForms/defs/client/SelectPanel";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useContext } from "react";
 import GenericErrorComponent from "../error/GenericErrorComponent";
 import Spinner from "../icons/Spinner";
 import StudRow from "../panelForms/studs/StudRow";
@@ -21,15 +21,12 @@ import { StudInfo, StudListProps } from "@/lib/locals/panelPage/declarations/int
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { strikeEntries } from "@/lib/locals/panelPage/consStyleScript";
 import { handleClientPermissions } from "@/lib/locals/panelPage/handlers/consHandlerUsers";
-export default function StudList({
-  mainDlgRef,
-  dispatch,
-  state = true,
-  userClass = "estudante",
-}: StudListProps): JSX.Element {
-  const tabRef = useRef<nullishTab>(null);
-  const tbodyRef = useRef<nullishTabSect>(null);
-  const studs: StudInfo[] = [];
+import { PanelCtx } from "../panelForms/defs/client/SelectLoader";
+export default function StudList({ mainDlgRef, dispatch, state = true }: StudListProps): JSX.Element {
+  const tabRef = useRef<nullishTab>(null),
+    tbodyRef = useRef<nullishTabSect>(null),
+    studs: StudInfo[] = [],
+    userClass = useContext(PanelCtx).userClass;
   useEffect(() => {
     try {
       if (!(tbodyRef.current instanceof HTMLTableSectionElement))
@@ -163,14 +160,7 @@ export default function StudList({
                     if (!tbodyRef.current.querySelector("tr"))
                       panelRoots[`${tbodyRef.current.id}`]?.render(
                         studs.map((stud, i) => (
-                          <StudRow
-                            nRow={i + 2}
-                            stud={stud}
-                            userClass={userClass}
-                            tabRef={tabRef}
-                            key={`stud_row__${i + 2}`}
-                            inDlg={true}
-                          />
+                          <StudRow nRow={i + 2} stud={stud} tabRef={tabRef} key={`stud_row__${i + 2}`} inDlg={true} />
                         )),
                       );
                     setTimeout(() => {
@@ -202,14 +192,7 @@ export default function StudList({
                       ) ? (
                       <></>
                     ) : (
-                      <StudRow
-                        nRow={i + 2}
-                        stud={stud}
-                        userClass={userClass}
-                        tabRef={tabRef}
-                        key={`stud_row__${i + 2}`}
-                        inDlg={true}
-                      />
+                      <StudRow nRow={i + 2} stud={stud} tabRef={tabRef} key={`stud_row__${i + 2}`} inDlg={true} />
                     );
                   }),
                 );

@@ -1,5 +1,8 @@
+import React from "react";
 import { render, fireEvent, RenderResult } from "@testing-library/react";
+//@ts-ignore
 import { handleSubmit } from "@/pages/api/ts/handlers";
+//@ts-ignore
 import { formatCPF, addEmailExtension } from "@/lib/global/gModel";
 import ProfForm from "../../../../../../components/panelForms/profs/ProfForm";
 jest.mock(

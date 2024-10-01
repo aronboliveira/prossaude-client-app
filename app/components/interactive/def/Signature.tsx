@@ -2,7 +2,8 @@
 import { changeToAstDigit } from "@/lib/global/handlers/gHandlers";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { nullishCanvas } from "@/lib/global/declarations/types";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
+import { addCanvasListeners } from "@/lib/global/gController";
 let ctx: CanvasRenderingContext2D | null = null;
 export default function Signature(): JSX.Element {
   const canvasRef = useRef<nullishCanvas>(null);
@@ -15,26 +16,29 @@ export default function Signature(): JSX.Element {
     setDrawing(true);
     drawTouch(e);
   };
-  const draw = (e: React.MouseEvent<HTMLCanvasElement, MouseEvent>): void => {
-    try {
-      if (!(canvasRef.current instanceof HTMLCanvasElement))
-        throw elementNotFound(canvasRef.current, `Validation of Canvas Ref Instance`, extLine(new Error()));
-      if (!(ctx instanceof CanvasRenderingContext2D))
-        throw new Error(`Error getting Canvas Context:
-        Obtained Value: ${ctx ?? "nullish"}`);
-      if (!isDrawing) return;
-      const rect = canvasRef.current.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      ctx.lineTo(x, y);
-      ctx.stroke();
-      ctx.beginPath();
-      ctx.moveTo(x, y);
-    } catch (e) {
-      console.error(`Error executing draw():
-      ${(e as Error).message}`);
-    }
-  };
+  const draw = useCallback(
+    (e: React.MouseEvent<HTMLCanvasElement, MouseEvent>): void => {
+      try {
+        if (!(canvasRef.current instanceof HTMLCanvasElement))
+          throw elementNotFound(canvasRef.current, `Validation of Canvas Ref Instance`, extLine(new Error()));
+        if (!(ctx instanceof CanvasRenderingContext2D))
+          throw new Error(`Error getting Canvas Context:
+          Obtained Value: ${ctx ?? "nullish"}`);
+        if (!isDrawing) return;
+        const rect = canvasRef.current.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        ctx.lineTo(x, y);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+      } catch (e) {
+        console.error(`Error executing draw():
+        ${(e as Error).message}`);
+      }
+    },
+    [isDrawing],
+  );
   const drawTouch = (e: React.TouchEvent<HTMLCanvasElement>): void => {
     try {
       if (!(canvasRef.current instanceof HTMLCanvasElement))
@@ -113,7 +117,42 @@ export default function Signature(): JSX.Element {
           onClick={ev => changeToAstDigit(ev.currentTarget)}>
           Usar Assinatura Digital
         </button>
-        <button type='button' className='btn btn-secondary' id='resetAstBtn'>
+        <button
+          type='button'
+          className='btn btn-secondary'
+          id='resetAstBtn'
+          onClick={ev => {
+            try {
+              const divConfirm = ev.currentTarget.closest(".divConfirm");
+              if (!(divConfirm instanceof HTMLElement))
+                throw elementNotFound(divConfirm, `Main ancestral div for resetAstBtn`, extLine(new Error()));
+              const astEl = divConfirm.querySelector("#inpAstConfirmId");
+              if (!(astEl instanceof HTMLCanvasElement || astEl instanceof HTMLInputElement))
+                throw elementNotFound(astEl, `Element for patient signing`, extLine(new Error()));
+              if (astEl instanceof HTMLCanvasElement) {
+                const replaceCanvas = Object.assign(document.createElement("canvas"), {
+                  id: "inpAstConfirmId",
+                });
+                replaceCanvas.dataset.title = "Assinatura do Paciente";
+                astEl.parentElement!.replaceChild(replaceCanvas, astEl);
+                addCanvasListeners();
+              }
+              if (astEl instanceof HTMLInputElement) {
+                const replaceInp = Object.assign(
+                  Object.assign(document.createElement("input") as HTMLInputElement, {
+                    type: "file",
+                    id: "inpAstConfirmId",
+                    accept: "image/*",
+                  }),
+                );
+                replaceInp.dataset.title = "Assinatura do Paciente";
+                replaceInp.classList.add("inpAst", "mg-07t", "form-control");
+                astEl.parentElement!.replaceChild(replaceInp, astEl);
+              }
+            } catch (e2) {
+              console.error(`Error handling click on Reset signature button`);
+            }
+          }}>
           Resetar
         </button>
       </span>

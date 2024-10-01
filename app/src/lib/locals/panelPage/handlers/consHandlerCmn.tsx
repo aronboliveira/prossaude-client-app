@@ -445,7 +445,6 @@ export function handleRenderRefLost(id: string, prevRef: HTMLElement, userClass:
               )
             }
             btnId={prevRef.id}
-            userClass={userClass}
           />,
         );
       }
@@ -492,7 +491,6 @@ export function handleAptBtnClick(ev: MouseEvent, userClass: string): void {
             )
           }
           btnId={ev.currentTarget.id}
-          userClass={userClass}
         />,
       );
       handleRenderRefLost("rootDlgList", ev.currentTarget, userClass);
@@ -541,7 +539,6 @@ export function handleAptBtnClick(ev: MouseEvent, userClass: string): void {
             )
           }
           btnId={ev.currentTarget.id}
-          userClass={userClass}
         />,
       );
       handleRenderRefLost("rootDlgList", ev.currentTarget, userClass);
