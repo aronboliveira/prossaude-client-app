@@ -92,7 +92,6 @@ export default function PrevConsRow({ historic, nRow, name = "Anônimo" }: Histo
         <output
           className={`outputPrevCons outputPrevConsPac${nRow - 1} outputPrevConsPac${name}`}
           id={`outpStudPrevCons-${nRow}`}
-          //TODO AQUI TEM QUE SER REPASSADO PELO BANCO ALGUM IDENTIFICADOR...
           data-title={`Estudante de Consulta no Histórico ${nRow}`}
           data-row={nRow}
           data-col={5}>

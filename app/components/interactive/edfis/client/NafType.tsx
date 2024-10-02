@@ -1,12 +1,13 @@
 "use client";
-import { callbackAtvLvlElementNaf, person, tabProps } from "@/pages/edfis";
+import { callbackAtvLvlElementNaf } from "@/pages/edfis";
+import { person, tabProps } from "@/vars";
 export default function NafType(): JSX.Element {
   return (
     <select
-      id="nafType"
-      name="naf"
-      className="form-select noInvert consInp"
-      data-title="Fator de Nível de Atividade Física"
+      id='nafType'
+      name='naf'
+      className='form-select noInvert consInp'
+      data-title='Fator de Nível de Atividade Física'
       onChange={ev => {
         [person.atvLvl, tabProps.factorAtvLvl] = callbackAtvLvlElementNaf(
           [
@@ -18,15 +19,14 @@ export default function NafType(): JSX.Element {
               ev.currentTarget,
             ],
           ],
-          ev.currentTarget.id
+          ev.currentTarget.id,
         );
-      }}
-    >
-      <option value="leve">1.4</option>
-      <option value="moderado">1.6</option>
-      <option value="intenso">1.9</option>
-      <option value="muitoIntenso">2.2</option>
-      <option value="sedentario">1.2</option>
+      }}>
+      <option value='leve'>1.4</option>
+      <option value='moderado'>1.6</option>
+      <option value='intenso'>1.9</option>
+      <option value='muitoIntenso'>2.2</option>
+      <option value='sedentario'>1.2</option>
     </select>
   );
 }

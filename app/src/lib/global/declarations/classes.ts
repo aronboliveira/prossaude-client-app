@@ -100,9 +100,9 @@ export class Person {
         throw new Error(
           `Error validating data for person. 
           Element person: ${Object.prototype.toString.call(personInfo).slice(8, -1) ?? "null"}; 
-          Weight present: ${"weight" in personInfo ?? false};
+          Weight present: ${"weight" in personInfo || false};
           Weight obtained: ${this.weight ?? 0};
-          Height present: ${"height" in personInfo ?? false};
+          Height present: ${"height" in personInfo || false};
           Height obtained: ${this.height ?? 0}`,
         );
     } catch (IMCError) {
@@ -118,7 +118,7 @@ export class Person {
         let PGC = 495 / DC - 450;
         if (PGC <= 0 || Number.isNaN(PGC)) PGC = 0.01;
         if (PGC > 100) PGC = 100;
-        let MLG = 100 - PGC ?? 0;
+        let MLG = 100 - PGC > 0 ? 100 - PGC : 0;
         if (Number.isNaN(MLG) || MLG === Math.abs(Infinity)) MLG = 0;
         return [PGC, MLG];
       } else if (person.gen === "feminino") {
@@ -127,7 +127,7 @@ export class Person {
         let PGC = 495 / DC - 450;
         if (PGC <= 0 || Number.isNaN(PGC)) PGC = 0.01;
         if (PGC > 100) PGC = 100;
-        let MLG = 100 - PGC ?? 0;
+        let MLG = 100 - PGC > 0 ? 100 - PGC : 0;
         if (Number.isNaN(MLG) || MLG === Math.abs(Infinity)) MLG = 0;
         return [PGC, MLG];
       } else if (person.gen === "neutro") {
@@ -137,7 +137,7 @@ export class Person {
         let PGC = 495 / DC - 450;
         if (PGC <= 0 || Number.isNaN(PGC)) PGC = 0.01;
         if (PGC > 100) PGC = 100;
-        let MLG = 100 - PGC ?? 0;
+        let MLG = 100 - PGC > 0 ? 100 - PGC : 0;
         if (Number.isNaN(MLG) || MLG === Math.abs(Infinity)) MLG = 0;
         return [PGC, MLG];
       } else
@@ -148,7 +148,7 @@ export class Person {
         );
     } else
       console.warn(`Error validating .sumDCut:
-      It is present: ${"sumDCut" in person ?? false};
+      It is present: ${"sumDCut" in person || false};
       Obtained primitive type for .sumDCut: ${typeof this.sumDCut};
       Obtained value: ${this.sumDCut ?? 0}`);
     return [0, 0];
@@ -217,11 +217,11 @@ export class Person {
               );
           } else
             throw new Error(`Error validating properties of person.
-            Weight present: ${"weight" in person ?? false};
+            Weight present: ${"weight" in person || false};
             Value of weight obtained: ${this.weight ?? 0};
-            Height present: ${"height" in person ?? false};
+            Height present: ${"height" in person || false};
             Value of height obtained: ${this.height ?? 0};
-            age present: ${"age" in person ?? false};
+            age present: ${"age" in person || false};
             `);
         } else {
           throw new Error(
@@ -234,7 +234,7 @@ export class Person {
         throw new Error(`Error validating person.
         Elemento: ${person ?? "null"};
         instance: ${Object.prototype.toString.call(person).slice(8, -1) ?? "null"};
-        atvLvl present: ${"atvLvl" in person ?? false};
+        atvLvl present: ${"atvLvl" in person || false};
         Value of atvLvl obtained: ${this.atvLvl ?? "null"};
         Primitive type of .atvLvl: ${typeof this.atvLvl};
         Primitive type of IMC: ${typeof IMC};
@@ -807,7 +807,6 @@ export class ExportHandler {
         console.error(`Failed fetching Canvas: ${e}`);
       }
     }
-    console.log(canvasBlobs);
     const zip = new JSZip();
     for (const [idf, blob] of Object.entries(canvasBlobs)) {
       try {

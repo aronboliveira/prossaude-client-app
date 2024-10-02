@@ -13,32 +13,20 @@ export default function UserProfilePanelWrapper(): JSX.Element {
   useEffect(() => {
     const profileSpan = document.getElementById("rootUserInfo");
     if (profileSpan instanceof HTMLElement) {
-      if (!context.roots.userRoot)
-        context.roots.userRoot = createRoot(profileSpan);
-      if (!profileSpan.hasChildNodes())
-        context.roots.userRoot.render(<UserProfilePanel router={nextRouter} />);
+      if (!context.roots.userRoot) context.roots.userRoot = createRoot(profileSpan);
+      if (!profileSpan.hasChildNodes()) context.roots.userRoot.render(<UserProfilePanel router={nextRouter} />);
       setTimeout(() => {
         if (!profileSpan.querySelector("img"))
-          context.roots.userRoot.render(
-            <GenericErrorComponent message="Erro renderizando painel de usuário" />
-          );
+          context.roots.userRoot.render(<GenericErrorComponent message='Erro renderizando painel de usuário' />);
       }, 2000);
     } else
       setTimeout(() => {
         !document.getElementById("rootUserInfo")?.querySelector("img") &&
-          elementNotFound(
-            profileSpan,
-            "profileSpan during DOM initialization",
-            extLine(new Error())
-          );
+          elementNotFound(profileSpan, "profileSpan during DOM initialization", extLine(new Error()));
       }, 2000);
-  }, []);
+  }, [context.roots, nextRouter]);
   return (
-    <ErrorBoundary
-      FallbackComponent={() => (
-        <GenericErrorComponent message="Error loading User Panel" />
-      )}
-    >
+    <ErrorBoundary FallbackComponent={() => <GenericErrorComponent message='Error loading User Panel' />}>
       <UserProfilePanel router={nextRouter} />
     </ErrorBoundary>
   );

@@ -1,6 +1,5 @@
 "use client";
 import { AppRootContext } from "@/pages/_app";
-import { User } from "@/lib/global/declarations/classes";
 import { createRoot } from "react-dom/client";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { equalizeParagraphs } from "@/lib/locals/basePage/baseStylescript";
@@ -11,31 +10,23 @@ import { useEffect, useContext } from "react";
 import { useRouter } from "next/router";
 import UserProfilePanel from "../../user/UserProfilePanel";
 import { defUser } from "@/redux/slices/userSlice";
-import { UserState } from "@/lib/locals/basePage/declarations/serverInterfaces";
+import { experimentalProps } from "@/vars";
 import Link from "next/link";
 let baseRootUser: targEl;
-export let experimentalUser: UserState = defUser;
 export default function MainContainer(): JSX.Element {
   const context = useContext(AppRootContext);
   const nextRouter = useRouter();
   useEffect(() => {
-    experimentalUser = localStorage.getItem("activeUser") ? JSON.parse(localStorage.getItem("activeUser")!) : defUser;
+    experimentalProps.experimentalUser = localStorage.getItem("activeUser")
+      ? JSON.parse(localStorage.getItem("activeUser")!)
+      : defUser;
     if (
-      experimentalUser?.loadedData &&
-      (experimentalUser.loadedData.name === "" || /an[oô]nimo/gi.test(experimentalUser.loadedData.name))
+      experimentalProps.experimentalUser?.loadedData &&
+      (experimentalProps.experimentalUser.loadedData.name === "" ||
+        /an[oô]nimo/gi.test(experimentalProps.experimentalUser.loadedData.name))
     )
       console.warn(`Failed to fetch user from local storage. Default user displayed.`);
-    const user = Object.freeze(
-      new User({
-        name: experimentalUser.loadedData.name,
-        privilege: experimentalUser.loadedData.privilege,
-        area: experimentalUser.loadedData.area,
-        email: experimentalUser.loadedData.email,
-        telephone: experimentalUser.loadedData.telephone,
-      }),
-    );
-    console.log(user);
-    localStorage.setItem("activeUser", JSON.stringify(experimentalUser));
+    localStorage.setItem("activeUser", JSON.stringify(experimentalProps.experimentalUser));
     baseRootUser = document.getElementById("rootUserInfo");
     baseRootUser instanceof HTMLElement && !context.roots.baseRootedUser
       ? (context.roots.baseRootedUser = createRoot(baseRootUser))
@@ -98,8 +89,10 @@ export default function MainContainer(): JSX.Element {
         }
         if (innerWidth > 520 && innerWidth <= 1025) numRows = 2;
         if (innerWidth <= 1025 && numRows > 1) {
+          /* eslint-disable */
           factor = 1 * numRows * factorRows;
           contFactor = 1 * numRows * factorRows;
+          /* estlint-enable */
           if (panelSect instanceof HTMLElement) {
             panelSect.style.paddingTop = "0";
             panelSect.style.paddingBottom = "0";
@@ -122,7 +115,9 @@ export default function MainContainer(): JSX.Element {
           }
         }
         if (innerWidth <= 750 && numRows > 1) {
+          /* estlint-disable */
           contFactor = 1 * numRows * factorRows;
+          /* estlint-enable */
           if (panelSect instanceof HTMLElement) {
             panelSect.style.paddingTop = "1rem";
             panelSect.style.paddingBottom = "3rem";
@@ -148,8 +143,10 @@ export default function MainContainer(): JSX.Element {
           factorRows = 0.25;
         }
         if (innerWidth <= 520 && numRows > 1) {
+          /* eslint-disable */
           factor = 1.06 * numRows * factorRows;
           contFactor = 1 * numRows * factorRows;
+          /* estlint-enable */
           if (panelSect instanceof HTMLElement) {
             panelSect.style.paddingBottom = "2rem";
             panelSect.style.marginTop = "0";
@@ -194,7 +191,7 @@ export default function MainContainer(): JSX.Element {
     handleBgResize();
     addEventListener("resize", handleBgResize);
     return (): void => removeEventListener("resize", handleBgResize);
-  }, []);
+  }, [context.roots, nextRouter]);
   return (
     <main className='main-container gridAlItCt widFull gridAlItBs750Q gridAuto750Q rGap4v750Q'>
       <section id='cardsSect' className='grid4col grid4r750Q gridJICt rGap2v750Q pd-t4v750Q fade-in-early-element'>

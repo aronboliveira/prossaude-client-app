@@ -43,7 +43,7 @@ export default function PacTabForm(): JSX.Element {
       callbackNormalizeSizesSb();
       syncAriaStates([...formRef.current!.querySelectorAll("*"), formRef.current]);
     } else elementNotFound(formRef?.current, "formRef.current in useEffect() for PacTabForm", extLine(new Error()));
-  }, [formRef]);
+  }, [formRef, callbackNormalizeSizesSb]);
   return (
     <form
       id='formRemovePac'

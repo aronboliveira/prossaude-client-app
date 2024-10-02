@@ -24,7 +24,9 @@ export function numberLimit(inpEl: targEl): void {
         const wrongMatchIndex = inpEl.value.indexOf(
           inpEl.value.match(/[=.,;~/|"!@#$%&*¬°ªº§¹²³£¢(){}[\]]/g)?.[0] ?? "",
         );
-        inpEl.value = inpEl.value.slice(0, wrongMatchIndex ?? 0) + inpEl.value.slice(wrongMatchIndex + 1 ?? 0);
+        inpEl.value =
+          inpEl.value.slice(0, wrongMatchIndex > 0 ? wrongMatchIndex : inpEl.value.length) +
+          inpEl.value.slice(wrongMatchIndex + 1 > 0 ? wrongMatchIndex + 1 : inpEl.value.length);
       }
       if (parseInt(inpEl.value) < 1 && inpEl.id?.endsWith("Max")) {
         const inpValueArray = Array.from(inpEl.value);

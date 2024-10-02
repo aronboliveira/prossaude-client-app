@@ -4,7 +4,7 @@ import { createRoot } from "react-dom/client";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { equalizeTabCells } from "@/lib/global/gStyleScript";
 import { handleFetch } from "@/lib/locals/panelPage/handlers/handlers";
-import { panelRoots } from "../panelForms/defs/client/SelectPanel";
+import { panelRoots } from "@/vars";
 import { strikeEntries } from "@/lib/locals/panelPage/consStyleScript";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useContext, useEffect, useRef } from "react";
@@ -311,7 +311,7 @@ export default function PacList({
     } catch (e) {
       console.error(`Error executing useEffect for Table Body Reference:\n${(e as Error).message}`);
     }
-  }, []);
+  }, [dispatch, shouldShowAlocBtn, state, userClass]);
   useEffect(() => {
     if (sectTabRef?.current instanceof HTMLElement) {
       const handleKeyDown = (press: KeyboardEvent): boolean | void =>
@@ -319,7 +319,7 @@ export default function PacList({
       addEventListener("keydown", handleKeyDown);
       return (): void => removeEventListener("keydown", handleKeyDown);
     } else elementNotFound(sectTabRef.current, "sectTabRef in useEffect()", extLine(new Error()));
-  }, [sectTabRef]);
+  }, [sectTabRef, setDisplayRowData]);
   return (
     <section className='form-padded' id='sectPacsTab' ref={sectTabRef}>
       <table className='table table-striped table-responsive table-hover tabPacs' id='avPacsTab' ref={tabPacRef}>

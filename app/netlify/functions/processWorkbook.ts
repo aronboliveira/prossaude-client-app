@@ -1,6 +1,5 @@
 import { Handler } from "@netlify/functions";
 function processWorkbook(wb: any): any {
-  console.log(wb);
   return wb;
 }
 const handler: Handler = async (
@@ -19,7 +18,6 @@ const handler: Handler = async (
     };
   }
   const processedWb = processWorkbook(wb);
-  console.log("Workbook JSON correctly processed");
   return {
     statusCode: 200,
     body: JSON.stringify(processedWb),

@@ -24,8 +24,9 @@ import {
   sixTargEl,
   textEl,
   looseNum,
+  nullishHtEl,
+  nlEl,
 } from "../../global/declarations/types";
-
 enum EnumTargInpTypes {
   "weight",
   "height",
@@ -249,21 +250,14 @@ export function updateIndexesContexts(
     typeof factorAtvLvl === "number" &&
     (factorAtleta === "Peso" || factorAtleta === "MLG")
   ) {
-    const gordCorpLvl = arrGord[0];
-    const [targInpTMB, targInpGET, formTMBTypeElement] = arrMetab;
-    const IMCArray = person.calcIMC(person) || ["", 0];
+    const [targInpTMB, targInpGET, formTMBTypeElement] = arrMetab,
+      IMCArray = person.calcIMC(person) || ["", 0];
     IMC = parseNotNaN(IMCArray[1].toFixed(4), 0, "float") || 0;
     updateIMCContext(arrGord, formTMBTypeElement, IMCArray, "NONE");
     MLG = parseNotNaN(person.calcPGC(person)[1].toFixed(4), 0, "float") || 0;
     const targInpMLG = arrGord[2];
     if (targInpMLG instanceof HTMLInputElement || targInpMLG instanceof HTMLSelectElement) formatValue(targInpMLG, MLG);
-    TMB =
-      updateTMBContext(
-        person,
-        [targInpTMB, formTMBTypeElement],
-        [...IMCArray, MLG] ?? [(gordCorpLvl as HTMLInputElement | HTMLSelectElement)?.value || 0, 0, 0],
-        factorAtleta,
-      ) || 0;
+    TMB = updateTMBContext(person, [targInpTMB, formTMBTypeElement], [...IMCArray, MLG], factorAtleta) || 0;
     TMB >= 0 && factorAtvLvl >= 0
       ? (GET = updateGETContext(person, targInpGET, TMB, factorAtvLvl))
       : console.warn(
@@ -579,9 +573,8 @@ export function updatePGC(
   context: string = "cons",
 ): [number, targEl, targEl] {
   let PGC = 0,
-    targInpPGC = null,
-    targInpSumDCut = null;
-
+    targInpPGC: targEl = null,
+    targInpSumDCut: targEl = null;
   if (person && parentEl && typeof numRef === "number" && (context === "cons" || context === "col")) {
     switch (context) {
       case "cons":
@@ -648,8 +641,8 @@ export function updateAtvLvl(mainSelect: targEl, secondarySelect: targEl, atvLvl
   return atvLvl || "leve";
 }
 export function defineTargInps(parentEl: targEl, numRef: string | number = 1, context: string = "cons"): sixTargEl {
-  const arrayTargInps = [];
-  const validTargInps: targEl[] | sixTargEl = [];
+  const arrayTargInps: nullishHtEl[] = [],
+    validTargInps: targEl[] | sixTargEl = [];
   if (
     parentEl instanceof HTMLElement &&
     (typeof numRef === "number" || typeof numRef === "string") &&
@@ -714,15 +707,29 @@ export function addRowAtivFis(count: number = 3, context: string = "Rot"): void 
       count - 1
     }&#41</td>
     <td class="tabCelAtFis tabCelAtFis${context} tabCelLeft" id="tabCelRowAtFis${context}${count}_2" itemprop="celAtFis${context}">
-      <input type="text" class="tabInpAtFis${context} tabInpRowAtFis${context}2 form-control minText" id="tabInpRowAtFis${context}${count}_1" itemprop="inpAtFis${context}" data-xls="Nome da Atividade Física ${title} ${count - 1}" data-title="Atividade_Fisica_${title}_Nome_${count - 1}" data-reqlength="3" required />
+      <input type="text" class="tabInpAtFis${context} tabInpRowAtFis${context}2 form-control minText" id="tabInpRowAtFis${context}${count}_1" itemprop="inpAtFis${context}" data-xls="Nome da Atividade Física ${title} ${
+      count - 1
+    }" data-title="Atividade_Fisica_${title}_Nome_${count - 1}" data-reqlength="3" required />
     <td class="tabCelAtFis tabCelAtFis${context} tabCelLeft" id="tabCelRowAtFis${context}${count}_3" itemprop="celAtFis${context}">
-      <input type="number" min-length="1" max-length"5" min="0" max="255" class="inpAtivFis tabInpAtFis${context} tabInpRowAtFis${context}2 form-control minText maxText minNum maxNum patternText" id="tabInpRowAtFis${context}${count}_2" itemprop="inpAtFis${context}" data-xls="Número de Semanas para a Atividade Física Proposta ${count - 1}" data-title="Atividade_Fisica_${title}_NSemana_${count - 1}" data-reqlength="1" data-maxlength='3' data-minnum="0" data-maxnum="255" required />
+      <input type="number" min-length="1" max-length"5" min="0" max="255" class="inpAtivFis tabInpAtFis${context} tabInpRowAtFis${context}2 form-control minText maxText minNum maxNum patternText" id="tabInpRowAtFis${context}${count}_2" itemprop="inpAtFis${context}" data-xls="Número de Semanas para a Atividade Física Proposta ${
+      count - 1
+    }" data-title="Atividade_Fisica_${title}_NSemana_${
+      count - 1
+    }" data-reqlength="1" data-maxlength='3' data-minnum="0" data-maxnum="255" required />
     </td>
     <td class="tabCelAtFis tabCelAtFis${context}" id="tabCelRowAtFis${context}${count}_4" itemprop="celAtFis${context}">
-      <input type="number" min-length="1" max-length="7" min="0" max="255" class="tabInpAtFis${context} tabInpRowAtFis${context}2 form-control minText maxText minNum maxNum patternText" id="tabInpRowAtFis${context}${count}_3" itemprop="inpAtFis${context}" data-xls='Tempo de Sessão Mínimo para Atividade Física ${title} ${count - 1}' data-title="Atividade_Fisica_${title}_SessãoMin_${count - 1}" data-reqlength="1" data-maxlength="3" data-minnum="0" data-maxnum="65535"required />
+      <input type="number" min-length="1" max-length="7" min="0" max="255" class="tabInpAtFis${context} tabInpRowAtFis${context}2 form-control minText maxText minNum maxNum patternText" id="tabInpRowAtFis${context}${count}_3" itemprop="inpAtFis${context}" data-xls='Tempo de Sessão Mínimo para Atividade Física ${title} ${
+      count - 1
+    }' data-title="Atividade_Fisica_${title}_SessãoMin_${
+      count - 1
+    }" data-reqlength="1" data-maxlength="3" data-minnum="0" data-maxnum="65535"required />
     </td>
     <td class="tabCelAtFis tabCelAtFis${context} tabCelRight" id="tabCelRowAtFis${context}${count}_5" itemprop="celAtFis${context}">
-      <input type="number" min-length="1" max-length="7" min="0" max="255" class="tabInpAtFis${context} tabInpRowAtFis${context}2 form-control minText maxText minNum maxNum patternText" id="tabInpRowAtFis${context}${count}_4" itemprop="inpAtFis${context}" data-xls="Número de Meses para a Atividade Física ${title} ${count -1}" data-title="Atividade_Fisica_${title}_Meses_${count - 1}" data-reqlength="1" data-maxlength="3" data-minnum="0" data-maxnum="65535" required />
+      <input type="number" min-length="1" max-length="7" min="0" max="255" class="tabInpAtFis${context} tabInpRowAtFis${context}2 form-control minText maxText minNum maxNum patternText" id="tabInpRowAtFis${context}${count}_4" itemprop="inpAtFis${context}" data-xls="Número de Meses para a Atividade Física ${title} ${
+      count - 1
+    }" data-title="Atividade_Fisica_${title}_Meses_${
+      count - 1
+    }" data-reqlength="1" data-maxlength="3" data-minnum="0" data-maxnum="65535" required />
     </td>
       `;
     tBodyContainer.appendChild(newRow);
@@ -753,8 +760,6 @@ export function removeRowAtivFis(count: number = 3, context: string = "Rot"): nu
   if (context === "rot") context = "Rot";
   if (context === "prop") context = "Prop";
   const rowToRemove = document.getElementById(`tabRowAtFis${context}Id${count - 1}`);
-  console.log(`tabRowAtFis${context}Id${count - 1}`);
-  console.log(count);
   if (rowToRemove && count >= 3) rowToRemove.remove() as void;
   else console.warn(`No row to remove detected!`);
   return count;
@@ -854,7 +859,7 @@ export function switchRequiredCols(
       } else
         console.error(`Error defining .length of <input> array in the cells.
         Obtained number: ${inpsCells.length ?? 0};
-        Equals to the desired number for filling the axes: ${inpsCells.length === nTotalMatrixValidAxes ?? false};
+        Equals to the desired number for filling the axes: ${inpsCells.length === nTotalMatrixValidAxes};
         Accepted number: ${nTotalMatrixValidAxes / totalTables.length};
         Obtained number of <input> Elements for Sinais Vitais: ${inpsCellsSVi?.length ?? 0};
         Obtained number of <input> Elements for Medidas Antropométricas: ${inpsCellsMedAnt?.length ?? 0};
@@ -864,15 +869,15 @@ export function switchRequiredCols(
       //determinação das novas cells required
       //validação das NodeLists de Inputs nas células
       const validInpsNodeLists = [
-        validateTabInpList(inpsCellsSVi, defineMatrixAxes(tabSVi)) ?? false,
-        validateTabInpList(inpsCellsMedAnt, defineMatrixAxes(tabMedAnt)) ?? false,
-        validateTabInpList(inpsCellsDC, defineMatrixAxes(tabDC)) ?? false,
-        validateTabInpList(inpsCellsIndPerc, defineMatrixAxes(tabIndPerc)) ?? false,
-      ],
-      consRequiredCellsSVi: Element[][] = [],
-        consRequiredCellsMedAnt: Element[][] = [],
-        consRequiredCellsDC: Element[][] = [],
-        consRequiredCellsIndPerc: Element[][] = [];
+          validateTabInpList(inpsCellsSVi, defineMatrixAxes(tabSVi)) ?? false,
+          validateTabInpList(inpsCellsMedAnt, defineMatrixAxes(tabMedAnt)) ?? false,
+          validateTabInpList(inpsCellsDC, defineMatrixAxes(tabDC)) ?? false,
+          validateTabInpList(inpsCellsIndPerc, defineMatrixAxes(tabIndPerc)) ?? false,
+        ],
+        consRequiredCellsSVi: Array<nlEl[]> = [],
+        consRequiredCellsMedAnt: Array<nlEl[]> = [],
+        consRequiredCellsDC: Array<nlEl[]> = [],
+        consRequiredCellsIndPerc: Array<nlEl[]> = [];
       //validação de NodeLists para inputs nas tabelas
       if (validInpsNodeLists.every(inpsNodeListValidation => inpsNodeListValidation === true)) {
         /* percorre a tabela usando o número de consulta como números de ciclos
@@ -880,7 +885,6 @@ export function switchRequiredCols(
         + são extraídas as células de interesse, com base na .id relativa à coluna, e então populam requiredCels */
         for (let iC = 0; iC < numCons; iC++) {
           const filterPattern = new RegExp(`_${iC + 2}`);
-
           consRequiredCellsSVi.push(...(filterCellsPattern(inpsCellsSVi, filterPattern, iC) ?? []));
           consRequiredCellsMedAnt.push(...(filterCellsPattern(inpsCellsMedAnt, filterPattern, iC) ?? []));
           consRequiredCellsDC.push(...(filterCellsPattern(inpsCellsDC, filterPattern, iC) ?? []));
@@ -969,7 +973,7 @@ export function filterCellsPattern(
   filterPattern: RegExp,
   columnNum: number = 2,
   testAtrib: string = "id",
-): Array<Element[]> {
+): Array<(Element | null)[]> {
   if (
     Array.from(inpCells)?.every(
       inpCel =>
@@ -981,7 +985,7 @@ export function filterCellsPattern(
     typeof columnNum === "number" &&
     typeof testAtrib === "string"
   ) {
-    const arrCells = [];
+    const arrCells: Array<(Element | null)[]> = [];
     let filterInpCell: Element[] = [];
     switch (testAtrib) {
       case "id":
@@ -1022,7 +1026,7 @@ export function switchNumConsTitles(
     typeof numTitledCons === "number" &&
     typeof numTabs === "number"
   ) {
-    const trioNums = [];
+    const trioNums: number[] = [];
     let iniValue = parseInt(trioEl?.value) ?? 0;
     !Number.isFinite(iniValue) && (iniValue = 1);
     if (Number.isNaN(iniValue)) {

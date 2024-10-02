@@ -16,8 +16,6 @@ export const AppRootContext: Context<AppRootContextType> = createContext<AppRoot
     nextRoot: undefined,
   },
 });
-//todo verificar se context e redux vão ser mantidos aqui ou substituídos por local storage
-//todo de repente criar contexts e stores só pra árvores clientside...
 export default function ProSaudeApp({ Component, pageProps }: AppProps): JSX.Element {
   return (
     <Provider store={mainStore}>

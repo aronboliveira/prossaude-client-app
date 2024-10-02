@@ -1,12 +1,13 @@
 "use client";
-import { callbackAtvLvlElementNaf, person, tabProps } from "@/pages/edfis";
+import { callbackAtvLvlElementNaf } from "@/pages/edfis";
+import { person, tabProps } from "@/vars";
 export default function SelectLvlAtFis(): JSX.Element {
   return (
     <select
-      className="form-select labelIdentif"
-      id="selectLvlAtFis"
-      name="atv_lvl"
-      data-title="Nivel de Atividade Física"
+      className='form-select labelIdentif'
+      id='selectLvlAtFis'
+      name='atv_lvl'
+      data-title='Nivel de Atividade Física'
       required
       onChange={ev => {
         [person.atvLvl, tabProps.factorAtvLvl] = callbackAtvLvlElementNaf(
@@ -19,23 +20,22 @@ export default function SelectLvlAtFis(): JSX.Element {
               document.getElementById("nafType"),
             ],
           ],
-          ev.currentTarget.id
+          ev.currentTarget.id,
         );
-      }}
-    >
-      <option value="leve" className="opLvlAtFis">
+      }}>
+      <option value='leve' className='opLvlAtFis'>
         Leve
       </option>
-      <option value="moderado" className="opLvlAtFis">
+      <option value='moderado' className='opLvlAtFis'>
         Moderado
       </option>
-      <option value="intenso" className="opLvlAtFis">
+      <option value='intenso' className='opLvlAtFis'>
         Intenso
       </option>
-      <option value="muitoIntenso" className="opLvlAtFis">
+      <option value='muitoIntenso' className='opLvlAtFis'>
         Muito intenso
       </option>
-      <option value="sedentario" className="opLvlAtFis">
+      <option value='sedentario' className='opLvlAtFis'>
         Sedentário
       </option>
     </select>

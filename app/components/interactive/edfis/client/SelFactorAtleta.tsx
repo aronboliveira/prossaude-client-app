@@ -1,12 +1,13 @@
 "use client";
-import { handleCallbackWHS, tabProps } from "@/pages/edfis";
+import { handleCallbackWHS } from "@/pages/edfis";
+import { tabProps } from "@/vars";
 export default function SelFactorAtleta(): JSX.Element {
   return (
     <select
-      className="selFactorAtletaClass form-select noInvert consInp"
-      id="selFactorAtleta"
-      name="factor_atl"
-      data-title="Fator de TMB para Atletas"
+      className='selFactorAtletaClass form-select noInvert consInp'
+      id='selFactorAtleta'
+      name='factor_atl'
+      data-title='Fator de TMB para Atletas'
       onChange={ev =>
         handleCallbackWHS(
           [
@@ -29,22 +30,15 @@ export default function SelFactorAtleta(): JSX.Element {
               tabProps.numCol,
               tabProps.factorAtvLvl,
               tabProps.factorAtleta,
-              [
-                tabProps.IMC,
-                tabProps.MLG,
-                tabProps.TMB,
-                tabProps.GET,
-                tabProps.PGC,
-              ],
+              [tabProps.IMC, tabProps.MLG, tabProps.TMB, tabProps.GET, tabProps.PGC],
             ],
           ],
           ev.currentTarget,
-          tabProps.isAutoFillActive
+          tabProps.isAutoFillActive,
         )
-      }
-    >
-      <option value="Peso">Peso</option>
-      <option value="MLG">MLG</option>
+      }>
+      <option value='Peso'>Peso</option>
+      <option value='MLG'>MLG</option>
     </select>
   );
 }

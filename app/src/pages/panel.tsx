@@ -3,8 +3,6 @@ import GenericErrorComponent from "../../components/error/GenericErrorComponent"
 import MainFormPanel from "../../components/mainPanel/MainFormPanel";
 import TipsBtnWrapper from "../../components/interactive/panel/TipsBtnWrapper";
 import UserProfilePanelWrapper from "../../components/interactive/panel/UserProfilePanelWrapper";
-export const fillScheduleState = { acc: 0 };
-export const formData: { [key: string]: string } = {};
 export default function PanelPage(): JSX.Element {
   return (
     <ErrorBoundary FallbackComponent={() => <GenericErrorComponent message='Error rendering Panel Page' />}>

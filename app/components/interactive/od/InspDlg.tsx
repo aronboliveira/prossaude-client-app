@@ -27,7 +27,7 @@ export default function InspDlg({
         `Error executing useEffect for InspDlg:\n${(e as Error).message}`
       );
     }
-  }, [state]);
+  }, [state, ctx]);
   return (
     <ErrorBoundary
       FallbackComponent={() => (

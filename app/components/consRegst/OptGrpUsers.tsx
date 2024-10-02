@@ -5,7 +5,7 @@ import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { UserProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import { handleFetch } from "@/lib/locals/panelPage/handlers/handlers";
 import { useEffect, useRef } from "react";
-import { panelRoots } from "../panelForms/defs/client/SelectPanel";
+import { panelRoots } from "@/vars";
 import { createRoot } from "react-dom/client";
 import { ErrorBoundary } from "react-error-boundary";
 import GenericErrorComponent from "../error/GenericErrorComponent";
@@ -106,6 +106,6 @@ export default function OptGrpUsers({ grp, area }: { grp: formCases; area: valid
     } catch (e) {
       console.error(`Error executing useEffect for ${OptGrpUsers.prototype.constructor.name}:${(e as Error).message}`);
     }
-  }, []);
+  }, [area, grp]);
   return <optgroup id={`OptGrp${textTransformPascal(grp)}${area}`} label={area} ref={optGrpRef}></optgroup>;
 }

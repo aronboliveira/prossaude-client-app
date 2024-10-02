@@ -25,7 +25,7 @@ export default function FailRegstAlert({
     };
     addEventListener("keydown", handleKeyDown);
     return (): void => removeEventListener("keydown", handleKeyDown);
-  }, [FailRegstDlgRef]);
+  }, [FailRegstDlgRef, toggleClose]);
   return (
     <>
       {shouldDisplayFailRegstDlg && (

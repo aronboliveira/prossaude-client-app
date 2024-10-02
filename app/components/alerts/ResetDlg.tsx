@@ -2,7 +2,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import { ResetDlgProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import { createRoot } from "react-dom/client";
 import { nullishDlg } from "@/lib/global/declarations/types";
-import { panelRoots } from "../panelForms/defs/client/SelectPanel";
+import { panelRoots } from "@/vars";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useEffect, useRef } from "react";
 import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
@@ -30,13 +30,11 @@ export default function ResetDlg({
     if (shouldDisplayResetDlg && ResetDlgRef.current instanceof HTMLDialogElement) ResetDlgRef.current.showModal();
     syncAriaStates([...ResetDlgRef.current!.querySelectorAll("*"), ResetDlgRef.current!]);
     const handleKeyDown = (press: KeyboardEvent): void => {
-      if (press.key === "Escape") {
-        toggleClose();
-      }
+      if (press.key === "Escape") toggleClose();
     };
     addEventListener("keydown", handleKeyDown);
     return (): void => removeEventListener("keydown", handleKeyDown);
-  }, [ResetDlgRef]);
+  }, [ResetDlgRef, toggleClose]);
   return (
     <>
       {shouldDisplayResetDlg && (

@@ -56,7 +56,7 @@ export function elementWithArrayError(
   arrayName: targStr,
   element: errorHandleElType,
   elementName: targStr,
-  line: targStr | errorLineExp
+  line: targStr | errorLineExp,
 ): Error {
   context ||= "UNDEFINED";
   arrayName ||= "UNDEFINED NAME";
@@ -78,7 +78,7 @@ export function elementWithObjectError(
   object: targObj = {},
   element: errorHandleElType,
   elementName: targStr,
-  line: targStr | errorLineExp
+  line: targStr | errorLineExp,
 ): Error {
   context ||= "UNDEFINED";
   element ??= "UNDEFINED";
@@ -95,7 +95,7 @@ export function elementWithObjectError(
 export function elementNotPopulated(
   array: errorHandleArrayType,
   arrayName: targStr,
-  line: targStr | errorLineExp
+  line: targStr | errorLineExp,
 ): Error {
   array ??= "UNDEFINED";
   arrayName ||= "UNNAMED ARRAY";
@@ -221,7 +221,7 @@ export function matchError(
   context: targStr,
   element: errorHandleElType,
   text: targStr,
-  line: targStr | errorLineExp
+  line: targStr | errorLineExp,
 ): Error {
   context ||= "UNDEFINED CONTEXT";
   element ??= "UNDEFINED";
@@ -238,7 +238,7 @@ export function typeError(
   context: targStr,
   element: primitiveType | Element,
   acceptedType: targStr,
-  line: targStr | errorLineExp
+  line: targStr | errorLineExp,
 ): Error {
   context ||= "UNDEFINED CONTEXT";
   element ??= "UNDEFINED";
@@ -246,7 +246,7 @@ export function typeError(
   line ||= "UNDEFINED";
   const errorMessage = `TYPE ERROR, LINE ${line ?? "UNDEFINED"}:
   Primitive type obtained for ${context || "UNDEFINED"} incorrect.
-  Type obtained: ${typeof element ?? "Undefined typeof"};
+  Type obtained: ${typeof element};
   Type accepted: ${acceptedType || "Undefined Accepted Type"}`;
   console.error(errorMessage);
   return Error(errorMessage);
@@ -256,7 +256,7 @@ export function objectError(
   object: targObj = {},
   objectName: targStr,
   maxPropertiesNumber: targLooseNum,
-  line: targStr | errorLineExp
+  line: targStr | errorLineExp,
 ): Error {
   context ||= "UNDEFINED CONTEXT";
   objectName ||= "UNDEFINED";

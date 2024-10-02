@@ -23,7 +23,6 @@ export class DataProvider {
   }
   initPersist(element: HTMLElement, gscopeProvider: DataProvider, userClass: string = "student"): void {
     setTimeout(() => {
-      // console.log("Initing persistence...");
       if (sessionStorage[element.id]) gscopeProvider.parseSessionStorage(element, element.id, userClass);
       else
         setTimeout(
@@ -34,7 +33,6 @@ export class DataProvider {
     //timeout for checking if element is out of DOM and then sets interval for keeping check in DOM
     const storageTimeout = setTimeout(() => {
       if (!(document.getElementById(`${element.id}`) || !element)) {
-        console.log("Initial DOM fetch rejected. Clearing timeout");
         clearTimeout(storageTimeout);
         return;
       }
@@ -87,7 +85,6 @@ export class DataProvider {
   initStorageParsing(scope: HTMLElement | Document = document, scopeRef: string): void {
     const persisters = sessionStorage.getItem(scopeRef);
     if (persisters) {
-      console.log("Init storage parsing...");
       Object.entries(JSON.parse(persisters)).forEach(entry => {
         const fetchedEl = scope.querySelector(`#${entry[0]}`) || document.querySelector(`#${entry[0]}`);
         if (
@@ -109,12 +106,6 @@ export class DataProvider {
         ) {
           entry[1] === "true" || entry[1] === true ? (fetchedEl.checked = true) : (fetchedEl.checked = false);
         } else if (fetchedEl instanceof HTMLElement) {
-          // console.log(
-          //   `HTML string parsed at init for ${
-          //     fetchedEl.id || fetchedEl.className || fetchedEl.tagName
-          //   }:`
-          // );
-          // console.log(entry[1]);
           fetchedEl.innerHTML = entry[1] as string;
           if (fetchedEl.classList.contains("consSlot")) {
             const aptBtn = fetchedEl.querySelector(".appointmentBtn");
@@ -154,7 +145,6 @@ export class DataProvider {
   parseSessionStorage(scope: HTMLElement | Document = document, scopeRef: string, userClass: string = "student"): void {
     const persisters = sessionStorage.getItem(scopeRef) || JSON.stringify(this.#sessionDataState);
     if (persisters) {
-      console.log("Parsing session storage...");
       Object.entries(JSON.parse(persisters)).forEach(entry => {
         const fetchedEl = scope.querySelector(`#${entry[0]}`) || document.querySelector(`#${entry[0]}`);
         if (
@@ -186,12 +176,6 @@ export class DataProvider {
               userClass,
               panelFormsVariables.isAutoFillMonthOn,
             );
-          // console.log(
-          //   `innerHTML parsed for ${
-          //     fetchedEl.id || fetchedEl.className || fetchedEl.tagName
-          //   }`
-          // );
-          // console.log(entry[1]);
         }
       });
     }
@@ -202,7 +186,7 @@ export class DataProvider {
     this.#sessionDataState = DataProvider.persistSessionEntries(scope);
     scope instanceof HTMLElement
       ? sessionStorage.setItem(`${scope.id}`, JSON.stringify(this.#sessionDataState))
-      : console.log("Failed to fetch scope when checking for persistence...");
+      : console.warn("Failed to fetch scope when checking for persistence...");
     return this.#sessionDataState;
   }
   static persistSessionEntries(scope: HTMLElement | Document = document): {
@@ -210,7 +194,6 @@ export class DataProvider {
   } {
     const persisters = [...scope.querySelectorAll(".ssPersist"), ...scope.querySelectorAll(".lcPersist")];
     const sessionData: { [key: string]: string } = {};
-    // console.log("Persisting session entries...");
     for (const persister of persisters) {
       if (
         (persister instanceof HTMLInputElement &&
@@ -230,17 +213,8 @@ export class DataProvider {
       else if (persister instanceof HTMLElement) {
         sessionData[`${persister.id || (persister instanceof HTMLSlotElement && persister.name)}`] =
           persister.innerHTML;
-        // console.log(
-        //   `InnerHTML assigned to session data id ${
-        //     persister.id ||
-        //     (persister instanceof HTMLSlotElement && persister.name)
-        //   }`
-        // );
-        // console.log(persister.innerHTML);
       }
     }
-    // console.log("Session Storage:");
-    // console.log(sessionStorage);
     return sessionData;
   }
   checkForm(elementId: string, storageInterval?: NodeJS.Timer): boolean {
@@ -251,7 +225,6 @@ export class DataProvider {
       clearFlags[`${elementId}`] = false;
       return false;
     }
-    // console.log("Form fetch was sucessfull. Checking por persistence...");
     return true;
   }
 }

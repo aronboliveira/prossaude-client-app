@@ -14,10 +14,8 @@ export default function TabComorb({ children = <></> }: { children: JSX.Element 
   const [blockCount, setBlockCount] = useReducer((s: number, a: CounterAction) => {
     switch (a.type) {
       case "INCREMENT":
-        console.log("State " + (s + 1));
         return s + 1;
       case "DECREMENT":
-        console.log("State " + (s > 3 ? s - 1 : s));
         return s > 3 ? s - 1 : s;
       default:
         return s;
@@ -33,7 +31,7 @@ export default function TabComorb({ children = <></> }: { children: JSX.Element 
     } catch (e) {
       console.error(`Error executing useEffect for blockCount:\n${(e as Error).message}`);
     }
-  }, [blockCount]);
+  }, [blockCount, mounted]);
   return !mounted ? (
     <></>
   ) : (

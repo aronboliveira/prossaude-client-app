@@ -6,12 +6,6 @@ import { nullishDlg } from "@/lib/global/declarations/types";
 import { useRef, useEffect } from "react";
 export default function OdTips({ state, dispatch }: DlgProps): JSX.Element {
   const dlgRef = useRef<nullishDlg>(null);
-  const handleEscape = (ev: KeyboardEvent): void => {
-    if (ev.key === "ESCAPE") {
-      dispatch(!state);
-      !state && dlgRef.current?.close();
-    }
-  };
   //push em history
   useEffect(() => {
     history.pushState({}, "", `${location.origin}${location.pathname}${location.search}&tips=open`);
@@ -30,6 +24,12 @@ export default function OdTips({ state, dispatch }: DlgProps): JSX.Element {
     };
   }, []);
   useEffect(() => {
+    const handleEscape = (ev: KeyboardEvent): void => {
+      if (ev.key === "ESCAPE") {
+        dispatch(!state);
+        !state && dlgRef.current?.close();
+      }
+    };
     try {
       if (!(dlgRef.current instanceof HTMLDialogElement))
         throw elementNotFound(dlgRef.current, `${OdTips.prototype.constructor.name}`, extLine(new Error()));
@@ -71,9 +71,8 @@ export default function OdTips({ state, dispatch }: DlgProps): JSX.Element {
             <p className='dicas' id='dicaKb'>
               <strong>1.1.</strong>
               <em>
-                {" "}
-                Apertar Alt + Y para "Sim" ou Alt + N para "Não" no próximo campo após iniciar o foco com Tab para
-                preencher automaticamente
+                Apertar Alt + Y para &quot;Sim&quot; ou Alt + N para &quot;Não&quot; no próximo campo após iniciar o
+                foco com Tab para preencher automaticamente
               </em>
             </p>
             <p className='dicas' id='dicaUppercase'>

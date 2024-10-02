@@ -1,7 +1,8 @@
 "use client";
 import { FillerProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import { addListenerAvMembers } from "@/lib/locals/panelPage/handlers/consHandlerList";
-import { globalDataProvider } from "../panelForms/defs/client/SelectPanel";
+import { providers } from "@/vars";
+("../panelForms/defs/client/SelectPanel");
 import { nullishBtn, nullishDiv } from "@/lib/global/declarations/types";
 import { useEffect, useRef, useState } from "react";
 import AvStudListDlg from "../lists/AvStudListDlg";
@@ -18,11 +19,12 @@ export default function DREFiller({ forwardedRef }: FillerProps): JSX.Element {
     if (fillerDivRef.current instanceof HTMLDivElement) {
       addListenerAvMembers(forwardedRef || fillerDivRef, false);
       //storage
-      globalDataProvider && globalDataProvider.initPersist(fillerDivRef.current, globalDataProvider);
+      providers.globalDataProvider &&
+        providers.globalDataProvider.initPersist(fillerDivRef.current, providers.globalDataProvider);
       //estilo e aria
       syncAriaStates([...fillerDivRef.current!.querySelectorAll("*"), fillerDivRef.current]);
     }
-  }, [fillerDivRef]);
+  }, [fillerDivRef, forwardedRef]);
   return (
     <>
       <div role='group' className='flexNoWC flexBasis100 widFull mg-1b' id='CPFFillerDiv' ref={fillerDivRef}>

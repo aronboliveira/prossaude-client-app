@@ -1,7 +1,7 @@
 import { ErrorBoundary } from "react-error-boundary";
 import { addListenerExportBtn } from "@/lib/global/gController";
 import { clearPhDates, normalizeSizeSb } from "@/lib/global/gStyleScript";
-import { globalDataProvider, panelRoots } from "../defs/client/SelectPanel";
+import { providers, panelRoots } from "@/vars";
 import { handleClientPermissions } from "@/lib/locals/panelPage/handlers/consHandlerUsers";
 import { handleSubmit } from "@/lib/locals/panelPage/handlers/handlers";
 import { panelFormsVariables } from "../panelFormsData";
@@ -32,7 +32,8 @@ export default function StudentForm(): JSX.Element {
   }, []);
   useEffect(() => {
     if (formRef?.current instanceof HTMLFormElement) {
-      globalDataProvider && globalDataProvider.initPersist(formRef.current, globalDataProvider);
+      providers.globalDataProvider &&
+        providers.globalDataProvider.initPersist(formRef.current, providers.globalDataProvider);
       const emailInput = formRef.current.querySelector("#inpEmailStud");
       const nameInput = formRef.current.querySelector("#inpNameStud");
       const dateInputs = Array.from(formRef.current.querySelectorAll('input[type="date"]'));
@@ -98,7 +99,7 @@ export default function StudentForm(): JSX.Element {
       callbackNormalizeSizeSb();
       syncAriaStates([...formRef.current!.querySelectorAll("*"), formRef.current]);
     } else inputNotFound(formRef.current, "formRef.current in useEffect()", extLine(new Error()));
-  }, [formRef]);
+  }, [formRef, callbackNormalizeSizeSb]);
   useEffect(() => {
     if (CPFStudRef.current instanceof HTMLInputElement && CPFStudRef.current.id.match(/cpf/gi)) {
       //adição de listener para corrigir cpf
@@ -106,7 +107,7 @@ export default function StudentForm(): JSX.Element {
         panelFormsVariables.isAutofillStudOn && formatCPF(CPFStudRef.current);
       });
     }
-  }, [CPFStudRef.current]);
+  }, []);
   useEffect(() => {
     if (telStudRef?.current instanceof HTMLInputElement && telStudRef.current.id.match(/tel/gi)) {
       //adição de listener para corrigir telefone
@@ -114,7 +115,7 @@ export default function StudentForm(): JSX.Element {
         panelFormsVariables.isAutofillStudOn && formatTel(telStudRef.current, true);
       });
     } else inputNotFound(telStudRef.current, "telStudRef.current in useEffect()", extLine(new Error()));
-  }, [telStudRef.current]);
+  }, []);
   useEffect(() => {
     if (formRef.current instanceof HTMLElement)
       handleClientPermissions(
@@ -124,7 +125,7 @@ export default function StudentForm(): JSX.Element {
         ...document.getElementsByTagName("button"),
         ...document.querySelector("form")!.getElementsByTagName("select"),
       );
-  }, [formRef]);
+  }, [formRef, userClass]);
   return (
     <ErrorBoundary
       FallbackComponent={() => <GenericErrorComponent message='Erro carregando formulário para profissionais' />}>
@@ -417,7 +418,6 @@ export default function StudentForm(): JSX.Element {
                     title='Modifique o rótulo de dia selecionando-o e digitando'>
                     Quarta-feira
                   </slot>
-                  {/* //TODO PRECISA CONCATENAR NOMES DAS CHECKBOXES COM CHECK */}
                   <input
                     type='checkbox'
                     id='checkQuarta'

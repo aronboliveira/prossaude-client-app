@@ -5,7 +5,7 @@ import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { PacInfo } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import { handleFetch } from "@/lib/locals/panelPage/handlers/handlers";
 import { useEffect, useRef } from "react";
-import { panelRoots } from "../panelForms/defs/client/SelectPanel";
+import { panelRoots } from "@/vars";
 import { createRoot } from "react-dom/client";
 import { ErrorBoundary } from "react-error-boundary";
 import GenericErrorComponent from "../error/GenericErrorComponent";

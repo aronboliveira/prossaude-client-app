@@ -1,7 +1,7 @@
 import { ErrorBoundary } from "react-error-boundary";
 import { ReseterBtnProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import { nullishBtn } from "@/lib/global/declarations/types";
-import { panelRoots } from "./client/SelectPanel";
+import { panelRoots } from "@/vars";
 import { scheduleReset } from "../panelFormsData";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useEffect, useRef, useState } from "react";

@@ -24,6 +24,6 @@ export default function WatcherTab({
     } catch (e) {
       console.error(`Error executing procedure for syncing aria states in TabIndPerc:\n${(e as Error).message}`);
     }
-  }, [mounted]);
+  }, [mounted, tabName]);
   return <div className='watcher' id={`watcher-${tabName}`} style={{ display: "none" }}></div>;
 }

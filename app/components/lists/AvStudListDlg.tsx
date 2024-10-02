@@ -40,7 +40,7 @@ export default function AvStudListDlg({ forwardedRef, dispatch, state = false }:
       addEventListener("keydown", handleKeyDown);
       return (): void => removeEventListener("keydown", handleKeyDown);
     } else elementNotFound(dialogRef.current, "dialogElement in AvStudListDlg", extLine(new Error()));
-  }, [forwardedRef, dialogRef]);
+  }, [forwardedRef, dialogRef, dispatch]);
   return (
     <>
       {state && (

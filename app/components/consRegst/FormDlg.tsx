@@ -5,8 +5,8 @@ import { addListenerAvMembers } from "@/lib/locals/panelPage/handlers/consHandle
 import { addListenerExportBtn } from "@/lib/global/gController";
 import { consVariablesData } from "./consVariables";
 import { createRoot } from "react-dom/client";
-import { formData } from "@/lib/locals/panelPage/consController";
-import { globalDataProvider } from "../panelForms/defs/client/SelectPanel";
+import { providers, formData } from "@/vars";
+("../panelForms/defs/client/SelectPanel");
 import { handleClientPermissions } from "@/lib/locals/panelPage/handlers/consHandlerUsers";
 import { handleSubmit } from "@/lib/locals/panelPage/handlers/handlers";
 import { isClickOutside } from "@/lib/global/gStyleScript";
@@ -43,7 +43,7 @@ let accFormData = 0;
 export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
   //display de campos para identificadores de estudante
   const userClass = useContext(PanelCtx).userClass,
-  dlgRef = useRef<nullishDlg>(null),
+    dlgRef = useRef<nullishDlg>(null),
     pacBtnRef = useRef<nullishBtn>(null);
   //autocompleção
   const CPFPacInpRef = useRef<nullishInp>(null),
@@ -68,70 +68,61 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
     [isAutofillConsOn, setAutofillCons] = useState<boolean>(true),
     toggleAFCons = (s: boolean = false): void => setAutofillCons(!s);
   //fechamento de modal com clique fora da área do mesmo
-  const handleClickOutside = (ev: MouseEvent): void => {
-      dlgRef.current && isClickOutside(ev, dlgRef.current).some(clickArea => clickArea === true) && onClose();
-    },
-    callbackCPFPacBtnClick = useCallback(
-      (retrvDataPh: { [key: string]: object }) => {
-        const matchDataPh = ((): Map<any,any> => {
-          const matchDataPh = new Map();
-          Object.entries(retrvDataPh).forEach(([key, value]) => {
-            matchDataPh.set(key, value);
-          });
-          return matchDataPh;
-        })();
-        if (dlgRef?.current instanceof Element) {
-          const cpfInp =
-              dlgRef.current.querySelector("input[id*=cpf]") || dlgRef.current.querySelector("input[id*=CPF]"),
-            currentInps = Array.from([
-              ...dlgRef.current.querySelectorAll("input"),
-              ...dlgRef.current.querySelectorAll("select"),
-              ...dlgRef.current.querySelectorAll("textarea"),
-            ]).filter(inp => !/cpf/gi.test(inp.id));
-          if (
-            cpfInp instanceof HTMLInputElement &&
-            currentInps.length > 0 &&
-            currentInps.every(
-              inp =>
-                inp instanceof HTMLInputElement ||
-                inp instanceof HTMLTextAreaElement ||
-                inp instanceof HTMLSelectElement,
-            )
-          ) {
-            const keyFirstLvlMatch = matchDataPh.get(cpfInp.value.replaceAll(/[^\d]/g, ""));
-            for (const inp of currentInps) {
-              let inpTitle = inp.dataset.title;
-              if (inpTitle) {
-                if (inpTitle.match(/[\s-_]/g)) {
-                  inpTitle.match(/[\s-_]/g)?.forEach((_: any, i: number) => {
-                    const index = /[\s-_]/g.exec(inpTitle!)!.index;
-                    if (i === 0) {
-                      inpTitle =
-                        inpTitle!.slice(0, index).toLowerCase() +
-                        inpTitle!.charAt(index + 1).toUpperCase() +
-                        inpTitle!.slice(index + 2).toLowerCase();
-                    } else
-                      inpTitle =
-                        inpTitle!.slice(0, index) +
-                        inpTitle!.charAt(index + 1).toUpperCase() +
-                        inpTitle!.slice(index + 2).toLowerCase();
-                  });
-                } else inpTitle = inpTitle.toLowerCase();
-                inpTitle = inpTitle
-                  .replaceAll(" ", "")
-                  .replaceAll("-", "")
-                  .replaceAll("_", "")
-                  .replaceAll(/D[aeo](?=[A-Z])/g, "")
-                  .replaceAll(/[Pp]aciente/g, "");
-                keyFirstLvlMatch[inpTitle] && (inp.value = keyFirstLvlMatch[inpTitle].toString());
-              } else console.warn(`Field ${inp.id || "UNIDENTIFIED"} has no data-title. Could not match data.`);
-            }
-          } else multipleElementsNotFound(extLine(new Error()), `inputs in the dialog id ${dlgRef.current.id}`, cpfInp);
-        } else console.warn(`dlgRef.current not validated in callbackCPFPacBtnClick()`);
-        return matchDataPh;
-      },
-      [CPFPacBtnRef],
-    );
+  const callbackCPFPacBtnClick = useCallback((retrvDataPh: { [key: string]: object }) => {
+    const matchDataPh = ((): Map<any, any> => {
+      const matchDataPh = new Map();
+      Object.entries(retrvDataPh).forEach(([key, value]) => {
+        matchDataPh.set(key, value);
+      });
+      return matchDataPh;
+    })();
+    if (dlgRef?.current instanceof Element) {
+      const cpfInp = dlgRef.current.querySelector("input[id*=cpf]") || dlgRef.current.querySelector("input[id*=CPF]"),
+        currentInps = Array.from([
+          ...dlgRef.current.querySelectorAll("input"),
+          ...dlgRef.current.querySelectorAll("select"),
+          ...dlgRef.current.querySelectorAll("textarea"),
+        ]).filter(inp => !/cpf/gi.test(inp.id));
+      if (
+        cpfInp instanceof HTMLInputElement &&
+        currentInps.length > 0 &&
+        currentInps.every(
+          inp =>
+            inp instanceof HTMLInputElement || inp instanceof HTMLTextAreaElement || inp instanceof HTMLSelectElement,
+        )
+      ) {
+        const keyFirstLvlMatch = matchDataPh.get(cpfInp.value.replaceAll(/[^\d]/g, ""));
+        for (const inp of currentInps) {
+          let inpTitle = inp.dataset.title;
+          if (inpTitle) {
+            if (inpTitle.match(/[\s-_]/g)) {
+              inpTitle.match(/[\s-_]/g)?.forEach((_: any, i: number) => {
+                const index = /[\s-_]/g.exec(inpTitle!)!.index;
+                if (i === 0) {
+                  inpTitle =
+                    inpTitle!.slice(0, index).toLowerCase() +
+                    inpTitle!.charAt(index + 1).toUpperCase() +
+                    inpTitle!.slice(index + 2).toLowerCase();
+                } else
+                  inpTitle =
+                    inpTitle!.slice(0, index) +
+                    inpTitle!.charAt(index + 1).toUpperCase() +
+                    inpTitle!.slice(index + 2).toLowerCase();
+              });
+            } else inpTitle = inpTitle.toLowerCase();
+            inpTitle = inpTitle
+              .replaceAll(" ", "")
+              .replaceAll("-", "")
+              .replaceAll("_", "")
+              .replaceAll(/D[aeo](?=[A-Z])/g, "")
+              .replaceAll(/[Pp]aciente/g, "");
+            keyFirstLvlMatch[inpTitle] && (inp.value = keyFirstLvlMatch[inpTitle].toString());
+          } else console.warn(`Field ${inp.id || "UNIDENTIFIED"} has no data-title. Could not match data.`);
+        }
+      } else multipleElementsNotFound(extLine(new Error()), `inputs in the dialog id ${dlgRef.current.id}`, cpfInp);
+    } else console.warn(`dlgRef.current not validated in callbackCPFPacBtnClick()`);
+    return matchDataPh;
+  }, []);
   //ativação de preenchimento de paciente com CPF
   const handleCPFBtnClick = useCallback(() => {
     CPFPacBtnRef?.current instanceof HTMLButtonElement && CPFPacBtnRef.current.id.match(/cpf/gi)
@@ -141,17 +132,14 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
           32913903255: { primeiroNome: "Pedro", sobrenome: "Guedes" },
         })
       : elementNotFound(CPFPacBtnRef.current, "argument for handleCPFBtnClick", extLine(new Error()));
-  }, [dlgRef, CPFPacBtnRef]);
+  }, [CPFPacBtnRef, callbackCPFPacBtnClick]);
   //ativação de preenchimento de Profisional com tabela
   const [isCPFFillerActive, setCPFFiller] = useState<boolean>(false),
-    toggleCPFFiller = useCallback(
-      (CPFProfBtnRef: MutableRefObject<nullishBtn>, isCPFFillerActive: boolean) => {
-        CPFProfBtnRef?.current instanceof HTMLButtonElement
-          ? setCPFFiller(!isCPFFillerActive)
-          : elementNotFound(CPFProfBtnRef.current, "CPFProfBtnRef for useCallback", extLine(new Error()));
-      },
-      [dlgRef, CPFProfBtnRef],
-    ),
+    toggleCPFFiller = useCallback((CPFProfBtnRef: MutableRefObject<nullishBtn>, isCPFFillerActive: boolean) => {
+      CPFProfBtnRef?.current instanceof HTMLButtonElement
+        ? setCPFFiller(!isCPFFillerActive)
+        : elementNotFound(CPFProfBtnRef.current, "CPFProfBtnRef for useCallback", extLine(new Error()));
+    }, []),
     generateSchedBtn = useCallback(
       (dialog: HTMLDialogElement) => {
         const allEntryEls = [
@@ -185,7 +173,7 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
         );
         handleDragAptBtn(newBtn, userClass);
       },
-      [dlgRef, submitRef],
+      [userClass],
     ),
     [shouldDisplayFailRegstDlg, setDisplayFailRegstDlg] = useState<boolean>(false),
     toggleDisplayRegstDlg = (shouldDisplayFailRegstDlg: boolean = true): void => {
@@ -240,7 +228,7 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
       document.getElementById("autoFillDREBtn"),
       document.getElementById("autoFillCPFRespBtn"),
     );
-  }, [dlgRef]);
+  }, [dlgRef, userClass]);
   useEffect(() => {
     if (dlgRef.current instanceof HTMLElement) {
       //garante que tela irá centralizar modal
@@ -255,11 +243,11 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
       // const consDataProvider = new DataProvider(
       //   DataProvider.persistSessionEntries(dlgRef.current)
       // );
-      globalDataProvider &&
-        globalDataProvider.initPersist(
+      providers.globalDataProvider &&
+        providers.globalDataProvider.initPersist(
           dlgRef.current,
           // consDataProvider,
-          globalDataProvider,
+          providers.globalDataProvider,
         );
       //remodela datalistas com base em membros disponíveis para tipo de consulta
       addListenerAvMembers(dlgRef, true);
@@ -271,11 +259,13 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
         }
       };
       addEventListener("keydown", handleKeyDown);
-      return (): void =>
-        removeEventListener("keydown", handleKeyDown);
+      return (): void => removeEventListener("keydown", handleKeyDown);
     }
-  }, [dlgRef]);
+  }, [dlgRef, onClose]);
   useEffect(() => {
+    const handleClickOutside = (ev: MouseEvent): void => {
+      dlgRef.current && isClickOutside(ev, dlgRef.current).some(clickArea => clickArea === true) && onClose();
+    };
     addEventListener("click", handleClickOutside);
     return (): void => removeEventListener("click", handleClickOutside);
   }, [dlgRef, onClose]);
@@ -415,7 +405,6 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
                     CPF do Paciente:
                   </label>
                   <div role='group' className='flexNoWRSwitch cGap5' id='cpfBodyDiv'>
-                    {/* //TODO PRECISA AJUSTA NAMES... */}
                     <input
                       type='text'
                       id='inpCPFPac'
@@ -997,7 +986,7 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
                               ) {
                                 hourInp.value = `${parseInt(hours[0].slice(0, 2))}:00`;
                                 hourInp.style.color = `rgb(33, 37, 41)`;
-                              } else console.log(`Failed at comparing Absolute hours`);
+                              }
                             }
                           }, 1000);
                         } else {
@@ -1038,7 +1027,7 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
                               ) {
                                 hourInp.value = `${parseInt(hours[0].slice(0, 2))}:00`;
                                 hourInp.style.color = `rgb(33, 37, 41)`;
-                              } else console.log(`Failed at comparing Absolute hours`);
+                              }
                             }
                           }, 1000);
                         } else {

@@ -455,7 +455,6 @@ export function handleRenderRefLost(id: string, prevRef: HTMLElement, userClass:
 }
 export function handleAptBtnClick(ev: MouseEvent, userClass: string): void {
   try {
-    console.log("Click listened");
     if (!(ev.currentTarget instanceof HTMLElement && ev.currentTarget.id !== ""))
       throw new Error(
         `Error locating Target New Appointment Button: Instance found -> ${
@@ -477,10 +476,7 @@ export function handleAptBtnClick(ev: MouseEvent, userClass: string): void {
       if (!rootDlg) throw new Error(`Failed to fetch Main Dialog Root`);
       rootDlg.classList.add("rootDlg");
     }
-    console.log(rootDlgContext.aptBtnsIdx[ev.currentTarget.id]);
     if (rootDlgContext.aptBtnsIdx[ev.currentTarget.id] === 1) {
-      console.log(`Attempting to render in rootDlgList`);
-      console.log(rootDlgContext.aptBtnsRoots[`rootDlgList`]);
       rootDlgContext.aptBtnsRoots[`rootDlgList`].render(
         <ProviderAptDatList
           data={
@@ -524,11 +520,6 @@ export function handleAptBtnClick(ev: MouseEvent, userClass: string): void {
           );
         rootDlgContext.aptBtnsRoots[`${ev.currentTarget.id}`] = createRoot(targRoot);
       }
-      console.log(
-        `Attempt to render in ${`rootDlgList-${rootDlgContext.aptBtnsRoots[`${ev.currentTarget.id}`] ?? "null"}-${
-          ev.currentTarget.id
-        }`}`,
-      );
       rootDlgContext.aptBtnsRoots[`${ev.currentTarget.id}`]!.render(
         <ProviderAptDatList
           data={
@@ -742,8 +733,7 @@ export function handleDragAptBtn(newAppointmentBtn: targEl, userClass: string = 
         offsetY = touch.clientY - initialY;
         (newAppointmentBtn as HTMLButtonElement).style.transform = `translate(${offsetX}px, ${offsetY}px)`;
       };
-      const handleTouchEnd = (end: TouchEvent): void => {
-        console.log(end);
+      const handleTouchEnd = (): void => {
         if (isDragging) {
           try {
             const targ = fbTouch;
@@ -1263,7 +1253,6 @@ export function addListenersForSchedTab(
       );
     if (!(typeof isAutoFillMonthOn === "boolean"))
       throw new Error(`Error validating type of isAutofillMonthOn when applying listeners after month state change`);
-    console.log("Trying to add listeners to Appointment buttons...");
     const aptInterv = setInterval(interv => {
       try {
         const appointmentBtns = Array.from(document.querySelectorAll(".appointmentBtn")).filter(
@@ -1299,7 +1288,7 @@ export function addListenersForSchedTab(
     }, 200);
     setTimeout(() => {
       clearInterval(aptInterv);
-      console.log("Cleared Appointment Interval");
+
       try {
         const appointmentBtns = Array.from(document.querySelectorAll(".appointmentBtn")).filter(
           aptBtn => aptBtn instanceof HTMLButtonElement,

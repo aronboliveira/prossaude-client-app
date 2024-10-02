@@ -52,7 +52,7 @@ export default function PrevConsList({
         history.pushState({}, "", `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#"));
       }, 300);
     };
-  }, []);
+  }, [name]);
   useEffect(() => {
     if (prevConsDlgRef.current instanceof HTMLDialogElement) {
       prevConsDlgRef.current.showModal();

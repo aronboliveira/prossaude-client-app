@@ -6230,8 +6230,8 @@ function parse_XLUnicodeRichExtendedString(blob) {
 	if(fExtSt) cbExtRst = blob.read_shift(4);
 	var encoding = width == 2 ? 'dbcs-cont' : 'sbcs-cont';
 	var msg = cch === 0 ? "" : blob.read_shift(cch, encoding);
-	if(fRichSt) blob.l += 4 * cRun; //TODO: parse this
-	if(fExtSt) blob.l += cbExtRst; //TODO: parse this
+	if(fRichSt) blob.l += 4 * cRun;
+	if(fExtSt) blob.l += cbExtRst;
 	z.t = msg;
 	if(!fRichSt) { z.raw = "<t>" + z.t + "</t>"; z.r = z.t; }
 	current_codepage = cp;
@@ -7652,11 +7652,9 @@ function dbf_to_aoa(buf, opts)/*:AOA*/ {
 		if(ft != 0x02) d.l += l7 ? 13 : 14;
 		switch(field.type) {
 			case 'B': // Double (VFP) / Binary (dBASE L7)
-				if((!vfp || field.len != 8) && opts.WTF) console.log('Skipping ' + field.name + ':' + field.type);
 				break;
 			case 'G': // General (FoxPro and dBASE L7)
 			case 'P': // Picture (FoxPro and dBASE L7)
-				if(opts.WTF) console.log('Skipping ' + field.name + ':' + field.type);
 				break;
 			case '+': // Autoincrement (dBASE L7 only)
 			case '0': // _NullFlags (VFP only)
@@ -16706,7 +16704,7 @@ function parse_wb_xml(data, opts)/*:WorkbookFile*/ {
 			/* 18.2.10 extLst CT_ExtensionList ? */
 			case '<extLst': case '<extLst>': case '</extLst>': case '<extLst/>': break;
 			/* 18.2.7  ext CT_Extension + */
-			case '<ext': pass=true; break; //TODO: check with versions of excel
+			case '<ext': pass=true; break;
 			case '</ext>': pass=false; break;
 
 			/* Others */
@@ -18652,8 +18650,6 @@ function parse_workbook(blob, options/*:ParseOpts*/)/*:Workbook*/ {
 		if(RecordType === 0 && last_RT === 0x000a /* EOF */) break;
 		var length = (blob.l === blob.length ? 0 : blob.read_shift(2));
 		var R = XLSRecordEnum[RecordType];
-		//console.log(RecordType.toString(16), RecordType, R, blob.l, length, blob.length);
-		//if(!R) console.log(blob.slice(blob.l, blob.l + length));
 		if(R && R.f) {
 			if(options.bookSheets) {
 				if(last_RT === 0x0085 /* BoundSheet8 */ && RecordType !== 0x0085 /* R.n !== 'BoundSheet8' */) break;
@@ -22742,13 +22738,13 @@ function parse_numbers_iwa(cfb) {
     try {
       o = decompress_iwa_file(s.content);
     } catch (e) {
-      return console.log("?? " + s.content.length + " " + (e.message || e));
+      return;
     }
     var packets;
     try {
       packets = parse_iwa_file(o);
     } catch (e) {
-      return console.log("## " + (e.message || e));
+      return;
     }
     packets.forEach(function(packet) {
       M[packet.id] = packet.messages;

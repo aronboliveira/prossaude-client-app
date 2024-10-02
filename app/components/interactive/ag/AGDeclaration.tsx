@@ -9,12 +9,6 @@ import { useEffect, useRef } from "react";
 import GenericErrorComponent from "../../error/GenericErrorComponent";
 export default function AGDeclaration({ state, dispatch }: DlgProps): JSX.Element {
   const mainRef = useRef<nullishDlg>(null);
-  const handleKp = (kp: KeyboardEvent): void => {
-    if (kp.key === "ESCAPE") {
-      dispatch(!state);
-      !state && mainRef.current?.close();
-    }
-  };
   //push em history
   useEffect(() => {
     history.pushState({}, "", `${location.origin}${location.pathname}${location.search}&conform=open`);
@@ -33,6 +27,12 @@ export default function AGDeclaration({ state, dispatch }: DlgProps): JSX.Elemen
     };
   }, []);
   useEffect(() => {
+    const handleKp = (kp: KeyboardEvent): void => {
+      if (kp.key === "ESCAPE") {
+        dispatch(!state);
+        !state && mainRef.current?.close();
+      }
+    };
     try {
       if (!(mainRef.current instanceof HTMLElement))
         throw elementNotFound(
@@ -47,7 +47,7 @@ export default function AGDeclaration({ state, dispatch }: DlgProps): JSX.Elemen
     } catch (e) {
       console.error(`Error executing useEffect:\n${(e as Error).message}`);
     }
-  }, [mainRef]);
+  }, [mainRef, dispatch]);
   return !state ? (
     <></>
   ) : (

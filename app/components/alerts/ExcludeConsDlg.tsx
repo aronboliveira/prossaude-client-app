@@ -13,14 +13,18 @@ export default function ExcludeConsDlg({
   shouldDisplayExcludeDlg = true,
   btn,
 }: ExcludeConsDlgProps): JSX.Element {
-  const userClass = useContext(PanelCtx).userClass;
-  const excludeDlgRef = useRef<nullishDlg>(null);
-  const confirmRef = useRef<nullishBtn>(null);
-  const toggleClose = (): void => {
-    setDisplayExcludeDlg(!shouldDisplayExcludeDlg);
-    if (!shouldDisplayExcludeDlg && excludeDlgRef.current instanceof HTMLDialogElement) excludeDlgRef.current.close();
-  };
+  const userClass = useContext(PanelCtx).userClass,
+    excludeDlgRef = useRef<nullishDlg>(null),
+    confirmRef = useRef<nullishBtn>(null),
+    handleClick = (): void => {
+      setDisplayExcludeDlg(!shouldDisplayExcludeDlg);
+      if (!shouldDisplayExcludeDlg && excludeDlgRef.current instanceof HTMLDialogElement) excludeDlgRef.current.close();
+    };
   useEffect(() => {
+    const toggleClose = (): void => {
+      setDisplayExcludeDlg(!shouldDisplayExcludeDlg);
+      if (!shouldDisplayExcludeDlg && excludeDlgRef.current instanceof HTMLDialogElement) excludeDlgRef.current.close();
+    };
     if (shouldDisplayExcludeDlg && excludeDlgRef.current instanceof HTMLDialogElement)
       excludeDlgRef.current.showModal();
     syncAriaStates([...excludeDlgRef.current!.querySelectorAll("*"), excludeDlgRef.current!]);
@@ -35,9 +39,7 @@ export default function ExcludeConsDlg({
       true,
     );
     const handleKeyDown = (press: KeyboardEvent): void => {
-      if (press.key === "Escape") {
-        toggleClose();
-      }
+      if (press.key === "Escape") toggleClose();
     };
     addEventListener("keydown", handleKeyDown);
     return (): void => removeEventListener("keydown", handleKeyDown);
@@ -55,7 +57,7 @@ export default function ExcludeConsDlg({
       console.warn(`Error fetching reference for confirm button:
       ${(err as Error).message}`);
     }
-  }, [confirmRef]);
+  }, [confirmRef, btn, userClass]);
   return (
     <>
       {shouldDisplayExcludeDlg && (
@@ -72,14 +74,14 @@ export default function ExcludeConsDlg({
           }}>
           <ErrorBoundary
             FallbackComponent={() => (
-              <ErrorFallbackDlg renderError={new Error(`Erro carregando a janela modal!`)} onClick={toggleClose} />
+              <ErrorFallbackDlg renderError={new Error(`Erro carregando a janela modal!`)} onClick={handleClick} />
             )}>
             <section role='alert' className='flexNoWC flexJC rGap2v'>
               <div role='group' className='flexJC flexAlItCt flexNoWC wsBs noInvert'>
                 <h3>Confirmar remoção?</h3>
                 <small role='textbox'>Esse processo é parcialmente ou totalmente irreversível!</small>
               </div>
-              <button className='btn btn-warning bolded' onClick={toggleClose} ref={confirmRef}>
+              <button className='btn btn-warning bolded' onClick={handleClick} ref={confirmRef}>
                 Confirmar
               </button>
             </section>

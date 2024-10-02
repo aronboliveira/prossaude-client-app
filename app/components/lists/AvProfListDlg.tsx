@@ -4,7 +4,7 @@ import { createRoot } from "react-dom/client";
 import { elementNotFound, extLine, inputNotFound } from "@/lib/global/handlers/errorHandler";
 import { equalizeTabCells, isClickOutside } from "@/lib/global/gStyleScript";
 import { handleFetch } from "@/lib/locals/panelPage/handlers/handlers";
-import { panelRoots } from "../panelForms/defs/client/SelectPanel";
+import { panelRoots } from "@/vars";
 import { strikeEntries } from "@/lib/locals/panelPage/consStyleScript";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useContext, useEffect, useRef } from "react";
@@ -625,7 +625,7 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
     } catch (e) {
       console.error(`Error executing useEffect for Table Body Reference:\n${(e as Error).message}`);
     }
-  }, []);
+  }, [props.dispatch, props.mainDlgRef, props.state, userClass]);
   return (
     <>
       {props.state && props.btnProf instanceof HTMLButtonElement && (

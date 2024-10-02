@@ -90,7 +90,7 @@ module.exports = {
   },
 };
 if (process.env.NODE_ENV === "production") {
-  module.exports.rules["no-console"] = "warn";
+  module.exports.rules["no-console"] = "off";
   module.exports.rules["no-useless-escape"] = "off";
   module.exports.rules["no-unused-vars"] = "off";
   module.exports.rules["no-useless-return"] = "off";

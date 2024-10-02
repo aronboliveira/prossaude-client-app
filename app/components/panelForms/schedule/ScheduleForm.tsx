@@ -2,8 +2,7 @@
 import { ErrorBoundary } from "react-error-boundary";
 import { ScheduleFormProps } from "../../../src/lib/locals/panelPage/declarations/interfacesCons";
 import { addListenerExportBtn } from "../../../src/lib/global/gController";
-import { fillScheduleState } from "../../../src/lib/locals/panelPage/consController";
-import { globalDataProvider, panelRoots } from "../defs/client/SelectPanel";
+import { fillScheduleState, panelRoots, providers } from "@/vars";
 import { handleClientPermissions } from "../../../src/lib/locals/panelPage/handlers/consHandlerUsers";
 import { handleSubmit } from "@/lib/locals/panelPage/handlers/handlers";
 import { useState, useRef, useEffect, useCallback, JSX, useContext } from "react";
@@ -144,7 +143,7 @@ export default function ScheduleForm({ mainRoot }: ScheduleFormProps): JSX.Eleme
       }, 200);
     addEventListener("resize", handleResize);
     return (): void => removeEventListener("resize", handleResize);
-  }, []);
+  }, [userClass]);
   useEffect(() => {
     /new-cons=open/gi.test(location.search) && setTogglePress(true);
   }, []);
@@ -156,7 +155,7 @@ export default function ScheduleForm({ mainRoot }: ScheduleFormProps): JSX.Eleme
       // const scheduleDataProvider = new DataProvider(
       //   DataProvider.persistSessionEntries(formRef.current)
       // );
-      globalDataProvider && globalDataProvider.initPersist(formRef.current, globalDataProvider, userClass);
+      providers.globalDataProvider && providers.globalDataProvider.initPersist(formRef.current, providers.globalDataProvider, userClass);
       const saveInterv = setInterval(() => {
         try {
           if (!(formRef.current instanceof HTMLFormElement))
@@ -172,7 +171,7 @@ export default function ScheduleForm({ mainRoot }: ScheduleFormProps): JSX.Eleme
       }, 60000);
       return (): void => clearInterval(saveInterv);
     } else elementNotFound(formRef.current, `formRef for useEffect() in ${ScheduleForm.name}`, extLine(new Error()));
-  }, [formRef]);
+  }, [formRef, formCallback, userClass]);
   useEffect(() => {
     if (workingDefinitionsRef?.current instanceof HTMLElement && workingDefinitionsRef.current.id.match(/working/gi)) {
       //adição de listeners para autoajuste de atributos da agenda
@@ -223,7 +222,7 @@ export default function ScheduleForm({ mainRoot }: ScheduleFormProps): JSX.Eleme
         extLine(new Error()),
       );
     }
-  }, [monthRef]);
+  }, [monthRef, userClass]);
   useEffect(() => {
     //populando inicialmente o array de state para agenda, tirando as mensagens default de erro
     //os states das agendas começam iguais e vão sendo atualizados com a sessionStorage e change no monthSelector
@@ -344,7 +343,7 @@ export default function ScheduleForm({ mainRoot }: ScheduleFormProps): JSX.Eleme
         console.error(`Error clearing intervals for Schedule:\n${(e as Error).message}`);
       }
     };
-  }, []);
+  }, [userClass]);
   return (
     <ErrorBoundary FallbackComponent={() => <GenericErrorComponent message='Erro carregando agenda!' />}>
       {showForm && (
@@ -441,7 +440,7 @@ export default function ScheduleForm({ mainRoot }: ScheduleFormProps): JSX.Eleme
                                   ) {
                                     hourInp.value = `${parseInt(hours[0].slice(0, 2))}:00`;
                                     hourInp.style.color = `rgb(33, 37, 41)`;
-                                  } else console.log(`Failed at comparing Absolute hours`);
+                                  }
                                 }
                               }, 1000);
                             } else {
@@ -482,7 +481,7 @@ export default function ScheduleForm({ mainRoot }: ScheduleFormProps): JSX.Eleme
                                   ) {
                                     hourInp.value = `${parseInt(hours[0].slice(0, 2))}:00`;
                                     hourInp.style.color = `rgb(33, 37, 41)`;
-                                  } else console.log(`Failed at comparing Absolute hours`);
+                                  }
                                 }
                               }, 1000);
                             } else {

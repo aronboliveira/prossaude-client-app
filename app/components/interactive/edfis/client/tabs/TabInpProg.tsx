@@ -1,9 +1,10 @@
 "use client";
 import { TdProps } from "@/lib/global/declarations/interfaces";
-import { handleCallbackWHS, tabProps } from "@/pages/edfis";
+import { handleCallbackWHS } from "@/pages/edfis";
 import { handleIndEv } from "../../TabIndPerc";
 import { textTransformPascal } from "@/lib/global/gModel";
 import { handleCondtReq, handleEventReq } from "@/lib/global/handlers/gHandlers";
+import { tabProps } from "@/vars";
 export default function TabInpProg({ nRow, nCol, ctx, lab }: TdProps): JSX.Element {
   const pascalLab = textTransformPascal(lab);
   const fullName = ((): string => {

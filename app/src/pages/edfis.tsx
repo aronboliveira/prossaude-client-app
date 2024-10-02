@@ -1,5 +1,6 @@
-import { ENTabsProps } from "@/lib/global/declarations/interfaces";
 import { ErrorBoundary } from "react-error-boundary";
+import { tabProps } from "@/vars";
+import { person } from "@/vars";
 import { Person } from "@/lib/global/declarations/classes";
 import { changeTabDCutLayout } from "@/lib/locals/edFisNutPage/edFisNutModel";
 import { defaultResult } from "@/lib/locals/edFisNutPage/edFisNutController";
@@ -32,33 +33,6 @@ import {
 } from "@/lib/locals/edFisNutPage/edFisNutHandler";
 import { Suspense, lazy } from "react";
 import Spinner from "../../components/icons/Spinner";
-export const tabProps: ENTabsProps = {
-  edIsAutoCorrectOn: true,
-  isAutoFillActive: true,
-  areColGroupsSimilar: false,
-  areNumConsOpsValid: false,
-  numColsCons: 1,
-  numCons: 1,
-  numConsLastOp: 1,
-  numCol: 1,
-  IMC: 0,
-  MLG: 0,
-  TMB: 0,
-  GET: 0,
-  PGC: 0,
-  factorAtvLvl: 1.4,
-  factorAtleta: "Peso",
-  edGenValue: "masculino",
-  targInpWeigth: undefined,
-  targInpHeigth: undefined,
-  targInpIMC: undefined,
-  targInpMLG: undefined,
-  targInpTMB: undefined,
-  targInpGET: undefined,
-  targInpPGC: undefined,
-  targInpSumDCut: undefined,
-};
-export const person = new Person("masculino", 0, 0, 0, 0, "leve");
 const ENForm = lazy(() => import("../../components/interactive/edfis/EdFisForm"));
 export default function EdFisNutPage(): JSX.Element {
   return (
@@ -183,14 +157,12 @@ export function exeAutoFill(targ: targEl, isAutoFillActive: boolean = true, cont
         console.error(
           `Error validating instances of arrtargInps in exeAutoFill(). Values for respective <input> Elements not updated.`,
         );
-      return (
-        [
-          numRef || 1,
-          [person.weight || 0, person.height || 0, person.sumDCut || 0],
-          arrIndexes || [0, 0, 0, 0, 0],
-          arrtargInps || [],
-        ] || [1, [0, 0, 0], [0, 0, 0, 0, 0], []]
-      );
+      return [
+        numRef || 1,
+        [person.weight || 0, person.height || 0, person.sumDCut || 0],
+        arrIndexes || [0, 0, 0, 0, 0],
+        arrtargInps || [],
+      ];
     } else {
       multipleElementsNotFound(
         extLine(new Error()),
@@ -212,24 +184,20 @@ export function exeAutoFill(targ: targEl, isAutoFillActive: boolean = true, cont
         tabProps.targInpPGC,
       ];
     }
-    return (
-      [
-        numRef || 1,
-        [person.weight || 0, person.height || 0, person.sumDCut || 0],
-        arrIndexes || [0, 0, 0, 0, 0],
-        arrtargInps || [],
-      ] || [1, [0, 0, 0], [0, 0, 0, 0, 0], []]
-    );
+    return [
+      numRef || 1,
+      [person.weight || 0, person.height || 0, person.sumDCut || 0],
+      arrIndexes || [0, 0, 0, 0, 0],
+      arrtargInps || [],
+    ];
   } catch (e) {
     console.error(`Error executing exeAutoFill:\n${(e as Error).message}`);
-    return (
-      [
-        numRef || 1,
-        [person.weight || 0, person.height || 0, person.sumDCut || 0],
-        arrIndexes || [0, 0, 0, 0, 0],
-        arrtargInps || [],
-      ] || [1, [0, 0, 0], [0, 0, 0, 0, 0], []]
-    );
+    return [
+      numRef || 1,
+      [person.weight || 0, person.height || 0, person.sumDCut || 0],
+      arrIndexes || [0, 0, 0, 0, 0],
+      arrtargInps || [],
+    ];
   }
 }
 export function callbackTextBodyEl(person: Person): [string, string, string] {
@@ -273,13 +241,11 @@ export function callbackTextBodyEl(person: Person): [string, string, string] {
   } catch (e) {
     console.error(`Error executing callbackTextBodyEl:\n${(e as Error).message}`);
   }
-  return (
-    [
-      person?.gen || "masculino",
-      (genElement as entryEl)?.value || "masculino",
-      (genFisAlin as entryEl)?.value || "masculinizado",
-    ] || ["masculino", "masculino", "masculinizado"]
-  );
+  return [
+    person?.gen || "masculino",
+    (genElement as entryEl)?.value || "masculino",
+    (genFisAlin as entryEl)?.value || "masculinizado",
+  ];
 }
 export function callbackAtvLvlElementNaf(contextData: [number[], targEl[]], mainEl: string): [string, number] {
   [tabProps.factorAtvLvl, tabProps.IMC] = contextData[0];
@@ -345,13 +311,12 @@ export function handleCallbackWHS(
 ): [number, autofillResult] {
   tabProps.numCol = contextComp[1][0];
   let prop = 0,
-    result: autofillResult =
-      [
-        tabProps.numCol || 2,
-        [person.weight || 0, person.height || 0, person.sumDCut || 0],
-        contextComp[1][3] || [0, 0, 0, 0, 0], //[1][3] === arrIndexes
-        contextComp[0][3] || [], //[0][3] === arrTargs
-      ] || defaultResult;
+    result: autofillResult = [
+      tabProps.numCol || 2,
+      [person.weight || 0, person.height || 0, person.sumDCut || 0],
+      contextComp[1][3] || [0, 0, 0, 0, 0], //[1][3] === arrIndexes
+      contextComp[0][3] || [], //[0][3] === arrTargs
+    ];
   const fillResult = (callbackResult: autofillResult, mainNum: number): void => {
     if (tabProps.isAutoFillActive === true) {
       if (mainNum === 0) {
@@ -425,7 +390,7 @@ export function handleCallbackWHS(
       prop = validateEvResultNum(inpWHS, parseInt(inpWHS.value || "0", 10));
       person.weight = prop;
       if (tabProps.isAutoFillActive === true) result = exeAutoFill(inpWHS, isAutoFillActive, "col");
-      const callbackResult: [number, autofillResult] = [prop || 0, result || defaultResult] || [0, defaultResult];
+      const callbackResult: [number, autofillResult] = [prop || 0, result || defaultResult];
       fillResult(callbackResult[1], 0);
     } else if (inpWHS.classList.contains("inpHeigth")) {
       if (parseNotNaN(inpWHS.value, 0, "float") > 3) inpWHS.value = "3";
@@ -433,7 +398,7 @@ export function handleCallbackWHS(
       prop = validateEvResultNum(inpWHS, parseInt(inpWHS.value || "0", 10));
       person.height = prop;
       if (tabProps.isAutoFillActive === true) result = exeAutoFill(inpWHS, isAutoFillActive, "col");
-      const callbackResult: [number, autofillResult] = [prop || 0, result || defaultResult] || [0, defaultResult];
+      const callbackResult: [number, autofillResult] = [prop || 0, result || defaultResult];
       fillResult(callbackResult[1], 1);
     } else if (inpWHS.classList.contains("inpSumDCut") || inpWHS.classList.contains("selFactorAtletaClass")) {
       if (inpWHS.classList.contains("inpSumDCut") && parseNotNaN(inpWHS.value, 0, "float") > 999) inpWHS.value = "999";
@@ -441,11 +406,11 @@ export function handleCallbackWHS(
       prop = validateEvResultNum(inpWHS, parseInt(inpWHS.value || "0", 10));
       person.sumDCut = prop;
       if (tabProps.isAutoFillActive === true) result = exeAutoFill(inpWHS, isAutoFillActive, "col");
-      const callbackResult: [number, autofillResult] = [prop || 0, result || defaultResult] || [0, defaultResult];
+      const callbackResult: [number, autofillResult] = [prop || 0, result || defaultResult];
       fillResult(callbackResult[1], 2);
     } else throw elementNotFound(inpWHS, `Inp WHS classList`, extLine(new Error()));
   } catch (e) {
     console.error(`Error executing callbackWHS for ${inpWHS?.id || "unidentified"}:${(e as Error).message}`);
   }
-  return [prop || 0, result || defaultResult] || [0, defaultResult];
+  return [prop || 0, result || defaultResult];
 }

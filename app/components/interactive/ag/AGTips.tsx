@@ -6,12 +6,6 @@ import { nullishDlg } from "@/lib/global/declarations/types";
 import { useRef, useEffect } from "react";
 export default function AGTips({ state, dispatch }: DlgProps): JSX.Element {
   const dlgRef = useRef<nullishDlg>(null);
-  const handleEscape = (ev: KeyboardEvent): void => {
-    if (ev.key === "ESCAPE") {
-      dispatch(!state);
-      !state && dlgRef.current?.close();
-    }
-  };
   //push em history
   useEffect(() => {
     history.pushState({}, "", `${location.origin}${location.pathname}${location.search}&tips=open`);
@@ -30,6 +24,12 @@ export default function AGTips({ state, dispatch }: DlgProps): JSX.Element {
     };
   }, []);
   useEffect(() => {
+    const handleEscape = (ev: KeyboardEvent): void => {
+      if (ev.key === "ESCAPE") {
+        dispatch(!state);
+        !state && dlgRef.current?.close();
+      }
+    };
     try {
       if (!(dlgRef.current instanceof HTMLDialogElement))
         throw elementNotFound(dlgRef.current, `${AGTips.prototype.constructor.name}`, extLine(new Error()));
@@ -39,7 +39,7 @@ export default function AGTips({ state, dispatch }: DlgProps): JSX.Element {
       console.error(`Error executing useEffect for PanelTips:\n${(e as Error).message}`);
     }
     return (): void => removeEventListener("keypress", handleEscape);
-  }, [dlgRef]);
+  }, [dlgRef, dispatch]);
   return !state ? (
     <></>
   ) : (
@@ -72,8 +72,8 @@ export default function AGTips({ state, dispatch }: DlgProps): JSX.Element {
               <strong>1.1.</strong>
               <em>
                 {" "}
-                Apertar Alt + Y para "Sim" ou Alt + N para "Não" no próximo campo após iniciar o foco com Tab para
-                preencher automaticamente
+                Apertar Alt + Y para &quot;Sim&quot; ou Alt + N para &quot;Não&quot; no próximo campo após iniciar o
+                foco com Tab para preencher automaticamente
               </em>
             </p>
             <p className='dicas' id='dicaUppercase' style={{ textAlign: "justify" }}>
@@ -148,8 +148,8 @@ export default function AGTips({ state, dispatch }: DlgProps): JSX.Element {
               <strong>
                 <dfn>não-binário</dfn>
               </strong>
-              ), o indivíduo não se identifica totalmente com nenhum dos dois papéis, se vendo em um "meio-termo", e
-              diversas denominações são usadas para as possíveis combinações.
+              ), o indivíduo não se identifica totalmente com nenhum dos dois papéis, se vendo em um
+              &quot;meio-termo&quot;, e diversas denominações são usadas para as possíveis combinações.
               <br />
               <br />É comum a adoção de{" "}
               <em>
