@@ -2,7 +2,7 @@
 import { entryEl } from "@/lib/global/declarations/types";
 import { handleLinkChanges } from "@/lib/global/handlers/gRoutingHandlers";
 import { assignFormAttrs, parseNotNaN } from "@/lib/global/gModel";
-import { person, tabProps } from "@/pages/edfis";
+import { person, tabProps } from "@/vars";
 import { useEffect, useState } from "react";
 import { addListenerExportBtn, getGlobalEls, watchLabels } from "@/lib/global/gController";
 import { clearPhDates, dinamicGridAdjust, equalizeFlexSibilings } from "@/lib/global/gStyleScript";
@@ -43,7 +43,7 @@ export default function WatcherEN(): JSX.Element {
       clearInterval(mountInterval);
       !document.getElementById("tabIndPerc") && console.warn(`Could not find tabIndPerc`);
     }, 10000);
-  }, []);
+  }, [isExportListening]);
   useEffect(() => {
     if (mounted && document.getElementsByTagName("table").length > 3) {
       const selectNumCons = document.getElementById("selectNumCons");

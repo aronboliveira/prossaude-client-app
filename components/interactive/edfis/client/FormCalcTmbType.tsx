@@ -1,12 +1,13 @@
 "use client";
-import { callbackAtvLvlElementNaf, person, tabProps } from "@/pages/edfis";
+import { callbackAtvLvlElementNaf } from "@/pages/edfis";
+import { person, tabProps } from "@/vars";
 export default function FormCalcTmbType(): JSX.Element {
   return (
     <select
-      id="formCalcTMBType"
-      name="form_tmb"
-      className="form-select noInvert lockSelect"
-      data-title="Fórmula para TMB"
+      id='formCalcTMBType'
+      name='form_tmb'
+      className='form-select noInvert lockSelect'
+      data-title='Fórmula para TMB'
       onChange={ev => {
         [person.atvLvl, tabProps.factorAtvLvl] = callbackAtvLvlElementNaf(
           [
@@ -18,13 +19,12 @@ export default function FormCalcTmbType(): JSX.Element {
               document.getElementById("nafType"),
             ],
           ],
-          ev.currentTarget.id
+          ev.currentTarget.id,
         );
-      }}
-    >
-      <option value="harrisBenedict">Harris-Benedict</option>
-      <option value="mifflinStJeor">Mifflin-St.Jeor</option>
-      <option value="tinsley">Tinsley</option>
+      }}>
+      <option value='harrisBenedict'>Harris-Benedict</option>
+      <option value='mifflinStJeor'>Mifflin-St.Jeor</option>
+      <option value='tinsley'>Tinsley</option>
     </select>
   );
 }

@@ -5,12 +5,6 @@ import { nullishDlg } from "@/lib/global/declarations/types";
 import { useRef, useEffect } from "react";
 export default function ENTips({ state, dispatch }: DlgProps): JSX.Element {
   const dlgRef = useRef<nullishDlg>(null);
-  const handleEscape = (ev: KeyboardEvent): void => {
-    if (ev.key === "ESCAPE") {
-      dispatch(!state);
-      !state && dlgRef.current?.close();
-    }
-  };
   //push em history
   useEffect(() => {
     history.pushState({}, "", `${location.origin}${location.pathname}${location.search}&tips=open`);
@@ -29,6 +23,12 @@ export default function ENTips({ state, dispatch }: DlgProps): JSX.Element {
     };
   }, []);
   useEffect(() => {
+    const handleEscape = (ev: KeyboardEvent): void => {
+      if (ev.key === "ESCAPE") {
+        dispatch(!state);
+        !state && dlgRef.current?.close();
+      }
+    };
     try {
       if (!(dlgRef.current instanceof HTMLDialogElement))
         throw elementNotFound(dlgRef.current, `${ENTips.prototype.constructor.name}`, extLine(new Error()));

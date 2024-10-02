@@ -31,8 +31,6 @@ export default function UserProfileDropdown({ user, router }: UserProfileDropdow
           telephone: user.loadedData.telephone,
         }),
       );
-      console.log("USER CARREGADO");
-      console.log(loadedUser);
       setUser(loadedUser);
       setClass(`${loadedUser.userClass.slice(0, 1).toUpperCase()}${loadedUser.userClass.slice(1)}`);
       setArea(`${loadedUser.userArea.slice(0, 1).toUpperCase()}${loadedUser.userArea.slice(1)}`);

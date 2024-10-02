@@ -1,8 +1,8 @@
 "use client";
-import { agProps, handleDivAddShow } from "@/pages/ag";
+import { handleDivAddShow } from "@/pages/ag";
+import { odProps, agProps } from "@/vars";
 import { extLine, inputNotFound } from "@/lib/global/handlers/errorHandler";
 import { handleLinkChanges } from "@/lib/global/handlers/gRoutingHandlers";
-import { odProps } from "@/pages/od";
 import { pageCases, targEl } from "@/lib/global/declarations/types";
 import { useEffect, useState } from "react";
 import { addListenerExportBtn, getGlobalEls, watchLabels } from "@/lib/global/gController";
@@ -56,12 +56,11 @@ export default function Watcher({ routeCase }: { routeCase?: pageCases }): JSX.E
     return (): void => {
       if (routeCase === "ag") removeEventListener("resize", handleResize);
     };
-  }, []);
+  }, [routeCase, isExportListening]);
   useEffect(() => {
     modelScripts();
     if (isFetching) return;
     (async (): Promise<void> => {
-      console.log("TRYING ON CLIENT...");
       isFetching = true;
       try {
         const res = await fetch("https://cdn.jsdelivr.net/gh/aronboliveira/my-python@main/fetch_test.py", {
@@ -82,7 +81,6 @@ export default function Watcher({ routeCase }: { routeCase?: pageCases }): JSX.E
           );
         let script = await res.text();
         script = JSON.parse(script.slice(script.indexOf("{"), script.lastIndexOf("}") + 1).trim());
-        console.log(script);
         isFetching = false;
       } catch (e) {
         console.warn(`Failed: 

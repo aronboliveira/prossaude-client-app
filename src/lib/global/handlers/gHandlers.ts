@@ -32,7 +32,6 @@ export function updateSimpleProperty(el: targEl): primitiveType {
     } else return el.value || "0";
   } else if (el instanceof HTMLSelectElement || el instanceof HTMLTextAreaElement) return el.value;
   else inputNotFound(el, "el in updateSimpleProperty", extLine(new Error()));
-  console.log(`Failed to update property for ${el?.id || el?.tagName || "unidentified"}. Value returned: -1`);
   return "-1";
 }
 export function cursorCheckTimer(): number {
@@ -316,7 +315,6 @@ export function changeToAstDigit(toFileInpBtn: targEl): void {
         extLine(new Error()),
       );
     if (inpAst instanceof HTMLCanvasElement || /Usar/gi.test(toFileInpBtn.innerText)) {
-      console.log("Case usar");
       toFileInpBtn.innerText = "Retornar à Assinatura Escrita";
       const fileInp = document.createElement("input");
       fileInp.classList.add("inpAst", "mg-07t", "form-control");
@@ -334,7 +332,6 @@ export function changeToAstDigit(toFileInpBtn: targEl): void {
       fileInp.type = "file";
       fileInp.accept = "image/*";
       fileInp.required = true;
-      console.log("replacing to file input...");
       inpAst.parentElement.replaceChild(fileInp, inpAst);
       fileInp.addEventListener("change", chose => {
         try {
@@ -412,7 +409,6 @@ export function changeToAstDigit(toFileInpBtn: targEl): void {
         }
       });
     } else if (!(inpAst instanceof HTMLCanvasElement) || /Retornar/gi.test(toFileInpBtn.innerText)) {
-      console.log("Case retornar");
       toFileInpBtn.innerText = "Usar Assinatura Digital";
       if (toFileInpBtn.classList.contains("tratBtn")) {
         const textInp = document.createElement("input") as HTMLInputElement;
@@ -421,7 +417,6 @@ export function changeToAstDigit(toFileInpBtn: targEl): void {
         textInp.dataset.title =
           inpAst.dataset.title || `Assinatura do Tratamento ${document.querySelectorAll(".tratAst").length + 1}`;
         textInp.required = true;
-        console.log("replacing to canvas...");
         inpAst.parentElement.replaceChild(textInp, inpAst);
         document.querySelectorAll(".inpAst").forEach((fileInp, i) => {
           try {
@@ -449,7 +444,6 @@ export function changeToAstDigit(toFileInpBtn: targEl): void {
         fileInp.dataset.title = "Assinatura do Paciente";
         defineLabId(document.querySelector(".labAst"), toFileInpBtn, fileInp as any);
         toFileInpBtn.previousElementSibling?.removeAttribute("hidden");
-        console.log("replacing to canvas...");
         inpAst.parentElement.replaceChild(fileInp, inpAst);
         addCanvasListeners();
       }
@@ -1368,30 +1362,8 @@ export function handleEventReq(entry: textEl | Event, alertColor: string = "#e52
       numInp.step !== "any" && !/[^0-9]/g.test(numInp.step) && numInp.step.replaceAll(/[^0-9]/g, "");
     }
   });
-  if (!entry.checkValidity()) {
-    console.log("Failed check validity");
+  if (!entry.checkValidity())
     isValid = false;
-    console.log(`
-    -- List for failure causes:
-    Bad Input: ${entry.validity.badInput}
-    Custom Error: ${entry.validity.customError}
-    Pattern Mismatch: ${entry.validity.patternMismatch}
-    Range Overflow: ${entry.validity.rangeOverflow}
-    Range Underflow: ${entry.validity.rangeUnderflow}
-    Step Mismatch: ${entry.validity.stepMismatch}
-    Too Long: ${entry.validity.tooLong}
-    Too Short: ${entry.validity.tooShort}
-    Type Mismatch: ${entry.validity.typeMismatch}
-    Value Missing: ${entry.validity.valueMissing}
-    `);
-    entry.validity.stepMismatch &&
-      entry instanceof HTMLInputElement &&
-      console.log(`Step is: ${entry.step || "step not defined"}`);
-    entry.validity.rangeOverflow &&
-      entry instanceof HTMLInputElement &&
-      console.log(`Max should be: ${entry.max || "max not defined"}`);
-    console.log("Obtained value: " + entry.value);
-  }
   if (entry.type === "date") {
     if (entry.classList.contains("minCurrDate")) {
       const currDate = new Date().toISOString().split("T")[0].replaceAll("-", "").trim();
@@ -1443,19 +1415,15 @@ export function handleEventReq(entry: textEl | Event, alertColor: string = "#e52
     }
   } else {
     if (entry.classList.contains("minText") && entry.value.length < parseNotNaN(entry.dataset.reqlength || "3")) {
-      console.log("Failed minText");
       isValid = false;
     }
     if (entry.classList.contains("maxText") && entry.value.length > parseNotNaN(entry.dataset.maxlength || "3")) {
-      console.log("Failed maxText");
       isValid = false;
     }
     if (entry.classList.contains("minNum") && parseNotNaN(entry.value) < parseNotNaN(entry.dataset.minnum || "3")) {
-      console.log("Failed minNum");
       isValid = false;
     }
     if (entry.classList.contains("maxNum") && parseNotNaN(entry.value) > parseNotNaN(entry.dataset.maxnum || "3")) {
-      console.log("Failed maxNum");
       isValid = false;
     }
     if (
@@ -1463,7 +1431,6 @@ export function handleEventReq(entry: textEl | Event, alertColor: string = "#e52
       entry.dataset.pattern &&
       !new RegExp(entry.dataset.pattern, entry.dataset.flags || "").test(entry.value)
     ) {
-      console.log("Failed patternText");
       isValid = false;
     }
   }

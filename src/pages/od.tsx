@@ -6,9 +6,6 @@ import OdTipsBtnWrapper from "../../components/interactive/od/OdTipsBtnWrapper";
 import SwitchDiv from "../../components/interactive/def/SwitchDiv";
 import Watcher from "../../components/interactive/def/Watcher";
 import Spinner from "../../components/icons/Spinner";
-export const odProps = {
-  odIsAutoCorrectOn: true,
-};
 const Form = lazy(() => import("../../components/interactive/od/OdForm"));
 export default function OdPage(): JSX.Element {
   return (

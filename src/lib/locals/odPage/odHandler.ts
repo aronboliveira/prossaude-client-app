@@ -140,7 +140,6 @@ export function dragStart(
             (validSrcEl as HTMLElement).style.zIndex = "100";
           }
           const handleTouchEnd = (end: TouchEvent): void => {
-            console.log(end);
             if (odIsDragging) {
               try {
                 const targ = odFbTouch;

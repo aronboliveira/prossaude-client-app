@@ -50,7 +50,7 @@ export default function InpRot(props: InpRotProps): JSX.Element {
     } catch (e) {
       console.error(`Error executing useEffect:\n${(e as Error).message}`);
     }
-  }, []);
+  }, [props.ctx, props.flags, props.grp]);
   return (
     <ErrorBoundary
       FallbackComponent={() => <GenericErrorComponent message={`Error rendering Input for ${props.quest}`} />}>

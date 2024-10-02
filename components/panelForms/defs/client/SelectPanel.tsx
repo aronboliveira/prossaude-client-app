@@ -4,11 +4,11 @@ import { AppRootContextType } from "@/lib/global/declarations/interfaces";
 import { DataProvider } from "@/lib/locals/panelPage/declarations/classesCons";
 import { ErrorBoundary } from "react-error-boundary";
 import { MainPanelProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
-import { Root } from "react-dom/client";
+import { providers } from "@/vars";
 import { camelToKebab, kebabToCamel } from "@/lib/global/gModel";
 import { createRoot } from "react-dom/client";
 import { handleLinkChanges } from "@/lib/global/handlers/gRoutingHandlers";
-import { nullishDiv, panelOpts, voidVal } from "@/lib/global/declarations/types";
+import { nullishDiv, panelOpts } from "@/lib/global/declarations/types";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useState, useRef, useEffect, useContext } from "react";
 import DefaultForm from "../DefaultForm";
@@ -24,17 +24,13 @@ import { elementNotFound, extLine, inputNotFound, stringError } from "@/lib/glob
 import { defUser } from "@/redux/slices/userSlice";
 import ScheduleLoader from "../../schedule/ScheduleLoader";
 import { PanelCtx } from "./SelectLoader";
-export let globalDataProvider: DataProvider | voidVal;
-export const panelRoots: { [k: string]: Root | undefined } = {
-  mainRoot: undefined,
-};
+import { panelRoots } from "@/vars";
 export default function SelectPanel({ defOp = "agenda" }: MainPanelProps): JSX.Element {
-  const { userClass, setUserClass: setPrivilege } = useContext(PanelCtx);
-  console.log("render user class " + userClass);
-  const [selectedOption, setSelectedOption] = useState<string>(defOp);
-  const [mounted, setMounted] = useState<boolean>(false);
-  const formRootRef = useRef<nullishDiv>(null);
-  const context = useContext<AppRootContextType>(AppRootContext);
+  const { userClass, setUserClass: setPrivilege } = useContext(PanelCtx),
+    [selectedOption, setSelectedOption] = useState<string>(defOp),
+    [mounted, setMounted] = useState<boolean>(false),
+    formRootRef = useRef<nullishDiv>(null),
+    context = useContext<AppRootContextType>(AppRootContext);
   useEffect(() => {
     const privilege = localStorage.getItem("activeUser")
       ? JSON.parse(localStorage.getItem("activeUser")!).loadedData?.privilege
@@ -44,10 +40,8 @@ export default function SelectPanel({ defOp = "agenda" }: MainPanelProps): JSX.E
     else translatedPrivilege = privilege;
     setPrivilege(translatedPrivilege);
     setMounted(true);
-  }, []);
+  }, [setPrivilege]);
   const renderSelectPanel = (opt: panelOpts): void => {
-    console.log("User class in render:");
-    console.log(userClass);
     try {
       const formRoot = document.getElementById("formRoot");
       if (!(formRoot instanceof HTMLElement))
@@ -55,7 +49,6 @@ export default function SelectPanel({ defOp = "agenda" }: MainPanelProps): JSX.E
       if (!context.roots.formRoot) context.roots.formRoot = createRoot(formRoot);
       context.roots.formRoot.render(
         ((opt: panelOpts): JSX.Element => {
-          console.log(`Rendering for ${opt}...`);
           switch (opt) {
             case "registStud":
               return userClass === "coordenador" || userClass === "supervisor" ? <StudentForm /> : <Unauthorized />;
@@ -95,10 +88,10 @@ export default function SelectPanel({ defOp = "agenda" }: MainPanelProps): JSX.E
     }, 300);
   };
   useEffect(() => {
-    globalDataProvider = new DataProvider(sessionStorage);
+    providers.globalDataProvider = new DataProvider(sessionStorage);
     handleLinkChanges("panel", "Panel Page Style");
     handlePanelPath(defOp);
-  }, [userClass]);
+  }, [userClass, defOp]);
   useEffect(() => {
     setTimeout(() => {
       try {
@@ -152,7 +145,7 @@ export default function SelectPanel({ defOp = "agenda" }: MainPanelProps): JSX.E
         );
       }
     }, 500);
-  }, [userClass]);
+  }, [userClass, context.roots, defOp]);
   //validating DOM structure using Main Select and parent for reference
   useEffect(() => {
     setTimeout(() => {
@@ -174,7 +167,7 @@ export default function SelectPanel({ defOp = "agenda" }: MainPanelProps): JSX.E
           }
         }, 2000);
     }, 3000);
-  }, [mounted]);
+  }, [mounted, context.roots, setPrivilege]);
   useEffect(() => {
     if (formRootRef.current instanceof HTMLElement) {
       syncAriaStates([

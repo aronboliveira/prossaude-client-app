@@ -2,7 +2,7 @@ import { Person } from "@/lib/global/declarations/classes";
 import { exeAutoFill } from "@/pages/edfis";
 import { handleEventReq } from "@/lib/global/handlers/gHandlers";
 import { nullishInp } from "@/lib/global/declarations/types";
-import { person, tabProps } from "@/pages/edfis";
+import { person, tabProps } from "@/vars";
 import { useState, useEffect, useRef } from "react";
 import { validateEvResultNum } from "@/lib/locals/edFisNutPage/edFisNutHandler";
 import { multipleElementsNotFound, extLine } from "@/lib/global/handlers/errorHandler";
@@ -46,7 +46,6 @@ export default function AgeElement(): JSX.Element {
           person.age = validateEvResultNum(ev.currentTarget, person.age);
           //sem autofill, dá update somente em person.age
           tabProps.isAutoFillActive && exeAutoFill(ev.currentTarget, tabProps.isAutoFillActive, "cons");
-          console.log([newValue, ev.currentTarget.value, person.age]);
         } else {
           setValue(prevValue);
           multipleElementsNotFound(

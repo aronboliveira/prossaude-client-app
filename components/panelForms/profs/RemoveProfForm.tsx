@@ -6,7 +6,7 @@ import { equalizeTabCells, normalizeSizeSb } from "@/lib/global/gStyleScript";
 import { fillTabAttr } from "@/lib/locals/panelPage/handlers/consHandlerList";
 import { handleClientPermissions } from "@/lib/locals/panelPage/handlers/consHandlerUsers";
 import { handleFetch } from "@/lib/locals/panelPage/handlers/handlers";
-import { panelRoots } from "../defs/client/SelectPanel";
+import { panelRoots } from "@/vars";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useEffect, useRef, useCallback, useContext } from "react";
 import GenericErrorComponent from "../../error/GenericErrorComponent";
@@ -236,7 +236,7 @@ export default function RemoveProfForm(): JSX.Element {
     } catch (e) {
       console.error(`Error executing useEffect for Table Body Reference:\n${(e as Error).message}`);
     }
-  }, []);
+  }, [userClass]);
   useEffect(() => {
     if (formRef?.current instanceof HTMLFormElement) {
       const btnExportTabProfs = btnExportProfsTabRef.current || formRef.current!.querySelector("#btnExport");
@@ -255,7 +255,7 @@ export default function RemoveProfForm(): JSX.Element {
       syncAriaStates([...formRef.current!.querySelectorAll("*"), formRef.current]);
       assignFormAttrs(formRef.current);
     } else elementNotFound(formRef?.current, "formRef.current in useEffect() for RemoveProfForm", extLine(new Error()));
-  }, [formRef]);
+  }, [formRef, callbackNormalizeSizesSb]);
   useEffect(() => {
     if (tabRef.current instanceof HTMLElement) {
       handleClientPermissions(
@@ -265,7 +265,7 @@ export default function RemoveProfForm(): JSX.Element {
         document.getElementById("btnExport"),
       );
     }
-  }, [tabRef]);
+  }, [tabRef, userClass]);
   return (
     <form
       id='formRemoveProf'

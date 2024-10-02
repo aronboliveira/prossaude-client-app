@@ -1,6 +1,6 @@
 "use client";
 import { switchAutoFill } from "@/lib/locals/edFisNutPage/edFisNutHandler";
-import { tabProps } from "@/pages/edfis";
+import { tabProps } from "@/vars";
 export default function SwitchDiv({ autofill = false }: { autofill?: boolean }): JSX.Element {
   return (
     <div role='group' className='switchDiv flexQ900NoWC divTab'>

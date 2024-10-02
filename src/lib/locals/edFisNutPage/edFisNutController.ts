@@ -137,7 +137,7 @@ export function addListenerInnerTabs(
       numColsCons,
       areColGroupsSimilar,
     );
-  return [numColsCons || 0, areColGroupsSimilar || false] || [1, false];
+  return [numColsCons || 0, areColGroupsSimilar || false];
 }
 export function addListenerTrioReadNumCons(
   consTablesFs: targEl,

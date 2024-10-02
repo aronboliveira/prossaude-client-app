@@ -35,7 +35,8 @@ export default function AlterFieldList({
       setTimeout(() => {
         history.pushState({}, "", `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#"));
       }, 300);
-    };
+    },
+    toggleDisplayRowData = (state: boolean = true): void => dispatch(!state);
   useEffect(() => {
     if (alterFieldRef.current instanceof HTMLDialogElement) {
       alterFieldRef.current.showModal();
@@ -55,12 +56,11 @@ export default function AlterFieldList({
           dispatch(!state);
         }
       };
-      document.addEventListener("keydown", handleKeyDown);
-      return (): void => document.removeEventListener("keydown", handleKeyDown);
+      addEventListener("keydown", handleKeyDown);
+      return (): void => removeEventListener("keydown", handleKeyDown);
     } else
       elementNotFound(alterFieldRef.current, "Reference for Previous appointments list dialog", extLine(new Error()));
-  }, [alterFieldRef]);
-  const toggleDisplayRowData = (state: boolean = true): void => dispatch(!state);
+  }, [alterFieldRef, dispatch, toggleDisplayRowData]);
   //push em history
   useEffect(() => {
     history.pushState(
@@ -100,7 +100,7 @@ export default function AlterFieldList({
         history.pushState({}, "", `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#"));
       }, 300);
     };
-  }, []);
+  }, [name]);
   useEffect(() => {
     if (
       (optsRef?.current instanceof HTMLSelectElement || optsRef.current! instanceof HTMLInputElement) &&
@@ -150,7 +150,7 @@ export default function AlterFieldList({
       }
     } else
       inputNotFound(optsRef?.current, "Reference for Field options in AlterFieldList component", extLine(new Error()));
-  }, [optsRef]);
+  }, [optsRef, tabRef]);
   return (
     <ErrorBoundary FallbackComponent={() => <GenericErrorComponent message='Erro carregando modal de alteração' />}>
       <dialog

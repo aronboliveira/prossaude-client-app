@@ -1,16 +1,16 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { User } from "@/lib/global/declarations/classes";
 import { LoadedUserState } from "@/lib/locals/basePage/declarations/serverInterfaces";
-import { experimentalUser } from "../../../components/interactive/base/MainContainer";
+import { experimentalProps } from "@/vars";
 export const activeUserSlice = createSlice({
   name: "user",
   initialState: {
     user: new User({
-      name: experimentalUser.loadedData.name,
-      privilege: experimentalUser.loadedData.privilege,
-      area: experimentalUser.loadedData.area,
-      email: experimentalUser.loadedData.email,
-      telephone: experimentalUser.loadedData.telephone,
+      name: experimentalProps.experimentalUser.loadedData.name,
+      privilege: experimentalProps.experimentalUser.loadedData.privilege,
+      area: experimentalProps.experimentalUser.loadedData.area,
+      email: experimentalProps.experimentalUser.loadedData.email,
+      telephone: experimentalProps.experimentalUser.loadedData.telephone,
     }),
   } as LoadedUserState,
   reducers: {

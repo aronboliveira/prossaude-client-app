@@ -15,13 +15,11 @@ export default function RecoverAlert({ dispatch, state = true }: DlgProps): JSX.
     if (state && FailRegstDlgRef.current instanceof HTMLDialogElement) FailRegstDlgRef.current.showModal();
     syncAriaStates([...FailRegstDlgRef.current!.querySelectorAll("*"), FailRegstDlgRef.current!]);
     const handleKeyDown = (press: KeyboardEvent): void => {
-      if (press.key === "Escape") {
-        toggleClose();
-      }
+      if (press.key === "Escape") toggleClose();
     };
     addEventListener("keydown", handleKeyDown);
     return (): void => removeEventListener("keydown", handleKeyDown);
-  }, [FailRegstDlgRef]);
+  }, [FailRegstDlgRef, toggleClose]);
   return (
     <>
       {state && (

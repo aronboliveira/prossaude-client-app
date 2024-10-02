@@ -7,7 +7,7 @@ export default function ConfirmLocId(): JSX.Element {
   const [value, setValue] = useState("Rio de Janeiro, Rio de Janeiro");
   useEffect(() => {
     if (mainRef.current instanceof HTMLInputElement && mainRef.current.value === "") mainRef.current.value = value;
-  }, []);
+  }, [value]);
   return (
     <input
       type='text'

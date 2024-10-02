@@ -40,6 +40,7 @@ export interface objInnerTabs {
   numColsCons: number;
   areColGroupsSimilar: boolean;
 }
+export type nlEl = Element | null;
 export type nullishHtEl = HTMLElement | null;
 export type nullishForm = HTMLFormElement | null;
 export type nullishDlg = HTMLDialogElement | null;

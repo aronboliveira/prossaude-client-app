@@ -9,9 +9,6 @@ import Watcher from "../../components/interactive/def/Watcher";
 import SwitchDiv from "../../components/interactive/def/SwitchDiv";
 import Spinner from "../../components/icons/Spinner";
 const Form = lazy(() => import("../../components/interactive/ag/AgForm"));
-export const agProps = {
-  agIsAutoCorrectOn: true,
-};
 export default function AGPage(): JSX.Element {
   return (
     <ErrorBoundary FallbackComponent={() => <GenericErrorComponent message='Error loading form for Anamnesis' />}>

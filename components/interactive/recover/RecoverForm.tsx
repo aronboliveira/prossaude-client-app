@@ -18,7 +18,6 @@ export default function RecoverForm(): JSX.Element {
       method='post'
       action=''
       encType='application/x-www-form-urlencoded'
-      //TODO TEM QUE ADICIONAR O ENDPOINT PRA ESSE FORM
       onSubmit={ev =>
         validateForm(ev).then(validation => {
           ev.preventDefault();
@@ -54,7 +53,6 @@ export default function RecoverForm(): JSX.Element {
           type='submit'
           id='submit-recover'
           className='btn btn-info'
-          //TODO PARA TESTE
           onClick={ev => {
             ev.preventDefault();
             setAlert(true);

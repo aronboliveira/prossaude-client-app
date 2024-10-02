@@ -12,7 +12,6 @@ export const PanelCtx = createContext<{
 const SelectPanel = lazy(() => import("./SelectPanel"));
 export default function SelectPanelLoader(): JSX.Element {
   const [userClass, setUserClass] = useState<string>("estudante");
-  //TODO EM UM CENÁRIO REAL, O PRIVILÉGIO VAI SER DEFINIDO NO LOGIN E RETIDO NO LOCAL STORAGE
   useEffect(() => {
     const active = localStorage.getItem("activeUser");
     if (active) {

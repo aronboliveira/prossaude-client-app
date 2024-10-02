@@ -153,7 +153,6 @@ export default function PacRow({
               data-aloc={`UnfilledText-pac`}
               data-row={nRow}
               data-col={userClass === "coordenador" ? 7 : 6}>
-              {/* //TODO PRECISA DEFINIR COMO VAI SER FEITA A PASSAGEM DOS FILES */}
               <a className='astAnchor' id={`tagPhAstPac${nRow}`} href='../img/teste-exame-clinico.pdf' download>
                 <svg
                   xmlns='http://www.w3.org/2000/svg'

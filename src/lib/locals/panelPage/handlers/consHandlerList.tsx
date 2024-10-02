@@ -1,5 +1,11 @@
 import { MutableRefObject } from "react";
-import { nullishDlg, personAbrvClasses, personAbrvUpperClasses, targEl } from "../../../global/declarations/types";
+import {
+  nullishDlg,
+  nullishHtEl,
+  personAbrvClasses,
+  personAbrvUpperClasses,
+  targEl,
+} from "../../../global/declarations/types";
 import { parseNotNaN } from "../../../global/gModel";
 import { switchBtnBS } from "../../../global/gStyleScript";
 import {
@@ -71,9 +77,9 @@ export function transferDataAloc(
           outp.innerText,
         ];
         if (/tel/gi.test(data[0]) && /\s/g.test(data[1])) {
-          const telParts = ["nac", "ddd", "tel"];
-          const splitTel = data[1].split(" ");
-          const mappedTel = [];
+          const telParts = ["nac", "ddd", "tel"],
+            splitTel = data[1].split(" "),
+            mappedTel: Array<string[][]> = [];
           if (splitTel.length === 2) {
             const pairParts = data[1].split(" ").map((split, i) => {
               return [telParts[i + 1], split];
@@ -94,7 +100,7 @@ export function transferDataAloc(
             data[1].slice(0, data[1].indexOf(" ")),
             data[1].slice(data[1].indexOf(" "), data[1].length),
           ];
-          const mappedName = [];
+          const mappedName: Array<string[]> = [];
           for (let n = 0; n <= nameParts.length; n++) mappedName.push([nameParts[n], slicedName[n]]);
           // @ts-ignore
           data = mappedName;
@@ -269,13 +275,18 @@ export function transferDataAloc(
 export function addListenerAlocation(
   alocBtn: targEl,
   parentRef: Exclude<targEl, HTMLTableElement>,
-  forwardedRef: HTMLElement,
+  forwardedRef: nullishHtEl,
   context: personAbrvUpperClasses | personAbrvClasses = "Stud",
   state: boolean = true,
   dispatch: (state: boolean) => void,
   userClass: string = "estudante",
 ): void {
-  if (alocBtn instanceof HTMLButtonElement && parentRef instanceof HTMLElement) {
+  try {
+    if (!(alocBtn instanceof HTMLButtonElement || (alocBtn instanceof HTMLInputElement && alocBtn.type === "button")))
+      throw new Error(`Failed to validate Alocation Button reference`);
+    if (!(parentRef instanceof HTMLElement)) throw new Error(`Failed to validate instance of Parent Element reference`);
+    if (!(forwardedRef instanceof HTMLElement))
+      throw new Error(`Failed to validate instance of Forwarded Reference to Ancestral Element`);
     const tabs = parentRef.querySelectorAll(`table[id*=av${context}]`);
     tabs.length > 0
       ? tabs.forEach(tab => {
@@ -300,13 +311,9 @@ export function addListenerAlocation(
           });
         })
       : elementNotPopulated(tabs, `tabs in addListenerAlocation(), context ${context}`, extLine(new Error()));
-  } else
-    multipleElementsNotFound(
-      extLine(new Error()),
-      "refs dependencies for useEffect() in AvStudListDlg()",
-      alocBtn,
-      parentRef,
-    );
+  } catch (e) {
+    console.error(`Error executing addListenerAlocation:\n${(e as Error).message}`);
+  }
 }
 export function addListenerAvMembers(
   dialogRef: MutableRefObject<nullishDlg | HTMLDivElement>,
@@ -461,9 +468,9 @@ export function fillTabAttr(tab: targEl, context: string = "pac"): void {
       const rowIndex = Array.from(tab.rows).findIndex(anyRow => row === anyRow);
       for (const attribute of row.attributes) {
         if (/Unfilled0/gi.test(attribute.value)) {
-          attribute.value = attribute.value.replace(/Unfilled0/gi, `${rowIndex + 1 ?? -1}` || "NotFound0");
+          attribute.value = attribute.value.replace(/Unfilled0/gi, `${rowIndex + 1}` || "NotFound0");
         } else if (/Unfilled1/gi.test(attribute.value)) {
-          attribute.value = attribute.value.replace(/Unfilled1/gi, `${rowIndex + 1 ?? -1}` || "NotFound1");
+          attribute.value = attribute.value.replace(/Unfilled1/gi, `${rowIndex + 1}` || "NotFound1");
         }
       }
       let celCount = 0;
@@ -472,10 +479,10 @@ export function fillTabAttr(tab: targEl, context: string = "pac"): void {
         .forEach(child => {
           for (const attribute of child.attributes) {
             if (/Unfilled0/gi.test(attribute.value)) {
-              attribute.value = attribute.value.replaceAll(/Unfilled0/gi, `${rowIndex + 1 ?? -1}` || "NotFound0");
+              attribute.value = attribute.value.replaceAll(/Unfilled0/gi, `${rowIndex + 1}` || "NotFound0");
             }
             if (/Unfilled1/gi.test(attribute.value)) {
-              attribute.value = attribute.value.replaceAll(/Unfilled1/gi, `${rowIndex + 1 ?? -1}` || "NotFound1");
+              attribute.value = attribute.value.replaceAll(/Unfilled1/gi, `${rowIndex + 1}` || "NotFound1");
             }
             if (/UnfilledText/gi.test(attribute.value)) {
               attribute.value = attribute.value.replaceAll(
@@ -484,7 +491,7 @@ export function fillTabAttr(tab: targEl, context: string = "pac"): void {
                   .querySelector("thead")
                   ?.querySelector("tr")
                   ?.getElementsByTagName("th")
-                  [celCount]?.innerText?.replace(" ", "-")}`,
+                  [celCount]?.innerText?.replace(" ", "-")}`
               );
             }
             if (/tagPh/gi.test(attribute.value)) {

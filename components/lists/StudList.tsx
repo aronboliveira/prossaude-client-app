@@ -11,7 +11,7 @@ import {
 } from "@/lib/locals/panelPage/handlers/consHandlerList";
 import { handleFetch } from "@/lib/locals/panelPage/handlers/handlers";
 import { nullishTab, nullishTabSect } from "@/lib/global/declarations/types";
-import { panelRoots } from "../panelForms/defs/client/SelectPanel";
+import { panelRoots } from "@/vars";
 import { useRef, useEffect, useContext } from "react";
 import GenericErrorComponent from "../error/GenericErrorComponent";
 import Spinner from "../icons/Spinner";
@@ -287,7 +287,7 @@ export default function StudList({ mainDlgRef, dispatch, state = true }: StudLis
     } catch (e) {
       console.error(`Error executing useEffect for Table Body Reference:\n${(e as Error).message}`);
     }
-  }, []);
+  }, [dispatch, state, mainDlgRef, userClass]);
   return (
     <table className='table table-striped table-responsive table-hover tabProfs' id='avStudsTab' ref={tabRef}>
       <caption className='caption-t'>

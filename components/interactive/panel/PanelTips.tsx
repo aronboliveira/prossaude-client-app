@@ -6,12 +6,6 @@ import { nullishDlg } from "@/lib/global/declarations/types";
 import { useRef, useEffect } from "react";
 export default function PanelTips({ state, dispatch }: DlgProps): JSX.Element {
   const dlgRef = useRef<nullishDlg>(null);
-  const handleEscape = (ev: KeyboardEvent): void => {
-    if (ev.key === "ESCAPE") {
-      dispatch(!state);
-      !state && dlgRef.current?.close();
-    }
-  };
   //push em history
   useEffect(() => {
     history.pushState({}, "", `${location.origin}${location.pathname}${location.search}&tips=open`);
@@ -30,6 +24,12 @@ export default function PanelTips({ state, dispatch }: DlgProps): JSX.Element {
     };
   }, []);
   useEffect(() => {
+    const handleEscape = (ev: KeyboardEvent): void => {
+      if (ev.key === "ESCAPE") {
+        dispatch(!state);
+        !state && dlgRef.current?.close();
+      }
+    };
     try {
       if (!(dlgRef.current instanceof HTMLDialogElement))
         throw elementNotFound(dlgRef.current, `${PanelTips.prototype.constructor.name}`, extLine(new Error()));
@@ -87,7 +87,7 @@ export default function PanelTips({ state, dispatch }: DlgProps): JSX.Element {
               <ul>
                 <li>
                   <p>
-                    O <strong className='noInvert'>Preenchimento Automático</strong> permite que campos{" "}
+                    O <strong className='noInvert'>Preenchimento Automático</strong> permite que campos
                     <em className='noInvert'>padronizados</em>
                     (como CPF e telefone) passem por correção automática de acordo com o padrão formal do dado tratado.
                   </p>
@@ -106,7 +106,7 @@ export default function PanelTips({ state, dispatch }: DlgProps): JSX.Element {
                 <li>
                   <p>
                     O <strong className='noInvert'>Registro de Consulta Nova</strong> deve ser feito com o preenchimento
-                    do formulário aberto ao clicar no botão rotulado{" "}
+                    do formulário aberto ao clicar no botão rotulado
                     <kbd className='kbd kbd-success'>Adicionar Consulta</kbd>
                     ;
                     <br />
@@ -116,7 +116,7 @@ export default function PanelTips({ state, dispatch }: DlgProps): JSX.Element {
                   <p>
                     A <strong className='noInvert'>Alocação</strong> pode ser agilizada com o uso de botões para
                     <kbd className='kbd kbd-primary'>Consultar Listas</kbd>, os quais abrem as tabelas de dados dos
-                    pacientes, estudantes ou profissionais e permitem preenchimento automático de campos com{" "}
+                    pacientes, estudantes ou profissionais e permitem preenchimento automático de campos com
                     <kbd className='kbd kbd-success'>Alocar</kbd>;
                   </p>
                 </li>
@@ -149,21 +149,21 @@ export default function PanelTips({ state, dispatch }: DlgProps): JSX.Element {
               </li>
               <li>
                 <p>
-                  O <strong className='noInvert'>Botão de Rótulo</strong> da consulta é produzido com a{" "}
-                  <em className='noInvert'>finalização de registro</em>, ocupando a{" "}
+                  O <strong className='noInvert'>Botão de Rótulo</strong> da consulta é produzido com a
+                  <em className='noInvert'>finalização de registro</em>, ocupando a
                   <strong className='noInvert'>Área de transferência</strong>;
                 </p>
               </li>
               <li>
                 <p>
-                  Os <em className='noInvert'>Botões de Rótulo</em> apresentam a{" "}
+                  Os <em className='noInvert'>Botões de Rótulo</em> apresentam a
                   <strong className='noInvert'>Ficha de Consulta</strong>
                   correspondente ao ser clicado;
                 </p>
               </li>
               <li>
                 <p>
-                  O <strong className='noInvert'>Download</strong> das informações do registro de consulta para{" "}
+                  O <strong className='noInvert'>Download</strong> das informações do registro de consulta para
                   <em className='noInvert'>armazenamento</em> pode ser feito através de
                   <kbd className='kbd kbd-primary'>Gerar planilha</kbd>, o qual exporta um <code>.xlsx</code>;
                 </p>
@@ -176,7 +176,7 @@ export default function PanelTips({ state, dispatch }: DlgProps): JSX.Element {
                     <li>
                       <p>
                         Através do <strong className='noInvert'>Preenchimento de informações</strong>
-                        com o dia e horário desejados e clique em{" "}
+                        com o dia e horário desejados e clique em
                         <kbd className='kbd kbd-primary'>Agendar Consulta</kbd>;
                       </p>
                     </li>
@@ -198,10 +198,10 @@ export default function PanelTips({ state, dispatch }: DlgProps): JSX.Element {
                 <li>
                   <p>
                     A <strong className='noInvert'>Confirmação</strong> de consultas na agenda só pode ser feita por
-                    Coordenadores e Supervisores do projeto, sendo feita pelo clique na checkbox{" "}
+                    Coordenadores e Supervisores do projeto, sendo feita pelo clique na checkbox
                     <kbd className='kbd-check-input'>
                       <input className='kbd-check-input-img' id='kbd-check-ex_1' checked disabled />
-                    </kbd>{" "}
+                    </kbd>
                     ao lado de todo espaço para agendamento;
                   </p>
                 </li>
@@ -215,11 +215,11 @@ export default function PanelTips({ state, dispatch }: DlgProps): JSX.Element {
                 <li>
                   <p>
                     A confirmação pode ser feita inicialmente, <em className='noInvert'>antes mesmo do agendamento</em>
-                    através da checkbox{" "}
+                    através da checkbox
                     <kbd className='kbd-check-input'>
                       <input className='kbd-check-input-img' id='kbd-check-ex_2' checked disabled />
-                    </kbd>{" "}
-                    ao lado, rotulada como <strong className='noInvert'>"Consulta Confirmada"</strong>;
+                    </kbd>
+                    ao lado, rotulada como <strong className='noInvert'>&quot;Consulta Confirmada&quot;</strong>;
                   </p>
                 </li>
               </ul>
@@ -232,10 +232,10 @@ export default function PanelTips({ state, dispatch }: DlgProps): JSX.Element {
                 <li>
                   <p>
                     O <strong className='noInvert'>Cancelamento</strong> de consultas na agenda só pode ser feito por
-                    Coordenadores e Supervisores do projeto, sendo feito através do{" "}
+                    Coordenadores e Supervisores do projeto, sendo feito através do
                     <kbd className='kbd-rounded'>
                       <span>×</span>
-                    </kbd>{" "}
+                    </kbd>
                     ao lado de um botão agendado
                   </p>
                 </li>
@@ -266,7 +266,7 @@ export default function PanelTips({ state, dispatch }: DlgProps): JSX.Element {
                 </li>
                 <li>
                   <p>
-                    Os espaços na agenda pode ser preenchida através de{" "}
+                    Os espaços na agenda pode ser preenchida através de
                     <strong className='noInvert'>Preenchimento direto</strong>, porém a consulta só é lida pelo sistema
                     com confirmação e <em className='noInvert'>não retornará ficha</em>;
                   </p>
@@ -292,7 +292,7 @@ export default function PanelTips({ state, dispatch }: DlgProps): JSX.Element {
                 </li>
                 <li>
                   <p>
-                    Formulários podem ser completamente reiniciados através de{" "}
+                    Formulários podem ser completamente reiniciados através de
                     <kbd className='kbd kbd-warning'>Resetar Formulário</kbd>
                   </p>
                 </li>
@@ -315,8 +315,8 @@ export default function PanelTips({ state, dispatch }: DlgProps): JSX.Element {
                 </li>
                 <li>
                   <p>
-                    O <strong className='noInvert'>ícone</strong> da área de trabalho pode ser clicado para exibir um{" "}
-                    <em className='noInvert'>dropdown</em> contendo informações adicionais sobre o usuário, assim como{" "}
+                    O <strong className='noInvert'>ícone</strong> da área de trabalho pode ser clicado para exibir um
+                    <em className='noInvert'>dropdown</em> contendo informações adicionais sobre o usuário, assim como
                     <strong className='noInvert'>acesso a janelas adicionais</strong>
                     representadas através de <em className='noInvert'>ícones</em>;
                   </p>
@@ -345,7 +345,7 @@ export default function PanelTips({ state, dispatch }: DlgProps): JSX.Element {
                     Há icones de acesso para outras janelas, em ordem:
                     <ol className='noInvert'>
                       <li>
-                        <strong className='noInvert'>Alteração</strong>: Solicitação de{" "}
+                        <strong className='noInvert'>Alteração</strong>: Solicitação de
                         <em className='noInvert'>Alteração de Dados do Usuário ativo</em>;
                       </li>
                       <li>
@@ -353,7 +353,7 @@ export default function PanelTips({ state, dispatch }: DlgProps): JSX.Element {
                         retornando à tela de login;
                       </li>
                       <li>
-                        <strong className='noInvert'>Contato</strong>: Solicitação de{" "}
+                        <strong className='noInvert'>Contato</strong>: Solicitação de
                         <em className='noInvert'>contato para reportar problemas</em> no sistema;
                       </li>
                     </ol>
@@ -368,7 +368,7 @@ export default function PanelTips({ state, dispatch }: DlgProps): JSX.Element {
               <ul className='noInvert'>
                 <li>
                   <p>
-                    O <strong className='noInvert'>Modo Noturno</strong> pode ser ativado ou desativado através do{" "}
+                    O <strong className='noInvert'>Modo Noturno</strong> pode ser ativado ou desativado através do
                     <em className='noInvert'>Alternador&nbsp;</em>
                     <input
                       type='checkbox'
@@ -377,7 +377,7 @@ export default function PanelTips({ state, dispatch }: DlgProps): JSX.Element {
                       id='switch_ex_1'
                       checked
                       disabled
-                    />{" "}
+                    />
                     ao lado do <strong className='noInvert'>ícone de lua</strong>;
                   </p>
                 </li>
@@ -396,7 +396,7 @@ export default function PanelTips({ state, dispatch }: DlgProps): JSX.Element {
                   <p>
                     <dfn className='noInvert'>
                       Janelas <strong className='noInvert'>Modais</strong>
-                    </dfn>{" "}
+                    </dfn>
                     são as que
                     <em className='noInvert'>cobrem parcialmente</em> uma tela principal, colocando-a em segundo plano.
                   </p>
@@ -414,10 +414,10 @@ export default function PanelTips({ state, dispatch }: DlgProps): JSX.Element {
                     <ol>
                       <li>
                         <p>
-                          Clicar no{" "}
+                          Clicar no
                           <kbd className='kbd-rounded'>
                             <span>×</span>
-                          </kbd>{" "}
+                          </kbd>
                           no cabeçalho da janela;
                         </p>
                       </li>
@@ -433,7 +433,7 @@ export default function PanelTips({ state, dispatch }: DlgProps): JSX.Element {
                       </li>
                       <li>
                         <p>
-                          Clicar em{" "}
+                          Clicar em
                           <strong className='noInvert'>
                             algum <kbd className='kbd noInvert'>Botão</kbd>
                             &nbsp;de submissão
@@ -489,8 +489,8 @@ export default function PanelTips({ state, dispatch }: DlgProps): JSX.Element {
               <ul>
                 <li>
                   <p>
-                    Em casos de cores com <strong className='noInvert'>visualização prejudicada</strong> ou{" "}
-                    <strong className='noInvert'>contraste excessivo</strong>, considere{" "}
+                    Em casos de cores com <strong className='noInvert'>visualização prejudicada</strong> ou
+                    <strong className='noInvert'>contraste excessivo</strong>, considere
                     <em className='noInvert'>trocar o painel de trabalho e/ou reiniciar o Modo Noturno</em> através do
                     Alternador&nbsp;
                     <input
@@ -522,8 +522,8 @@ export default function PanelTips({ state, dispatch }: DlgProps): JSX.Element {
               <ul>
                 <li>
                   <p>
-                    No caso de <strong className='noInvert'>erros de carregamento</strong>, clique em{" "}
-                    <kbd className='kbd kbd-primary'>Tentar novamente</kbd> para forçar nova tentativa e/ou{" "}
+                    No caso de <strong className='noInvert'>erros de carregamento</strong>, clique em
+                    <kbd className='kbd kbd-primary'>Tentar novamente</kbd> para forçar nova tentativa e/ou
                     <em className='noInvert'>permitir escape para outras telas</em>, ou clique insistentemente pelo
                     menos 3 vezes para <em className='noInvert'>recarregar a tela</em>;
                   </p>

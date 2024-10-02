@@ -16,7 +16,7 @@ export default function BtnAddPac(): JSX.Element {
           const aptBtn = document.getElementById("addAppointBtn");
           aptBtn instanceof HTMLElement && syncAriaStates([aptBtn]);
         }, 2000);
-  }, [pressState, toggleForm]);
+  }, [pressState]);
   return (
     <>
       <button

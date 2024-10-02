@@ -1,5 +1,5 @@
 "use client";
-import { basePath } from "../../../src/pages";
+import { basePath } from "@/vars";
 import { clearDefInvalidMsg, resetPhs } from "@/lib/global/gStyleScript";
 import { handleLogin } from "@/lib/locals/panelPage/handlers/handlers";
 import { nullishAnchor, nullishForm, nullishHtEl, nullishSpan } from "@/lib/global/declarations/types";

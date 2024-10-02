@@ -11,8 +11,8 @@ import {
   stringError,
 } from "../../global/handlers/errorHandler";
 export function checkInnerColGroups(parentEl: targEl, areAllColGroupsSimilar: boolean = false): [number, boolean] {
-  const validColGroupsChildCount = [];
-  const colGroups = Array.from(parentEl?.querySelectorAll("colgroup") ?? []);
+  const validColGroupsChildCount: number[] = [],
+    colGroups = Array.from(parentEl?.querySelectorAll("colgroup") ?? []);
 
   if (parentEl instanceof HTMLElement && colGroups?.flat(1)?.length > 0) {
     //popula arrays de colgroups com base em filtragem de instância
@@ -28,7 +28,7 @@ export function checkInnerColGroups(parentEl: targEl, areAllColGroupsSimilar: bo
         Total of children: ${arrColGrpChilds?.length}`);
 
         //descreve as instâncias achadas, para detalhar quais elementos não foram validados como colunas
-        const colsInstances = [];
+        const colsInstances: string[] = [];
         arrColGrpChilds.forEach(arrColGrpChild => {
           const childInstance = `${Object.prototype.toString.call(arrColGrpChild).slice(8, -1) ?? "null"}`;
           colsInstances.push(childInstance);
@@ -37,9 +37,8 @@ export function checkInnerColGroups(parentEl: targEl, areAllColGroupsSimilar: bo
         });
       }
     }
-
     //filtra array de colgroups válida com base em colunas de tamanho similar
-    const pairedColGroupsValid = [];
+    const pairedColGroupsValid: boolean[] = [];
     for (let m = 0; m < validColGroupsChildCount.length; m++) {
       if (m === 0) continue;
       else {
@@ -51,7 +50,6 @@ export function checkInnerColGroups(parentEl: targEl, areAllColGroupsSimilar: bo
         }
       }
     }
-
     //verifica se todos os pares são válidos para, em caso negativo, fornecer warn
     if (pairedColGroupsValid.every(pairedColGroup => pairedColGroup === true)) areAllColGroupsSimilar = true;
     else console.warn(`Grupos de Colunas não são similares no número de children`);
@@ -63,12 +61,10 @@ export function checkInnerColGroups(parentEl: targEl, areAllColGroupsSimilar: bo
       parentEl,
       `${JSON.stringify(colGroups) || null}`,
     );
-
   return [validColGroupsChildCount?.length ?? 0, areAllColGroupsSimilar];
 }
 export function checkTabRowsIds(tab: targEl): string[] {
   const arrTabRowsIds: string[] = [];
-
   tab instanceof HTMLTableElement && tab.id === "tabDCut"
     ? Array.from(tab.querySelectorAll("tr.tabRowDCutMed")).forEach(tabRow => {
         const rowId = tabRow?.id;
@@ -95,9 +91,11 @@ export function changeTabDCutLayout(protocolo: targEl, tabDC: targEl, bodyType: 
       for (let iOp = 0; iOp < filteredOpsProtocolo.length - 1; iOp++) {
         const arrayTabIds = checkTabRowsIds(tabDC);
         const genderedIds = filterIdsByGender(arrayTabIds, bodyType.value);
+        /* eslint-disable */
         /*após checagem de ids e filtragem por gênero da pessoa 
         valida se de fato as rows sem informação (visuais) não estão sendo capturadas
         e se a filtragem por gênero ocorreu corretamente*/
+        /* eslint-enable */
         if (
           arrayTabIds?.length ===
             Array.from(tabDC.rows).filter(row => row.classList.contains("tabRowDCutMed"))?.length &&
@@ -158,7 +156,7 @@ export function defineHiddenRows(
     genderedIds.every(genId => typeof genId === "string") &&
     (context === "bin" || context === "nb")
   ) {
-    const matchedIds = [];
+    const matchedIds: string[] = [];
     /*percorrimento de matriz da tabela para capitalizar primeiro dígito
     e definir matchedIds*/
     for (const genId of genderedIds) {
@@ -221,15 +219,8 @@ export function evaluatePGCDecay(person: Person, targInpPGC: targEl, PGC: number
       targInpPGC instanceof HTMLTextAreaElement) &&
     typeof PGC === "number"
   ) {
-    const initSumDCut = person.sumDCut;
-    const decreasedPerson = new Person(
-      person.gen,
-      person.age,
-      person.weight,
-      person.height,
-      person.sumDCut,
-      person.atvLvl,
-    );
+    const initSumDCut = person.sumDCut,
+      decreasedPerson = new Person(person.gen, person.age, person.weight, person.height, person.sumDCut, person.atvLvl);
     decreasedPerson.sumDCut = decreasedPerson.sumDCut - 1;
     let decreasedPGC = decreasedPerson.calcPGC(decreasedPerson)[0],
       sumAcc = 1;
@@ -237,7 +228,7 @@ export function evaluatePGCDecay(person: Person, targInpPGC: targEl, PGC: number
     if (decreasedPGC > PGC) {
       foundDecayPoint = true;
       alertPGCRounding(targInpPGC);
-      const arrDecreasedPGC = [];
+      const arrDecreasedPGC: number[] = [];
       //busca pontos de decay anteriores
       while (decreasedPerson?.sumDCut > 0) {
         sumAcc++;
@@ -254,8 +245,10 @@ export function evaluatePGCDecay(person: Person, targInpPGC: targEl, PGC: number
           : (PGC = Math.ceil((Math.max(...arrDecreasedPGC) + 0.05) * 10) / 10 + ((initSumDCut - 260) / 100) * 5);
       } else PGC = decreasedPGC;
     }
+    /* eslint-disable */
     /*casos específicos para handling de input anômalo (além do possível para um ser humano) 
       evitando bugs nos listeners devido a NaN e loops de normalização */
+    /* eslint-enable */
     if (decreasedPGC <= PGC && (PGC > 100 || decreasedPerson?.sumDCut > 514)) {
       console.warn(`Valor anômalo de entrada para sumDCut e/ou PGC. Valor aproximado fornecido`);
       foundDecayPoint = true;

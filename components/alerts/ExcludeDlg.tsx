@@ -12,13 +12,17 @@ export default function ExcludeDlg({
   setDisplayExcludeDlg,
   shouldDisplayExcludeDlg = true,
 }: ExcludeDlgProps): JSX.Element {
-  const excludeDlgRef = useRef<nullishDlg>(null);
-  const formRef = useRef<nullishForm>(null);
-  const toggleClose = (): void => {
-    setDisplayExcludeDlg(!shouldDisplayExcludeDlg);
-    if (!shouldDisplayExcludeDlg && excludeDlgRef.current instanceof HTMLDialogElement) excludeDlgRef.current.close();
-  };
+  const excludeDlgRef = useRef<nullishDlg>(null),
+    formRef = useRef<nullishForm>(null),
+    handleClick = (): void => {
+      setDisplayExcludeDlg(!shouldDisplayExcludeDlg);
+      if (!shouldDisplayExcludeDlg && excludeDlgRef.current instanceof HTMLDialogElement) excludeDlgRef.current.close();
+    };
   useEffect(() => {
+    const toggleClose = (): void => {
+      setDisplayExcludeDlg(!shouldDisplayExcludeDlg);
+      if (!shouldDisplayExcludeDlg && excludeDlgRef.current instanceof HTMLDialogElement) excludeDlgRef.current.close();
+    };
     if (shouldDisplayExcludeDlg && excludeDlgRef.current instanceof HTMLDialogElement)
       excludeDlgRef.current.showModal();
     syncAriaStates([...excludeDlgRef.current!.querySelectorAll("*"), excludeDlgRef.current!]);
@@ -40,12 +44,12 @@ export default function ExcludeDlg({
           onClick={click => {
             if (isClickOutside(click, excludeDlgRef.current!).some(point => point === true)) {
               excludeDlgRef.current!.close();
-              toggleClose();
+              handleClick();
             }
           }}>
           <ErrorBoundary
             FallbackComponent={() => (
-              <ErrorFallbackDlg renderError={new Error(`Erro carregando a janela modal!`)} onClick={toggleClose} />
+              <ErrorFallbackDlg renderError={new Error(`Erro carregando a janela modal!`)} onClick={handleClick} />
             )}>
             <form
               role='alert'
@@ -56,7 +60,7 @@ export default function ExcludeDlg({
                 <h3>Confirmar remoção?</h3>
                 <small role='textbox'>Esse processo é parcialmente ou totalmente irreversível!</small>
               </div>
-              <button type='submit' className='btn btn-warning bolded' onClick={toggleClose}>
+              <button type='submit' className='btn btn-warning bolded' onClick={handleClick}>
                 Confirmar
               </button>
             </form>

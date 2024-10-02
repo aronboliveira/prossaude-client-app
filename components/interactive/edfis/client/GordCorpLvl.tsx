@@ -1,12 +1,13 @@
 "use client";
-import { callbackAtvLvlElementNaf, person, tabProps } from "@/pages/edfis";
+import { callbackAtvLvlElementNaf } from "@/pages/edfis";
+import { person, tabProps } from "@/vars";
 export default function GordCorpLvl(): JSX.Element {
   return (
     <select
-      id="gordCorpLvl"
-      name="gord_corp_lvl"
-      className="form-select noInvert lockSelect"
-      data-title="Nível de Gordura Corporal"
+      id='gordCorpLvl'
+      name='gord_corp_lvl'
+      className='form-select noInvert lockSelect'
+      data-title='Nível de Gordura Corporal'
       onChange={ev => {
         [person.atvLvl, tabProps.factorAtvLvl] = callbackAtvLvlElementNaf(
           [
@@ -18,16 +19,15 @@ export default function GordCorpLvl(): JSX.Element {
               document.getElementById("nafType"),
             ],
           ],
-          ev.currentTarget.id
+          ev.currentTarget.id,
         );
-      }}
-    >
-      <option value="abaixo">Com Baixo Peso</option>
-      <option value="eutrofico">Eutrófico</option>
-      <option value="sobrepeso">Com Sobrepeso (não Obeso)</option>
-      <option value="obeso1">Obeso Grau 1</option>
-      <option value="obeso2">Obeso Grau 2</option>
-      <option value="obeso3">Obeso Grau 3</option>
+      }}>
+      <option value='abaixo'>Com Baixo Peso</option>
+      <option value='eutrofico'>Eutrófico</option>
+      <option value='sobrepeso'>Com Sobrepeso (não Obeso)</option>
+      <option value='obeso1'>Obeso Grau 1</option>
+      <option value='obeso2'>Obeso Grau 2</option>
+      <option value='obeso3'>Obeso Grau 3</option>
     </select>
   );
 }

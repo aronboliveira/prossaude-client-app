@@ -14,7 +14,6 @@ export function decodeToken(
   try {
     if (!UNDER_TEST) {
       const decoded = jwtDecode<StudentTokenPayload | ProfessionalTokenPayload>(token);
-      //TODO DEFINIR AQUI LÓGICA DE VALIDAÇÃO DO TOKEN DECODIFICADO
       return {
         ok: true,
         res: decoded,
@@ -84,8 +83,6 @@ export async function handleLogin(
           message: `Failed to validate login: Error code ${res.status}`,
         };
       }
-      console.log(`Fetch was sucessfull: ${res.status}\nJSON Data:`);
-      console.log(data);
       if (!("access" in data)) {
         console.warn(`Error on processing JSONified HTTP Response:\n`);
         console.warn(data);
@@ -178,10 +175,7 @@ export async function handleSubmit(
         body,
       });
       if (!res.ok) throw new Error(`Error posting Table to API`);
-      const data = await res.json();
-      console.log(`Data fetched:\n${data}`);
-      console.log(`Submit handled:\n${body}`);
-    } else console.log(`Submit handled:\n${body}`);
+    }
   } catch (e) {
     console.error(`Error executing handleSubmit:\n${(e as Error).message}`);
   }
@@ -459,7 +453,6 @@ export async function handleFetch(
       });
       if (!res.ok) throw new Error(`Error fetching Students Table from API`);
       const data = await res.json();
-      console.log(`Data fetched:\n${data}`);
       return JSON.parse(data);
     } else return arrJSONResTest;
   } catch (e) {
@@ -487,15 +480,12 @@ export async function handleDelete(apiRoute: formCases, UNDER_TEST: boolean = tr
       throw new Error(`Invalidating route for API argumented to handler`);
     if (typeof UNDER_TEST !== "boolean") throw new Error(`Error validating typeof UNDER_TEST`);
     if (!UNDER_TEST) {
-      //TODO DEFINIR LÓGICA PARA ELIMINAR ROW AO INVÉS DA TABLE
       const res = await fetch(`../api/django/${apiRoute}_table`, {
         method: "DELETE",
         headers: { "Content-type": "application/json" },
       });
       if (!res.ok) throw new Error(`Error deleting Students Table from API`);
-      const data = await res.json();
-      console.log(`Data fetched:\n${data}`);
-    } else console.log("Handled delete test");
+    }
   } catch (e) {
     console.error(`Error executing handleDelete:\n${(e as Error).message}`);
   }

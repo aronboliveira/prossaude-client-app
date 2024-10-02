@@ -1,8 +1,9 @@
+import React from "react";
 import { render, screen, fireEvent, RenderResult } from "@testing-library/react";
 import DREFiller from "../../../../../components/consRegst/DREFiller";
 import { FillerProps } from "../../../../lib/locals/panelPage/declarations/interfacesCons";
 import { addListenerAvMembers } from "../../../../lib/locals/panelPage/handlers/consHandlerList";
-import { globalDataProvider } from "../../../../../components/panelForms/defs/client/SelectPanel";
+import { providers } from "../../../../vars";
 import { syncAriaStates } from "../../../../lib/global/handlers/gHandlers";
 import "@testing-library/jest-dom/extend-expect";
 import { MutableRefObject, useRef } from "react";
@@ -13,7 +14,7 @@ jest.mock(
     addListenerAvMembers: jest.Mock<any, any, any>;
   } => ({
     addListenerAvMembers: jest.fn() as jest.Mock,
-  })
+  }),
 ) as typeof jest;
 jest.mock(
   "../../../../lib/global/handlers/gHandlers",
@@ -23,20 +24,15 @@ jest.mock(
   } => ({
     handleCondtReq: jest.fn() as jest.Mock,
     syncAriaStates: jest.fn() as jest.Mock,
-  })
+  }),
 ) as typeof jest;
-jest.mock(
-  "../../../../../components/panelForms/defs/client/SelectPanel",
-  (): {
+jest.mock("../../../../vars", () => ({
+  providers: {
     globalDataProvider: {
-      initPersist: jest.Mock<any, any, any>;
-    };
-  } => ({
-    globalDataProvider: {
-      initPersist: jest.fn() as jest.Mock,
+      initPersist: jest.fn(),
     },
-  })
-) as typeof jest;
+  },
+})) as typeof jest;
 describe("DREFiller Component", (): void => {
   const forwardedRef: MutableRefObject<nullishHtEl> = useRef<nullishHtEl>(null);
   const defaultProps: FillerProps = {
@@ -44,7 +40,7 @@ describe("DREFiller Component", (): void => {
     userClass: "estudante",
   };
   const renderComponent = (
-    props = {}
+    props = {},
   ): RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement> =>
     render(<DREFiller {...defaultProps} {...props} />);
   test("renders CPF input correctly", (): void =>
@@ -54,7 +50,7 @@ describe("DREFiller Component", (): void => {
       HTMLElement
     >) &&
     (expect(
-      screen.getByPlaceholderText<HTMLElement>("Preencha com o CPF do Estudante Alocado")
+      screen.getByPlaceholderText<HTMLElement>("Preencha com o CPF do Estudante Alocado"),
     ).toBeInTheDocument() as void));
   test("renders DRE input correctly", (): void =>
     (renderComponent() as RenderResult<
@@ -63,7 +59,7 @@ describe("DREFiller Component", (): void => {
       HTMLElement
     >) &&
     (expect(
-      screen.getByPlaceholderText<HTMLElement>("Preencha com o DRE do Estudante Alocado")
+      screen.getByPlaceholderText<HTMLElement>("Preencha com o DRE do Estudante Alocado"),
     ).toBeInTheDocument() as void));
 
   test("toggles student list display on button click", (): void => {
@@ -101,8 +97,10 @@ describe("DREFiller Component", (): void => {
     ).toBeInTheDocument() as void;
     window.location = original;
   }) as void;
-  test("calls initPersist from globalDataProvider on mount", (): void => {
+  test("calls initPersist from providers.globalDataProvider on mount", (): void => {
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
-    (expect(globalDataProvider?.initPersist) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalled() as void;
+    (
+      expect(providers.globalDataProvider?.initPersist) as jest.JestMatchers<jest.SpyInstance>
+    ).toHaveBeenCalled() as void;
   }) as void;
 }) as void;

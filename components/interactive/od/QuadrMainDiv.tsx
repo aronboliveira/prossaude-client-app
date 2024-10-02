@@ -30,7 +30,7 @@ export default function QuadrMainDiv({ qr }: qrProps): JSX.Element {
     } catch (e) {
       console.error(`Error executing useEffect for QuadrMainDiv ${qr}:\n${(e as Error).message}`);
     }
-  }, []);
+  }, [qr]);
   return (
     <div
       role='group'

@@ -19,7 +19,7 @@ export default function RadioPair({
       for (const radio of mainRef.current.querySelectorAll('input[type="radio"]'))
         if (radio instanceof HTMLInputElement) radio.dataset.required = "true";
     }
-  }, []);
+  }, [required]);
   let camelName = /_/g.test(name)
     ? name
         .split("_")
