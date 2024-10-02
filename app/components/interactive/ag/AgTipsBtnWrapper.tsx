@@ -1,4 +1,4 @@
-("use client");
+"use client";
 import { ErrorBoundary } from "react-error-boundary";
 import { useState, useEffect } from "react";
 import AGTips from "./AGTips";
@@ -10,11 +10,7 @@ export default function AgTipsBtnWrapper(): JSX.Element {
     /tips=open/gi.test(location.search) && setTips(true);
   }, []);
   return (
-    <ErrorBoundary
-      FallbackComponent={() => (
-        <GenericErrorComponent message="Failed to render Tips Btn" />
-      )}
-    >
+    <ErrorBoundary FallbackComponent={() => <GenericErrorComponent message='Failed to render Tips Btn' />}>
       <TipsBtn dispatch={setTips} state={shouldShowTips} />
       {shouldShowTips && <AGTips dispatch={setTips} state={shouldShowTips} />}
     </ErrorBoundary>
