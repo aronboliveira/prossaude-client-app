@@ -55,7 +55,7 @@ export default function Watcher({ routeCase }: { routeCase?: pageCases }): JSX.E
     return (): void => {
       if (routeCase === "ag") removeEventListener("resize", handleResize);
     };
-  }, [routeCase, isExportListening]);
+  }, []);
   useEffect(() => {
     for (const f of document.querySelectorAll("form")) assignFormAttrs(f);
   });
