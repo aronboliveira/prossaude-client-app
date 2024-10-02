@@ -42,7 +42,7 @@ export default function WatcherEN(): JSX.Element {
       clearInterval(mountInterval);
       !document.getElementById("tabIndPerc") && console.warn(`Could not find tabIndPerc`);
     }, 10000);
-  }, [isExportListening]);
+  }, []);
   useEffect(() => {
     if (mounted && document.getElementsByTagName("table").length > 3) {
       const selectNumCons = document.getElementById("selectNumCons");
