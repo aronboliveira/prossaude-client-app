@@ -190,7 +190,7 @@ export default function LoginInputs(): JSX.Element {
             </div>
           </div>
           <small className='customValidityWarn' id='pwWarn' role='textbox' ref={spanRef}>
-            {msg}
+            <Spinner fs={true} />
           </small>
           <nav id='loginBtnCont'>
             <Link

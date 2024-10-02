@@ -1,31 +1,51 @@
+"use client";
 import { ErrorBoundary } from "react-error-boundary";
 import { SpinnerComponentProps } from "@/lib/global/declarations/interfaces";
 import GenericErrorComponent from "../error/GenericErrorComponent";
+import { useRef, useEffect } from "react";
+import { nullishDiv } from "@/lib/global/declarations/types";
 export default function Spinner({
   spinnerClass = "spinner-border",
   spinnerColor = "text-info",
   message = "Loading...",
   fs = false,
 }: SpinnerComponentProps): JSX.Element {
+  const spinner = useRef<nullishDiv>(null);
+  useEffect(() => {
+    try {
+      const handleResize = (): void => {
+        if (!spinner.current) return;
+        if (innerWidth > 1100) spinner.current.style.left = "37.5%";
+        else if (innerWidth > 530) spinner.current.style.left = "33%";
+        else spinner.current.style.left = "17.5%";
+      };
+      handleResize();
+      addEventListener("resize", handleResize);
+      (): void => removeEventListener("resize", handleResize);
+    } catch (e) {
+      console.error(`Error executing useEffect for spinner:\n${(e as Error).message}`);
+    }
+  }, []);
   return (
     <ErrorBoundary FallbackComponent={() => <GenericErrorComponent message='Error loading Spinner' />}>
       <div
+        ref={spinner}
         className={`${spinnerClass} ${spinnerColor} spinner`}
         role='status'
         style={
           fs
             ? {
-                width: "50vw",
-                height: "50vw",
-                maxWidth: "40rem",
-                maxHeight: "40rem",
-                marginInline: "auto",
-                marginTop: "0",
-                marginBottom: "15vh",
+                bottom: "30%",
+                left: "17.5%",
+                right: "10%",
+                minHeight: "15rem",
+                minWidth: "15rem",
+                maxHeight: "20rem",
+                maxWidth: "20rem",
+                width: "35vw",
+                height: "35vw",
                 background: "transparent",
                 position: "fixed",
-                top: "10vh",
-                left: "30%",
                 borderWidth: "0.5vw 1vw 1vw 1vw",
                 borderRight: "0.8vw",
                 borderRightStyle: "solid",
