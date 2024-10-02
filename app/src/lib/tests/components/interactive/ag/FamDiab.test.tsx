@@ -1,20 +1,21 @@
+import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import FamDiab from "../../../../../../components/interactive/ag/FamDiab";
-import { handleDivAddShow } from "../../../../../pages/ag";
+import { handleDivAddShow } from "../../../../../lib/locals/aGPage/aGHandlers";
 jest.mock(
   "../../../../../pages/ag",
   (): {
     handleDivAddShow: jest.Mock<any, any, any>;
   } => ({
     handleDivAddShow: jest.fn() as jest.Mock,
-  })
+  }),
 ) as typeof jest;
 describe("FamDiab Component", (): void => {
   it("renders the checkbox for family diabetes history", (): void => {
     render(<FamDiab />);
     (
       expect(
-        screen.getByLabelText<HTMLInputElement>("Antecedentes Familiares — Diabetes")
+        screen.getByLabelText<HTMLInputElement>("Antecedentes Familiares — Diabetes"),
       ) as jest.JestMatchers<jest.SpyInstance>
     ).toBeInTheDocument() as void;
   }) as void;

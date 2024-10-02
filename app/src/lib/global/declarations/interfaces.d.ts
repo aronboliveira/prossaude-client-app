@@ -119,7 +119,9 @@ export interface ThProps extends TabCelProps {
 export interface TdProps extends TabCelProps {
   lab: validTabLabs;
 }
+/* eslint-disable */
 export interface ColProps extends Omit<ThProps, "nRow"> {}
+/* eslint-enable */
 export interface SpinnerComponentProps {
   spinnerClass?: "spinner-border" | "spinner-grow";
   spinnerColor?:

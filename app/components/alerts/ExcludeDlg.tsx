@@ -29,10 +29,12 @@ export default function ExcludeDlg({
     const handleKeyDown = (press: KeyboardEvent): void => {
       press.key === "Escape" && toggleClose();
     };
-    assignFormAttrs(formRef.current);
     addEventListener("keydown", handleKeyDown);
     return (): void => removeEventListener("keydown", handleKeyDown);
-  }, [excludeDlgRef]);
+  }, [excludeDlgRef, setDisplayExcludeDlg]);
+  useEffect(() => {
+    assignFormAttrs(formRef.current);
+  });
   return (
     <>
       {shouldDisplayExcludeDlg && (

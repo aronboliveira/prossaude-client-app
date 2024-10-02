@@ -74,7 +74,6 @@ export default function AlterFieldList({
     setTimeout(() => {
       history.pushState({}, "", `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#"));
     }, 300);
-    assignFormAttrs(formRef.current);
     return (): void => {
       optsRef.current instanceof HTMLSelectElement
         ? history.pushState(
@@ -151,6 +150,9 @@ export default function AlterFieldList({
     } else
       inputNotFound(optsRef?.current, "Reference for Field options in AlterFieldList component", extLine(new Error()));
   }, [optsRef, tabRef]);
+  useEffect(() => {
+    assignFormAttrs(formRef.current);
+  });
   return (
     <ErrorBoundary FallbackComponent={() => <GenericErrorComponent message='Erro carregando modal de alteração' />}>
       <dialog

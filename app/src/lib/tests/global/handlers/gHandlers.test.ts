@@ -28,8 +28,8 @@ import {
   elementNotFound,
   elementNotPopulated,
 } from "../../../global/handlers/errorHandler";
-import { handleSubmit } from "../../../../pages/api/ts/handlers";
-import { formCases } from "../../../../lib/global/declarations/types";
+import { handleSubmit } from "../../../../../../../pro-saude-app-vite/app/src/lib/locals/panelPage/handlers/handlers";
+import { formCases, nullishHtEl } from "../../../../lib/global/declarations/types";
 import {
   BirthRelation,
   CSSColor,
@@ -54,7 +54,7 @@ jest.mock(
     extLine: (jest.fn() as jest.Mock).mockReturnValue("test-line"),
     inputNotFound: jest.fn() as jest.Mock,
     multipleElementsNotFound: jest.fn() as jest.Mock,
-  })
+  }),
 ) as typeof jest;
 describe("gHandlers Tests", (): void => {
   describe("updateSimpleProperty", (): void => {
@@ -82,7 +82,7 @@ describe("gHandlers Tests", (): void => {
       expect(inputNotFound).toHaveBeenCalledWith<Parameters<typeof inputNotFound>>(
         element,
         "el in updateSimpleProperty",
-        "test-line"
+        "test-line",
       );
     }) as void;
   }) as void;
@@ -127,7 +127,7 @@ describe("gHandlers Tests", (): void => {
         "test-line",
         "validando radioYes id UNDEFINED ID or radiosNo id UNDEFINED ID",
         invalidRadio,
-        radioNo
+        radioNo,
       );
     }) as void;
   }) as void;
@@ -199,7 +199,7 @@ describe("gHandlers Tests", (): void => {
     it("should call multipleElementsNotFound if the element structure is invalid", () => {
       const multipleElementsNotFoundSpy = jest.spyOn<any, ErrorHandler>(
         require("../../../global/handlers/errorHandler"),
-        "multipleElementsNotFound"
+        "multipleElementsNotFound",
       );
       cpbInpHandler(event, radio);
       expect(multipleElementsNotFoundSpy).toHaveBeenCalled() as void;
@@ -255,7 +255,7 @@ describe("gHandlers Tests", (): void => {
     it("should toggle the radio's checked property and call cpbInpHandler", () => {
       const cpbInpHandlerSpy = jest.spyOn<any, "cpbInpHandler">(
         require("../../../global/handlers/gHandlers"),
-        "cpbInpHandler"
+        "cpbInpHandler",
       );
       radio.checked = false;
       doubleClickHandler(radio);
@@ -268,7 +268,7 @@ describe("gHandlers Tests", (): void => {
     it("should call inputNotFound if the element is not a checkbox or radio input", () => {
       const inputNotFoundSpy = jest.spyOn<any, ErrorHandler>(
         require("../../../global/handlers/errorHandler"),
-        "inputNotFound"
+        "inputNotFound",
       );
       doubleClickHandler(document.createElement("div") as HTMLDivElement);
       expect(inputNotFoundSpy).toHaveBeenCalled() as void;
@@ -298,7 +298,7 @@ describe("gHandlers Tests", (): void => {
     it("should call inputNotFound if the target input is not found", () => {
       const inputNotFoundSpy = jest.spyOn<any, ErrorHandler>(
         require("../../../global/handlers/errorHandler"),
-        "inputNotFound"
+        "inputNotFound",
       );
       jest
         .spyOn<any, SearchFunction>(require("../../../global/handlers/gHandlers"), "searchPreviousSiblings")
@@ -310,7 +310,7 @@ describe("gHandlers Tests", (): void => {
     it("should call elementNotFound if activation target does not match the button", () => {
       const elementNotFoundSpy = jest.spyOn<any, ErrorHandler>(
         require("../../../global/handlers/errorHandler"),
-        "elementNotFound"
+        "elementNotFound",
       );
       dateBtn.dispatchEvent(new Event("click")) as boolean;
       useCurrentDate(new Event("click"), dateBtn);
@@ -331,14 +331,14 @@ describe("gHandlers Tests", (): void => {
     }) as void;
     it("should find the next sibling with the specified class", () => {
       expect(searchNextSiblings(currentElement, "searchedClass").classList.contains("searchedClass")).toBe<boolean>(
-        true
+        true,
       );
     }) as void;
     it("should find the previous sibling with the specified class", () => {
       expect(
         searchPreviousSiblings(parentElement.lastElementChild as any, "searchedClass").classList.contains(
-          "searchedClass"
-        )
+          "searchedClass",
+        ),
       ).toBe<boolean>(true);
     }) as void;
   }) as void;
@@ -433,26 +433,26 @@ describe("gHandlers Tests", (): void => {
       jest.clearAllMocks() as typeof jest;
     }) as void;
     it("should reset the form and set default values for editable elements", (): void => {
-      resetarFormulario(clickEvent, fileBtns);
+      resetarFormulario(clickEvent.currentTarget as nullishHtEl);
       expect(document.getElementById("formAnamGId") as HTMLFormElement).toBeTruthy() as void;
       expect(
-        (document.querySelector<HTMLElement>('cite[contenteditable="true"]') as HTMLElement).textContent
+        (document.querySelector<HTMLElement>('cite[contenteditable="true"]') as HTMLElement).textContent,
       ).toBe<string>("--Nome");
       expect((document.getElementById("genBirthRelId") as HTMLInputElement).value).toBe<BirthRelation>("cis");
       expect((document.getElementById("genTransId") as HTMLInputElement).value).toBe<TransitionLevel>("avancado");
     }) as void;
     it('should call changeToAstDigit for buttons with "Retornar" in textContent', (): void => {
       fileBtns[0].textContent = "Retornar à Assinatura Escrita";
-      resetarFormulario(clickEvent, fileBtns);
+      resetarFormulario(clickEvent.currentTarget as nullishHtEl);
       expect(changeToAstDigit).toHaveBeenCalledWith<Parameters<typeof changeToAstDigit>>(fileBtns[0]) as void;
     }) as void;
     it("should call elementNotFound when form is not found", () => {
       document.getElementById("formAnamGId")?.remove() as void;
-      resetarFormulario(clickEvent, fileBtns);
+      resetarFormulario(clickEvent.currentTarget as nullishHtEl);
       expect(elementNotFound).toHaveBeenCalled() as void;
     }) as void;
     it("should call multipleElementsNotFound when button elements are invalid", (): void => {
-      resetarFormulario(clickEvent, []);
+      resetarFormulario(clickEvent.currentTarget as nullishHtEl);
       expect(multipleElementsNotFound).toHaveBeenCalled() as void;
     }) as void;
   }) as void;
@@ -752,7 +752,7 @@ describe("gHandlers Tests", (): void => {
       expect(handleSubmit).toHaveBeenCalledWith<Parameters<typeof handleSubmit>>(
         ep as formCases,
         expect.any(FormData) as any,
-        true
+        true,
       );
     }) as void;
     it("should throw an error if form is not an HTMLFormElement", async (): Promise<void> => {

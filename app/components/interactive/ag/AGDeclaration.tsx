@@ -11,7 +11,7 @@ export default function AGDeclaration({ state, dispatch }: DlgProps): JSX.Elemen
   const mainRef = useRef<nullishDlg>(null);
   //push em history
   useEffect(() => {
-    history.pushState({}, "", `${location.origin}${location.pathname}${location.search}&conform=open`);
+    history.pushState({}, "", `${location.origin}${location.pathname}${location.search}conform=open`);
     setTimeout(() => {
       history.pushState({}, "", `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#"));
     }, 300);
@@ -19,7 +19,7 @@ export default function AGDeclaration({ state, dispatch }: DlgProps): JSX.Elemen
       history.pushState(
         {},
         "",
-        `${location.origin}${location.pathname}${location.search}`.replaceAll("&conform=open", ""),
+        `${location.origin}${location.pathname}${location.search}`.replace(/[\?\&]conform=open/g, ""),
       );
       setTimeout(() => {
         history.pushState({}, "", `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#"));

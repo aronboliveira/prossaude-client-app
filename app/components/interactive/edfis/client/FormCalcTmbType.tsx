@@ -1,5 +1,5 @@
 "use client";
-import { callbackAtvLvlElementNaf } from "@/pages/edfis";
+import { callbackAtvLvlElementNaf } from "@/lib/locals/edFisNutPage/edFisNutHandler";
 import { person, tabProps } from "@/vars";
 export default function FormCalcTmbType(): JSX.Element {
   return (

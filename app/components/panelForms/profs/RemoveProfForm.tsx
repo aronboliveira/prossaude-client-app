@@ -253,7 +253,6 @@ export default function RemoveProfForm(): JSX.Element {
           );
       callbackNormalizeSizesSb();
       syncAriaStates([...formRef.current!.querySelectorAll("*"), formRef.current]);
-      assignFormAttrs(formRef.current);
     } else elementNotFound(formRef?.current, "formRef.current in useEffect() for RemoveProfForm", extLine(new Error()));
   }, [formRef, callbackNormalizeSizesSb]);
   useEffect(() => {
@@ -266,6 +265,7 @@ export default function RemoveProfForm(): JSX.Element {
       );
     }
   }, [tabRef, userClass]);
+  useEffect(() => assignFormAttrs(formRef.current));
   return (
     <form
       id='formRemoveProf'

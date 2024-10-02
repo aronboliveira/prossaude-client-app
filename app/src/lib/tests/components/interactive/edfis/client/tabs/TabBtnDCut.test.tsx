@@ -1,5 +1,6 @@
+import React from "react";
 import { render, screen, fireEvent, RenderResult } from "@testing-library/react";
-import { handleSumClick } from "../../../../../../../../components/interactive/edfis/TabDCut";
+import { handleSumClick } from "../../../../../../locals/edFisNutPage/edFisNutHandler";
 import TabBtnDCut from "../../../../../../../../components/interactive/edfis/client/tabs/TabBtnDCut";
 jest.mock(
   "../../../../../../../components/interactive/edfis/TabDCut",
@@ -7,7 +8,7 @@ jest.mock(
     handleSumClick: jest.Mock<any, any, any>;
   } => ({
     handleSumClick: jest.fn(),
-  })
+  }),
 ) as typeof jest;
 describe("TabBtnDCut Component", (): void => {
   it("should render the TabBtnDCut button", (): void => {

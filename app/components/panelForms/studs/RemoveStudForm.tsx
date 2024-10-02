@@ -233,7 +233,6 @@ export default function RemoveStudForm(): JSX.Element {
             setTimeout(() => syncAriaStates([...(tabRef.current?.querySelectorAll("*") ?? []), tabRef.current!]), 3000);
           });
       }, 300);
-      assignFormAttrs(formRef.current);
     } catch (e) {
       console.error(`Error executing useEffect for Table Body Reference:\n${(e as Error).message}`);
     }
@@ -266,6 +265,7 @@ export default function RemoveStudForm(): JSX.Element {
       );
     }
   }, [tabRef, userClass]);
+  useEffect(() => assignFormAttrs(formRef.current));
   return (
     <form
       id='formRemoveStud'

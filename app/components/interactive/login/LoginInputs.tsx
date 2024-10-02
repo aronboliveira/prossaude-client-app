@@ -89,7 +89,6 @@ export default function LoginInputs(): JSX.Element {
     }
     const form = formRef.current ?? document.querySelector("form");
     const inps = Array.from(document.querySelectorAll("input"));
-    assignFormAttrs(form);
     form instanceof HTMLFormElement && inps.length > 0
       ? clearDefInvalidMsg(form, inps)
       : multipleElementsNotFound(
@@ -103,6 +102,9 @@ export default function LoginInputs(): JSX.Element {
       pw: "Senha",
     });
   }, []);
+  useEffect(() => {
+    assignFormAttrs(formRef.current ?? document.querySelector("form"));
+  });
   return (
     <form
       ref={formRef}

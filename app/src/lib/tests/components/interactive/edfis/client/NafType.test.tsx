@@ -1,8 +1,10 @@
+import React from "react";
 import { render, screen, fireEvent, RenderResult } from "@testing-library/react";
-import { callbackAtvLvlElementNaf, tabProps } from "../../../../../../pages/edfis";
+import { callbackAtvLvlElementNaf } from "../../../../../locals/edFisNutPage/edFisNutHandler";
+import { tabProps } from "../../../../../../../../../pro-saude-app-vite/app/src/vars";
 import NafType from "../../../../../../../components/interactive/edfis/client/NafType";
 jest.mock(
-  "../../../../../pages/edfis",
+  "../../../../../locals/edFisNutPage/edFisNutHandler",
   (): {
     callbackAtvLvlElementNaf: jest.Mock<any, any, any>;
     person: {
@@ -16,7 +18,7 @@ jest.mock(
     callbackAtvLvlElementNaf: jest.fn(),
     person: { atvLvl: "sedentario" },
     tabProps: { factorAtvLvl: 1.2, IMC: 23 },
-  })
+  }),
 ) as typeof jest;
 describe("NafType component", (): void => {
   beforeEach((): void => {
@@ -44,7 +46,7 @@ describe("NafType component", (): void => {
           select,
         ],
       ],
-      select.id
+      select.id,
     ) as void;
   }) as void;
 }) as void;

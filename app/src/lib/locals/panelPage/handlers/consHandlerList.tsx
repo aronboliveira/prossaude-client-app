@@ -486,12 +486,14 @@ export function fillTabAttr(tab: targEl, context: string = "pac"): void {
             }
             if (/UnfilledText/gi.test(attribute.value)) {
               attribute.value = attribute.value.replaceAll(
+                /* eslint-disable */
                 /UnfilledText/gi,
                 `${tab
                   .querySelector("thead")
                   ?.querySelector("tr")
                   ?.getElementsByTagName("th")
-                  [celCount]?.innerText?.replace(" ", "-")}`
+                  [celCount]?.innerText?.replace(" ", "-")}`,
+                /* eslint-enable */
               );
             }
             if (/tagPh/gi.test(attribute.value)) {

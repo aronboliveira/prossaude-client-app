@@ -10,7 +10,8 @@ export default function ENDeclaration({ state, dispatch }: DlgProps): JSX.Elemen
   const mainRef = useRef<nullishDlg>(null);
   //push em history
   useEffect(() => {
-    history.pushState({}, "", `${location.origin}${location.pathname}${location.search}&conform=open`);
+    if (!/conform=open/gi.test(location.href))
+      history.pushState({}, "", `${location.origin}${location.pathname}${location.search}&conform=open`);
     setTimeout(() => {
       history.pushState({}, "", `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#"));
     }, 300);
@@ -46,7 +47,7 @@ export default function ENDeclaration({ state, dispatch }: DlgProps): JSX.Elemen
     } catch (e) {
       console.error(`Error executing useEffect:\n${(e as Error).message}`);
     }
-  }, [mainRef]);
+  }, [mainRef, dispatch]);
   return !state ? (
     <></>
   ) : (

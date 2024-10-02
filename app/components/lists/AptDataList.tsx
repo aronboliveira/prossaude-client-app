@@ -17,42 +17,72 @@ export default function AptDataList({
   shouldDisplayAptList,
   isDirectRender = false,
 }: AptDataListProps): JSX.Element {
-  const userClass = useContext(PanelCtx).userClass;
-  const transfArea = document.getElementById("transfArea")!;
+  const userClass = useContext(PanelCtx).userClass,
+    transfArea = document.getElementById("transfArea")!;
   if (!transfArea) console.warn(`Transfer area was not found by AptDataList.`);
-  const transferBtn = document.querySelector(`[id*="${btnId}"]`);
-  const aptDlgRef = useRef<nullishDlg>(null);
-  const renderDirectly = (): void => {
-    try {
-      shouldDisplayAptList = !shouldDisplayAptList;
-      if (consVariablesData.rootDlg)
-        !shouldDisplayAptList
-          ? consVariablesData.rootDlg.unmount()
-          : consVariablesData.rootDlg.render(
-              <AptDataList
-                setDisplayAptList={setDisplayAptList}
-                shouldDisplayAptList={shouldDisplayAptList}
-                data={data}
-                btnId={btnId}
-              />,
-            );
-    } catch (e) {
-      console.warn(`Error rendering AptDataList:
+  const transferBtn = document.querySelector(`[id*="${btnId}"]`),
+    aptDlgRef = useRef<nullishDlg>(null),
+    renderDirectly = (): void => {
+      try {
+        shouldDisplayAptList = !shouldDisplayAptList;
+        if (consVariablesData.rootDlg)
+          !shouldDisplayAptList
+            ? consVariablesData.rootDlg.unmount()
+            : consVariablesData.rootDlg.render(
+                <AptDataList
+                  setDisplayAptList={setDisplayAptList}
+                  shouldDisplayAptList={shouldDisplayAptList}
+                  data={data}
+                  btnId={btnId}
+                />,
+              );
+      } catch (e) {
+        console.warn(`Error rendering AptDataList:
       ${(e as Error).message};
       Initiating root recovering attempt.`);
-      try {
-        const fallbackRootDlg = document.getElementById("rootDlgList");
-        if (!(fallbackRootDlg instanceof HTMLElement))
-          throw elementNotFound(fallbackRootDlg, `attemp to recreate rootDlg`, extLine(new Error()));
-        createRoot(fallbackRootDlg).unmount();
-      } catch (e2) {
-        console.error(`Error rendering AptDataList:
+        try {
+          const fallbackRootDlg = document.getElementById("rootDlgList");
+          if (!(fallbackRootDlg instanceof HTMLElement))
+            throw elementNotFound(fallbackRootDlg, `attemp to recreate rootDlg`, extLine(new Error()));
+          createRoot(fallbackRootDlg).unmount();
+        } catch (e2) {
+          console.error(`Error rendering AptDataList:
         ${(e2 as Error).message};
         Failed to salvage rootDlg.`);
+        }
       }
-    }
-  };
+    };
   useEffect(() => {
+    const renderDirectlyAsEffect = (): void => {
+      try {
+        shouldDisplayAptList = !shouldDisplayAptList;
+        if (consVariablesData.rootDlg)
+          !shouldDisplayAptList
+            ? consVariablesData.rootDlg.unmount()
+            : consVariablesData.rootDlg.render(
+                <AptDataList
+                  setDisplayAptList={setDisplayAptList}
+                  shouldDisplayAptList={shouldDisplayAptList}
+                  data={data}
+                  btnId={btnId}
+                />,
+              );
+      } catch (e) {
+        console.warn(`Error rendering AptDataList:
+        ${(e as Error).message};
+        Initiating root recovering attempt.`);
+        try {
+          const fallbackRootDlg = document.getElementById("rootDlgList");
+          if (!(fallbackRootDlg instanceof HTMLElement))
+            throw elementNotFound(fallbackRootDlg, `attemp to recreate rootDlg`, extLine(new Error()));
+          createRoot(fallbackRootDlg).unmount();
+        } catch (e2) {
+          console.error(`Error rendering AptDataList:
+          ${(e2 as Error).message};
+          Failed to salvage rootDlg.`);
+        }
+      }
+    };
     if (aptDlgRef.current instanceof HTMLDialogElement) {
       aptDlgRef.current.showModal();
       aptDlgRef.current.addEventListener("click", function (this: HTMLDialogElement, click) {
@@ -60,7 +90,7 @@ export default function AptDataList({
           click.currentTarget &&
           isClickOutside(click, click.currentTarget as HTMLElement).some(coord => coord === true)
         ) {
-          !isDirectRender ? setDisplayAptList(!shouldDisplayAptList) : renderDirectly();
+          !isDirectRender ? setDisplayAptList(!shouldDisplayAptList) : renderDirectlyAsEffect();
         }
       });
       syncAriaStates([...aptDlgRef.current!.querySelectorAll("*"), aptDlgRef.current]);
@@ -82,13 +112,13 @@ export default function AptDataList({
         : elementNotFound(transferBtn, "transferBtn for AptDataList", extLine(new Error()));
       const handleKeyDown = (press: KeyboardEvent): void => {
         if (press.key === "Escape") {
-          !isDirectRender ? setDisplayAptList(!shouldDisplayAptList) : renderDirectly();
+          !isDirectRender ? setDisplayAptList(!shouldDisplayAptList) : renderDirectlyAsEffect();
         }
       };
       document.addEventListener("keydown", handleKeyDown);
       return (): void => document.removeEventListener("keydown", handleKeyDown);
     }
-  }, [aptDlgRef]);
+  }, [aptDlgRef, data.cpf, data.date, setDisplayAptList, transferBtn, isDirectRender]);
   return !shouldDisplayAptList ? (
     <></>
   ) : (

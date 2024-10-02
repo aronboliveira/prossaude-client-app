@@ -1,5 +1,5 @@
 "use client";
-import { callbackTextBodyEl } from "@/pages/edfis";
+import { callbackTextBodyEl } from "@/lib/locals/edFisNutPage/edFisNutHandler";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { person } from "@/vars";
 export default function TextBodyType(): JSX.Element {

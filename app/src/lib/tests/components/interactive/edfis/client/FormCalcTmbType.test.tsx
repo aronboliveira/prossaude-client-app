@@ -1,8 +1,10 @@
+import React from "react";
 import { render, screen, fireEvent, RenderResult } from "@testing-library/react";
-import { callbackAtvLvlElementNaf, tabProps } from "@/pages/edfis";
+import { callbackAtvLvlElementNaf } from "../../../../../locals/edFisNutPage/edFisNutHandler";
+import { tabProps } from "../../../../../../../../../pro-saude-app-vite/app/src/vars";
 import FormCalcTmbType from "../../../../../../../components/interactive/edfis/client/FormCalcTmbType";
 jest.mock(
-  "@/pages/edfis",
+  "../../../../../locals/edFisNutPage/edFisNutHandler",
   (): {
     callbackAtvLvlElementNaf: jest.Mock<any, any, any>;
     person: {
@@ -16,7 +18,7 @@ jest.mock(
     callbackAtvLvlElementNaf: jest.fn() as jest.Mock,
     person: { atvLvl: "leve" },
     tabProps: { factorAtvLvl: 1.4, IMC: 22 },
-  })
+  }),
 ) as typeof jest;
 describe("FormCalcTmbType component", (): void => {
   beforeEach((): void => {
@@ -44,7 +46,7 @@ describe("FormCalcTmbType component", (): void => {
           document.getElementById("nafType") as HTMLSelectElement,
         ],
       ],
-      select.id
+      select.id,
     ) as void;
   }) as void;
 }) as void;

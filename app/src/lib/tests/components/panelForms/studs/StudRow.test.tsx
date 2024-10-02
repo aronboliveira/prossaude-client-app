@@ -2,8 +2,9 @@ import { render, fireEvent, RenderResult } from "@testing-library/react";
 import { useRef, MutableRefObject } from "react";
 import StudRow from "../../../../../../components/panelForms/studs/StudRow";
 import AlterFieldList from "../../../../../../components/lists/AlterFieldList";
-import { nullishTab } from "@/lib/global/declarations/types";
-jest.mock("@/components/lists/AlterFieldList", (): jest.Mock<any, any, any> => jest.fn() as jest.Mock);
+import React from "react";
+import { nullishTab } from "../../../../global/declarations/types";
+jest.mock("../../../../../../components/lists/AlterFieldList", (): jest.Mock<any, any, any> => jest.fn() as jest.Mock);
 describe("StudRow Component", (): void => {
   test("renders student row data", (): void => {
     const tabRef: MutableRefObject<nullishTab> = useRef<nullishTab>(null);
@@ -21,7 +22,7 @@ describe("StudRow Component", (): void => {
           start_day: "2023-01-01",
           end_day: "2023-12-31",
         }}
-      />
+      />,
     ) as RenderResult;
     (
       expect(renderResult.getByText(/Student Name/i) as HTMLOutputElement) as jest.JestMatchers<HTMLElement>
@@ -50,10 +51,10 @@ describe("StudRow Component", (): void => {
                   start_day: "2023-01-01",
                   end_day: "2023-12-31",
                 }}
-              />
+              />,
             ) as RenderResult
-          ).getByText(/Alterar/i) as HTMLButtonElement
-        ) as boolean
+          ).getByText(/Alterar/i) as HTMLButtonElement,
+        ) as boolean,
       ) as jest.JestMatchers<HTMLElement>
     ).toBe<boolean>(true) as void;
     (expect(AlterFieldList) as jest.JestMatchers<HTMLElement>).toHaveBeenCalled() as void;

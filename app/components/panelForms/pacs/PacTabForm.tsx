@@ -24,7 +24,6 @@ export default function PacTabForm(): JSX.Element {
     document.querySelector("table")!.style.minHeight = "revert";
     const nextDiv = document.getElementById("sectsPacsTab")?.nextElementSibling;
     if (nextDiv?.id === "" && nextDiv instanceof HTMLDivElement) nextDiv.remove() as void;
-    assignFormAttrs(formRef.current);
   }, []);
   useEffect(() => {
     if (formRef?.current instanceof HTMLFormElement) {
@@ -44,6 +43,7 @@ export default function PacTabForm(): JSX.Element {
       syncAriaStates([...formRef.current!.querySelectorAll("*"), formRef.current]);
     } else elementNotFound(formRef?.current, "formRef.current in useEffect() for PacTabForm", extLine(new Error()));
   }, [formRef, callbackNormalizeSizesSb]);
+  useEffect(() => assignFormAttrs(formRef.current));
   return (
     <form
       id='formRemovePac'

@@ -454,6 +454,7 @@ button {
 
 canvas {
   &#inpAstConfirmId {
+    min-width: 55vw;
     max-width: 90vw;
     display: block;
     border: 0.2rem solid #eeee;
@@ -702,7 +703,7 @@ label.boldLabel,
   font-weight: bold;
 }
 
-input[type="date"],
+input[type="date"]:not(#dateHeader),
 .datBtn {
   @include minMaxW(16, "ch", 36, "ch");
 }
@@ -2281,11 +2282,11 @@ td,
   height: fit-content;
   &:has(img) {
     display: grid;
-    grid-template: 0.5fr 4fr 0.5fr / repeat(2, 1fr);
+    grid-template: 0.5fr 7fr 0.5fr / repeat(2, 1fr);
     img {
       grid-row: 2;
       grid-column: 1;
-      margin-block: 5%;
+      margin-bottom: 5%;
     }
     button {
       grid-row: 3;

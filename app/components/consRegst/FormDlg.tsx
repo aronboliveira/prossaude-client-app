@@ -198,7 +198,6 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
     setTimeout(() => {
       history.pushState({}, "", `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#"));
     }, 300);
-    assignFormAttrs(formRef.current);
     return (): void => {
       history.pushState(
         {},
@@ -341,6 +340,7 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
         dlgRef.current,
       );
   }, [exportRef]);
+  useEffect(() => assignFormAttrs(formRef.current));
   return (
     <dialog className='modal-content flexWC' ref={dlgRef} id='regstPacDlg'>
       <ErrorBoundary

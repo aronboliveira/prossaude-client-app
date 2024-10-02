@@ -1,11 +1,13 @@
+import React from "react";
 import { render, screen, fireEvent, RenderResult } from "@testing-library/react";
 import { Person } from "../../../../../global/declarations/classes";
-import { exeAutoFill, person, tabProps } from "../../../../../../pages/edfis";
+import { exeAutoFill } from "../../../../../locals/edFisNutPage/edFisNutHandler";
+import { person, tabProps } from "../../../../../../../../../pro-saude-app-vite/app/src/vars";
 import { validateEvResultNum } from "../../../../../locals/edFisNutPage/edFisNutHandler";
 import { handleEventReq } from "../../../../../global/handlers/gHandlers";
 import { multipleElementsNotFound } from "../../../../../global/handlers/errorHandler";
 import AgeElement from "../../../../../../../components/interactive/edfis/defaulted/AgeElement";
-import { targEl } from "@/lib/global/declarations/types";
+import { targEl } from "../../../../../global/declarations/types";
 jest.mock(
   "../../../../../pages/edfis",
   (): {
@@ -53,7 +55,7 @@ jest.mock(
       targInpSumDCut: null,
       targInpPGC: null,
     },
-  })
+  }),
 ) as typeof jest;
 jest.mock(
   "../../../../../lib/locals/edFisNutPage/edFisNutHandler",
@@ -61,7 +63,7 @@ jest.mock(
     validateEvResultNum: jest.Mock<any, any, any>;
   } => ({
     validateEvResultNum: jest.fn(),
-  })
+  }),
 ) as typeof jest;
 jest.mock(
   "../../../../../lib/global/handlers/gHandlers",
@@ -69,7 +71,7 @@ jest.mock(
     handleEventReq: jest.Mock<any, any, any>;
   } => ({
     handleEventReq: jest.fn(),
-  })
+  }),
 ) as typeof jest;
 jest.mock(
   "../../../../../lib/global/handlers/errorHandler",
@@ -79,7 +81,7 @@ jest.mock(
   } => ({
     multipleElementsNotFound: jest.fn(),
     extLine: jest.fn(() => "Error Line"),
-  })
+  }),
 ) as typeof jest;
 describe("AgeElement Component", (): void => {
   beforeEach((): void => {
@@ -104,7 +106,7 @@ describe("AgeElement Component", (): void => {
     (expect(exeAutoFill) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalledWith<Parameters<typeof exeAutoFill>>(
       input,
       tabProps.isAutoFillActive,
-      "cons"
+      "cons",
     ) as void;
     (expect(handleEventReq) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalledWith<
       Parameters<typeof handleEventReq>
@@ -126,7 +128,7 @@ describe("AgeElement Component", (): void => {
       person?.age,
       input,
       (expect as jest.Expect).any(String) as any,
-      tabProps.isAutoFillActive as boolean
+      tabProps.isAutoFillActive as boolean,
     ) as void;
     (expect(handleEventReq) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalledWith<
       Parameters<typeof handleEventReq>
