@@ -391,6 +391,9 @@ $swhite: rgba(255, 255, 255, 0.8);
     hr:last-of-type {
       margin-top: 2rem;
     }
+    input {
+      min-width: 25vw;
+    }
   }
 
   #fsAvDentId,

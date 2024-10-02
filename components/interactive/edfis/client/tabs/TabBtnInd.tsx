@@ -1,6 +1,6 @@
 "use client";
 import { TabBtnProps } from "@/lib/global/declarations/interfaces";
-import { handleIndEv } from "../../TabIndPerc";
+import { handleIndEv } from "@/lib/locals/edFisNutPage/edFisNutHandler";
 import { textTransformPascal } from "@/lib/global/gModel";
 export default function TabBtnInd({ nRow, nCol, lab }: TabBtnProps): JSX.Element {
   const pascalCtx = textTransformPascal(lab).replaceAll(" ", "_");
@@ -11,8 +11,7 @@ export default function TabBtnInd({ nRow, nCol, lab }: TabBtnProps): JSX.Element
       className={`btn btn-secondary tabBtn tabBtnProgCons tabBtnInd tabBtn${pascalCtx} tabBtnCol${nCol - 1}`}
       onClick={ev => handleIndEv(ev, "BTN")}
       data-row={nRow}
-      data-col={nCol}
-    >
+      data-col={nCol}>
       Calcular
     </button>
   );

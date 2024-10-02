@@ -1,13 +1,14 @@
+import React from "react";
 import { render, screen, fireEvent, RenderResult } from "@testing-library/react";
 import TabBtnInd from "../../../../../../../../components/interactive/edfis/client/tabs/TabBtnInd";
-import { handleIndEv } from "../../../../../../../../components/interactive/edfis/TabIndPerc";
+import { handleIndEv } from "../../../../../../locals/edFisNutPage/edFisNutHandler";
 jest.mock(
   "../../../../../../../components/interactive/edfis/TabIndPerc",
   (): {
     handleIndEv: jest.Mock<any, any, any>;
   } => ({
     handleIndEv: jest.fn() as jest.Mock,
-  })
+  }),
 ) as typeof jest;
 jest.mock(
   "../../../../../lib/global/gModel",
@@ -15,7 +16,7 @@ jest.mock(
     textTransformPascal: jest.Mock<any, [lab: any], any>;
   } => ({
     textTransformPascal: jest.fn((lab: string): string => lab) as jest.Mock,
-  })
+  }),
 ) as typeof jest;
 describe("TabBtnInd Component", (): void => {
   it("should render the TabBtnInd button", (): void => {
@@ -29,7 +30,7 @@ describe("TabBtnInd Component", (): void => {
     fireEvent.click(screen.getByRole<HTMLButtonElement>("button", { name: "Calcular" })) as boolean;
     (expect(handleIndEv) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalledWith<Parameters<typeof handleIndEv>>(
       expect.any(Object),
-      "BTN"
+      "BTN",
     ) as void;
   }) as void;
 }) as void;

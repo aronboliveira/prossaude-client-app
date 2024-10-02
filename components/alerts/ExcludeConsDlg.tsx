@@ -43,7 +43,7 @@ export default function ExcludeConsDlg({
     };
     addEventListener("keydown", handleKeyDown);
     return (): void => removeEventListener("keydown", handleKeyDown);
-  }, [excludeDlgRef]);
+  }, [excludeDlgRef, setDisplayExcludeDlg]);
   useEffect(() => {
     try {
       if (!(confirmRef.current instanceof HTMLButtonElement))

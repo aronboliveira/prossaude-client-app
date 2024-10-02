@@ -1,8 +1,10 @@
 import { render, screen, fireEvent, RenderResult } from "@testing-library/react";
-import { handleCallbackWHS, tabProps } from "../../../../../../pages/edfis";
+import { handleCallbackWHS } from "../../../../../locals/edFisNutPage/edFisNutHandler";
+import { tabProps } from "../../../../../../../../../pro-saude-app-vite/app/src/vars";
+import React from "react";
 import SelFactorAtleta from "../../../../../../../components/interactive/edfis/client/SelFactorAtleta";
 jest.mock(
-  "../../../../../pages/edfis",
+  "../../../../../locals/edFisNutPage/edFisNutHandler",
   (): {
     handleCallbackWHS: jest.Mock<any, any, any>;
     tabProps: object;

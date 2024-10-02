@@ -17,16 +17,20 @@ export default function ResetDlg({
     panelRoots.mainRoot = createRoot(document.getElementById("formRoot")!);
     root = panelRoots.mainRoot;
   }
-  const ResetDlgRef = useRef<nullishDlg>(null);
-  const toggleClose = (): void => {
-    setDisplayResetDlg(!shouldDisplayResetDlg);
-    if (!shouldDisplayResetDlg && ResetDlgRef.current instanceof HTMLDialogElement) ResetDlgRef.current.close();
-  };
-  const resetForm = (): void => {
-    document.querySelector("form")!.reset();
-    root.render(<MainFormPanel />);
-  };
+  const ResetDlgRef = useRef<nullishDlg>(null),
+    resetForm = (): void => {
+      document.querySelector("form")!.reset();
+      root.render(<MainFormPanel />);
+    },
+    handleClose = (): void => {
+      setDisplayResetDlg(!shouldDisplayResetDlg);
+      if (!shouldDisplayResetDlg && ResetDlgRef.current instanceof HTMLDialogElement) ResetDlgRef.current.close();
+    };
   useEffect(() => {
+    const toggleClose = (): void => {
+      setDisplayResetDlg(!shouldDisplayResetDlg);
+      if (!shouldDisplayResetDlg && ResetDlgRef.current instanceof HTMLDialogElement) ResetDlgRef.current.close();
+    };
     if (shouldDisplayResetDlg && ResetDlgRef.current instanceof HTMLDialogElement) ResetDlgRef.current.showModal();
     syncAriaStates([...ResetDlgRef.current!.querySelectorAll("*"), ResetDlgRef.current!]);
     const handleKeyDown = (press: KeyboardEvent): void => {
@@ -34,7 +38,7 @@ export default function ResetDlg({
     };
     addEventListener("keydown", handleKeyDown);
     return (): void => removeEventListener("keydown", handleKeyDown);
-  }, [ResetDlgRef, toggleClose]);
+  }, [ResetDlgRef, setDisplayResetDlg]);
   return (
     <>
       {shouldDisplayResetDlg && (
@@ -51,10 +55,10 @@ export default function ResetDlg({
           }}>
           <ErrorBoundary
             FallbackComponent={() => (
-              <ErrorFallbackDlg renderError={new Error(`Erro carregando a janela modal!`)} onClick={toggleClose} />
+              <ErrorFallbackDlg renderError={new Error(`Erro carregando a janela modal!`)} onClick={handleClose} />
             )}>
             <section role='alert' className='flexNoW'>
-              <button className='btn btn-close forceInvert' onClick={toggleClose}></button>
+              <button className='btn btn-close forceInvert' onClick={handleClose}></button>
             </section>
             <section role='alert' className='flexNoWC flexJtC flexAlItCt rGap2v'>
               <div role='group' className='flexJtC flexAlItCt flexNoWC wsBs noInvert'>
@@ -66,7 +70,7 @@ export default function ResetDlg({
               <button
                 className='btn btn-warning bolded'
                 onClick={() => {
-                  toggleClose();
+                  handleClose();
                   resetForm();
                 }}>
                 Confirmar

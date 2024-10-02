@@ -1,5 +1,5 @@
 "use client";
-import { handleCallbackWHS } from "@/pages/edfis";
+import { handleCallbackWHS } from "@/lib/locals/edFisNutPage/edFisNutHandler";
 import { tabProps } from "@/vars";
 export default function SelFactorAtleta(): JSX.Element {
   return (

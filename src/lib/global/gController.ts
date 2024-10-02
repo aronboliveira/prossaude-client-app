@@ -16,9 +16,7 @@ export function getGlobalEls(isAutocorrectOn: boolean = true, context: string = 
     deactAutocorrectBtns = [
       ...document.querySelectorAll('button[id^="deactAutocorrectBtn"]'),
       ...document.querySelectorAll('input[id^="deactAutocorrectBtn"]'),
-    ],
-    astDigtBtns = Array.from(document.querySelectorAll('button[id$="AstDigtBtn')),
-    resetFormBtn = document.getElementById("resetFormBtn");
+    ];
   textConts?.length > 0
     ? addListenerTexts(textConts, isAutocorrectOn)
     : elementNotPopulated(textConts, "textConts", extLine(new Error()));
@@ -28,11 +26,6 @@ export function getGlobalEls(isAutocorrectOn: boolean = true, context: string = 
   dateBtns?.length > 0
     ? addListenerDateBtns(dateBtns)
     : elementNotPopulated(dateBtns, "dateBtns", extLine(new Error()));
-  resetFormBtn instanceof HTMLButtonElement
-    ? resetFormBtn.addEventListener("click", (click): void =>
-        GlobalHandler.resetarFormulario(click, astDigtBtns, resetFormBtn),
-      )
-    : elementNotFound(resetFormBtn, "resetFormBtn", extLine(new Error()));
   if (context === "num") {
     const numInps = Array.from(document.querySelectorAll('input[type="number"]'));
     numInps?.length > 0 ? addListenerNumInps(numInps) : elementNotPopulated(numInps, "numInps", extLine(new Error()));

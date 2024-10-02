@@ -1,6 +1,7 @@
+import React from "react";
 import { render, screen, fireEvent, RenderResult } from "@testing-library/react";
 import TabInpProg from "../../../../../../../../components/interactive/edfis/client/tabs/TabInpProg";
-import { handleIndEv } from "../../../../../../../../components/interactive/edfis/TabIndPerc";
+import { handleIndEv } from "../../../../../../locals/edFisNutPage/edFisNutHandler";
 import { handleEventReq, handleCondtReq } from "../../../../../../global/handlers/gHandlers";
 jest.mock(
   "../../../../../../../components/interactive/edfis/TabIndPerc",
@@ -8,7 +9,7 @@ jest.mock(
     handleIndEv: jest.Mock<any, any, any>;
   } => ({
     handleIndEv: jest.fn() as jest.Mock,
-  })
+  }),
 ) as typeof jest;
 jest.mock(
   "../../../../../../lib/global/handlers/gHandlers",
@@ -18,7 +19,7 @@ jest.mock(
   } => ({
     handleCondtReq: jest.fn() as jest.Mock,
     handleEventReq: jest.fn() as jest.Mock,
-  })
+  }),
 ) as typeof jest;
 describe("TabInpProg Component", (): void => {
   it("should render the input for IndPerc context", (): void => {
@@ -33,7 +34,7 @@ describe("TabInpProg Component", (): void => {
     fireEvent.input(input, { target: { value: "123" } }) as boolean;
     (expect(handleIndEv) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalledWith<Parameters<typeof handleIndEv>>(
       expect.any(Object),
-      "IMC"
+      "IMC",
     ) as void;
     (expect(handleEventReq) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalledWith<
       Parameters<typeof handleEventReq>
@@ -59,7 +60,7 @@ describe("TabInpProg Component", (): void => {
         min: 1,
         max: 99,
         pattern: ["^[\\d,.]+$", ""],
-      }) as any
+      }) as any,
     ) as void;
   }) as void;
 }) as void;

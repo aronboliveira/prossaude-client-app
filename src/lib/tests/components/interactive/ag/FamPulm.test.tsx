@@ -1,19 +1,20 @@
+import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import FamPulm from "../../../../../../components/interactive/ag/FamPulm";
-import { handleDivAddShow } from "../../../../../pages/ag";
+import { handleDivAddShow } from "../../../../../lib/locals/aGPage/aGHandlers";
 jest.mock(
   "../../../../../pages/ag",
   (): {
     handleDivAddShow: jest.Mock<any, any, any>;
   } => ({
     handleDivAddShow: jest.fn() as jest.Mock,
-  })
+  }),
 ) as typeof jest;
 describe("FamPulm Component", (): void => {
   it("renders the checkbox for family pulmonary disease history", (): void => {
     render(<FamPulm />);
     expect(
-      screen.getByLabelText<HTMLInputElement>("Antecedentes Familiares — Doença(s) Pulmonar(es)")
+      screen.getByLabelText<HTMLInputElement>("Antecedentes Familiares — Doença(s) Pulmonar(es)"),
     ).toBeInTheDocument() as void;
   }) as void;
   it("calls handleDivAddShow on checkbox click", async (): Promise<void> => {

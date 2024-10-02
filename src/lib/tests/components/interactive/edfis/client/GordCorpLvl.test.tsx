@@ -1,8 +1,9 @@
 import { render, screen, fireEvent, RenderResult } from "@testing-library/react";
-import { callbackAtvLvlElementNaf, tabProps } from "../../../../../../pages/edfis";
+import { callbackAtvLvlElementNaf } from "../../../../../locals/edFisNutPage/edFisNutHandler";
+import { tabProps } from "../../../../../../../../../pro-saude-app-vite/app/src/vars";
 import GordCorpLvl from "../../../../../../../components/interactive/edfis/client/GordCorpLvl";
 jest.mock(
-  "../../../../../pages/edfis",
+  "../../../../../locals/edFisNutPage/edFisNutHandler",
   (): {
     callbackAtvLvlElementNaf: jest.Mock<any, any, any>;
     person: {
@@ -16,7 +17,7 @@ jest.mock(
     callbackAtvLvlElementNaf: jest.fn() as jest.Mock,
     person: { atvLvl: "eutrofico" },
     tabProps: { factorAtvLvl: 1.6, IMC: 25 },
-  })
+  }),
 ) as typeof jest;
 describe("GordCorpLvl component", (): void => {
   beforeEach((): void => {
@@ -44,7 +45,7 @@ describe("GordCorpLvl component", (): void => {
           document.getElementById("nafType") as HTMLSelectElement,
         ],
       ],
-      select.id
+      select.id,
     ) as void;
   }) as void;
 }) as void;

@@ -28,7 +28,6 @@ export default function WatcherEN(): JSX.Element {
       setExport(true);
     }
     dinamicGridAdjust(Array.from(document.querySelectorAll(".fsAnamGDiv")));
-    for (const f of document.querySelectorAll("form")) assignFormAttrs(f);
     selFactorAtleta instanceof HTMLSelectElement
       ? (tabProps.factorAtleta = selFactorAtleta.value)
       : elementNotFound(selFactorAtleta, "selFactorAtleta", extLine(new Error()));
@@ -205,5 +204,16 @@ export default function WatcherEN(): JSX.Element {
       watchLabels();
     }
   }, [mounted]);
+  useEffect(() => {
+    for (const f of document.querySelectorAll("form")) assignFormAttrs(f);
+  });
+  useEffect(() => {
+    setTimeout(() => {
+      for (const f of document.querySelectorAll("form")) assignFormAttrs(f);
+      for (const a of document.querySelectorAll(".divAdd.divAntFamCheck")) {
+        if (a instanceof HTMLElement) a.style.display = "none";
+      }
+    }, 1000);
+  }, []);
   return <div className='watcher' id='watcher-en' style={{ display: "none" }}></div>;
 }

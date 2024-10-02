@@ -370,8 +370,8 @@ export function changeToAstDigit(toFileInpBtn: targEl): void {
                 imgAstDigt.style.width = "100%";
                 imgAstDigt.style.maxHeight = "100%";
               } else {
-                imgAstDigt.style.maxWidth = "18.75rem";
-                imgAstDigt.style.maxHeight = "12.5rem";
+                imgAstDigt.style.maxWidth = "30rem";
+                imgAstDigt.style.maxHeight = "30rem";
               }
               imgAstDigt.style.overflow = "auto";
               fileInp.parentElement?.replaceChild(imgAstDigt, fileInp);
@@ -466,29 +466,22 @@ export function defineLabId(
     labAst!.id = "spanAstPct";
   } else multipleElementsNotFound(extLine(new Error()), "argumentos para defineLabId", toFileInpBtn, fileEl);
 }
-export function resetarFormulario(
-  click: MouseEvent,
-  toFileInpBtns: targEl[] | NodeListOf<Element>,
-  resetFormBtn: targEl = click?.target as HTMLElement,
-): void {
+export function resetarFormulario(caller: nullishHtEl): void {
   if (
-    (click?.target instanceof HTMLButtonElement || resetFormBtn instanceof HTMLButtonElement) &&
-    Array.from(toFileInpBtns).every(fileBtn => fileBtn instanceof HTMLButtonElement)
+    caller instanceof HTMLButtonElement ||
+    (caller instanceof HTMLInputElement && (caller.type === "button" || caller.type === "reset"))
   ) {
-    const formulario = document.getElementById("formAnamGId");
-    const editableCite = document.querySelector('cite[contenteditable="true"]');
-    const genBirthRel = document.getElementById("genBirthRelId");
-    const genTrans = document.getElementById("genTransId");
-
+    const formulario = document.getElementById("formAnamGId"),
+      editableCite = document.querySelector('cite[contenteditable="true"]'),
+      genBirthRel = document.getElementById("genBirthRelId"),
+      genTrans = document.getElementById("genTransId");
     formulario instanceof HTMLFormElement
       ? formulario.reset()
       : elementNotFound(formulario, "formulario in resetarFormulario()", extLine(new Error()));
-
     if (editableCite) {
       editableCite.textContent = `--Nome`;
       removeFirstClick(editableCite);
-    } else elementNotFound(editableCite, "editableCite in resetarFormulario()", extLine(new Error()));
-
+    }
     if (
       genBirthRel instanceof HTMLSelectElement ||
       genBirthRel instanceof HTMLTextAreaElement ||
@@ -497,7 +490,6 @@ export function resetarFormulario(
       genBirthRel.value = "cis";
       genBirthRel.hidden = true;
     } else inputNotFound(genBirthRel, "genBirthRel in resetarFormulario()", extLine(new Error()));
-
     if (
       genTrans instanceof HTMLSelectElement ||
       genTrans instanceof HTMLTextAreaElement ||
@@ -506,17 +498,10 @@ export function resetarFormulario(
       genTrans.value = "avancado";
       genTrans.hidden = true;
     } else inputNotFound(genTrans, "genTrans in resetarFormulario()", extLine(new Error()));
-
-    toFileInpBtns.forEach(toFileInpBtn => {
+    [...document.querySelectorAll(".astDigtBtn"), ...document.querySelectorAll('[id*=AstDigtBtn]')].forEach(toFileInpBtn => {
       if (toFileInpBtn?.textContent?.match(/Retornar/g)) changeToAstDigit(toFileInpBtn);
     });
-  } else
-    multipleElementsNotFound(
-      extLine(new Error()),
-      "arguments for resetarFormulario()",
-      `${JSON.stringify(click?.target)}` || null,
-      `${JSON.stringify(toFileInpBtns)}` || null,
-    );
+  } else multipleElementsNotFound(extLine(new Error()), "arguments for resetarFormulario");
 }
 export function enableCPFBtn(cpfBtn: targEl, cpfLength: string = ""): boolean {
   if (cpfBtn instanceof HTMLButtonElement && typeof cpfLength === "string") {
@@ -548,7 +533,8 @@ export function syncAriaStates(els: Array<Element> | NodeListOf<Element>): void 
         el instanceof HTMLBaseElement ||
         el instanceof HTMLStyleElement ||
         (el.parentElement && el.parentElement instanceof HTMLHeadElement) ||
-        el.classList.contains("watcher")
+        el.classList.contains("watcher") ||
+        el.classList.contains("spinner")
       )
         return;
       if (el instanceof HTMLElement) {
@@ -1362,8 +1348,7 @@ export function handleEventReq(entry: textEl | Event, alertColor: string = "#e52
       numInp.step !== "any" && !/[^0-9]/g.test(numInp.step) && numInp.step.replaceAll(/[^0-9]/g, "");
     }
   });
-  if (!entry.checkValidity())
-    isValid = false;
+  if (!entry.checkValidity()) isValid = false;
   if (entry.type === "date") {
     if (entry.classList.contains("minCurrDate")) {
       const currDate = new Date().toISOString().split("T")[0].replaceAll("-", "").trim();

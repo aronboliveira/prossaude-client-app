@@ -97,7 +97,6 @@ export default function ProfForm({ mainRoot }: GlobalFormProps): JSX.Element {
       //estilização e aria
       callbackNormalizeSizeSb();
       syncAriaStates([...formRef.current!.querySelectorAll("*"), formRef.current]);
-      assignFormAttrs(formRef.current);
     } else elementNotFound(formRef.current, "formRef.current in useEffect()", extLine(new Error()));
   }, [formRef, callbackNormalizeSizeSb]);
   useEffect(() => {
@@ -123,6 +122,7 @@ export default function ProfForm({ mainRoot }: GlobalFormProps): JSX.Element {
       ...document.querySelector("form")!.getElementsByTagName("select"),
     );
   }, [formRef, userClass]);
+  useEffect(() => assignFormAttrs(formRef.current));
   return (
     <ErrorBoundary
       FallbackComponent={() => <GenericErrorComponent message='Erro carregando formulário para profissionais' />}>

@@ -1,6 +1,6 @@
 import { Person } from "@/lib/global/declarations/classes";
-import { evaluatePGCDecay } from "./edFisNutModel";
-import { formatValue } from "./edFisNutController";
+import { changeTabDCutLayout, evaluatePGCDecay } from "./edFisNutModel";
+import { checkReturnIndex, defaultResult, formatValue } from "./edFisNutController";
 import { highlightChange, fadeElement } from "../../global/gStyleScript";
 //nesse file estão presentes principalmente as funções de manipulação dinâmica de texto e layout
 import { parseNotNaN, numberLimit, autoCapitalizeInputs, checkAutoCorrect } from "../../global/gModel";
@@ -26,7 +26,13 @@ import {
   looseNum,
   nullishHtEl,
   nlEl,
+  btnFillResult,
+  IndCases,
+  autofillResult,
+  contextAutofill,
+  contextAutofillNums,
 } from "../../global/declarations/types";
+import { person, tabProps } from "@/vars";
 enum EnumTargInpTypes {
   "weight",
   "height",
@@ -936,8 +942,8 @@ export function switchRequiredCols(
 export function defineMatrixAxes(tab: targEl): number {
   let matrixValidAxes = 0;
   if (tab instanceof HTMLTableElement) {
-    const nRows = tab.querySelectorAll("tr");
-    const nCols = tab.querySelectorAll("col");
+    const nRows = tab.querySelectorAll("tr"),
+      nCols = tab.querySelectorAll("col");
     nRows?.length > 0 && nCols?.length > 0
       ? (matrixValidAxes = (nRows.length - 1) * (nCols.length - 1))
       : console.error(`Error validating number of rows in the table for Sinais Vitais.
@@ -1117,13 +1123,12 @@ export function createArraysRels(
     btnId?.match(/[0-9]+(?=_)/) &&
     typeof protocolValue === "string"
   ) {
-    const btnCol = parseNotNaN(btnId?.match(/(?<=_)[0-9]+/)?.toString() ?? "0", 1);
-    const targColInps = arrayRows.map(
-      row =>
-        Array.from(row.querySelectorAll("input")).filter(inp => inp.id?.match(`_${btnCol.toString()}`) ?? false)[0],
-    );
-    const inpsIds = targColInps.map(inp => inp?.id);
-
+    const btnCol = parseNotNaN(btnId?.match(/(?<=_)[0-9]+/)?.toString() ?? "0", 1),
+      targColInps = arrayRows.map(
+        row =>
+          Array.from(row.querySelectorAll("input")).filter(inp => inp.id?.match(`_${btnCol.toString()}`) ?? false)[0],
+      ),
+      inpsIds = targColInps.map(inp => inp?.id);
     if (inpsIds.length === arrayRows.length) {
       //define qual coluna será utilizada de acordo com a posição do botão e validando se há algum preenchimento na coluna
       const protocoloNum = parseNotNaN(protocolValue.slice(-1));
@@ -1136,7 +1141,6 @@ export function createArraysRels(
         console.error(`Erro obtaining the protocol number.
         Obtained number: ${protocoloNum ?? 0}`);
     } else console.error(`Error validating length of columnValues.`);
-
     const sumInp = document.getElementById(`tabInpRowDCut9_${btnCol}`);
     sumInp instanceof HTMLInputElement
       ? (sumInp.value = colAcc.toString())
@@ -1160,4 +1164,564 @@ export function getConsultasNums(arrayRow: targEl): number[] {
     }
   } else elementNotFound(arrayRow, "arrayRow in getConsultasNum", extLine(new Error()));
   return arrayConsultasNum || [1];
+}
+export function handleSumClick(ev: React.MouseEvent): void {
+  const protocolo = document.getElementById("tabSelectDCutId"),
+    rowsDCArray = Array.from(document.getElementById("tabDCut")?.getElementsByClassName("tabRowDCutMed") ?? []).filter(
+      rowDC => rowDC instanceof HTMLTableRowElement,
+    );
+  try {
+    if (typeof person !== "object" && "sumDCut" in person)
+      throw typeError(`validating typeof person object`, "person", "object", extLine(new Error()));
+    if (!(protocolo instanceof HTMLSelectElement || protocolo instanceof HTMLInputElement))
+      throw elementNotFound(protocolo, `Protocolo Element`, extLine(new Error()));
+    person.sumDCut = createArraysRels(rowsDCArray as HTMLTableRowElement[], ev.currentTarget?.id, protocolo.value);
+    if (Number.isFinite(person.sumDCut) || person.sumDCut <= 0) person.sumDCut = 0;
+    if (tabProps.isAutoFillActive === true) {
+      if (
+        person instanceof Person &&
+        tabProps.targInpPGC instanceof HTMLInputElement &&
+        protocolo.value === "pollock3" &&
+        person.age >= 0
+      ) {
+        const numCol = getNumCol(ev.currentTarget) ?? 0;
+        typeof numCol === "number" && numCol > 0
+          ? ([tabProps.PGC, tabProps.targInpSumDCut, tabProps.targInpPGC] = updatePGC(
+              person,
+              document.getElementById("fsProgConsId"),
+              tabProps.numCol,
+              "col",
+            ))
+          : typeError("obtaining column number", tabProps.numCol, "number (natural)", extLine(new Error()));
+      } else
+        console.warn(`Error updating PGC using .sumDCut.
+            Obtained person.age: ${person?.age || 0}
+            Used Protocol: ${protocolo?.value || "null"} (Apenas pollock3 aceito, por enquanto);
+            Is person classified? ${person instanceof Person};
+            Instance of the targeted input for PGC: ${
+              Object.prototype.toString.call(tabProps.targInpPGC).slice(8, -1) ?? "null"
+            }`);
+    } else console.warn(`Autofill not active. PGC not affected.`);
+  } catch (e) {
+    console.error(`Error executing callback for Button for Sum of Skin Folds:\n${(e as Error).message}`);
+  }
+}
+export function handleIndEv(ev: React.MouseEvent | React.FormEvent | React.ChangeEvent, context: IndCases): void {
+  try {
+    if (!(person instanceof Person))
+      console.warn(
+        `Error validating the treated person as as gendered instance in handleIndEv. That will probably lead to data errors. Consider deactivating autofill.`,
+      );
+    if (
+      !(
+        ev.currentTarget instanceof HTMLButtonElement ||
+        (ev.currentTarget instanceof HTMLInputElement &&
+          (ev.currentTarget.type === "number" || ev.currentTarget.type === "text")) ||
+        ev.currentTarget instanceof HTMLSelectElement
+      )
+    )
+      throw elementNotFound(
+        ev.currentTarget,
+        `Instance of ${ev.currentTarget.id || ev.currentTarget.tagName} in handleIndEv`,
+        extLine(new Error()),
+      );
+    tabProps.numCol = getNumCol(ev.currentTarget) ?? 0;
+    if (!Number.isFinite(tabProps.numCol)) tabProps.numCol = 0;
+    if (typeof tabProps.factorAtleta !== "string")
+      throw typeError(`typeof Factor Atleta`, tabProps.factorAtleta, `string`, extLine(new Error()));
+    const consTablesFs = document.getElementById("fsProgConsId");
+    [
+      ...document.getElementsByClassName("tabInpProgIndPerc"),
+      ...document.getElementsByClassName("inpHeigth"),
+      ...document.getElementsByClassName("inpWeigth"),
+      ...document.getElementsByClassName("tabInpProgSumDCut"),
+    ].forEach(targInp => {
+      if (targInp instanceof HTMLElement) {
+        if (targInp.dataset[`active`]) targInp.dataset[`active`] = "false";
+        else targInp.setAttribute("data-active", "false");
+      }
+    });
+    if (!(consTablesFs instanceof HTMLElement))
+      throw elementNotFound(consTablesFs, `Cons Table Fieldset`, extLine(new Error()));
+    if (tabProps.isAutoFillActive && typeof tabProps.isAutoFillActive === "boolean") {
+      [
+        tabProps.targInpWeigth,
+        tabProps.targInpHeigth,
+        tabProps.targInpIMC,
+        tabProps.targInpMLG,
+        tabProps.targInpTMB,
+        tabProps.targInpGET,
+      ] = defineTargInps(consTablesFs, tabProps.numCol, "col");
+      tabProps.targInpPGC = document.querySelector(`#inpPgc${tabProps.numCol - 1}Cel4_${tabProps.numCol}`);
+      [tabProps.PGC, , tabProps.targInpPGC] = updatePGC(person, consTablesFs, tabProps.numCol, "col");
+      [
+        tabProps.targInpWeigth,
+        tabProps.targInpHeigth,
+        tabProps.targInpIMC,
+        tabProps.targInpMLG,
+        tabProps.targInpTMB,
+        tabProps.targInpGET,
+        tabProps.targInpPGC,
+        tabProps.targInpSumDCut,
+      ].forEach(targ => {
+        if (targ instanceof HTMLElement) targ.dataset[`active`] = "true";
+        else targ?.setAttribute("data-active", "true");
+      });
+    } else if (typeof tabProps.isAutoFillActive !== "boolean")
+      console.warn(`Error validating typeof tabProps.isAutoFillActive`);
+    if (
+      context !== "BTN" &&
+      context !== "IMC" &&
+      context !== "MLG" &&
+      context !== "TMB" &&
+      context !== "GET" &&
+      context !== "PGC"
+    )
+      throw stringError(
+        `validation of context argument in handleIndEv for ${ev.currentTarget.id || ev.currentTarget.tagName}`,
+        context,
+        extLine(new Error()),
+      );
+    context = context.toUpperCase() as IndCases;
+    switch (context) {
+      case "BTN":
+        break;
+      case "IMC":
+        tabProps.IMC = checkReturnIndex(tabProps.targInpIMC, tabProps.IMC, "IMC");
+        break;
+      case "MLG":
+        tabProps.MLG = checkReturnIndex(tabProps.targInpMLG, tabProps.MLG, "MLG");
+        break;
+      case "TMB":
+        tabProps.TMB = checkReturnIndex(tabProps.targInpTMB, tabProps.TMB, "tabProps.");
+        break;
+      case "GET":
+        tabProps.GET = checkReturnIndex(tabProps.targInpGET, tabProps.GET, "GET");
+        break;
+      case "PGC":
+        tabProps.PGC = checkReturnIndex(tabProps.targInpPGC, tabProps.PGC, "PGC");
+        break;
+      default:
+        stringError("value for callbackTabBtnsInps() context", context, extLine(new Error()));
+    }
+    const gordCorpLvl = document.getElementById("gordCorpLvl"),
+      formTMBTypeElement = document.getElementById("formCalcTMBType");
+    if (!(gordCorpLvl instanceof HTMLElement))
+      throw elementNotFound(gordCorpLvl, `Instance of Body Fat Level Element`, extLine(new Error()));
+    if (!(formTMBTypeElement instanceof HTMLElement))
+      throw elementNotFound(formTMBTypeElement, `Instance of Form TMB Type Element`, extLine(new Error()));
+    if (context === "BTN" || tabProps.isAutoFillActive === true) {
+      [person.weight, person.height] = matchPersonPropertiesWH(person, tabProps.targInpWeigth, tabProps.targInpHeigth);
+      if (typeof tabProps.factorAtvLvl !== "number")
+        throw typeError(`typeof FactorAtvLvl`, tabProps.factorAtleta, `number`, extLine(new Error()));
+      if (typeof tabProps.factorAtleta !== "string")
+        throw typeError(`typeof Factor Atleta`, tabProps.factorAtleta, `string`, extLine(new Error()));
+      //UPDATE AUTOMÁTICO DE VALUES DOS INPUTS AQUI
+      [tabProps.IMC, tabProps.MLG, tabProps.TMB, tabProps.GET] = updateIndexesContexts(
+        person,
+        [gordCorpLvl, tabProps.targInpIMC, tabProps.targInpMLG],
+        [tabProps.targInpTMB, tabProps.targInpGET, formTMBTypeElement],
+        tabProps.factorAtvLvl,
+        tabProps.factorAtleta,
+      );
+    }
+    const callbackResult: btnFillResult = [
+      [person?.weight || 0, person?.height || 0],
+      [tabProps.IMC || 0, tabProps.MLG || 0, tabProps.TMB || 0, tabProps.GET || 0, tabProps.PGC || 0] || [
+        0, 0, 0, 0, 0,
+      ],
+      [
+        tabProps.targInpWeigth,
+        tabProps.targInpHeigth,
+        tabProps.targInpIMC,
+        tabProps.targInpMLG,
+        tabProps.targInpTMB,
+        tabProps.targInpGET,
+        tabProps.targInpPGC,
+      ] || [],
+    ] || [[0, 0], [0, 0, 0, 0, 0], []];
+    if (context === "BTN" || tabProps.isAutoFillActive === true) {
+      [
+        [person.weight, person.height],
+        [tabProps.IMC, tabProps.MLG, tabProps.TMB, tabProps.GET, tabProps.PGC],
+        [
+          tabProps.targInpWeigth,
+          tabProps.targInpHeigth,
+          tabProps.targInpIMC,
+          tabProps.targInpMLG,
+          tabProps.targInpTMB,
+          tabProps.targInpGET,
+          tabProps.targInpPGC,
+        ],
+      ] = callbackResult;
+    } else {
+      switch (context) {
+        case "IMC":
+          tabProps.IMC = checkReturnIndex(callbackResult[2][2], callbackResult[1][0], context);
+          break;
+        case "MLG":
+          tabProps.MLG = checkReturnIndex(callbackResult[2][3], callbackResult[1][1], context);
+          break;
+        case "TMB":
+          tabProps.TMB = checkReturnIndex(callbackResult[2][4], callbackResult[1][2], context);
+          break;
+        case "GET":
+          tabProps.GET = checkReturnIndex(callbackResult[2][5], callbackResult[1][3], context);
+          break;
+        case "PGC":
+          tabProps.PGC = checkReturnIndex(callbackResult[2][6], callbackResult[1][4], context);
+          break;
+        default:
+          stringError("value for callbackTabBtnsInps() context", context, extLine(new Error()));
+      }
+    }
+  } catch (e) {
+    console.error(
+      `Error executing handleIndEv with ${ev.currentTarget.id || ev.currentTarget.tagName}:\n${(e as Error).message}`,
+    );
+  }
+}
+export function exeAutoFill(targ: targEl, isAutoFillActive: boolean = true, context: string = "cons"): autofillResult {
+  let numRef = 1,
+    arrIndexes: number[] = [],
+    arrtargInps: targEl[] = [];
+  try {
+    const consTablesFs = document.getElementById("fsProgConsId"),
+      gordCorpLvl = document.getElementById("gordCorpLvl"),
+      formTMBTypeElement = document.getElementById("formCalcTMBType");
+    if (
+      (targ instanceof HTMLInputElement || targ instanceof HTMLTextAreaElement || targ instanceof HTMLSelectElement) &&
+      tabProps.isAutoFillActive === true &&
+      person instanceof Person &&
+      typeof context === "string"
+    ) {
+      if (context === "cons") {
+        const selectNumCons = document.getElementById("selectNumCons");
+        selectNumCons instanceof HTMLInputElement || selectNumCons instanceof HTMLSelectElement
+          ? (tabProps.numCons = parseInt(selectNumCons?.value || "1"))
+          : inputNotFound(selectNumCons, "selectNumCons in exeAutoFill()", extLine(new Error()));
+        numRef = tabProps.numCons;
+      } else if (context === "col") {
+        tabProps.numCol = getNumCol(targ) || 2;
+        numRef = tabProps.numCol;
+      } else console.warn(`defaulted numRef`);
+      [
+        ...document.getElementsByClassName("tabInpProgIndPerc"),
+        ...document.getElementsByClassName("inpHeigth"),
+        ...document.getElementsByClassName("inpWeigth"),
+        ...document.getElementsByClassName("tabInpProgSumDCut"),
+      ].forEach(targInp => {
+        if (targInp instanceof HTMLElement) targInp.dataset[`active`] = "false";
+      });
+      arrtargInps = defineTargInps(consTablesFs, numRef, context);
+      [
+        tabProps.targInpWeigth,
+        tabProps.targInpHeigth,
+        tabProps.targInpIMC,
+        tabProps.targInpMLG,
+        tabProps.targInpTMB,
+        tabProps.targInpGET,
+      ] = arrtargInps;
+      arrIndexes = updateIndexesContexts(
+        person,
+        [gordCorpLvl, tabProps.targInpIMC, tabProps.targInpMLG],
+        [tabProps.targInpTMB, tabProps.targInpGET, formTMBTypeElement],
+        tabProps.factorAtvLvl,
+        tabProps.factorAtleta,
+      );
+      [tabProps.IMC, tabProps.MLG, tabProps.TMB, tabProps.GET] = arrIndexes;
+      [person.weight, person.height] = matchPersonPropertiesWH(person, tabProps.targInpWeigth, tabProps.targInpHeigth);
+      const arrPGC = updatePGC(person, consTablesFs, numRef, context);
+      //PGC, targInpSumDCut, targInpPGC
+      [tabProps.PGC, tabProps.targInpSumDCut, tabProps.targInpPGC] = arrPGC;
+      [
+        tabProps.targInpWeigth,
+        tabProps.targInpHeigth,
+        tabProps.targInpIMC,
+        tabProps.targInpMLG,
+        tabProps.targInpTMB,
+        tabProps.targInpGET,
+        tabProps.targInpPGC,
+        tabProps.targInpSumDCut,
+      ].forEach(targ => {
+        if (targ instanceof HTMLElement) targ.dataset[`active`] = "true";
+        else targ?.setAttribute("data-active", "true");
+      });
+      arrIndexes.push(tabProps.PGC);
+      arrtargInps.push(tabProps.targInpSumDCut, tabProps.targInpPGC);
+      person.sumDCut = matchPersonPropertiesDC(person, arrPGC[1]);
+      //APLICAÇÃO DE VALUES NOS TARG INPUTS
+      if (
+        arrtargInps.every(
+          targ =>
+            targ instanceof HTMLInputElement ||
+            targ instanceof HTMLSelectElement ||
+            targ instanceof HTMLTextAreaElement,
+        )
+      ) {
+        (tabProps.targInpIMC as entryEl).value = tabProps.IMC.toString();
+        (tabProps.targInpMLG as entryEl).value = tabProps.MLG.toString();
+        (tabProps.targInpTMB as entryEl).value = tabProps.TMB.toString();
+        (tabProps.targInpGET as entryEl).value = tabProps.GET.toString();
+        (tabProps.targInpPGC as entryEl).value = tabProps.PGC.toString();
+      } else
+        console.error(
+          `Error validating instances of arrtargInps in exeAutoFill(). Values for respective <input> Elements not updated.`,
+        );
+      return [
+        numRef || 1,
+        [person.weight || 0, person.height || 0, person.sumDCut || 0],
+        arrIndexes || [0, 0, 0, 0, 0],
+        arrtargInps || [],
+      ];
+    } else {
+      multipleElementsNotFound(
+        extLine(new Error()),
+        "arguments for exeAutoFill",
+        targ,
+        isAutoFillActive,
+        `${JSON.stringify(person)}`,
+        context,
+      );
+      arrIndexes = [tabProps.IMC, tabProps.MLG, tabProps.TMB, tabProps.GET, tabProps.PGC];
+      arrtargInps = [
+        tabProps.targInpWeigth,
+        tabProps.targInpHeigth,
+        tabProps.targInpIMC,
+        tabProps.targInpMLG,
+        tabProps.targInpTMB,
+        tabProps.targInpGET,
+        tabProps.targInpSumDCut,
+        tabProps.targInpPGC,
+      ];
+    }
+    return [
+      numRef || 1,
+      [person.weight || 0, person.height || 0, person.sumDCut || 0],
+      arrIndexes || [0, 0, 0, 0, 0],
+      arrtargInps || [],
+    ];
+  } catch (e) {
+    console.error(`Error executing exeAutoFill:\n${(e as Error).message}`);
+    return [
+      numRef || 1,
+      [person.weight || 0, person.height || 0, person.sumDCut || 0],
+      arrIndexes || [0, 0, 0, 0, 0],
+      arrtargInps || [],
+    ];
+  }
+}
+export function callbackTextBodyEl(person: Person): [string, string, string] {
+  const textBodytype = document.getElementById("textBodytype"),
+    protocolo = document.getElementById("tabSelectDCutId"),
+    tabDC = document.getElementById("tabDCut"),
+    genElement = document.getElementById("genId"),
+    genBirthRel = document.getElementById("genBirthRelId"),
+    genFisAlin = document.getElementById("genFisAlinId");
+  try {
+    if (typeof person !== "object")
+      throw typeError(`typeof person in callback for Text Body Element`, person, `object`, extLine(new Error()));
+    if (!(textBodytype instanceof HTMLSelectElement || textBodytype instanceof HTMLInputElement))
+      throw elementNotFound(textBodytype, `Text Body Type Element`, extLine(new Error()));
+    if (!(protocolo instanceof HTMLSelectElement || protocolo instanceof HTMLInputElement))
+      throw elementNotFound(protocolo, `Protocolo Element`, extLine(new Error()));
+    if (!(tabDC instanceof HTMLTableElement)) throw elementNotFound(tabDC, `Table of Skin Folds`, extLine(new Error()));
+    if (!(genElement instanceof HTMLSelectElement || genElement instanceof HTMLInputElement))
+      throw elementNotFound(genElement, `Gender Element`, extLine(new Error()));
+    if (!(genBirthRel instanceof HTMLSelectElement || genBirthRel instanceof HTMLInputElement))
+      throw elementNotFound(genBirthRel, `Gender Birth Relation Element`, extLine(new Error()));
+    if (!(genFisAlin instanceof HTMLSelectElement || genFisAlin instanceof HTMLInputElement))
+      throw elementNotFound(genFisAlin, `Gen Physical Alignment Element`, extLine(new Error()));
+    changeTabDCutLayout(protocolo, tabDC, textBodytype);
+    person.gen = textBodytype.value;
+    if ((genElement.value === "masculino" || genElement.value === "feminino") && genBirthRel.value === "cis")
+      genElement.value = textBodytype.value;
+    switch (textBodytype.value) {
+      case "masculino":
+        genFisAlin.value = "masculinizado";
+        break;
+      case "feminino":
+        genFisAlin.value = "feminilizado";
+        break;
+      case "neutro":
+        genFisAlin.value = "neutro";
+        break;
+      default:
+        stringError("verifying textBodytype.value", textBodytype?.value, extLine(new Error()));
+    }
+  } catch (e) {
+    console.error(`Error executing callbackTextBodyEl:\n${(e as Error).message}`);
+  }
+  return [
+    person?.gen || "masculino",
+    (genElement as entryEl)?.value || "masculino",
+    (genFisAlin as entryEl)?.value || "masculinizado",
+  ];
+}
+export function callbackAtvLvlElementNaf(contextData: [number[], targEl[]], mainEl: string): [string, number] {
+  [tabProps.factorAtvLvl, tabProps.IMC] = contextData[0];
+  const [atvLvlElement, gordCorpLvl, formTMBTypeElement, nafType] = contextData[1];
+  try {
+    if (!(person instanceof Person)) throw new Error(`Failed to validate patient person instance`);
+    if (typeof tabProps.factorAtvLvl !== "number")
+      throw typeError(`typeof Factor for activity level`, tabProps.factorAtvLvl, `number`, extLine(new Error()));
+    if (typeof tabProps.IMC !== "number") throw typeError(`typeof IMC`, tabProps.IMC, `number`, extLine(new Error()));
+    if (!(atvLvlElement instanceof HTMLInputElement || atvLvlElement instanceof HTMLSelectElement))
+      throw elementNotFound(atvLvlElement, `Activity Level Element instance`, extLine(new Error()));
+    if (!(gordCorpLvl instanceof HTMLInputElement || gordCorpLvl instanceof HTMLSelectElement))
+      throw elementNotFound(gordCorpLvl, `Body Fat Level Element`, extLine(new Error()));
+    if (!(formTMBTypeElement instanceof HTMLInputElement || formTMBTypeElement instanceof HTMLSelectElement))
+      throw elementNotFound(formTMBTypeElement, `TMB Type Element`, extLine(new Error()));
+    if (!(nafType instanceof HTMLInputElement || nafType instanceof HTMLSelectElement))
+      throw elementNotFound(nafType, `Level of Physical Activity Type Element`, extLine(new Error()));
+    //ajusta elementos <select> com base em combinações
+    fluxFormIMC(gordCorpLvl, formTMBTypeElement, tabProps.IMC || 0);
+    if (/LvlAtFis/gi.test(mainEl) || /TMBType/gi.test(mainEl) || /gordCorpLvl/gi.test(mainEl)) {
+      matchTMBElements(
+        atvLvlElement,
+        gordCorpLvl,
+        formTMBTypeElement,
+        document.getElementById("spanFactorAtleta"),
+        document.getElementById("lockGordCorpLvl"),
+        tabProps.IMC || 0,
+      );
+      person.atvLvl = updateAtvLvl(atvLvlElement, nafType, person.atvLvl);
+      //retorna factorAtvLvl(número para ser utilizado, com base no .atvLvl)
+      const returnedFactorAtvLvl = person.checkAtvLvl(person);
+      typeof returnedFactorAtvLvl === "number"
+        ? (tabProps.factorAtvLvl = returnedFactorAtvLvl || 1.4)
+        : typeError("returnedFactorAtvLvl", returnedFactorAtvLvl, "number", extLine(new Error()));
+    } else if (/nafType/gi.test(mainEl)) {
+      matchTMBElements(
+        nafType,
+        gordCorpLvl,
+        formTMBTypeElement,
+        document.getElementById("spanFactorAtleta"),
+        document.getElementById("lockGordCorpLvl"),
+        tabProps.IMC || 0,
+      );
+      person.atvLvl = updateAtvLvl(nafType, atvLvlElement, person.atvLvl);
+      //retorna factorAtvLvl(número para ser utilizado, com base no .atvLvl)
+      const returnedFactorAtvLvl = person.checkAtvLvl(person);
+      typeof returnedFactorAtvLvl === "number"
+        ? (tabProps.factorAtvLvl = returnedFactorAtvLvl || 1.4)
+        : typeError("returnedFactorAtvLvl", returnedFactorAtvLvl, "number", extLine(new Error()));
+    } else
+      console.error(`Error validating mainEl.
+        obtained .id: ${mainEl ?? "UNDEFINED ID"}`);
+    return [person.atvLvl, tabProps.factorAtvLvl];
+  } catch (e) {
+    console.error(`Error executing callbackAtvLvlElementNaf:\n${(e as Error).message}`);
+    return [person.atvLvl, tabProps.factorAtvLvl];
+  }
+}
+export function handleCallbackWHS(
+  contextComp: [contextAutofill, contextAutofillNums],
+  inpWHS: targEl,
+  isAutoFillActive: boolean = true,
+): [number, autofillResult] {
+  tabProps.numCol = contextComp[1][0];
+  let prop = 0,
+    result: autofillResult = [
+      tabProps.numCol || 2,
+      [person.weight || 0, person.height || 0, person.sumDCut || 0],
+      contextComp[1][3] || [0, 0, 0, 0, 0], //[1][3] === arrIndexes
+      contextComp[0][3] || [], //[0][3] === arrTargs
+    ];
+  const fillResult = (callbackResult: autofillResult, mainNum: number): void => {
+    if (tabProps.isAutoFillActive === true) {
+      if (mainNum === 0) {
+        tabProps.targInpWeigth = callbackResult[3][mainNum];
+        for (const targWeight of document.getElementsByClassName("inpWeigth")) {
+          if (targWeight instanceof HTMLElement) {
+            targWeight.dataset.active
+              ? (targWeight.dataset[`active`] = "false")
+              : targWeight.setAttribute("data-active", "false");
+          }
+        }
+        if (tabProps.targInpWeigth instanceof HTMLElement) {
+          tabProps.targInpWeigth.dataset.active
+            ? (tabProps.targInpWeigth.dataset[`active`] = "true")
+            : tabProps.targInpWeigth?.setAttribute("data-active", "true");
+        }
+      } else if (mainNum === 1) {
+        tabProps.targInpHeigth = callbackResult[3][mainNum];
+        for (const targHeigth of document.getElementsByClassName("inpHeigth")) {
+          if (targHeigth instanceof HTMLElement) {
+            targHeigth.dataset.active
+              ? (targHeigth.dataset[`active`] = "false")
+              : targHeigth.setAttribute("data-active", "false");
+          }
+        }
+        if (tabProps.targInpHeigth instanceof HTMLElement) {
+          tabProps.targInpHeigth.dataset.active
+            ? (tabProps.targInpHeigth.dataset[`active`] = "true")
+            : tabProps.targInpHeigth?.setAttribute("data-active", "true");
+        }
+      } else if (mainNum === 2) {
+        tabProps.targInpSumDCut = callbackResult[3].at(-mainNum);
+        for (const targSumDCut of document.getElementsByClassName("tabInpProgSumDCut")) {
+          if (targSumDCut instanceof HTMLElement) {
+            targSumDCut.dataset.active
+              ? (targSumDCut.dataset[`active`] = "false")
+              : targSumDCut.setAttribute("data-active", "false");
+          }
+        }
+        if (tabProps.targInpSumDCut instanceof HTMLElement) {
+          tabProps.targInpSumDCut.dataset.active
+            ? (tabProps.targInpSumDCut.dataset[`active`] = "true")
+            : tabProps.targInpSumDCut?.setAttribute("data-active", "true");
+        }
+      } else console.error(`Error validating mainNum in fillResult()`);
+      [tabProps.IMC, tabProps.MLG, tabProps.TMB, tabProps.GET, tabProps.PGC] = callbackResult[2];
+      [tabProps.targInpIMC, tabProps.targInpMLG, tabProps.targInpTMB, tabProps.targInpGET, , tabProps.targInpPGC] =
+        callbackResult[3].slice(2);
+    }
+  };
+  try {
+    if (!(person instanceof Person))
+      throw typeError(`instanceof person`, (person as any).toString(), `formClassPerson`, extLine(new Error()));
+    if (
+      !(
+        inpWHS instanceof HTMLInputElement ||
+        inpWHS instanceof HTMLSelectElement ||
+        inpWHS instanceof HTMLTextAreaElement
+      )
+    )
+      throw elementNotFound(inpWHS, `${inpWHS?.id || inpWHS?.tagName || "unidentified"}`, extLine(new Error()));
+    if (
+      inpWHS.value.length > 0 &&
+      inpWHS.value !== "" &&
+      (/NaN/gi.test(inpWHS.value) || /Infinity/gi.test(inpWHS.value))
+    )
+      inpWHS.value = "0";
+    if (inpWHS.classList.contains("inpWeigth")) {
+      if (parseNotNaN(inpWHS.value, 0, "float") > 999) inpWHS.value = "999";
+      prop = person.weight;
+      prop = validateEvResultNum(inpWHS, parseInt(inpWHS.value || "0", 10));
+      person.weight = prop;
+      if (tabProps.isAutoFillActive === true) result = exeAutoFill(inpWHS, isAutoFillActive, "col");
+      const callbackResult: [number, autofillResult] = [prop || 0, result || defaultResult];
+      fillResult(callbackResult[1], 0);
+    } else if (inpWHS.classList.contains("inpHeigth")) {
+      if (parseNotNaN(inpWHS.value, 0, "float") > 3) inpWHS.value = "3";
+      prop = person.height;
+      prop = validateEvResultNum(inpWHS, parseInt(inpWHS.value || "0", 10));
+      person.height = prop;
+      if (tabProps.isAutoFillActive === true) result = exeAutoFill(inpWHS, isAutoFillActive, "col");
+      const callbackResult: [number, autofillResult] = [prop || 0, result || defaultResult];
+      fillResult(callbackResult[1], 1);
+    } else if (inpWHS.classList.contains("inpSumDCut") || inpWHS.classList.contains("selFactorAtletaClass")) {
+      if (inpWHS.classList.contains("inpSumDCut") && parseNotNaN(inpWHS.value, 0, "float") > 999) inpWHS.value = "999";
+      prop = person.sumDCut;
+      prop = validateEvResultNum(inpWHS, parseInt(inpWHS.value || "0", 10));
+      person.sumDCut = prop;
+      if (tabProps.isAutoFillActive === true) result = exeAutoFill(inpWHS, isAutoFillActive, "col");
+      const callbackResult: [number, autofillResult] = [prop || 0, result || defaultResult];
+      fillResult(callbackResult[1], 2);
+    } else throw elementNotFound(inpWHS, `Inp WHS classList`, extLine(new Error()));
+  } catch (e) {
+    console.error(`Error executing callbackWHS for ${inpWHS?.id || "unidentified"}:${(e as Error).message}`);
+  }
+  return [prop || 0, result || defaultResult];
 }

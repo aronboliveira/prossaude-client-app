@@ -1,7 +1,7 @@
 "use client";
 import { TdProps } from "@/lib/global/declarations/interfaces";
-import { handleCallbackWHS } from "@/pages/edfis";
-import { handleIndEv } from "../../TabIndPerc";
+import { handleCallbackWHS } from "@/lib/locals/edFisNutPage/edFisNutHandler";
+import { handleIndEv } from "@/lib/locals/edFisNutPage/edFisNutHandler";
 import { textTransformPascal } from "@/lib/global/gModel";
 import { handleCondtReq, handleEventReq } from "@/lib/global/handlers/gHandlers";
 import { tabProps } from "@/vars";

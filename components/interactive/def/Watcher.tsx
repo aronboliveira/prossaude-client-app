@@ -1,5 +1,5 @@
 "use client";
-import { handleDivAddShow } from "@/pages/ag";
+import { handleDivAddShow } from "@/lib/locals/aGPage/aGHandlers";
 import { odProps, agProps } from "@/vars";
 import { extLine, inputNotFound } from "@/lib/global/handlers/errorHandler";
 import { handleLinkChanges } from "@/lib/global/handlers/gRoutingHandlers";
@@ -52,11 +52,21 @@ export default function Watcher({ routeCase }: { routeCase?: pageCases }): JSX.E
       document.querySelectorAll(".inpAvDent").forEach((inp, i) => handleInpAvDentValue(inp, i));
     } else if (routeCase === "recover") handleLinkChanges("recover", "Recover Page Style");
     setHandle(true);
-    for (const f of document.querySelectorAll("form")) assignFormAttrs(f);
     return (): void => {
       if (routeCase === "ag") removeEventListener("resize", handleResize);
     };
   }, [routeCase, isExportListening]);
+  useEffect(() => {
+    for (const f of document.querySelectorAll("form")) assignFormAttrs(f);
+  });
+  useEffect(() => {
+    setTimeout(() => {
+      for (const f of document.querySelectorAll("form")) assignFormAttrs(f);
+      for (const a of document.querySelectorAll(".divAdd.divAntFamCheck")) {
+        if (a instanceof HTMLElement) a.style.display = "none";
+      }
+    }, 1000);
+  }, []);
   useEffect(() => {
     modelScripts();
     if (isFetching) return;

@@ -1,5 +1,5 @@
 import { Person } from "@/lib/global/declarations/classes";
-import { exeAutoFill } from "@/pages/edfis";
+import { exeAutoFill } from "@/lib/locals/edFisNutPage/edFisNutHandler";
 import { handleEventReq } from "@/lib/global/handlers/gHandlers";
 import { nullishInp } from "@/lib/global/declarations/types";
 import { person, tabProps } from "@/vars";

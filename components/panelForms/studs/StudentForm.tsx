@@ -28,8 +28,8 @@ export default function StudentForm(): JSX.Element {
     ]);
     const nextDiv = document.getElementById("avPacsTab")?.nextElementSibling;
     if (nextDiv?.id === "" && nextDiv instanceof HTMLDivElement) nextDiv.remove() as void;
-    assignFormAttrs(formRef.current);
   }, []);
+  useEffect(() => assignFormAttrs(formRef.current));
   useEffect(() => {
     if (formRef?.current instanceof HTMLFormElement) {
       providers.globalDataProvider &&

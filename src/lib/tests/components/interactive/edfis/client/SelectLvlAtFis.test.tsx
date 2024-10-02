@@ -1,8 +1,10 @@
 import { render, screen, fireEvent, RenderResult } from "@testing-library/react";
-import { callbackAtvLvlElementNaf, tabProps } from "../../../../../../pages/edfis";
+import React from "react";
+import { callbackAtvLvlElementNaf } from "../../../../../locals/edFisNutPage/edFisNutHandler";
+import { tabProps } from "../../../../../../../../../pro-saude-app-vite/app/src/vars";
 import SelectLvlAtFis from "../../../../../../../components/interactive/edfis/client/SelectLvlAtFis";
 jest.mock(
-  "../../../../../pages/edfis",
+  "../../../../../locals/edFisNutPage/edFisNutHandler",
   (): {
     callbackAtvLvlElementNaf: jest.Mock<any, any, any>;
     person: object;
