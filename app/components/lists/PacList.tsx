@@ -7,7 +7,7 @@ import { handleFetch } from "@/lib/locals/panelPage/handlers/handlers";
 import { panelRoots } from "@/vars";
 import { strikeEntries } from "@/lib/locals/panelPage/consStyleScript";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
-import { useContext, useEffect, useRef } from "react";
+import { useContext, useEffect, useMemo, useRef } from "react";
 import GenericErrorComponent from "../error/GenericErrorComponent";
 import PacRow from "../panelForms/pacs/PacRow";
 import Spinner from "../icons/Spinner";
@@ -24,7 +24,7 @@ export default function PacList({
   state = true,
 }: PacListProps): JSX.Element {
   const userClass = useContext(PanelCtx).userClass,
-    pacs: PacInfo[] = [],
+    pacs: PacInfo[] = useMemo(() => [], []),
     tabPacRef = useRef<nullishTab>(null),
     sectTabRef = useRef<nullishHtEl>(null),
     tbodyRef = useRef<nullishTabSect>(null);
