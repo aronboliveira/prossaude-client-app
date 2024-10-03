@@ -20,9 +20,9 @@ jest.mock(
 jest.mock(
   "@/lib/global/gController",
   (): {
-    addListenerExportBtn: jest.Mock<any, any, any>;
+    addExportFlags: jest.Mock<any, any, any>;
   } => ({
-    addListenerExportBtn: jest.fn() as jest.Mock,
+    addExportFlags: jest.fn() as jest.Mock,
   }),
 ) as typeof jest;
 jest.mock(

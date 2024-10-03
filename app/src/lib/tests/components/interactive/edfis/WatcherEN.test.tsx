@@ -3,7 +3,7 @@ import { render, screen, fireEvent, RenderResult } from "@testing-library/react"
 import { maxNumberError } from "../../../../global/handlers/errorHandler";
 import { syncAriaStates, handleCondtReq } from "../../../../global/handlers/gHandlers";
 import { parseNotNaN } from "../../../../global/gModel";
-import { addListenerExportBtn, getGlobalEls } from "../../../../global/gController";
+import { addExportFlags, getGlobalEls } from "../../../../global/gController";
 import { dinamicGridAdjust } from "../../../../global/gStyleScript";
 import { addListenerInnerTabs, validateTitlesForTargs } from "../../../../locals/edFisNutPage/edFisNutController";
 import WatcherEN from "../../../../../../components/interactive/edfis/WatcherEN";
@@ -40,11 +40,11 @@ jest.mock(
 jest.mock(
   "../../../../lib/global/gController",
   (): {
-    addListenerExportBtn: jest.Mock<any, any, any>;
+    addExportFlags: jest.Mock<any, any, any>;
     getGlobalEls: jest.Mock<any, any, any>;
     watchLabels: jest.Mock<any, any, any>;
   } => ({
-    addListenerExportBtn: jest.fn() as jest.Mock,
+    addExportFlags: jest.fn() as jest.Mock,
     getGlobalEls: jest.fn() as jest.Mock,
     watchLabels: jest.fn() as jest.Mock,
   }),
@@ -81,10 +81,10 @@ describe("WatcherEN component", (): void => {
     (expect(watcherDiv) as jest.JestMatchers<jest.SpyInstance>).toBeInTheDocument() as void;
     (expect(watcherDiv) as jest.JestMatchers<jest.SpyInstance>).toHaveStyle("display: none") as void;
   }) as void;
-  test("calls addListenerExportBtn, dinamicGridAdjust, and syncAriaStates in useEffect", (): void => {
+  test("calls addExportFlags, dinamicGridAdjust, and syncAriaStates in useEffect", (): void => {
     render(<WatcherEN />) as RenderResult;
-    (expect(addListenerExportBtn) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalledWith<
-      Parameters<typeof addListenerExportBtn>
+    (expect(addExportFlags) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalledWith<
+      Parameters<typeof addExportFlags>
     >("edFisNut");
     (expect(dinamicGridAdjust) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalled() as void;
     (expect(syncAriaStates) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalled() as void;

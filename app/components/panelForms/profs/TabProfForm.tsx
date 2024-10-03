@@ -1,12 +1,12 @@
 import { ErrorBoundary } from "react-error-boundary";
-import { addListenerExportBtn } from "@/lib/global/gController";
+import { addExportFlags } from "@/lib/global/gController";
 import { createRoot } from "react-dom/client";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { equalizeTabCells, normalizeSizeSb } from "@/lib/global/gStyleScript";
 import { fillTabAttr } from "@/lib/locals/panelPage/handlers/consHandlerList";
 import { handleClientPermissions } from "@/lib/locals/panelPage/handlers/consHandlerUsers";
 import { handleFetch } from "@/lib/locals/panelPage/handlers/handlers";
-import { panelRoots } from "@/vars";
+import { exporters, panelRoots } from "@/vars";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useEffect, useRef, useCallback, useContext } from "react";
 import GenericErrorComponent from "../../error/GenericErrorComponent";
@@ -17,28 +17,29 @@ import { ProfInfo } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import { strikeEntries } from "@/lib/locals/panelPage/consStyleScript";
 import { assignFormAttrs } from "@/lib/global/gModel";
 import { PanelCtx } from "../defs/client/SelectLoader";
-export default function RemoveProfForm(): JSX.Element {
-  const userClass = useContext(PanelCtx).userClass;
-  const profs: ProfInfo[] = [];
-  const formRef = useRef<nullishForm>(null);
-  const tabRef = useRef<nullishTab>(null);
-  const tbodyRef = useRef<nullishTabSect>(null);
-  const btnExportProfsTabRef = useRef<nullishBtn>(null);
-  const callbackNormalizeSizesSb = useCallback(() => {
-    normalizeSizeSb(
-      [
-        ...document.querySelectorAll(".form-padded"),
-        ...document.querySelectorAll(".ovFlAut"),
-        ...document.querySelectorAll("[scrollbar-width=none]"),
-      ],
-      [false, 0],
-      true,
-      [document.getElementById("sectProfsTab")],
-    );
-    document.querySelector("table")!.style.minHeight = "revert";
-    const nextDiv = document.getElementById("avPacsTab")?.nextElementSibling;
-    if (nextDiv?.id === "" && nextDiv instanceof HTMLDivElement) nextDiv.remove() as void;
-  }, []);
+import { ExportHandler } from "@/lib/global/declarations/classes";
+export default function TableProfForm(): JSX.Element {
+  const userClass = useContext(PanelCtx).userClass,
+    profs: ProfInfo[] = [],
+    formRef = useRef<nullishForm>(null),
+    tabRef = useRef<nullishTab>(null),
+    tbodyRef = useRef<nullishTabSect>(null),
+    btnExportProfsTabRef = useRef<nullishBtn>(null),
+    callbackNormalizeSizesSb = useCallback(() => {
+      normalizeSizeSb(
+        [
+          ...document.querySelectorAll(".form-padded"),
+          ...document.querySelectorAll(".ovFlAut"),
+          ...document.querySelectorAll("[scrollbar-width=none]"),
+        ],
+        [false, 0],
+        true,
+        [document.getElementById("sectProfsTab")],
+      );
+      document.querySelector("table")!.style.minHeight = "revert";
+      const nextDiv = document.getElementById("avPacsTab")?.nextElementSibling;
+      if (nextDiv?.id === "" && nextDiv instanceof HTMLDivElement) nextDiv.remove() as void;
+    }, []);
   useEffect(() => {
     try {
       if (!(tbodyRef.current instanceof HTMLTableSectionElement))
@@ -241,11 +242,7 @@ export default function RemoveProfForm(): JSX.Element {
     if (formRef?.current instanceof HTMLFormElement) {
       const btnExportTabProfs = btnExportProfsTabRef.current || formRef.current!.querySelector("#btnExport");
       btnExportTabProfs instanceof HTMLButtonElement
-        ? addListenerExportBtn(
-            "tab_Profissionais",
-            formRef.current,
-            document.getElementById("titleTabProfs") || formRef.current,
-          )
+        ? addExportFlags(formRef.current)
         : elementNotFound(
             btnExportTabProfs,
             "<button> for triggering generation of spreadsheet in the table for checking professionals",
@@ -253,7 +250,7 @@ export default function RemoveProfForm(): JSX.Element {
           );
       callbackNormalizeSizesSb();
       syncAriaStates([...formRef.current!.querySelectorAll("*"), formRef.current]);
-    } else elementNotFound(formRef?.current, "formRef.current in useEffect() for RemoveProfForm", extLine(new Error()));
+    } else elementNotFound(formRef?.current, "formRef.current in useEffect() for TableProfForm", extLine(new Error()));
   }, [formRef, callbackNormalizeSizesSb]);
   useEffect(() => {
     if (tabRef.current instanceof HTMLElement) {
@@ -265,6 +262,37 @@ export default function RemoveProfForm(): JSX.Element {
       );
     }
   }, [tabRef, userClass]);
+  useEffect(() => {
+    exporters.tabProfExporter = new ExportHandler();
+    const interv = exporters.tabProfExporter.autoResetTimer(600000),
+      path = location.pathname,
+      handleUnload = (): void => interv && clearInterval(interv),
+      handlePop = (): boolean => {
+        if (location.pathname !== path) {
+          interv && clearInterval(interv);
+          return true;
+        }
+        return false;
+      };
+    addEventListener(
+      "beforeunload",
+      () => {
+        handleUnload();
+        removeEventListener("beforeunload", handleUnload);
+      },
+      { once: true },
+    );
+    addEventListener("popstate", () => {
+      handlePop() && removeEventListener("popstate", handlePop);
+    });
+    addExportFlags(formRef.current ?? document);
+    (): void => {
+      handlePop();
+      removeEventListener("popstate", handlePop);
+      handleUnload();
+      removeEventListener("beforeunload", handleUnload);
+    };
+  }, []);
   useEffect(() => assignFormAttrs(formRef.current));
   return (
     <form
@@ -345,7 +373,23 @@ export default function RemoveProfForm(): JSX.Element {
         name='btnExportProfsTab'
         ref={btnExportProfsTabRef}
         data-active='false'
-        title='Gere um .xlsx com os dados preenchidos'>
+        title='Gere um .xlsx com os dados preenchidos'
+        onClick={ev => {
+          try {
+            if (!exporters.tabProfExporter) exporters.tabProfExporter = new ExportHandler();
+            exporters.tabProfExporter.handleExportClick(
+              ev,
+              "tabelaDeProfissionais",
+              document.getElementById("titleTabProfs") ?? formRef.current ?? document,
+              `d${new Date().getDate()}_m${new Date().getMonth() + 1}_y${new Date().getFullYear()}`,
+            );
+          } catch (e) {
+            console.error(`Error executing callback:\n${(e as Error).message}`);
+          }
+          {
+            signal: new AbortController().signal;
+          }
+        }}>
         Gerar Planilha
       </button>
     </form>

@@ -4,7 +4,6 @@ import {
   cursorCheckTimer,
   opRadioHandler,
   cpbInpHandler,
-  deactTextInput,
   doubleClickHandler,
   useCurrentDate,
   searchNextSiblings,
@@ -21,6 +20,7 @@ import {
   submitForm,
   handleCondtReq,
   handleEventReq,
+  cleanStorageName,
 } from "../../../global/handlers/gHandlers";
 import {
   inputNotFound,
@@ -204,46 +204,6 @@ describe("gHandlers Tests", (): void => {
       cpbInpHandler(event, radio);
       expect(multipleElementsNotFoundSpy).toHaveBeenCalled() as void;
       multipleElementsNotFoundSpy.mockRestore() as void;
-    }) as void;
-  }) as void;
-  describe("deactTextInput", (): void => {
-    let addressInps: HTMLInputElement[], nullRadios: HTMLInputElement[], blockableInput: HTMLInputElement;
-    beforeEach((): void => {
-      addressInps = [
-        document.createElement("input") as HTMLInputElement,
-        document.createElement("input") as HTMLInputElement,
-      ];
-      nullRadios = [
-        document.createElement("input") as HTMLInputElement,
-        document.createElement("input") as HTMLInputElement,
-      ];
-      blockableInput = document.createElement("input") as HTMLInputElement;
-      const parentDiv1 = document.createElement("div") as HTMLDivElement,
-        parentDiv2 = document.createElement("div") as HTMLDivElement,
-        grandParentDiv1 = document.createElement("div") as HTMLDivElement,
-        grandParentDiv2 = document.createElement("div") as HTMLDivElement;
-      parentDiv1.appendChild(blockableInput);
-      grandParentDiv1.appendChild(parentDiv1);
-      grandParentDiv2.appendChild(parentDiv2);
-      blockableInput.classList.add("inpLocNum");
-      parentDiv1.appendChild(nullRadios[0]);
-      parentDiv2.appendChild(nullRadios[1]);
-      grandParentDiv1.appendChild(addressInps[0]);
-      grandParentDiv2.appendChild(addressInps[1]);
-      document.body.appendChild(grandParentDiv1);
-      document.body.appendChild(grandParentDiv2);
-    }) as void;
-    it("should disable the input when the corresponding radio is clicked", () => {
-      nullRadios[0].checked = true;
-      deactTextInput(addressInps, nullRadios);
-      nullRadios[0].dispatchEvent(new Event("click")) as boolean;
-      expect(blockableInput.disabled).toBe<boolean>(true);
-    }) as void;
-    it("should re-enable the input when the radio is unchecked", () => {
-      nullRadios[0].checked = false;
-      deactTextInput(addressInps, nullRadios);
-      nullRadios[0].dispatchEvent(new Event("click")) as boolean;
-      expect(blockableInput.disabled).toBe<boolean>(false);
     }) as void;
   }) as void;
   describe("doubleClickHandler", (): void => {
@@ -906,4 +866,44 @@ describe("gHandlers Tests", (): void => {
       expect(input.style.color).toBe<CSSColor>("");
     });
   });
+  describe("cleanStorageName", () => {
+    const mockSetItem = jest.fn(),
+      originalConsoleError = console.error;
+    beforeEach(() => {
+      mockSetItem.mockClear();
+      Object.defineProperty(window, "localStorage", {
+        value: {
+          setItem: mockSetItem,
+        },
+        writable: true,
+      });
+      console.error = jest.fn();
+    });
+    afterEach(() => {
+      console.error = originalConsoleError;
+    });
+    it('should set "name", "secondName", and "lastName" to an empty string in localStorage', () => {
+      cleanStorageName();
+      expect(mockSetItem).toHaveBeenCalledTimes(3);
+      expect(mockSetItem).toHaveBeenCalledWith("name", "");
+      expect(mockSetItem).toHaveBeenCalledWith("secondName", "");
+      expect(mockSetItem).toHaveBeenCalledWith("lastName", "");
+    });
+    it("should not execute if window is undefined", () => {
+      const originalWindow = global.window;
+      cleanStorageName();
+      expect(mockSetItem).not.toHaveBeenCalled();
+      global.window = originalWindow;
+    });
+    it("should handle localStorage errors and log them to console.error", () => {
+      mockSetItem.mockImplementationOnce(() => {
+        throw new Error("localStorage error");
+      });
+      cleanStorageName();
+      expect(console.error).toHaveBeenCalledTimes(1);
+      expect(console.error).toHaveBeenCalledWith(
+        "Error executing iteration 0 of names in Local Storage:\nlocalStorage error",
+      );
+    });
+  }) as void;
 });

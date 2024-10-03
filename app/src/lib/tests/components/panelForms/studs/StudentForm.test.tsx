@@ -1,14 +1,14 @@
 import { render, fireEvent, RenderResult } from "@testing-library/react";
-import { addListenerExportBtn } from "@/lib/global/gController";
+import { addExportFlags } from "@/lib/global/gController";
 import { autoCapitalizeInputs } from "@/lib/global/gModel";
 import StudentForm from "../../../../../../components/panelForms/studs/StudentForm";
 jest.mock(
   "@/lib/global/gController",
   (): {
-    addListenerExportBtn: jest.Mock<any, any, any>;
+    addExportFlags: jest.Mock<any, any, any>;
   } => ({
-    addListenerExportBtn: jest.fn() as jest.Mock,
-  })
+    addExportFlags: jest.fn() as jest.Mock,
+  }),
 ) as typeof jest;
 jest.mock(
   "@/pages/api/ts/handlers",
@@ -16,7 +16,7 @@ jest.mock(
     handleSubmit: jest.Mock<any, any, any>;
   } => ({
     handleSubmit: jest.fn() as jest.Mock,
-  })
+  }),
 ) as typeof jest;
 jest.mock(
   "@/lib/global/gModel",
@@ -28,7 +28,7 @@ jest.mock(
     autoCapitalizeInputs: jest.fn() as jest.Mock,
     formatCPF: jest.fn() as jest.Mock,
     formatTel: jest.fn() as jest.Mock,
-  })
+  }),
 ) as typeof jest;
 describe("StudentForm Component", (): void => {
   test("renders student form", (): void => {
@@ -45,10 +45,10 @@ describe("StudentForm Component", (): void => {
       expect(
         fireEvent.input(
           (render(<StudentForm mainRoot={undefined} userClass='coordenador' />) as RenderResult).getByPlaceholderText(
-            /Preencha com o nome completo/i
+            /Preencha com o nome completo/i,
           ) as HTMLInputElement,
-          { target: { value: "john doe" } }
-        ) as boolean
+          { target: { value: "john doe" } },
+        ) as boolean,
       ) as jest.JestMatchers<HTMLElement>
     ).toBe(true) as void;
     (expect(autoCapitalizeInputs) as jest.JestMatchers<HTMLElement>).toHaveBeenCalledWith<
@@ -60,13 +60,15 @@ describe("StudentForm Component", (): void => {
       expect(
         fireEvent.click(
           (render(<StudentForm mainRoot={undefined} userClass='coordenador' />) as RenderResult).getByTitle(
-            /Gere um .xlsx com os dados preenchidos/i
-          ) as HTMLButtonElement
-        ) as boolean
+            /Gere um .xlsx com os dados preenchidos/i,
+          ) as HTMLButtonElement,
+        ) as boolean,
       ) as jest.JestMatchers<HTMLElement>
     ).toBe<boolean>(true) as void;
-    (expect(addListenerExportBtn) as jest.JestMatchers<HTMLElement>).toHaveBeenCalledWith<
-      Parameters<typeof addListenerExportBtn>
-    >("novoEstudante", (expect as jest.Expect).anything(), (expect as jest.Expect).anything()) as void;
+    (expect(addExportFlags) as jest.JestMatchers<HTMLElement>).toHaveBeenCalledWith<Parameters<typeof addExportFlags>>(
+      "novoEstudante",
+      (expect as jest.Expect).anything(),
+      (expect as jest.Expect).anything(),
+    ) as void;
   }) as void;
 }) as void;

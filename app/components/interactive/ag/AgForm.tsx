@@ -221,32 +221,12 @@ export default function AgForm(): JSX.Element {
               <span role='textbox'>Número:</span>
               <span role='group' className='flexDiv spanLoc fitSpaced mg-07t'>
                 <StreetNum />
-                <span role='group' className='halfSpanCheck halfR flexAlItCt noInvert'>
-                  <input
-                    type='checkbox'
-                    name='streetNumNullName'
-                    id='streetNumNullId'
-                    className='noInvert numNullId form-check-input'
-                    role='switch'
-                    data-title='switch_num_rua'
-                  />
-                </span>
               </span>
             </span>
             <span role='group' className='fsAnamGSpan locSpan form-switch flexColumn noInvert' id='fsAnamGSpan14'>
               <span role='textbox'>Complemento:</span>
               <span role='group' className='flexDiv spanLoc fitSpaced mg-07t'>
                 <LocComp />
-                <span role='group' className='halfSpanCheck halfR flexAlItCt noInvert'>
-                  <input
-                    type='checkbox'
-                    name='compNumNullName'
-                    id='compNumNullId'
-                    className='noInvert numNullId form-check-input'
-                    role='switch'
-                    data-title='switch_comp_casa'
-                  />
-                </span>
               </span>
             </span>
           </div>

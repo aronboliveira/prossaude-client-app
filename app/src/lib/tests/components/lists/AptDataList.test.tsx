@@ -1,7 +1,7 @@
 import { render, screen, fireEvent, RenderResult } from "@testing-library/react";
 import AptDataList from "../../../../../components/lists/AptDataList";
 import { consVariablesData } from "../../../../../components/consRegst/consVariables";
-import { addListenerExportBtn } from "../../../../lib/global/gController";
+import { addExportFlags } from "../../../../lib/global/gController";
 import "@testing-library/jest-dom/extend-expect";
 jest.mock(
   "../../../../../components/consRegst/ErrorFallbackDlg",
@@ -10,9 +10,9 @@ jest.mock(
 jest.mock(
   "../../../../../lib/global/gController",
   (): {
-    addListenerExportBtn: jest.Mock<any, any, any>;
+    addExportFlags: jest.Mock<any, any, any>;
   } => ({
-    addListenerExportBtn: jest.fn(),
+    addExportFlags: jest.fn(),
   }),
 ) as typeof jest;
 jest.mock(
@@ -69,10 +69,10 @@ describe("AptDataList Component", (): void => {
     fireEvent.click(screen.getByRole<HTMLButtonElement>("button", { name: "" })) as boolean;
     expect(mockSetDisplayAptList).toHaveBeenCalled() as void;
   }) as void;
-  test("calls addListenerExportBtn when export button is rendered", (): void => {
+  test("calls addExportFlags when export button is rendered", (): void => {
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
     fireEvent.click(screen.getByRole<HTMLButtonElement>("button", { name: /Gerar Planilha/i })) as boolean;
-    expect(addListenerExportBtn).toHaveBeenCalled() as void;
+    expect(addExportFlags).toHaveBeenCalled() as void;
   }) as void;
   test("renders the ErrorFallbackDlg when an error occurs", (): void => {
     jest.spyOn<Console, "warn">(console, "warn").mockImplementation((): void => {}) as jest.SpyInstance;

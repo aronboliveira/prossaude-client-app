@@ -1,8 +1,8 @@
 "use client";
 import { ErrorBoundary } from "react-error-boundary";
 import { ScheduleFormProps } from "../../../src/lib/locals/panelPage/declarations/interfacesCons";
-import { addListenerExportBtn } from "../../../src/lib/global/gController";
-import { fillScheduleState, panelRoots, providers } from "@/vars";
+import { addExportFlags } from "../../../src/lib/global/gController";
+import { exporters, fillScheduleState, panelRoots, providers } from "@/vars";
 import { handleClientPermissions } from "../../../src/lib/locals/panelPage/handlers/consHandlerUsers";
 import { handleSubmit } from "@/lib/locals/panelPage/handlers/handlers";
 import { useState, useRef, useEffect, useCallback, JSX, useContext } from "react";
@@ -38,9 +38,7 @@ import { scheduleReset, panelFormsVariables, sessionScheduleState } from "../pan
 import FormDlg from "../../consRegst/FormDlg";
 import { assignFormAttrs } from "@/lib/global/gModel";
 import { PanelCtx } from "../defs/client/SelectLoader";
-export const scheduleProps: { autoSaving: boolean } = {
-  autoSaving: true,
-};
+import { ExportHandler } from "@/lib/global/declarations/classes";
 export default function ScheduleForm({ mainRoot }: ScheduleFormProps): JSX.Element {
   const cols = [1, 2, 3, 4, 5, 6, 7, 8, 9],
     hours: validSchedHours[] = [18, 19, 20, 21],
@@ -95,7 +93,7 @@ export default function ScheduleForm({ mainRoot }: ScheduleFormProps): JSX.Eleme
         //adição de listeners para exportação de excel
         const btnExportSched = btnExportSchedRef.current || form.querySelector("#btnExport");
         btnExportSched instanceof HTMLButtonElement
-          ? addListenerExportBtn("Agenda", form, document.getElementById("hSched") || form)
+          ? addExportFlags(form)
           : elementNotFound(btnExportSched, "Button for generating spreadsheet in schedule form", extLine(new Error()));
         //ajustes de estilo
         clearPhDates(Array.from(form.querySelectorAll('input[type="date"]')));
@@ -347,6 +345,37 @@ export default function ScheduleForm({ mainRoot }: ScheduleFormProps): JSX.Eleme
       }
     };
   }, [userClass]);
+  useEffect(() => {
+    exporters.scheduleExporter = new ExportHandler();
+    const interv = exporters.scheduleExporter.autoResetTimer(600000),
+      path = location.pathname,
+      handleUnload = (): void => interv && clearInterval(interv),
+      handlePop = (): boolean => {
+        if (location.pathname !== path) {
+          interv && clearInterval(interv);
+          return true;
+        }
+        return false;
+      };
+    addEventListener(
+      "beforeunload",
+      () => {
+        handleUnload();
+        removeEventListener("beforeunload", handleUnload);
+      },
+      { once: true },
+    );
+    addEventListener("popstate", () => {
+      handlePop() && removeEventListener("popstate", handlePop);
+    });
+    addExportFlags(formRef.current ?? document);
+    (): void => {
+      handlePop();
+      removeEventListener("popstate", handlePop);
+      handleUnload();
+      removeEventListener("beforeunload", handleUnload);
+    };
+  }, []);
   useEffect(() => assignFormAttrs(formRef.current));
   return (
     <ErrorBoundary FallbackComponent={() => <GenericErrorComponent message='Erro carregando agenda!' />}>
@@ -912,7 +941,19 @@ export default function ScheduleForm({ mainRoot }: ScheduleFormProps): JSX.Eleme
                 name='btnExportSched'
                 ref={btnExportSchedRef}
                 data-active='false'
-                title='Gere um .xlsx com os dados preenchidos'>
+                title='Gere um .xlsx com os dados preenchidos'
+                onClick={ev => {
+                  if (!exporters.scheduleExporter) exporters.scheduleExporter = new ExportHandler();
+                  exporters.scheduleExporter.handleExportClick(
+                    ev,
+                    `Agenda__d${new Date().getDay()}_m${new Date().getMonth() + 1}_y${new Date().getFullYear()}`,
+                    formRef.current ?? document,
+                    Array.from(formRef.current?.querySelectorAll("table") ?? []).at(-1) ??
+                      Array.from(document.querySelectorAll("table") ?? []).at(-1) ??
+                      "TabelaDeAgenda",
+                  ),
+                    { signal: new AbortController().signal };
+                }}>
                 Gerar Planilha
               </button>
               <ReseterBtn

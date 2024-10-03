@@ -2,7 +2,7 @@
 import { ConsDlgProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import { ErrorBoundary } from "react-error-boundary";
 import { addListenerAvMembers } from "@/lib/locals/panelPage/handlers/consHandlerList";
-import { addListenerExportBtn } from "@/lib/global/gController";
+import { addExportFlags } from "@/lib/global/gController";
 import { consVariablesData } from "./consVariables";
 import { createRoot } from "react-dom/client";
 import { providers, formData } from "@/vars";
@@ -31,7 +31,13 @@ import {
 } from "@/lib/global/handlers/errorHandler";
 import { nullishBtn, nullishDiv, nullishDlg, nullishForm, nullishInp } from "@/lib/global/declarations/types";
 import { addEmailExtension, assignFormAttrs, autoCapitalizeInputs, formatCPF, formatTel } from "@/lib/global/gModel";
-import { enableCPFBtn, handleCondtReq, validateForm, syncAriaStates } from "@/lib/global/handlers/gHandlers";
+import {
+  enableCPFBtn,
+  handleCondtReq,
+  validateForm,
+  syncAriaStates,
+  cleanStorageName,
+} from "@/lib/global/handlers/gHandlers";
 import ListFirstNameCons from "./ListFirstNameCons";
 import ListCPFPacCons from "./ListCPFPacCons";
 import OptGrpUsers from "./OptGrpUsers";
@@ -39,6 +45,8 @@ import ListTelPacCons from "./ListTelPacCons";
 import ListEmailPacCons from "./ListEmailPacCons";
 import FailRegstAlert from "../alerts/FailRegsAlert";
 import { PanelCtx } from "../panelForms/defs/client/SelectLoader";
+import { ExportHandler } from "@/lib/global/declarations/classes";
+import { exporters } from "@/vars";
 let accFormData = 0;
 export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
   //display de campos para identificadores de estudante
@@ -322,24 +330,40 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
       if (timeDiv instanceof HTMLElement) timeDiv.style.display = "none";
     }
   }, [dayRef]);
-  //adicionar listener para exportação de excel
   useEffect(() => {
-    if (
-      exportRef?.current instanceof HTMLButtonElement &&
-      exportRef.current.id.match(/export/gi) &&
-      (dlgRef?.current instanceof HTMLDialogElement ||
-        (dlgRef.current! instanceof HTMLElement &&
-          (dlgRef.current as HTMLElement).classList.toString().match(/modal/gi)))
-    )
-      addListenerExportBtn("Paciente", dlgRef.current, "#firstNamePac");
-    else
-      multipleElementsNotFound(
-        extLine(new Error()),
-        "refs in useEffect() for FormDlg",
-        exportRef.current,
-        dlgRef.current,
-      );
-  }, [exportRef]);
+    exporters.formDlgExporter = new ExportHandler();
+    const interv = exporters.formDlgExporter.autoResetTimer(600000),
+      path = location.pathname,
+      handleUnload = (): void => interv && clearInterval(interv),
+      handlePop = (): boolean => {
+        if (location.pathname !== path) {
+          interv && clearInterval(interv);
+          return true;
+        }
+        return false;
+      };
+    addEventListener(
+      "beforeunload",
+      () => {
+        handleUnload();
+        removeEventListener("beforeunload", handleUnload);
+      },
+      { once: true },
+    );
+    addEventListener("popstate", () => {
+      handlePop() && removeEventListener("popstate", handlePop);
+    });
+    addExportFlags(dlgRef.current ?? document);
+    addEventListener("beforeunload", cleanStorageName);
+    (): void => {
+      cleanStorageName();
+      removeEventListener("beforeunload", cleanStorageName);
+      handlePop();
+      removeEventListener("popstate", handlePop);
+      handleUnload();
+      removeEventListener("beforeunload", handleUnload);
+    };
+  }, []);
   useEffect(() => assignFormAttrs(formRef.current));
   return (
     <dialog className='modal-content flexWC' ref={dlgRef} id='regstPacDlg'>
@@ -463,6 +487,7 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
                       data-title='Primeiro Nome Paciente'
                       data-aloc='firstname-pac'
                       onInput={ev => {
+                        if (window) localStorage.setItem("name", ev.currentTarget.value);
                         handleCondtReq(ev.currentTarget, {
                           min: 3,
                           max: 99,
@@ -602,6 +627,7 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
                   data-title='Sobrenome Paciente'
                   data-aloc='familyname-pac'
                   onInput={ev => {
+                    if (window) localStorage.setItem("secondName", ev.currentTarget.value);
                     isAutocorrectConsOn && autoCapitalizeInputs(ev.currentTarget, isAutocorrectConsOn);
                     handleCondtReq(ev.currentTarget, {
                       min: 3,
@@ -1104,7 +1130,19 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
                   className='btn btn-primary widFull'
                   data-active='false'
                   ref={exportRef}
-                  title='Gere um .xlsx com os dados preenchidos'>
+                  title='Gere um .xlsx com os dados preenchidos'
+                  onClick={ev => {
+                    if (!exporters.formDlgExporter) exporters.formDlgExporter = new ExportHandler();
+                    exporters.formDlgExporter.handleExportClick(
+                      ev,
+                      "registroDeConsultaParaPaciente",
+                      ev.currentTarget.closest("form") ?? document,
+                      `${localStorage.getItem("name")?.replace(/\s/g, "-") ?? ""}_${
+                        localStorage.getItem("secondName")?.replace(/\s/g, "-") ?? ""
+                      }_${localStorage.getItem("lastName")?.replace(/\s/g, "-") ?? ""}`,
+                    ),
+                      { signal: new AbortController().signal };
+                  }}>
                   <small role='textbox'>
                     <em className='bolded'>Gerar Planilha</em>
                   </small>

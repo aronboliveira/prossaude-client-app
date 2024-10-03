@@ -3,10 +3,10 @@ import PacTabForm from "../../../../../../components/panelForms/pacs/PacTabForm"
 jest.mock(
   "@/lib/global/gController",
   (): {
-    addListenerExportBtn: jest.Mock<any, any, any>;
+    addExportFlags: jest.Mock<any, any, any>;
   } => ({
-    addListenerExportBtn: jest.fn() as jest.Mock,
-  })
+    addExportFlags: jest.fn() as jest.Mock,
+  }),
 ) as typeof jest;
 jest.mock(
   "@/lib/global/handlers/errorHandler",
@@ -16,7 +16,7 @@ jest.mock(
   } => ({
     elementNotFound: jest.fn() as jest.Mock,
     extLine: jest.fn() as jest.Mock,
-  })
+  }),
 ) as typeof jest;
 jest.mock(
   "@/lib/global/gStyleScript",
@@ -24,7 +24,7 @@ jest.mock(
     normalizeSizeSb: jest.Mock<any, any, any>;
   } => ({
     normalizeSizeSb: jest.fn() as jest.Mock,
-  })
+  }),
 ) as typeof jest;
 jest.mock(
   "@/lib/global/handlers/gHandlers",
@@ -32,21 +32,23 @@ jest.mock(
     syncAriaStates: jest.Mock<any, any, any>;
   } => ({
     syncAriaStates: jest.fn() as jest.Mock,
-  })
+  }),
 ) as typeof jest;
 describe("PacTabForm Component", (): void => {
   test("renders PacTabForm with default props", (): void => {
     (
       expect(
-        (render(<PacTabForm userClass='estudante' />) as RenderResult).getByText(/Tabela de Pacientes Registrados/i)
+        (render(<PacTabForm userClass='estudante' />) as RenderResult).getByText(/Tabela de Pacientes Registrados/i),
       ) as jest.JestMatchers<HTMLElement>
     ).toBeInTheDocument() as void;
   }) as void;
   test("click on 'Gerar Planilha' button", (): void => {
     expect(
       fireEvent.click(
-        (render(<PacTabForm userClass='estudante' />) as RenderResult).getByText(/Gerar Planilha/i) as HTMLButtonElement
-      ) as boolean
+        (render(<PacTabForm userClass='estudante' />) as RenderResult).getByText(
+          /Gerar Planilha/i,
+        ) as HTMLButtonElement,
+      ) as boolean,
     ).toBe<boolean>(true) as void;
   }) as void;
 }) as void;

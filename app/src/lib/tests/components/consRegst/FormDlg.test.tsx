@@ -2,7 +2,7 @@ import { render, fireEvent, screen, RenderResult } from "@testing-library/react"
 import FormDlg from "../../../../../components/consRegst/FormDlg";
 import { ConsDlgProps } from "../../../../lib/locals/panelPage/declarations/interfacesCons";
 import { addListenerAvMembers } from "../../../../lib/locals/panelPage/handlers/consHandlerList";
-import { addListenerExportBtn } from "../../../../lib/global/gController";
+import { addExportFlags } from "../../../../lib/global/gController";
 import { syncAriaStates } from "../../../../lib/global/handlers/gHandlers";
 import { isClickOutside } from "../../../../lib/global/gStyleScript";
 import { checkRegstBtn, generateSchedPacData } from "../../../../lib/locals/panelPage/handlers/consHandlerCmn";
@@ -24,9 +24,9 @@ jest.mock(
 jest.mock(
   "../../../../lib/global/gController",
   (): {
-    addListenerExportBtn: jest.Mock<any, any, any>;
+    addExportFlags: jest.Mock<any, any, any>;
   } => ({
-    addListenerExportBtn: jest.fn() as jest.Mock,
+    addExportFlags: jest.fn() as jest.Mock,
   }),
 ) as typeof jest;
 jest.mock(
@@ -132,10 +132,10 @@ describe("FormDlg Component", (): void => {
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
     (expect(addListenerAvMembers) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalled() as void;
   }) as void;
-  test("calls addListenerExportBtn when exportRef and dlgRef are valid", (): void => {
+  test("calls addExportFlags when exportRef and dlgRef are valid", (): void => {
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
-    (expect(addListenerExportBtn) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalledWith<
-      Parameters<typeof addListenerExportBtn>
+    (expect(addExportFlags) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalledWith<
+      Parameters<typeof addExportFlags>
     >("Paciente", expect.anything() as any, "#firstNamePac");
   }) as void;
   test("calls isClickOutside and onClose when clicking outside dialog", (): void => {

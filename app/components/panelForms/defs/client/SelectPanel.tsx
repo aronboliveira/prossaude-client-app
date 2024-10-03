@@ -16,8 +16,8 @@ import ErrorMainDiv from "../../../error/ErrorMainDiv";
 import GenericErrorComponent from "../../../error/GenericErrorComponent";
 import PacTabForm from "../../pacs/PacTabForm";
 import ProfForm from "../../profs/ProfForm";
-import RemoveProfForm from "../../profs/RemoveProfForm";
-import RemoveStudForm from "../../studs/RemoveStudForm";
+import TableProfForm from "../../profs/TabProfForm";
+import TabStudForm from "../../studs/TabStudForm";
 import StudentForm from "../../studs/StudentForm";
 import Unauthorized from "../Unauthorized";
 import { elementNotFound, extLine, inputNotFound, stringError } from "@/lib/global/handlers/errorHandler";
@@ -55,9 +55,9 @@ export default function SelectPanel({ defOp = "agenda" }: MainPanelProps): JSX.E
             case "registProf":
               return userClass === "coordenador" ? <ProfForm /> : <Unauthorized />;
             case "removeStud":
-              return userClass === "coordenador" || userClass === "supervisor" ? <RemoveStudForm /> : <Unauthorized />;
+              return userClass === "coordenador" || userClass === "supervisor" ? <TabStudForm /> : <Unauthorized />;
             case "removeProf":
-              return userClass === "coordenador" || userClass === "supervisor" ? <RemoveProfForm /> : <Unauthorized />;
+              return userClass === "coordenador" || userClass === "supervisor" ? <TableProfForm /> : <Unauthorized />;
             case "pacList":
               return <PacTabForm />;
             case "agenda":
@@ -122,12 +122,12 @@ export default function SelectPanel({ defOp = "agenda" }: MainPanelProps): JSX.E
           panelSelect.value = "registProf";
         } else if (/removeProf/gi.test(kebabSearch)) {
           context.roots.formRoot.render(
-            userClass === "coordenador" || userClass === "supervisor" ? <RemoveProfForm /> : <Unauthorized />,
+            userClass === "coordenador" || userClass === "supervisor" ? <TableProfForm /> : <Unauthorized />,
           );
           panelSelect.value = "removeProf";
         } else if (/removeStud/gi.test(kebabSearch)) {
           context.roots.formRoot.render(
-            userClass === "coordenador" || userClass === "supervisor" ? <RemoveStudForm /> : <Unauthorized />,
+            userClass === "coordenador" || userClass === "supervisor" ? <TabStudForm /> : <Unauthorized />,
           );
           panelSelect.value = "removeStud";
         } else if (/agenda/gi.test(kebabSearch)) {

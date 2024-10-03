@@ -1,12 +1,12 @@
 import { ErrorBoundary } from "react-error-boundary";
-import { addListenerExportBtn } from "@/lib/global/gController";
+import { addExportFlags } from "@/lib/global/gController";
 import { createRoot } from "react-dom/client";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { equalizeTabCells, normalizeSizeSb } from "@/lib/global/gStyleScript";
 import { fillTabAttr } from "@/lib/locals/panelPage/handlers/consHandlerList";
 import { handleClientPermissions } from "@/lib/locals/panelPage/handlers/consHandlerUsers";
 import { handleFetch } from "@/lib/locals/panelPage/handlers/handlers";
-import { panelRoots } from "@/vars";
+import { exporters, panelRoots } from "@/vars";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useEffect, useRef, useCallback, useContext } from "react";
 import GenericErrorComponent from "../../error/GenericErrorComponent";
@@ -17,26 +17,27 @@ import { StudInfo } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import { strikeEntries } from "@/lib/locals/panelPage/consStyleScript";
 import { assignFormAttrs } from "@/lib/global/gModel";
 import { PanelCtx } from "../defs/client/SelectLoader";
-export default function RemoveStudForm(): JSX.Element {
-  const userClass = useContext(PanelCtx).userClass;
-  const studs: StudInfo[] = [];
-  const formRef = useRef<nullishForm>(null);
-  const tabRef = useRef<nullishTab>(null);
-  const tbodyRef = useRef<HTMLTableSectionElement | null>(null);
-  const btnExportTabStudsRef = useRef<nullishBtn>(null);
-  const callbackNormalizeSizeSb = useCallback(() => {
-    normalizeSizeSb(
-      [
-        ...document.querySelectorAll(".form-padded"),
-        ...document.querySelectorAll(".ovFlAut"),
-        ...document.querySelectorAll("[scrollbar-width=none]"),
-      ],
-      [false, 0],
-      true,
-      [document.getElementById("sectStudsTab")],
-    );
-    document.querySelector("table")!.style.minHeight = "revert";
-  }, []);
+import { ExportHandler } from "@/lib/global/declarations/classes";
+export default function TabStudForm(): JSX.Element {
+  const userClass = useContext(PanelCtx).userClass,
+    studs: StudInfo[] = [],
+    formRef = useRef<nullishForm>(null),
+    tabRef = useRef<nullishTab>(null),
+    tbodyRef = useRef<HTMLTableSectionElement | null>(null),
+    btnExportTabStudsRef = useRef<nullishBtn>(null),
+    callbackNormalizeSizeSb = useCallback(() => {
+      normalizeSizeSb(
+        [
+          ...document.querySelectorAll(".form-padded"),
+          ...document.querySelectorAll(".ovFlAut"),
+          ...document.querySelectorAll("[scrollbar-width=none]"),
+        ],
+        [false, 0],
+        true,
+        [document.getElementById("sectStudsTab")],
+      );
+      document.querySelector("table")!.style.minHeight = "revert";
+    }, []);
   useEffect(() => {
     try {
       if (!(tbodyRef.current instanceof HTMLTableSectionElement))
@@ -241,11 +242,7 @@ export default function RemoveStudForm(): JSX.Element {
     if (formRef?.current instanceof HTMLFormElement) {
       const btnExportTabStuds = btnExportTabStudsRef.current || formRef.current!.querySelector("#btnExport");
       btnExportTabStuds instanceof HTMLButtonElement
-        ? addListenerExportBtn(
-            "tab_Estudantes",
-            formRef.current,
-            document.getElementById("titleTabStuds") || formRef.current,
-          )
+        ? addExportFlags(formRef.current)
         : elementNotFound(
             btnExportTabStuds,
             "<button> for triggering generation of spreadsheet in the table for checking students",
@@ -253,7 +250,7 @@ export default function RemoveStudForm(): JSX.Element {
           );
       callbackNormalizeSizeSb();
       syncAriaStates([...formRef.current!.querySelectorAll("*"), formRef.current]);
-    } else elementNotFound(formRef?.current, "formRef.current in useEffect() for RemoveStudForm", extLine(new Error()));
+    } else elementNotFound(formRef?.current, "formRef.current in useEffect() for TabStudForm", extLine(new Error()));
   }, [formRef, callbackNormalizeSizeSb]);
   useEffect(() => {
     if (tabRef.current instanceof HTMLElement) {
@@ -265,6 +262,37 @@ export default function RemoveStudForm(): JSX.Element {
       );
     }
   }, [tabRef, userClass]);
+  useEffect(() => {
+    exporters.tabStudExporter = new ExportHandler();
+    const interv = exporters.tabStudExporter.autoResetTimer(600000),
+      path = location.pathname,
+      handleUnload = (): void => interv && clearInterval(interv),
+      handlePop = (): boolean => {
+        if (location.pathname !== path) {
+          interv && clearInterval(interv);
+          return true;
+        }
+        return false;
+      };
+    addEventListener(
+      "beforeunload",
+      () => {
+        handleUnload();
+        removeEventListener("beforeunload", handleUnload);
+      },
+      { once: true },
+    );
+    addEventListener("popstate", () => {
+      handlePop() && removeEventListener("popstate", handlePop);
+    });
+    addExportFlags(formRef.current ?? document);
+    (): void => {
+      handlePop();
+      removeEventListener("popstate", handlePop);
+      handleUnload();
+      removeEventListener("beforeunload", handleUnload);
+    };
+  }, []);
   useEffect(() => assignFormAttrs(formRef.current));
   return (
     <form
@@ -339,7 +367,16 @@ export default function RemoveStudForm(): JSX.Element {
         name='btnExportTabStuds'
         ref={btnExportTabStudsRef}
         data-active='false'
-        title='Gere um .xlsx com os dados preenchidos'>
+        title='Gere um .xlsx com os dados preenchidos'
+        onClick={ev => {
+          if (!exporters.tabStudExporter) exporters.tabStudExporter = new ExportHandler();
+          exporters.tabStudExporter.handleExportClick(
+            ev,
+            "tabelaDeEstudantes",
+            document.getElementById("titleTabStuds") ?? formRef.current ?? document,
+            `d${new Date().getDate()}_m${new Date().getMonth() + 1}_y${new Date().getFullYear()}`,
+          );
+        }}>
         Gerar Planilha
       </button>
     </form>

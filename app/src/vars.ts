@@ -1,5 +1,5 @@
 import { Root } from "react-dom/client";
-import { Person } from "./lib/global/declarations/classes";
+import { ExportHandler, Person } from "./lib/global/declarations/classes";
 import { ENTabsProps } from "./lib/global/declarations/interfaces";
 import { UserState } from "./lib/locals/basePage/declarations/serverInterfaces";
 import { defUser } from "./redux/slices/userSlice";
@@ -52,4 +52,20 @@ export const providers: { [k: string]: DataProvider | voidVal } = {
 };
 export const panelRoots: { [k: string]: Root | undefined } = {
   mainRoot: undefined,
+};
+export const scheduleProps: { autoSaving: boolean } = {
+  autoSaving: true,
+};
+export const exporters: { [k: string]: ExportHandler | undefined } = {
+  formDlgExporter: undefined,
+  agExporter: undefined,
+  edExporter: undefined,
+  odExporter: undefined,
+  aptExporter: undefined,
+  pacExporter: undefined,
+  profExporter: undefined,
+  studExporter: undefined,
+  tabProfExporter: undefined,
+  tabStudExporter: undefined,
+  scheduleExporter: undefined,
 };
