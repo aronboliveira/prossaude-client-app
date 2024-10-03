@@ -1,7 +1,7 @@
 "use client";
 import { Dispatch, lazy, SetStateAction, Suspense, useState } from "react";
 import { createContext, useEffect } from "react";
-import Spinner from "../../../icons/Spinner";
+import ReactSpinner from "../../../icons/ReactSpinner";
 export const PanelCtx = createContext<{
   userClass: string;
   setUserClass: Dispatch<SetStateAction<string>>;
@@ -21,7 +21,7 @@ export default function SelectPanelLoader(): JSX.Element {
   }, []);
   return (
     <PanelCtx.Provider value={{ userClass, setUserClass }}>
-      <Suspense fallback={<Spinner />}>
+      <Suspense fallback={<ReactSpinner scale={0.7} />}>
         <SelectPanel defOp='agenda' />
       </Suspense>
     </PanelCtx.Provider>
