@@ -246,6 +246,10 @@
         }
       }
     }
+    #bgDiv {
+      height: 46rem;
+      min-height: 50rem;
+    }
     #cardsSect {
       grid-template-columns: repeat(4, 24.8%);
       gap: 0.5rem;
@@ -254,6 +258,7 @@
       transform: translateY(-2.3rem);
     }
     #panelSect {
+      padding-top: 1rem;
       transform: translateY((-5.8rem));
     }
   }
