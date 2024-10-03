@@ -8,7 +8,7 @@ import { handleClientPermissions } from "@/lib/locals/panelPage/handlers/consHan
 import { handleFetch } from "@/lib/locals/panelPage/handlers/handlers";
 import { exporters, panelRoots } from "@/vars";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
-import { useEffect, useRef, useCallback, useContext } from "react";
+import { useEffect, useRef, useCallback, useContext, useMemo } from "react";
 import GenericErrorComponent from "../../error/GenericErrorComponent";
 import ProfRow from "./ProfRow";
 import Spinner from "../../icons/Spinner";
@@ -20,7 +20,7 @@ import { PanelCtx } from "../defs/client/SelectLoader";
 import { ExportHandler } from "@/lib/global/declarations/classes";
 export default function TableProfForm(): JSX.Element {
   const userClass = useContext(PanelCtx).userClass,
-    profs: ProfInfo[] = [],
+    profs: ProfInfo[] = useMemo(() => [], []),
     formRef = useRef<nullishForm>(null),
     tabRef = useRef<nullishTab>(null),
     tbodyRef = useRef<nullishTabSect>(null),

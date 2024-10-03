@@ -12,11 +12,10 @@ import {
 import { handleFetch } from "@/lib/locals/panelPage/handlers/handlers";
 import { nullishTab, nullishTabSect } from "@/lib/global/declarations/types";
 import { panelRoots } from "@/vars";
-import { useRef, useEffect, useContext } from "react";
+import { useRef, useEffect, useContext, useMemo } from "react";
 import GenericErrorComponent from "../error/GenericErrorComponent";
 import Spinner from "../icons/Spinner";
 import StudRow from "../panelForms/studs/StudRow";
-
 import { StudInfo, StudListProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { strikeEntries } from "@/lib/locals/panelPage/consStyleScript";
@@ -25,7 +24,7 @@ import { PanelCtx } from "../panelForms/defs/client/SelectLoader";
 export default function StudList({ mainDlgRef, dispatch, state = true }: StudListProps): JSX.Element {
   const tabRef = useRef<nullishTab>(null),
     tbodyRef = useRef<nullishTabSect>(null),
-    studs: StudInfo[] = [],
+    studs: StudInfo[] = useMemo(() => [], []),
     userClass = useContext(PanelCtx).userClass;
   useEffect(() => {
     try {

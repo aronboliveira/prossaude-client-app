@@ -7,7 +7,7 @@ import { handleFetch } from "@/lib/locals/panelPage/handlers/handlers";
 import { panelRoots } from "@/vars";
 import { strikeEntries } from "@/lib/locals/panelPage/consStyleScript";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
-import { useContext, useEffect, useRef } from "react";
+import { useContext, useEffect, useMemo, useRef } from "react";
 import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
 import GenericErrorComponent from "../error/GenericErrorComponent";
 import ProfRow from "../panelForms/profs/ProfRow";
@@ -23,8 +23,8 @@ import {
 import { PanelCtx } from "../panelForms/defs/client/SelectLoader";
 export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
   const userClass = useContext(PanelCtx).userClass,
-    internalProfs: ProfInfo[] = [],
-    externalProfs: ProfInfo[] = [],
+    internalProfs: ProfInfo[] = useMemo(() => [], []),
+    externalProfs: ProfInfo[] = useMemo(() => [], []),
     dialogRef = useRef<nullishDlg>(null),
     tabProfIntRef = useRef<nullishTab>(null),
     tabProfExtRef = useRef<nullishTab>(null),

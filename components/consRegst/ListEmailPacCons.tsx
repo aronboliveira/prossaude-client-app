@@ -4,14 +4,14 @@ import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { PersonProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import { handleFetch } from "@/lib/locals/panelPage/handlers/handlers";
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { panelRoots } from "@/vars";
 import { createRoot } from "react-dom/client";
 import { ErrorBoundary } from "react-error-boundary";
 import GenericErrorComponent from "../error/GenericErrorComponent";
 export default function ListEmailPacCons(): JSX.Element {
   const dlRef = useRef<nullishDl>(null);
-  const pacs: PersonProps[] = [];
+  const pacs: PersonProps[] = useMemo(() => [], []);
   useEffect(() => {
     try {
       if (!(dlRef.current instanceof HTMLDataListElement))
