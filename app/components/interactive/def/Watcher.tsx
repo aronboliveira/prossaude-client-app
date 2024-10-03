@@ -21,9 +21,11 @@ export default function Watcher({ routeCase }: { routeCase?: pageCases }): JSX.E
     setTimeout(() => {
       watchLabels();
       addEventListener("resize", handleResize);
-      if (!isExportListening) {
-        addExportFlags();
-        setExport(true);
+      if (routeCase !== "login" && routeCase !== "base" && routeCase !== "recover") {
+        if (!isExportListening) {
+          addExportFlags();
+          setExport(true);
+        }
       }
       if (routeCase === "ag") {
         equalizeFlexSibilings(document.querySelectorAll("[class*='flexTwin']"), [["width", "px"]]);
