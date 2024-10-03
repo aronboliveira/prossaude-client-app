@@ -296,6 +296,12 @@
     .main-article {
       height: 70rem;
     }
+    .main-container {
+      min-height: 66rem;
+    }
+    #bgDiv {
+      min-height: 71rem;
+    }
     #cardsSect {
       grid-template-columns: repeat(2, 1fr);
       row-gap: 1rem;

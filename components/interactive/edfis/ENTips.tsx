@@ -9,16 +9,16 @@ export default function ENTips({ state, dispatch }: DlgProps): JSX.Element {
   useEffect(() => {
     history.pushState({}, "", `${location.origin}${location.pathname}${location.search}&tips=open`);
     setTimeout(() => {
-      history.pushState({}, "", `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#"));
+      history.replaceState({}, "", `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#"));
     }, 300);
     return (): void => {
-      history.pushState(
+      history.replaceState(
         {},
         "",
         `${location.origin}${location.pathname}${location.search}`.replaceAll("&tips=open", ""),
       );
       setTimeout(() => {
-        history.pushState({}, "", `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#"));
+        history.replaceState({}, "", `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#"));
       }, 300);
     };
   }, []);

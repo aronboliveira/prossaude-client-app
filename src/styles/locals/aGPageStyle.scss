@@ -289,7 +289,7 @@
       height: 2.4rem;
       margin-top: 0.1vh;
       &:has(#streetNumNullId) {
-        height: 2.377rem;
+        height: 2.4rem;
       }
     }
   }
@@ -330,6 +330,10 @@
     }
   }
 
+  .taOp {
+    width: 61.5vw;
+  }
+
   #divAddFamDiab {
     .divAntFamCheck {
       width: 99%;
@@ -338,6 +342,7 @@
   }
 
   #divAddGrv {
+    width: 61.5vw;
     input {
       @include formCheckOpaque;
       transform: translateY(0.04rem);
@@ -411,7 +416,15 @@
   }
 
   #fsAnamGDiv3 {
-    width: 65%;
+    width: 75%;
+    input:not([type="radio"]):not([type="checkbox"]),
+    select {
+      min-width: 5rem;
+    }
+    #streetNumId,
+    #compNumId {
+      width: 13.3rem;
+    }
   }
 
   #fsAnamGDiv4 {
@@ -485,8 +498,20 @@
     padding-left: 0;
   }
 
+  #statusPac {
+    width: 90%;
+  }
+
+  #tempFum {
+    transform: translateY(-2rem);
+  }
+
   #textAddOtherDId {
     width: 100%;
+  }
+
+  #UFId {
+    width: 16.3rem;
   }
 }
 

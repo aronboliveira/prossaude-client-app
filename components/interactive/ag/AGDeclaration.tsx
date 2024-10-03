@@ -7,22 +7,40 @@ import { nullishDlg } from "@/lib/global/declarations/types";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useEffect, useRef } from "react";
 import GenericErrorComponent from "../../error/GenericErrorComponent";
+import st from "../../../src/styles/locals/declarationStyles.module.scss";
+import DefaultDeclaration from "../def/DefaultDeclaration";
 export default function AGDeclaration({ state, dispatch }: DlgProps): JSX.Element {
   const mainRef = useRef<nullishDlg>(null);
   //push em history
   useEffect(() => {
-    history.pushState({}, "", `${location.origin}${location.pathname}${location.search}conform=open`);
+    if (!/conform=open/gi.test(location.href))
+      history.pushState({}, "", `${location.origin}${location.pathname}${location.search}&conform=open`);
     setTimeout(() => {
-      history.pushState({}, "", `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#"));
-    }, 300);
-    return (): void => {
-      history.pushState(
+      history.replaceState(
         {},
         "",
-        `${location.origin}${location.pathname}${location.search}`.replace(/[\?\&]conform=open/g, ""),
+        `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#").replaceAll("/&", "&"),
+      );
+      location.href.match(/conform=open/g)?.forEach((m, i) => {
+        console.log(m);
+        try {
+          if (i === 0) return;
+          location.href.replace(m, "");
+        } catch (e) {
+          console.error(`Error executing iteration ${i} for reading conform in URL:${(e as Error).message}`);
+        }
+      });
+      if (!/\?/g.test(location.href) && /&/g.test(location.href))
+        history.replaceState({}, "", location.href.replace("&", "?"));
+    }, 300);
+    return (): void => {
+      history.replaceState(
+        {},
+        "",
+        `${location.origin}${location.pathname}${location.search}`.replaceAll(/[\?&]conform=open/g, ""),
       );
       setTimeout(() => {
-        history.pushState({}, "", `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#"));
+        history.replaceState({}, "", `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#"));
       }, 300);
     };
   }, []);
@@ -62,8 +80,21 @@ export default function AGDeclaration({ state, dispatch }: DlgProps): JSX.Elemen
             !state && ev.currentTarget.close();
           }
         }}>
-        <h3>TERMOS DE CONCORDÂNCIA</h3>
-        <p>Texto</p>
+        <div className={st.declaracao}>
+          <DefaultDeclaration />
+          <p className={st.p}>
+            <span className={`${st.span} ${st.num}`}>8. </span>
+            <span className={st.strong}>
+              Declaro estar ciente de que, de acordo com a regulamentação vigente para profissionais da saúde mental,{" "}
+              <b>os dados deverão ser mantidos por um período mínimo de 20 anos</b> após o término do tratamento,
+            </span>
+            <span className={st.span}> em conformidade com as exigências do </span>
+            <a href='https://portal.cfm.org.br/' target='_blank' rel='noopener noreferrer' className={st.a}>
+              Conselho Federal de Medicina
+            </a>
+            <span className={st.span}>.</span>
+          </p>
+        </div>
       </dialog>
     </ErrorBoundary>
   );

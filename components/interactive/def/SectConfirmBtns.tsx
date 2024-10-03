@@ -1,7 +1,55 @@
 "use client";
-import { addCanvasListeners } from "@/lib/global/gController";
+import { ExportHandler } from "@/lib/global/declarations/classes";
+import { nullishBtn } from "@/lib/global/declarations/types";
+import { addCanvasListeners, addExportFlags } from "@/lib/global/gController";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
+import { exporters } from "@/vars";
+import { useEffect, useRef } from "react";
+let exporter: ExportHandler | undefined = undefined;
 export default function SectConfirmBtns(): JSX.Element {
+  const btnRef = useRef<nullishBtn>(null);
+  useEffect(() => {
+    exporter = (() => {
+      if (/ag/gi.test(location.pathname)) {
+        if (!exporters.agExporter) exporters.agExporter = new ExportHandler();
+        return exporters.agExporter;
+      } else if (/ed/gi.test(location.pathname)) {
+        if (!exporters.edExporter) exporters.edExporter = new ExportHandler();
+        return exporters.edExporter;
+      } else if (/od/gi.test(location.pathname)) {
+        if (!exporters.odExporter) exporters.odExporter = new ExportHandler();
+        return exporters.odExporter;
+      } else return new ExportHandler();
+    })();
+    const interv = exporter.autoResetTimer(600000),
+      path = location.pathname,
+      handleUnload = (): void => interv && clearInterval(interv),
+      handlePop = (): boolean => {
+        if (location.pathname !== path) {
+          interv && clearInterval(interv);
+          return true;
+        }
+        return false;
+      };
+    addEventListener(
+      "beforeunload",
+      () => {
+        handleUnload();
+        removeEventListener("beforeunload", handleUnload);
+      },
+      { once: true },
+    );
+    addEventListener("popstate", () => {
+      handlePop() && removeEventListener("popstate", handlePop);
+    });
+    addExportFlags(btnRef.current?.closest("form") ?? document);
+    (): void => {
+      handlePop();
+      removeEventListener("popstate", handlePop);
+      handleUnload();
+      removeEventListener("beforeunload", handleUnload);
+    };
+  }, []);
   return (
     <section className='sectionMain sectionConfirm' id='sectConfirmBut'>
       <button
@@ -60,6 +108,7 @@ export default function SectConfirmBtns(): JSX.Element {
         Resetar
       </button>
       <button
+        ref={btnRef}
         type='button'
         id='btnExport'
         data-active='false'
@@ -67,6 +116,36 @@ export default function SectConfirmBtns(): JSX.Element {
         style={{
           backgroundColor: "rgba(0, 0, 255, 0.904)",
           borderColor: "rgba(0, 0, 255, 0.904)",
+        }}
+        onClick={ev => {
+          if (!exporter) {
+            exporter = (() => {
+              if (/ag/gi.test(location.pathname)) {
+                if (!exporters.agExporter) exporters.agExporter = new ExportHandler();
+                return exporters.agExporter;
+              } else if (/ed/gi.test(location.pathname)) {
+                if (!exporters.edExporter) exporters.edExporter = new ExportHandler();
+                return exporters.edExporter;
+              } else if (/od/gi.test(location.pathname)) {
+                if (!exporters.odExporter) exporters.odExporter = new ExportHandler();
+                return exporters.odExporter;
+              } else return new ExportHandler();
+            })();
+          }
+          exporter.handleExportClick(
+            ev,
+            (() => {
+              if (/ag/gi.test(location.pathname)) return "anamnese";
+              else if (/ed/gi.test(location.pathname)) return "educacaoFisica__Nutricao";
+              else if (/od/gi.test(location.pathname)) return "odontologia";
+              else return "indefinido";
+            })(),
+            ev.currentTarget.closest("form") ?? document,
+            `${localStorage.getItem("name")?.replace(/\s/g, "-") ?? ""}_${
+              localStorage.getItem("secondName")?.replace(/\s/g, "-") ?? ""
+            }_${localStorage.getItem("lastName")?.replace(/\s/g, "-") ?? ""}`,
+          ),
+            { signal: new AbortController().signal };
         }}>
         Gerar Planilha
       </button>

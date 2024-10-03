@@ -8,31 +8,32 @@ import {
   multipleElementsNotFound,
   elementNotPopulated,
 } from "./handlers/errorHandler";
-import { ExportHandler } from "./declarations/classes";
 export function getGlobalEls(isAutocorrectOn: boolean = true, context: string = "notNum"): boolean {
-  const textConts = [...document.querySelectorAll("textarea"), ...document.querySelectorAll('input[type="text"]')],
-    radioInps = Array.from(document.querySelectorAll('input[type="radio"]')),
-    dateBtns = Array.from(document.querySelectorAll('button[id$="DatBtn"]')),
-    deactAutocorrectBtns = [
-      ...document.querySelectorAll('button[id^="deactAutocorrectBtn"]'),
-      ...document.querySelectorAll('input[id^="deactAutocorrectBtn"]'),
-    ];
-  textConts?.length > 0
-    ? addListenerTexts(textConts, isAutocorrectOn)
-    : elementNotPopulated(textConts, "textConts", extLine(new Error()));
-  radioInps?.length > 0
-    ? addListenerRadios(radioInps, "ed")
-    : elementNotPopulated(radioInps, "radioInps", extLine(new Error()));
-  dateBtns?.length > 0
-    ? addListenerDateBtns(dateBtns)
-    : elementNotPopulated(dateBtns, "dateBtns", extLine(new Error()));
-  if (context === "num") {
-    const numInps = Array.from(document.querySelectorAll('input[type="number"]'));
-    numInps?.length > 0 ? addListenerNumInps(numInps) : elementNotPopulated(numInps, "numInps", extLine(new Error()));
-  }
-  deactAutocorrectBtns?.length > 0
-    ? (isAutocorrectOn = addListenerAutocorrectBtns(deactAutocorrectBtns, isAutocorrectOn))
-    : elementNotPopulated(deactAutocorrectBtns, "deactAutoCorrectBtns", extLine(new Error()));
+  setTimeout(() => {
+    const textConts = [...document.querySelectorAll("textarea"), ...document.querySelectorAll('input[type="text"]')],
+      radioInps = Array.from(document.querySelectorAll('input[type="radio"]')),
+      dateBtns = Array.from(document.querySelectorAll('button[id$="DatBtn"]')),
+      deactAutocorrectBtns = [
+        ...document.querySelectorAll('button[id^="deactAutocorrectBtn"]'),
+        ...document.querySelectorAll('input[id^="deactAutocorrectBtn"]'),
+      ];
+    deactAutocorrectBtns?.length > 0
+      ? (isAutocorrectOn = addListenerAutocorrectBtns(deactAutocorrectBtns, isAutocorrectOn))
+      : elementNotPopulated(deactAutocorrectBtns, "deactAutoCorrectBtns", extLine(new Error()));
+    textConts.length > 0
+      ? addListenerTexts(textConts, isAutocorrectOn)
+      : elementNotPopulated(textConts, "textConts", extLine(new Error()));
+    radioInps.length > 0
+      ? addListenerRadios(radioInps, "ed")
+      : elementNotPopulated(radioInps, "radioInps", extLine(new Error()));
+    dateBtns.length > 0
+      ? addListenerDateBtns(dateBtns)
+      : elementNotPopulated(dateBtns, "dateBtns", extLine(new Error()));
+    if (context === "num") {
+      const numInps = Array.from(document.querySelectorAll('input[type="number"]'));
+      numInps?.length > 0 ? addListenerNumInps(numInps) : elementNotPopulated(numInps, "numInps", extLine(new Error()));
+    }
+  }, 500);
   return isAutocorrectOn || true;
 }
 export function addListenerTexts(textConts: targEl[], isAutocorrectOn: boolean = true): void {
@@ -79,13 +80,6 @@ export function addListenerRadios(radioInps: targEl[], context: string = "od"): 
         if (context === "ed" || context === "ag") {
           radio.addEventListener("change", (change): void => GlobalHandler.cpbInpHandler(change, radio));
           radio.addEventListener("keydown", (keydown): void => GlobalHandler.cpbInpHandler(keydown, radio));
-          context === "ag" &&
-            radio.addEventListener("change", (): void =>
-              GlobalHandler.deactTextInput(
-                document.querySelectorAll('input[type="number"][id$=NumId]'),
-                document.querySelectorAll("input[id$=NullId]"),
-              ),
-            );
         }
         // radio.addEventListener("touchstart", GlobalHandler.touchStartHandler);
       } else inputNotFound(radio, `target radio id ${radio?.id || "UNDEFINED ID RADIO"}`, extLine(new Error()));
@@ -149,13 +143,13 @@ export function addListenerAstDigitBtns(astDigtBtns: targEl[]): void {
   } else console.error(`Erro validando instâncias em astDigtBtns`);
 }
 export const exportSignaler = new AbortController();
-export function addListenerExportBtn(
-  context: string = "undefined",
+export function addExportFlags(
   scope: Document | Element | voidVal = document,
-  namer?: HTMLElement | string | voidVal,
+  btnExport?: HTMLButtonElement | HTMLInputElement | null,
 ): targEl {
-  const btnExport =
-    (scope ?? document).querySelector(`[id*="btnExport"]`) || (scope ?? document).querySelector(`[name*="btnExport"]`);
+  btnExport ??=
+    ((scope ?? document).querySelector(`[id*="btnExport"]`) as HTMLButtonElement | null) ||
+    ((scope ?? document).querySelector(`[name*="btnExport"]`) as HTMLButtonElement | null);
   Array.from((scope ?? document).querySelectorAll("button")).filter(
     btn => /btnexport/gi.test(btn.id) || /exportbtn/gi.test(btn.id),
   )[0];
@@ -163,35 +157,8 @@ export function addListenerExportBtn(
     btnExport instanceof HTMLButtonElement ||
     (btnExport instanceof HTMLInputElement && (btnExport.type === "radio" || btnExport.type === "checkbox"))
   ) {
-    const exporter = new ExportHandler(),
-      interv = exporter.autoResetTimer(600000),
-      path = location.pathname,
-      handleUnload = (): void => interv && clearInterval(interv),
-      handlePop = (): boolean => {
-        if (location.pathname !== path) {
-          interv && clearInterval(interv);
-          return true;
-        }
-        return false;
-      };
-    addEventListener(
-      "beforeunload",
-      () => {
-        handleUnload();
-        removeEventListener("beforeunload", handleUnload);
-      },
-      { once: true },
-    );
-    addEventListener("popstate", () => {
-      handlePop() && removeEventListener("popstate", handlePop);
-    });
-    if (!btnExport.dataset.active || btnExport.dataset.active !== "true") {
-      btnExport.addEventListener("click", ev => exporter.handleExportClick(ev as MouseEvent, context, scope, namer), {
-        signal: exportSignaler.signal,
-      });
-      btnExport.dataset.active = "true";
-    }
-  } else elementNotFound(btnExport, "argument for addListenerExportBtn()", extLine(new Error()));
+    if (!btnExport.dataset.active || btnExport.dataset.active !== "true") btnExport.dataset.active = "true";
+  } else elementNotFound(btnExport, "argument for addExportFlags()", extLine(new Error()));
   return btnExport;
 }
 export function addResetAstListener(): void {

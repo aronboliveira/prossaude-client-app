@@ -1,8 +1,8 @@
 import { ErrorBoundary } from "react-error-boundary";
 import { GlobalFormProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
-import { addListenerExportBtn } from "@/lib/global/gController";
+import { addExportFlags } from "@/lib/global/gController";
 import { clearPhDates, normalizeSizeSb } from "@/lib/global/gStyleScript";
-import { providers, panelRoots } from "@/vars";
+import { providers, panelRoots, exporters } from "@/vars";
 import { handleClientPermissions } from "@/lib/locals/panelPage/handlers/consHandlerUsers";
 import { handleSubmit } from "@/lib/locals/panelPage/handlers/handlers";
 import { panelFormsVariables } from "../panelFormsData";
@@ -12,8 +12,15 @@ import ReseterBtn from "../defs/ReseterBtn";
 import { nullishBtn, nullishForm, nullishInp } from "@/lib/global/declarations/types";
 import { addEmailExtension, assignFormAttrs, autoCapitalizeInputs, formatCPF, formatTel } from "@/lib/global/gModel";
 import { elementNotFound, elementNotPopulated, extLine, inputNotFound } from "@/lib/global/handlers/errorHandler";
-import { handleCondtReq, handleEventReq, validateForm, syncAriaStates } from "@/lib/global/handlers/gHandlers";
+import {
+  handleCondtReq,
+  handleEventReq,
+  validateForm,
+  syncAriaStates,
+  cleanStorageName,
+} from "@/lib/global/handlers/gHandlers";
 import { PanelCtx } from "../defs/client/SelectLoader";
+import { ExportHandler } from "@/lib/global/declarations/classes";
 export default function ProfForm({ mainRoot }: GlobalFormProps): JSX.Element {
   const userClass = useContext(PanelCtx).userClass,
     [showForm] = useState(true),
@@ -92,7 +99,7 @@ export default function ProfForm({ mainRoot }: GlobalFormProps): JSX.Element {
       //adição de listener para exportação de excel
       const exportBtn = btnExportProfForm.current || document.querySelector("#btnExport");
       exportBtn instanceof HTMLButtonElement
-        ? addListenerExportBtn("novoProfissional", formRef.current, nameInput as HTMLElement | null)
+        ? addExportFlags(formRef.current)
         : elementNotFound(exportBtn, "exportBtn in New Professional form", extLine(new Error()));
       //estilização e aria
       callbackNormalizeSizeSb();
@@ -122,6 +129,40 @@ export default function ProfForm({ mainRoot }: GlobalFormProps): JSX.Element {
       ...document.querySelector("form")!.getElementsByTagName("select"),
     );
   }, [formRef, userClass]);
+  useEffect(() => {
+    exporters.profExporter = new ExportHandler();
+    const interv = exporters.profExporter.autoResetTimer(600000),
+      path = location.pathname,
+      handleUnload = (): void => interv && clearInterval(interv),
+      handlePop = (): boolean => {
+        if (location.pathname !== path) {
+          interv && clearInterval(interv);
+          return true;
+        }
+        return false;
+      };
+    addEventListener(
+      "beforeunload",
+      () => {
+        handleUnload();
+        removeEventListener("beforeunload", handleUnload);
+      },
+      { once: true },
+    );
+    addEventListener("popstate", () => {
+      handlePop() && removeEventListener("popstate", handlePop);
+    });
+    addExportFlags(formRef.current ?? document);
+    addEventListener("beforeunload", cleanStorageName);
+    (): void => {
+      cleanStorageName();
+      removeEventListener("beforeunload", cleanStorageName);
+      handlePop();
+      removeEventListener("popstate", handlePop);
+      handleUnload();
+      removeEventListener("beforeunload", handleUnload);
+    };
+  }, []);
   useEffect(() => assignFormAttrs(formRef.current));
   return (
     <ErrorBoundary
@@ -195,7 +236,10 @@ export default function ProfForm({ mainRoot }: GlobalFormProps): JSX.Element {
                 minLength={3}
                 maxLength={99}
                 required
-                onInput={ev => handleEventReq(ev.currentTarget)}
+                onInput={ev => {
+                  handleEventReq(ev.currentTarget);
+                  if (window) localStorage.setItem("name", ev.currentTarget.value);
+                }}
               />
             </label>
             <label htmlFor='inpCPFProf'>
@@ -340,7 +384,16 @@ export default function ProfForm({ mainRoot }: GlobalFormProps): JSX.Element {
                 className='btn btn-primary flexAlItCt flexJC flexBasis50 widFull bolded noInvert'
                 ref={btnExportProfForm}
                 data-active='false'
-                title='Gere um .xlsx com os dados preenchidos'>
+                title='Gere um .xlsx com os dados preenchidos'
+                onClick={ev => {
+                  if (!exporters.profExporter) exporters.profExporter = new ExportHandler();
+                  exporters.profExporter.handleExportClick(
+                    ev,
+                    "newProfessional",
+                    formRef.current ?? document,
+                    localStorage.getItem("name")?.replace(/\s/g, "-") || "anonymous",
+                  );
+                }}>
                 Gerar Planilha
               </button>
               <ReseterBtn root={panelRoots.mainRoot!} renderForm={<ProfForm mainRoot={mainRoot} />} />

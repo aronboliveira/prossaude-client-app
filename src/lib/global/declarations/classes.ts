@@ -715,7 +715,7 @@ export class ExportHandler {
           }
         };
       if (namer) {
-        const writeNamedFile = (namer: HTMLElement): void => {
+        const writeNamedFile = (namer: Element | String): void => {
           if (
             namer instanceof HTMLInputElement ||
             namer instanceof HTMLSelectElement ||
@@ -764,14 +764,28 @@ export class ExportHandler {
             );
           } else if (namer instanceof HTMLElement) {
             fetchProcess(wb);
-            writeFile(wb, `data_${context}_${namer.textContent?.trim() ?? ""}form_${fullDate}.xlsx`);
-          } else throw new Error(`namer unqualified for naming spreadsheet`);
+            writeFile(
+              wb,
+              `data_${context}_${
+                namer.id?.trim() ||
+                namer.dataset.xls?.replaceAll(/\s/g, "__") ||
+                namer.dataset.title?.replaceAll(/\s/g, "__") ||
+                namer.tagName
+              }form_${fullDate}.xlsx`,
+            );
+          } else if (typeof namer === "string") {
+            fetchProcess(wb);
+            writeFile(wb, `data_${context}_${namer.trim().replace(/\s/g, "__")}_form_${fullDate}.xlsx`);
+          }
         };
         if (typeof namer === "string") {
           if ((scope ?? document).querySelector(namer)) {
             fetchProcess(wb);
             writeNamedFile((scope ?? document).querySelector(namer)!);
-          } else throw new Error(`Error validating namer.`);
+          } else {
+            fetchProcess(wb);
+            writeNamedFile(namer);
+          }
         }
         if (typeof namer === "object") {
           fetchProcess(wb);

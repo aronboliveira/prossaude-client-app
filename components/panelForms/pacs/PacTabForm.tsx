@@ -1,4 +1,4 @@
-import { addListenerExportBtn } from "@/lib/global/gController";
+import { addExportFlags } from "@/lib/global/gController";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { normalizeSizeSb } from "@/lib/global/gStyleScript";
 import { nullishBtn, nullishForm } from "@/lib/global/declarations/types";
@@ -6,34 +6,32 @@ import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useEffect, useRef, useState, useCallback } from "react";
 import PacList from "../../lists/PacList";
 import { assignFormAttrs } from "@/lib/global/gModel";
+import { ExportHandler } from "@/lib/global/declarations/classes";
+import { exporters } from "@/vars";
 export default function PacTabForm(): JSX.Element {
-  const [shouldDisplayRowData, setDisplayRowData] = useState<boolean>(false);
-  const formRef = useRef<nullishForm>(null);
-  const btnExportPacsTabRef = useRef<nullishBtn>(null);
-  const callbackNormalizeSizesSb = useCallback(() => {
-    normalizeSizeSb(
-      [
-        ...document.querySelectorAll(".form-padded"),
-        ...document.querySelectorAll(".ovFlAut"),
-        ...document.querySelectorAll("[scrollbar-width=none]"),
-      ],
-      [false, 0],
-      true,
-      [document.getElementById("sectPacsTab")],
-    );
-    document.querySelector("table")!.style.minHeight = "revert";
-    const nextDiv = document.getElementById("sectsPacsTab")?.nextElementSibling;
-    if (nextDiv?.id === "" && nextDiv instanceof HTMLDivElement) nextDiv.remove() as void;
-  }, []);
+  const [shouldDisplayRowData, setDisplayRowData] = useState<boolean>(false),
+    formRef = useRef<nullishForm>(null),
+    btnExportPacsTabRef = useRef<nullishBtn>(null),
+    callbackNormalizeSizesSb = useCallback(() => {
+      normalizeSizeSb(
+        [
+          ...document.querySelectorAll(".form-padded"),
+          ...document.querySelectorAll(".ovFlAut"),
+          ...document.querySelectorAll("[scrollbar-width=none]"),
+        ],
+        [false, 0],
+        true,
+        [document.getElementById("sectPacsTab")],
+      );
+      document.querySelector("table")!.style.minHeight = "revert";
+      const nextDiv = document.getElementById("sectsPacsTab")?.nextElementSibling;
+      if (nextDiv?.id === "" && nextDiv instanceof HTMLDivElement) nextDiv.remove() as void;
+    }, []);
   useEffect(() => {
     if (formRef?.current instanceof HTMLFormElement) {
       const btnExportTabPacs = btnExportPacsTabRef.current || formRef.current!.querySelector("#btnExport");
       btnExportTabPacs instanceof HTMLButtonElement
-        ? addListenerExportBtn(
-            "tab_Pacissionais",
-            formRef.current,
-            document.getElementById("titleTabPacs") || formRef.current,
-          )
+        ? addExportFlags(formRef.current)
         : elementNotFound(
             btnExportTabPacs,
             "<button> for triggering generation of spreadsheet in the table for checking pacients",
@@ -43,6 +41,37 @@ export default function PacTabForm(): JSX.Element {
       syncAriaStates([...formRef.current!.querySelectorAll("*"), formRef.current]);
     } else elementNotFound(formRef?.current, "formRef.current in useEffect() for PacTabForm", extLine(new Error()));
   }, [formRef, callbackNormalizeSizesSb]);
+  useEffect(() => {
+    exporters.pacExporter = new ExportHandler();
+    const interv = exporters.pacExporter.autoResetTimer(600000),
+      path = location.pathname,
+      handleUnload = (): void => interv && clearInterval(interv),
+      handlePop = (): boolean => {
+        if (location.pathname !== path) {
+          interv && clearInterval(interv);
+          return true;
+        }
+        return false;
+      };
+    addEventListener(
+      "beforeunload",
+      () => {
+        handleUnload();
+        removeEventListener("beforeunload", handleUnload);
+      },
+      { once: true },
+    );
+    addEventListener("popstate", () => {
+      handlePop() && removeEventListener("popstate", handlePop);
+    });
+    addExportFlags(formRef.current ?? document);
+    (): void => {
+      handlePop();
+      removeEventListener("popstate", handlePop);
+      handleUnload();
+      removeEventListener("beforeunload", handleUnload);
+    };
+  }, []);
   useEffect(() => assignFormAttrs(formRef.current));
   return (
     <form
@@ -79,7 +108,17 @@ export default function PacTabForm(): JSX.Element {
         name='btnExportPacsTab'
         ref={btnExportPacsTabRef}
         data-active='false'
-        title='Gere um .xlsx com os dados preenchidos'>
+        title='Gere um .xlsx com os dados preenchidos'
+        onClick={ev => {
+          if (!exporters.pacExporter) exporters.pacExporter = new ExportHandler();
+          exporters.pacExporter.handleExportClick(
+            ev,
+            `tabelaDePacientes__d${new Date().getDay()}_m${new Date().getMonth() + 1}_y${new Date().getFullYear()}`,
+            formRef.current,
+            document.getElementById("titleTabPacs") || formRef.current,
+          ),
+            { signal: new AbortController().signal };
+        }}>
         Gerar Planilha
       </button>
     </form>

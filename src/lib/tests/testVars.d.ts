@@ -830,7 +830,6 @@ export type GlobalHandler =
   | "updateSimpleProperty"
   | "doubleClickHandler"
   | "cpbInpHandler"
-  | "deactTextInput"
   | "useCurrentDate"
   | "changeToAstDigit";
 export type GlobalModeler = "numberLimit" | "checkAllGenConts" | "switchAutocorrect" | "fluxGen";

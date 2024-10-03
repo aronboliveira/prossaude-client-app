@@ -1,7 +1,7 @@
 import { ErrorBoundary } from "react-error-boundary";
-import { addListenerExportBtn } from "@/lib/global/gController";
+import { addExportFlags } from "@/lib/global/gController";
 import { clearPhDates, normalizeSizeSb } from "@/lib/global/gStyleScript";
-import { providers, panelRoots } from "@/vars";
+import { providers, panelRoots, exporters } from "@/vars";
 import { handleClientPermissions } from "@/lib/locals/panelPage/handlers/consHandlerUsers";
 import { handleSubmit } from "@/lib/locals/panelPage/handlers/handlers";
 import { panelFormsVariables } from "../panelFormsData";
@@ -11,34 +11,41 @@ import ReseterBtn from "../defs/ReseterBtn";
 import { nullishBtn, nullishForm, nullishInp } from "@/lib/global/declarations/types";
 import { addEmailExtension, assignFormAttrs, autoCapitalizeInputs, formatCPF, formatTel } from "@/lib/global/gModel";
 import { elementNotFound, elementNotPopulated, extLine, inputNotFound } from "@/lib/global/handlers/errorHandler";
-import { handleCondtReq, handleEventReq, validateForm, syncAriaStates } from "@/lib/global/handlers/gHandlers";
+import {
+  handleCondtReq,
+  handleEventReq,
+  validateForm,
+  syncAriaStates,
+  cleanStorageName,
+} from "@/lib/global/handlers/gHandlers";
 import { PanelCtx } from "../defs/client/SelectLoader";
+import { ExportHandler } from "@/lib/global/declarations/classes";
 export default function StudentForm(): JSX.Element {
-  const userClass = useContext(PanelCtx).userClass;
-  const [showForm] = useState<boolean>(true);
-  const formRef = useRef<nullishForm>(null);
-  const CPFStudRef = useRef<nullishInp>(null);
-  const telStudRef = useRef<nullishInp>(null);
-  const btnExportStudsRef = useRef<nullishBtn>(null);
-  const callbackNormalizeSizeSb = useCallback(() => {
-    normalizeSizeSb([
-      ...document.querySelectorAll(".form-padded"),
-      ...document.querySelectorAll(".ovFlAut"),
-      ...document.querySelectorAll("[scrollbar-width=none]"),
-    ]);
-    const nextDiv = document.getElementById("avPacsTab")?.nextElementSibling;
-    if (nextDiv?.id === "" && nextDiv instanceof HTMLDivElement) nextDiv.remove() as void;
-  }, []);
+  const userClass = useContext(PanelCtx).userClass,
+    [showForm] = useState<boolean>(true),
+    formRef = useRef<nullishForm>(null),
+    CPFStudRef = useRef<nullishInp>(null),
+    telStudRef = useRef<nullishInp>(null),
+    btnExportStudsRef = useRef<nullishBtn>(null),
+    callbackNormalizeSizeSb = useCallback(() => {
+      normalizeSizeSb([
+        ...document.querySelectorAll(".form-padded"),
+        ...document.querySelectorAll(".ovFlAut"),
+        ...document.querySelectorAll("[scrollbar-width=none]"),
+      ]);
+      const nextDiv = document.getElementById("avPacsTab")?.nextElementSibling;
+      if (nextDiv?.id === "" && nextDiv instanceof HTMLDivElement) nextDiv.remove() as void;
+    }, []);
   useEffect(() => assignFormAttrs(formRef.current));
   useEffect(() => {
     if (formRef?.current instanceof HTMLFormElement) {
       providers.globalDataProvider &&
         providers.globalDataProvider.initPersist(formRef.current, providers.globalDataProvider);
-      const emailInput = formRef.current.querySelector("#inpEmailStud");
-      const nameInput = formRef.current.querySelector("#inpNameStud");
-      const dateInputs = Array.from(formRef.current.querySelectorAll('input[type="date"]'));
-      const toggleAutoFill = document.getElementById("deactAutofilltBtnStud");
-      const toggleAutocorrect = document.getElementById("deactAutocorrectBtnStud");
+      const emailInput = formRef.current.querySelector("#inpEmailStud"),
+        nameInput = formRef.current.querySelector("#inpNameStud"),
+        dateInputs = Array.from(formRef.current.querySelectorAll('input[type="date"]')),
+        toggleAutoFill = document.getElementById("deactAutofilltBtnStud"),
+        toggleAutocorrect = document.getElementById("deactAutocorrectBtnStud");
       //adição de listeners para autopreenchimento
       if (toggleAutoFill instanceof HTMLInputElement) {
         toggleAutoFill.checked = true;
@@ -84,7 +91,7 @@ export default function StudentForm(): JSX.Element {
       //adição de listener para exportar excel
       const exportBtn = btnExportStudsRef.current || document.querySelector("#btnExport");
       exportBtn instanceof HTMLButtonElement
-        ? addListenerExportBtn("novoEstudante", formRef.current, nameInput as HTMLElement | null)
+        ? addExportFlags(formRef.current)
         : elementNotFound(exportBtn, "exportBtn in New Student form", extLine(new Error()));
       //chamadas de estilização
       if (dateInputs.length > 0 && dateInputs.every(inp => inp instanceof HTMLInputElement && inp.type === "date")) {
@@ -126,6 +133,40 @@ export default function StudentForm(): JSX.Element {
         ...document.querySelector("form")!.getElementsByTagName("select"),
       );
   }, [formRef, userClass]);
+  useEffect(() => {
+    exporters.studExporter = new ExportHandler();
+    const interv = exporters.studExporter.autoResetTimer(600000),
+      path = location.pathname,
+      handleUnload = (): void => interv && clearInterval(interv),
+      handlePop = (): boolean => {
+        if (location.pathname !== path) {
+          interv && clearInterval(interv);
+          return true;
+        }
+        return false;
+      };
+    addEventListener(
+      "beforeunload",
+      () => {
+        handleUnload();
+        removeEventListener("beforeunload", handleUnload);
+      },
+      { once: true },
+    );
+    addEventListener("popstate", () => {
+      handlePop() && removeEventListener("popstate", handlePop);
+    });
+    addExportFlags(formRef.current ?? document);
+    addEventListener("beforeunload", cleanStorageName);
+    (): void => {
+      cleanStorageName();
+      removeEventListener("beforeunload", cleanStorageName);
+      handlePop();
+      removeEventListener("popstate", handlePop);
+      handleUnload();
+      removeEventListener("beforeunload", handleUnload);
+    };
+  }, []);
   return (
     <ErrorBoundary
       FallbackComponent={() => <GenericErrorComponent message='Erro carregando formulário para profissionais' />}>
@@ -199,7 +240,10 @@ export default function StudentForm(): JSX.Element {
                 minLength={3}
                 maxLength={99}
                 required
-                onInput={ev => handleEventReq(ev.currentTarget)}
+                onInput={ev => {
+                  handleEventReq(ev.currentTarget);
+                  if (window) localStorage.setItem("name", ev.currentTarget.value);
+                }}
               />
               <datalist id='listStudRegstName'></datalist>
             </label>
@@ -313,11 +357,11 @@ export default function StudentForm(): JSX.Element {
                 onInput={ev => handleEventReq(ev.currentTarget)}
               />
               <datalist id='listCoursesStud'>
-                <option value='Educação Física'></option>
-                <option value='Medicina'></option>
-                <option value='Nutrição'></option>
-                <option value='Odontologia'></option>
-                <option value='Psicologia'></option>
+                {["Educação Física", "Medicina", "Nutrição", "Odontologia", "Psicologia"].map(option => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
               </datalist>
             </label>
             <label htmlFor='inpAtuacaoStud'>
@@ -357,21 +401,11 @@ export default function StudentForm(): JSX.Element {
                 onInput={ev => handleEventReq(ev.currentTarget)}
               />
               <datalist id='listPeriodos'>
-                <option value='1'></option>
-                <option value='2'></option>
-                <option value='3'></option>
-                <option value='4'></option>
-                <option value='5'></option>
-                <option value='6'></option>
-                <option value='7'></option>
-                <option value='8'></option>
-                <option value='9'></option>
-                <option value='10'></option>
-                <option value='11'></option>
-                <option value='12'></option>
-                <option value='13'></option>
-                <option value='14'></option>
-                <option value='15'></option>
+                {Array.from({ length: 15 }, (_, index) => index + 1).map((op, i) => (
+                  <option key={`${op}_${i}`} value={op}>
+                    {op}
+                  </option>
+                ))}
               </datalist>
             </label>
             <label htmlFor='inpEntr'>
@@ -458,7 +492,16 @@ export default function StudentForm(): JSX.Element {
                 className='btn btn-primary flexAlItCt flexJC flexBasis50 widFull bolded noInvert'
                 ref={btnExportStudsRef}
                 data-active='false'
-                title='Gere um .xlsx com os dados preenchidos'>
+                title='Gere um .xlsx com os dados preenchidos'
+                onClick={ev => {
+                  if (!exporters.studExporter) exporters.studExporter = new ExportHandler();
+                  exporters.studExporter.handleExportClick(
+                    ev,
+                    "newStudent",
+                    formRef.current ?? document,
+                    localStorage.getItem("name")?.replace(/\s/g, "-") || "anonymous",
+                  );
+                }}>
                 Gerar Planilha
               </button>
               <ReseterBtn root={panelRoots.mainRoot!} renderForm={<StudentForm />} />

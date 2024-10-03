@@ -96,8 +96,8 @@ describe("getGlobalEls", (): void => {
       expect(
         jest.spyOn<HTMLButtonElement, EventTargetMethod>(
           document.getElementById("resetFormBtn")! as HTMLButtonElement,
-          "addEventListener"
-        )
+          "addEventListener",
+        ),
       ) as jest.JestMatchers<jest.SpyInstance>
     ).toHaveBeenCalledWith<[DOMEvent, any]>("click", expect.any(Function));
     (expect(elementNotFoundSpy) as jest.JestMatchers<jest.SpyInstance>).not.toHaveBeenCalled() as void;
@@ -108,7 +108,7 @@ describe("getGlobalEls", (): void => {
     (expect(elementNotFoundSpy) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalledWith<[any, string, any]>(
       null,
       "resetFormBtn",
-      expect.any(Error) as any
+      expect.any(Error) as any,
     ) as void;
   }) as void;
   it('should call addListenerNumInps when context is "num" and numInps are found', (): void => {
@@ -126,7 +126,7 @@ describe("getGlobalEls", (): void => {
     (expect(elementNotPopulatedSpy) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalledWith<[any, string, any]>(
       [],
       "numInps",
-      expect.any(Error) as any
+      expect.any(Error) as any,
     ) as void;
   }) as void;
 }) as void;
@@ -143,7 +143,7 @@ describe("addListenerTexts", (): void => {
   it("should log an error when textConts contains non-HTMLElement elements", (): void => {
     (
       expect(
-        jest.spyOn<Console, ConsoleMethod>(console, "error").mockImplementation((): void => {}) as jest.Mock
+        jest.spyOn<Console, ConsoleMethod>(console, "error").mockImplementation((): void => {}) as jest.Mock,
       ) as jest.JestMatchers<jest.SpyInstance>
     ).toHaveBeenCalledWith<[string]>("Erro validando instâncias em textConts");
   }) as void;
@@ -181,14 +181,14 @@ describe("addListenerNumInps", (): void => {
     >(
       mockTextInput,
       `target numInp id ${JSON.stringify(mockTextInput.id || "UNIDENTIFIED TEXTCONT")}`,
-      expect.any(Error)
+      expect.any(Error),
     ) as any;
   }) as void;
   it("should log an error if the array contains invalid elements", (): void => {
     gController.addListenerNumInps([null as any]);
     (
       expect(
-        jest.spyOn<Console, ConsoleMethod>(console, "error").mockImplementation((): void => {}) as jest.Mock
+        jest.spyOn<Console, ConsoleMethod>(console, "error").mockImplementation((): void => {}) as jest.Mock,
       ) as jest.JestMatchers<jest.SpyInstance>
     ).toHaveBeenCalledWith<[string]>("Erro validando instâncias em numInps") as void;
   }) as void;
@@ -204,9 +204,6 @@ describe("addListenerRadios", (): void => {
       .mockImplementation((): void => {}) as jest.Mock;
     jest
       .spyOn<typeof gHandlers, GlobalHandler>(gHandlers, "cpbInpHandler")
-      .mockImplementation((): void => {}) as jest.Mock;
-    jest
-      .spyOn<typeof gHandlers, GlobalHandler>(gHandlers, "deactTextInput")
       .mockImplementation((): void => {}) as jest.Mock;
     jest.clearAllMocks() as typeof jest;
   }) as void;
@@ -237,10 +234,10 @@ describe("addListenerRadios", (): void => {
     >("keydown", expect.any(Function) as any) as void;
     mockRadioInput.dispatchEvent(new Event("change")) as boolean;
     (expect(gHandlers.cpbInpHandler) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalledWith<[any]>(
-      (expect.anything() as any, mockRadioInput)
+      (expect.anything() as any, mockRadioInput),
     ) as void;
   }) as void;
-  it("should add a change listener and call deactTextInput if context is ag", (): void => {
+  it("should add a change listener", (): void => {
     const mockRadioInput = document.createElement("input") as HTMLInputElement;
     mockRadioInput.type = "radio";
     jest.spyOn<HTMLInputElement, EventTargetMethod>(mockRadioInput, "addEventListener");
@@ -249,7 +246,6 @@ describe("addListenerRadios", (): void => {
       Parameters<typeof mockRadioInput.addEventListener>
     >("change", expect.any(Function) as any) as void;
     mockRadioInput.dispatchEvent(new Event("change")) as boolean;
-    (expect(gHandlers.deactTextInput) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalled() as void;
   }) as void;
   it("should call inputNotFound if the element is not a valid radio input", (): void => {
     const mockTextInput = document.createElement("input") as HTMLInputElement;
@@ -263,7 +259,7 @@ describe("addListenerRadios", (): void => {
     gController.addListenerRadios([null as any]) as void;
     (
       expect(
-        jest.spyOn<Console, ConsoleMethod>(console, "error") as jest.SpyInstance
+        jest.spyOn<Console, ConsoleMethod>(console, "error") as jest.SpyInstance,
       ) as jest.JestMatchers<jest.SpyInstance>
     )
       //@ts-ignore
@@ -288,11 +284,11 @@ describe("addListenerDateBtns", (): void => {
     gController.addListenerDateBtns([mockButton]) as void;
     (expect(mockButton.addEventListener) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalledWith<[DOMEvent, any]>(
       "click",
-      expect.any(Function) as any
+      expect.any(Function) as any,
     ) as void;
     mockButton.dispatchEvent(new Event("click")) as boolean;
     (expect(gHandlers.useCurrentDate) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalledWith<[any]>(
-      (expect.anything() as any, mockButton)
+      (expect.anything() as any, mockButton),
     ) as void;
     (expect(elementNotFoundSpy) as jest.JestMatchers<jest.SpyInstance>).not.toHaveBeenCalled() as void;
   }) as void;
@@ -306,7 +302,7 @@ describe("addListenerDateBtns", (): void => {
   it("should log an error if the array contains invalid elements", (): void => {
     gController.addListenerDateBtns([null as any]) as void;
     expect(
-      jest.spyOn<Console, ConsoleMethod>(console, "error").mockImplementation((): void => {})
+      jest.spyOn<Console, ConsoleMethod>(console, "error").mockImplementation((): void => {}),
     ).toHaveBeenCalledWith<[string]>("Erro validando instâncias em dateBtns");
   }) as void;
 }) as void;
@@ -334,7 +330,7 @@ describe("addListenersGenConts", (): void => {
     mockElement.dispatchEvent(new Event("change")) as boolean;
     (expect(fluxGenSpy) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalledWith<[HTMLElement[], string]>(
       [mockElement, mockBirthRel, mockTrans, mockFisAlin],
-      mockElement.value
+      mockElement.value,
     ) as void;
     expect(gController.addListenersGenConts(mockElement, "feminino")).toBe<Gender>("masculino") as void;
   }) as void;
@@ -365,10 +361,10 @@ describe("addListenerAutocorrectBtns", (): void => {
     >("click", expect.any(Function) as any) as void;
     mockButton.dispatchEvent(new Event("click")) as boolean;
     (expect(switchAutocorrectSpy) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalledWith<[any]>(
-      (expect.anything() as any, mockButton, true)
+      (expect.anything() as any, mockButton, true),
     ) as void;
     (expect(gController.addListenerAutocorrectBtns([mockButton])) as jest.JestMatchers<jest.SpyInstance>).toBe<boolean>(
-      true
+      true,
     ) as void;
   }) as void;
 
@@ -384,7 +380,7 @@ describe("addListenerAutocorrectBtns", (): void => {
     gController.addListenerAutocorrectBtns([null as any]);
     (
       expect(
-        jest.spyOn<Console, ConsoleMethod>(console, "error").mockImplementation((): void => {})
+        jest.spyOn<Console, ConsoleMethod>(console, "error").mockImplementation((): void => {}),
       ) as jest.JestMatchers<jest.SpyInstance>
     ).toHaveBeenCalledWith<[string]>("Erro validando instâncias em deactAutocorrectBtns");
   }) as void;
@@ -407,7 +403,7 @@ describe("addListenerAstDigitBtns", (): void => {
     gController.addListenerAstDigitBtns([mockButton]) as void;
     expect(mockButton.addEventListener).toHaveBeenCalledWith<[DOMEvent, any]>(
       "click",
-      expect.any(Function) as any
+      expect.any(Function) as any,
     ) as void;
     mockButton.dispatchEvent(new Event("click")) as boolean;
     expect(changeToAstDigitSpy).toHaveBeenCalledWith<[HTMLButtonElement]>(mockButton) as void;
@@ -423,12 +419,12 @@ describe("addListenerAstDigitBtns", (): void => {
     gController.addListenerAstDigitBtns([null as any]);
     (
       expect(
-        jest.spyOn<Console, ConsoleMethod>(console, "error").mockImplementation((): void => {})
+        jest.spyOn<Console, ConsoleMethod>(console, "error").mockImplementation((): void => {}),
       ) as jest.JestMatchers<jest.SpyInstance>
     ).toHaveBeenCalledWith<[string]>("Erro validando instâncias em astDigtBtns");
   }) as void;
 }) as void;
-describe("addListenerExportBtn", (): void => {
+describe("addExportFlags", (): void => {
   let elementNotFoundSpy: jest.SpyInstance;
   beforeEach((): void => {
     elementNotFoundSpy = jest
@@ -451,9 +447,9 @@ describe("addListenerExportBtn", (): void => {
     (expect(mockButton.addEventListener) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalledWith<
       Parameters<typeof mockButton.addEventListener>
     >("click", expect.any(Function) as any) as void;
-    (
-      expect(gController.addListenerExportBtn() as targEl) as jest.JestMatchers<jest.SpyInstance>
-    ).toBe<HTMLButtonElement>(mockButton) as void;
+    (expect(gController.addExportFlags() as targEl) as jest.JestMatchers<jest.SpyInstance>).toBe<HTMLButtonElement>(
+      mockButton,
+    ) as void;
   }) as void;
   it("should handle spreadsheet creation on click", (): void => {
     const mockButton = document.createElement("button") as HTMLButtonElement;
@@ -463,19 +459,19 @@ describe("addListenerExportBtn", (): void => {
     jest.spyOn<HTMLButtonElement, EventTargetMethod>(mockButton, "addEventListener");
     document.querySelector = (jest.fn() as jest.Mock).mockReturnValue(mockButton) as jest.Mock;
     document.querySelectorAll = (jest.fn() as jest.Mock).mockReturnValue([mockInput]) as jest.Mock;
-    gController.addListenerExportBtn() as targEl;
+    gController.addExportFlags() as targEl;
     mockButton.dispatchEvent(new Event("click")) as boolean;
     (expect(writeFile) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalledWith<[any]>(
-      (expect.anything() as any, expect.stringContaining("data_undefinedform_"))
+      (expect.anything() as any, expect.stringContaining("data_undefinedform_")),
     ) as void;
   }) as void;
   it("should call elementNotFound when export button is missing", (): void => {
     document.querySelector = (jest.fn() as jest.Mock).mockReturnValue(null) as jest.Mock;
-    gController.addListenerExportBtn() as targEl;
+    gController.addExportFlags() as targEl;
     (expect(elementNotFoundSpy) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalledWith<[any, string, any]>(
       null,
-      "argument for addListenerExportBtn()",
-      expect.any(Error) as any
+      "argument for addExportFlags()",
+      expect.any(Error) as any,
     );
   }) as void;
 }) as void;
@@ -532,7 +528,7 @@ describe("addResetAstListener", (): void => {
     (expect(elementNotFoundSpy) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalledWith<[any, string, any]>(
       null,
       "Button for reseting signature",
-      expect.any(Error) as any
+      expect.any(Error) as any,
     ) as void;
   }) as void;
 }) as void;
@@ -549,7 +545,7 @@ describe("addCustomSbListeners", (): void => {
     (expect(elementNotFoundSpy) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalledWith<[any, string, any]>(
       null,
       "Main Element for addCustomSbListeners()",
-      expect.any(Error) as any
+      expect.any(Error) as any,
     );
   }) as void;
   it("should throw an error if content is not an HTMLElement", (): void => {
@@ -557,7 +553,7 @@ describe("addCustomSbListeners", (): void => {
     (expect(elementNotFoundSpy) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalledWith<[any, string, any]>(
       null,
       "Content Element for addCustomSbListeners()",
-      expect.any(Error)
+      expect.any(Error),
     );
   }) as void;
   it("should correctly create and append the scrollbar and thumb", (): void => {
@@ -578,16 +574,16 @@ describe("addCustomSbListeners", (): void => {
     const thumb = mockContainer.querySelector<HTMLElement>(".scroll-thumb");
     const thumbMouseDownSpy = jest.spyOn<HTMLElement, EventTargetMethod>(
       thumb as HTMLElement,
-      "addEventListener"
+      "addEventListener",
     ) as jest.SpyInstance;
     thumb?.dispatchEvent(new MouseEvent("mousedown", { clientY: 50 })) as boolean;
     (expect(thumbMouseDownSpy) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalledWith<[DOMEvent, any]>(
       "mousedown",
-      expect.any(Function) as any
+      expect.any(Function) as any,
     ) as void;
     (
       expect(
-        jest.spyOn<Window, EventTargetMethod>(window, "addEventListener") as jest.SpyInstance
+        jest.spyOn<Window, EventTargetMethod>(window, "addEventListener") as jest.SpyInstance,
       ) as jest.JestMatchers<jest.SpyInstance>
     ).toHaveBeenCalledWith<[DOMEvent, any]>("resize", expect.any(Function) as any) as void;
   }) as void;
@@ -606,7 +602,7 @@ describe("addCanvasListeners", (): void => {
     (expect(elementNotFoundSpy) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalledWith<[any, string, any]>(
       null,
       "Canvas for executing addCanvasListeners()",
-      expect.any(Error)
+      expect.any(Error),
     );
   }) as void;
   it("should initialize canvas and set drawing listeners", (): void => {

@@ -217,23 +217,6 @@ export function cpbInpHandler(ev: Event, radio: targEl): void {
       radio?.parentElement?.parentElement,
     );
 }
-export function deactTextInput(
-  addressInps: NodeListOf<Element> | Element[],
-  nullRadios: NodeListOf<Element> | Element[],
-): void {
-  addressInps?.length > 0 && addressInps.length === nullRadios.length
-    ? nullRadios.forEach(nullRadio => {
-        const blockeableInput = nullRadio.parentElement?.parentElement?.querySelector(".inpLocNum");
-        ["click", "dblclick"].forEach(event => {
-          nullRadio.addEventListener(event, () => {
-            nullRadio instanceof HTMLInputElement && nullRadio.checked
-              ? blockeableInput?.setAttribute("disabled", "")
-              : blockeableInput?.removeAttribute("disabled");
-          });
-        });
-      })
-    : console.error("Number of Inputs and Radios unequal, aborting deactTextInput()");
-}
 export function doubleClickHandler(inpEl: targEl): void {
   if (inpEl instanceof HTMLInputElement && (inpEl.type === "checkbox" || inpEl.type === "radio")) {
     inpEl.checked = inpEl.checked ? false : true;
@@ -498,9 +481,11 @@ export function resetarFormulario(caller: nullishHtEl): void {
       genTrans.value = "avancado";
       genTrans.hidden = true;
     } else inputNotFound(genTrans, "genTrans in resetarFormulario()", extLine(new Error()));
-    [...document.querySelectorAll(".astDigtBtn"), ...document.querySelectorAll('[id*=AstDigtBtn]')].forEach(toFileInpBtn => {
-      if (toFileInpBtn?.textContent?.match(/Retornar/g)) changeToAstDigit(toFileInpBtn);
-    });
+    [...document.querySelectorAll(".astDigtBtn"), ...document.querySelectorAll("[id*=AstDigtBtn]")].forEach(
+      toFileInpBtn => {
+        if (toFileInpBtn?.textContent?.match(/Retornar/g)) changeToAstDigit(toFileInpBtn);
+      },
+    );
   } else multipleElementsNotFound(extLine(new Error()), "arguments for resetarFormulario");
 }
 export function enableCPFBtn(cpfBtn: targEl, cpfLength: string = ""): boolean {
@@ -1246,7 +1231,7 @@ export function handleCondtReq(
     )
       throw inputNotFound(el, `${el?.id || el?.className || el?.tagName}`, extLine(new Error()));
     if (el.value.length < 2) return;
-    if (!(options.pattern && options.min && options.max && options.maxNum && options.minNum))
+    if (!(options.pattern || options.min || options.max || options.maxNum || options.minNum))
       throw new Error(`No pattern was given to handleCondtReq`);
     if (
       options.pattern &&
@@ -1428,4 +1413,14 @@ export function handleEventReq(entry: textEl | Event, alertColor: string = "#e52
     }
     entry.style.color = "rgb(33, 37, 41)";
   }, 2000);
+}
+export function cleanStorageName(): void {
+  if (!window) return;
+  ["name", "secondName", "lastName"].forEach((n, i) => {
+    try {
+      localStorage.setItem(n, "");
+    } catch (e) {
+      console.error(`Error executing iteration ${i} of names in Local Storage:\n${(e as Error).message}`);
+    }
+  });
 }

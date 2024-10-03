@@ -1,6 +1,6 @@
 import { AptDataListProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import { ErrorBoundary } from "react-error-boundary";
-import { addListenerExportBtn } from "@/lib/global/gController";
+import { addExportFlags } from "@/lib/global/gController";
 import { consVariablesData } from "../consRegst/consVariables";
 import { createRoot } from "react-dom/client";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
@@ -10,6 +10,8 @@ import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useContext, useEffect, useRef } from "react";
 import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
 import { PanelCtx } from "../panelForms/defs/client/SelectLoader";
+import { ExportHandler } from "@/lib/global/declarations/classes";
+import { exporters } from "@/vars";
 export default function AptDataList({
   setDisplayAptList,
   data,
@@ -96,12 +98,7 @@ export default function AptDataList({
       syncAriaStates([...aptDlgRef.current!.querySelectorAll("*"), aptDlgRef.current]);
       const btnExport = aptDlgRef.current.querySelector('[id*="btnExport"]');
       btnExport instanceof HTMLButtonElement
-        ? addListenerExportBtn(
-            `spreadsheet_${data.cpf}_${data.date}`,
-            aptDlgRef.current,
-            (aptDlgRef.current.querySelector(`[id*="outpNamePac"]`) as HTMLOutputElement) ??
-              (aptDlgRef.current as HTMLElement),
-          )
+        ? addExportFlags(aptDlgRef.current)
         : elementNotFound(btnExport, "Button for generating spreadsheet in appointment modal", extLine(new Error()));
       transferBtn instanceof HTMLButtonElement
         ? transferBtn.addEventListener("click", () => {
@@ -119,6 +116,37 @@ export default function AptDataList({
       return (): void => document.removeEventListener("keydown", handleKeyDown);
     }
   }, [aptDlgRef, data.cpf, data.date, setDisplayAptList, transferBtn, isDirectRender]);
+  useEffect(() => {
+    exporters.aptExporter = new ExportHandler();
+    const interv = exporters.aptExporter.autoResetTimer(600000),
+      path = location.pathname,
+      handleUnload = (): void => interv && clearInterval(interv),
+      handlePop = (): boolean => {
+        if (location.pathname !== path) {
+          interv && clearInterval(interv);
+          return true;
+        }
+        return false;
+      };
+    addEventListener(
+      "beforeunload",
+      () => {
+        handleUnload();
+        removeEventListener("beforeunload", handleUnload);
+      },
+      { once: true },
+    );
+    addEventListener("popstate", () => {
+      handlePop() && removeEventListener("popstate", handlePop);
+    });
+    addExportFlags(aptDlgRef.current ?? document);
+    (): void => {
+      handlePop();
+      removeEventListener("popstate", handlePop);
+      handleUnload();
+      removeEventListener("beforeunload", handleUnload);
+    };
+  }, []);
   return !shouldDisplayAptList ? (
     <></>
   ) : (
@@ -324,7 +352,19 @@ export default function AptDataList({
                 id={`btnExport${data.cpf || "Unidentified"}_${data.date || "0000-00-00"}}`}
                 name={`btnExport${data.cpf || "Unidentified"}_${data.date || "0000-00-00"}`}
                 data-active='false'
-                className='btn btn-info opaqueLightEl widFull'>
+                className='btn btn-info opaqueLightEl widFull'
+                onClick={ev => {
+                  if (!exporters.aptExporter) exporters.aptExporter = new ExportHandler();
+                  exporters.aptExporter.handleExportClick(
+                    ev,
+                    `detalhesDeAgendamento`,
+                    (aptDlgRef.current?.querySelector(`[id*="outpNamePac"]`) as HTMLOutputElement) ??
+                      aptDlgRef.current ??
+                      document,
+                    `spreadsheet_${data.cpf || "semCPF"}_${data.name || "anonimo"}_${data.date || "semData"}`,
+                  ),
+                    { signal: new AbortController().signal };
+                }}>
                 <small role='textbox'>
                   <em>Gerar Planilha</em>
                 </small>
