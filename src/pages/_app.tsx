@@ -10,6 +10,7 @@ import "../styles/locals/edFisNutPageStyle.scss";
 import "../styles/locals/odPageStyle.scss";
 import "../styles/locals/panelPageStyle.scss";
 import "../styles/locals/recoverPageStyle.scss";
+import "../styles/locals/reactSpinner.scss";
 import mainStore from "@/redux/mainStore";
 export const AppRootContext: Context<AppRootContextType> = createContext<AppRootContextType>({
   roots: {

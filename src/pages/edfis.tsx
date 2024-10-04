@@ -6,6 +6,7 @@ import SwitchDiv from "../../components/interactive/def/SwitchDiv";
 import WatcherEN from "../../components/interactive/edfis/WatcherEN";
 import { Suspense, lazy } from "react";
 import Spinner from "../../components/icons/Spinner";
+import Guard from "../../components/interactive/def/Guard";
 const ENForm = lazy(() => import("../../components/interactive/edfis/EdFisForm"));
 export default function EdFisNutPage(): JSX.Element {
   return (
@@ -40,6 +41,7 @@ export default function EdFisNutPage(): JSX.Element {
         </main>
       </div>
       <WatcherEN />
+      <Guard />
     </ErrorBoundary>
   );
 }

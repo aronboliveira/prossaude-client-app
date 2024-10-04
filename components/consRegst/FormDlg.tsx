@@ -2,11 +2,9 @@
 import { ConsDlgProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import { ErrorBoundary } from "react-error-boundary";
 import { addListenerAvMembers } from "@/lib/locals/panelPage/handlers/consHandlerList";
-import { addExportFlags } from "@/lib/global/gController";
 import { consVariablesData } from "./consVariables";
 import { createRoot } from "react-dom/client";
 import { providers, formData } from "@/vars";
-("../panelForms/defs/client/SelectPanel");
 import { handleClientPermissions } from "@/lib/locals/panelPage/handlers/consHandlerUsers";
 import { handleSubmit } from "@/lib/locals/panelPage/handlers/handlers";
 import { isClickOutside } from "@/lib/global/gStyleScript";
@@ -36,7 +34,6 @@ import {
   handleCondtReq,
   validateForm,
   syncAriaStates,
-  cleanStorageName,
 } from "@/lib/global/handlers/gHandlers";
 import ListFirstNameCons from "./ListFirstNameCons";
 import ListCPFPacCons from "./ListCPFPacCons";
@@ -47,6 +44,7 @@ import FailRegstAlert from "../alerts/FailRegsAlert";
 import { PanelCtx } from "../panelForms/defs/client/SelectLoader";
 import { ExportHandler } from "@/lib/global/declarations/classes";
 import { exporters } from "@/vars";
+import useExportHandler from "@/lib/hooks/useExportHandler";
 let accFormData = 0;
 export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
   //display de campos para identificadores de estudante
@@ -330,40 +328,7 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
       if (timeDiv instanceof HTMLElement) timeDiv.style.display = "none";
     }
   }, [dayRef]);
-  useEffect(() => {
-    exporters.formDlgExporter = new ExportHandler();
-    const interv = exporters.formDlgExporter.autoResetTimer(600000),
-      path = location.pathname,
-      handleUnload = (): void => interv && clearInterval(interv),
-      handlePop = (): boolean => {
-        if (location.pathname !== path) {
-          interv && clearInterval(interv);
-          return true;
-        }
-        return false;
-      };
-    addEventListener(
-      "beforeunload",
-      () => {
-        handleUnload();
-        removeEventListener("beforeunload", handleUnload);
-      },
-      { once: true },
-    );
-    addEventListener("popstate", () => {
-      handlePop() && removeEventListener("popstate", handlePop);
-    });
-    addExportFlags(dlgRef.current ?? document);
-    addEventListener("beforeunload", cleanStorageName);
-    (): void => {
-      cleanStorageName();
-      removeEventListener("beforeunload", cleanStorageName);
-      handlePop();
-      removeEventListener("popstate", handlePop);
-      handleUnload();
-      removeEventListener("beforeunload", handleUnload);
-    };
-  }, []);
+  useExportHandler("formDlgExporter", dlgRef.current, true);
   useEffect(() => assignFormAttrs(formRef.current));
   return (
     <dialog className='modal-content flexWC' ref={dlgRef} id='regstPacDlg'>

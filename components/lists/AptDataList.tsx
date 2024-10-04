@@ -12,6 +12,7 @@ import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
 import { PanelCtx } from "../panelForms/defs/client/SelectLoader";
 import { ExportHandler } from "@/lib/global/declarations/classes";
 import { exporters } from "@/vars";
+import useExportHandler from "@/lib/hooks/useExportHandler";
 export default function AptDataList({
   setDisplayAptList,
   data,
@@ -116,37 +117,7 @@ export default function AptDataList({
       return (): void => document.removeEventListener("keydown", handleKeyDown);
     }
   }, [aptDlgRef, data.cpf, data.date, setDisplayAptList, transferBtn, isDirectRender]);
-  useEffect(() => {
-    exporters.aptExporter = new ExportHandler();
-    const interv = exporters.aptExporter.autoResetTimer(600000),
-      path = location.pathname,
-      handleUnload = (): void => interv && clearInterval(interv),
-      handlePop = (): boolean => {
-        if (location.pathname !== path) {
-          interv && clearInterval(interv);
-          return true;
-        }
-        return false;
-      };
-    addEventListener(
-      "beforeunload",
-      () => {
-        handleUnload();
-        removeEventListener("beforeunload", handleUnload);
-      },
-      { once: true },
-    );
-    addEventListener("popstate", () => {
-      handlePop() && removeEventListener("popstate", handlePop);
-    });
-    addExportFlags(aptDlgRef.current ?? document);
-    (): void => {
-      handlePop();
-      removeEventListener("popstate", handlePop);
-      handleUnload();
-      removeEventListener("beforeunload", handleUnload);
-    };
-  }, []);
+  useExportHandler("aptExporter", aptDlgRef.current);
   return !shouldDisplayAptList ? (
     <></>
   ) : (

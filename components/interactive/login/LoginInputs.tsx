@@ -21,6 +21,10 @@ export default function LoginInputs(): JSX.Element {
       try {
         if (!(formRef.current instanceof HTMLFormElement)) throw new Error(`Failed to validate form instance`);
         if (!(resSpan instanceof HTMLElement)) throw new Error(`Failed to validate span reference`);
+        const uW = document.getElementById("userWarn"),
+          pW = document.getElementById("pwWarn");
+        if (uW instanceof HTMLElement) uW.style.display = "none";
+        if (pW instanceof HTMLElement) pW.textContent = "none";
         const spin = (): void => {
           setMsg(<Spinner fs={true} />);
           const form = formRef.current ?? resSpan.closest("form");
@@ -55,10 +59,14 @@ export default function LoginInputs(): JSX.Element {
                   .find(a => (a as CSSAnimation).animationName === "spinner-border")
                   ?.startTime?.toString() ?? "",
               );
-            const time = Number.isFinite(spinTime) ? spinTime : 2000;
-            setTimeout(() => {
-              router.push("/base");
-            }, time);
+            setTimeout(
+              () => {
+                localStorage.removeItem("pw");
+                localStorage.setItem("authorized", "true");
+                router.push("/base");
+              },
+              Number.isFinite(spinTime) ? spinTime : 2000,
+            );
           }, 1200);
         } else {
           spin();
@@ -87,8 +95,8 @@ export default function LoginInputs(): JSX.Element {
     } catch (e) {
       console.error(`Error executing procedure for adjusting anchor href:\n${(e as Error).message}`);
     }
-    const form = formRef.current ?? document.querySelector("form");
-    const inps = Array.from(document.querySelectorAll("input"));
+    const form = formRef.current ?? document.querySelector("form"),
+      inps = Array.from(document.querySelectorAll("input"));
     form instanceof HTMLFormElement && inps.length > 0
       ? clearDefInvalidMsg(form, inps)
       : multipleElementsNotFound(
@@ -105,6 +113,25 @@ export default function LoginInputs(): JSX.Element {
   useEffect(() => {
     assignFormAttrs(formRef.current ?? document.querySelector("form"));
   });
+  useEffect(() => {
+    const handleEnter = (ev: KeyboardEvent): void => {
+      try {
+        if (!anchorRef.current) throw new Error(`Failed to validate Submit Reference`);
+        if (ev.code === "Enter") {
+          anchorRef.current.focus();
+          setTimeout(() => {
+            if (!anchorRef.current) return;
+            anchorRef.current.click();
+          }, 200);
+        }
+      } catch (e) {
+        console.error(`Error executing handleEnter:\n${(e as Error).message}`);
+      }
+    };
+    if (!anchorRef.current) return;
+    addEventListener("keyup", handleEnter);
+    (): void => removeEventListener("keyup", handleEnter);
+  }, [anchorRef]);
   return (
     <form
       ref={formRef}
@@ -152,6 +179,8 @@ export default function LoginInputs(): JSX.Element {
                 data-title='Usuário'
                 autoComplete='username'
                 required
+                autoFocus
+                onInput={ev => localStorage.setItem("user", btoa(ev.currentTarget.value))}
               />
             </div>
           </div>
@@ -171,6 +200,7 @@ export default function LoginInputs(): JSX.Element {
                   minLength={8}
                   maxLength={30}
                   required
+                  onInput={ev => localStorage.setItem("pw", btoa(ev.currentTarget.value))}
                 />
                 <button
                   type='button'
@@ -207,7 +237,13 @@ export default function LoginInputs(): JSX.Element {
               type='submit'
               className='btn btn-primary fade-in-element'
               id='submitBtn'
-              onClick={ev => ev.preventDefault()}>
+              onClick={ev => {
+                ev.preventDefault();
+                if (ev.currentTarget.firstElementChild instanceof HTMLAnchorElement) {
+                  ev.currentTarget.firstElementChild.focus();
+                  ev.currentTarget.firstElementChild.click();
+                }
+              }}>
               <Link
                 href={`${basePath.path}/base`}
                 ref={anchorRef}
@@ -258,6 +294,9 @@ export default function LoginInputs(): JSX.Element {
                   setTimeout(() => {
                     handleLogin(ev, loginForm, true).then(res => {
                       res.valid ? exeLogin(spanRef.current) : setMsg(res.message);
+                      setTimeout(() => {
+                        setMsg("");
+                      }, 10000);
                     });
                   }, 300);
                   navigator.language.startsWith("pt-")

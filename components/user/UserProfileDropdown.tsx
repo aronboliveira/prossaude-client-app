@@ -106,6 +106,9 @@ export default function UserProfileDropdown({ user, router }: UserProfileDropdow
               }}
               href={`${location.href.replace(location.pathname, "")}/login`}
               onClick={() => {
+                localStorage.removeItem("authorized");
+                localStorage.removeItem("user");
+                localStorage.removeItem("pw");
                 router.push("/login");
               }}>
               LOGIN

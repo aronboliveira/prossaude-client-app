@@ -710,7 +710,7 @@ export function convertToHex(
 export function expandContent(el: targEl): void {
   if (el instanceof HTMLElement) {
     el.style.opacity = "0";
-    el.parentElement!.style.opacity = "0";
+    if (el.parentElement) el.parentElement.style.opacity = "0";
     const outputs = el.querySelectorAll("output");
     if (outputs.length > 0) {
       for (const output of outputs) {
@@ -719,7 +719,9 @@ export function expandContent(el: targEl): void {
       }
     }
     setTimeout(() => {
-      (el.parentElement!.querySelector(".profileIcon") as HTMLElement).style.opacity = "0";
+      if (!el.parentElement) return;
+      if (el.parentElement.querySelector(".profileIcon") instanceof HTMLElement)
+        (el.parentElement.querySelector(".profileIcon") as HTMLElement).style.opacity = "0";
       setTimeout(() => {
         let safeAcc = 0;
         Array.from(el.children).forEach(child => {
@@ -729,18 +731,23 @@ export function expandContent(el: targEl): void {
         let opcAcc = 0,
           widthAcc = 0;
         const interval = setInterval(() => {
+          if (!el.parentElement) return;
           const maxWidth = (document.getElementById("nameLogin")?.innerText.length || 12) * 10.6;
           if (!maxWidth || maxWidth < 0 || !Number.isFinite(maxWidth)) return;
           if (
             parseInt(getComputedStyle(el).opacity) < 1 ||
-            parseInt(getComputedStyle(el.parentElement!).opacity) < 1 ||
-            parseInt(getComputedStyle(el.parentElement!.querySelector(".profileIcon") as HTMLElement).opacity) < 1
+            parseInt(getComputedStyle(el.parentElement).opacity) < 1 ||
+            (el.parentElement.querySelector(".profileIcon") instanceof HTMLElement &&
+              parseInt(getComputedStyle(el.parentElement.querySelector(".profileIcon") as HTMLElement).opacity) < 1)
           ) {
             opcAcc += 0.003;
             if (parseInt(getComputedStyle(el).opacity) < 1) el.style.opacity = opcAcc.toString();
-            if (parseInt(getComputedStyle(el.parentElement!).opacity) < 1)
-              el.parentElement!.style.opacity = opcAcc.toString();
-            if (parseInt((el.parentElement!.querySelector(".profileIcon") as HTMLElement).style.opacity) < 1)
+            if (parseInt(getComputedStyle(el.parentElement).opacity) < 1)
+              el.parentElement.style.opacity = opcAcc.toString();
+            if (
+              el.parentElement.querySelector(".profileIcon") instanceof HTMLElement &&
+              parseInt((el.parentElement!.querySelector(".profileIcon") as HTMLElement).style.opacity) < 1
+            )
               (el.parentElement!.querySelector(".profileIcon") as HTMLElement).style.opacity = (
                 (opcAcc * 2) /
                 3
