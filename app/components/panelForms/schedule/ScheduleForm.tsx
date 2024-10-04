@@ -39,6 +39,7 @@ import FormDlg from "../../consRegst/FormDlg";
 import { assignFormAttrs } from "@/lib/global/gModel";
 import { PanelCtx } from "../defs/client/SelectLoader";
 import { ExportHandler } from "@/lib/global/declarations/classes";
+import useExportHandler from "@/lib/hooks/useExportHandler";
 export default function ScheduleForm({ mainRoot }: ScheduleFormProps): JSX.Element {
   const cols = [1, 2, 3, 4, 5, 6, 7, 8, 9],
     hours: validSchedHours[] = [18, 19, 20, 21],
@@ -345,37 +346,7 @@ export default function ScheduleForm({ mainRoot }: ScheduleFormProps): JSX.Eleme
       }
     };
   }, [userClass]);
-  useEffect(() => {
-    exporters.scheduleExporter = new ExportHandler();
-    const interv = exporters.scheduleExporter.autoResetTimer(600000),
-      path = location.pathname,
-      handleUnload = (): void => interv && clearInterval(interv),
-      handlePop = (): boolean => {
-        if (location.pathname !== path) {
-          interv && clearInterval(interv);
-          return true;
-        }
-        return false;
-      };
-    addEventListener(
-      "beforeunload",
-      () => {
-        handleUnload();
-        removeEventListener("beforeunload", handleUnload);
-      },
-      { once: true },
-    );
-    addEventListener("popstate", () => {
-      handlePop() && removeEventListener("popstate", handlePop);
-    });
-    addExportFlags(formRef.current ?? document);
-    (): void => {
-      handlePop();
-      removeEventListener("popstate", handlePop);
-      handleUnload();
-      removeEventListener("beforeunload", handleUnload);
-    };
-  }, []);
+  useExportHandler("scheduleExporter", formRef.current);
   useEffect(() => assignFormAttrs(formRef.current));
   return (
     <ErrorBoundary FallbackComponent={() => <GenericErrorComponent message='Erro carregando agenda!' />}>

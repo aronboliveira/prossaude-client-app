@@ -8,6 +8,7 @@ import PacList from "../../lists/PacList";
 import { assignFormAttrs } from "@/lib/global/gModel";
 import { ExportHandler } from "@/lib/global/declarations/classes";
 import { exporters } from "@/vars";
+import useExportHandler from "@/lib/hooks/useExportHandler";
 export default function PacTabForm(): JSX.Element {
   const [shouldDisplayRowData, setDisplayRowData] = useState<boolean>(false),
     formRef = useRef<nullishForm>(null),
@@ -41,37 +42,7 @@ export default function PacTabForm(): JSX.Element {
       syncAriaStates([...formRef.current!.querySelectorAll("*"), formRef.current]);
     } else elementNotFound(formRef?.current, "formRef.current in useEffect() for PacTabForm", extLine(new Error()));
   }, [formRef, callbackNormalizeSizesSb]);
-  useEffect(() => {
-    exporters.pacExporter = new ExportHandler();
-    const interv = exporters.pacExporter.autoResetTimer(600000),
-      path = location.pathname,
-      handleUnload = (): void => interv && clearInterval(interv),
-      handlePop = (): boolean => {
-        if (location.pathname !== path) {
-          interv && clearInterval(interv);
-          return true;
-        }
-        return false;
-      };
-    addEventListener(
-      "beforeunload",
-      () => {
-        handleUnload();
-        removeEventListener("beforeunload", handleUnload);
-      },
-      { once: true },
-    );
-    addEventListener("popstate", () => {
-      handlePop() && removeEventListener("popstate", handlePop);
-    });
-    addExportFlags(formRef.current ?? document);
-    (): void => {
-      handlePop();
-      removeEventListener("popstate", handlePop);
-      handleUnload();
-      removeEventListener("beforeunload", handleUnload);
-    };
-  }, []);
+  useExportHandler("pacExporter", formRef.current);
   useEffect(() => assignFormAttrs(formRef.current));
   return (
     <form

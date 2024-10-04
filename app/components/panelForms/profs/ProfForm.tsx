@@ -17,10 +17,10 @@ import {
   handleEventReq,
   validateForm,
   syncAriaStates,
-  cleanStorageName,
 } from "@/lib/global/handlers/gHandlers";
 import { PanelCtx } from "../defs/client/SelectLoader";
 import { ExportHandler } from "@/lib/global/declarations/classes";
+import useExportHandler from "@/lib/hooks/useExportHandler";
 export default function ProfForm({ mainRoot }: GlobalFormProps): JSX.Element {
   const userClass = useContext(PanelCtx).userClass,
     [showForm] = useState(true),
@@ -129,40 +129,7 @@ export default function ProfForm({ mainRoot }: GlobalFormProps): JSX.Element {
       ...document.querySelector("form")!.getElementsByTagName("select"),
     );
   }, [formRef, userClass]);
-  useEffect(() => {
-    exporters.profExporter = new ExportHandler();
-    const interv = exporters.profExporter.autoResetTimer(600000),
-      path = location.pathname,
-      handleUnload = (): void => interv && clearInterval(interv),
-      handlePop = (): boolean => {
-        if (location.pathname !== path) {
-          interv && clearInterval(interv);
-          return true;
-        }
-        return false;
-      };
-    addEventListener(
-      "beforeunload",
-      () => {
-        handleUnload();
-        removeEventListener("beforeunload", handleUnload);
-      },
-      { once: true },
-    );
-    addEventListener("popstate", () => {
-      handlePop() && removeEventListener("popstate", handlePop);
-    });
-    addExportFlags(formRef.current ?? document);
-    addEventListener("beforeunload", cleanStorageName);
-    (): void => {
-      cleanStorageName();
-      removeEventListener("beforeunload", cleanStorageName);
-      handlePop();
-      removeEventListener("popstate", handlePop);
-      handleUnload();
-      removeEventListener("beforeunload", handleUnload);
-    };
-  }, []);
+  useExportHandler("profExporter", formRef.current, true);
   useEffect(() => assignFormAttrs(formRef.current));
   return (
     <ErrorBoundary

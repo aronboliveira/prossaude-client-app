@@ -117,13 +117,13 @@ export async function handleLogin(
       localStorage.setItem("activeUser", JSON.stringify(user));
       return {
         valid: true,
-        message: `Loading...`,
+        message: navigator.language.startsWith("pt-") ? "Carregando..." : "Loading...",
       };
     } else {
       localStorage.setItem("activeUser", JSON.stringify(decodeToken("", true).res));
       return {
         valid: true,
-        message: `Loading...`,
+        message: navigator.language.startsWith("pt-") ? "Carregando..." : "Loading...",
       };
     }
   } catch (e) {
@@ -131,7 +131,9 @@ export async function handleLogin(
     console.warn(`Error on processing HTTP Response:\n${resData}`);
     return {
       valid: false,
-      message: `Failed to validate login: Error code ${status}`,
+      message: navigator.language.startsWith("pt-")
+        ? `Falha na validação de login: Código de erro ${status}`
+        : `Failed to validate login: Error code ${status}`,
     };
   }
 }

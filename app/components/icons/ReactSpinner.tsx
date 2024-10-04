@@ -1,8 +1,22 @@
-import styles from "./ReactSpinner.module.scss";
-export default function ReactSpinner({ scale = 0.8 }: { scale: number }): JSX.Element {
+export default function ReactSpinner({
+  width,
+  height,
+  scale = 0.8,
+  translate,
+}: {
+  scale: number;
+  width?: number | string;
+  height?: number | string;
+  translate?: string;
+}): JSX.Element {
   return (
-    <div style={{ transform: `scale(${scale})` }}>
-      <svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='-11 -10.13 22 20.27' className={styles.reactSpinner}>
+    <div
+      style={{
+        width: `${width}px`,
+        height: `${height}px`,
+        transform: `scale(${scale})${translate ? ` translate(${translate})` : ""}`,
+      }}>
+      <svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='-11 -10.13 22 20.27' className='react-spinner'>
         <defs>
           <radialGradient id='nucleus-gradient' cx='50%' cy='50%' r='50%' fx='50%' fy='50%'>
             <stop offset='0%' stopColor='#48656e' />
@@ -25,21 +39,21 @@ export default function ReactSpinner({ scale = 0.8 }: { scale: number }): JSX.El
             <stop offset='100%' stopColor='#815816' />
           </linearGradient>
         </defs>
-        <circle r='2' fill='url(#nucleus-gradient)' className={styles.reactNucleus} />
+        <circle r='2' fill='url(#nucleus-gradient)' className='react-nucleus' />
         <g>
-          <ellipse rx='10' ry='4.5' stroke='url(#center-ellipse-gradient)' className={styles.reactCenterEllipse} />
+          <ellipse rx='10' ry='4.5' stroke='url(#center-ellipse-gradient)' className='react-center-ellipside' />
           <ellipse
             rx='10'
             ry='4.5'
             stroke='url(#left-ellipse-gradient)'
-            className={styles.reactLeftEllipse}
+            className='react-left-ellipse'
             transform='rotate(60)'
           />
           <ellipse
             rx='10'
             ry='4.5'
             stroke='url(#right-ellipse-gradient)'
-            className={styles.reactRightEllipse}
+            className='react-right-ellipse'
             transform='rotate(120)'
           />
         </g>

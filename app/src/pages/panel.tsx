@@ -3,6 +3,7 @@ import GenericErrorComponent from "../../components/error/GenericErrorComponent"
 import MainFormPanel from "../../components/mainPanel/MainFormPanel";
 import TipsBtnWrapper from "../../components/interactive/panel/TipsBtnWrapper";
 import UserProfilePanelWrapper from "../../components/interactive/panel/UserProfilePanelWrapper";
+import Guard from "../../components/interactive/def/Guard";
 export default function PanelPage(): JSX.Element {
   return (
     <ErrorBoundary FallbackComponent={() => <GenericErrorComponent message='Error rendering Panel Page' />}>
@@ -42,6 +43,7 @@ export default function PanelPage(): JSX.Element {
       <canvas id='chreference' hidden>
         0
       </canvas>
+      <Guard />
     </ErrorBoundary>
   );
 }

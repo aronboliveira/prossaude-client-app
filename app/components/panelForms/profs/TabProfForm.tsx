@@ -18,6 +18,7 @@ import { strikeEntries } from "@/lib/locals/panelPage/consStyleScript";
 import { assignFormAttrs } from "@/lib/global/gModel";
 import { PanelCtx } from "../defs/client/SelectLoader";
 import { ExportHandler } from "@/lib/global/declarations/classes";
+import useExportHandler from "@/lib/hooks/useExportHandler";
 export default function TableProfForm(): JSX.Element {
   const userClass = useContext(PanelCtx).userClass,
     profs: ProfInfo[] = useMemo(() => [], []),
@@ -262,37 +263,7 @@ export default function TableProfForm(): JSX.Element {
       );
     }
   }, [tabRef, userClass]);
-  useEffect(() => {
-    exporters.tabProfExporter = new ExportHandler();
-    const interv = exporters.tabProfExporter.autoResetTimer(600000),
-      path = location.pathname,
-      handleUnload = (): void => interv && clearInterval(interv),
-      handlePop = (): boolean => {
-        if (location.pathname !== path) {
-          interv && clearInterval(interv);
-          return true;
-        }
-        return false;
-      };
-    addEventListener(
-      "beforeunload",
-      () => {
-        handleUnload();
-        removeEventListener("beforeunload", handleUnload);
-      },
-      { once: true },
-    );
-    addEventListener("popstate", () => {
-      handlePop() && removeEventListener("popstate", handlePop);
-    });
-    addExportFlags(formRef.current ?? document);
-    (): void => {
-      handlePop();
-      removeEventListener("popstate", handlePop);
-      handleUnload();
-      removeEventListener("beforeunload", handleUnload);
-    };
-  }, []);
+  useExportHandler("tabProfExporter", formRef.current);
   useEffect(() => assignFormAttrs(formRef.current));
   return (
     <form

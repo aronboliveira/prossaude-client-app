@@ -109,6 +109,9 @@ export default function UserDlg({
                   color: "transparent",
                 }}
                 onClick={() => {
+                  localStorage.removeItem("authorized");
+                  localStorage.removeItem("user");
+                  localStorage.removeItem("pw");
                   router ? router.push("/login") : nextRouter.push("/login");
                 }}>
                 LOGIN
