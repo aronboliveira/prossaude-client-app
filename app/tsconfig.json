@@ -27,7 +27,7 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "jest.config.ts", "./setupTests.ts"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "./setupTests.ts"],
   "exclude": [
     "node_modules",
     "__tests__",
