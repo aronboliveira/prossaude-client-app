@@ -715,7 +715,7 @@ export class ExportHandler {
           }
         };
       if (namer) {
-        const writeNamedFile = (namer: Element | String): void => {
+        const writeNamedFile = (namer: Element | string): void => {
           if (
             namer instanceof HTMLInputElement ||
             namer instanceof HTMLSelectElement ||
