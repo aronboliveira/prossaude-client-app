@@ -3,6 +3,7 @@ import ReactSpinner from "./ReactSpinner";
 export default function ReactBrand(): JSX.Element {
   return (
     <div
+      className='react-wrapper'
       style={{
         display: "flex",
         flexFlow: "column wrap",

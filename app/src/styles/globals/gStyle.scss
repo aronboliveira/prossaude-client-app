@@ -1021,6 +1021,7 @@ td,
     border: none;
     padding: 0;
   }
+  scrollbar-width: thin !important;
 }
 
 .divTab {
@@ -2955,6 +2956,18 @@ $baseMax750InpWidth: 85vw;
     padding-left: 3.2rem;
   }
 
+  .rGapQ4601v {
+    row-gap: 1vh;
+  }
+
+  .rGapQ4602v {
+    row-gap: 2vh;
+  }
+
+  .react-wrapper {
+    padding-top: 5rem;
+  }
+
   .widQ460MinFull {
     min-width: 100% !important;
     max-width: 100% !important;
@@ -2970,14 +2983,6 @@ $baseMax750InpWidth: 85vw;
 
   .widMin75Q460v {
     min-width: 75vw;
-  }
-
-  .rGapQ4601v {
-    row-gap: 1vh;
-  }
-
-  .rGapQ4602v {
-    row-gap: 2vh;
   }
 
   #autocorrectDiv {

@@ -238,6 +238,10 @@
     }
   }
 
+  .divAntFamCheck {
+    transition: opacity 0.5s ease-in-out;
+  }
+
   .divAntMedSpan {
     flex-flow: column;
     height: 20%;
@@ -565,7 +569,7 @@ $baseNullableVw900InpWidth: 70vw;
       padding: 0 0 1% 0;
       overflow: auto;
       column-gap: 1vw;
-      scrollbar-width: none;
+      scrollbar-width: thin;
     }
 
     .atualTratBtn {

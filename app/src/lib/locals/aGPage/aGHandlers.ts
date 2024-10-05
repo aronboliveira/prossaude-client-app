@@ -283,9 +283,18 @@ export function handleDivAddShow(targ: targEl): void {
     if (!(divAdd instanceof HTMLElement && (divAdd.classList.contains("divAdd") as boolean)))
       throw elementNotFound(divAdd, `Validation of Div Add`, extLine(new Error()));
     if (targ.checked) {
+      console.log(divAdd);
       divAdd.style.display = "grid";
       divAdd.style.opacity = "0.8";
-      divAdd.style.minWidth = "70vw";
+      innerWidth > 460 ? (divAdd.style.minWidth = "70vw") : (divAdd.style.minWidth = "88vw");
+      divAdd.querySelectorAll(".divAntFamCheck").forEach(d => {
+        if (!(d instanceof HTMLElement)) return;
+        d.style.display = "grid";
+        setTimeout(() => {
+          d.style.opacity = "1";
+        }, 300);
+        innerWidth > 460 ? (d.style.minWidth = "60vw !important") : (d.style.minWidth = "70vw !important");
+      });
       for (const radio of [
         ...(divAdd.querySelectorAll('input[type="radio"') as NodeListOf<HTMLInputElement>),
         ...(divAdd.querySelectorAll('input[type="number"]') as NodeListOf<HTMLInputElement>),
@@ -296,6 +305,12 @@ export function handleDivAddShow(targ: targEl): void {
       divAdd.style.display = "none";
       divAdd.style.opacity = "0";
       divAdd.style.minWidth = "0";
+      divAdd.querySelectorAll(".divAntFamCheck").forEach(d => {
+        if (!(d instanceof HTMLElement)) return;
+        d.style.display = "none";
+        d.style.opacity = "0";
+        innerWidth > 460 ? (d.style.minWidth = "60vw !important") : (d.style.minWidth = "70vw !important");
+      });
       for (const radio of [
         ...(divAdd.querySelectorAll('input[type="radio"') as NodeListOf<HTMLInputElement>),
         ...(divAdd.querySelectorAll('input[type="number"]') as NodeListOf<HTMLInputElement>),

@@ -1,6 +1,4 @@
 import { entryEl, targEl, voidVal } from "./declarations/types";
-import * as GlobalHandler from "./handlers/gHandlers";
-import * as GlobalModel from "./gModel";
 import {
   extLine,
   elementNotFound,
@@ -8,6 +6,16 @@ import {
   multipleElementsNotFound,
   elementNotPopulated,
 } from "./handlers/errorHandler";
+import { ExportHandler } from "./declarations/classes";
+import {
+  autoCapitalizeInputs,
+  checkAllGenConts,
+  checkAutoCorrect,
+  fluxGen,
+  numberLimit,
+  switchAutocorrect,
+} from "./gModel";
+import { changeToAstDigit, cpbInpHandler, doubleClickHandler, useCurrentDate } from "./handlers/gHandlers";
 export function getGlobalEls(isAutocorrectOn: boolean = true, context: string = "notNum"): boolean {
   setTimeout(() => {
     const textConts = [...document.querySelectorAll("textarea"), ...document.querySelectorAll('input[type="text"]')],
@@ -37,110 +45,134 @@ export function getGlobalEls(isAutocorrectOn: boolean = true, context: string = 
   return isAutocorrectOn || true;
 }
 export function addListenerTexts(textConts: targEl[], isAutocorrectOn: boolean = true): void {
-  if (textConts.every(el => el instanceof HTMLElement)) {
-    textConts.forEach(textCont => {
-      if (textCont?.classList.contains("autocorrect")) {
-        textCont instanceof HTMLTextAreaElement || (textCont instanceof HTMLInputElement && textCont.type === "text")
-          ? textCont.addEventListener("input", (): void => {
-              isAutocorrectOn = GlobalModel.checkAutoCorrect(
-                document.querySelector('button[id^="deactAutocorrectBtn"]') ||
-                  document.querySelector('input[id^="deactAutocorrectBtn"]'),
-              );
-              GlobalModel.autoCapitalizeInputs(textCont, isAutocorrectOn);
-            })
-          : inputNotFound(
-              textCont,
-              `target textCont id ${JSON.stringify(textCont?.id || "UNIDENTIFIED TEXTCONT")}`,
-              extLine(new Error()),
-            );
-      }
-    });
-  } else console.error(`Erro validando instâncias em textConts`);
+  textConts.forEach(textCont => {
+    if (textCont?.classList.contains("autocorrect")) {
+      if (
+        (textCont instanceof HTMLTextAreaElement ||
+          (textCont instanceof HTMLInputElement && textCont.type === "text")) &&
+        !(textCont.dataset.active && textCont.dataset.active === "true")
+      ) {
+        textCont.addEventListener("input", (): void => {
+          isAutocorrectOn = checkAutoCorrect(
+            document.querySelector('button[id^="deactAutocorrectBtn"]') ||
+              document.querySelector('input[id^="deactAutocorrectBtn"]'),
+          );
+          autoCapitalizeInputs(textCont, isAutocorrectOn);
+        });
+        textCont.dataset.active = "true";
+      } else if (
+        !(textCont instanceof HTMLTextAreaElement || (textCont instanceof HTMLInputElement && textCont.type === "text"))
+      )
+        inputNotFound(
+          textCont,
+          `target textCont id ${JSON.stringify(textCont?.id || "UNIDENTIFIED TEXTCONT")}`,
+          extLine(new Error()),
+        );
+    }
+  });
 }
 export function addListenerNumInps(numInps: targEl[]): void {
-  if (numInps.every(el => el instanceof HTMLElement)) {
-    numInps.forEach(numInp => {
-      numInp instanceof HTMLInputElement && numInp.type === "number"
-        ? numInp.addEventListener("input", (): void => {
-            GlobalModel.numberLimit(numInp);
-          })
-        : inputNotFound(
-            numInp,
-            `target numInp id ${JSON.stringify(numInp?.id || "UNIDENTIFIED TEXTCONT")}`,
-            extLine(new Error()),
-          );
-    });
-  } else console.error(`Erro validando instâncias em numInps`);
+  numInps.forEach(numInp => {
+    if (
+      numInp instanceof HTMLInputElement &&
+      numInp.type === "number" &&
+      !(numInp.dataset.active && numInp.dataset.active === "true")
+    ) {
+      numInp.addEventListener("input", (): void => numberLimit(numInp));
+      numInp.dataset.active = "true";
+    } else if (!(numInp instanceof HTMLInputElement && numInp.type === "number"))
+      inputNotFound(
+        numInp,
+        `target numInp id ${JSON.stringify(numInp?.id || "UNIDENTIFIED TEXTCONT")}`,
+        extLine(new Error()),
+      );
+  });
 }
 export function addListenerRadios(radioInps: targEl[], context: string = "od"): void {
-  if (radioInps.every(el => el instanceof HTMLElement) && (context === "od" || context === "ed" || context === "ag")) {
+  if (context === "od" || context === "ed" || context === "ag") {
     radioInps.forEach(radio => {
-      if (radio instanceof HTMLInputElement && radio.type === "radio") {
-        radio.addEventListener("dblclick", () => GlobalHandler.doubleClickHandler(radio));
+      if (
+        radio instanceof HTMLInputElement &&
+        radio.type === "radio" &&
+        !(radio.dataset.active && radio.dataset.active === "true")
+      ) {
+        radio.addEventListener("dblclick", () => doubleClickHandler(radio));
         if (context === "ed" || context === "ag") {
-          radio.addEventListener("change", (change): void => GlobalHandler.cpbInpHandler(change, radio));
-          radio.addEventListener("keydown", (keydown): void => GlobalHandler.cpbInpHandler(keydown, radio));
+          radio.addEventListener("change", (change): void => cpbInpHandler(change, radio));
+          radio.addEventListener("keydown", (keydown): void => cpbInpHandler(keydown, radio));
         }
         // radio.addEventListener("touchstart", GlobalHandler.touchStartHandler);
-      } else inputNotFound(radio, `target radio id ${radio?.id || "UNDEFINED ID RADIO"}`, extLine(new Error()));
+        radio.dataset.active = "true";
+      } else if (!(radio instanceof HTMLInputElement && radio.type === "radio"))
+        inputNotFound(radio, `target radio id ${radio?.id || "UNDEFINED ID RADIO"}`, extLine(new Error()));
     });
-  } else console.error(`Erro validando instâncias em radioInps`);
+  } else console.error(`Error validating context`);
 }
 export function addListenerDateBtns(dateBtns: targEl[]): void {
-  if (dateBtns.every(el => el instanceof HTMLElement)) {
-    dateBtns.forEach(dateBtn => {
-      dateBtn instanceof HTMLButtonElement
-        ? dateBtn.addEventListener("click", (activation): void => {
-            GlobalHandler.useCurrentDate(activation, dateBtn);
-          })
-        : elementNotFound(dateBtn, `target dateBtn id ${dateBtn?.id || "UNDEFINED ID DATEBTN"}`, extLine(new Error()));
-    });
-  } else console.error(`Erro validando instâncias em dateBtns`);
+  dateBtns.forEach(dateBtn => {
+    if (dateBtn instanceof HTMLButtonElement && !(dateBtn.dataset.active && dateBtn.dataset.active === "true")) {
+      dateBtn.addEventListener("click", (activation): void => useCurrentDate(activation, dateBtn));
+      dateBtn.dataset.active = "true";
+    } else if (!(dateBtn instanceof HTMLButtonElement))
+      elementNotFound(dateBtn, `target dateBtn id ${dateBtn?.id || "UNDEFINED ID DATEBTN"}`, extLine(new Error()));
+  });
 }
 export function addListenersGenConts(genElement: targEl, genValue: string = "masculino"): string {
   const genBirthRel = document.getElementById("genBirthRelId"),
     genTrans = document.getElementById("genTransId"),
     genFisAlin = document.getElementById("genFisAlinId");
-  if (GlobalModel.checkAllGenConts(genElement, genBirthRel, genTrans, genFisAlin) && typeof genValue === "string") {
+  if (checkAllGenConts(genElement, genBirthRel, genTrans, genFisAlin) && typeof genValue === "string") {
     const arrGenConts = [genElement, genBirthRel, genTrans, genFisAlin] as entryEl[];
     arrGenConts.forEach(genCont => {
-      genCont.addEventListener("change", (): string => {
-        genValue = GlobalModel.fluxGen(arrGenConts, (genElement as entryEl)?.value) || "masculino";
-        return genValue || "masculino";
-      });
+      if (!(genCont.dataset.active && genCont.dataset.active === "true")) {
+        genCont.addEventListener("change", (): string => {
+          genValue = fluxGen(arrGenConts, (genElement as entryEl)?.value) || "masculino";
+          return genValue || "masculino";
+        });
+        genCont.dataset.active = "true";
+      }
     });
   } else multipleElementsNotFound(extLine(new Error()), "gen Elements", genElement, genBirthRel, genTrans, genFisAlin);
   return genValue || "masculino";
 }
 export function addListenerAutocorrectBtns(deactAutocorrectBtns: targEl[], isAutocorrectOn: boolean = true): boolean {
-  if (deactAutocorrectBtns.every(el => el instanceof HTMLElement)) {
-    deactAutocorrectBtns.forEach(deactAutocorrectBtn => {
-      deactAutocorrectBtn instanceof HTMLButtonElement ||
-      (deactAutocorrectBtn instanceof HTMLInputElement &&
-        (deactAutocorrectBtn.type === "checkbox" || deactAutocorrectBtn.type === "radio"))
-        ? deactAutocorrectBtn.addEventListener("click", (click): boolean => {
-            isAutocorrectOn = GlobalModel.switchAutocorrect(click, deactAutocorrectBtn, isAutocorrectOn);
-            return isAutocorrectOn;
-          })
-        : elementNotPopulated(
-            deactAutocorrectBtns,
-            `target deactAutocorrectBtn id ${deactAutocorrectBtn?.id || "UNDEFINED ID BUTTON"}`,
-            extLine(new Error()),
-          );
-    });
-  } else console.error(`Erro validando instâncias em deactAutocorrectBtns`);
+  deactAutocorrectBtns.forEach(deactAutocorrectBtn => {
+    if (
+      (deactAutocorrectBtn instanceof HTMLButtonElement ||
+        (deactAutocorrectBtn instanceof HTMLInputElement &&
+          (deactAutocorrectBtn.type === "checkbox" ||
+            deactAutocorrectBtn.type === "radio" ||
+            deactAutocorrectBtn.type === "button"))) &&
+      !(deactAutocorrectBtn.dataset.active && deactAutocorrectBtn.dataset.active === "true")
+    ) {
+      deactAutocorrectBtn.addEventListener("click", (click): boolean => {
+        isAutocorrectOn = switchAutocorrect(click, deactAutocorrectBtn, isAutocorrectOn);
+        return isAutocorrectOn;
+      });
+      deactAutocorrectBtn.dataset.active = "true";
+    } else if (
+      !(
+        deactAutocorrectBtn instanceof HTMLButtonElement ||
+        (deactAutocorrectBtn instanceof HTMLInputElement &&
+          (deactAutocorrectBtn.type === "checkbox" ||
+            deactAutocorrectBtn.type === "radio" ||
+            deactAutocorrectBtn.type === "button"))
+      )
+    )
+      elementNotFound(deactAutocorrectBtn, "Button for deactive autocorrection", extLine(new Error()));
+  });
   return isAutocorrectOn || true;
 }
 export function addListenerAstDigitBtns(astDigtBtns: targEl[]): void {
-  if (astDigtBtns.every(el => el instanceof HTMLElement)) {
-    astDigtBtns.forEach(astDigtBtn => {
-      astDigtBtn instanceof HTMLButtonElement
-        ? astDigtBtn.addEventListener("click", (): void => {
-            GlobalHandler.changeToAstDigit(astDigtBtn);
-          })
-        : elementNotFound(astDigtBtn, astDigtBtn?.id || "UNDEFINED ID BUTTON", extLine(new Error()));
-    });
-  } else console.error(`Erro validando instâncias em astDigtBtns`);
+  astDigtBtns.forEach(astDigtBtn => {
+    if (
+      astDigtBtn instanceof HTMLButtonElement &&
+      !(astDigtBtn.dataset.active && astDigtBtn.dataset.active === "true")
+    ) {
+      astDigtBtn.addEventListener("click", (): void => changeToAstDigit(astDigtBtn));
+      astDigtBtn.dataset.active = "true";
+    } else elementNotFound(astDigtBtn, astDigtBtn?.id || "UNDEFINED ID BUTTON", extLine(new Error()));
+  });
 }
 export const exportSignaler = new AbortController();
 export function addExportFlags(
@@ -157,7 +189,31 @@ export function addExportFlags(
     btnExport instanceof HTMLButtonElement ||
     (btnExport instanceof HTMLInputElement && (btnExport.type === "radio" || btnExport.type === "checkbox"))
   ) {
-    if (!btnExport.dataset.active || btnExport.dataset.active !== "true") btnExport.dataset.active = "true";
+    const exporter = new ExportHandler(),
+      interv = exporter.autoResetTimer(600000),
+      path = location.pathname,
+      handleUnload = (): void => interv && clearInterval(interv),
+      handlePop = (): boolean => {
+        if (location.pathname !== path) {
+          interv && clearInterval(interv);
+          return true;
+        }
+        return false;
+      };
+    addEventListener(
+      "beforeunload",
+      () => {
+        handleUnload();
+        removeEventListener("beforeunload", handleUnload);
+      },
+      { once: true },
+    );
+    addEventListener("popstate", () => {
+      handlePop() && removeEventListener("popstate", handlePop);
+    });
+    if (!btnExport.dataset.active || btnExport.dataset.active !== "true") {
+      btnExport.dataset.active = "true";
+    }
   } else elementNotFound(btnExport, "argument for addExportFlags()", extLine(new Error()));
   return btnExport;
 }
@@ -166,38 +222,41 @@ export function addResetAstListener(): void {
     const resetBtn = document.getElementById("resetAstBtn");
     if (!(resetBtn instanceof HTMLButtonElement))
       throw elementNotFound(resetBtn, `Button for reseting signature`, extLine(new Error()));
-    resetBtn.addEventListener("click", () => {
-      try {
-        const divConfirm = resetBtn.closest(".divConfirm");
-        if (!(divConfirm instanceof HTMLElement))
-          throw elementNotFound(divConfirm, `Main ancestral div for resetAstBtn`, extLine(new Error()));
-        const astEl = divConfirm.querySelector("#inpAstConfirmId");
-        if (!(astEl instanceof HTMLCanvasElement || astEl instanceof HTMLInputElement))
-          throw elementNotFound(astEl, `Element for patient signing`, extLine(new Error()));
-        if (astEl instanceof HTMLCanvasElement) {
-          const replaceCanvas = Object.assign(document.createElement("canvas"), {
-            id: "inpAstConfirmId",
-          });
-          replaceCanvas.dataset.title = "Assinatura do Paciente";
-          astEl.parentElement!.replaceChild(replaceCanvas, astEl);
-          addCanvasListeners();
-        }
-        if (astEl instanceof HTMLInputElement) {
-          const replaceInp = Object.assign(
-            Object.assign(document.createElement("input") as HTMLInputElement, {
-              type: "file",
+    if (!(resetBtn.dataset.active && resetBtn.dataset.active === "true")) {
+      resetBtn.addEventListener("click", () => {
+        try {
+          const divConfirm = resetBtn.closest(".divConfirm");
+          if (!(divConfirm instanceof HTMLElement))
+            throw elementNotFound(divConfirm, `Main ancestral div for resetAstBtn`, extLine(new Error()));
+          const astEl = divConfirm.querySelector("#inpAstConfirmId");
+          if (!(astEl instanceof HTMLCanvasElement || astEl instanceof HTMLInputElement))
+            throw elementNotFound(astEl, `Element for patient signing`, extLine(new Error()));
+          if (astEl instanceof HTMLCanvasElement) {
+            const replaceCanvas = Object.assign(document.createElement("canvas"), {
               id: "inpAstConfirmId",
-              accept: "image/*",
-            }),
-          );
-          replaceInp.dataset.title = "Assinatura do Paciente";
-          replaceInp.classList.add("inpAst", "mg-07t", "form-control");
-          astEl.parentElement!.replaceChild(replaceInp, astEl);
+            });
+            replaceCanvas.dataset.title = "Assinatura do Paciente";
+            astEl.parentElement?.replaceChild(replaceCanvas, astEl);
+            addCanvasListeners();
+          }
+          if (astEl instanceof HTMLInputElement) {
+            const replaceInp = Object.assign(
+              Object.assign(document.createElement("input") as HTMLInputElement, {
+                type: "file",
+                id: "inpAstConfirmId",
+                accept: "image/*",
+              }),
+            );
+            replaceInp.dataset.title = "Assinatura do Paciente";
+            replaceInp.classList.add("inpAst", "mg-07t", "form-control");
+            astEl.parentElement?.replaceChild(replaceInp, astEl);
+          }
+        } catch (e2) {
+          console.error(`Error handling click on Reset signature button`);
         }
-      } catch (e2) {
-        console.error(`Error handling click on Reset signature button`);
-      }
-    });
+      });
+      resetBtn.dataset.active = "true";
+    }
   } catch (e) {
     console.error(`Error executing addResetAstListener:
     ${(e as Error).message}`);

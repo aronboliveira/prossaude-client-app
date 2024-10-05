@@ -12,6 +12,7 @@ import Spinner from "../../icons/Spinner";
 import { useRouter } from "next/router";
 import { ClickEvaluator } from "@/lib/global/declarations/classes";
 export default function LoginInputs(): JSX.Element {
+  let isSpinning = false;
   const anchorRef = useRef<nullishAnchor>(null),
     formRef = useRef<nullishForm>(null),
     spanRef = useRef<nullishSpan>(null),
@@ -21,11 +22,10 @@ export default function LoginInputs(): JSX.Element {
       try {
         if (!(formRef.current instanceof HTMLFormElement)) throw new Error(`Failed to validate form instance`);
         if (!(resSpan instanceof HTMLElement)) throw new Error(`Failed to validate span reference`);
-        const uW = document.getElementById("userWarn"),
-          pW = document.getElementById("pwWarn");
+        const uW = document.getElementById("userWarn");
         if (uW instanceof HTMLElement) uW.style.display = "none";
-        if (pW instanceof HTMLElement) pW.textContent = "none";
         const spin = (): void => {
+          isSpinning = true;
           setMsg(<Spinner fs={true} />);
           const form = formRef.current ?? resSpan.closest("form");
           if (form instanceof HTMLElement) {
@@ -33,7 +33,7 @@ export default function LoginInputs(): JSX.Element {
             form.style.filter = "grayscale(40%)";
           }
         };
-        if (typeof router === "object" && "beforePopState" in router && "push" in router) {
+        if (typeof router === "object" && "beforePopState" in router && "push" in router && !isSpinning) {
           spin();
           navigator.language.startsWith("pt-")
             ? alert(
@@ -69,15 +69,17 @@ export default function LoginInputs(): JSX.Element {
             );
           }, 1200);
         } else {
-          spin();
-          navigator.language.startsWith("pt-")
-            ? alert(
-                "Esta é apenas uma versão de teste estático do sistema. O login irá prosseguir independente da validez do formulário.",
-              )
-            : alert(
-                "This is a client only, static, test execution. The login will be forwarded regardless of the form validity.",
-              );
-          setTimeout(() => (location.href = "/base"), 1000);
+          if (!isSpinning) {
+            spin();
+            navigator.language.startsWith("pt-")
+              ? alert(
+                  "Esta é apenas uma versão de teste estático do sistema. O login irá prosseguir independente da validez do formulário.",
+                )
+              : alert(
+                  "This is a client only, static, test execution. The login will be forwarded regardless of the form validity.",
+                );
+            setTimeout(() => (location.href = "/base"), 1000);
+          }
         }
       } catch (e) {
         console.error(`Error executing exeLogin:\n${(e as Error).message}`);
@@ -240,6 +242,7 @@ export default function LoginInputs(): JSX.Element {
               onClick={ev => {
                 ev.preventDefault();
                 if (ev.currentTarget.firstElementChild instanceof HTMLAnchorElement) {
+                  localStorage.setItem("shouldTrustNavigate", "true");
                   ev.currentTarget.firstElementChild.focus();
                   ev.currentTarget.firstElementChild.click();
                 }
@@ -299,13 +302,6 @@ export default function LoginInputs(): JSX.Element {
                       }, 10000);
                     });
                   }, 300);
-                  navigator.language.startsWith("pt-")
-                    ? alert(
-                        "Esta é apenas uma versão de teste estático do sistema. O login irá prosseguir independente da validez do formulário.",
-                      )
-                    : alert(
-                        "This is a client only, static, test execution. The login will be forwarded regardless of the form validity.",
-                      );
                 }}>
                 Avançar
               </Link>

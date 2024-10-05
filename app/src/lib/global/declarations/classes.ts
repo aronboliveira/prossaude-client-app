@@ -379,7 +379,15 @@ export class ClickEvaluator {
     let suspicious = true;
     try {
       if (!("movementX" in ev)) throw new Error("Invalid instance for Event");
-      if (!this.#isTrustedEvent(ev)) {
+      if (
+        !this.#isTrustedEvent(ev) &&
+        !(
+          window &&
+          localStorage.getItem("shouldTrustNavigate") &&
+          localStorage.getItem("shouldTrustNavigate") === "true"
+        )
+      ) {
+        localStorage.removeItem("shouldTrustNavigate");
         return [
           navigator.language.startsWith("pt-")
             ? "Evento de mouse não confiável. Por favor aguarde para tentar novamente."
