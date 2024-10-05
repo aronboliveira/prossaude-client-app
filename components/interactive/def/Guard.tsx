@@ -4,7 +4,6 @@ import { useEffect } from "react";
 export default function Guard(): JSX.Element {
   const router = useRouter();
   useEffect(() => {
-    console.log("guarding...");
     if (window) {
       if (!localStorage.getItem("user")) {
         alert("Por favor logue no sistema antes de prosseguir.");
