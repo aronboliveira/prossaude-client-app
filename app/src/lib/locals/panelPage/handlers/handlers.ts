@@ -1,6 +1,6 @@
 import { jwtDecode } from "jwt-decode";
 import { rMouseEvent, formCases, fetchSuffixes } from "@/lib/global/declarations/types";
-import { PacInfo, ProfInfo, StudInfo } from "@/lib/locals/panelPage/declarations/interfacesCons";
+import { PacInfo, ProfInfo, StudInfo } from "@/lib/global/declarations/interfacesCons";
 import { ProfessionalTokenPayload, StudentTokenPayload } from "../../basePage/declarations/serverInterfaces";
 import Cookies from "js-cookie";
 import { defCurrSemester } from "@/redux/slices/userSlice";

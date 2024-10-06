@@ -1,5 +1,5 @@
 import { ErrorBoundary } from "react-error-boundary";
-import { ResetDlgProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
+import { ResetDlgProps } from "@/lib/global/declarations/interfacesCons";
 import { createRoot } from "react-dom/client";
 import { nullishDlg } from "@/lib/global/declarations/types";
 import { panelRoots } from "@/vars";

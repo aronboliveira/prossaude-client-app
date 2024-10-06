@@ -3,7 +3,7 @@ import { ExportHandler, Person } from "./lib/global/declarations/classes";
 import { ENTabsProps } from "./lib/global/declarations/interfaces";
 import { UserState } from "./lib/locals/basePage/declarations/serverInterfaces";
 import { defUser } from "./redux/slices/userSlice";
-import { DataProvider } from "./lib/locals/panelPage/declarations/classesCons";
+import { DataProvider } from "./lib/global/declarations/classesCons";
 import { voidVal } from "./lib/global/declarations/types";
 export const basePath = {
   path: "",
@@ -48,7 +48,7 @@ export const experimentalProps: { experimentalUser: UserState } & { [k: string]:
   experimentalUser: defUser as UserState,
 };
 export const providers: { [k: string]: DataProvider | voidVal } = {
-  globalDataProvider: null,
+  globalDataProvider: undefined,
 };
 export const panelRoots: { [k: string]: Root | undefined } = {
   mainRoot: undefined,

@@ -1,5 +1,5 @@
 "use client";
-import { AvPacListDlgProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
+import { AvPacListDlgProps } from "@/lib/global/declarations/interfacesCons";
 import { ErrorBoundary } from "react-error-boundary";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { isClickOutside } from "@/lib/global/gStyleScript";

@@ -98,7 +98,7 @@ export function equalizeFlexSibilings(
         Match as flexTwin: ${/flexTwin/gi.test(el?.classList?.toString() ?? "")}
         Display value: ${getComputedStyle(el!)?.display}.`);
     });
-  } else console.warn(`Failed to equalize flex siblings`);
+  }
 }
 export function equalizeTabCells(tab: HTMLTableElement | null): void {
   if (tab instanceof HTMLTableElement) {

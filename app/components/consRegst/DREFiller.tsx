@@ -1,5 +1,5 @@
 "use client";
-import { FillerProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
+import { FillerProps } from "@/lib/global/declarations/interfacesCons";
 import { addListenerAvMembers } from "@/lib/locals/panelPage/handlers/consHandlerList";
 import { providers } from "@/vars";
 ("../panelForms/defs/client/SelectPanel");

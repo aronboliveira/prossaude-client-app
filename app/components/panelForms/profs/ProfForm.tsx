@@ -1,5 +1,5 @@
 import { ErrorBoundary } from "react-error-boundary";
-import { GlobalFormProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
+import { GlobalFormProps } from "@/lib/global/declarations/interfacesCons";
 import { addExportFlags } from "@/lib/global/gController";
 import { clearPhDates, normalizeSizeSb } from "@/lib/global/gStyleScript";
 import { providers, panelRoots, exporters } from "@/vars";
@@ -12,12 +12,7 @@ import ReseterBtn from "../defs/ReseterBtn";
 import { nullishBtn, nullishForm, nullishInp } from "@/lib/global/declarations/types";
 import { addEmailExtension, assignFormAttrs, autoCapitalizeInputs, formatCPF, formatTel } from "@/lib/global/gModel";
 import { elementNotFound, elementNotPopulated, extLine, inputNotFound } from "@/lib/global/handlers/errorHandler";
-import {
-  handleCondtReq,
-  handleEventReq,
-  validateForm,
-  syncAriaStates,
-} from "@/lib/global/handlers/gHandlers";
+import { handleCondtReq, handleEventReq, validateForm, syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { PanelCtx } from "../defs/client/SelectLoader";
 import { ExportHandler } from "@/lib/global/declarations/classes";
 import useExportHandler from "@/lib/hooks/useExportHandler";

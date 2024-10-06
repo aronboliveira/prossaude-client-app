@@ -1,6 +1,6 @@
 import { render, screen, fireEvent, RenderResult } from "@testing-library/react";
 import ExcludeDlg from "../../../../../components/alerts/ExcludeDlg";
-import { ExcludeDlgProps } from "../../../../lib/locals/panelPage/declarations/interfacesCons";
+import { ExcludeDlgProps } from "../../..//lib/global/declarations/interfacesCons";
 import { handleDelete } from "@/pages/api/ts/handlers";
 import "@testing-library/jest-dom/extend-expect";
 jest.mock(
@@ -9,7 +9,7 @@ jest.mock(
     handleDelete: jest.Mock<void, [string, boolean]>;
   } => ({
     handleDelete: jest.fn<void, [string, boolean]>(),
-  })
+  }),
 ) as typeof jest;
 jest.mock(
   "../../../../lib/global/gStyleScript",
@@ -17,7 +17,7 @@ jest.mock(
     isClickOutside: jest.Mock<boolean[], [MouseEvent, HTMLElement]>;
   } => ({
     isClickOutside: jest.fn<boolean[], [MouseEvent, HTMLElement]>().mockReturnValue([true]),
-  })
+  }),
 ) as typeof jest;
 jest.mock(
   "../../../../lib/global/handlers/gHandlers",
@@ -25,7 +25,7 @@ jest.mock(
     syncAriaStates: jest.Mock<void, HTMLElement[]>;
   } => ({
     syncAriaStates: jest.fn<void, HTMLElement[]>(),
-  })
+  }),
 ) as typeof jest;
 describe("ExcludeDlg Component", (): void => {
   const defaultProps: ExcludeDlgProps = {
@@ -37,7 +37,7 @@ describe("ExcludeDlg Component", (): void => {
     shouldDisplayExcludeDlg: true,
   };
   const renderComponent = (
-    props = {}
+    props = {},
   ): RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement> =>
     render(<ExcludeDlg {...defaultProps} {...props} />);
 
@@ -51,7 +51,7 @@ describe("ExcludeDlg Component", (): void => {
     ).toBeInTheDocument() as void;
     (
       expect(
-        screen.getByText<HTMLElement>("Esse processo é parcialmente ou totalmente irreversível!")
+        screen.getByText<HTMLElement>("Esse processo é parcialmente ou totalmente irreversível!"),
       ) as jest.JestMatchers<jest.SpyInstance>
     ).toBeInTheDocument() as void;
   }) as void;
@@ -75,7 +75,7 @@ describe("ExcludeDlg Component", (): void => {
     fireEvent.submit(screen.getByRole<HTMLFormElement>("form")) as boolean;
     (expect(handleDelete) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalledWith<Parameters<typeof handleDelete>>(
       "ag",
-      true
+      true,
     ) as void;
   }) as void;
   test("closes dialog and toggles state when clicking outside the modal", (): void => {
@@ -111,7 +111,7 @@ describe("ExcludeDlg Component", (): void => {
         ErrorBoundary: jest.fn<never, []>().mockImplementation((): never => {
           throw new Error("Test Error");
         }) as jest.Mock,
-      })
+      }),
     );
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
     (

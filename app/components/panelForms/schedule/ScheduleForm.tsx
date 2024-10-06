@@ -1,6 +1,6 @@
 "use client";
 import { ErrorBoundary } from "react-error-boundary";
-import { ScheduleFormProps } from "../../../src/lib/locals/panelPage/declarations/interfacesCons";
+import { ScheduleFormProps } from "../../../src/lib/global/declarations/interfacesCons";
 import { addExportFlags } from "../../../src/lib/global/gController";
 import { exporters, fillScheduleState, panelRoots, providers } from "@/vars";
 import { handleClientPermissions } from "../../../src/lib/locals/panelPage/handlers/consHandlerUsers";

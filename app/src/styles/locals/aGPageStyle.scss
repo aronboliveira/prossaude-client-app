@@ -26,6 +26,13 @@
     }
   }
 
+  label {
+    &[for="qxPrinc"],
+    &[for="histDc"] {
+      margin-bottom: 0.5rem;
+    }
+  }
+
   [type="checkbox"] {
     accent-color: rgba(0, 128, 0, 0.836);
   }

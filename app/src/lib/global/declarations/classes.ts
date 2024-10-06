@@ -387,7 +387,6 @@ export class ClickEvaluator {
           localStorage.getItem("shouldTrustNavigate") === "true"
         )
       ) {
-        localStorage.removeItem("shouldTrustNavigate");
         return [
           navigator.language.startsWith("pt-")
             ? "Evento de mouse não confiável. Por favor aguarde para tentar novamente."
@@ -425,6 +424,7 @@ export class ClickEvaluator {
       this.#incrementClientAttempt();
       this.#setLastClickCoordinates(ev.clientX, ev.clientY);
       suspicious = false;
+      localStorage.getItem("shouldTrustNavigate") && localStorage.removeItem("shouldTrustNavigate");
       return ["Attempt validated.", suspicious];
     } catch (e) {
       console.error(`Error executing evaluateClickMovements: ${(e as Error).message}`);

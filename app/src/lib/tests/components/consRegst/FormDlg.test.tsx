@@ -1,6 +1,6 @@
 import { render, fireEvent, screen, RenderResult } from "@testing-library/react";
 import FormDlg from "../../../../../components/consRegst/FormDlg";
-import { ConsDlgProps } from "../../../../lib/locals/panelPage/declarations/interfacesCons";
+import { ConsDlgProps } from "../../..//lib/global/declarations/interfacesCons";
 import { addListenerAvMembers } from "../../../../lib/locals/panelPage/handlers/consHandlerList";
 import { addExportFlags } from "../../../../lib/global/gController";
 import { syncAriaStates } from "../../../../lib/global/handlers/gHandlers";
@@ -64,7 +64,7 @@ jest.mock(
   }),
 ) as typeof jest;
 jest.mock(
-  "../../../../lib/locals/panelPage/declarations/interfacesCons",
+  "../../..//lib/global/declarations/interfacesCons",
   (): {
     toggleACCons: jest.Mock<any, any, any>;
     toggleAFCons: jest.Mock<any, any, any>;

@@ -12,7 +12,7 @@ import GenericErrorComponent from "../error/GenericErrorComponent";
 import PacRow from "../panelForms/pacs/PacRow";
 import Spinner from "../icons/Spinner";
 import { nullishHtEl, nullishTab, nullishTabSect } from "@/lib/global/declarations/types";
-import { PacInfo, PacListProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
+import { PacInfo, PacListProps } from "@/lib/global/declarations/interfacesCons";
 import { addListenerAlocation, checkLocalIntervs, fillTabAttr } from "@/lib/locals/panelPage/handlers/consHandlerList";
 import { handleClientPermissions } from "@/lib/locals/panelPage/handlers/consHandlerUsers";
 import { PanelCtx } from "../panelForms/defs/client/SelectLoader";

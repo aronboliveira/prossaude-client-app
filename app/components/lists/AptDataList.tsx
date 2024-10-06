@@ -1,5 +1,5 @@
-import { AptDataListProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
 import { ErrorBoundary } from "react-error-boundary";
+import { AptDataListProps } from "@/lib/global/declarations/interfacesCons";
 import { addExportFlags } from "@/lib/global/gController";
 import { consVariablesData } from "../consRegst/consVariables";
 import { createRoot } from "react-dom/client";

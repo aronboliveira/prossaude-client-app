@@ -2,7 +2,7 @@
 import { nullishDl } from "@/lib/global/declarations/types";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
-import { PacInfo } from "@/lib/locals/panelPage/declarations/interfacesCons";
+import { PacInfo } from "@/lib/global/declarations/interfacesCons";
 import { handleFetch } from "@/lib/locals/panelPage/handlers/handlers";
 import { useEffect, useMemo, useRef } from "react";
 import { panelRoots } from "@/vars";

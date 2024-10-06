@@ -1,4 +1,4 @@
-import { ProfRowProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
+import { ProfRowProps } from "@/lib/global/declarations/interfacesCons";
 import { dateISOtoBRL } from "@/lib/global/gModel";
 import { useContext, useState } from "react";
 import AlterFieldList from "../../lists/AlterFieldList";

@@ -1,5 +1,5 @@
 import { ErrorBoundary } from "react-error-boundary";
-import { UserPropsDlgProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
+import { UserPropsDlgProps } from "@/lib/global/declarations/interfacesCons";
 import { isClickOutside } from "@/lib/global/gStyleScript";
 import { useEffect, useRef, useState } from "react";
 import { validateForm, syncAriaStates } from "@/lib/global/handlers/gHandlers";
