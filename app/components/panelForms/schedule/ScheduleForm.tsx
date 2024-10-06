@@ -40,6 +40,7 @@ import { assignFormAttrs } from "@/lib/global/gModel";
 import { PanelCtx } from "../defs/client/SelectLoader";
 import { ExportHandler } from "@/lib/global/declarations/classes";
 import useExportHandler from "@/lib/hooks/useExportHandler";
+import { privilege } from "@/lib/locals/basePage/declarations/serverInterfaces";
 export default function ScheduleForm({ mainRoot }: ScheduleFormProps): JSX.Element {
   const cols = [1, 2, 3, 4, 5, 6, 7, 8, 9],
     hours: validSchedHours[] = [18, 19, 20, 21],
@@ -158,7 +159,11 @@ export default function ScheduleForm({ mainRoot }: ScheduleFormProps): JSX.Eleme
       //   DataProvider.persistSessionEntries(formRef.current)
       // );
       providers.globalDataProvider &&
-        providers.globalDataProvider.initPersist(formRef.current, providers.globalDataProvider, userClass);
+        providers.globalDataProvider.initPersist(
+          formRef.current,
+          providers.globalDataProvider,
+          (userClass as privilege) ?? "student",
+        );
       const saveInterv = setInterval(() => {
         try {
           if (!(formRef.current instanceof HTMLFormElement))

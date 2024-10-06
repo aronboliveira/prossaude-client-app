@@ -4,7 +4,7 @@ import { odProps, agProps } from "@/vars";
 import { extLine, inputNotFound } from "@/lib/global/handlers/errorHandler";
 import { handleLinkChanges } from "@/lib/global/handlers/gRoutingHandlers";
 import { pageCases, targEl } from "@/lib/global/declarations/types";
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { addExportFlags, getGlobalEls, watchLabels } from "@/lib/global/gController";
 import { clearPhDates, dinamicGridAdjust, equalizeFlexSibilings } from "@/lib/global/gStyleScript";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
@@ -13,7 +13,7 @@ export default function Watcher({ routeCase }: { routeCase?: pageCases }): JSX.E
   const [handled, setHandle] = useState<boolean>(false);
   const [isMounted, setMount] = useState<boolean>(false);
   const [isExportListening, setExport] = useState<boolean>(false);
-  useLayoutEffect(() => setMount(true), []);
+  useEffect(() => setMount(true), []);
   useEffect(() => {
     if (!isMounted) return;
     const handleResize = (): void =>

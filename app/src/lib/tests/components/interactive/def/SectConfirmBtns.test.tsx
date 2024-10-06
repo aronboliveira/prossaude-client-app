@@ -1,3 +1,4 @@
+import React from "react";
 import { render, fireEvent, screen, RenderResult } from "@testing-library/react";
 import { addCanvasListeners } from "../../../../../lib/global/gController";
 import { elementNotFound } from "../../../../../lib/global/handlers/errorHandler";
@@ -8,7 +9,7 @@ jest.mock(
     addCanvasListeners: jest.Mock<any, any, any>;
   } => ({
     addCanvasListeners: jest.fn() as jest.Mock,
-  })
+  }),
 ) as typeof jest;
 jest.mock(
   "../../../../../lib/global/handlers/errorHandler",
@@ -18,7 +19,7 @@ jest.mock(
   } => ({
     elementNotFound: jest.fn() as jest.Mock,
     extLine: jest.fn() as jest.Mock,
-  })
+  }),
 ) as typeof jest;
 describe("SectConfirmBtns Component", (): void => {
   test("calls addCanvasListeners when reset button is clicked", (): void => {
