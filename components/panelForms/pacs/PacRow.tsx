@@ -1,5 +1,5 @@
 "use client";
-import { PacRowProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
+import { PacRowProps } from "@/lib/global/declarations/interfacesCons";
 import { dateISOtoBRL } from "@/lib/global/gModel";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { nullishBtn } from "@/lib/global/declarations/types";

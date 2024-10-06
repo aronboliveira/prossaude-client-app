@@ -1,6 +1,6 @@
 import { root } from "../vars";
 import { nullishBtn } from "../../../../lib/global/declarations/types";
-import { ExcludeConsDlgProps } from "../../../../lib/locals/panelPage/declarations/interfacesCons";
+import { ExcludeConsDlgProps } from "../../..//lib/global/declarations/interfacesCons";
 import { render, screen, fireEvent, RenderResult } from "@testing-library/react";
 import ExcludeConsDlg from "../../../../../components/alerts/ExcludeConsDlg";
 import "@testing-library/jest-dom";
@@ -10,7 +10,7 @@ jest.mock(
     isClickOutside: jest.Mock<boolean[], [MouseEvent, HTMLElement]>;
   } => ({
     isClickOutside: jest.fn<boolean[], [MouseEvent, HTMLElement]>().mockReturnValue([true]),
-  })
+  }),
 ) as typeof jest;
 jest.mock(
   `${root}/lib/global/handlers/errorHandler`,
@@ -20,7 +20,7 @@ jest.mock(
   } => ({
     elementNotFound: jest.fn<void, [HTMLElement | null, string, string]>(),
     extLine: jest.fn<string, [Error]>(),
-  })
+  }),
 ) as typeof jest;
 jest.mock(
   `${root}/lib/global/handlers/gHandlers`,
@@ -28,7 +28,7 @@ jest.mock(
     syncAriaStates: jest.Mock<void, HTMLElement[]>;
   } => ({
     syncAriaStates: jest.fn<void, HTMLElement[]>(),
-  })
+  }),
 ) as typeof jest;
 jest.mock(
   `${root}/lib/locals/panelPage/handlers/consHandlerCmn`,
@@ -36,7 +36,7 @@ jest.mock(
     addEraseEvent: jest.Mock<void, [nullishBtn, string]>;
   } => ({
     addEraseEvent: jest.fn<void, [nullishBtn, string]>(),
-  })
+  }),
 ) as typeof jest;
 describe("ExcludeConsDlg Component", (): void => {
   const defaultProps: ExcludeConsDlgProps = {
@@ -51,7 +51,7 @@ describe("ExcludeConsDlg Component", (): void => {
     userClass: "estudante",
   };
   const renderComponent = (
-    props = {}
+    props = {},
   ): RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement> =>
     render(<ExcludeConsDlg {...defaultProps} {...props} />);
   test("renders the modal dialog when shouldDisplayExcludeDlg is true", (): void => {
@@ -64,7 +64,7 @@ describe("ExcludeConsDlg Component", (): void => {
     ).toBeInTheDocument() as void;
     (
       expect(
-        screen.getByText<HTMLElement>("Esse processo é parcialmente ou totalmente irreversível!")
+        screen.getByText<HTMLElement>("Esse processo é parcialmente ou totalmente irreversível!"),
       ) as jest.JestMatchers<jest.SpyInstance>
     ).toBeInTheDocument() as void;
   }) as void;
@@ -114,7 +114,7 @@ describe("ExcludeConsDlg Component", (): void => {
         ErrorBoundary: jest.fn<never, []>().mockImplementation((): never => {
           throw new Error("Test Error");
         }) as jest.Mock,
-      })
+      }),
     ) as typeof jest;
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
     (

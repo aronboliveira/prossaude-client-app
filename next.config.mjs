@@ -4,5 +4,6 @@ const nextConfig = {
   trailingSlash: true,
   distDir: "build",
   output: "export",
+  productionBrowserSourceMaps: true,
 };
 export default nextConfig;

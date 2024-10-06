@@ -13,7 +13,7 @@ import GenericErrorComponent from "../error/GenericErrorComponent";
 import ProfRow from "../panelForms/profs/ProfRow";
 import Spinner from "../icons/Spinner";
 import { nullishDlg, nullishHtEl, nullishTab, nullishTabSect } from "@/lib/global/declarations/types";
-import { AvProfListDlgProps, ProfInfo } from "@/lib/locals/panelPage/declarations/interfacesCons";
+import { AvProfListDlgProps, ProfInfo } from "@/lib/global/declarations/interfacesCons";
 import {
   addListenerAlocation,
   checkLocalIntervs,

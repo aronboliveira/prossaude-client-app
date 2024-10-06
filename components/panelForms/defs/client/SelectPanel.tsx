@@ -1,9 +1,9 @@
 "use client";
 import { AppRootContext } from "@/pages/_app";
 import { AppRootContextType } from "@/lib/global/declarations/interfaces";
-import { DataProvider } from "@/lib/locals/panelPage/declarations/classesCons";
+import { DataProvider } from "@/lib/global/declarations/classesCons";
 import { ErrorBoundary } from "react-error-boundary";
-import { MainPanelProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
+import { MainPanelProps } from "@/lib/global/declarations/interfacesCons";
 import { providers } from "@/vars";
 import { camelToKebab, kebabToCamel } from "@/lib/global/gModel";
 import { createRoot } from "react-dom/client";

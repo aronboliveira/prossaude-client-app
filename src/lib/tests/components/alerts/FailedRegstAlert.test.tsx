@@ -1,6 +1,6 @@
 import { render, screen, fireEvent, RenderResult } from "@testing-library/react";
 import FailRegstAlert from "../../../../../components/alerts/FailRegsAlert";
-import { FailedRegstProps } from "../../../../lib/locals/panelPage/declarations/interfacesCons";
+import { FailedRegstProps } from "../../..//lib/global/declarations/interfacesCons";
 import { createRoot } from "react-dom/client";
 import "@testing-library/jest-dom/extend-expect";
 jest.mock(
@@ -9,7 +9,7 @@ jest.mock(
     isClickOutside: jest.Mock<boolean[], [MouseEvent, HTMLElement]>;
   } => ({
     isClickOutside: jest.fn<boolean[], [MouseEvent, HTMLElement]>().mockReturnValue([true]),
-  })
+  }),
 ) as typeof jest;
 jest.mock(
   "../../../../lib/global/handlers/gHandlers",
@@ -17,7 +17,7 @@ jest.mock(
     syncAriaStates: jest.Mock<void, HTMLElement[]>;
   } => ({
     syncAriaStates: jest.fn<void, HTMLElement[]>(),
-  })
+  }),
 ) as typeof jest;
 describe("FailRegstAlert Component", (): void => {
   const defaultProps: FailedRegstProps = {
@@ -30,7 +30,7 @@ describe("FailRegstAlert Component", (): void => {
     secondOp: "Arraste",
   };
   const renderComponent = (
-    props = {}
+    props = {},
   ): RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement> =>
     render(<FailRegstAlert {...defaultProps} {...props} />);
 
@@ -42,8 +42,8 @@ describe("FailRegstAlert Component", (): void => {
     (
       expect(
         screen.getByText<HTMLElement>(
-          "Falha na procura de um encaixe correspondente na agenda! Arraste  ou insira manualmente."
-        )
+          "Falha na procura de um encaixe correspondente na agenda! Arraste  ou insira manualmente.",
+        ),
       ) as jest.JestMatchers<jest.SpyInstance>
     ).toBeInTheDocument() as void;
   }) as void;
@@ -95,7 +95,7 @@ describe("FailRegstAlert Component", (): void => {
         ErrorBoundary: jest.fn<never, []>().mockImplementation((): never => {
           throw new Error("Test Error");
         }) as jest.Mock,
-      })
+      }),
     );
     renderComponent() as RenderResult<typeof import("@testing-library/dom/types/queries"), HTMLElement, HTMLElement>;
     (

@@ -1,4 +1,4 @@
-import { RegsConstBtnProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
+import { RegsConstBtnProps } from "@/lib/global/declarations/interfacesCons";
 import { Root, createRoot } from "react-dom/client";
 import { checkRegstBtn } from "@/lib/locals/panelPage/handlers/consHandlerCmn";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";

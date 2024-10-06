@@ -1,7 +1,7 @@
 import React from "react";
 import { render, screen, fireEvent, RenderResult } from "@testing-library/react";
 import DREFiller from "../../../../../components/consRegst/DREFiller";
-import { FillerProps } from "../../../../lib/locals/panelPage/declarations/interfacesCons";
+import { FillerProps } from "../../..//lib/global/declarations/interfacesCons";
 import { addListenerAvMembers } from "../../../../lib/locals/panelPage/handlers/consHandlerList";
 import { providers } from "../../../../vars";
 import { syncAriaStates } from "../../../../lib/global/handlers/gHandlers";

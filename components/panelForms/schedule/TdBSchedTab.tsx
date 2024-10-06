@@ -1,5 +1,5 @@
 "use client";
-import { HrCelProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
+import { HrCelProps } from "@/lib/global/declarations/interfacesCons";
 import EraseAptBtn from "./EraseAptBtn";
 export default function TdBSchedTab({ nHr, nRow, nCol, last = false }: HrCelProps): JSX.Element {
   const dayOrder = ((): string => {

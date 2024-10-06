@@ -5,7 +5,7 @@ import PacRow from "../../../../../../components/panelForms/pacs/PacRow";
 import { nullishTab } from "@/lib/global/declarations/types";
 import { useRef, MutableRefObject } from "react";
 //@ts-ignore
-import { PacInfo } from "@/lib/locals/panelPage/declarations/interfacesCons";
+import { PacInfo } from "@/lib/global/declarations/interfacesCons";
 jest.mock(
   "@/lib/global/handlers/errorHandler",
   (): {

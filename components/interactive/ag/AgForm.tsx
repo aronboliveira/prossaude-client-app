@@ -41,9 +41,15 @@ import HASDivAdd from "./HASDivAdd";
 import OtherD from "./OtherD";
 import FamDiab from "./FamDiab";
 import FamDislip from "./FamDislip";
+import { useRef } from "react";
+import { nullishForm } from "@/lib/global/declarations/types";
+import useDataProvider from "@/lib/hooks/useDataProvider";
 export default function AgForm(): JSX.Element {
+  const f = useRef<nullishForm>(null);
+  useDataProvider(f.current);
   return (
     <form
+      ref={f}
       name='ag_form'
       id='formAnamGId'
       method='post'
@@ -218,13 +224,17 @@ export default function AgForm(): JSX.Element {
               <br role='presentation' />
             </span>
             <span role='group' className='fsAnamGSpan locSpan form-switch flexColumn noInvert' id='fsAnamGSpan13'>
-              <span role='textbox'>Número:</span>
+              <span role='textbox' style={{ marginLeft: "0.5rem" }}>
+                Número:
+              </span>
               <span role='group' className='flexDiv spanLoc fitSpaced mg-07t'>
                 <StreetNum />
               </span>
             </span>
             <span role='group' className='fsAnamGSpan locSpan form-switch flexColumn noInvert' id='fsAnamGSpan14'>
-              <span role='textbox'>Complemento:</span>
+              <span role='textbox' style={{ marginLeft: "0.5rem" }}>
+                Complemento:
+              </span>
               <span role='group' className='flexDiv spanLoc fitSpaced mg-07t'>
                 <LocComp />
               </span>

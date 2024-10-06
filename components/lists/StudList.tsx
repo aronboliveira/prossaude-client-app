@@ -16,7 +16,7 @@ import { useRef, useEffect, useContext, useMemo } from "react";
 import GenericErrorComponent from "../error/GenericErrorComponent";
 import Spinner from "../icons/Spinner";
 import StudRow from "../panelForms/studs/StudRow";
-import { StudInfo, StudListProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
+import { StudInfo, StudListProps } from "@/lib/global/declarations/interfacesCons";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { strikeEntries } from "@/lib/locals/panelPage/consStyleScript";
 import { handleClientPermissions } from "@/lib/locals/panelPage/handlers/consHandlerUsers";

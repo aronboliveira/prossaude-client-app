@@ -1,5 +1,5 @@
 "use client";
-import { HrRowProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
+import { HrRowProps } from "@/lib/global/declarations/interfacesCons";
 import TdBSchedTab from "./TdBSchedTab";
 export default function TrBSchedTab({ mainRoot, nHr, nRow }: HrRowProps): JSX.Element {
   const cols = [1, 2, 3, 4, 5, 6, 7, 8, 9];

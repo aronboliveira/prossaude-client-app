@@ -1,5 +1,5 @@
 "use client";
-import { ConsDlgProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
+import { ConsDlgProps } from "@/lib/global/declarations/interfacesCons";
 import { ErrorBoundary } from "react-error-boundary";
 import { addListenerAvMembers } from "@/lib/locals/panelPage/handlers/consHandlerList";
 import { consVariablesData } from "./consVariables";

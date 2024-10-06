@@ -13,7 +13,7 @@ import GenericErrorComponent from "../../error/GenericErrorComponent";
 import ProfRow from "./ProfRow";
 import Spinner from "../../icons/Spinner";
 import { nullishBtn, nullishForm, nullishTab, nullishTabSect } from "@/lib/global/declarations/types";
-import { ProfInfo } from "@/lib/locals/panelPage/declarations/interfacesCons";
+import { ProfInfo } from "@/lib/global/declarations/interfacesCons";
 import { strikeEntries } from "@/lib/locals/panelPage/consStyleScript";
 import { assignFormAttrs } from "@/lib/global/gModel";
 import { PanelCtx } from "../defs/client/SelectLoader";

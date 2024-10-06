@@ -1,5 +1,5 @@
-import { userClasses } from "@/lib/global/declarations/types";
-import { DataProvider } from "../../../../locals/panelPage/declarations/classesCons";
+import { DataProvider } from "../../../../global/declarations/classesCons";
+import { userClasses } from "../../../../global/declarations/types";
 import { DOMEvent, EventTargetMethod } from "@/lib/tests/testVars";
 describe("DataProvider Class", (): void => {
   let dataProvider: DataProvider;
@@ -17,7 +17,7 @@ describe("DataProvider Class", (): void => {
       dataProvider = new DataProvider(mockSessionStorage);
       expect(jest.spyOn<Window, EventTargetMethod>(window, "addEventListener")).toHaveBeenCalledWith<[DOMEvent, any]>(
         "beforeunload",
-        expect.any(Function)
+        expect.any(Function),
       );
     }) as void;
   }) as void;
@@ -26,7 +26,7 @@ describe("DataProvider Class", (): void => {
       sessionStorage.setItem("testElement", JSON.stringify({ key: "value" }));
       const mockParseSessionStorage = jest.spyOn<DataProvider, "parseSessionStorage">(
         dataProvider,
-        "parseSessionStorage"
+        "parseSessionStorage",
       );
       const element = document.createElement("div") as HTMLDivElement;
       element.id = "testElement";
@@ -35,7 +35,7 @@ describe("DataProvider Class", (): void => {
         expect(mockParseSessionStorage).toHaveBeenCalledWith<[HTMLElement, string, userClasses]>(
           element,
           element.id,
-          "estudante"
+          "estudante",
         );
       }, 200);
     }) as void;
@@ -71,7 +71,7 @@ describe("DataProvider Class", (): void => {
     it("should call handleScheduleChange if a month selector is found", (): void => {
       const mockHandleScheduleChange = jest.spyOn<any, "handleScheduleChange">(
         require("../handlers/consHandlerCmn"),
-        "handleScheduleChange"
+        "handleScheduleChange",
       );
       const monthSelector = document.createElement("select");
       monthSelector.id = "monthSelector";
@@ -89,7 +89,7 @@ describe("DataProvider Class", (): void => {
       mockScope.appendChild(inputEl);
       dataProvider.checkForPersist(mockScope);
       expect(sessionStorage.getItem(mockScope.id)).toContain<string>(
-        JSON.stringify({ input1: "persistedValue" })
+        JSON.stringify({ input1: "persistedValue" }),
       ) as void;
     }) as void;
   }) as void;

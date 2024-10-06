@@ -2,7 +2,7 @@
 import { formCases, nullishOptGrp, validAreas } from "@/lib/global/declarations/types";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
-import { UserProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
+import { UserProps } from "@/lib/global/declarations/interfacesCons";
 import { handleFetch } from "@/lib/locals/panelPage/handlers/handlers";
 import { useEffect, useRef } from "react";
 import { panelRoots } from "@/vars";

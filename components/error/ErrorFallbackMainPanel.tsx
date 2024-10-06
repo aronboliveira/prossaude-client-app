@@ -1,5 +1,5 @@
 import { ErrorBoundary } from "react-error-boundary";
-import { ErrorFallbackMainPanelProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
+import { ErrorFallbackMainPanelProps } from "@/lib/global/declarations/interfacesCons";
 import { nullishSel, panelOpts } from "@/lib/global/declarations/types";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useEffect, useRef, useState } from "react";

@@ -1,5 +1,5 @@
 import { ErrorBoundary } from "react-error-boundary";
-import { UserDlgProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
+import { UserDlgProps } from "@/lib/global/declarations/interfacesCons";
 import { basePath } from "@/vars";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { nullishDlg } from "@/lib/global/declarations/types";

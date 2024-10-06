@@ -28,8 +28,10 @@ export default function SwitchDiv({ autofill = false }: { autofill?: boolean }):
           id='deactAutocorrectBtnPac'
           data-title='Autocorreção'
           defaultChecked
-        />{" "}
-        <strong>Autocorreção</strong>
+        />
+        <label htmlFor='deactAutocorrectBtnPac' style={{ display: "inline", marginLeft: "0.3rem" }}>
+          <strong>Autocorreção</strong>
+        </label>
       </span>
     </div>
   );

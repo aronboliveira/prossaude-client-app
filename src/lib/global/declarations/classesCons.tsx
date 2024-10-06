@@ -1,14 +1,16 @@
-import { elementNotFound, extLine, inputNotFound, stringError } from "../../../global/handlers/errorHandler";
+import { elementNotFound, extLine, inputNotFound, stringError } from "../handlers/errorHandler";
 import {
   checkConfirmApt,
   handleAptBtnClick,
   handleScheduleChange,
   replaceBtnSlot,
   verifyAptCheck,
-} from "../handlers/consHandlerCmn";
-import { panelFormsVariables } from "../../../../../components/panelForms/panelFormsData";
+} from "../../locals/panelPage/handlers/consHandlerCmn";
+import { panelFormsVariables } from "../../../../components/panelForms/panelFormsData";
 import { defUser } from "@/redux/slices/userSlice";
-
+import { privilege } from "@/lib/locals/basePage/declarations/serverInterfaces";
+import { providers } from "@/vars";
+import { voidVal } from "./types";
 const clearFlags: { [k: string]: boolean } = {};
 export class DataProvider {
   #sessionDataState: { [key: string]: any };
@@ -16,73 +18,97 @@ export class DataProvider {
     this.#sessionDataState = _dataSessionState;
     addEventListener("beforeunload", () => {
       this.#sessionDataState = {};
-      ["formSched", "formAddStud", "formAddProf", "regstPacDlg", "CPFFillerDiv"].forEach(form => {
-        sessionStorage.getItem(form) && sessionStorage.setItem(form, "");
+      ["formSched", "formAddStud", "formAddProf", "regstPacDlg", "CPFFillerDiv", "formAnamGId"].forEach(form => {
+        if (sessionStorage.getItem(form)) {
+          const prevPath = location.pathname;
+          setTimeout(() => !location.pathname.includes(prevPath) && sessionStorage.removeItem(form), 1000);
+        }
       });
     });
   }
-  initPersist(element: HTMLElement, gscopeProvider: DataProvider, userClass: string = "student"): void {
+  initPersist(
+    element: HTMLElement,
+    provider: DataProvider | voidVal = providers.globalDataProvider,
+    userClass: privilege = "student",
+  ): void {
+    const checkTimer = 500;
+    provider ??= new DataProvider(element);
     setTimeout(() => {
-      if (sessionStorage[element.id]) gscopeProvider.parseSessionStorage(element, element.id, userClass);
-      else
-        setTimeout(
-          () => sessionStorage[element.id] && gscopeProvider.parseSessionStorage(element, element.id, userClass),
-          300,
-        );
-    }, 100);
-    //timeout for checking if element is out of DOM and then sets interval for keeping check in DOM
-    const storageTimeout = setTimeout(() => {
-      if (!(document.getElementById(`${element.id}`) || !element)) {
-        clearTimeout(storageTimeout);
-        return;
-      }
-      clearFlags[`${element.id}`] = true;
-      const persistInterv = setInterval(interv => {
-        if (!clearFlags[`${element.id}`] || !this.checkForm(element.id, interv))
-          setTimeout(() => clearInterval(interv), 200);
-        else this.checkForPersist(element);
-      }, 1_000);
-      this.checkForPersist(element);
-      try {
-        const panelSelect = document.getElementById("coordPanelSelect");
-        if (!(panelSelect instanceof HTMLSelectElement))
-          throw inputNotFound(
-            panelSelect,
-            "Panel selector when fetching for session storage cicles",
-            extLine(new Error()),
-          );
-        let isTargPanelRendered = true;
-        const handleSessionPanelChange = (elementId: string): void => {
-          try {
-            const scope = document.getElementById(elementId);
-            if (!(scope instanceof HTMLElement)) {
-              console.warn(`Could not find scopped element for handling panel change`);
-              clearInterval(persistInterv);
-              return;
-            }
-            const persisters = sessionStorage.getItem(elementId);
-            if (!persisters)
-              throw stringError(`Persisting elements for ${elementId}`, persisters, extLine(new Error()));
-            this.initStorageParsing(document.getElementById(elementId)!, elementId);
-          } catch (err) {
-            console.error(`Error handling Panel Change:
-                ${(err as Error).message};`);
+      provider ??= new DataProvider(element);
+      if (sessionStorage[element.id]) provider.parseSessionStorage(element, element.id, userClass);
+      else {
+        //timeout for checking if element is out of DOM and then sets interval for keeping check in DOM
+        const storageTimeout = setTimeout(() => {
+          if (!(document.getElementById(`${element.id}`) || !element)) {
+            clearTimeout(storageTimeout);
+            return;
           }
-          !this.checkForm(elementId) ? (isTargPanelRendered = false) : (isTargPanelRendered = true);
-          !isTargPanelRendered &&
-            ((): void => {
-              panelSelect.removeEventListener("change", () => handleSessionPanelChange(elementId));
-              console.warn(`event listener removido para handleSessionPanelChange`);
-            })();
-        };
-        panelSelect.addEventListener("change", () => handleSessionPanelChange(element.id));
-      } catch (err) {
-        console.error(`Error on initiation of Panel Change Listening:
-            ${(err as Error).message}`);
+          clearFlags[`${element.id}`] = true;
+          const persistInterv = setInterval(interv => {
+            if (!clearFlags[`${element.id}`] || !this.checkForm(element.id, interv))
+              setTimeout(() => {
+                clearInterval(interv);
+                return;
+              }, 200);
+            else this.checkForPersist(element);
+          }, 1000);
+          this.checkForPersist(element);
+          if (
+            element.id === "formSched" ||
+            element.id === "formAddStud" ||
+            element.id === "formAddProf" ||
+            element.id === "regstPacDlg" ||
+            element.id === "CPFFillerDiv"
+          ) {
+            try {
+              const panelSelect = document.getElementById("coordPanelSelect");
+              if (!(panelSelect instanceof HTMLSelectElement))
+                throw inputNotFound(
+                  panelSelect,
+                  "Panel selector when fetching for session storage cicles",
+                  extLine(new Error()),
+                );
+              let isTargPanelRendered = true;
+              const handleSessionPanelChange = (elementId: string): void => {
+                try {
+                  const scope = document.getElementById(elementId);
+                  if (!(scope instanceof HTMLElement)) {
+                    console.warn(`Could not find scopped element for handling panel change`);
+                    clearInterval(persistInterv);
+                    return;
+                  }
+                  const persisters = sessionStorage.getItem(elementId);
+                  if (!persisters)
+                    throw stringError(`Persisting elements for ${elementId}`, persisters, extLine(new Error()));
+                  this.initSelectParsing(document.getElementById(elementId)!, elementId);
+                } catch (err) {
+                  console.error(`Error handling Panel Change:
+                  ${(err as Error).message};`);
+                }
+                !this.checkForm(elementId) ? (isTargPanelRendered = false) : (isTargPanelRendered = true);
+                !isTargPanelRendered &&
+                  ((): void => {
+                    panelSelect.removeEventListener("change", () => handleSessionPanelChange(elementId));
+                    console.warn(`event listener removido para handleSessionPanelChange`);
+                  })();
+              };
+              panelSelect.addEventListener("change", () => handleSessionPanelChange(element.id));
+            } catch (err) {
+              console.error(`Error on initiation of Panel Change Listening:
+              ${(err as Error).message}`);
+            }
+          }
+        }, checkTimer);
       }
-    }, 500);
+      setTimeout(() => {
+        if (sessionStorage[element.id]) {
+          provider ??= new DataProvider(element);
+          provider.parseSessionStorage(element, element.id, userClass);
+        }
+      }, checkTimer * 2);
+    }, 100);
   }
-  initStorageParsing(scope: HTMLElement | Document = document, scopeRef: string): void {
+  initSelectParsing(scope: HTMLElement | Document = document, scopeRef: string): void {
     const persisters = sessionStorage.getItem(scopeRef);
     if (persisters) {
       Object.entries(JSON.parse(persisters)).forEach(entry => {

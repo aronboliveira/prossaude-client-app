@@ -1,4 +1,4 @@
-import { HistoricRowProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
+import { HistoricRowProps } from "@/lib/global/declarations/interfacesCons";
 import { dateISOtoBRL } from "@/lib/global/gModel";
 export default function PrevConsRow({ historic, nRow, name = "Anônimo" }: HistoricRowProps): JSX.Element {
   const typeFullName = ((): string => {

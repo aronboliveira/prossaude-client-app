@@ -1,6 +1,6 @@
 "use client";
 import { ErrorBoundary } from "react-error-boundary";
-import { HistoricDlgProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
+import { HistoricDlgProps } from "@/lib/global/declarations/interfacesCons";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { isClickOutside } from "@/lib/global/gStyleScript";
 import { nullishDlg, nullishTab } from "@/lib/global/declarations/types";

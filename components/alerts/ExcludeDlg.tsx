@@ -1,5 +1,5 @@
 import { ErrorBoundary } from "react-error-boundary";
-import { ExcludeDlgProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
+import { ExcludeDlgProps } from "@/lib/global/declarations/interfacesCons";
 import { handleDelete } from "@/lib/locals/panelPage/handlers/handlers";
 import { isClickOutside } from "@/lib/global/gStyleScript";
 import { nullishDlg, nullishForm } from "@/lib/global/declarations/types";

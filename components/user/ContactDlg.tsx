@@ -1,4 +1,4 @@
-import { ContactDlgProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
+import { ContactDlgProps } from "@/lib/global/declarations/interfacesCons";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { isClickOutside } from "@/lib/global/gStyleScript";
 import { nullishBtn, nullishDlg } from "@/lib/global/declarations/types";
@@ -25,8 +25,7 @@ export default function ContactDlg({ setContact, shouldDisplayContact = true }: 
               setContact(!shouldDisplayContact);
               ev.currentTarget.closest("dialog")?.close();
             }
-          }}
-        >
+          }}>
           <div className='flexNoW cGap2v widFull mg-3b'>
             <h3 className='bolded'>Formulário de Contato</h3>
             <button
@@ -34,8 +33,7 @@ export default function ContactDlg({ setContact, shouldDisplayContact = true }: 
               onClick={() => {
                 setContact(!shouldDisplayContact);
                 contactDlgRef.current instanceof HTMLDialogElement && contactDlgRef.current?.close();
-              }}
-            ></button>
+              }}></button>
           </div>
           <div className='flexNoWC widFull mg-2bv'>
             <label className='bolded' htmlFor='contactOps'>
@@ -60,10 +58,9 @@ export default function ContactDlg({ setContact, shouldDisplayContact = true }: 
             ref={contacBtnRef}
             onClick={ev => {
               validateForm(ev, ev.currentTarget.closest("dialog")!).then(
-                validation => validation[0] && setContact(!shouldDisplayContact)
+                validation => validation[0] && setContact(!shouldDisplayContact),
               );
-            }}
-          >
+            }}>
             Enviar
           </button>
         </dialog>

@@ -1,5 +1,5 @@
 import { ErrorBoundary } from "react-error-boundary";
-import { FailedRegstProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
+import { FailedRegstProps } from "@/lib/global/declarations/interfacesCons";
 import { nullishDlg } from "@/lib/global/declarations/types";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useEffect, useRef } from "react";

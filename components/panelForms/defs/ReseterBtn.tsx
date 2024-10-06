@@ -1,5 +1,5 @@
 import { ErrorBoundary } from "react-error-boundary";
-import { ReseterBtnProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
+import { ReseterBtnProps } from "@/lib/global/declarations/interfacesCons";
 import { nullishBtn } from "@/lib/global/declarations/types";
 import { panelRoots } from "@/vars";
 import { scheduleReset } from "../panelFormsData";

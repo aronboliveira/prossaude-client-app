@@ -1,5 +1,5 @@
 "use client";
-import { AlterFieldListProps } from "@/lib/locals/panelPage/declarations/interfacesCons";
+import { AlterFieldListProps } from "@/lib/global/declarations/interfacesCons";
 import { ErrorBoundary } from "react-error-boundary";
 import { isClickOutside } from "@/lib/global/gStyleScript";
 import { nullishDlg, nullishForm, nullishSel } from "@/lib/global/declarations/types";
