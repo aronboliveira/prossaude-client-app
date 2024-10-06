@@ -453,6 +453,7 @@ button {
 }
 
 canvas {
+  touch-action: none;
   &#inpAstConfirmId {
     min-width: 55vw;
     max-width: 90vw;

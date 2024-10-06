@@ -1,8 +1,8 @@
 "use client";
 import { ExportHandler } from "@/lib/global/declarations/classes";
 import { nullishBtn } from "@/lib/global/declarations/types";
-import { addCanvasListeners, addExportFlags } from "@/lib/global/gController";
-import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
+import { addExportFlags } from "@/lib/global/gController";
+import { checkForReset } from "@/lib/global/handlers/gHandlers";
 import { exporters } from "@/vars";
 import { useEffect, useRef } from "react";
 let exporter: ExportHandler | undefined = undefined;
@@ -69,42 +69,7 @@ export default function SectConfirmBtns(): JSX.Element {
         }}
         className='confirmBut btn btn-warning forceInvert'
         id='resetFormBtn'
-        onClick={ev => {
-          const res = prompt("Digite CONFIRMAR para resetar o formulário");
-          if (res === "CONFIRMAR") {
-            try {
-              ev.currentTarget.closest("form")?.reset();
-              const divConfirm = ev.currentTarget.closest(".divConfirm");
-              if (!(divConfirm instanceof HTMLElement))
-                throw elementNotFound(divConfirm, `Main ancestral div for resetAstBtn`, extLine(new Error()));
-              const astEl = divConfirm.querySelector("#inpAstConfirmId");
-              if (!(astEl instanceof HTMLCanvasElement || astEl instanceof HTMLInputElement))
-                throw elementNotFound(astEl, `Element for patient signing`, extLine(new Error()));
-              if (astEl instanceof HTMLCanvasElement) {
-                const replaceCanvas = Object.assign(document.createElement("canvas"), {
-                  id: "inpAstConfirmId",
-                });
-                replaceCanvas.dataset.title = "Assinatura do Paciente";
-                astEl.parentElement?.replaceChild(replaceCanvas, astEl);
-                addCanvasListeners();
-              }
-              if (astEl instanceof HTMLInputElement) {
-                const replaceInp = Object.assign(
-                  Object.assign(document.createElement("input") as HTMLInputElement, {
-                    type: "file",
-                    id: "inpAstConfirmId",
-                    accept: "image/*",
-                  }),
-                );
-                replaceInp.dataset.title = "Assinatura do Paciente";
-                replaceInp.classList.add("inpAst", "mg-07t", "form-control");
-                astEl.parentElement?.replaceChild(replaceInp, astEl);
-              }
-            } catch (e2) {
-              console.error(`Error handling click on Reset signature button`);
-            }
-          }
-        }}>
+        onClick={checkForReset}>
         Resetar
       </button>
       <button

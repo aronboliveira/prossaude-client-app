@@ -1,5 +1,5 @@
 "use client";
-import { quadrCases } from "@/lib/global/declarations/types";
+import { nullishForm, quadrCases } from "@/lib/global/declarations/types";
 import ConfirmDate from "../def/ConfirmDate";
 import ConfirmLocId from "../def/ConfirmLocId";
 import Declaration from "../def/Declaration";
@@ -10,12 +10,26 @@ import QuadrMainDiv from "./QuadrMainDiv";
 import TratFs from "./TratFs";
 import SocialName from "../def/SocialName";
 import Name from "../def/Name";
-import { validateForm } from "@/lib/global/handlers/gHandlers";
+import { registerPersistInputs, validateForm } from "@/lib/global/handlers/gHandlers";
 import { handleSubmit } from "@/lib/locals/panelPage/handlers/handlers";
 import InspDlgElements from "./InspDlgElements";
+import { useRef, useEffect } from "react";
+import useDataProvider from "@/lib/hooks/useDataProvider";
 export default function OdForm(): JSX.Element {
+  const f = useRef<nullishForm>(null);
+  useEffect(() => {
+    registerPersistInputs({
+      f: f.current,
+      textareas: true,
+      selects: true,
+      inputTypes: ["date", "number", "text", "checkbox", "radio"],
+      queriesToExclude: ['[role="switch"]'],
+    });
+  }, []);
+  useDataProvider(f.current);
   return (
     <form
+      ref={f}
       name='od_form'
       action='submit_od_form'
       data-ep='od'

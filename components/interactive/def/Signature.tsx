@@ -3,67 +3,65 @@ import { changeToAstDigit } from "@/lib/global/handlers/gHandlers";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { nullishCanvas } from "@/lib/global/declarations/types";
 import { useEffect, useState, useRef, useCallback } from "react";
-import { addCanvasListeners } from "@/lib/global/gController";
+import { addCanvasListeners, getCanvasCoords } from "@/lib/global/gController";
 let ctx: CanvasRenderingContext2D | null = null;
 export default function Signature(): JSX.Element {
-  const canvasRef = useRef<nullishCanvas>(null);
-  const [isDrawing, setDrawing] = useState<boolean>(false);
-  const startDrawing = (e: React.MouseEvent<HTMLCanvasElement, MouseEvent>): void => {
-    setDrawing(true);
-    draw(e);
-  };
-  const startDrawingTouch = (e: React.TouchEvent<HTMLCanvasElement>): void => {
-    setDrawing(true);
-    drawTouch(e);
-  };
-  const draw = useCallback(
-    (e: React.MouseEvent<HTMLCanvasElement, MouseEvent>): void => {
+  const canvasRef = useRef<nullishCanvas>(null),
+    [isDrawing, setDrawing] = useState<boolean>(false),
+    startDrawing = (e: React.MouseEvent<HTMLCanvasElement, MouseEvent>): void => {
+      e.preventDefault();
+      setDrawing(true);
+      draw(e);
+    },
+    startDrawingTouch = (e: React.TouchEvent<HTMLCanvasElement>): void => {
+      e.preventDefault();
+      setDrawing(true);
+      drawTouch(e);
+    },
+    draw = useCallback(
+      (e: React.MouseEvent<HTMLCanvasElement, MouseEvent>): void => {
+        try {
+          if (!(canvasRef.current instanceof HTMLCanvasElement))
+            throw elementNotFound(canvasRef.current, `Validation of Canvas Ref Instance`, extLine(new Error()));
+          if (!(ctx instanceof CanvasRenderingContext2D))
+            throw new Error(`Error getting Canvas Context:
+          Obtained Value: ${ctx ?? "nullish"}`);
+          if (!isDrawing) return;
+          const { x, y } = getCanvasCoords(e.clientX, e.clientY, canvasRef.current);
+          ctx.lineTo(x, y);
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(x, y);
+        } catch (e) {
+          console.error(`Error executing draw():
+        ${(e as Error).message}`);
+        }
+      },
+      [isDrawing],
+    ),
+    drawTouch = (e: React.TouchEvent<HTMLCanvasElement>): void => {
       try {
         if (!(canvasRef.current instanceof HTMLCanvasElement))
           throw elementNotFound(canvasRef.current, `Validation of Canvas Ref Instance`, extLine(new Error()));
         if (!(ctx instanceof CanvasRenderingContext2D))
           throw new Error(`Error getting Canvas Context:
-          Obtained Value: ${ctx ?? "nullish"}`);
+        Obtained Value: ${ctx ?? "nullish"}`);
         if (!isDrawing) return;
-        const rect = canvasRef.current.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
+        const point = e.touches[0];
+        const { x, y } = getCanvasCoords(point.clientX, point.clientY, canvasRef.current);
         ctx.lineTo(x, y);
         ctx.stroke();
         ctx.beginPath();
         ctx.moveTo(x, y);
       } catch (e) {
         console.error(`Error executing draw():
-        ${(e as Error).message}`);
+      ${(e as Error).message}`);
       }
     },
-    [isDrawing],
-  );
-  const drawTouch = (e: React.TouchEvent<HTMLCanvasElement>): void => {
-    try {
-      if (!(canvasRef.current instanceof HTMLCanvasElement))
-        throw elementNotFound(canvasRef.current, `Validation of Canvas Ref Instance`, extLine(new Error()));
-      if (!(ctx instanceof CanvasRenderingContext2D))
-        throw new Error(`Error getting Canvas Context:
-        Obtained Value: ${ctx ?? "nullish"}`);
-      if (!isDrawing) return;
-      const rect = canvasRef.current.getBoundingClientRect();
-      const point = e.touches[0];
-      const x = point.clientX - rect.left;
-      const y = point.clientY - rect.top;
-      ctx.lineTo(x, y);
-      ctx.stroke();
-      ctx.beginPath();
-      ctx.moveTo(x, y);
-    } catch (e) {
-      console.error(`Error executing draw():
-      ${(e as Error).message}`);
-    }
-  };
-  const stopDrawing = (): void => {
-    setDrawing(false);
-    ctx?.beginPath();
-  };
+    stopDrawing = (): void => {
+      setDrawing(false);
+      ctx?.beginPath();
+    };
   useEffect(() => {
     const equalizeCanvas = (): void => {
       try {

@@ -1,6 +1,6 @@
 import { FormEvent } from "react";
 import { addCanvasListeners } from "../gController";
-import { autoCapitalizeInputs, parseNotNaN, regularToSnake, removeFirstClick } from "../gModel";
+import { autoCapitalizeInputs, parseNotNaN, regularToSnake } from "../gModel";
 import { fadeElement, isClickOutside } from "../gStyleScript";
 //nesse file estão presentes principalmente as funções de manipulação dinâmica de texto e layout
 import type {
@@ -449,45 +449,6 @@ export function defineLabId(
     labAst!.id = "spanAstPct";
   } else multipleElementsNotFound(extLine(new Error()), "argumentos para defineLabId", toFileInpBtn, fileEl);
 }
-export function resetarFormulario(caller: nullishHtEl): void {
-  if (
-    caller instanceof HTMLButtonElement ||
-    (caller instanceof HTMLInputElement && (caller.type === "button" || caller.type === "reset"))
-  ) {
-    const formulario = document.getElementById("formAnamGId"),
-      editableCite = document.querySelector('cite[contenteditable="true"]'),
-      genBirthRel = document.getElementById("genBirthRelId"),
-      genTrans = document.getElementById("genTransId");
-    formulario instanceof HTMLFormElement
-      ? formulario.reset()
-      : elementNotFound(formulario, "formulario in resetarFormulario()", extLine(new Error()));
-    if (editableCite) {
-      editableCite.textContent = `--Nome`;
-      removeFirstClick(editableCite);
-    }
-    if (
-      genBirthRel instanceof HTMLSelectElement ||
-      genBirthRel instanceof HTMLTextAreaElement ||
-      genBirthRel instanceof HTMLInputElement
-    ) {
-      genBirthRel.value = "cis";
-      genBirthRel.hidden = true;
-    } else inputNotFound(genBirthRel, "genBirthRel in resetarFormulario()", extLine(new Error()));
-    if (
-      genTrans instanceof HTMLSelectElement ||
-      genTrans instanceof HTMLTextAreaElement ||
-      genTrans instanceof HTMLInputElement
-    ) {
-      genTrans.value = "avancado";
-      genTrans.hidden = true;
-    } else inputNotFound(genTrans, "genTrans in resetarFormulario()", extLine(new Error()));
-    [...document.querySelectorAll(".astDigtBtn"), ...document.querySelectorAll("[id*=AstDigtBtn]")].forEach(
-      toFileInpBtn => {
-        if (toFileInpBtn?.textContent?.match(/Retornar/g)) changeToAstDigit(toFileInpBtn);
-      },
-    );
-  } else multipleElementsNotFound(extLine(new Error()), "arguments for resetarFormulario");
-}
 export function enableCPFBtn(cpfBtn: targEl, cpfLength: string = ""): boolean {
   if (cpfBtn instanceof HTMLButtonElement && typeof cpfLength === "string") {
     if (cpfLength.replaceAll(/[^0-9]/g, "").length < 11) {
@@ -684,6 +645,88 @@ export function toggleConformDlg(): void {
     });
   } else
     multipleElementsNotFound("Elements for Dialog for agreement terms", extLine(new Error()), conformDlg, btnConform);
+}
+export function checkForReset(ev: rMouseEvent): void {
+  try {
+    if (!(ev.currentTarget instanceof Element)) throw new Error(`Failed to validate current target instance`);
+    const res = prompt("Digite CONFIRMAR para resetar o formulário");
+    if (res === "CONFIRMAR") {
+      const form = ev.currentTarget.closest("form");
+      if (!form) {
+        navigator.language.startsWith("pt-")
+          ? alert("Não foi possível localizar o formulário")
+          : alert("Failed to locate the formulary");
+        return;
+      }
+      resetForm(form);
+    }
+  } catch (e) {
+    console.error(`Error executing checkForReset:\n${(e as Error).message}`);
+  }
+}
+export function resetForm(form: nullishForm): void {
+  try {
+    if (!(form instanceof HTMLFormElement)) throw elementNotFound(form, "Form for resetting", extLine(new Error()));
+    [...form.querySelectorAll("input"), ...form.querySelectorAll("textarea")].forEach((inp, i) => {
+      try {
+        if (
+          inp instanceof HTMLTextAreaElement ||
+          (inp instanceof HTMLInputElement &&
+            (inp.type === "text" ||
+              inp.type === "date" ||
+              inp.type === "datetime-local" ||
+              inp.type === "email" ||
+              inp.type === "file" ||
+              inp.type === "hidden" ||
+              inp.type === "month" ||
+              inp.type === "number" ||
+              inp.type === "password" ||
+              inp.type === "search" ||
+              inp.type === "tel" ||
+              inp.type === "time" ||
+              inp.type === "url" ||
+              inp.type === "week" ||
+              inp.type === "datetime"))
+        )
+          inp.value = "";
+        else if (inp.type === "button" || inp.type === "reset" || inp.type === "submit" || inp.type === "image") return;
+        else if (inp.type === "checkbox" || inp.type === "radio") {
+          if (inp.role === "switch") return;
+          inp.checked = false;
+        } else if (inp.type === "color") {
+          if (inp.dataset.default) inp.value = inp.dataset.default;
+          else inp.value = "#0000";
+        } else if (inp.type === "range") {
+          if (inp.dataset.default) inp.value = inp.dataset.default;
+          else if (inp.min) inp.value = inp.min;
+          else inp.value = "0";
+        }
+      } catch (e) {
+        console.error(`Error executing iteration ${i} for reseting the form inputs:\n${(e as Error).message}`);
+      }
+    });
+    form.querySelectorAll("select").forEach((s, i) => {
+      try {
+        if (s.options.length === 0)
+          throw new Error(`No option in the select ${s.id || s.name || s.className || s.tagName}`);
+        if (s.dataset.default) s.value = s.dataset.default;
+        else s.value = s.options[0].value;
+      } catch (e) {
+        console.error(`Error executing iteration ${i} for reseting selects:\n${(e as Error).message}`);
+      }
+    });
+    [document.getElementById("astDigtBtn"), document.querySelectorAll("[id$=AstDigtBtn]")].forEach((b, i) => {
+      try {
+        if (!(b instanceof HTMLButtonElement || (b instanceof HTMLInputElement && b.type === "button")))
+          throw new Error(`Invalidate instance for button used to reset canvas`);
+        if (b.innerText.toLowerCase() === "retornar") b.click();
+      } catch (e) {
+        console.error(`Error executing iteration ${i} for resetting for canvas elements:\n${(e as Error).message}`);
+      }
+    });
+  } catch (e) {
+    console.error(`Error executing resetForm:\n${(e as Error).message}`);
+  }
 }
 const borderColors: { [k: string]: string } = {};
 export async function validateForm(
@@ -1423,4 +1466,46 @@ export function cleanStorageName(): void {
       console.error(`Error executing iteration ${i} of names in Local Storage:\n${(e as Error).message}`);
     }
   });
+}
+export function registerPersistInputs({
+  f,
+  selects = true,
+  textareas = true,
+  inputTypes = ["text", "number", "date"],
+  queriesToExclude,
+}: {
+  f: nullishForm;
+  selects: boolean;
+  textareas: boolean;
+  inputTypes?: string[];
+  queriesToExclude?: string[];
+}): void {
+  try {
+    if (!(f instanceof HTMLElement)) throw new Error(`Failed to validate Form Reference in the DOM`);
+    f.dataset.start = "true";
+    if (!Array.isArray(inputTypes)) throw new Error(`Error validating type of inputTypes argument`);
+    inputTypes = inputTypes.filter(t => typeof t === "string");
+    if (typeof selects !== "boolean") selects = false;
+    if (typeof textareas !== "boolean") textareas = false;
+    if (selects)
+      f.querySelectorAll("select").forEach(s => !s.classList.contains("ssPersist") && s.classList.add("ssPersist"));
+    if (textareas)
+      f.querySelectorAll("textarea").forEach(
+        ta => !ta.classList.contains("ssPersist") && ta.classList.add("ssPersist"),
+      );
+    inputTypes.forEach(t =>
+      f
+        .querySelectorAll(`input[type=${t}]`)
+        .forEach(inp => !inp.classList.contains("ssPersist") && inp.classList.add("ssPersist")),
+    );
+    if (queriesToExclude) {
+      queriesToExclude.forEach(q => {
+        const queried = f.querySelector(q);
+        if (!queried) return;
+        queried.classList.contains("ssPersist") && queried.classList.remove("ssPersist");
+      });
+    }
+  } catch (e) {
+    console.error(`Error executing persistInputs:\n${(e as Error).message}`);
+  }
 }

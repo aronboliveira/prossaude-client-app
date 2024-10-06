@@ -334,9 +334,7 @@ export function addCanvasListeners(): void {
             throw new Error(`Error getting Canvas Context:
           Obtained Value: ${ctx ?? "nullish"}`);
           if (!isDrawing) return;
-          const rect = canvas.getBoundingClientRect(),
-            x = e.clientX - rect.left,
-            y = e.clientY - rect.top;
+          const { x, y } = getCanvasCoords(e.clientX, e.clientY, canvas);
           ctx.lineTo(x, y);
           ctx.stroke();
           ctx.beginPath();
@@ -367,6 +365,22 @@ export function addCanvasListeners(): void {
     console.error(`Error executing addCanvasListteners:
     ${(e as Error).message}`);
   }
+}
+export function getCanvasCoords(
+  x: number,
+  y: number,
+  canvas: HTMLCanvasElement,
+): {
+  x: number;
+  y: number;
+} {
+  const rect = canvas.getBoundingClientRect(),
+    scaleX = canvas.width / rect.width,
+    scaleY = canvas.height / rect.height;
+  return {
+    x: (x - rect.left) * (Number.isFinite(scaleX) ? scaleX : canvas.width * 0.5),
+    y: (y - rect.top) * (Number.isFinite(scaleY) ? scaleY : canvas.height * 0.5),
+  };
 }
 export function watchLabels(): void {
   setTimeout(() => {

@@ -12,7 +12,7 @@ import FamOnc from "./FamOnc";
 import FamPulm from "./FamPulm";
 import RadioPairDoces from "./RadioPairDoces";
 import AntMedFs from "./AntMedFs";
-import { validateForm } from "@/lib/global/handlers/gHandlers";
+import { registerPersistInputs, validateForm } from "@/lib/global/handlers/gHandlers";
 import { handleSubmit } from "@/lib/locals/panelPage/handlers/handlers";
 import Name from "../def/Name";
 import SocialName from "../def/SocialName";
@@ -41,11 +41,20 @@ import HASDivAdd from "./HASDivAdd";
 import OtherD from "./OtherD";
 import FamDiab from "./FamDiab";
 import FamDislip from "./FamDislip";
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import { nullishForm } from "@/lib/global/declarations/types";
 import useDataProvider from "@/lib/hooks/useDataProvider";
 export default function AgForm(): JSX.Element {
   const f = useRef<nullishForm>(null);
+  useEffect(() => {
+    registerPersistInputs({
+      f: f.current,
+      textareas: true,
+      selects: true,
+      inputTypes: ["date", "number", "text", "checkbox", "radio"],
+      queriesToExclude: ['[role="switch"]'],
+    });
+  }, []);
   useDataProvider(f.current);
   return (
     <form

@@ -11,7 +11,7 @@ import {
   searchPreviousSiblingsById,
   changeToAstDigit,
   defineLabId,
-  resetarFormulario,
+  resetForm,
   enableCPFBtn,
   syncAriaStates,
   toggleTips,
@@ -21,6 +21,8 @@ import {
   handleCondtReq,
   handleEventReq,
   cleanStorageName,
+  registerPersistInputs,
+  checkForReset,
 } from "../../../global/handlers/gHandlers";
 import {
   inputNotFound,
@@ -28,10 +30,9 @@ import {
   elementNotFound,
   elementNotPopulated,
 } from "../../../global/handlers/errorHandler";
-import { handleSubmit } from "../../../../../../../pro-saude-app-vite/app/src/lib/locals/panelPage/handlers/handlers";
-import { formCases, nullishHtEl } from "../../../../lib/global/declarations/types";
+import { handleSubmit } from "../../../../../src/lib/locals/panelPage/handlers/handlers";
+import { formCases } from "../../../../lib/global/declarations/types";
 import {
-  BirthRelation,
   CSSColor,
   ErrorHandler,
   HTMLDialogElementMethod,
@@ -41,7 +42,6 @@ import {
   PseudoBool,
   PseudoNum,
   SearchFunction,
-  TransitionLevel,
   WindowMethods,
 } from "../../testVars";
 jest.mock(
@@ -54,6 +54,14 @@ jest.mock(
     extLine: (jest.fn() as jest.Mock).mockReturnValue("test-line"),
     inputNotFound: jest.fn() as jest.Mock,
     multipleElementsNotFound: jest.fn() as jest.Mock,
+  }),
+) as typeof jest;
+jest.mock(
+  "../../../global/handlers/gHandlers",
+  (): {
+    checkForReset: jest.Mock<any, any, any>;
+  } => ({
+    checkForReset: jest.fn() as jest.Mock,
   }),
 ) as typeof jest;
 describe("gHandlers Tests", (): void => {
@@ -372,49 +380,121 @@ describe("gHandlers Tests", (): void => {
       (expect(elementNotFound) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalled() as void;
     }) as void;
   }) as void;
-  describe("resetarFormulario", (): void => {
-    let clickEvent: MouseEvent, resetFormBtn: HTMLButtonElement, fileBtns: HTMLButtonElement[];
-    beforeEach((): void => {
-      resetFormBtn = document.createElement("button") as HTMLButtonElement;
-      clickEvent = new MouseEvent("click");
-      Object.defineProperty(clickEvent, "target", { value: resetFormBtn }) as MouseEvent;
-      fileBtns = [
-        document.createElement("button") as HTMLButtonElement,
-        document.createElement("button") as HTMLButtonElement,
-      ];
+  describe("checkForReset", (): void => {
+    let eventMock: any;
+    let form: HTMLFormElement;
+    beforeEach(() => {
       document.body.innerHTML = `
-				<form id="formAnamGId"></form>
-				<cite contenteditable="true">Old Name</cite>
-				<input id="genBirthRelId">
-				<input id="genTransId">
-			`;
-    }) as void;
-    afterEach((): void => {
-      jest.clearAllMocks() as typeof jest;
-    }) as void;
-    it("should reset the form and set default values for editable elements", (): void => {
-      resetarFormulario(clickEvent.currentTarget as nullishHtEl);
-      expect(document.getElementById("formAnamGId") as HTMLFormElement).toBeTruthy() as void;
-      expect(
-        (document.querySelector<HTMLElement>('cite[contenteditable="true"]') as HTMLElement).textContent,
-      ).toBe<string>("--Nome");
-      expect((document.getElementById("genBirthRelId") as HTMLInputElement).value).toBe<BirthRelation>("cis");
-      expect((document.getElementById("genTransId") as HTMLInputElement).value).toBe<TransitionLevel>("avancado");
-    }) as void;
-    it('should call changeToAstDigit for buttons with "Retornar" in textContent', (): void => {
-      fileBtns[0].textContent = "Retornar à Assinatura Escrita";
-      resetarFormulario(clickEvent.currentTarget as nullishHtEl);
-      expect(changeToAstDigit).toHaveBeenCalledWith<Parameters<typeof changeToAstDigit>>(fileBtns[0]) as void;
-    }) as void;
-    it("should call elementNotFound when form is not found", () => {
-      document.getElementById("formAnamGId")?.remove() as void;
-      resetarFormulario(clickEvent.currentTarget as nullishHtEl);
-      expect(elementNotFound).toHaveBeenCalled() as void;
-    }) as void;
-    it("should call multipleElementsNotFound when button elements are invalid", (): void => {
-      resetarFormulario(clickEvent.currentTarget as nullishHtEl);
-      expect(multipleElementsNotFound).toHaveBeenCalled() as void;
-    }) as void;
+        <form id="testForm">
+          <input type="text" value="some text" />
+          <button id="resetButton">Reset</button>
+        </form>
+      `;
+      form = document.getElementById("testForm") as HTMLFormElement;
+      const resetButton = document.getElementById("resetButton");
+      eventMock = {
+        currentTarget: resetButton,
+      };
+      global.prompt = jest.fn();
+      global.alert = jest.fn();
+    });
+    afterEach(() => jest.clearAllMocks());
+    it("should prompt the user for confirmation", () => {
+      (global.prompt as jest.Mock).mockReturnValue("CONFIRMAR");
+      checkForReset(eventMock);
+      expect(global.prompt).toHaveBeenCalledWith("Digite CONFIRMAR para resetar o formulário");
+    });
+    it("should reset the form if the user confirms", () => {
+      (global.prompt as jest.Mock).mockReturnValue("CONFIRMAR");
+      checkForReset(eventMock);
+      expect(resetForm).toHaveBeenCalledWith(form);
+    });
+    it("should not reset the form if the user cancels", () => {
+      (global.prompt as jest.Mock).mockReturnValue("CANCELAR");
+      checkForReset(eventMock);
+      expect(resetForm).not.toHaveBeenCalled();
+    });
+    it("should alert if the form is not found", () => {
+      (global.prompt as jest.Mock).mockReturnValue("CONFIRMAR");
+      eventMock.currentTarget = document.createElement("div");
+      checkForReset(eventMock);
+      expect(global.alert).toHaveBeenCalledWith(expect.stringContaining("Não foi possível localizar o formulário"));
+      expect(resetForm).not.toHaveBeenCalled();
+    });
+    it("should handle an invalid currentTarget gracefully", () => {
+      const consoleSpy = jest.spyOn(console, "error").mockImplementation();
+      eventMock.currentTarget = null;
+      checkForReset(eventMock);
+      expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining("Failed to validate current target instance"));
+      consoleSpy.mockRestore();
+    });
+    it("should display alert in English if the language is not Portuguese", () => {
+      (global.prompt as jest.Mock).mockReturnValue("CONFIRMAR");
+      eventMock.currentTarget = document.createElement("div");
+      jest.spyOn(navigator, "language", "get").mockReturnValue("en-US");
+      checkForReset(eventMock);
+      expect(global.alert).toHaveBeenCalledWith("Failed to locate the formulary");
+      expect(resetForm).not.toHaveBeenCalled();
+    });
+  }) as void;
+  describe("resetForm", (): void => {
+    let form: HTMLFormElement;
+    beforeEach(() => {
+      document.body.innerHTML = `
+        <form id="testForm">
+          <input type="text" id="textInput" value="some text" />
+          <input type="checkbox" id="checkboxInput" checked />
+          <input type="radio" id="radioInput" checked />
+          <input type="color" id="colorInput" value="#ff0000" data-default="#00ff00" />
+          <input type="range" id="rangeInput" value="50" min="0" max="100" data-default="25" />
+          <input type="file" id="fileInput" />
+          <textarea id="textareaInput">Some textarea text</textarea>
+          <select id="selectInput">
+            <option value="1">Option 1</option>
+            <option value="2" selected>Option 2</option>
+          </select>
+          <button type="submit">Submit</button>
+        </form>
+      `;
+      form = document.getElementById("testForm") as HTMLFormElement;
+    });
+    it("should clear text inputs and textarea fields", () => {
+      resetForm(form);
+      expect((document.getElementById("textInput") as HTMLInputElement).value).toBe("");
+      expect((document.getElementById("textareaInput") as HTMLTextAreaElement).value).toBe("");
+    });
+    it("should uncheck checkboxes and radio buttons", () => {
+      resetForm(form);
+      expect((document.getElementById("checkboxInput") as HTMLInputElement).checked).toBe(false);
+      expect((document.getElementById("radioInput") as HTMLInputElement).checked).toBe(false);
+    });
+    it("should reset color input to its default value", () => {
+      resetForm(form);
+      expect((document.getElementById("colorInput") as HTMLInputElement).value).toBe("#00ff00");
+    });
+    it("should reset range input to its default value", () => {
+      resetForm(form);
+      expect((document.getElementById("rangeInput") as HTMLInputElement).value).toBe("25");
+    });
+    it("should reset file input field", () => {
+      resetForm(form);
+      expect((document.getElementById("fileInput") as HTMLInputElement).value).toBe("");
+    });
+    it("should reset select field to its first option", () => {
+      resetForm(form);
+      expect((document.getElementById("selectInput") as HTMLSelectElement).value).toBe("1");
+    });
+    it("should log error for invalid form element", () => {
+      const consoleSpy = jest.spyOn(console, "error").mockImplementation();
+      resetForm(null);
+      expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining("Error executing resetForm"));
+      consoleSpy.mockRestore();
+    });
+    it("should reset only applicable inputs and skip buttons", () => {
+      resetForm(form);
+      const button = form.querySelector("button");
+      expect(button?.type).toBe("submit");
+    });
   }) as void;
   describe("enableCPFBtn", (): void => {
     let cpfBtn: HTMLButtonElement;
@@ -866,7 +946,7 @@ describe("gHandlers Tests", (): void => {
       expect(input.style.color).toBe<CSSColor>("");
     });
   });
-  describe("cleanStorageName", () => {
+  describe("cleanStorageName", (): void => {
     const mockSetItem = jest.fn(),
       originalConsoleError = console.error;
     beforeEach(() => {
@@ -904,6 +984,79 @@ describe("gHandlers Tests", (): void => {
       expect(console.error).toHaveBeenCalledWith(
         "Error executing iteration 0 of names in Local Storage:\nlocalStorage error",
       );
+    });
+  }) as void;
+  describe("registerPersistInputs", (): void => {
+    let mockForm: HTMLFormElement;
+    beforeEach(() => {
+      mockForm = document.createElement("form");
+      jest.clearAllMocks();
+    });
+    test("should throw error if f is not an HTMLElement", () => {
+      registerPersistInputs({ f: null as any } as any);
+      expect(jest.spyOn(console, "error").mockImplementation(() => {})).toHaveBeenCalledWith(
+        expect.stringContaining("Failed to validate Form Reference in the DOM"),
+      );
+    });
+    test("should throw error if inputTypes is not an array", () => {
+      registerPersistInputs({ f: mockForm, inputTypes: null as any } as any);
+      expect(jest.spyOn(console, "error").mockImplementation(() => {})).toHaveBeenCalledWith(
+        expect.stringContaining("Error validating type of inputTypes argument"),
+      );
+    });
+    test("should add ssPersist class to inputs of specified types", () => {
+      const mockInputText = document.createElement("input");
+      mockInputText.type = "text";
+      mockForm.appendChild(mockInputText);
+      const mockInputNumber = document.createElement("input");
+      mockInputNumber.type = "number";
+      mockForm.appendChild(mockInputNumber);
+      registerPersistInputs({ f: mockForm } as any);
+      expect(mockInputText.classList.contains("ssPersist")).toBe(true);
+      expect(mockInputNumber.classList.contains("ssPersist")).toBe(true);
+    });
+    test("should add ssPersist class to select elements if selects is true", () => {
+      const mockSelect = document.createElement("select");
+      mockForm.appendChild(mockSelect);
+      registerPersistInputs({ f: mockForm, selects: true } as any);
+      expect(mockSelect.classList.contains("ssPersist")).toBe(true);
+    });
+    test("should not add ssPersist class to select elements if selects is false", () => {
+      const mockSelect = document.createElement("select");
+      mockForm.appendChild(mockSelect);
+      registerPersistInputs({ f: mockForm, selects: false } as any);
+      expect(mockSelect.classList.contains("ssPersist")).toBe(false);
+    });
+    test("should add ssPersist class to textarea elements if textareas is true", () => {
+      const mockTextarea = document.createElement("textarea");
+      mockForm.appendChild(mockTextarea);
+      registerPersistInputs({ f: mockForm, textareas: true } as any);
+      expect(mockTextarea.classList.contains("ssPersist")).toBe(true);
+    });
+    test("should not add ssPersist class to textarea elements if textareas is false", () => {
+      const mockTextarea = document.createElement("textarea");
+      mockForm.appendChild(mockTextarea);
+      registerPersistInputs({ f: mockForm, textareas: false } as any);
+      expect(mockTextarea.classList.contains("ssPersist")).toBe(false);
+    });
+    test("should exclude elements from having ssPersist class based on queriesToExclude", () => {
+      const mockInputText = document.createElement("input");
+      mockInputText.type = "text";
+      mockInputText.classList.add("ssPersist");
+      mockInputText.id = "excludeMe";
+      mockForm.appendChild(mockInputText);
+      registerPersistInputs({ f: mockForm, queriesToExclude: ["#excludeMe"] } as any);
+      expect(mockInputText.classList.contains("ssPersist")).toBe(false);
+    });
+    test("should handle missing elements in queriesToExclude gracefully", () => {
+      registerPersistInputs({ f: mockForm, queriesToExclude: ["#nonExistentElement"] } as any);
+      expect(jest.spyOn(console, "error").mockImplementation(() => {})).not.toHaveBeenCalled();
+    });
+    test("should handle invalid selects and textareas types gracefully", () => {
+      registerPersistInputs({ f: mockForm, selects: "invalid" as any, textareas: "invalid" as any });
+      expect(() => {
+        registerPersistInputs({ f: mockForm, selects: "invalid" as any, textareas: "invalid" as any });
+      }).not.toThrow();
     });
   }) as void;
 });

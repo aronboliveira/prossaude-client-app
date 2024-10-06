@@ -7,7 +7,7 @@ export default function Guard(): JSX.Element {
     if (window) {
       if (!localStorage.getItem("user")) {
         alert("Por favor logue no sistema antes de prosseguir.");
-        router.push("/login");
+        router.replace("/login");
         return;
       }
       if (!localStorage.getItem("timer")) {
@@ -23,7 +23,7 @@ export default function Guard(): JSX.Element {
               localStorage.removeItem("authorized");
               localStorage.removeItem("pw");
               clearInterval(timerCounter);
-              router.push("/login");
+              router.replace("/login");
             } else {
               localStorage.setItem("timer", newTimer.toString());
               console.log("Updated Timer:", newTimer);
@@ -35,7 +35,7 @@ export default function Guard(): JSX.Element {
       }
       if (!localStorage.getItem("authorized") || localStorage.getItem("authorized") !== "true") {
         alert("Usuário não autorizado. Retornando à tela de login.");
-        router.push("/login");
+        router.replace("/login");
       }
     }
   }, [router]);
