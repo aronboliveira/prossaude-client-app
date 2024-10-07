@@ -222,40 +222,95 @@ describe("checkAllGenConts", (): void => {
   }) as void;
 }) as void;
 describe("fluxGen", (): void => {
-  let multipleElementsNotFoundSpy: jest.SpyInstance;
-  beforeEach((): void => {
-    multipleElementsNotFoundSpy = jest
-      .spyOn<any, ErrorHandler>(errorHandler, "multipleElementsNotFound")
-      .mockImplementation((): Error => new Error(`Multiple element not found.`)) as jest.SpyInstance;
-    jest.clearAllMocks() as typeof jest;
-  }) as void;
-  it("should return 'masculino' if appropriate conditions are met", (): void => {
-    const mockGen = document.createElement("select"),
-      mockGenBirthRel = document.createElement("select"),
-      mockGenTrans = document.createElement("select"),
-      mockGenFisAlin = document.createElement("select");
-    mockGen.value = "masculino";
-    mockGenBirthRel.value = "cis";
-    const result = gModel.fluxGen([mockGen, mockGenBirthRel, mockGenTrans, mockGenFisAlin], "masculino");
-    expect(result).toBe<Gender>("masculino") as void;
-  }) as void;
-  it("should handle multiple stages of conditions", (): void => {
-    const mockGen = document.createElement("select"),
-      mockGenBirthRel = document.createElement("select"),
-      mockGenTrans = document.createElement("select"),
-      mockGenFisAlin = document.createElement("select");
-    mockGen.value = "feminino";
-    mockGenBirthRel.value = "trans";
-    mockGenTrans.value = "intermediario";
-    mockGenFisAlin.value = "feminilizado";
-    expect(gModel.fluxGen([mockGen, mockGenBirthRel, mockGenTrans, mockGenFisAlin], "feminino")).toBe<Gender>(
-      "feminino",
-    );
-  }) as void;
-  it("should call multipleElementsNotFound if elements are invalid", (): void => {
-    gModel.fluxGen([null as any]);
-    expect(multipleElementsNotFoundSpy).toHaveBeenCalled() as void;
-  }) as void;
+  let gen: HTMLSelectElement, gb: HTMLSelectElement, gt: HTMLSelectElement, ga: HTMLSelectElement;
+  beforeEach(() => {
+    gen = document.createElement("select");
+    gb = document.createElement("select");
+    gt = document.createElement("select");
+    ga = document.createElement("select");
+    ["masculinizado", "feminilizado", "neutro"].forEach(value => {
+      const option = document.createElement("option");
+      option.value = value;
+      ga.appendChild(option);
+    });
+  });
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+  test("should return 'masculino' when gen is 'masculino' and gb is 'cis'", () => {
+    gen.value = "masculino";
+    gb.value = "cis";
+    expect(gModel.fluxGen({ g: gen, gb: gb, gt: gt, ga: ga })).toBe("masculino");
+    expect(
+      ga.closest(".genSpan") instanceof HTMLElement && (ga.closest(".genSpan") as HTMLElement).hidden,
+    ).toBeTruthy();
+    expect(
+      gt.closest(".genSpan") instanceof HTMLElement && (ga.closest(".genSpan") as HTMLElement).hidden,
+    ).toBeTruthy();
+  });
+  test("should return 'feminino' when gen is 'feminino' and gb is 'cis'", () => {
+    gen.value = "feminino";
+    gb.value = "cis";
+    expect(gModel.fluxGen({ g: gen, gb: gb, gt: gt, ga: ga })).toBe("feminino");
+    expect(
+      ga.closest(".genSpan") instanceof HTMLElement && (ga.closest(".genSpan") as HTMLElement).hidden,
+    ).toBeTruthy();
+    expect(
+      gt.closest(".genSpan") instanceof HTMLElement && (ga.closest(".genSpan") as HTMLElement).hidden,
+    ).toBeTruthy();
+  });
+  test("should show hormonal transition options when gb is 'trans' and return the correct gender", () => {
+    gen.value = "masculino";
+    gb.value = "trans";
+    gt.value = "intermediario";
+    expect(gModel.fluxGen({ g: gen, gb: gb, gt: gt, ga: ga })).toBe("masculino");
+    expect(gModel.showStgTransHorm).toHaveBeenCalledWith(gt);
+    expect(gModel.showGenFisAlin).toHaveBeenCalledWith(ga);
+    expect(ga.value).toBe("masculinizado");
+  });
+  test("should handle non-binary gender and set the correct physical alignment", () => {
+    gen.value = "naoBinario";
+    gb.value = "trans";
+    ga.value = "neutro";
+    expect(gModel.fluxGen({ g: gen, gb: gb, gt: gt, ga: ga })).toBe("neutro");
+    expect(gModel.showGenFisAlin).toHaveBeenCalledWith(ga);
+  });
+  test("should return 'masculino' when gen is undefined and fallback to default", () => {
+    expect(gModel.fluxGen({ g: gen, gb: gb, gt: gt, ga: ga })).toBe("masculino");
+  });
+  test("should handle alignSetter if provided", () => {
+    const mockAlignSetter = jest.fn();
+    gen.value = "masculino";
+    gb.value = "trans";
+    gt.value = "intermediario";
+    gModel.fluxGen({ g: gen, gb: gb, gt: gt, ga: ga }, "masculino", mockAlignSetter);
+    expect(mockAlignSetter).toHaveBeenCalledWith("masculinizado");
+  });
+  test("should switch alignment based on gender and transition state", () => {
+    gen.value = "feminino";
+    gb.value = "trans";
+    gt.value = "avancado";
+    ga.value = "feminilizado";
+    const result = gModel.fluxGen({ g: gen, gb: gb, gt: gt, ga: ga });
+    expect(result).toBe("feminino");
+    expect(gModel.showStgTransHorm).toHaveBeenCalledWith(gt);
+    expect(gModel.hideGenFisAlin).toHaveBeenCalledWith(ga);
+  });
+  test("should switch gender based on gb value being 'outros'", () => {
+    gen.value = "masculino";
+    gb.value = "outros";
+    ga.value = "neutro";
+    expect(gModel.fluxGen({ g: gen, gb: gb, gt: gt, ga: ga })).toBe("neutro");
+    expect(gModel.showGenFisAlin).toHaveBeenCalledWith(ga);
+  });
+  test("should return default 'masculino' if gen is not recognized", () => {
+    gen.value = "undefined";
+    gb.value = "undefined";
+    gt.value = "undefined";
+    ga.value = "undefined";
+    expect(gModel.fluxGen({ g: gen, gb: gb, gt: gt, ga: ga })).toBe("masculino");
+    expect(errorHandler.multipleElementsNotFound).toHaveBeenCalled();
+  });
 }) as void;
 describe("showGenFisAlin", (): void => {
   let elementNotFoundSpy: jest.SpyInstance;
@@ -272,10 +327,10 @@ describe("showGenFisAlin", (): void => {
     mockGenSpan.hidden = true;
     mockGenFisAlin.appendChild<HTMLSpanElement>(mockGenSpan);
     expect(mockGenSpan.hidden).toBe<boolean>(false) as void;
-    expect(gModel.showGenFisAlin(mockGenFisAlin)).toBe<boolean>(true) as void;
+    expect(gModel.showGenFisAlin(mockGenFisAlin, document.createElement("select"))).toBe<boolean>(true) as void;
   }) as void;
   it("should throw an error if element is not valid", (): void => {
-    gModel.showGenFisAlin(null as any);
+    gModel.showGenFisAlin(null as any, null);
     expect(elementNotFoundSpy).toHaveBeenCalled() as void;
   }) as void;
 }) as void;

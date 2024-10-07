@@ -1,5 +1,5 @@
 import { DlgProps } from "@/lib/global/declarations/interfaces";
-import { aptTypes, formCases, looseNum, panelOpts } from "@/lib/global/declarations/types";
+import { aptTypes, formCases, looseNum, panelOpts, vRoot } from "@/lib/global/declarations/types";
 import { nullishForm, nullishDlg, nullishTab, voidVal, nullishBtn } from "@glSrc/types";
 import { NextRouter } from "next/router";
 import { MutableRefObject, Dispatch, SetStateAction, Component } from "react";
@@ -113,7 +113,7 @@ export interface ExcludeConsDlgProps extends Omit<ExcludeDlgProps, "route"> {
 export interface FailedRegstProps {
   setDisplayFailRegstDlg: Dispatch<SetStateAction<boolean>>;
   shouldDisplayFailRegstDlg: boolean;
-  root: Root | undefined;
+  root: vRoot;
   secondOp: string;
 }
 export interface ReseterBtnProps {

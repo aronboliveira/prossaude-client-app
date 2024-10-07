@@ -7,7 +7,7 @@ import WatcherEN from "../../components/interactive/edfis/WatcherEN";
 import { Suspense, lazy } from "react";
 import Spinner from "../../components/icons/Spinner";
 import Guard from "../../components/interactive/def/Guard";
-const ENForm = lazy(() => import("../../components/interactive/edfis/EdFisForm"));
+const ENForm = lazy(() => import("../../components/interactive/edfis/ENForm"));
 export default function EdFisNutPage(): JSX.Element {
   return (
     <ErrorBoundary

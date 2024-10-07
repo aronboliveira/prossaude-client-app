@@ -1,12 +1,11 @@
 "use client";
 import { ErrorBoundary } from "react-error-boundary";
-import { createRoot } from "react-dom/client";
 import { elementNotFound, extLine, inputNotFound } from "@/lib/global/handlers/errorHandler";
 import { equalizeTabCells, isClickOutside } from "@/lib/global/gStyleScript";
 import { handleFetch } from "@/lib/locals/panelPage/handlers/handlers";
 import { panelRoots } from "@/vars";
 import { strikeEntries } from "@/lib/locals/panelPage/consStyleScript";
-import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
+import { registerRoot, syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useContext, useEffect, useMemo, useRef } from "react";
 import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
 import GenericErrorComponent from "../error/GenericErrorComponent";
@@ -138,8 +137,11 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                     panelRoots[`${tbodyIntRef.current.id}`]?.unmount();
                     delete panelRoots[`${tbodyIntRef.current.id}`];
                     tbodyIntRef.current.remove() as void;
-                    if (!panelRoots[`${tabProfIntRef.current.id}`])
-                      panelRoots[`${tabProfIntRef.current.id}`] = createRoot(tabProfIntRef.current);
+                    panelRoots[`${tabProfIntRef.current.id}`] = registerRoot(
+                      panelRoots[`${tabProfIntRef.current.id}`],
+                      `#${tabProfIntRef.current.id}`,
+                      tabProfIntRef,
+                    );
                     panelRoots[`${tabProfIntRef.current.id}`]?.render(
                       <ErrorBoundary
                         FallbackComponent={() => (
@@ -220,8 +222,11 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                     tbodyIntRef.current = document.getElementById("profsIntTbody") as nullishTabSect;
                     if (!(tbodyIntRef.current instanceof HTMLElement))
                       throw elementNotFound(tbodyIntRef.current, `Validation of replaced tbody`, extLine(new Error()));
-                    if (!panelRoots[`${tbodyIntRef.current.id}`])
-                      panelRoots[`${tbodyIntRef.current.id}`] = createRoot(tbodyIntRef.current);
+                    panelRoots[`${tbodyIntRef.current.id}`] = registerRoot(
+                      panelRoots[`${tbodyIntRef.current.id}`],
+                      `#${tbodyIntRef.current.id}`,
+                      tbodyIntRef,
+                    );
                     if (!tbodyIntRef.current.querySelector("tr"))
                       panelRoots[`${tbodyIntRef.current.id}`]?.render(
                         internalProfs.map((prof, i) => (
@@ -253,7 +258,12 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                     );
                   }
                 }, 1000);
-              } else panelRoots[`${tbodyIntRef.current.id}`] = createRoot(tbodyIntRef.current);
+              } else
+                panelRoots[`${tbodyIntRef.current.id}`] = registerRoot(
+                  panelRoots[`${tbodyIntRef.current.id}`],
+                  `#${tbodyIntRef.current.id}`,
+                  tbodyIntRef,
+                );
               if (!tbodyIntRef.current.querySelector("tr"))
                 panelRoots[`${tbodyIntRef.current.id}`]?.render(
                   internalProfs.map((prof, i) => {
@@ -290,15 +300,12 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
               }, 300);
               setTimeout(() => {
                 if (!document.querySelector("tr") && document.querySelector("table")) {
-                  if (!panelRoots[`${document.querySelector("table")!.id}`])
-                    panelRoots[`${document.querySelector("table")!.id}`] = createRoot(document.querySelector("table")!);
-                  panelRoots[`${document.querySelector("table")!.id}`]?.render(
-                    <GenericErrorComponent message='Failed to render table' />,
-                  );
+                  const firstTable = document.querySelector("table");
+                  if (!firstTable) return;
+                  panelRoots[`${firstTable.id}`] = registerRoot(panelRoots[`${firstTable.id}`], `#${firstTable.id}`);
+                  panelRoots[`${firstTable.id}`]?.render(<GenericErrorComponent message='Failed to render table' />);
                 }
               }, 5000);
-              //
-              //
               if (
                 panelRoots[`${tbodyExtRef.current.id}`] &&
                 !(panelRoots[`${tbodyExtRef.current.id}`] as any)["_internalRoot"]
@@ -321,8 +328,11 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                     panelRoots[`${tbodyExtRef.current.id}`]?.unmount();
                     delete panelRoots[`${tbodyExtRef.current.id}`];
                     tbodyExtRef.current.remove() as void;
-                    if (!panelRoots[`${tabProfIntRef.current.id}`])
-                      panelRoots[`${tabProfIntRef.current.id}`] = createRoot(tabProfIntRef.current);
+                    panelRoots[`${tabProfIntRef.current.id}`] = registerRoot(
+                      panelRoots[`${tabProfIntRef.current.id}`],
+                      `#${tabProfIntRef.current.id}`,
+                      tabProfIntRef,
+                    );
                     panelRoots[`${tabProfIntRef.current.id}`]?.render(
                       <ErrorBoundary
                         FallbackComponent={() => (
@@ -403,8 +413,11 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                     tbodyExtRef.current = document.getElementById("profsExtTbody") as nullishTabSect;
                     if (!(tbodyExtRef.current instanceof HTMLElement))
                       throw elementNotFound(tbodyExtRef.current, `Validation of replaced tbody`, extLine(new Error()));
-                    if (!panelRoots[`${tbodyExtRef.current.id}`])
-                      panelRoots[`${tbodyExtRef.current.id}`] = createRoot(tbodyExtRef.current);
+                    panelRoots[`${tbodyExtRef.current.id}`] = registerRoot(
+                      panelRoots[`${tbodyExtRef.current.id}`],
+                      `#${tbodyExtRef.current.id}`,
+                      tbodyExtRef,
+                    );
                     if (!tbodyExtRef.current.querySelector("tr"))
                       panelRoots[`${tbodyExtRef.current.id}`]?.render(
                         externalProfs.map((prof, i) => (
@@ -436,7 +449,12 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                     );
                   }
                 }, 1000);
-              } else panelRoots[`${tbodyExtRef.current.id}`] = createRoot(tbodyExtRef.current);
+              } else
+                panelRoots[`${tbodyExtRef.current.id}`] = registerRoot(
+                  panelRoots[`${tbodyExtRef.current.id}`],
+                  `#${tbodyExtRef.current.id}`,
+                  tbodyExtRef,
+                );
               if (!tbodyExtRef.current.querySelector("tr"))
                 panelRoots[`${tbodyExtRef.current.id}`]?.render(
                   externalProfs.map((prof, i) => {
@@ -473,11 +491,10 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
               }, 300);
               setTimeout(() => {
                 if (!document.querySelector("tr") && document.querySelector("table")) {
-                  if (!panelRoots[`${document.querySelector("table")!.id}`])
-                    panelRoots[`${document.querySelector("table")!.id}`] = createRoot(document.querySelector("table")!);
-                  panelRoots[`${document.querySelector("table")!.id}`]?.render(
-                    <GenericErrorComponent message='Failed to render table' />,
-                  );
+                  const firstTable = document.querySelector("table");
+                  if (!firstTable) return;
+                  panelRoots[`${firstTable.id}`] = registerRoot(panelRoots[`${firstTable.id}`], `#${firstTable}`);
+                  panelRoots[`${firstTable.id}`]?.render(<GenericErrorComponent message='Failed to render table' />);
                 }
               }, 5000);
             } catch (e) {

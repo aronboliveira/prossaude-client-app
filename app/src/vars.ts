@@ -1,10 +1,9 @@
-import { Root } from "react-dom/client";
 import { ExportHandler, Person } from "./lib/global/declarations/classes";
 import { ENTabsProps } from "./lib/global/declarations/interfaces";
 import { UserState } from "./lib/locals/basePage/declarations/serverInterfaces";
 import { defUser } from "./redux/slices/userSlice";
 import { DataProvider } from "./lib/global/declarations/classesCons";
-import { voidVal } from "./lib/global/declarations/types";
+import { voidVal, vRoot } from "./lib/global/declarations/types";
 export const basePath = {
   path: "",
   ph: "undefined",
@@ -50,7 +49,7 @@ export const experimentalProps: { experimentalUser: UserState } & { [k: string]:
 export const providers: { [k: string]: DataProvider | voidVal } = {
   globalDataProvider: undefined,
 };
-export const panelRoots: { [k: string]: Root | undefined } = {
+export const panelRoots: { [k: string]: vRoot } = {
   mainRoot: undefined,
 };
 export const scheduleProps: { autoSaving: boolean } = {

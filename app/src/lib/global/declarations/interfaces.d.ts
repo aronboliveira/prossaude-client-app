@@ -1,5 +1,5 @@
 import { SetStateAction } from "react";
-import { TabCelCtxs, ctxRot, looseNum, quadrCases, targEl, validTabLabs } from "./types";
+import { TabCelCtxs, ctxRot, looseNum, quadrCases, targEl, validTabLabs, vRoot } from "./types";
 export interface DocumentNodeProps {
   html: string;
   head?: (JSX.Element | null)[];
@@ -10,8 +10,12 @@ export interface ProSaudeAppProps extends AppProps {
 }
 export interface AppRootContextType {
   roots: {
-    [k: string]: Root | undefined;
+    [k: string]: vRoot;
   };
+}
+export interface ENContextProps {
+  age: looseNum;
+  gen: Gender;
 }
 export interface CounterAction {
   type: "INCREMENT" | "DECREMENT";

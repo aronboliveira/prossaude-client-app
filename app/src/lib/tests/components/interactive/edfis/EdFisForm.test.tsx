@@ -2,7 +2,7 @@ import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import userEvent from "@testing-library/user-event";
-import EdFisForm from "../../../../../../components/interactive/edfis/EdFisForm";
+import ENForm from "../../../../../../components/interactive/edfis/ENForm";
 import { handleSubmit } from "../../../../locals/panelPage/handlers/handlers";
 import { validateForm } from "../../../../global/handlers/gHandlers";
 jest.mock("../../../../global/handlers/gHandlers", () => ({
@@ -11,12 +11,12 @@ jest.mock("../../../../global/handlers/gHandlers", () => ({
 jest.mock("../../../../locals/panelPage/handlers/handlers", () => ({
   handleSubmit: jest.fn(),
 }));
-describe("EdFisForm component", () => {
+describe("ENForm component", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
   it("renders the form with correct elements", () => {
-    render(<EdFisForm />);
+    render(<ENForm />);
     expect(screen.getByRole("form", { name: /ed_form/i })).toBeInTheDocument();
     expect(screen.getByText("Identificação")).toBeInTheDocument();
     expect(screen.getByText("Hábitos Rotineiros — Alimentação")).toBeInTheDocument();
@@ -25,7 +25,7 @@ describe("EdFisForm component", () => {
   });
   it("validates the form on submit", async () => {
     (validateForm as jest.Mock).mockResolvedValue([true, {}, "mockedFormData"]);
-    render(<EdFisForm />);
+    render(<ENForm />);
     fireEvent.submit(screen.getByRole("form", { name: /ed_form/i }));
     await waitFor(() => {
       expect(validateForm).toHaveBeenCalled();
@@ -36,7 +36,7 @@ describe("EdFisForm component", () => {
   });
   it("prevents submission if validation fails", async () => {
     (validateForm as jest.Mock).mockResolvedValue([false, {}, null]);
-    render(<EdFisForm />);
+    render(<ENForm />);
     fireEvent.submit(screen.getByRole("form", { name: /ed_form/i }));
     await waitFor(() => {
       expect(validateForm).toHaveBeenCalled();
@@ -46,7 +46,7 @@ describe("EdFisForm component", () => {
     });
   });
   it("allows filling in form fields correctly", () => {
-    render(<EdFisForm />);
+    render(<ENForm />);
     const nameInput = screen.getByLabelText(/Nome completo/i);
     userEvent.type(nameInput, "John Doe");
     expect(nameInput).toHaveValue("John Doe");

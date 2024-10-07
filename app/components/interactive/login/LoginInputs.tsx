@@ -11,6 +11,7 @@ import { assignFormAttrs } from "@/lib/global/gModel";
 import Spinner from "../../icons/Spinner";
 import { useRouter } from "next/router";
 import { ClickEvaluator } from "@/lib/global/declarations/classes";
+import { defUser, setFullUser } from "@/redux/slices/userSlice";
 export default function LoginInputs(): JSX.Element {
   let isSpinning = false;
   const anchorRef = useRef<nullishAnchor>(null),
@@ -302,7 +303,10 @@ export default function LoginInputs(): JSX.Element {
                   callbackSubmitBtn();
                   setTimeout(() => {
                     handleLogin(ev, loginForm, true).then(res => {
-                      res.valid ? exeLogin(spanRef.current) : setMsg(res.message);
+                      if (res.valid) {
+                        exeLogin(spanRef.current);
+                        setFullUser({ v: defUser });
+                      } else setMsg(res.message);
                       setTimeout(() => {
                         setMsg("");
                       }, 10000);

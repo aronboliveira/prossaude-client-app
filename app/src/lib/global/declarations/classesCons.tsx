@@ -10,7 +10,7 @@ import { panelFormsVariables } from "../../../../components/panelForms/panelForm
 import { defUser } from "@/redux/slices/userSlice";
 import { privilege } from "@/lib/locals/basePage/declarations/serverInterfaces";
 import { providers } from "@/vars";
-import { voidVal } from "./types";
+import { queryableNode, voidVal } from "./types";
 const clearFlags: { [k: string]: boolean } = {};
 export class DataProvider {
   #sessionDataState: { [key: string]: any };
@@ -123,23 +123,26 @@ export class DataProvider {
     }
     return true;
   }
-  #evaluatePersistence(scope: HTMLElement | Document = document): {
+  #evaluatePersistence(scope: queryableNode = document): {
     [key: string]: string;
   } {
     if (scope instanceof HTMLElement && sessionStorage.getItem(scope.id) && scope.dataset.start === "true") {
       this.#parseSessionStorage(scope, scope.id);
       delete scope.dataset.start;
     }
-    this.#sessionDataState = DataProvider.#persistSessionEntries(scope);
+    this.#sessionDataState = DataProvider.#persistSessionEntries(scope as HTMLElement | Document | undefined);
     scope instanceof HTMLElement
       ? sessionStorage.setItem(`${scope.id}`, JSON.stringify(this.#sessionDataState))
       : console.warn("Failed to fetch scope when checking for persistence...");
     return this.#sessionDataState;
   }
-  static #persistSessionEntries(scope: HTMLElement | Document = document): {
+  static #persistSessionEntries(scope: queryableNode = document): {
     [k: string]: string;
   } {
-    const persisters = [...scope.querySelectorAll(".ssPersist"), ...scope.querySelectorAll(".lcPersist")];
+    const persisters = [
+      ...(scope?.querySelectorAll(".ssPersist") ?? []),
+      ...(scope?.querySelectorAll(".lcPersist") ?? []),
+    ];
     const sessionData: { [key: string]: string } = {};
     for (const persister of persisters) {
       if (
@@ -164,15 +167,11 @@ export class DataProvider {
     }
     return sessionData;
   }
-  #parseSessionStorage(
-    scope: HTMLElement | Document = document,
-    scopeRef: string,
-    userClass: string = "student",
-  ): void {
+  #parseSessionStorage(scope: queryableNode = document, scopeRef: string, userClass: string = "student"): void {
     const persisters = sessionStorage.getItem(scopeRef) || JSON.stringify(this.#sessionDataState);
     if (persisters) {
       Object.entries(JSON.parse(persisters)).forEach(entry => {
-        const fetchedEl = scope.querySelector(`#${entry[0]}`) || document.querySelector(`#${entry[0]}`);
+        const fetchedEl = scope?.querySelector(`#${entry[0]}`) || document.querySelector(`#${entry[0]}`);
         if (
           (fetchedEl instanceof HTMLInputElement &&
             !(
@@ -206,11 +205,11 @@ export class DataProvider {
       });
     }
   }
-  #initSelectParsing(scope: HTMLElement | Document = document, scopeRef: string): void {
+  #initSelectParsing(scope: queryableNode = document, scopeRef: string): void {
     const persisters = sessionStorage.getItem(scopeRef);
     if (persisters) {
       Object.entries(JSON.parse(persisters)).forEach(entry => {
-        const fetchedEl = scope.querySelector(`#${entry[0]}`) || document.querySelector(`#${entry[0]}`);
+        const fetchedEl = scope?.querySelector(`#${entry[0]}`) || document.querySelector(`#${entry[0]}`);
         if (
           (fetchedEl instanceof HTMLInputElement &&
             !(

@@ -31,6 +31,9 @@
     &[for="histDc"] {
       margin-bottom: 0.5rem;
     }
+    &[for="dateBdayId"] {
+      width: 88%;
+    }
   }
 
   [type="checkbox"] {
@@ -439,7 +442,12 @@
   }
 
   #fsAnamGDiv4 {
-    width: 33%;
+    width: 60%;
+    display: flex;
+    justify-content: space-between;
+    .labelIdentif {
+      min-width: 25vw;
+    }
   }
 
   #fsAnamGSpan8 {
@@ -454,7 +462,6 @@
   #fsAnamGSpan11 {
     grid-column: 2;
     grid-row: 2;
-    margin-right: 5.5vw;
     width: 100%;
   }
 
@@ -668,6 +675,8 @@ $baseNullableVw900InpWidth: 70vw;
 
     #dateAgeId {
       width: $base900InpWidth;
+      min-width: 25vw !important;
+      max-width: 36ch;
     }
 
     #dateBdayId {

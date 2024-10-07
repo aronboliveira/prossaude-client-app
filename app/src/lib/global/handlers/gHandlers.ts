@@ -1,4 +1,4 @@
-import { FormEvent } from "react";
+import { FormEvent, MutableRefObject } from "react";
 import { addCanvasListeners } from "../gController";
 import { autoCapitalizeInputs, parseNotNaN, regularToSnake } from "../gModel";
 import { fadeElement, isClickOutside } from "../gStyleScript";
@@ -11,6 +11,8 @@ import type {
   nullishForm,
   nullishHtEl,
   formCases,
+  queryableNode,
+  vRoot,
 } from "../declarations/types";
 import {
   extLine,
@@ -21,6 +23,7 @@ import {
   elementNotPopulated,
 } from "./errorHandler";
 import { handleSubmit } from "@/lib/locals/panelPage/handlers/handlers";
+import { createRoot } from "react-dom/client";
 //function for facilitating conversion of types when passing properties to DOM elements
 export function updateSimpleProperty(el: targEl): primitiveType {
   if (el instanceof HTMLInputElement) {
@@ -731,7 +734,7 @@ export function resetForm(form: nullishForm): void {
 const borderColors: { [k: string]: string } = {};
 export async function validateForm(
   ev: FormEvent | SubmitEvent | rMouseEvent | HTMLFormElement,
-  scope: HTMLElement | Document = document,
+  scope: queryableNode = document,
   submit: boolean = true,
 ): Promise<[boolean, string[], Array<[string, string | File]>]> {
   let targ;
@@ -760,7 +763,7 @@ export async function validateForm(
       throw elementNotFound(targ, `Validation of Submit Button instance`, extLine(new Error()));
     if (targ instanceof HTMLFormElement) form = targ;
     else form = targ.closest("form");
-    if (!(form instanceof HTMLFormElement)) scope.querySelector("form");
+    if (!(form instanceof HTMLFormElement)) scope?.querySelector("form");
     if (!(form instanceof HTMLFormElement))
       throw elementNotFound(form, `Validation of Form instance`, extLine(new Error()));
     [
@@ -1508,4 +1511,26 @@ export function registerPersistInputs({
   } catch (e) {
     console.error(`Error executing persistInputs:\n${(e as Error).message}`);
   }
+}
+export function registerRoot(root: vRoot, selector: string, selectorRef?: MutableRefObject<nullishHtEl>): vRoot {
+  try {
+    const rootEl =
+      typeof selectorRef === "object" && "current" in selectorRef
+        ? selectorRef.current ?? document.querySelector(selector) ?? document.getElementById(selector)
+        : document.querySelector(selector) ?? document.getElementById(selector);
+    if (!(rootEl instanceof HTMLElement))
+      throw elementNotFound(rootEl, `Finding element with ${selector} for rooting`, extLine(new Error()));
+    if (!root) {
+      if (rootEl && (!rootEl.dataset.rooted || rootEl.dataset.rooted !== "true")) root = createRoot(rootEl);
+      else if (!root["_internalRoot"]) {
+        root = undefined;
+        rootEl.dataset.rooted = "false";
+        root = createRoot(rootEl);
+      }
+      rootEl.dataset.rooted = "true";
+    }
+  } catch (e) {
+    console.error(`Error executing registerRoot:\n${(e as Error).message}`);
+  }
+  return root;
 }
