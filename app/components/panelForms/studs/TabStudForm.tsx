@@ -19,6 +19,7 @@ import { assignFormAttrs } from "@/lib/global/gModel";
 import { PanelCtx } from "../defs/client/SelectLoader";
 import { ExportHandler } from "@/lib/global/declarations/classes";
 import useExportHandler from "@/lib/hooks/useExportHandler";
+import Link from "next/link";
 export default function TabStudForm(): JSX.Element {
   const userClass = useContext(PanelCtx).userClass,
     studs: StudInfo[] = useMemo(() => [], []),
@@ -98,7 +99,12 @@ export default function TabStudForm(): JSX.Element {
                               <em>
                                 Lista Recuperada da Ficha de Estudantes registrados. Acesse
                                 <samp>
-                                  <a> ROTA_PLACEHOLDER </a>
+                                  <Link
+                                    href={`${location.origin}/panel?panel=regist-stud`}
+                                    id='linkRegistStud'
+                                    style={{ display: "inline" }}>
+                                    Cadastrar Aluno
+                                  </Link>
                                 </samp>
                                 para cadastrar
                               </em>
@@ -106,28 +112,48 @@ export default function TabStudForm(): JSX.Element {
                           </strong>
                         </caption>
                         <colgroup>
-                          {userClass === "coordenador" && <col></col>}
-                          {userClass === "coordenador" && <col></col>}
-                          <col></col>
-                          <col></col>
-                          <col></col>
-                          <col></col>
-                          <col></col>
-                          {userClass === "coordenador" && <col></col>}
-                          {userClass === "coordenador" && <col></col>}
+                          {Array.from({ length: 5 }, (_, i) => (
+                            <col key={`tab_stud_col__${i}`} data-col={i + 1}></col>
+                          ))}
+                          {userClass === "coordenador" &&
+                            Array.from({ length: 4 }, (_, i) => (
+                              <col key={`tab_stud_col__${i + 6}`} data-col={i + 6}></col>
+                            ))}
                         </colgroup>
                         <thead className='thead-dark'>
                           <tr id='avPacs-row1'>
-                            {userClass === "coordenador" && <th scope='col'>CPF</th>}
-                            {userClass === "coordenador" && <th scope='col'>DRE</th>}
-                            <th scope='col'>Nome</th>
-                            <th scope='col'>E-mail</th>
-                            <th scope='col'>Telefone</th>
-                            <th scope='col'>Área de Atividade</th>
-                            <th scope='col'>Dia de Atividade</th>
-                            <th scope='col'>Período de Atividade</th>
-                            {userClass === "coordenador" && <th scope='col'>Alteração</th>}
-                            {userClass === "coordenador" && <th scope='col'>Exclusão</th>}
+                            {userClass === "coordenador" && (
+                              <th scope='col' data-col='1'>
+                                CPF
+                              </th>
+                            )}
+                            {userClass === "coordenador" && (
+                              <th scope='col' data-col='2'>
+                                DRE
+                              </th>
+                            )}
+                            {[
+                              "Nome",
+                              "E-mail",
+                              "Telefone",
+                              "Área de Atividade",
+                              "Dia de Atividade",
+                              "Período de Atividade",
+                            ].map((l, i) => (
+                              <th key={`tab_stud_th__${i}`} data-col={userClass === "coordenador" ? i + 3 : i + 1}>
+                                {l}
+                              </th>
+                            ))}
+                            {userClass === "coordenador" && (
+                              <th scope='col' data-col='9'>
+                                Alteração
+                              </th>
+                            )}
+                            {userClass === "coordenador" && (
+                              <th scope='col' data-col='10'>
+                                Exclusão
+                              </th>
+                            )}
                           </tr>
                         </thead>
                         <tbody ref={tbodyRef}>
@@ -292,7 +318,12 @@ export default function TabStudForm(): JSX.Element {
                 <em>
                   Lista Recuperada da Ficha de Estudantes registrados. Acesse
                   <samp>
-                    <a> ROTA_PLACEHOLDER </a>
+                    <Link
+                      href={`${location.origin}/panel?panel=regist-stud`}
+                      id='linkRegistStud'
+                      style={{ display: "inline" }}>
+                      Cadastrar Aluno
+                    </Link>
                   </samp>
                   para cadastrar
                 </em>
@@ -300,28 +331,41 @@ export default function TabStudForm(): JSX.Element {
             </strong>
           </caption>
           <colgroup>
-            {userClass === "coordenador" && <col></col>}
-            {userClass === "coordenador" && <col></col>}
-            <col></col>
-            <col></col>
-            <col></col>
-            <col></col>
-            <col></col>
-            {userClass === "coordenador" && <col></col>}
-            {userClass === "coordenador" && <col></col>}
+            {Array.from({ length: 5 }, (_, i) => (
+              <col key={`tab_stud_col__${i}`} data-col={i + 1}></col>
+            ))}
+            {userClass === "coordenador" &&
+              Array.from({ length: 4 }, (_, i) => <col key={`tab_stud_col__${i + 6}`} data-col={i + 6}></col>)}
           </colgroup>
           <thead className='thead-dark'>
             <tr id='avPacs-row1'>
-              {userClass === "coordenador" && <th scope='col'>CPF</th>}
-              {userClass === "coordenador" && <th scope='col'>DRE</th>}
-              <th scope='col'>Nome</th>
-              <th scope='col'>E-mail</th>
-              <th scope='col'>Telefone</th>
-              <th scope='col'>Área de Atividade</th>
-              <th scope='col'>Dia de Atividade</th>
-              <th scope='col'>Período de Atividade</th>
-              {userClass === "coordenador" && <th scope='col'>Alteração</th>}
-              {userClass === "coordenador" && <th scope='col'>Exclusão</th>}
+              {userClass === "coordenador" && (
+                <th scope='col' data-col='1'>
+                  CPF
+                </th>
+              )}
+              {userClass === "coordenador" && (
+                <th scope='col' data-col='2'>
+                  DRE
+                </th>
+              )}
+              {["Nome", "E-mail", "Telefone", "Área de Atividade", "Dia de Atividade", "Período de Atividade"].map(
+                (l, i) => (
+                  <th key={`tab_stud_th__${i}`} data-col={userClass === "coordenador" ? i + 3 : i + 1}>
+                    {l}
+                  </th>
+                ),
+              )}
+              {userClass === "coordenador" && (
+                <th scope='col' data-col='9'>
+                  Alteração
+                </th>
+              )}
+              {userClass === "coordenador" && (
+                <th scope='col' data-col='10'>
+                  Exclusão
+                </th>
+              )}
             </tr>
           </thead>
           <tbody ref={tbodyRef}>

@@ -48,7 +48,7 @@ describe("checkComponentValidity", (): void => {
   }) as void;
   test("should return Default element if invalid JSX element", (): void => {
     const DefaultComponent = <span>Default</span>;
-    expect(checkComponentValidity(<React.Fragment />, DefaultComponent)).toEqual(DefaultComponent);
+    expect(checkComponentValidity(<></>, DefaultComponent)).toEqual(DefaultComponent);
   }) as void;
 }) as void;
 describe("asyncJSXCall", (): void => {

@@ -13,6 +13,7 @@ import { PanelCtx } from "../panelForms/defs/client/SelectLoader";
 import { ExportHandler } from "@/lib/global/declarations/classes";
 import { exporters } from "@/vars";
 import useExportHandler from "@/lib/hooks/useExportHandler";
+import Link from "next/link";
 export default function AptDataList({
   setDisplayAptList,
   data,
@@ -157,7 +158,12 @@ export default function AptDataList({
                     <em className='noInvert'>
                       Lista Recuperada da Ficha de Consultas registradas. Acesse
                       <samp>
-                        <a> ROTA_PLACEHOLDER </a>
+                        <Link
+                          href={`${location.origin}/panel?panel=agenda&new-cons=open`}
+                          style={{ display: "inline" }}
+                          id='addAppointmentLink'>
+                          Adicionar Consulta
+                        </Link>
                       </samp>
                       para cadastrar
                     </em>

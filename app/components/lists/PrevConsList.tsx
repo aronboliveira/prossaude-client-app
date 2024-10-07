@@ -9,6 +9,7 @@ import { useEffect, useRef } from "react";
 import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
 import GenericErrorComponent from "../error/GenericErrorComponent";
 import PrevConsRow from "./PrevConsRow";
+import Link from "next/link";
 export default function PrevConsList({
   dispatch,
   state = true,
@@ -97,7 +98,9 @@ export default function PrevConsList({
                     <em className='noInvert'>
                       Lista Recuperada da Ficha de Pacientes registrados. Acesse
                       <samp>
-                        <a> ROTA_PLACEHOLDER </a>
+                        <Link href={`${location.origin}/ag`} id='agLink' style={{ display: "inline" }}>
+                          Anamnese Geral
+                        </Link>
                       </samp>
                       para cadastrar
                     </em>

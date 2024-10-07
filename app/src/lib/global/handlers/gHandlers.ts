@@ -24,6 +24,7 @@ import {
 } from "./errorHandler";
 import { handleSubmit } from "@/lib/locals/panelPage/handlers/handlers";
 import { createRoot } from "react-dom/client";
+import { panelRoots } from "@/vars";
 //function for facilitating conversion of types when passing properties to DOM elements
 export function updateSimpleProperty(el: targEl): primitiveType {
   if (el instanceof HTMLInputElement) {
