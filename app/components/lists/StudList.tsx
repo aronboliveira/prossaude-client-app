@@ -1,6 +1,5 @@
 "use client";
 import { ErrorBoundary } from "react-error-boundary";
-import { createRoot } from "react-dom/client";
 import { elementNotFound, extLine, inputNotFound } from "@/lib/global/handlers/errorHandler";
 import { equalizeTabCells } from "@/lib/global/gStyleScript";
 import {
@@ -8,6 +7,7 @@ import {
   checkLocalIntervs,
   fillTabAttr,
   filterTabMembers,
+  renderTable,
 } from "@/lib/locals/panelPage/handlers/consHandlerList";
 import { handleFetch } from "@/lib/locals/panelPage/handlers/handlers";
 import { nullishTab, nullishTabSect } from "@/lib/global/declarations/types";
@@ -17,7 +17,7 @@ import GenericErrorComponent from "../error/GenericErrorComponent";
 import Spinner from "../icons/Spinner";
 import StudRow from "../panelForms/studs/StudRow";
 import { StudInfo, StudListProps } from "@/lib/global/declarations/interfacesCons";
-import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
+import { registerRoot, syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { strikeEntries } from "@/lib/locals/panelPage/consStyleScript";
 import { handleClientPermissions } from "@/lib/locals/panelPage/handlers/consHandlerUsers";
 import { PanelCtx } from "../panelForms/defs/client/SelectLoader";
@@ -55,10 +55,7 @@ export default function StudList({ mainDlgRef, dispatch, state = true }: StudLis
                 throw elementNotFound(tabRef.current, `Validation of Table reference`, extLine(new Error()));
               if (!(tbodyRef.current instanceof HTMLElement))
                 throw elementNotFound(tbodyRef.current, `Validation of Table Body Reference`, extLine(new Error()));
-              if (
-                panelRoots[`${tbodyRef.current.id}`] &&
-                !(panelRoots[`${tbodyRef.current.id}`] as any)["_internalRoot"]
-              ) {
+              if (panelRoots[tbodyRef.current.id] && !(panelRoots[tbodyRef.current.id] as any)["_internalRoot"]) {
                 setTimeout(() => {
                   try {
                     if (!(tabRef.current instanceof HTMLElement))
@@ -70,12 +67,15 @@ export default function StudList({ mainDlgRef, dispatch, state = true }: StudLis
                         extLine(new Error()),
                       );
                     if (tbodyRef.current.querySelector("tr")) return;
-                    panelRoots[`${tbodyRef.current.id}`]?.unmount();
-                    delete panelRoots[`${tbodyRef.current.id}`];
+                    panelRoots[tbodyRef.current.id]?.unmount();
+                    delete panelRoots[tbodyRef.current.id];
                     tbodyRef.current.remove() as void;
-                    if (!panelRoots[`${tabRef.current.id}`])
-                      panelRoots[`${tabRef.current.id}`] = createRoot(tabRef.current);
-                    panelRoots[`${tabRef.current.id}`]?.render(
+                    panelRoots[tabRef.current.id] = registerRoot(
+                      panelRoots[tabRef.current.id],
+                      `#${tabRef.current.id}}`,
+                      tabRef,
+                    );
+                    panelRoots[tabRef.current.id]?.render(
                       <ErrorBoundary
                         FallbackComponent={() => (
                           <GenericErrorComponent message='Error reloading replacement for table body' />
@@ -90,7 +90,7 @@ export default function StudList({ mainDlgRef, dispatch, state = true }: StudLis
                                     href={`${location.origin}/panel?panel=regist-stud`}
                                     id='linkRegistStud'
                                     style={{ display: "inline" }}>
-                                    Cadastrar Aluno
+                                    &nbsp;Cadastrar Aluno&nbsp;
                                   </Link>
                                 </samp>
                                 para cadastrar
@@ -149,10 +149,13 @@ export default function StudList({ mainDlgRef, dispatch, state = true }: StudLis
                     tbodyRef.current = document.getElementById("avStudsTbody") as nullishTabSect;
                     if (!(tbodyRef.current instanceof HTMLElement))
                       throw elementNotFound(tbodyRef.current, `Validation of replaced tbody`, extLine(new Error()));
-                    if (!panelRoots[`${tbodyRef.current.id}`])
-                      panelRoots[`${tbodyRef.current.id}`] = createRoot(tbodyRef.current);
+                    panelRoots[tbodyRef.current.id] = registerRoot(
+                      panelRoots[tbodyRef.current.id],
+                      `#${tbodyRef.current.id}}`,
+                      tbodyRef,
+                    );
                     if (!tbodyRef.current.querySelector("tr"))
-                      panelRoots[`${tbodyRef.current.id}`]?.render(
+                      panelRoots[tbodyRef.current.id]?.render(
                         studs.map((stud, i) => (
                           <StudRow nRow={i + 2} stud={stud} tabRef={tabRef} key={`stud_row__${i + 2}`} inDlg={true} />
                         )),
@@ -174,9 +177,14 @@ export default function StudList({ mainDlgRef, dispatch, state = true }: StudLis
                     );
                   }
                 }, 1000);
-              } else panelRoots[`${tbodyRef.current.id}`] = createRoot(tbodyRef.current);
+              } else
+                panelRoots[tbodyRef.current.id] = registerRoot(
+                  panelRoots[tbodyRef.current.id],
+                  `#${tbodyRef.current.id}}`,
+                  tbodyRef,
+                );
               if (!tbodyRef.current.querySelector("tr"))
-                panelRoots[`${tbodyRef.current.id}`]?.render(
+                panelRoots[tbodyRef.current.id]?.render(
                   studs.map((stud, i) => {
                     return Array.from(tbodyRef.current?.querySelectorAll("output") ?? []).some(
                       outp => outp.innerText === (stud as StudInfo)["cpf"],
@@ -202,13 +210,7 @@ export default function StudList({ mainDlgRef, dispatch, state = true }: StudLis
                   );
               }, 300);
               setTimeout(() => {
-                if (!document.querySelector("tr") && document.querySelector("table")) {
-                  if (!panelRoots[`${document.querySelector("table")!.id}`])
-                    panelRoots[`${document.querySelector("table")!.id}`] = createRoot(document.querySelector("table")!);
-                  panelRoots[`${document.querySelector("table")!.id}`]?.render(
-                    <GenericErrorComponent message='Failed to render table' />,
-                  );
-                }
+                if (!document.querySelector("tr") && document.querySelector("table")) renderTable();
               }, 5000);
             } catch (e) {
               console.error(`Error executing rendering of Table Body Content:\n${(e as Error).message}`);
@@ -294,7 +296,7 @@ export default function StudList({ mainDlgRef, dispatch, state = true }: StudLis
                   href={`${location.origin}/panel?panel=regist-stud`}
                   id='linkRegistStud'
                   style={{ display: "inline" }}>
-                  Cadastrar Aluno
+                  &nbsp;Cadastrar Aluno&nbsp;
                 </Link>
               </samp>
               para cadastrar

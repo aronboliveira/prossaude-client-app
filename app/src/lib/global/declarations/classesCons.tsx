@@ -79,7 +79,6 @@ export class DataProvider {
               try {
                 const scope = document.getElementById(elementId);
                 if (!(scope instanceof HTMLElement)) {
-                  console.warn(`Could not find scopped element for handling panel change`);
                   clearInterval(persistInterv);
                   return;
                 }
@@ -95,7 +94,6 @@ export class DataProvider {
               !isTargPanelRendered &&
                 ((): void => {
                   panelSelect.removeEventListener("change", () => handleSessionPanelChange(elementId));
-                  console.warn(`event listener removido para handleSessionPanelChange`);
                 })();
             };
             panelSelect.addEventListener("change", () => handleSessionPanelChange(element.id));
@@ -115,7 +113,6 @@ export class DataProvider {
   }
   #checkForm(elementId: string, storageInterval?: NodeJS.Timer): boolean {
     if (!document.getElementById(elementId)) {
-      console.warn(`Failed to fetch form for persistence`);
       //@ts-ignore
       storageInterval && clearInterval(storageInterval);
       clearFlags[`${elementId}`] = false;
@@ -131,9 +128,7 @@ export class DataProvider {
       delete scope.dataset.start;
     }
     this.#sessionDataState = DataProvider.#persistSessionEntries(scope as HTMLElement | Document | undefined);
-    scope instanceof HTMLElement
-      ? sessionStorage.setItem(`${scope.id}`, JSON.stringify(this.#sessionDataState))
-      : console.warn("Failed to fetch scope when checking for persistence...");
+    if (scope instanceof HTMLElement) sessionStorage.setItem(`${scope.id}`, JSON.stringify(this.#sessionDataState));
     return this.#sessionDataState;
   }
   static #persistSessionEntries(scope: queryableNode = document): {

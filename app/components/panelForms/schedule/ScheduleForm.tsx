@@ -540,10 +540,8 @@ export default function ScheduleForm({ mainRoot }: ScheduleFormProps): JSX.Eleme
                                           `Validation of confirmRegst instance`,
                                           extLine(new Error()),
                                         );
-                                      if (!(relAptBtn instanceof HTMLElement)) {
-                                        console.warn(`No related button for day checkbox id ${confirmRegst.id}`);
+                                      if (!(relAptBtn instanceof HTMLElement))
                                         return;
-                                      }
                                       if (confirmRegst.checked) {
                                         relAptBtn.classList.remove("btn-info");
                                         relAptBtn.classList.add("btn-success");

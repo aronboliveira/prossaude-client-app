@@ -104,7 +104,6 @@ export function callbackSubmitBtn(): boolean {
       if (v.tooLong) message += "Entrada com excesso de caracteres\n";
       userInp.setCustomValidity(message);
       fillCustomValidityWarn(userInp.id ?? "", message);
-      console.warn(message);
       setTimeout(() => (userInp.placeholder = "Nome de Usuário"), 5000);
       return false;
     }
@@ -138,7 +137,6 @@ export function callbackSubmitBtn(): boolean {
       if (v.tooLong) userInp.placeholder += "Entrada com excesso de caracteres\n";
       pwInp.setCustomValidity(message);
       fillCustomValidityWarn(pwInp.id ?? "", message);
-      console.warn(message);
       return false;
     }
     return true;

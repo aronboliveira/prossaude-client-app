@@ -929,11 +929,9 @@ export function dateISOtoBRL(isoDate: string): string {
     let d, m, y;
     const dateFragments = isoDate.split("-");
     if (dateFragments.length === 1) {
-      console.warn(`No month and day were found after date split during conversion to BRL.`);
       [y] = dateFragments;
       (m = "00"), (d = "00");
     } else if (dateFragments.length === 2) {
-      console.warn(`No day was found after date split during conversion to BRL.`);
       [y, m] = dateFragments;
       d = "00";
     } else [y, m, d] = dateFragments;

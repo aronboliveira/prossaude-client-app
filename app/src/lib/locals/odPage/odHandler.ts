@@ -283,9 +283,7 @@ export function resetLabels(quadrBtn: targEl): void {
   const parentDiv = quadrBtn?.closest(".quadrMainDiv");
   const innerDivInps = parentDiv?.querySelectorAll("input[id^=inpD]");
   if (quadrBtn instanceof HTMLButtonElement && parentDiv && innerDivInps && innerDivInps?.length > 0) {
-    if (innerDivInps.length < 8)
-      console.warn(`Error validating inputs in the quadrant. Total number of inputs obtained: ${innerDivInps.length}`);
-    else
+    if (!(innerDivInps.length < 8))
       innerDivInps.forEach(innerDivInp => {
         if (innerDivInp instanceof HTMLInputElement) innerDivInp.value = "Hígido";
       });
@@ -362,11 +360,6 @@ export function addSubDivTrat(click: Event | React.MouseEvent, addSubDivBtn: tar
     } else if (addSubDivBtn.classList.contains("removeTrat")) {
       const divToRemove = Array.from(document.querySelectorAll(".divSubTrat")).at(-1);
       if (divToRemove && blockCount > 1 && divToRemove?.id !== "divSubTrat1") divToRemove.remove() as void;
-      else
-        console.warn(`Erro localizando divToRemove:
-        Elemento: ${divToRemove?.tagName};
-        blockCount: ${blockCount};
-        divToRemove id: ${divToRemove?.id}`);
     } else
       console.error(`Erro validando .classList de addSubDivBtn.
       Valores possíveis: addTrat || removeTrat`);

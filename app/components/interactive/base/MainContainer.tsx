@@ -21,12 +21,6 @@ export default function MainContainer(): JSX.Element {
     experimentalProps.experimentalUser = localStorage.getItem("activeUser")
       ? JSON.parse(localStorage.getItem("activeUser")!)
       : defUser;
-    if (
-      experimentalProps.experimentalUser?.loadedData &&
-      (experimentalProps.experimentalUser.loadedData.name === "" ||
-        /an[oô]nimo/gi.test(experimentalProps.experimentalUser.loadedData.name))
-    )
-      console.warn(`Failed to fetch user from local storage. Default user displayed.`);
     localStorage.setItem("activeUser", JSON.stringify(experimentalProps.experimentalUser));
     baseRootUser = document.getElementById("rootUserInfo");
     baseRootUser instanceof HTMLElement && !context.roots.baseRootedUser
@@ -36,7 +30,7 @@ export default function MainContainer(): JSX.Element {
           !baseRootUser && elementNotFound(baseRootUser, "Root for user painel", extLine(new Error()));
         }, 2000);
     typeof context.roots.baseRootedUser === "object"
-      ? context.roots.baseRootedUser.render(<UserProfilePanel router={nextRouter} />)
+      ? context.roots.baseRootedUser?.render(<UserProfilePanel router={nextRouter} />)
       : elementNotFound(
           `${JSON.stringify(context.roots.baseRootedUser)}`,
           "Root instance for User panel",
@@ -47,25 +41,13 @@ export default function MainContainer(): JSX.Element {
     const handleBgResize = (): void => {
       try {
         const bgDiv = document.getElementById("bgDiv");
-        if (!(bgDiv instanceof HTMLElement)) {
-          console.warn(`Failed to fetch Background Div`);
-          return;
-        }
+        if (!(bgDiv instanceof HTMLElement)) return;
         const mainArticle = document.querySelector(".main-article") || document.querySelector("nav");
-        if (!(mainArticle instanceof HTMLElement)) {
-          console.warn(`Failed to fetch MainArticle`);
-          return;
-        }
+        if (!(mainArticle instanceof HTMLElement)) return;
         const mainContainer = document.querySelector(".main-container") || document.querySelector("main");
-        if (!(mainContainer instanceof HTMLElement)) {
-          console.warn(`Failed to fetch Main Container`);
-          return;
-        }
+        if (!(mainContainer instanceof HTMLElement)) return;
         const cardsSect = document.getElementById("cardsSect");
-        if (!(cardsSect instanceof HTMLElement)) {
-          console.warn(`Failed to fetch Cards Section`);
-          return;
-        }
+        if (!(cardsSect instanceof HTMLElement)) return;
         const panelBtn = document.getElementById("panelBtn"),
           panelSect = document.getElementById("panelSect"),
           rows = getComputedStyle(cardsSect).gridTemplateRows;

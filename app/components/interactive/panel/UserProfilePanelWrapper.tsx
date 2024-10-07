@@ -19,10 +19,10 @@ export default function UserProfilePanelWrapper(): JSX.Element {
         context.roots.userRoot = registerRoot(context.roots.userRoot, `#${profileSpan.id}`);
         hasInitializedRoot.current = true;
       }
-      if (!profileSpan.hasChildNodes()) context.roots.userRoot.render(<UserProfilePanel router={nextRouter} />);
+      if (!profileSpan.hasChildNodes()) context.roots.userRoot?.render(<UserProfilePanel router={nextRouter} />);
       const timeoutId = setTimeout(() => {
         if (!profileSpan.querySelector("img"))
-          context.roots.userRoot.render(<GenericErrorComponent message='Erro renderizando painel de usuário' />);
+          context.roots.userRoot?.render(<GenericErrorComponent message='Erro renderizando painel de usuário' />);
       }, 2000);
       return (): void => clearTimeout(timeoutId);
     } else {

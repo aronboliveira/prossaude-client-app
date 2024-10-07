@@ -49,7 +49,9 @@ export default function AgForm(): JSX.Element {
     dnr = useRef<nullishInp>(null),
     ar = useRef<nullishInp>(null),
     sr = useRef<nullishSel>(null),
-    lnr = useRef<nullishInp>(null);
+    lnr = useRef<nullishInp>(null),
+    gr = useRef<nullishSel>(null),
+    gbr = useRef<nullishSel>(null);
   useEffect(() => {
     registerPersistInputs({
       f: f.current,
@@ -75,6 +77,18 @@ export default function AgForm(): JSX.Element {
   useEffect(() => {
     const handleResize = (): void => {
       if (!(sr.current instanceof HTMLElement && lnr.current instanceof HTMLElement)) return;
+      if (gr.current && ar.current && dnr.current) {
+        dnr.current.style.width = getComputedStyle(gr.current).width;
+        dnr.current.style.maxWidth = getComputedStyle(gr.current).width;
+        if (gbr.current) {
+          console.log(getComputedStyle(gbr.current).width);
+          ar.current.style.width = getComputedStyle(gbr.current).width;
+          ar.current.style.maxWidth = getComputedStyle(gbr.current).width;
+        } else {
+          ar.current.style.width = getComputedStyle(gr.current).width;
+          ar.current.style.maxWidth = getComputedStyle(gr.current).width;
+        }
+      }
       sr.current.style.width = getComputedStyle(lnr.current).width;
       sr.current.style.maxWidth = getComputedStyle(lnr.current).width;
     };
@@ -84,7 +98,7 @@ export default function AgForm(): JSX.Element {
       handleResize();
     }
     (): void => removeEventListener("resize", handleResize);
-  }, [sr, ar]);
+  }, [sr, ar, gr.current]);
   useDataProvider(f.current);
   return (
     <form
@@ -174,7 +188,7 @@ export default function AgForm(): JSX.Element {
                 </label>
               </span>
             </div>
-            <GenDiv />
+            <GenDiv genRef={gr} genBirthRef={gbr} />
             <hr />
             <div
               className='divMain fsAnamGDiv alItSt900Q flexQ900NoWC gridAlItE gridTwoCol noGapDiv noEqualize'

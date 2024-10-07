@@ -133,11 +133,7 @@ export function setListenersForDates(
             if (mainConsDaysCont instanceof HTMLElement) {
               const consDayConts = document.querySelectorAll('th[scope="col"]');
               let lengthRef = monthdates.length;
-              consDayConts.length === dateInps.length
-                ? (lengthRef = consDayConts.length)
-                : console.warn(
-                    `Error comparing length of containers for appointment days and number of inputs for them`,
-                  );
+              if (consDayConts.length === dateInps.length) lengthRef = consDayConts.length;
               //ATRIBUIÇÃO AUTOMÁTICA DE DATAS AQUI
               for (let w = 0; w < lengthRef; w++) {
                 if (typeof monthdates[w] === "number" && dateInps[w] instanceof HTMLInputElement) {

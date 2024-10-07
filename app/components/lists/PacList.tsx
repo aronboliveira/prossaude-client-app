@@ -12,7 +12,12 @@ import PacRow from "../panelForms/pacs/PacRow";
 import Spinner from "../icons/Spinner";
 import { nullishHtEl, nullishTab, nullishTabSect } from "@/lib/global/declarations/types";
 import { PacInfo, PacListProps } from "@/lib/global/declarations/interfacesCons";
-import { addListenerAlocation, checkLocalIntervs, fillTabAttr } from "@/lib/locals/panelPage/handlers/consHandlerList";
+import {
+  addListenerAlocation,
+  checkLocalIntervs,
+  fillTabAttr,
+  renderTable,
+} from "@/lib/locals/panelPage/handlers/consHandlerList";
 import { handleClientPermissions } from "@/lib/locals/panelPage/handlers/consHandlerUsers";
 import { PanelCtx } from "../panelForms/defs/client/SelectLoader";
 import Link from "next/link";
@@ -57,10 +62,7 @@ export default function PacList({
                 throw elementNotFound(tabPacRef.current, `Validation of Table reference`, extLine(new Error()));
               if (!(tbodyRef.current instanceof HTMLElement))
                 throw elementNotFound(tbodyRef.current, `Validation of Table Body Reference`, extLine(new Error()));
-              if (
-                panelRoots[`${tbodyRef.current.id}`] &&
-                !(panelRoots[`${tbodyRef.current.id}`] as any)["_internalRoot"]
-              ) {
+              if (panelRoots[tbodyRef.current.id] && !(panelRoots[tbodyRef.current.id] as any)["_internalRoot"]) {
                 setTimeout(() => {
                   try {
                     if (!(tabPacRef.current instanceof HTMLElement))
@@ -72,15 +74,15 @@ export default function PacList({
                         extLine(new Error()),
                       );
                     if (tbodyRef.current.querySelector("tr")) return;
-                    panelRoots[`${tbodyRef.current.id}`]?.unmount();
-                    delete panelRoots[`${tbodyRef.current.id}`];
+                    panelRoots[tbodyRef.current.id]?.unmount();
+                    delete panelRoots[tbodyRef.current.id];
                     tbodyRef.current.remove() as void;
-                    panelRoots[`${tabPacRef.current.id}`] = registerRoot(
-                      panelRoots[`${tabPacRef.current.id}`],
+                    panelRoots[tabPacRef.current.id] = registerRoot(
+                      panelRoots[tabPacRef.current.id],
                       `#${tabPacRef.current.id}`,
                       tabPacRef,
                     );
-                    panelRoots[`${tabPacRef.current.id}`]?.render(
+                    panelRoots[tabPacRef.current.id]?.render(
                       <ErrorBoundary
                         FallbackComponent={() => (
                           <GenericErrorComponent message='Error reloading replacement for table body' />
@@ -92,7 +94,7 @@ export default function PacList({
                                 Lista Recuperada da Ficha de Pacientes registrados. Acesse
                                 <samp>
                                   <Link href={`${location.origin}/ag`} id='agLink' style={{ display: "inline" }}>
-                                    Anamnese Geral
+                                    &nbsp;Anamnese Geral&nbsp;
                                   </Link>
                                 </samp>
                                 para cadastrar
@@ -180,13 +182,13 @@ export default function PacList({
                     tbodyRef.current = document.querySelector(".pacTbody");
                     if (!(tbodyRef.current instanceof HTMLElement))
                       throw elementNotFound(tbodyRef.current, `Validation of replaced tbody`, extLine(new Error()));
-                    panelRoots[`${tbodyRef.current.id}`] = registerRoot(
-                      panelRoots[`${tbodyRef.current.id}`],
+                    panelRoots[tbodyRef.current.id] = registerRoot(
+                      panelRoots[tbodyRef.current.id],
                       `#${tbodyRef.current.id}`,
                       tbodyRef,
                     );
                     if (!tbodyRef.current.querySelector("tr"))
-                      panelRoots[`${tbodyRef.current.id}`]?.render(
+                      panelRoots[tbodyRef.current.id]?.render(
                         pacs.map((pac, i) => (
                           <PacRow
                             nRow={i + 2}
@@ -217,13 +219,13 @@ export default function PacList({
                   }
                 }, 1000);
               } else
-                panelRoots[`${tbodyRef.current.id}`] = registerRoot(
-                  panelRoots[`${tbodyRef.current.id}`],
+                panelRoots[tbodyRef.current.id] = registerRoot(
+                  panelRoots[tbodyRef.current.id],
                   `#${tbodyRef.current.id}`,
                   tbodyRef,
                 );
               if (!tbodyRef.current.querySelector("tr"))
-                panelRoots[`${tbodyRef.current.id}`]?.render(
+                panelRoots[tbodyRef.current.id]?.render(
                   pacs.map((pac, i) => {
                     return Array.from(tbodyRef.current?.querySelectorAll("output") ?? []).some(
                       outp => outp.innerText === (pac as PacInfo)["idf"],
@@ -255,12 +257,7 @@ export default function PacList({
                   );
               }, 300);
               setTimeout(() => {
-                if (!document.querySelector("tr") && document.querySelector("table")) {
-                  const firstTable = document.querySelector("table");
-                  if (!firstTable) return;
-                  registerRoot(panelRoots[`${firstTable.id}`], `#${firstTable.id}`);
-                  panelRoots[`${firstTable.id}`]?.render(<GenericErrorComponent message='Failed to render table' />);
-                }
+                if (!document.querySelector("tr") && document.querySelector("table")) renderTable();
               }, 5000);
             } catch (e) {
               console.error(`Error executing rendering of Table Body Content:\n${(e as Error).message}`);
@@ -335,8 +332,8 @@ export default function PacList({
               <em className='noInvert'>
                 Lista Recuperada da Ficha de Pacientes registrados. Acesse
                 <samp>
-                  <Link href={`${location.origin}/ag`} id="idLink" style={{ display: "inline" }}>
-                    Anamnese Geral
+                  <Link href={`${location.origin}/ag`} id='idLink' style={{ display: "inline" }}>
+                    &nbsp;Anamnese Geral&nbsp;
                   </Link>
                 </samp>
                 para cadastrar

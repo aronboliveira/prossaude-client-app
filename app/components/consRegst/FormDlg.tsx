@@ -123,10 +123,10 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
               .replaceAll(/D[aeo](?=[A-Z])/g, "")
               .replaceAll(/[Pp]aciente/g, "");
             keyFirstLvlMatch[inpTitle] && (inp.value = keyFirstLvlMatch[inpTitle].toString());
-          } else console.warn(`Field ${inp.id || "UNIDENTIFIED"} has no data-title. Could not match data.`);
+          }
         }
       } else multipleElementsNotFound(extLine(new Error()), `inputs in the dialog id ${dlgRef.current.id}`, cpfInp);
-    } else console.warn(`dlgRef.current not validated in callbackCPFPacBtnClick()`);
+    }
     return matchDataPh;
   }, []);
   //ativação de preenchimento de paciente com CPF
@@ -168,7 +168,7 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
           });
         } else elementNotPopulated(allEntryEls, "allEntryEls in generateSchedBtn()", extLine(new Error()));
         const selected = document.getElementById("rootDlgList") ?? document.getElementById("transfArea");
-        consVariablesData.rootDlg = registerRoot(consVariablesData.rootDlg, `#${selected?.id ?? ""}`);
+        consVariablesData.rootDlg = registerRoot(consVariablesData.rootDlg, `#${selected?.id ?? "DEFAULT"}`);
         const newBtn = createAptBtn(
           formData,
           providerFormData[accFormData] as any,

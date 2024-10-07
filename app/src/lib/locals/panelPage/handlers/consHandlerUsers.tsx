@@ -13,7 +13,7 @@ export function handleClientPermissions(
         "validating type of userClass in handleClientPermissions",
         userClass,
         "string",
-        extLine(new Error())
+        extLine(new Error()),
       );
     if (!(Array.isArray(allowedClasses) && allowedClasses.every(userClass => typeof userClass === "string")))
       throw elementNotPopulated(`${JSON.stringify(allowedClasses)}`, "allowedClasses", extLine(new Error()));
@@ -39,7 +39,6 @@ export function handleClientPermissions(
             )
               elements[e]?.classList.remove("btn-secondary", "blocked");
           } else message += `Element ${e + 1}. \n ${elements[e]?.id || elements[e]?.tagName || "Não identificado"}\n`;
-          if (/Element/g.test(message)) console.warn(message);
         }
         if (elements[e] instanceof HTMLDataListElement || elements[e] instanceof HTMLTableElement) {
           if (!allowedClasses.some(allowedClass => new RegExp(allowedClass, "gi").test(userClass)))

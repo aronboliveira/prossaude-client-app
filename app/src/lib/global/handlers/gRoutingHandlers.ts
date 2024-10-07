@@ -5,7 +5,6 @@ import { pageProps } from "../vars";
 export function handleLinkChanges(componentCase: pageCases, styleFlag: pageStyleCases): void {
   try {
     if (!decodeToken("", true).ok) {
-      console.warn(`User token invalid. Redirecting to base page`);
       window.location.replace(window.location.origin);
     }
     if (typeof componentCase !== "string") throw new Error(`invalid componentCase argument given to handleLinkChanges`);

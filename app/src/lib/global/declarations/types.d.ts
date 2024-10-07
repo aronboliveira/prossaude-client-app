@@ -1,3 +1,4 @@
+import { Root } from "react-dom/client";
 export type voidVal = null | undefined;
 export type looseNum = string | number;
 export type primitiveType = looseNum | boolean | voidVal;

@@ -23,10 +23,6 @@ export function checkInnerColGroups(parentEl: targEl, areAllColGroupsSimilar: bo
       else {
         //filtragem para incluir somente as instâncias validadas como colunas
         validColGroupsChildCount.push(arrColGrpChilds.filter(col => col instanceof HTMLTableColElement).length);
-        console.warn(`Some children of <colgroup> are not HTMLTableColElement.
-        Number of valid children obtained: ${validColGroupsChildCount.length}.
-        Total of children: ${arrColGrpChilds?.length}`);
-
         //descreve as instâncias achadas, para detalhar quais elementos não foram validados como colunas
         const colsInstances: string[] = [];
         arrColGrpChilds.forEach(arrColGrpChild => {
@@ -43,16 +39,10 @@ export function checkInnerColGroups(parentEl: targEl, areAllColGroupsSimilar: bo
       if (m === 0) continue;
       else {
         if ((validColGroupsChildCount[m] = validColGroupsChildCount[m - 1])) pairedColGroupsValid.push(true);
-        else {
-          console.warn(`Erro validando par de Col Groups.
-          Par invalidado: ${validColGroupsChildCount[m] ?? "null"} com ${validColGroupsChildCount[m - 1] ?? "null"}`);
-          pairedColGroupsValid.push(false);
-        }
       }
     }
     //verifica se todos os pares são válidos para, em caso negativo, fornecer warn
     if (pairedColGroupsValid.every(pairedColGroup => pairedColGroup === true)) areAllColGroupsSimilar = true;
-    else console.warn(`Grupos de Colunas não são similares no número de children`);
     areAllColGroupsSimilar = false;
   } else
     multipleElementsNotFound(
@@ -118,19 +108,9 @@ export function changeTabDCutLayout(protocolo: targEl, tabDC: targEl, bodyType: 
             });
             return "pollock7";
           } else stringError("obtaining pollock value", (protocolo as entryEl)?.value, extLine(new Error()));
-        } else
-          console.warn(
-            `Error verifying number and/or id from rows. Row Elements ${
-              JSON.stringify(arrayTabIds) || null
-            }; Obtained number: ${arrayTabIds?.length}; Expected number: ${
-              Array.from(tabDC.rows).filter(row => row.classList.contains("tabRowDCutMed"))?.length
-            }
-            Gender-filtered elements ${JSON.stringify(genderedIds) || null}; Obtained number: ${
-              genderedIds?.length
-            }; Expected number: 3`,
-          );
+        }
       }
-    } else console.warn(`Error checking protocol options. Total of options validated: ${filteredOpsProtocolo.length}`);
+    }
   } else
     multipleElementsNotFound(
       extLine(new Error()),
@@ -250,7 +230,6 @@ export function evaluatePGCDecay(person: Person, targInpPGC: targEl, PGC: number
       evitando bugs nos listeners devido a NaN e loops de normalização */
     /* eslint-enable */
     if (decreasedPGC <= PGC && (PGC > 100 || decreasedPerson?.sumDCut > 514)) {
-      console.warn(`Valor anômalo de entrada para sumDCut e/ou PGC. Valor aproximado fornecido`);
       foundDecayPoint = true;
       alertPGCRounding(targInpPGC);
       PGC = 60.45 + 0.05 * ((decreasedPerson?.sumDCut ?? 514) - 513);
