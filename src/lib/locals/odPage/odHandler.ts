@@ -110,8 +110,8 @@ export function dragStart(
     if (validSrcEl instanceof HTMLElement) {
       const contInQuadrs = document.querySelectorAll(".contInQuadrs");
       if (move instanceof DragEvent || "dataTransfer" in move) {
-        move.dataTransfer?.setData("text/plain", ""); //define a data inicial no container mobilizado
-        dragStartChilds(contInQuadrs);
+        move.dataTransfer?.setData("text/plain", "");
+        contInQuadrs.forEach(contInQuadr => contInQuadr.setAttribute("draggable", "true"));
         const dropHandler = (drop: Event): void => {
           const quadrsTe = Array.from(document.getElementsByClassName("quadrMainDiv"));
           dragDrop(drop, validSrcEl as Element, quadrsTe, dropHandler);
@@ -193,17 +193,17 @@ export function dragStart(
   }
 }
 export function dragEnter(move: rDragEvent): void {
-  move instanceof DragEvent && move.target instanceof HTMLElement
+  "dataTransfer" in move && move.target instanceof HTMLElement
     ? move.preventDefault()
     : elementNotFound(move?.target, "move.target in dragEnter", extLine(new Error()));
 }
 export function dragOver(move: rDragEvent): void {
-  move instanceof DragEvent && move.target instanceof HTMLElement
+  "dataTransfer" in move && move.target instanceof HTMLElement
     ? move.preventDefault()
     : elementNotFound(move?.target, "move.target in dragOver", extLine(new Error()));
 }
 export function dragLeave(move: rDragEvent): void {
-  move instanceof DragEvent && move.target instanceof HTMLElement
+  "dataTransfer" in move && move.target instanceof HTMLElement
     ? move.preventDefault()
     : elementNotFound(move?.target, "move.target in dragLeave", extLine(new Error()));
 }
@@ -224,6 +224,8 @@ export function dragDrop(
     validTargEl instanceof HTMLElement &&
     validTargEl.classList.contains("quadrAvDent")
   ) {
+    console.log(validSrcEl);
+    console.log(validTargEl);
     const targCSt = window.getComputedStyle(validTargEl); //captura estilos do target na área de drop
     const targCStCol = targCSt.getPropertyValue("grid-column");
     const targCStRow = targCSt.getPropertyValue("grid-row");
@@ -251,9 +253,7 @@ export function dragEnd(movingSrcEl: targEl): void {
     : elementNotFound(movingSrcEl, "movingSrcEl in dragEnd", extLine(new Error()));
 }
 export function dragStartChilds(contInQuadrs: Element[] | NodeListOf<Element>): void {
-  contInQuadrs.forEach(contInQuadr => {
-    contInQuadr.setAttribute("draggable", "true");
-  });
+  contInQuadrs.forEach(contInQuadr => contInQuadr.setAttribute("draggable", "true"));
 }
 export function dragEndChilds(contInQuadrs: Element[] | NodeListOf<Element>): void {
   contInQuadrs.forEach(contInQuadr => {
