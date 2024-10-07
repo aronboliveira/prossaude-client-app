@@ -213,7 +213,7 @@ body {
 
   #formAddStud,
   #formAddProf {
-    padding-inline: 3vw;
+    padding-inline: 1vw;
   }
 
   #formBodySchedSect,
@@ -360,6 +360,10 @@ body {
     #autofillDivCons {
       padding-top: 0;
       margin-top: 0;
+    }
+    #formAddStud,
+    #formAddProf {
+      padding-inline: 3vw;
     }
     #formPanelDiv {
       > div {

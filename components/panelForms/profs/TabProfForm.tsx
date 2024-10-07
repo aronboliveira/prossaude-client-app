@@ -19,6 +19,7 @@ import { assignFormAttrs } from "@/lib/global/gModel";
 import { PanelCtx } from "../defs/client/SelectLoader";
 import { ExportHandler } from "@/lib/global/declarations/classes";
 import useExportHandler from "@/lib/hooks/useExportHandler";
+import Link from "next/link";
 export default function TableProfForm(): JSX.Element {
   const userClass = useContext(PanelCtx).userClass,
     profs: ProfInfo[] = useMemo(() => [], []),
@@ -99,7 +100,12 @@ export default function TableProfForm(): JSX.Element {
                               <em>
                                 Lista Recuperada da Ficha de Profissionais registrados. Acesse
                                 <samp>
-                                  <a> ROTA_PLACEHOLDER </a>
+                                  <Link
+                                    href={`${location.origin}/panel?panel=regist-prof`}
+                                    id='registProfLink'
+                                    style={{ display: "inline" }}>
+                                    Cadastrar Membro Profissional
+                                  </Link>
                                 </samp>
                                 para cadastrar
                               </em>
@@ -107,25 +113,30 @@ export default function TableProfForm(): JSX.Element {
                           </strong>
                         </caption>
                         <colgroup>
-                          {userClass === "coordenador" && <col></col>}
-                          <col></col>
-                          <col></col>
-                          <col></col>
-                          <col></col>
-                          <col></col>
-                          {userClass === "coordenador" && <col></col>}
-                          {userClass === "coordenador" && <col></col>}
+                          {Array.from({ length: 5 }, (_, i) => (
+                            <col key={`prof_col__${i}`} data-col={i + 1}></col>
+                          ))}
+                          {userClass === "coordenador" &&
+                            Array.from({ length: 3 }, (_, i) => (
+                              <col key={`prof_col__${i + 5}`} data-col={i + 6}></col>
+                            ))}
                         </colgroup>
                         <thead className='thead-dark'>
                           <tr id='avPacs-row1'>
                             {userClass === "coordenador" && <th scope='col'>CPF</th>}
-                            <th scope='col'>Nome</th>
-                            <th scope='col'>Externo</th>
-                            <th scope='col'>E-mail</th>
-                            <th scope='col'>Telefone</th>
-                            <th scope='col'>Área de Atuação</th>
-                            <th scope='col'>Dia de Trablho</th>
-                            <th scope='col'>Período de Participação</th>
+                            {[
+                              "Nome",
+                              "Externo",
+                              "E-mail",
+                              "Telefone",
+                              "Área de Atuação",
+                              "Dia de Trabalho",
+                              "Período de Participação",
+                            ].map((l, i) => (
+                              <th scope='col' data-col={userClass === "coordenador" ? i + 2 : i + 1}>
+                                {l}
+                              </th>
+                            ))}
                             {userClass === "coordenador" && <th scope='col'>Alteração</th>}
                             {userClass === "coordenador" && <th scope='col'>Exclusão</th>}
                           </tr>
@@ -295,7 +306,12 @@ export default function TableProfForm(): JSX.Element {
                 <em>
                   Lista Recuperada da Ficha de Profissionais registrados. Acesse
                   <samp>
-                    <a> ROTA_PLACEHOLDER </a>
+                    <Link
+                      href={`${location.origin}/panel?panel=regist-prof`}
+                      id='registProfLink'
+                      style={{ display: "inline" }}>
+                      Cadastrar Membro Profissional
+                    </Link>
                   </samp>
                   para cadastrar
                 </em>
@@ -303,25 +319,28 @@ export default function TableProfForm(): JSX.Element {
             </strong>
           </caption>
           <colgroup>
-            {userClass === "coordenador" && <col></col>}
-            <col></col>
-            <col></col>
-            <col></col>
-            <col></col>
-            <col></col>
-            {userClass === "coordenador" && <col></col>}
-            {userClass === "coordenador" && <col></col>}
+            {Array.from({ length: 5 }, (_, i) => (
+              <col key={`prof_col__${i}`} data-col={i + 1}></col>
+            ))}
+            {userClass === "coordenador" &&
+              Array.from({ length: 3 }, (_, i) => <col key={`prof_col__${i + 5}`} data-col={i + 6}></col>)}
           </colgroup>
           <thead className='thead-dark'>
             <tr id='avPacs-row1'>
               {userClass === "coordenador" && <th scope='col'>CPF</th>}
-              <th scope='col'>Nome</th>
-              <th scope='col'>Externo</th>
-              <th scope='col'>E-mail</th>
-              <th scope='col'>Telefone</th>
-              <th scope='col'>Área de Atuação</th>
-              <th scope='col'>Dia de Trablho</th>
-              <th scope='col'>Período de Participação</th>
+              {[
+                "Nome",
+                "Externo",
+                "E-mail",
+                "Telefone",
+                "Área de Atuação",
+                "Dia de Trabalho",
+                "Período de Participação",
+              ].map((l, i) => (
+                <th scope='col' data-col={userClass === "coordenador" ? i + 2 : i + 1}>
+                  {l}
+                </th>
+              ))}
               {userClass === "coordenador" && <th scope='col'>Alteração</th>}
               {userClass === "coordenador" && <th scope='col'>Exclusão</th>}
             </tr>

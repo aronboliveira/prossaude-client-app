@@ -21,6 +21,7 @@ import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { strikeEntries } from "@/lib/locals/panelPage/consStyleScript";
 import { handleClientPermissions } from "@/lib/locals/panelPage/handlers/consHandlerUsers";
 import { PanelCtx } from "../panelForms/defs/client/SelectLoader";
+import Link from "next/link";
 export default function StudList({ mainDlgRef, dispatch, state = true }: StudListProps): JSX.Element {
   const tabRef = useRef<nullishTab>(null),
     tbodyRef = useRef<nullishTabSect>(null),
@@ -85,21 +86,22 @@ export default function StudList({ mainDlgRef, dispatch, state = true }: StudLis
                               <em className='noInvert'>
                                 Lista Recuperada da Ficha de Estudantes registrados. Acesse
                                 <samp>
-                                  <a> ROTA_PLACEHOLDER </a>
-                                </samp>{" "}
+                                  <Link
+                                    href={`${location.origin}/panel?panel=regist-stud`}
+                                    id='linkRegistStud'
+                                    style={{ display: "inline" }}>
+                                    Cadastrar Aluno
+                                  </Link>
+                                </samp>
                                 para cadastrar
                               </em>
                             </small>
                           </strong>
                         </caption>
                         <colgroup>
-                          <col data-col='1'></col>
-                          <col data-col='2'></col>
-                          <col data-col='3'></col>
-                          <col data-col='4'></col>
-                          <col data-col='5'></col>
-                          <col data-col='6'></col>
-                          <col data-col='7'></col>
+                          {Array.from({ length: 7 }, (_, i) => (
+                            <col key={`stud_col__${i}`} data-col={i + 1}></col>
+                          ))}
                           {userClass === "coordenador" && <col data-col='8'></col>}
                           {userClass === "coordenador" && <col data-col='9'></col>}
                         </colgroup>
@@ -115,29 +117,22 @@ export default function StudList({ mainDlgRef, dispatch, state = true }: StudLis
                                 DRE
                               </th>
                             )}
-                            <th scope='col' data-row='1' data-col={userClass === "coordenador" ? "3" : "1"}>
-                              Nome
-                            </th>
-                            <th scope='col' data-row='1' data-col={userClass === "coordenador" ? "4" : "2"}>
-                              E-mail
-                            </th>
-                            <th scope='col' data-row='1' data-col={userClass === "coordenador" ? "5" : "3"}>
-                              Telefone
-                            </th>
-                            <th scope='col' data-row='1' data-col={userClass === "coordenador" ? "6" : "4"}>
-                              Curso
-                            </th>
-                            <th scope='col' data-row='1' data-col={userClass === "coordenador" ? "7" : "5"}>
-                              Dia De Atividade
-                            </th>
-                            <th scope='col' data-row='1' data-col={userClass === "coordenador" ? "8" : "6"}>
-                              Período de Participação
-                            </th>
-                            <th
-                              className='alocCel'
-                              scope='col'
-                              data-row='1'
-                              data-col={userClass === "coordenador" ? "9" : "7"}></th>
+                            {[
+                              "Nome",
+                              "E-mail",
+                              "Telefone",
+                              "Próximo Dia de Consulta",
+                              "Período de Acompanhamento",
+                              "",
+                            ].map((l, i) => (
+                              <th
+                                scope='col'
+                                key={`pac_th__${i}`}
+                                data-row={1}
+                                data-col={userClass === "coordenador" ? i + 3 : i + 1}>
+                                {l}
+                              </th>
+                            ))}
                           </tr>
                         </thead>
                         <tbody id='avStudsTbody' ref={tbodyRef}>
@@ -295,21 +290,22 @@ export default function StudList({ mainDlgRef, dispatch, state = true }: StudLis
             <em className='noInvert'>
               Lista Recuperada da Ficha de Estudantes registrados. Acesse
               <samp>
-                <a> ROTA_PLACEHOLDER </a>
-              </samp>{" "}
+                <Link
+                  href={`${location.origin}/panel?panel=regist-stud`}
+                  id='linkRegistStud'
+                  style={{ display: "inline" }}>
+                  Cadastrar Aluno
+                </Link>
+              </samp>
               para cadastrar
             </em>
           </small>
         </strong>
       </caption>
       <colgroup>
-        <col data-col='1'></col>
-        <col data-col='2'></col>
-        <col data-col='3'></col>
-        <col data-col='4'></col>
-        <col data-col='5'></col>
-        <col data-col='6'></col>
-        <col data-col='7'></col>
+        {Array.from({ length: 7 }, (_, i) => (
+          <col key={`stud_col__${i}`} data-col={i + 1}></col>
+        ))}
         {userClass === "coordenador" && <col data-col='8'></col>}
         {userClass === "coordenador" && <col data-col='9'></col>}
       </colgroup>
@@ -325,25 +321,11 @@ export default function StudList({ mainDlgRef, dispatch, state = true }: StudLis
               DRE
             </th>
           )}
-          <th scope='col' data-row='1' data-col={userClass === "coordenador" ? "3" : "1"}>
-            Nome
-          </th>
-          <th scope='col' data-row='1' data-col={userClass === "coordenador" ? "4" : "2"}>
-            E-mail
-          </th>
-          <th scope='col' data-row='1' data-col={userClass === "coordenador" ? "5" : "3"}>
-            Telefone
-          </th>
-          <th scope='col' data-row='1' data-col={userClass === "coordenador" ? "6" : "4"}>
-            Curso
-          </th>
-          <th scope='col' data-row='1' data-col={userClass === "coordenador" ? "7" : "5"}>
-            Dia De Atividade
-          </th>
-          <th scope='col' data-row='1' data-col={userClass === "coordenador" ? "8" : "6"}>
-            Período de Participação
-          </th>
-          <th className='alocCel' scope='col' data-row='1' data-col={userClass === "coordenador" ? "9" : "7"}></th>
+          {["Nome", "E-mail", "Telefone", "Próximo Dia de Consulta", "Período de Acompanhamento", ""].map((l, i) => (
+            <th scope='col' key={`pac_th__${i}`} data-row={1} data-col={userClass === "coordenador" ? i + 3 : i + 1}>
+              {l}
+            </th>
+          ))}
         </tr>
       </thead>
       <tbody id='avStudsTbody' ref={tbodyRef}>

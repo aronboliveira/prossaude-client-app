@@ -20,6 +20,7 @@ import {
   filterTabMembers,
 } from "@/lib/locals/panelPage/handlers/consHandlerList";
 import { PanelCtx } from "../panelForms/defs/client/SelectLoader";
+import Link from "next/link";
 export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
   const userClass = useContext(PanelCtx).userClass,
     internalProfs: ProfInfo[] = useMemo(() => [], []),
@@ -157,9 +158,13 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                                 <em className='noInvert'>
                                   Lista Recuperada da Ficha de Profissionais registrados. Acesse
                                   <samp>
-                                    {" "}
-                                    <a> ROTA_PLACEHOLDER </a>{" "}
-                                  </samp>{" "}
+                                    <Link
+                                      href={`${location.origin}/panel?panel-regist-prof`}
+                                      id='registProfLink'
+                                      style={{ display: "inline" }}>
+                                      Cadastrar Membro Profissional
+                                    </Link>
+                                  </samp>
                                   para cadastrar
                                 </em>
                               </small>
@@ -348,9 +353,13 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                                 <em className='noInvert'>
                                   Lista Recuperada da Ficha de Profissionais registrados. Acesse
                                   <samp>
-                                    {" "}
-                                    <a> ROTA_PLACEHOLDER </a>{" "}
-                                  </samp>{" "}
+                                    <Link
+                                      href={`${location.origin}/panel?panel-regist-prof`}
+                                      id='registProfLink'
+                                      style={{ display: "inline" }}>
+                                      Cadastrar Membro Profissional
+                                    </Link>
+                                  </samp>
                                   para cadastrar
                                 </em>
                               </small>
@@ -681,9 +690,13 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                         <em className='noInvert'>
                           Lista Recuperada da Ficha de Profissionais registrados. Acesse
                           <samp>
-                            {" "}
-                            <a> ROTA_PLACEHOLDER </a>{" "}
-                          </samp>{" "}
+                            <Link
+                              href={`${location.origin}/panel?panel-regist-prof`}
+                              id='registProfLink'
+                              style={{ display: "inline" }}>
+                              Cadastrar Membro Profissional
+                            </Link>
+                          </samp>
                           para cadastrar
                         </em>
                       </small>
@@ -756,9 +769,13 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                         <em className='noInvert'>
                           Lista Recuperada da Ficha de Profissionais registrados. Acesse
                           <samp>
-                            {" "}
-                            <a> ROTA_PLACEHOLDER </a>{" "}
-                          </samp>{" "}
+                            <Link
+                              href={`${location.origin}/panel?panel-regist-prof`}
+                              id='registProfLink'
+                              style={{ display: "inline" }}>
+                              Cadastrar Membro Profissional
+                            </Link>
+                          </samp>
                           para cadastrar
                         </em>
                       </small>
