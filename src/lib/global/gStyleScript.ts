@@ -16,9 +16,7 @@ export function dinamicGridAdjust(gridDivs: Array<targEl>): void {
             const nColumns = (gridDiv.style.gridTemplateColumns || getComputedStyle(gridDiv).gridTemplateColumns)
               .trim()
               .split(/\s+/g).length;
-            !isFinite(nColumns) && nColumns > 0
-              ? (gridDiv.style.width = (25 * (nColumns + 1)).toFixed(1) + "vw")
-              : console.warn(`nColumns returned as NaN or not a natural number. Value obtained: ${nColumns}`);
+            if (!isFinite(nColumns) && nColumns > 0) gridDiv.style.width = (25 * (nColumns + 1)).toFixed(1) + "vw";
             break;
           case "flex":
             switch (gridDiv.style.flexDirection) {
@@ -77,26 +75,11 @@ export function equalizeFlexSibilings(
                   (elChildren[i] as any).style.minWidth = `${(previousChildRect as any)[context[0]].toFixed(4)}${
                     context[1]
                   }`;
-                } else
-                  console.warn(`Error validating objects for Geometry:
-                flexTwin type applied: el.classList.contains(flexTwin-${context[0]});
-                ${context[0]} in elChildren${i}, id ${elChildren[i]?.id || "UNIDENTIFIED"}: ${
-                    context[0] in elChildren[i]
-                  };
-                ${context[0]} in previousChildRect, id ${previousChild ?? "UNIDENTIFIED"}: ${
-                    context[0] in previousChildRect
-                  }.`);
+                }
               });
-            } else
-              console.warn(`Error validating instance of child in index ${i}:
-          Obtained instance: ${Object.prototype.toString.call(el.children[i]).slice(8, -1)}`);
+            }
           });
-      } else
-        console.warn(`Error calling equalizeFlexSibilings() for Element id ${el?.id}:
-        Instance of current Element: ${el instanceof HTMLElement}
-        Instance of previousElementSibling: ${Object.prototype.toString.call(el?.previousElementSibling).slice(8, -1)};
-        Match as flexTwin: ${/flexTwin/gi.test(el?.classList?.toString() ?? "")}
-        Display value: ${getComputedStyle(el!)?.display}.`);
+      }
     });
   }
 }
@@ -294,7 +277,6 @@ export function clearDefInvalidMsg(
               inp instanceof HTMLSelectElement ||
               inp instanceof HTMLTextAreaElement
             ) {
-              if (!inp.checkValidity()) console.warn(`Error validating data in field id ${inp?.id || "UNDEFINED ID"}`);
               inpsValidity.push(inp.checkValidity());
             } else
               inputNotFound(inp, `entry field id ${(inp as any)?.id || "UNDEFINED ID"} invalid`, extLine(new Error()));
@@ -311,10 +293,7 @@ export function clearDefInvalidMsg(
     });
     if (form instanceof HTMLFormElement) {
       form.addEventListener("submit", ev => {
-        if (inpsValidity.some(validity => validity === false)) {
-          ev.preventDefault();
-          console.warn(`Error validating fields in the form. Submission prevented.`);
-        }
+        if (inpsValidity.some(validity => validity === false)) ev.preventDefault();
       });
     } else elementNotFound(form, "form in clearDefInvalidMsg()", extLine(new Error()));
   }
@@ -384,7 +363,7 @@ export function addListenerForValidities(inps: Array<targEl>, pattern?: RegExp):
                 </svg>
                 `;
                 fadeElement(alertSpan.querySelector("svg"), "0");
-              } else console.warn(`No alert span found for input id ${inp.id}`);
+              }
             }
           } else {
             inpValidity = true;
@@ -397,7 +376,7 @@ export function addListenerForValidities(inps: Array<targEl>, pattern?: RegExp):
                 setTimeout(() => {
                   alertSpan.innerHTML = ``;
                 }, 2000);
-              } else console.warn(`No alert span found for input id ${inp.id}`);
+              }
             }
           }
           return inpValidity;
@@ -474,14 +453,6 @@ export function equalizeWidWithPhs(els: Array<targEl>): void {
                       parseFloat(getComputedStyle(el).paddingRight)) /
                       chWid
                   }ch`;
-                  if (
-                    parseFloat(getComputedStyle(el).width) < (option.textContent?.length ?? 0) + 8 ||
-                    parseFloat(getComputedStyle(el).width) < (option.value.length ?? 0) + 8
-                  )
-                    console.warn(
-                      `Failed to apply Placeholder equalization for ${el.id || "UNIDENTIFIED"} in equalizeWidWithPhs()`,
-                      extLine(new Error()),
-                    );
                 });
             } else {
               el.style.minWidth = `${
@@ -496,29 +467,11 @@ export function equalizeWidWithPhs(els: Array<targEl>): void {
                   chWid
               }ch`;
             }
-            if (
-              parseFloat(getComputedStyle(el).width) < (options[0].textContent?.length ?? 0) + 8 ||
-              parseFloat(getComputedStyle(el).width) < (options[0].value.length ?? 0) + 8
-            )
-              console.warn(
-                `Failed to apply Placeholder equalization for ${el.id || "UNIDENTIFIED"} in equalizeWidWithPhs()`,
-                extLine(new Error()),
-              );
-          } else
-            console.warn(
-              `No <${
-                options[0]?.tagName.toLowerCase() ?? "UNDEFINED TAG"
-              }> found for <${el.tagName.toLowerCase()}> id ${el?.id || "UNIDENTIFIED"} in equalizeWidWithPhs()`,
-            );
+          }
         } else if (el instanceof HTMLInputElement && (el.type === "date" || el.type === "hour")) {
           el.style.minWidth = `${
             10 + parseFloat(getComputedStyle(el).paddingLeft) + parseFloat(getComputedStyle(el).paddingRight)
           }ch`;
-          if (parseFloat(getComputedStyle(el).width) < 16)
-            console.warn(
-              `Failed to apply Placeholder equalization for ${el.id || "UNIDENTIFIED"} in equalizeWidWithPhs()`,
-              extLine(new Error()),
-            );
         } else if (
           !(el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement || el instanceof HTMLSelectElement)
         )
@@ -526,7 +479,7 @@ export function equalizeWidWithPhs(els: Array<targEl>): void {
       });
     } else
       console.error(`No ch measure reference. Results for equalizeWidWithPhs may be misleading. Aborting process.`);
-  } else elementNotPopulated(els, "els in balanceWidWithPhs()", extLine(new Error()));
+  }
 }
 export function strikeNulls(els: Array<targEl>): void {
   if (Array.isArray(els) && els.length > 0 && els.every(el => el instanceof HTMLElement)) {

@@ -117,7 +117,7 @@ export interface FailedRegstProps {
   secondOp: string;
 }
 export interface ReseterBtnProps {
-  root: Root;
+  root: vRoot;
   renderForm: Component | ReactElement;
 }
 export interface ResetDlgProps extends ReseterBtnProps {

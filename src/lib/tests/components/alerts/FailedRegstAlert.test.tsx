@@ -1,6 +1,7 @@
+import React from "react";
 import { render, screen, fireEvent, RenderResult } from "@testing-library/react";
 import FailRegstAlert from "../../../../../components/alerts/FailRegsAlert";
-import { FailedRegstProps } from "../../..//lib/global/declarations/interfacesCons";
+import { FailedRegstProps } from "../../../global/declarations/interfacesCons";
 import { createRoot } from "react-dom/client";
 import "@testing-library/jest-dom/extend-expect";
 jest.mock(

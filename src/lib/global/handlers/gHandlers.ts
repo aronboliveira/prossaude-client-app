@@ -24,7 +24,6 @@ import {
 } from "./errorHandler";
 import { handleSubmit } from "@/lib/locals/panelPage/handlers/handlers";
 import { createRoot } from "react-dom/client";
-import { panelRoots } from "@/vars";
 //function for facilitating conversion of types when passing properties to DOM elements
 export function updateSimpleProperty(el: targEl): primitiveType {
   if (el instanceof HTMLInputElement) {
@@ -825,26 +824,19 @@ export async function validateForm(
         if (entry instanceof HTMLInputElement && entry.type === "date") {
           if (entry.classList.contains("minCurrDate")) {
             const currDate = new Date().toISOString().split("T")[0].replaceAll("-", "").trim();
-            if (currDate.length < 8) {
-              console.warn(`Failed to form Current Date string. Aborting check.`);
-              return;
-            }
+            if (currDate.length < 8) return;
             const currNumDate = Math.abs(parseNotNaN(currDate));
             if (
               !Number.isFinite(currNumDate) ||
               currNumDate.toString().slice(0, currNumDate.toString().indexOf(".")).length < 8
-            ) {
-              console.warn(`Failed to get Current Date as a Number. Aborting check.`);
+            )
               return;
-            }
             const entryNumDateValue = parseNotNaN(entry.value.replaceAll("-", ""));
             if (
               !Number.isFinite(entryNumDateValue) ||
               entryNumDateValue.toString().slice(0, entryNumDateValue.toString().indexOf(".")).length < 8
-            ) {
-              console.warn(`Failed to get Current Date as a Number. Aborting check.`);
+            )
               return;
-            }
             if (entryNumDateValue < currNumDate) {
               isValid = false;
               invalidEntries.push(entry.id || entry.name || entry.dataset.title || entry.tagName);
@@ -853,26 +845,19 @@ export async function validateForm(
           }
           if (entry.classList.contains("maxCurrDate")) {
             const currDate = new Date().toISOString().split("T")[0].replaceAll("-", "").trim();
-            if (currDate.length < 8) {
-              console.warn(`Failed to form Current Date string. Aborting check.`);
-              return;
-            }
+            if (currDate.length < 8) return;
             const currNumDate = Math.abs(parseNotNaN(currDate));
             if (
               !Number.isFinite(currNumDate) ||
               currNumDate.toString().slice(0, currNumDate.toString().indexOf(".")).length < 8
-            ) {
-              console.warn(`Failed to get Current Date as a Number. Aborting check.`);
+            )
               return;
-            }
             const entryNumDateValue = parseNotNaN(entry.value.replaceAll("-", ""));
             if (
               !Number.isFinite(entryNumDateValue) ||
               entryNumDateValue.toString().slice(0, entryNumDateValue.toString().indexOf(".")).length < 8
-            ) {
-              console.warn(`Failed to get Current Date as a Number. Aborting check.`);
+            )
               return;
-            }
             if (entryNumDateValue > currNumDate) {
               isValid = false;
               invalidEntries.push(entry.id || entry.name || entry.dataset.title || entry.tagName);
@@ -1124,13 +1109,6 @@ export async function submitForm(form: nullishForm, ep: formCases): Promise<void
               });
             })().then(file => fd.append(idf, file));
           } else {
-            if (el.name === "") {
-              console.warn(`Element ${el.id || el.className || `undefined ${el.tagName}`} has no name prop defined!`);
-              if (el.id === "")
-                console.warn(
-                  `Element ${el.className || `undefined ${el.tagName}`} also does not have a id prop defined!`,
-                );
-            }
             const idf = el.name || el.id || el.dataset.title || el.className || el.tagName;
             if (el instanceof HTMLInputElement) {
               if (el.type === "radio") {
@@ -1180,9 +1158,6 @@ export async function submitForm(form: nullishForm, ep: formCases): Promise<void
                       checkGroup(refAncestral);
                       return;
                     }
-                    console.warn(
-                      `Failed to fetch reference for ancestral using data-parent. Defaulting to parent element`,
-                    );
                     refAncestral = el.parentElement;
                     if (!refAncestral) {
                       appendRad(el);
@@ -1384,72 +1359,53 @@ export function handleEventReq(entry: textEl | Event, alertColor: string = "#e52
   if (entry.type === "date") {
     if (entry.classList.contains("minCurrDate")) {
       const currDate = new Date().toISOString().split("T")[0].replaceAll("-", "").trim();
-      if (currDate.length < 8) {
-        console.warn(`Failed to form Current Date string. Aborting check.`);
-        return;
-      }
+      if (currDate.length < 8) return;
       const currNumDate = Math.abs(parseNotNaN(currDate));
       if (
         !Number.isFinite(currNumDate) ||
         currNumDate.toString().slice(0, currNumDate.toString().indexOf(".")).length < 8
-      ) {
-        console.warn(`Failed to get Current Date as a Number. Aborting check.`);
+      )
         return;
-      }
       const entryNumDateValue = parseNotNaN(entry.value.replaceAll("-", ""));
       if (
         !Number.isFinite(entryNumDateValue) ||
         entryNumDateValue.toString().slice(0, entryNumDateValue.toString().indexOf(".")).length < 8
-      ) {
-        console.warn(`Failed to get Current Date as a Number. Aborting check.`);
+      )
         return;
-      }
       if (entryNumDateValue < currNumDate) isValid = false;
     }
     if (entry.classList.contains("maxCurrDate")) {
       const currDate = new Date().toISOString().split("T")[0].replaceAll("-", "").trim();
-      if (currDate.length < 8) {
-        console.warn(`Failed to form Current Date string. Aborting check.`);
-        return;
-      }
+      if (currDate.length < 8) return;
       const currNumDate = Math.abs(parseNotNaN(currDate));
       if (
         !Number.isFinite(currNumDate) ||
         currNumDate.toString().slice(0, currNumDate.toString().indexOf(".")).length < 8
-      ) {
-        console.warn(`Failed to get Current Date as a Number. Aborting check.`);
+      )
         return;
-      }
       const entryNumDateValue = parseNotNaN(entry.value.replaceAll("-", ""));
       if (
         !Number.isFinite(entryNumDateValue) ||
         entryNumDateValue.toString().slice(0, entryNumDateValue.toString().indexOf(".")).length < 8
-      ) {
-        console.warn(`Failed to get Current Date as a Number. Aborting check.`);
+      )
         return;
-      }
       if (entryNumDateValue > currNumDate) isValid = false;
     }
   } else {
-    if (entry.classList.contains("minText") && entry.value.length < parseNotNaN(entry.dataset.reqlength || "3")) {
+    if (entry.classList.contains("minText") && entry.value.length < parseNotNaN(entry.dataset.reqlength || "3"))
       isValid = false;
-    }
-    if (entry.classList.contains("maxText") && entry.value.length > parseNotNaN(entry.dataset.maxlength || "3")) {
+    if (entry.classList.contains("maxText") && entry.value.length > parseNotNaN(entry.dataset.maxlength || "3"))
       isValid = false;
-    }
-    if (entry.classList.contains("minNum") && parseNotNaN(entry.value) < parseNotNaN(entry.dataset.minnum || "3")) {
+    if (entry.classList.contains("minNum") && parseNotNaN(entry.value) < parseNotNaN(entry.dataset.minnum || "3"))
       isValid = false;
-    }
-    if (entry.classList.contains("maxNum") && parseNotNaN(entry.value) > parseNotNaN(entry.dataset.maxnum || "3")) {
+    if (entry.classList.contains("maxNum") && parseNotNaN(entry.value) > parseNotNaN(entry.dataset.maxnum || "3"))
       isValid = false;
-    }
     if (
       entry.classList.contains("patternText") &&
       entry.dataset.pattern &&
       !new RegExp(entry.dataset.pattern, entry.dataset.flags || "").test(entry.value)
-    ) {
+    )
       isValid = false;
-    }
   }
   if (!isValid) entry.style.color = alertColor;
   setTimeout(() => {
@@ -1521,15 +1477,24 @@ export function registerRoot(root: vRoot, selector: string, selectorRef?: Mutabl
         : document.querySelector(selector) ?? document.getElementById(selector);
     if (!(rootEl instanceof HTMLElement))
       throw elementNotFound(rootEl, `Finding element with ${selector} for rooting`, extLine(new Error()));
-    if (!root) {
-      if (rootEl && (!rootEl.dataset.rooted || rootEl.dataset.rooted !== "true")) root = createRoot(rootEl);
-      else if (!root["_internalRoot"]) {
-        root = undefined;
-        rootEl.dataset.rooted = "false";
-        root = createRoot(rootEl);
-      }
-      rootEl.dataset.rooted = "true";
+    if (!root && rootEl) {
+      if (rootEl.dataset.rooted === "true") {
+        if (!rootEl.hasChildNodes()) {
+          console.log(`Root ${selector} has no children `);
+          rootEl.dataset.rooted = "false";
+          root = createRoot(rootEl);
+        } else {
+          console.log(`Root ${selector} has children`);
+          root = createRoot(rootEl);
+        }
+      } else root = createRoot(rootEl);
+    } else if (root && !(root as any)["_internalRoot"]) {
+      console.log(`Root ${selector} invalid`);
+      root = undefined;
+      rootEl.dataset.rooted = "false";
+      root = createRoot(rootEl);
     }
+    rootEl.dataset.rooted = "true";
   } catch (e) {
     console.error(`Error executing registerRoot:\n${(e as Error).message}`);
   }

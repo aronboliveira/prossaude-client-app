@@ -1,9 +1,8 @@
 import { RegsConstBtnProps } from "@/lib/global/declarations/interfacesCons";
-import { createRoot } from "react-dom/client";
 import { checkRegstBtn } from "@/lib/locals/panelPage/handlers/consHandlerCmn";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { nullishBtn, voidVal, vRoot } from "@/lib/global/declarations/types";
-import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
+import { registerRoot, syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useContext, useEffect, useRef, useState } from "react";
 import FailRegstAlert from "../../alerts/FailRegsAlert";
 import { PanelCtx } from "../defs/client/SelectLoader";
@@ -14,10 +13,10 @@ export default function RegstConsBtn({ rootEl, secondOp = "Arraste" }: RegsConst
     RegstBtnRef = useRef<nullishBtn>(null),
     toggleDisplayRegstDlg = (rootEl: HTMLElement | voidVal, shouldDisplayFailRegstDlg: boolean = true): void => {
       rootEl instanceof HTMLElement
-        ? (root = createRoot(rootEl))
+        ? (root = registerRoot(root, `#${rootEl.id}`))
         : (rootEl = document.getElementById("regstDaySubDiv"));
       rootEl instanceof HTMLElement
-        ? (root = createRoot(rootEl))
+        ? (root = registerRoot(root, `#${rootEl.id}`))
         : elementNotFound(rootEl, "Root for placing failed register for new appointment", extLine(new Error()));
       if (
         !checkRegstBtn(

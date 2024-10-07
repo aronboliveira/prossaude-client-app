@@ -9,8 +9,8 @@ import { panelRoots } from "@/vars";
 import { ErrorBoundary } from "react-error-boundary";
 import GenericErrorComponent from "../error/GenericErrorComponent";
 export default function ListCPFPacCons(): JSX.Element {
-  const dlRef = useRef<nullishDl>(null);
-  const pacs: PacInfo[] = useMemo(() => [], []);
+  const dlRef = useRef<nullishDl>(null),
+    pacs: PacInfo[] = useMemo(() => [], []);
   useEffect(() => {
     try {
       if (!(dlRef.current instanceof HTMLDataListElement))
@@ -34,17 +34,17 @@ export default function ListCPFPacCons(): JSX.Element {
           });
           if (!(dlRef.current instanceof HTMLDataListElement))
             throw elementNotFound(dlRef.current, `Validation of Datalist instance`, extLine(new Error()));
-          if (panelRoots[`${dlRef.current.id}`] && !(panelRoots[`${dlRef.current.id}`] as any)["_internalRoot"]) {
+          if (panelRoots[dlRef.current.id] && !(panelRoots[dlRef.current.id] as any)["_internalRoot"]) {
             setTimeout(() => {
               try {
                 if (!(dlRef.current instanceof HTMLElement))
                   throw elementNotFound(dlRef.current, `Validation of Datalist Reference`, extLine(new Error()));
                 if (dlRef.current.querySelector("option")) return;
-                panelRoots[`${dlRef.current.id}`]?.unmount();
-                delete panelRoots[`${dlRef.current.id}`];
+                panelRoots[dlRef.current.id]?.unmount();
+                delete panelRoots[dlRef.current.id];
                 dlRef.current.remove() as void;
-                registerRoot(panelRoots[`${dlRef.current.id}`], `#${dlRef.current.id}`, dlRef);
-                panelRoots[`${dlRef.current.id}`]?.render(
+                registerRoot(panelRoots[dlRef.current.id], `#${dlRef.current.id}`, dlRef);
+                panelRoots[dlRef.current.id]?.render(
                   <ErrorBoundary
                     FallbackComponent={() => (
                       <GenericErrorComponent message='Error reloading replacement for data list' />
@@ -55,9 +55,9 @@ export default function ListCPFPacCons(): JSX.Element {
                 dlRef.current = document.getElementById("listCPFPacCons") as nullishDl;
                 if (!(dlRef.current instanceof HTMLElement))
                   throw elementNotFound(dlRef.current, `Validation of replaced dl`, extLine(new Error()));
-                registerRoot(panelRoots[`${dlRef.current.id}`], `#${dlRef.current.id}`, dlRef);
+                registerRoot(panelRoots[dlRef.current.id], `#${dlRef.current.id}`, dlRef);
                 if (!dlRef.current.querySelector("option"))
-                  panelRoots[`${dlRef.current.id}`]?.render(
+                  panelRoots[dlRef.current.id]?.render(
                     pacs.map((pac, i) => (
                       <option value={pac.idf} key={`cpf-pac__${i}`}>
                         {pac.name}
@@ -70,9 +70,9 @@ export default function ListCPFPacCons(): JSX.Element {
                 );
               }
             }, 1000);
-          } else registerRoot(panelRoots[`${dlRef.current.id}`], `#${dlRef.current.id}`, dlRef);
+          } else registerRoot(panelRoots[dlRef.current.id], `#${dlRef.current.id}`, dlRef);
           if (!dlRef.current.querySelector("tr"))
-            panelRoots[`${dlRef.current.id}`]?.render(
+            panelRoots[dlRef.current.id]?.render(
               pacs.map((pac, i) => (
                 <option value={pac.idf} key={`cpf-pac__${i}`}>
                   {pac.name}

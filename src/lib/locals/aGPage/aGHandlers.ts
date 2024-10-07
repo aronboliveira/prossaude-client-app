@@ -251,12 +251,7 @@ export function addMedHistHandler(click: targEv | React.MouseEvent, blockCount: 
       });
     } else if (click.currentTarget instanceof HTMLElement && click.currentTarget.classList.contains("removeAntMed")) {
       const divToRemove = Array.from(document.querySelectorAll(".antMedBlock")).at(-1);
-      divToRemove && blockCount > 0 && divToRemove?.id !== "antMedBlock1"
-        ? divToRemove.remove()
-        : console.warn(`Erro localizando divToRemove:
-        Elemento: ${JSON.stringify(divToRemove?.tagName || "no instance")};
-        blockCount: ${blockCount};
-        divToRemove id: ${divToRemove?.id}`);
+      if (divToRemove && blockCount > 0 && divToRemove?.id !== "antMedBlock1") divToRemove.remove();
     } else
       console.error(`Error validating .classList of click.target in addAntMedHandler.
         Catched value: ${(click?.target as HTMLElement)?.classList ?? "UNDEFINED CLASS LIST"}.`);

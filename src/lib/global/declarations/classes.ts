@@ -146,11 +146,7 @@ export class Person {
             Object.prototype.toString.call(person).slice(8, -1) ?? "null"
           }`,
         );
-    } else
-      console.warn(`Error validating .sumDCut:
-      It is present: ${"sumDCut" in person || false};
-      Obtained primitive type for .sumDCut: ${typeof this.sumDCut};
-      Obtained value: ${this.sumDCut ?? 0}`);
+    }
     return [0, 0];
   }
   calcTMB(person: Person, IMC: number = 0, MLG: number = 0, factorAtleta: string = "Peso"): [string, number] {
@@ -832,10 +828,7 @@ export class ExportHandler {
     const zip = new JSZip();
     for (const [idf, blob] of Object.entries(canvasBlobs)) {
       try {
-        if (!blob) {
-          console.warn(`No blob available for ${idf}`);
-          continue;
-        }
+        if (!blob) continue;
         const fileName = `image_${context || idf}.png`;
         zip.file(fileName, blob);
       } catch (e) {

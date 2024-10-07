@@ -18,6 +18,7 @@ import {
   checkLocalIntervs,
   fillTabAttr,
   filterTabMembers,
+  renderTable,
 } from "@/lib/locals/panelPage/handlers/consHandlerList";
 import { PanelCtx } from "../panelForms/defs/client/SelectLoader";
 import Link from "next/link";
@@ -116,10 +117,7 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                 throw elementNotFound(tbodyExtRef.current, `Validation of Table Body instance`, extLine(new Error()));
               if (!(tbodyIntRef.current instanceof HTMLTableSectionElement))
                 throw elementNotFound(tbodyExtRef.current, `Validation of Table Body instance`, extLine(new Error()));
-              if (
-                panelRoots[`${tbodyIntRef.current.id}`] &&
-                !(panelRoots[`${tbodyIntRef.current.id}`] as any)["_internalRoot"]
-              ) {
+              if (panelRoots[tbodyIntRef.current.id] && !(panelRoots[tbodyIntRef.current.id] as any)["_internalRoot"]) {
                 setTimeout(() => {
                   try {
                     if (!(tabProfIntRef.current instanceof HTMLElement))
@@ -135,15 +133,15 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                         extLine(new Error()),
                       );
                     if (tbodyIntRef.current.querySelector("tr")) return;
-                    panelRoots[`${tbodyIntRef.current.id}`]?.unmount();
-                    delete panelRoots[`${tbodyIntRef.current.id}`];
+                    panelRoots[tbodyIntRef.current.id]?.unmount();
+                    delete panelRoots[tbodyIntRef.current.id];
                     tbodyIntRef.current.remove() as void;
-                    panelRoots[`${tabProfIntRef.current.id}`] = registerRoot(
-                      panelRoots[`${tabProfIntRef.current.id}`],
+                    panelRoots[tabProfIntRef.current.id] = registerRoot(
+                      panelRoots[tabProfIntRef.current.id],
                       `#${tabProfIntRef.current.id}`,
                       tabProfIntRef,
                     );
-                    panelRoots[`${tabProfIntRef.current.id}`]?.render(
+                    panelRoots[tabProfIntRef.current.id]?.render(
                       <ErrorBoundary
                         FallbackComponent={() => (
                           <GenericErrorComponent message='Error reloading replacement for table body' />
@@ -227,13 +225,13 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                     tbodyIntRef.current = document.getElementById("profsIntTbody") as nullishTabSect;
                     if (!(tbodyIntRef.current instanceof HTMLElement))
                       throw elementNotFound(tbodyIntRef.current, `Validation of replaced tbody`, extLine(new Error()));
-                    panelRoots[`${tbodyIntRef.current.id}`] = registerRoot(
-                      panelRoots[`${tbodyIntRef.current.id}`],
+                    panelRoots[tbodyIntRef.current.id] = registerRoot(
+                      panelRoots[tbodyIntRef.current.id],
                       `#${tbodyIntRef.current.id}`,
                       tbodyIntRef,
                     );
                     if (!tbodyIntRef.current.querySelector("tr"))
-                      panelRoots[`${tbodyIntRef.current.id}`]?.render(
+                      panelRoots[tbodyIntRef.current.id]?.render(
                         internalProfs.map((prof, i) => (
                           <ProfRow
                             nRow={i + 2}
@@ -264,13 +262,13 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                   }
                 }, 1000);
               } else
-                panelRoots[`${tbodyIntRef.current.id}`] = registerRoot(
-                  panelRoots[`${tbodyIntRef.current.id}`],
+                panelRoots[tbodyIntRef.current.id] = registerRoot(
+                  panelRoots[tbodyIntRef.current.id],
                   `#${tbodyIntRef.current.id}`,
                   tbodyIntRef,
                 );
               if (!tbodyIntRef.current.querySelector("tr"))
-                panelRoots[`${tbodyIntRef.current.id}`]?.render(
+                panelRoots[tbodyIntRef.current.id]?.render(
                   internalProfs.map((prof, i) => {
                     return Array.from(tbodyIntRef.current?.querySelectorAll("output") ?? []).some(
                       outp => outp.innerText === (prof as ProfInfo)["idf"],
@@ -304,17 +302,9 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                   );
               }, 300);
               setTimeout(() => {
-                if (!document.querySelector("tr") && document.querySelector("table")) {
-                  const firstTable = document.querySelector("table");
-                  if (!firstTable) return;
-                  panelRoots[`${firstTable.id}`] = registerRoot(panelRoots[`${firstTable.id}`], `#${firstTable.id}`);
-                  panelRoots[`${firstTable.id}`]?.render(<GenericErrorComponent message='Failed to render table' />);
-                }
+                if (!document.querySelector("tr") && document.querySelector("table")) renderTable();
               }, 5000);
-              if (
-                panelRoots[`${tbodyExtRef.current.id}`] &&
-                !(panelRoots[`${tbodyExtRef.current.id}`] as any)["_internalRoot"]
-              ) {
+              if (panelRoots[tbodyExtRef.current.id] && !(panelRoots[tbodyExtRef.current.id] as any)["_internalRoot"]) {
                 setTimeout(() => {
                   try {
                     if (!(tabProfIntRef.current instanceof HTMLElement))
@@ -330,15 +320,15 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                         extLine(new Error()),
                       );
                     if (tbodyExtRef.current.querySelector("tr")) return;
-                    panelRoots[`${tbodyExtRef.current.id}`]?.unmount();
-                    delete panelRoots[`${tbodyExtRef.current.id}`];
+                    panelRoots[tbodyExtRef.current.id]?.unmount();
+                    delete panelRoots[tbodyExtRef.current.id];
                     tbodyExtRef.current.remove() as void;
-                    panelRoots[`${tabProfIntRef.current.id}`] = registerRoot(
-                      panelRoots[`${tabProfIntRef.current.id}`],
+                    panelRoots[tabProfIntRef.current.id] = registerRoot(
+                      panelRoots[tabProfIntRef.current.id],
                       `#${tabProfIntRef.current.id}`,
                       tabProfIntRef,
                     );
-                    panelRoots[`${tabProfIntRef.current.id}`]?.render(
+                    panelRoots[tabProfIntRef.current.id]?.render(
                       <ErrorBoundary
                         FallbackComponent={() => (
                           <GenericErrorComponent message='Error reloading replacement for table body' />
@@ -422,13 +412,13 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                     tbodyExtRef.current = document.getElementById("profsExtTbody") as nullishTabSect;
                     if (!(tbodyExtRef.current instanceof HTMLElement))
                       throw elementNotFound(tbodyExtRef.current, `Validation of replaced tbody`, extLine(new Error()));
-                    panelRoots[`${tbodyExtRef.current.id}`] = registerRoot(
-                      panelRoots[`${tbodyExtRef.current.id}`],
+                    panelRoots[tbodyExtRef.current.id] = registerRoot(
+                      panelRoots[tbodyExtRef.current.id],
                       `#${tbodyExtRef.current.id}`,
                       tbodyExtRef,
                     );
                     if (!tbodyExtRef.current.querySelector("tr"))
-                      panelRoots[`${tbodyExtRef.current.id}`]?.render(
+                      panelRoots[tbodyExtRef.current.id]?.render(
                         externalProfs.map((prof, i) => (
                           <ProfRow
                             nRow={i + 2}
@@ -459,13 +449,13 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                   }
                 }, 1000);
               } else
-                panelRoots[`${tbodyExtRef.current.id}`] = registerRoot(
-                  panelRoots[`${tbodyExtRef.current.id}`],
+                panelRoots[tbodyExtRef.current.id] = registerRoot(
+                  panelRoots[tbodyExtRef.current.id],
                   `#${tbodyExtRef.current.id}`,
                   tbodyExtRef,
                 );
               if (!tbodyExtRef.current.querySelector("tr"))
-                panelRoots[`${tbodyExtRef.current.id}`]?.render(
+                panelRoots[tbodyExtRef.current.id]?.render(
                   externalProfs.map((prof, i) => {
                     return Array.from(tbodyExtRef.current?.querySelectorAll("output") ?? []).some(
                       outp => outp.innerText === (prof as ProfInfo)["idf"],
@@ -499,12 +489,7 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                   );
               }, 300);
               setTimeout(() => {
-                if (!document.querySelector("tr") && document.querySelector("table")) {
-                  const firstTable = document.querySelector("table");
-                  if (!firstTable) return;
-                  panelRoots[`${firstTable.id}`] = registerRoot(panelRoots[`${firstTable.id}`], `#${firstTable}`);
-                  panelRoots[`${firstTable.id}`]?.render(<GenericErrorComponent message='Failed to render table' />);
-                }
+                if (!document.querySelector("tr") && document.querySelector("table")) renderTable();
               }, 5000);
             } catch (e) {
               console.error(`Error executing rendering of Table Body Content:\n${(e as Error).message}`);

@@ -200,34 +200,21 @@ export function matchPersonPropertiesWH(
   targinpheigth: targEl,
 ): [number, number] {
   if (person && Object.keys(person)?.length > 0) {
-    if ("weight" in person && typeof person.weight !== "number" && typeof person.weight !== "string") {
-      console.warn(`Type obtained for person.weight invalid. Value defaulted.`);
-      person.weight = 0;
-    }
-
-    if ("height" in person && typeof person.height !== "number" && typeof person.height !== "string") {
-      console.warn(`Type obtained for person.height invalid. Value defaulted.`);
-      person.height = 0;
-    }
-
+    if ("weight" in person && typeof person.weight !== "number" && typeof person.weight !== "string") person.weight = 0;
+    if ("height" in person && typeof person.height !== "number" && typeof person.height !== "string") person.height = 0;
     targinpweigth instanceof HTMLInputElement
       ? (person.weight = validateEvResultNum(targinpweigth, person.weight))
       : inputNotFound(targinpweigth, "targinpweigth", extLine(new Error()));
-
     targinpheigth instanceof HTMLInputElement
       ? (person.height = validateEvResultNum(targinpheigth, person.height))
       : inputNotFound(targinpheigth, "targinpheigth", extLine(new Error()));
   } else objectError("arguments de matchPersonPropertiesWH", person, "person", 6, extLine(new Error()));
-
   return [person.weight || 0, person.height || 0];
 }
 export function matchPersonPropertiesDC(person: Person, targInpSumDCut: targEl): number {
   if (person && Object.keys(person)?.length > 0) {
-    if ("sumDCut" in person && typeof person.sumDCut !== "number" && typeof person.sumDCut !== "string") {
-      console.warn(`Type for person.sumDCut invalid. Value defaulted.`);
+    if ("sumDCut" in person && typeof person.sumDCut !== "number" && typeof person.sumDCut !== "string")
       person.sumDCut = 0;
-    }
-
     targInpSumDCut instanceof HTMLInputElement
       ? (person.sumDCut = validateEvResultNum(targInpSumDCut, person.sumDCut))
       : inputNotFound(targInpSumDCut, "targInpSumDCut", extLine(new Error()));
@@ -264,13 +251,7 @@ export function updateIndexesContexts(
     const targInpMLG = arrGord[2];
     if (targInpMLG instanceof HTMLInputElement || targInpMLG instanceof HTMLSelectElement) formatValue(targInpMLG, MLG);
     TMB = updateTMBContext(person, [targInpTMB, formTMBTypeElement], [...IMCArray, MLG], factorAtleta) || 0;
-    TMB >= 0 && factorAtvLvl >= 0
-      ? (GET = updateGETContext(person, targInpGET, TMB, factorAtvLvl))
-      : console.warn(
-          `TMB and/or factorAtvLvl not updated or invalid.
-          Obtained TMB: ${TMB ?? 0};
-          Obtained factorAtvLvl: ${factorAtvLvl ?? 0}`,
-        );
+    if (TMB >= 0 && factorAtvLvl >= 0) GET = updateGETContext(person, targInpGET, TMB, factorAtvLvl);
   } else
     multipleElementsNotFound(
       extLine(new Error()),
@@ -592,7 +573,6 @@ export function updatePGC(
         targInpSumDCut = parentEl.querySelector(`#tabInpRowDCut9_${numRef}`);
         break;
     }
-
     if (
       (targInpSumDCut instanceof HTMLInputElement || targInpSumDCut instanceof HTMLSelectElement) &&
       targInpSumDCut.type === "number"
@@ -618,12 +598,7 @@ export function updatePGC(
       numRef,
       context,
     );
-
-  if (PGC < 0) {
-    console.warn(`PGC value defaulted. Obtained value: ${PGC || 0}`);
-    PGC = 0;
-  }
-
+  if (PGC < 0) PGC = 0;
   return [PGC || 0, targInpSumDCut ?? null, targInpPGC ?? null];
 }
 export function updateAtvLvl(mainSelect: targEl, secondarySelect: targEl, atvLvl: string = "leve"): string {
@@ -767,7 +742,6 @@ export function removeRowAtivFis(count: number = 3, context: string = "Rot"): nu
   if (context === "prop") context = "Prop";
   const rowToRemove = document.getElementById(`tabRowAtFis${context}Id${count - 1}`);
   if (rowToRemove && count >= 3) rowToRemove.remove() as void;
-  else console.warn(`No row to remove detected!`);
   return count;
 }
 export function switchRowComorb(comorbContainer: targEl, rowCountComorb: number = 3): void {
@@ -802,7 +776,6 @@ export function switchRowComorb(comorbContainer: targEl, rowCountComorb: number 
       ?.children?.namedItem(`tabRowComorb${rowCountComorb - 1}`);
     if (comorbRowToRemove && rowCountComorb !== 3 && comorbRowToRemove?.id !== "tabRowComorb2")
       comorbRowToRemove.remove() as void;
-    else console.warn(`No row to remove detected.`);
     return;
   } else elementNotFound(comorbContainer, "comorbContainer in switchRowComorb", extLine(new Error()));
 }
@@ -954,18 +927,15 @@ export function defineMatrixAxes(tab: targEl): number {
 }
 export function validateTabInpList(inpsNL: NodeListOf<Element> | Array<Element>, nMatrix: number = 4): boolean {
   let validInpNL = false;
-  if ((inpsNL instanceof NodeList || Array.isArray(inpsNL)) && typeof nMatrix === "number") {
+  if (
+    (inpsNL instanceof NodeList || Array.isArray(inpsNL)) &&
+    typeof nMatrix === "number" &&
     Array.from(inpsNL).every(inpCell => inpCell instanceof HTMLInputElement) &&
     inpsNL?.length > 0 &&
     inpsNL.length === nMatrix
-      ? (validInpNL = true)
-      : console.warn(`Error capturings inputs of Sinais Vitais with querry.
-        Obtained array: ${inpsNL.toString() || null};
-        All Elements as HTMLInputElements: ${
-          Array.from(inpsNL).every(inpCell => inpCell instanceof HTMLInputElement) ?? false
-        };
-        Length esperada: ${nMatrix ?? 0}.`);
-  } else
+  )
+    validInpNL = true;
+  else
     multipleElementsNotFound(
       extLine(new Error()),
       "arguments for validateTabInpList()",
@@ -1006,7 +976,7 @@ export function filterCellsPattern(
     if (filterInpCell?.length > 0) {
       arrCells.push(filterInpCell);
       return arrCells;
-    } else console.warn(`Error filtering .id of Elements in the table for Sinais Vitais, column ${columnNum}.`);
+    }
   } else
     multipleElementsNotFound(
       extLine(new Error()),
@@ -1193,25 +1163,14 @@ export function handleSumClick(ev: React.MouseEvent): void {
               "col",
             ))
           : typeError("obtaining column number", tabProps.numCol, "number (natural)", extLine(new Error()));
-      } else
-        console.warn(`Error updating PGC using .sumDCut.
-            Obtained person.age: ${person?.age || 0}
-            Used Protocol: ${protocolo?.value || "null"} (Apenas pollock3 aceito, por enquanto);
-            Is person classified? ${person instanceof Person};
-            Instance of the targeted input for PGC: ${
-              Object.prototype.toString.call(tabProps.targInpPGC).slice(8, -1) ?? "null"
-            }`);
-    } else console.warn(`Autofill not active. PGC not affected.`);
+      }
+    }
   } catch (e) {
     console.error(`Error executing callback for Button for Sum of Skin Folds:\n${(e as Error).message}`);
   }
 }
 export function handleIndEv(ev: React.MouseEvent | React.FormEvent | React.ChangeEvent, context: IndCases): void {
   try {
-    if (!(person instanceof Person))
-      console.warn(
-        `Error validating the treated person as as gendered instance in handleIndEv. That will probably lead to data errors. Consider deactivating autofill.`,
-      );
     if (
       !(
         ev.currentTarget instanceof HTMLButtonElement ||
@@ -1267,8 +1226,7 @@ export function handleIndEv(ev: React.MouseEvent | React.FormEvent | React.Chang
         if (targ instanceof HTMLElement) targ.dataset[`active`] = "true";
         else targ?.setAttribute("data-active", "true");
       });
-    } else if (typeof tabProps.isAutoFillActive !== "boolean")
-      console.warn(`Error validating typeof tabProps.isAutoFillActive`);
+    }
     if (
       context !== "BTN" &&
       context !== "IMC" &&
@@ -1404,7 +1362,7 @@ export function exeAutoFill(targ: targEl, isAutoFillActive: boolean = true, cont
       } else if (context === "col") {
         tabProps.numCol = getNumCol(targ) || 2;
         numRef = tabProps.numCol;
-      } else console.warn(`defaulted numRef`);
+      }
       [
         ...document.getElementsByClassName("tabInpProgIndPerc"),
         ...document.getElementsByClassName("inpHeigth"),

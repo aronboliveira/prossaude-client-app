@@ -12,7 +12,6 @@ export default function useExportHandler(
 ): ExportHandler | null {
   const exporter = new ExportHandler();
   useEffect(() => {
-    console.log("effecting...");
     exporters[exportHandlerProperty] = exporter;
     const interv = exporter.autoResetTimer(timeout),
       path = location.pathname,
@@ -32,12 +31,10 @@ export default function useExportHandler(
       },
       { once: true },
     );
-    console.log("adding pop state...");
     addEventListener("popstate", () => {
       handlePop() && removeEventListener("popstate", handlePop);
     });
     addExportFlags(ref ?? document);
-    console.log("clearing names...");
     clearNames && addEventListener("beforeunload", cleanStorageName);
     return (): void => {
       cleanStorageName();

@@ -99,7 +99,7 @@ export default function PrevConsList({
                       Lista Recuperada da Ficha de Pacientes registrados. Acesse
                       <samp>
                         <Link href={`${location.origin}/ag`} id='agLink' style={{ display: "inline" }}>
-                          Anamnese Geral
+                          &nbsp;Anamnese Geral&nbsp;
                         </Link>
                       </samp>
                       para cadastrar
@@ -108,33 +108,24 @@ export default function PrevConsList({
                 </strong>
               </caption>
               <colgroup>
-                <col data-col={1}></col>
-                <col data-col={2}></col>
-                <col data-col={3}></col>
-                <col data-col={4}></col>
-                <col data-col={5}></col>
-                <col data-col={6}></col>
+                {Array.from({ length: 5 }, (_, i) => (
+                  <col key={`pac_col__${i}`} data-col={i + 1}></col>
+                ))}
               </colgroup>
               <thead className='thead-dark'>
                 <tr id='avPacs-row1' data-row={1}>
-                  <th scope='col' data-row={1} data-col={1}>
-                    Nome
-                  </th>
-                  <th scope='col' data-row={1} data-col={2}>
-                    Data
-                  </th>
-                  <th scope='col' data-row={1} data-col={3}>
-                    Tipo da Consulta
-                  </th>
-                  <th scope='col' data-row={1} data-col={4}>
-                    Profissional Responsável
-                  </th>
-                  <th scope='col' data-row={1} data-col={5}>
-                    Estudante Alocado
-                  </th>
-                  <th scope='col' data-row={1} data-col={6}>
-                    Anotações
-                  </th>
+                  {[
+                    "Nome",
+                    "Data",
+                    "Tipo de Consulta",
+                    "Profissional Responsável",
+                    "Estudante Alocado",
+                    "Anotações",
+                  ].map((l, i) => (
+                    <th key={`pac_th__${i}`} scope='col' data-row={1} data-col={i + 1}>
+                      {l}
+                    </th>
+                  ))}
                 </tr>
               </thead>
               <tbody>

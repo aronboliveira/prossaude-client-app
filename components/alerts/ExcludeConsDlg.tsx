@@ -54,8 +54,7 @@ export default function ExcludeConsDlg({
         );
       (userClass === "coordenador" || userClass === "supervisor") && addEraseEvent(btn!, userClass);
     } catch (err) {
-      console.warn(`Error fetching reference for confirm button:
-      ${(err as Error).message}`);
+      return;
     }
   }, [confirmRef, btn, userClass]);
   return (

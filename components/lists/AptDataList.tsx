@@ -2,11 +2,10 @@ import { ErrorBoundary } from "react-error-boundary";
 import { AptDataListProps } from "@/lib/global/declarations/interfacesCons";
 import { addExportFlags } from "@/lib/global/gController";
 import { consVariablesData } from "../consRegst/consVariables";
-import { createRoot } from "react-dom/client";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { isClickOutside } from "@/lib/global/gStyleScript";
 import { nullishDlg } from "@/lib/global/declarations/types";
-import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
+import { registerRoot, syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useContext, useEffect, useRef } from "react";
 import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
 import { PanelCtx } from "../panelForms/defs/client/SelectLoader";
@@ -22,9 +21,7 @@ export default function AptDataList({
   isDirectRender = false,
 }: AptDataListProps): JSX.Element {
   const userClass = useContext(PanelCtx).userClass,
-    transfArea = document.getElementById("transfArea")!;
-  if (!transfArea) console.warn(`Transfer area was not found by AptDataList.`);
-  const transferBtn = document.querySelector(`[id*="${btnId}"]`),
+    transferBtn = document.querySelector(`[id*="${btnId}"]`),
     aptDlgRef = useRef<nullishDlg>(null),
     renderDirectly = (): void => {
       try {
@@ -41,14 +38,14 @@ export default function AptDataList({
                 />,
               );
       } catch (e) {
-        console.warn(`Error rendering AptDataList:
-      ${(e as Error).message};
-      Initiating root recovering attempt.`);
         try {
           const fallbackRootDlg = document.getElementById("rootDlgList");
           if (!(fallbackRootDlg instanceof HTMLElement))
             throw elementNotFound(fallbackRootDlg, `attemp to recreate rootDlg`, extLine(new Error()));
-          createRoot(fallbackRootDlg).unmount();
+          registerRoot(
+            undefined,
+            `${fallbackRootDlg.id || fallbackRootDlg.className.replace(/\s/g, "__") || fallbackRootDlg.tagName}`,
+          )?.unmount();
         } catch (e2) {
           console.error(`Error rendering AptDataList:
         ${(e2 as Error).message};
@@ -72,14 +69,14 @@ export default function AptDataList({
                 />,
               );
       } catch (e) {
-        console.warn(`Error rendering AptDataList:
-        ${(e as Error).message};
-        Initiating root recovering attempt.`);
         try {
           const fallbackRootDlg = document.getElementById("rootDlgList");
           if (!(fallbackRootDlg instanceof HTMLElement))
             throw elementNotFound(fallbackRootDlg, `attemp to recreate rootDlg`, extLine(new Error()));
-          createRoot(fallbackRootDlg).unmount();
+          registerRoot(
+            undefined,
+            `${fallbackRootDlg.id || fallbackRootDlg.className.replace(/\s/g, "__") || fallbackRootDlg.tagName}`,
+          )?.unmount();
         } catch (e2) {
           console.error(`Error rendering AptDataList:
           ${(e2 as Error).message};

@@ -353,6 +353,7 @@ describe("renderTable", () => {
     document.body.appendChild(mockTable);
     panelRoots["testTable"] = {
       render: jest.fn(),
+      unmount: jest.fn(),
     };
     jest.spyOn(document, "querySelector").mockReturnValue(mockTable);
     renderTable();
@@ -362,9 +363,11 @@ describe("renderTable", () => {
     const mockTable = document.createElement("table");
     mockTable.id = "testTable";
     document.body.appendChild(mockTable);
-    const mockRender = jest.fn();
+    const mockRender = jest.fn(),
+      mockUnmount = jest.fn();
     panelRoots["testTable"] = {
       render: mockRender,
+      unmount: mockUnmount,
     };
     jest.spyOn(document, "querySelector").mockReturnValue(mockTable);
     renderTable();

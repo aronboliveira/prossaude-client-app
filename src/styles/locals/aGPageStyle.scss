@@ -444,7 +444,11 @@
   #fsAnamGDiv4 {
     width: 60%;
     display: flex;
-    justify-content: space-between;
+    justify-content: left;
+    column-gap: 10.2%;
+    #fsAnamGSpan11 {
+      margin-right: 0;
+    }
     .labelIdentif {
       min-width: 25vw;
     }
@@ -462,7 +466,6 @@
   #fsAnamGSpan11 {
     grid-column: 2;
     grid-row: 2;
-    width: 100%;
   }
 
   #fsAnamGSpan13 {
@@ -529,7 +532,15 @@
   }
 
   #UFId {
-    width: 16.3rem;
+    width: 100%;
+  }
+}
+
+@media screen and (min-width: 1300px) {
+  .agBody {
+    #fsAnamGDiv4 {
+      min-width: 66vw;
+    }
   }
 }
 

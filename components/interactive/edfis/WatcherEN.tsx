@@ -38,7 +38,6 @@ export default function WatcherEN(): JSX.Element {
         }
       }, 200);
       clearInterval(mountInterval);
-      !document.getElementById("tabIndPerc") && console.warn(`Could not find tabIndPerc`);
     }, 10000);
   }, []);
   useEffect(() => {
