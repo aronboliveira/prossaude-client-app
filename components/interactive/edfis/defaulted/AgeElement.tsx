@@ -1,15 +1,20 @@
 import { Person } from "@/lib/global/declarations/classes";
 import { exeAutoFill } from "@/lib/locals/edFisNutPage/edFisNutHandler";
 import { handleEventReq } from "@/lib/global/handlers/gHandlers";
-import { nullishInp } from "@/lib/global/declarations/types";
+import { looseNum, nullishInp } from "@/lib/global/declarations/types";
 import { person, tabProps } from "@/vars";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, Dispatch, SetStateAction, MutableRefObject } from "react";
 import { validateEvResultNum } from "@/lib/locals/edFisNutPage/edFisNutHandler";
 import { multipleElementsNotFound, extLine } from "@/lib/global/handlers/errorHandler";
-export default function AgeElement(): JSX.Element {
+export default function AgeElement({
+  onSetAge,
+  inpRef,
+}: {
+  onSetAge?: Dispatch<SetStateAction<looseNum>>;
+  inpRef: MutableRefObject<nullishInp>;
+}): JSX.Element {
   const [value, setValue] = useState<string>("");
   const [prevValue, setPreValue] = useState<string>("");
-  const inpRef = useRef<nullishInp>(null);
   useEffect(() => {
     if (inpRef.current && inpRef.current.value === "") inpRef.current.value = "30";
   }, []);
@@ -44,6 +49,7 @@ export default function AgeElement(): JSX.Element {
           setValue(newValue);
           setPreValue(newValue);
           person.age = validateEvResultNum(ev.currentTarget, person.age);
+          onSetAge && onSetAge(() => person.age);
           //sem autofill, dá update somente em person.age
           tabProps.isAutoFillActive && exeAutoFill(ev.currentTarget, tabProps.isAutoFillActive, "cons");
         } else {

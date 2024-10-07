@@ -62,6 +62,7 @@ export type nullishCanvas = HTMLCanvasElement | null;
 export type nullishDl = HTMLDataListElement | null;
 export type nullishOptGrp = HTMLOptGroupElement | null;
 export type queryableNode = Document | Element | null;
+export type vRoot = Root | voidVal;
 export type rMouseEvent = MouseEvent | React.MouseEvent;
 export type rDragEvent = DragEvent | React.DragEvent;
 export type pageCases = "login" | "base" | "ag" | "ed" | "od" | "panel" | "recover";

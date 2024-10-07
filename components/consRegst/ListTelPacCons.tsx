@@ -1,12 +1,11 @@
 "use client";
 import { nullishDl } from "@/lib/global/declarations/types";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
-import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
+import { registerRoot, syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { PersonProps } from "@/lib/global/declarations/interfacesCons";
 import { handleFetch } from "@/lib/locals/panelPage/handlers/handlers";
 import { useEffect, useMemo, useRef } from "react";
 import { panelRoots } from "@/vars";
-import { createRoot } from "react-dom/client";
 import { ErrorBoundary } from "react-error-boundary";
 import GenericErrorComponent from "../error/GenericErrorComponent";
 export default function ListTelPacCons(): JSX.Element {
@@ -37,7 +36,7 @@ export default function ListTelPacCons(): JSX.Element {
                 panelRoots[`${dlRef.current.id}`]?.unmount();
                 delete panelRoots[`${dlRef.current.id}`];
                 dlRef.current.remove() as void;
-                if (!panelRoots[`${dlRef.current.id}`]) panelRoots[`${dlRef.current.id}`] = createRoot(dlRef.current);
+                registerRoot(panelRoots[`${dlRef.current.id}`], `#${dlRef.current.id}`, dlRef);
                 panelRoots[`${dlRef.current.id}`]?.render(
                   <ErrorBoundary
                     FallbackComponent={() => (
@@ -49,7 +48,7 @@ export default function ListTelPacCons(): JSX.Element {
                 dlRef.current = document.getElementById("listTelPacCons") as nullishDl;
                 if (!(dlRef.current instanceof HTMLElement))
                   throw elementNotFound(dlRef.current, `Validation of replaced dl`, extLine(new Error()));
-                if (!panelRoots[`${dlRef.current.id}`]) panelRoots[`${dlRef.current.id}`] = createRoot(dlRef.current);
+                registerRoot(panelRoots[`${dlRef.current.id}`], `#${dlRef.current.id}`, dlRef);
                 if (!dlRef.current.querySelector("option"))
                   panelRoots[`${dlRef.current.id}`]?.render(
                     pacs.map((pac, i) => (
@@ -68,7 +67,7 @@ export default function ListTelPacCons(): JSX.Element {
                 );
               }
             }, 1000);
-          } else panelRoots[`${dlRef.current.id}`] = createRoot(dlRef.current);
+          } else registerRoot(panelRoots[`${dlRef.current.id}`], `#${dlRef.current.id}`, dlRef);
           if (!dlRef.current.querySelector("tr"))
             panelRoots[`${dlRef.current.id}`]?.render(
               pacs.map((pac, i) => (

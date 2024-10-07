@@ -1,4 +1,4 @@
-import { entryEl, targEl, voidVal } from "./declarations/types";
+import { entryEl, queryableNode, targEl, voidVal } from "./declarations/types";
 import {
   extLine,
   elementNotFound,
@@ -117,22 +117,22 @@ export function addListenerDateBtns(dateBtns: targEl[]): void {
       elementNotFound(dateBtn, `target dateBtn id ${dateBtn?.id || "UNDEFINED ID DATEBTN"}`, extLine(new Error()));
   });
 }
-export function addListenersGenConts(genElement: targEl, genValue: string = "masculino"): string {
-  const genBirthRel = document.getElementById("genBirthRelId"),
-    genTrans = document.getElementById("genTransId"),
-    genFisAlin = document.getElementById("genFisAlinId");
-  if (checkAllGenConts(genElement, genBirthRel, genTrans, genFisAlin) && typeof genValue === "string") {
-    const arrGenConts = [genElement, genBirthRel, genTrans, genFisAlin] as entryEl[];
+export function addListenersGenConts(g: targEl, genValue: string = "masculino"): string {
+  const gb = document.getElementById("genBirthRelId") as HTMLSelectElement,
+    gt = document.getElementById("genTransId") as HTMLSelectElement,
+    ga = document.getElementById("genFisAlinId") as HTMLSelectElement;
+  if (checkAllGenConts(g, gb, gt, ga) && typeof genValue === "string") {
+    const arrGenConts = [g, gb, gt, ga] as HTMLSelectElement[];
     arrGenConts.forEach(genCont => {
       if (!(genCont.dataset.active && genCont.dataset.active === "true")) {
         genCont.addEventListener("change", (): string => {
-          genValue = fluxGen(arrGenConts, (genElement as entryEl)?.value) || "masculino";
+          genValue = fluxGen({ g: g as HTMLSelectElement, gb, gt, ga }, (g as entryEl)?.value) || "masculino";
           return genValue || "masculino";
         });
         genCont.dataset.active = "true";
       }
     });
-  } else multipleElementsNotFound(extLine(new Error()), "gen Elements", genElement, genBirthRel, genTrans, genFisAlin);
+  } else multipleElementsNotFound(extLine(new Error()), "gen Elements", g, gb, gt, ga);
   return genValue || "masculino";
 }
 export function addListenerAutocorrectBtns(deactAutocorrectBtns: targEl[], isAutocorrectOn: boolean = true): boolean {
@@ -176,7 +176,7 @@ export function addListenerAstDigitBtns(astDigtBtns: targEl[]): void {
 }
 export const exportSignaler = new AbortController();
 export function addExportFlags(
-  scope: Document | Element | voidVal = document,
+  scope: queryableNode | voidVal = document,
   btnExport?: HTMLButtonElement | HTMLInputElement | null,
 ): targEl {
   btnExport ??=

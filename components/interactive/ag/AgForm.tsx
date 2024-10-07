@@ -42,10 +42,14 @@ import OtherD from "./OtherD";
 import FamDiab from "./FamDiab";
 import FamDislip from "./FamDislip";
 import { useRef, useEffect } from "react";
-import { nullishForm } from "@/lib/global/declarations/types";
+import { nullishForm, nullishInp, nullishSel } from "@/lib/global/declarations/types";
 import useDataProvider from "@/lib/hooks/useDataProvider";
 export default function AgForm(): JSX.Element {
-  const f = useRef<nullishForm>(null);
+  const f = useRef<nullishForm>(null),
+    dnr = useRef<nullishInp>(null),
+    ar = useRef<nullishInp>(null),
+    sr = useRef<nullishSel>(null),
+    lnr = useRef<nullishInp>(null);
   useEffect(() => {
     registerPersistInputs({
       f: f.current,
@@ -54,7 +58,33 @@ export default function AgForm(): JSX.Element {
       inputTypes: ["date", "number", "text", "checkbox", "radio"],
       queriesToExclude: ['[role="switch"]'],
     });
-  }, []);
+  }, [registerPersistInputs, f]);
+  useEffect(() => {
+    const handleResize = (): void => {
+      if (!(dnr.current instanceof HTMLElement && ar.current instanceof HTMLElement)) return;
+      dnr.current.style.width = getComputedStyle(ar.current).width;
+      dnr.current.style.maxWidth = getComputedStyle(ar.current).width;
+      handleResize();
+    };
+    if (!document.body.dataset.equalizing || document.body.dataset.equalizing !== "true") {
+      addEventListener("resize", handleResize);
+      document.body.dataset.equalizing = "true";
+    }
+    (): void => removeEventListener("resize", handleResize);
+  }, [dnr, ar]);
+  useEffect(() => {
+    const handleResize = (): void => {
+      if (!(sr.current instanceof HTMLElement && lnr.current instanceof HTMLElement)) return;
+      sr.current.style.width = getComputedStyle(lnr.current).width;
+      sr.current.style.maxWidth = getComputedStyle(lnr.current).width;
+    };
+    if (sr.current && (!sr.current?.dataset.equalizing || sr.current.dataset.equalizing !== "true")) {
+      addEventListener("resize", handleResize);
+      sr.current.dataset.equalizing = "true";
+      handleResize();
+    }
+    (): void => removeEventListener("resize", handleResize);
+  }, [sr, ar]);
   useDataProvider(f.current);
   return (
     <form
@@ -78,7 +108,7 @@ export default function AgForm(): JSX.Element {
         </legend>
         <section className='sectionMain' id='fsAnamGSect'>
           <div className='flexQ900NoWC' id='div1_div2flex' role='group'>
-            <Name />
+            <Name lastNameRef={lnr} />
             <div
               className='fsAnamGDiv alItSt900Q flexQ900NoWC flexAlItE noAdj flexNoWR flexTwin-width'
               role='group'
@@ -94,6 +124,7 @@ export default function AgForm(): JSX.Element {
                 <label className='labelIdentif'>
                   Status:
                   <select
+                    ref={sr}
                     className='form-select noInvert ssPersist'
                     id='statusPac'
                     name='statusPac-in'
@@ -119,6 +150,31 @@ export default function AgForm(): JSX.Element {
                 </label>
               </span>
             </div>
+            <hr />
+            <div className='flexDiv fsAnamGDiv alItSt900Q flexQ900NoWC gridTwoCol' id='fsAnamGDiv4' role='group'>
+              <span role='group' className='fsAnamGSpan mgr-3v' id='fsAnamGSpan11'>
+                <label htmlFor='dateBdayId' className='labelIdentif'>
+                  Data de Nascimento:
+                  <input
+                    ref={dnr}
+                    type='date'
+                    name='birth'
+                    id='dateBdayId'
+                    className='form-control inpIdentif noInvert maxCurrDate'
+                    autoComplete='bday'
+                    data-title='Nascimento'
+                    required
+                  />
+                </label>
+              </span>
+              <span role='group' className='fsAnamGSpan' id='fsAnamGSpan12'>
+                <label htmlFor='dateAgeId' className='labelIdentif'>
+                  <span>Idade:</span>
+                  <AgeElement inpRef={ar} />
+                </label>
+              </span>
+            </div>
+            <GenDiv />
             <hr />
             <div
               className='divMain fsAnamGDiv alItSt900Q flexQ900NoWC gridAlItE gridTwoCol noGapDiv noEqualize'
@@ -180,8 +236,8 @@ export default function AgForm(): JSX.Element {
                 </label>
               </span>
             </div>
-            <hr />
           </div>
+          <hr />
           <div
             className='divMain fsAnamGDiv alItSt900Q flexQ900NoWC gridAlItE gridTwoCol widFull900Q noEqualize'
             id='fsAnamGDiv3'
@@ -249,30 +305,6 @@ export default function AgForm(): JSX.Element {
               </span>
             </span>
           </div>
-          <hr />
-          <div className='flexDiv fsAnamGDiv alItSt900Q flexQ900NoWC gridTwoCol' id='fsAnamGDiv4' role='group'>
-            <span role='group' className='fsAnamGSpan mgr-3v' id='fsAnamGSpan11'>
-              <label htmlFor='dateBdayId' className='labelIdentif'>
-                Data de Nascimento:
-                <input
-                  type='date'
-                  name='birth'
-                  id='dateBdayId'
-                  className='form-control inpIdentif noInvert maxCurrDate'
-                  autoComplete='bday'
-                  data-title='Nascimento'
-                  required
-                />
-              </label>
-            </span>
-            <span role='group' className='fsAnamGSpan' id='fsAnamGSpan12'>
-              <label htmlFor='dateAgeId' className='labelIdentif'>
-                <span>Idade:</span>
-                <AgeElement />
-              </label>
-            </span>
-          </div>
-          <GenDiv />
         </section>
         <hr />
       </fieldset>

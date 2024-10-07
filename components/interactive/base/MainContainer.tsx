@@ -1,6 +1,5 @@
 "use client";
 import { AppRootContext } from "@/pages/_app";
-import { createRoot } from "react-dom/client";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { equalizeParagraphs } from "@/lib/locals/basePage/baseStylescript";
 import { expandContent } from "@/lib/global/gStyleScript";
@@ -12,9 +11,11 @@ import UserProfilePanel from "../../user/UserProfilePanel";
 import { defUser } from "@/redux/slices/userSlice";
 import { experimentalProps } from "@/vars";
 import Link from "next/link";
+import { registerRoot } from "@/lib/global/handlers/gHandlers";
+import { AppRootContextType } from "@/lib/global/declarations/interfaces";
 let baseRootUser: targEl;
 export default function MainContainer(): JSX.Element {
-  const context = useContext(AppRootContext);
+  const context = useContext<AppRootContextType>(AppRootContext);
   const nextRouter = useRouter();
   useEffect(() => {
     experimentalProps.experimentalUser = localStorage.getItem("activeUser")
@@ -29,7 +30,7 @@ export default function MainContainer(): JSX.Element {
     localStorage.setItem("activeUser", JSON.stringify(experimentalProps.experimentalUser));
     baseRootUser = document.getElementById("rootUserInfo");
     baseRootUser instanceof HTMLElement && !context.roots.baseRootedUser
-      ? (context.roots.baseRootedUser = createRoot(baseRootUser))
+      ? (context.roots.baseRootedUser = registerRoot(context.roots.baseRootedUser, `#${baseRootUser.id}`))
       : setTimeout(() => {
           baseRootUser = document.getElementById("rootUserInfo");
           !baseRootUser && elementNotFound(baseRootUser, "Root for user painel", extLine(new Error()));

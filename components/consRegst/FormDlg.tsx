@@ -3,7 +3,6 @@ import { ConsDlgProps } from "@/lib/global/declarations/interfacesCons";
 import { ErrorBoundary } from "react-error-boundary";
 import { addListenerAvMembers } from "@/lib/locals/panelPage/handlers/consHandlerList";
 import { consVariablesData } from "./consVariables";
-import { createRoot } from "react-dom/client";
 import { providers, formData } from "@/vars";
 import { handleClientPermissions } from "@/lib/locals/panelPage/handlers/consHandlerUsers";
 import { handleSubmit } from "@/lib/locals/panelPage/handlers/handlers";
@@ -34,6 +33,7 @@ import {
   handleCondtReq,
   validateForm,
   syncAriaStates,
+  registerRoot,
 } from "@/lib/global/handlers/gHandlers";
 import ListFirstNameCons from "./ListFirstNameCons";
 import ListCPFPacCons from "./ListCPFPacCons";
@@ -167,10 +167,8 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
             ] = entry.value || "Anônimo";
           });
         } else elementNotPopulated(allEntryEls, "allEntryEls in generateSchedBtn()", extLine(new Error()));
-        if (!consVariablesData.rootDlg)
-          consVariablesData.rootDlg = createRoot(
-            document.getElementById("rootDlgList") ?? document.getElementById("transfArea")!,
-          );
+        const selected = document.getElementById("rootDlgList") ?? document.getElementById("transfArea");
+        consVariablesData.rootDlg = registerRoot(consVariablesData.rootDlg, `#${selected?.id ?? ""}`);
         const newBtn = createAptBtn(
           formData,
           providerFormData[accFormData] as any,
