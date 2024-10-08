@@ -1,8 +1,8 @@
-import { nullishHtEl } from "@/lib/global/declarations/types";
+import { nlHtEl } from "@/lib/global/declarations/types";
 import { ErrorDlgProps } from "@/lib/global/declarations/interfacesCons";
 import { useRef } from "react";
 export default function ErrorFallbackDlg({ renderError, onClick }: ErrorDlgProps): JSX.Element {
-  const mainArticleRef = useRef<nullishHtEl>(null);
+  const mainArticleRef = useRef<nlHtEl>(null);
   return (
     <article role='alert' id='errorDlgDiv' ref={mainArticleRef}>
       <h2 className='mg-2bv widHalf'>

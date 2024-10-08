@@ -21,7 +21,7 @@ import ConfirmLocId from "../def/ConfirmLocId";
 import ConfirmDate from "../def/ConfirmDate";
 import Signature from "../def/Signature";
 import SectConfirmBtns from "../def/SectConfirmBtns";
-import { looseNum, nullishForm, nullishInp } from "@/lib/global/declarations/types";
+import { looseNum, nlFm, nlInp } from "@/lib/global/declarations/types";
 import useDataProvider from "@/lib/hooks/useDataProvider";
 import ReactSpinner from "../../icons/ReactSpinner";
 import { Suspense } from "react";
@@ -36,8 +36,8 @@ export const ENContext = createContext<ENContextProps>({
   gen: "masculino",
 });
 export default function ENForm(): JSX.Element {
-  const f = useRef<nullishForm>(null),
-    af = useRef<nullishInp>(null),
+  const f = useRef<nlFm>(null),
+    af = useRef<nlInp>(null),
     [age, setAge] = useState<looseNum>("0"),
     [gen, setGen] = useState<Gender>("masculino");
   useEffect(() => {

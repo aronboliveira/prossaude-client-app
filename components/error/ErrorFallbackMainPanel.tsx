@@ -1,13 +1,13 @@
 import { ErrorBoundary } from "react-error-boundary";
 import { ErrorFallbackMainPanelProps } from "@/lib/global/declarations/interfacesCons";
-import { nullishSel, panelOpts } from "@/lib/global/declarations/types";
+import { nlSel, panelOpts } from "@/lib/global/declarations/types";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useEffect, useRef, useState } from "react";
 import MainFormPanel from "../mainPanel/MainFormPanel";
 import { mainPanelVariables, resetErrorBoundary } from "../mainPanel/mainPanelVariables";
 export default function ErrorFallbackMainPanel(props: ErrorFallbackMainPanelProps): JSX.Element {
   const [, setPanelValue] = useState(props.defOp);
-  const selectRef = useRef<nullishSel>(null);
+  const selectRef = useRef<nlSel>(null);
   const mainArticleRef = useRef<HTMLElement | null>(null);
   useEffect(() => {
     if (mainArticleRef.current instanceof HTMLElement) {

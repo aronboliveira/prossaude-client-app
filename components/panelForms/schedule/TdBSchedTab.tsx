@@ -50,7 +50,6 @@ export default function TdBSchedTab({ nHr, nRow, nCol, last = false }: HrCelProp
         id={`slot_${nHr}-00_${nCol}`}
         data-row={nRow}
         data-col={nCol}>
-        //TODO CHECAR COMPONENT PARA BUTTON
         <TdSlotInput nHr={nHr} nCol={nCol} nRow={nRow} dayOrder={dayOrder} hourOrder={hourOrder} />
         <div role='group' className='flexNoWC flexAlItCt'>
           <input

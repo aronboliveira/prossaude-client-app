@@ -1,5 +1,5 @@
 "use client";
-import { nullishForm, quadrCases } from "@/lib/global/declarations/types";
+import { nlFm, quadrCases } from "@/lib/global/declarations/types";
 import ConfirmDate from "../def/ConfirmDate";
 import ConfirmLocId from "../def/ConfirmLocId";
 import Declaration from "../def/Declaration";
@@ -16,7 +16,7 @@ import InspDlgElements from "./InspDlgElements";
 import { useRef, useEffect } from "react";
 import useDataProvider from "@/lib/hooks/useDataProvider";
 export default function OdForm(): JSX.Element {
-  const f = useRef<nullishForm>(null);
+  const f = useRef<nlFm>(null);
   useEffect(() => {
     registerPersistInputs({
       f: f.current,

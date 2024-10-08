@@ -1,9 +1,16 @@
 "use client";
-import { useContext } from "react";
 import ThDate from "./ThDate";
-import { ScheduleCtx } from "./ScheduleForm";
+import { useSelector } from "react-redux";
+import { validSchedCols } from "@/lib/global/declarations/types";
+import { SchedColsSliceProps } from "@/lib/global/declarations/interfacesRedux";
 export default function ScheduleTab({ children }: { children: JSX.Element }): JSX.Element {
-  const cols = useContext(ScheduleCtx)?.nCols ?? [];
+  let cols = useSelector<SchedColsSliceProps, validSchedCols[]>(
+    (s: SchedColsSliceProps): validSchedCols[] => s.schedColsSlice.cols,
+  );
+  if (!cols || cols.length === 0) {
+    console.warn(`Failed to useSelector`);
+    cols = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+  }
   return (
     <table
       className='table table-responsive table-striped table-hover form-padded table-transparent'

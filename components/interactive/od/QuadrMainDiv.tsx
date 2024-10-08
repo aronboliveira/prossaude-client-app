@@ -1,6 +1,6 @@
 "use client";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
-import { nullishDiv } from "@/lib/global/declarations/types";
+import { nlDiv } from "@/lib/global/declarations/types";
 import { orderLabels } from "@/lib/locals/odPage/odModel";
 import { qrProps } from "@/lib/global/declarations/interfaces";
 import { useEffect, useRef } from "react";
@@ -15,7 +15,7 @@ import {
   resetLabels,
 } from "@/lib/locals/odPage/odHandler";
 export default function QuadrMainDiv({ qr }: qrProps): JSX.Element {
-  const subDivRef = useRef<nullishDiv>(null);
+  const subDivRef = useRef<nlDiv>(null);
   const teethList = ((): number[] => {
     if (qr === "SupEsq") return [21, 22, 23, 24, 25, 26, 27, 28];
     else if (qr === "InfEsq") return [31, 32, 33, 34, 35, 36, 37, 38];

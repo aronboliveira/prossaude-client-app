@@ -2,7 +2,7 @@
 import { basePath } from "@/vars";
 import { clearDefInvalidMsg, resetPhs } from "@/lib/global/gStyleScript";
 import { handleLogin } from "@/lib/locals/panelPage/handlers/handlers";
-import { nullishAnchor, nullishForm, nullishHtEl, nullishSpan } from "@/lib/global/declarations/types";
+import { nullishAnchor, nlFm, nlHtEl, nullishSpan } from "@/lib/global/declarations/types";
 import { useEffect, useRef, useState } from "react";
 import { elementNotFound, extLine, inputNotFound, multipleElementsNotFound } from "@/lib/global/handlers/errorHandler";
 import { callbackShowPw, callbackSubmitBtn } from "@/lib/locals/loginPage/loginController";
@@ -15,11 +15,11 @@ import { defUser, setFullUser } from "@/redux/slices/userSlice";
 export default function LoginInputs(): JSX.Element {
   let isSpinning = false;
   const anchorRef = useRef<nullishAnchor>(null),
-    formRef = useRef<nullishForm>(null),
+    formRef = useRef<nlFm>(null),
     spanRef = useRef<nullishSpan>(null),
     router = useRouter(),
     [msg, setMsg] = useState<string | JSX.Element>(""),
-    exeLogin = (resSpan: nullishHtEl): void => {
+    exeLogin = (resSpan: nlHtEl): void => {
       try {
         if (!(formRef.current instanceof HTMLFormElement)) throw new Error(`Failed to validate form instance`);
         if (!(resSpan instanceof HTMLElement)) throw new Error(`Failed to validate span reference`);

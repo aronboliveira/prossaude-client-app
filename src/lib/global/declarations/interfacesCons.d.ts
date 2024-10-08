@@ -1,6 +1,14 @@
 import { DlgProps } from "@/lib/global/declarations/interfaces";
-import { aptTypes, formCases, looseNum, panelOpts, vRoot } from "@/lib/global/declarations/types";
-import { nullishForm, nullishDlg, nullishTab, voidVal, nullishBtn } from "@glSrc/types";
+import {
+  aptTypes,
+  formCases,
+  looseNum,
+  panelOpts,
+  rMouseEvent,
+  vRoot,
+  validSchedHours,
+} from "@/lib/global/declarations/types";
+import { nlFm, nullishDlg, nullishTab, voidVal, nlBtn } from "@glSrc/types";
 import { NextRouter } from "next/router";
 import { MutableRefObject, Dispatch, SetStateAction, Component } from "react";
 import { Root } from "react-dom/client";
@@ -22,11 +30,11 @@ export interface MainPanelProps {
   defOp: panelOpts;
 }
 export interface ScheduleFormProps extends GlobalFormProps {
-  context: boolean;
+  context?: boolean;
   children?: React.Element;
 }
 export interface HrRowProps extends GlobalFormProps {
-  nHr: 18 | 19 | 20 | 21;
+  nHr: validSchedHours;
   nRow: number;
   last?: boolean;
 }
@@ -42,7 +50,7 @@ export interface DataContextType {
   updateFormData: (newData: FormData) => void;
 }
 export interface PanelFormProps {
-  formCallback: (form: nullishForm) => void;
+  formCallback: (form: nlFm) => void;
 }
 export interface BtnAddPacPros {
   context: boolean;
@@ -112,7 +120,7 @@ export interface ExcludeDlgProps {
   route: formCases;
 }
 export interface ExcludeConsDlgProps extends Omit<ExcludeDlgProps, "route"> {
-  btn: nullishBtn;
+  btn: nlBtn;
   userClass?: userClasses;
 }
 export interface FailedRegstProps {
@@ -223,4 +231,9 @@ export interface HistoricDlgProps extends DlgProps {
 export interface HistoricRowProps extends Pick<HistoricDlgProps, "name"> {
   historic: HistoricInfo;
   nRow: number;
+}
+export interface AptBtnProps extends GlobalFormProps {
+  formData: { [k: string]: string };
+  providerFormData: { [k: string]: string };
+  onAptClick: (ev: rMouseEvent) => void;
 }

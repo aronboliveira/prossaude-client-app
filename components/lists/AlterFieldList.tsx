@@ -2,7 +2,7 @@
 import { AlterFieldListProps } from "@/lib/global/declarations/interfacesCons";
 import { ErrorBoundary } from "react-error-boundary";
 import { isClickOutside } from "@/lib/global/gStyleScript";
-import { nullishDlg, nullishForm, nullishSel } from "@/lib/global/declarations/types";
+import { nullishDlg, nlFm, nlSel } from "@/lib/global/declarations/types";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useEffect, useRef, useState } from "react";
 import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
@@ -23,8 +23,8 @@ export default function AlterFieldList({
   state = true,
 }: AlterFieldListProps): JSX.Element {
   const alterFieldRef = useRef<nullishDlg>(null),
-    formRef = useRef<nullishForm>(null),
-    optsRef = useRef<nullishSel>(null),
+    formRef = useRef<nlFm>(null),
+    optsRef = useRef<nlSel>(null),
     [, setChosenOp] = useState(optsRef.current?.value || null),
     handleChange = (targ: HTMLSelectElement): void => {
       history.pushState(

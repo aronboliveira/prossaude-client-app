@@ -11,7 +11,7 @@ import { useEffect, useRef, useCallback, useContext, useMemo } from "react";
 import GenericErrorComponent from "../../error/GenericErrorComponent";
 import ProfRow from "./ProfRow";
 import Spinner from "../../icons/Spinner";
-import { nullishBtn, nullishForm, nullishTab, nullishTabSect } from "@/lib/global/declarations/types";
+import { nlBtn, nlFm, nullishTab, nullishTabSect } from "@/lib/global/declarations/types";
 import { ProfInfo } from "@/lib/global/declarations/interfacesCons";
 import { strikeEntries } from "@/lib/locals/panelPage/consStyleScript";
 import { assignFormAttrs } from "@/lib/global/gModel";
@@ -22,10 +22,10 @@ import Link from "next/link";
 export default function TabProfForm(): JSX.Element {
   const userClass = useContext(PanelCtx).userClass,
     profs: ProfInfo[] = useMemo(() => [], []),
-    formRef = useRef<nullishForm>(null),
+    formRef = useRef<nlFm>(null),
     tabRef = useRef<nullishTab>(null),
     tbodyRef = useRef<nullishTabSect>(null),
-    btnExportProfsTabRef = useRef<nullishBtn>(null),
+    btnExportProfsTabRef = useRef<nlBtn>(null),
     callbackNormalizeSizesSb = useCallback(() => {
       normalizeSizeSb(
         [

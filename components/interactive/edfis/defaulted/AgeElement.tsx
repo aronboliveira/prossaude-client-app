@@ -1,7 +1,7 @@
 import { Person } from "@/lib/global/declarations/classes";
 import { exeAutoFill } from "@/lib/locals/edFisNutPage/edFisNutHandler";
 import { handleEventReq } from "@/lib/global/handlers/gHandlers";
-import { looseNum, nullishInp } from "@/lib/global/declarations/types";
+import { looseNum, nlInp } from "@/lib/global/declarations/types";
 import { person, tabProps } from "@/vars";
 import { useState, useEffect, Dispatch, SetStateAction, MutableRefObject } from "react";
 import { validateEvResultNum } from "@/lib/locals/edFisNutPage/edFisNutHandler";
@@ -11,7 +11,7 @@ export default function AgeElement({
   inpRef,
 }: {
   onSetAge?: Dispatch<SetStateAction<looseNum>>;
-  inpRef: MutableRefObject<nullishInp>;
+  inpRef: MutableRefObject<nlInp>;
 }): JSX.Element {
   const [value, setValue] = useState<string>("");
   const [prevValue, setPreValue] = useState<string>("");

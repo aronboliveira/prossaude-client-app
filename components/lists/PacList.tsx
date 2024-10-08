@@ -10,7 +10,7 @@ import { useContext, useEffect, useMemo, useRef } from "react";
 import GenericErrorComponent from "../error/GenericErrorComponent";
 import PacRow from "../panelForms/pacs/PacRow";
 import Spinner from "../icons/Spinner";
-import { nullishHtEl, nullishTab, nullishTabSect } from "@/lib/global/declarations/types";
+import { nlHtEl, nullishTab, nullishTabSect } from "@/lib/global/declarations/types";
 import { PacInfo, PacListProps } from "@/lib/global/declarations/interfacesCons";
 import {
   addListenerAlocation,
@@ -31,7 +31,7 @@ export default function PacList({
   const userClass = useContext(PanelCtx).userClass,
     pacs: PacInfo[] = useMemo(() => [], []),
     tabPacRef = useRef<nullishTab>(null),
-    sectTabRef = useRef<nullishHtEl>(null),
+    sectTabRef = useRef<nlHtEl>(null),
     tbodyRef = useRef<nullishTabSect>(null);
   useEffect(() => {
     try {
@@ -172,6 +172,7 @@ export default function PacList({
                               position: "absolute",
                             }}>
                             <Spinner
+                              key={crypto.randomUUID()}
                               spinnerClass='spinner-border'
                               spinnerColor='text-info'
                               message='Loading Patients Table...'
@@ -403,7 +404,12 @@ export default function PacList({
         </thead>
         <tbody className='pacTbody' ref={tbodyRef}>
           <span style={{ marginBlock: "2rem", position: "absolute" }}>
-            <Spinner spinnerClass='spinner-border' spinnerColor='text-info' message='Loading Patients Table...' />
+            <Spinner
+              key={crypto.randomUUID()}
+              spinnerClass='spinner-border'
+              spinnerColor='text-info'
+              message='Loading Patients Table...'
+            />
           </span>
         </tbody>
       </table>

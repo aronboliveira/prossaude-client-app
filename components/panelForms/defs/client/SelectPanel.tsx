@@ -7,7 +7,7 @@ import { MainPanelProps } from "@/lib/global/declarations/interfacesCons";
 import { providers } from "@/vars";
 import { camelToKebab, kebabToCamel } from "@/lib/global/gModel";
 import { handleLinkChanges } from "@/lib/global/handlers/gRoutingHandlers";
-import { nullishDiv, panelOpts } from "@/lib/global/declarations/types";
+import { nlDiv, panelOpts } from "@/lib/global/declarations/types";
 import { registerRoot, syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useState, useRef, useEffect, useContext } from "react";
 import DefaultForm from "../DefaultForm";
@@ -29,7 +29,7 @@ export default function SelectPanel({ defOp = "agenda" }: MainPanelProps): JSX.E
   const { userClass, setUserClass: setPrivilege } = useContext(PanelCtx),
     [selectedOption, setSelectedOption] = useState<string>(defOp),
     [mounted, setMounted] = useState<boolean>(false),
-    formRootRef = useRef<nullishDiv>(null),
+    formRootRef = useRef<nlDiv>(null),
     context = useContext<AppRootContextType>(AppRootContext),
     renderSelectPanel = (opt: panelOpts): void => {
       try {
