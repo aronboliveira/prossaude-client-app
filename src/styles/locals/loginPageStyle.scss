@@ -1,0 +1,276 @@
+/* Login Page Styles */
+
+@supports (scrollbar-width: thin) {
+  * {
+    &:not(:has(header)) {
+      scrollbar-width: thin;
+    }
+  }
+}
+
+.loginBody {
+  background-size: cover;
+  background-position: center 50%;
+  box-sizing: inherit;
+  line-height: 1.4286;
+  font-family: roboto, "Noto Sans Myanmar UI", arial, sans-serif;
+  font-size: 0.875rem;
+  button {
+    &:hover {
+      transform: translate(0, 0.1rem);
+    }
+    &:active {
+      transform: translate(0, 0.2rem);
+    }
+  }
+
+  #bgDiv {
+    border: none;
+    background-color: rgba(255, 255, 255, 0.97);
+    padding: 0;
+    margin: 0;
+  }
+
+  #recover {
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+
+  .userInput,
+  #outerLoginCont::after,
+  #outerLoginCont::before {
+    display: block;
+  }
+
+  .loginInputCont2,
+  #outerLoginCont,
+  #logoCont,
+  #loginBtnCont,
+  #loginInputCont3 {
+    display: flex;
+  }
+
+  .loginInputCont2,
+  .userInput,
+  #logoCont,
+  #loginBtnCont {
+    flex: 1;
+  }
+
+  .loginInputCont2,
+  #loginBtnCont,
+  #loginInputCont3 {
+    align-items: center;
+  }
+
+  #loginBtnCont,
+  #loginInputCont3 {
+    justify-content: space-between;
+  }
+
+  #titleCont1,
+  #headerCont {
+    text-align: center;
+  }
+
+  .loginInputCont2,
+  #outerLoginCont {
+    position: relative;
+  }
+
+  .loginInputCont2,
+  #inputCont {
+    vertical-align: top;
+  }
+
+  .loginInputCont2,
+  .userInput {
+    text-align: left;
+  }
+
+  .loginInputCont2,
+  #inputCont,
+  #logoCont {
+    width: 100%;
+  }
+
+  .loginInputCont1 {
+    margin: auto 0;
+    margin-top: 0;
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
+    &:has(svg) {
+      padding-left: 2.6rem;
+      padding-right: 0.7rem;
+    }
+  }
+
+  .loginInputCont2 {
+    box-sizing: content-box;
+    height: 3.5rem;
+    padding: 0.5rem 0 0;
+    margin-top: 0;
+  }
+
+  .userInput {
+    margin: 0.0625rem 0.0625rem 0 0.0625rem;
+    line-height: 1.5rem;
+    outline: none;
+    overflow: auto;
+  }
+
+  #inputCont {
+    margin: auto;
+    white-space: nowrap;
+    display: inline-block;
+    font-size: 0.875rem;
+    padding: 1.5rem 0 0;
+    white-space: normal;
+  }
+
+  #outerLoginCont {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    justify-items: center;
+    min-height: 100vh;
+    &::before,
+    &::after {
+      content: "";
+      height: 1.5rem;
+    }
+    &::before {
+      min-height: 1.875rem;
+    }
+  }
+
+  #logoCont,
+  #loginBtnCont {
+    padding-bottom: 3vh;
+  }
+
+  #logoCont {
+    justify-content: center;
+    margin: 0 auto;
+  }
+
+  #loginBtnCont {
+    width: 70%;
+    padding-top: 3vh;
+    padding-left: 18%;
+    padding-right: 5vw;
+  }
+
+  #logo {
+    max-width: 45vw;
+    max-height: 16vh;
+  }
+
+  #loginCont {
+    overflow: hidden;
+    overflow-y: auto;
+    min-height: 70vh;
+    min-width: 33.6rem;
+    height: auto;
+    width: 28.125rem;
+    padding: 3rem 2.5rem 2.25rem;
+    margin: 0 auto;
+    border: 0.0625rem solid #dadce0;
+    border-radius: 0.5rem;
+    transition: all 0s ease 0.2s;
+    background: #fff;
+  }
+
+  #loginInputCont3 {
+    flex-flow: row nowrap;
+    padding: 0;
+  }
+
+  #pw {
+    width: 100%;
+    border: none;
+  }
+
+  #spanShowPw {
+    padding-right: 2vw;
+    padding-left: 2vw;
+    border-bottom-right-radius: var(--bs-border-radius);
+    border-top-right-radius: var(--bs-border-radius);
+    background-color: transparent;
+    border-color: transparent;
+    border-left: var(--bs-border-width) solid var(--bs-border-color);
+  }
+
+  #titleCont2 {
+    padding-bottom: 0.75rem;
+  }
+
+  #titleText {
+    padding-bottom: 0;
+    padding-top: 1rem;
+    color: rgb(32, 33, 36);
+    font-size: 1.5rem;
+    font-family: "Google Sans", "Noto Sans Myanmar UI", arial, sans-serif;
+    font-weight: 400;
+    line-height: 1.3333;
+    margin-bottom: 0;
+    margin-top: 0;
+    word-break: break-word;
+  }
+
+  #submitBtn {
+    height: fit-content;
+  }
+
+  #subtitleText {
+    padding-bottom: 0.625rem;
+    padding-top: 0.4375rem;
+    margin-bottom: 0;
+    margin-top: 0;
+    letter-spacing: 0.0625rem;
+    line-height: 1.5;
+    font-size: 1rem;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .loginBody {
+    #outerLoginCont {
+      flex-direction: row;
+      max-width: 100vw;
+      max-height: 100vh;
+    }
+    #loginCont {
+      min-width: 260px;
+    }
+  }
+}
+
+@media screen and (max-width: 460px) {
+  .loginBody {
+    .customValidityWarn {
+      margin-left: 6.5%;
+    }
+
+    .loginInputCont1 {
+      padding-inline: 1.4rem 3rem;
+      &:has(svg) {
+        padding-inline: 1.5rem;
+        .loginInputCont2 {
+          width: 101%;
+        }
+      }
+    }
+    #loginCont {
+      height: 89vh;
+      padding-right: 12.5%;
+      padding-inline: 0;
+    }
+    #loginBtnCont {
+      width: 70%;
+      display: flex;
+      flex-flow: row wrap;
+      padding-left: 14vw;
+    }
+  }
+}
