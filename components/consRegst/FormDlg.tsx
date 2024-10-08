@@ -3,6 +3,7 @@ import { ConsDlgProps } from "@/lib/global/declarations/interfacesCons";
 import { ErrorBoundary } from "react-error-boundary";
 import { addListenerAvMembers } from "@/lib/locals/panelPage/handlers/consHandlerList";
 import { consVariablesData } from "./consVariables";
+import { createRoot } from "react-dom/client";
 import { providers, formData } from "@/vars";
 import { handleClientPermissions } from "@/lib/locals/panelPage/handlers/consHandlerUsers";
 import { handleSubmit } from "@/lib/locals/panelPage/handlers/handlers";
@@ -33,7 +34,6 @@ import {
   handleCondtReq,
   validateForm,
   syncAriaStates,
-  registerRoot,
 } from "@/lib/global/handlers/gHandlers";
 import ListFirstNameCons from "./ListFirstNameCons";
 import ListCPFPacCons from "./ListCPFPacCons";
@@ -123,10 +123,10 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
               .replaceAll(/D[aeo](?=[A-Z])/g, "")
               .replaceAll(/[Pp]aciente/g, "");
             keyFirstLvlMatch[inpTitle] && (inp.value = keyFirstLvlMatch[inpTitle].toString());
-          }
+          } else console.warn(`Field ${inp.id || "UNIDENTIFIED"} has no data-title. Could not match data.`);
         }
       } else multipleElementsNotFound(extLine(new Error()), `inputs in the dialog id ${dlgRef.current.id}`, cpfInp);
-    }
+    } else console.warn(`dlgRef.current not validated in callbackCPFPacBtnClick()`);
     return matchDataPh;
   }, []);
   //ativação de preenchimento de paciente com CPF
@@ -167,8 +167,10 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
             ] = entry.value || "Anônimo";
           });
         } else elementNotPopulated(allEntryEls, "allEntryEls in generateSchedBtn()", extLine(new Error()));
-        const selected = document.getElementById("rootDlgList") ?? document.getElementById("transfArea");
-        consVariablesData.rootDlg = registerRoot(consVariablesData.rootDlg, `#${selected?.id ?? "DEFAULT"}`);
+        if (!consVariablesData.rootDlg)
+          consVariablesData.rootDlg = createRoot(
+            document.getElementById("rootDlgList") ?? document.getElementById("transfArea")!,
+          );
         const newBtn = createAptBtn(
           formData,
           providerFormData[accFormData] as any,

@@ -1,5 +1,6 @@
 "use client";
 import { AppRootContext } from "@/pages/_app";
+import { createRoot } from "react-dom/client";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { equalizeParagraphs } from "@/lib/locals/basePage/baseStylescript";
 import { expandContent } from "@/lib/global/gStyleScript";
@@ -11,20 +12,24 @@ import UserProfilePanel from "../../user/UserProfilePanel";
 import { defUser } from "@/redux/slices/userSlice";
 import { experimentalProps } from "@/vars";
 import Link from "next/link";
-import { registerRoot } from "@/lib/global/handlers/gHandlers";
-import { AppRootContextType } from "@/lib/global/declarations/interfaces";
 let baseRootUser: targEl;
 export default function MainContainer(): JSX.Element {
-  const context = useContext<AppRootContextType>(AppRootContext);
+  const context = useContext(AppRootContext);
   const nextRouter = useRouter();
   useEffect(() => {
     experimentalProps.experimentalUser = localStorage.getItem("activeUser")
       ? JSON.parse(localStorage.getItem("activeUser")!)
       : defUser;
+    if (
+      experimentalProps.experimentalUser?.loadedData &&
+      (experimentalProps.experimentalUser.loadedData.name === "" ||
+        /an[oô]nimo/gi.test(experimentalProps.experimentalUser.loadedData.name))
+    )
+      console.warn(`Failed to fetch user from local storage. Default user displayed.`);
     localStorage.setItem("activeUser", JSON.stringify(experimentalProps.experimentalUser));
     baseRootUser = document.getElementById("rootUserInfo");
     baseRootUser instanceof HTMLElement && !context.roots.baseRootedUser
-      ? (context.roots.baseRootedUser = registerRoot(context.roots.baseRootedUser, `#${baseRootUser.id}`))
+      ? (context.roots.baseRootedUser = createRoot(baseRootUser))
       : setTimeout(() => {
           baseRootUser = document.getElementById("rootUserInfo");
           !baseRootUser && elementNotFound(baseRootUser, "Root for user painel", extLine(new Error()));
@@ -41,13 +46,25 @@ export default function MainContainer(): JSX.Element {
     const handleBgResize = (): void => {
       try {
         const bgDiv = document.getElementById("bgDiv");
-        if (!(bgDiv instanceof HTMLElement)) return;
+        if (!(bgDiv instanceof HTMLElement)) {
+          console.warn(`Failed to fetch Background Div`);
+          return;
+        }
         const mainArticle = document.querySelector(".main-article") || document.querySelector("nav");
-        if (!(mainArticle instanceof HTMLElement)) return;
+        if (!(mainArticle instanceof HTMLElement)) {
+          console.warn(`Failed to fetch MainArticle`);
+          return;
+        }
         const mainContainer = document.querySelector(".main-container") || document.querySelector("main");
-        if (!(mainContainer instanceof HTMLElement)) return;
+        if (!(mainContainer instanceof HTMLElement)) {
+          console.warn(`Failed to fetch Main Container`);
+          return;
+        }
         const cardsSect = document.getElementById("cardsSect");
-        if (!(cardsSect instanceof HTMLElement)) return;
+        if (!(cardsSect instanceof HTMLElement)) {
+          console.warn(`Failed to fetch Cards Section`);
+          return;
+        }
         const panelBtn = document.getElementById("panelBtn"),
           panelSect = document.getElementById("panelSect"),
           rows = getComputedStyle(cardsSect).gridTemplateRows;

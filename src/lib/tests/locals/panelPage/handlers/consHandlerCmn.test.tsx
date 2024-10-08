@@ -26,6 +26,7 @@ import {
 } from "../../../../locals/panelPage/handlers/consHandlerCmn";
 import { sessionScheduleState } from "../../../../../../components/panelForms/panelFormsData";
 import { consVariablesData } from "../../../../../../components/consRegst/consVariables";
+import { Root } from "react-dom/client";
 import React from "react";
 import {
   AppointmentHandler,
@@ -36,19 +37,18 @@ import {
   ISODate,
   WeekDay,
   WeekDaysNum,
-} from "../../../testVars";
-import { vRoot } from "../../../../global/declarations/types";
+} from "@/lib/tests/testVars";
 let isDragging = false;
 describe("checkComponentValidity", (): void => {
   test("should return JSX element if valid and contains children", (): void => {
     const ValidComponent: () => React.JSX.Element = (): JSX.Element => <div>Child</div>;
     expect(checkComponentValidity(<ValidComponent />, <span>Default</span>).type).toBe<() => React.JSX.Element>(
-      ValidComponent,
+      ValidComponent
     );
   }) as void;
   test("should return Default element if invalid JSX element", (): void => {
     const DefaultComponent = <span>Default</span>;
-    expect(checkComponentValidity(<></>, DefaultComponent)).toEqual(DefaultComponent);
+    expect(checkComponentValidity(<React.Fragment />, DefaultComponent)).toEqual(DefaultComponent);
   }) as void;
 }) as void;
 describe("asyncJSXCall", (): void => {
@@ -64,7 +64,7 @@ describe("asyncJSXCall", (): void => {
       jest.fn((): never => {
         throw new Error("Test error");
       }),
-      jest.fn() as jest.Mock,
+      jest.fn() as jest.Mock
     );
     expect(result.type).toBe<HTMLTag>("p") as void;
     expect(result.props.children).toBe<string>("ERROR LOADING PAGE COMPONENT") as void;
@@ -178,7 +178,7 @@ describe("generateSchedPacData", (): void => {
   it("should handle non-element scope and call elementNotFound", (): void => {
     generateSchedPacData(null as any);
     expect(
-      jest.spyOn<any, ErrorHandler>(require("../../../../global/handlers/errorHandler"), "elementNotFound"),
+      jest.spyOn<any, ErrorHandler>(require("../../../../global/handlers/errorHandler"), "elementNotFound")
     ).toHaveBeenCalled() as void;
   }) as void;
 }) as void;
@@ -205,7 +205,7 @@ describe("handleRenderRefLost", (): void => {
   it("should throw typeError when id is not a string", (): void => {
     handleRenderRefLost(null as any, prevRef, "coordenador");
     expect(
-      jest.spyOn<Console, ConsoleMethod>(console, "error").mockImplementation((): void => {}) as jest.SpyInstance,
+      jest.spyOn<Console, ConsoleMethod>(console, "error").mockImplementation((): void => {}) as jest.SpyInstance
     ).toHaveBeenCalled() as void;
   }) as void;
 }) as void;
@@ -266,7 +266,7 @@ describe("createAptBtn", (): void => {
     document.body.innerHTML = "";
     createAptBtn(formData, providerFormData, rootedDlg, "coordenador");
     expect(
-      jest.spyOn<any, ErrorHandler>(require("../../../../global/handlers/errorHandler"), "elementNotFound"),
+      jest.spyOn<any, ErrorHandler>(require("../../../../global/handlers/errorHandler"), "elementNotFound")
     ).toHaveBeenCalled() as void;
   }) as void;
 }) as void;
@@ -279,7 +279,7 @@ describe("handleDragAptBtn", (): void => {
     mockReplaceRegstSlot = jest
       .spyOn<any, AppointmentHandler>(
         require("../../../../locals/panelPage/handlers/consHandlerCmn"),
-        "replaceRegstSlot",
+        "replaceRegstSlot"
       )
       .mockImplementation() as jest.SpyInstance;
     document.body.innerHTML = `
@@ -308,7 +308,7 @@ describe("handleDragAptBtn", (): void => {
             clientY: 20,
           }),
         ],
-      }),
+      })
     );
     expect(isDragging).toBe<boolean>(true) as void;
   }) as void;
@@ -324,14 +324,14 @@ describe("handleDragAptBtn", (): void => {
             clientY: 50,
           }),
         ],
-      }),
+      })
     );
     expect(mockReplaceRegstSlot).toHaveBeenCalled() as void;
   }) as void;
   it("should throw an error if newAppointmentBtn is not an HTMLButtonElement", (): void => {
     handleDragAptBtn({} as any);
     expect(
-      jest.spyOn<any, ErrorHandler>(require("../../../../global/handlers/errorHandler"), "elementNotFound"),
+      jest.spyOn<any, ErrorHandler>(require("../../../../global/handlers/errorHandler"), "elementNotFound")
     ).toHaveBeenCalled() as void;
   }) as void;
 }) as void;
@@ -358,22 +358,22 @@ describe("replaceRegstSlot", (): void => {
       jest
         .spyOn<any, AppointmentHandler>(
           require("../../../../locals/panelPage/handlers/consHandlerCmn"),
-          "fillSchedStateValues",
+          "fillSchedStateValues"
         )
-        .mockImplementation() as jest.SpyInstance,
+        .mockImplementation() as jest.SpyInstance
     ).toHaveBeenCalled() as void;
   }) as void;
   it("should throw an error if matchedSlot is not an HTMLElement", (): void => {
     replaceRegstSlot(null as any, newAppointmentBtn, [matchedSlot], "estudante");
     expect(
-      jest.spyOn<any, ErrorHandler>(require("../../../../global/handlers/errorHandler"), "elementNotFound"),
+      jest.spyOn<any, ErrorHandler>(require("../../../../global/handlers/errorHandler"), "elementNotFound")
     ).toHaveBeenCalled() as void;
   }) as void;
 }) as void;
 describe("checkRegstBtn", (): void => {
   let regstBtn: HTMLElement;
   let scope: Document;
-  let failProps: [vRoot, boolean, jest.Mock, string];
+  let failProps: [Root | undefined, boolean, jest.Mock, string];
   const userClass = "coordenador";
   beforeEach((): void => {
     regstBtn = document.createElement("button") as HTMLButtonElement;
@@ -398,7 +398,7 @@ describe("checkRegstBtn", (): void => {
   it("should call multipleElementsNotFound if there is a mismatch", (): void => {
     const errorSpy = jest.spyOn<any, ErrorHandler>(
       require("../../../../global/handlers/errorHandler"),
-      "multipleElementsNotFound",
+      "multipleElementsNotFound"
     );
     checkRegstBtn(regstBtn, scope, failProps, userClass);
     expect(errorSpy).toHaveBeenCalled() as void;
@@ -419,9 +419,9 @@ describe("addEraseEvent", (): void => {
       jest
         .spyOn<any, AppointmentHandler>(
           require("../../../../locals/panelPage/handlers/consHandlerCmn"),
-          "replaceBtnSlot",
+          "replaceBtnSlot"
         )
-        .mockImplementation() as jest.SpyInstance,
+        .mockImplementation() as jest.SpyInstance
     ).toHaveBeenCalled() as void;
   }) as void;
 
@@ -480,8 +480,8 @@ describe("handleScheduleChange", (): void => {
       handleScheduleChange(
         document.createElement("select"),
         document.createElement("div") as HTMLDivElement,
-        "coordenador",
-      ),
+        "coordenador"
+      )
     ).toThrow();
   }) as void;
 }) as void;
@@ -577,7 +577,7 @@ describe("addListenerForSchedUpdates", (): void => {
   it("should throw error if monthSelector is not valid", (): void => {
     addListenerForSchedUpdates(document.createElement("div") as HTMLDivElement as any);
     expect(
-      jest.spyOn<any, ErrorHandler>(require("../../../../global/handlers/errorHandler"), "inputNotFound"),
+      jest.spyOn<any, ErrorHandler>(require("../../../../global/handlers/errorHandler"), "inputNotFound")
     ).toHaveBeenCalled() as void;
   }) as void;
   it("should throw error if no input/select/textarea elements are found", (): void => {
@@ -590,7 +590,7 @@ describe("addListenerForSchedUpdates", (): void => {
     monthSelector = document.getElementById("monthSelector") as HTMLSelectElement;
     addListenerForSchedUpdates(monthSelector);
     expect(
-      jest.spyOn<any, ErrorHandler>(require("../../../../global/handlers/errorHandler"), "elementNotPopulated"),
+      jest.spyOn<any, ErrorHandler>(require("../../../../global/handlers/errorHandler"), "elementNotPopulated")
     ).toHaveBeenCalled() as void;
   }) as void;
   it("should throw error if no slots are found", (): void => {
@@ -605,7 +605,7 @@ describe("addListenerForSchedUpdates", (): void => {
     monthSelector = document.getElementById("monthSelector") as HTMLSelectElement;
     addListenerForSchedUpdates(monthSelector);
     expect(
-      jest.spyOn<any, ErrorHandler>(require("../../../../global/handlers/errorHandler"), "elementNotPopulated"),
+      jest.spyOn<any, ErrorHandler>(require("../../../../global/handlers/errorHandler"), "elementNotPopulated")
     ).toHaveBeenCalled() as void;
   }) as void;
   it("should update session state on event listener triggers", (): void => {
@@ -645,7 +645,7 @@ describe("fillSchedStateValues", (): void => {
     document.body.innerHTML = "";
     fillSchedStateValues("January");
     expect(
-      jest.spyOn<any, ErrorHandler>(require("../../../../global/handlers/errorHandler"), "elementNotFound"),
+      jest.spyOn<any, ErrorHandler>(require("../../../../global/handlers/errorHandler"), "elementNotFound")
     ).toHaveBeenCalled() as void;
   }) as void;
   it("should throw error if no input/select/textarea elements are found", (): void => {
@@ -654,7 +654,7 @@ describe("fillSchedStateValues", (): void => {
     `;
     fillSchedStateValues("January");
     expect(
-      jest.spyOn<any, ErrorHandler>(require("../../../../global/handlers/errorHandler"), "elementNotPopulated"),
+      jest.spyOn<any, ErrorHandler>(require("../../../../global/handlers/errorHandler"), "elementNotPopulated")
     ).toHaveBeenCalled() as void;
   }) as void;
 }) as void;

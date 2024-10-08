@@ -1,11 +1,12 @@
 "use client";
 import { ErrorBoundary } from "react-error-boundary";
+import { createRoot } from "react-dom/client";
 import { elementNotFound, extLine, inputNotFound } from "@/lib/global/handlers/errorHandler";
 import { equalizeTabCells, isClickOutside } from "@/lib/global/gStyleScript";
 import { handleFetch } from "@/lib/locals/panelPage/handlers/handlers";
 import { panelRoots } from "@/vars";
 import { strikeEntries } from "@/lib/locals/panelPage/consStyleScript";
-import { registerRoot, syncAriaStates } from "@/lib/global/handlers/gHandlers";
+import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useContext, useEffect, useMemo, useRef } from "react";
 import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
 import GenericErrorComponent from "../error/GenericErrorComponent";
@@ -18,10 +19,8 @@ import {
   checkLocalIntervs,
   fillTabAttr,
   filterTabMembers,
-  renderTable,
 } from "@/lib/locals/panelPage/handlers/consHandlerList";
 import { PanelCtx } from "../panelForms/defs/client/SelectLoader";
-import Link from "next/link";
 export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
   const userClass = useContext(PanelCtx).userClass,
     internalProfs: ProfInfo[] = useMemo(() => [], []),
@@ -117,7 +116,10 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                 throw elementNotFound(tbodyExtRef.current, `Validation of Table Body instance`, extLine(new Error()));
               if (!(tbodyIntRef.current instanceof HTMLTableSectionElement))
                 throw elementNotFound(tbodyExtRef.current, `Validation of Table Body instance`, extLine(new Error()));
-              if (panelRoots[tbodyIntRef.current.id] && !(panelRoots[tbodyIntRef.current.id] as any)["_internalRoot"]) {
+              if (
+                panelRoots[`${tbodyIntRef.current.id}`] &&
+                !(panelRoots[`${tbodyIntRef.current.id}`] as any)["_internalRoot"]
+              ) {
                 setTimeout(() => {
                   try {
                     if (!(tabProfIntRef.current instanceof HTMLElement))
@@ -133,15 +135,12 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                         extLine(new Error()),
                       );
                     if (tbodyIntRef.current.querySelector("tr")) return;
-                    panelRoots[tbodyIntRef.current.id]?.unmount();
-                    delete panelRoots[tbodyIntRef.current.id];
+                    panelRoots[`${tbodyIntRef.current.id}`]?.unmount();
+                    delete panelRoots[`${tbodyIntRef.current.id}`];
                     tbodyIntRef.current.remove() as void;
-                    panelRoots[tabProfIntRef.current.id] = registerRoot(
-                      panelRoots[tabProfIntRef.current.id],
-                      `#${tabProfIntRef.current.id}`,
-                      tabProfIntRef,
-                    );
-                    panelRoots[tabProfIntRef.current.id]?.render(
+                    if (!panelRoots[`${tabProfIntRef.current.id}`])
+                      panelRoots[`${tabProfIntRef.current.id}`] = createRoot(tabProfIntRef.current);
+                    panelRoots[`${tabProfIntRef.current.id}`]?.render(
                       <ErrorBoundary
                         FallbackComponent={() => (
                           <GenericErrorComponent message='Error reloading replacement for table body' />
@@ -156,13 +155,9 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                                 <em className='noInvert'>
                                   Lista Recuperada da Ficha de Profissionais registrados. Acesse
                                   <samp>
-                                    <Link
-                                      href={`${location.origin}/panel?panel-regist-prof`}
-                                      id='registProfLink'
-                                      style={{ display: "inline" }}>
-                                      Cadastrar Membro Profissional
-                                    </Link>
-                                  </samp>
+                                    {" "}
+                                    <a> ROTA_PLACEHOLDER </a>{" "}
+                                  </samp>{" "}
                                   para cadastrar
                                 </em>
                               </small>
@@ -225,13 +220,10 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                     tbodyIntRef.current = document.getElementById("profsIntTbody") as nullishTabSect;
                     if (!(tbodyIntRef.current instanceof HTMLElement))
                       throw elementNotFound(tbodyIntRef.current, `Validation of replaced tbody`, extLine(new Error()));
-                    panelRoots[tbodyIntRef.current.id] = registerRoot(
-                      panelRoots[tbodyIntRef.current.id],
-                      `#${tbodyIntRef.current.id}`,
-                      tbodyIntRef,
-                    );
+                    if (!panelRoots[`${tbodyIntRef.current.id}`])
+                      panelRoots[`${tbodyIntRef.current.id}`] = createRoot(tbodyIntRef.current);
                     if (!tbodyIntRef.current.querySelector("tr"))
-                      panelRoots[tbodyIntRef.current.id]?.render(
+                      panelRoots[`${tbodyIntRef.current.id}`]?.render(
                         internalProfs.map((prof, i) => (
                           <ProfRow
                             nRow={i + 2}
@@ -261,14 +253,9 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                     );
                   }
                 }, 1000);
-              } else
-                panelRoots[tbodyIntRef.current.id] = registerRoot(
-                  panelRoots[tbodyIntRef.current.id],
-                  `#${tbodyIntRef.current.id}`,
-                  tbodyIntRef,
-                );
+              } else panelRoots[`${tbodyIntRef.current.id}`] = createRoot(tbodyIntRef.current);
               if (!tbodyIntRef.current.querySelector("tr"))
-                panelRoots[tbodyIntRef.current.id]?.render(
+                panelRoots[`${tbodyIntRef.current.id}`]?.render(
                   internalProfs.map((prof, i) => {
                     return Array.from(tbodyIntRef.current?.querySelectorAll("output") ?? []).some(
                       outp => outp.innerText === (prof as ProfInfo)["idf"],
@@ -302,9 +289,20 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                   );
               }, 300);
               setTimeout(() => {
-                if (!document.querySelector("tr") && document.querySelector("table")) renderTable();
+                if (!document.querySelector("tr") && document.querySelector("table")) {
+                  if (!panelRoots[`${document.querySelector("table")!.id}`])
+                    panelRoots[`${document.querySelector("table")!.id}`] = createRoot(document.querySelector("table")!);
+                  panelRoots[`${document.querySelector("table")!.id}`]?.render(
+                    <GenericErrorComponent message='Failed to render table' />,
+                  );
+                }
               }, 5000);
-              if (panelRoots[tbodyExtRef.current.id] && !(panelRoots[tbodyExtRef.current.id] as any)["_internalRoot"]) {
+              //
+              //
+              if (
+                panelRoots[`${tbodyExtRef.current.id}`] &&
+                !(panelRoots[`${tbodyExtRef.current.id}`] as any)["_internalRoot"]
+              ) {
                 setTimeout(() => {
                   try {
                     if (!(tabProfIntRef.current instanceof HTMLElement))
@@ -320,15 +318,12 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                         extLine(new Error()),
                       );
                     if (tbodyExtRef.current.querySelector("tr")) return;
-                    panelRoots[tbodyExtRef.current.id]?.unmount();
-                    delete panelRoots[tbodyExtRef.current.id];
+                    panelRoots[`${tbodyExtRef.current.id}`]?.unmount();
+                    delete panelRoots[`${tbodyExtRef.current.id}`];
                     tbodyExtRef.current.remove() as void;
-                    panelRoots[tabProfIntRef.current.id] = registerRoot(
-                      panelRoots[tabProfIntRef.current.id],
-                      `#${tabProfIntRef.current.id}`,
-                      tabProfIntRef,
-                    );
-                    panelRoots[tabProfIntRef.current.id]?.render(
+                    if (!panelRoots[`${tabProfIntRef.current.id}`])
+                      panelRoots[`${tabProfIntRef.current.id}`] = createRoot(tabProfIntRef.current);
+                    panelRoots[`${tabProfIntRef.current.id}`]?.render(
                       <ErrorBoundary
                         FallbackComponent={() => (
                           <GenericErrorComponent message='Error reloading replacement for table body' />
@@ -343,13 +338,9 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                                 <em className='noInvert'>
                                   Lista Recuperada da Ficha de Profissionais registrados. Acesse
                                   <samp>
-                                    <Link
-                                      href={`${location.origin}/panel?panel-regist-prof`}
-                                      id='registProfLink'
-                                      style={{ display: "inline" }}>
-                                      Cadastrar Membro Profissional
-                                    </Link>
-                                  </samp>
+                                    {" "}
+                                    <a> ROTA_PLACEHOLDER </a>{" "}
+                                  </samp>{" "}
                                   para cadastrar
                                 </em>
                               </small>
@@ -412,13 +403,10 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                     tbodyExtRef.current = document.getElementById("profsExtTbody") as nullishTabSect;
                     if (!(tbodyExtRef.current instanceof HTMLElement))
                       throw elementNotFound(tbodyExtRef.current, `Validation of replaced tbody`, extLine(new Error()));
-                    panelRoots[tbodyExtRef.current.id] = registerRoot(
-                      panelRoots[tbodyExtRef.current.id],
-                      `#${tbodyExtRef.current.id}`,
-                      tbodyExtRef,
-                    );
+                    if (!panelRoots[`${tbodyExtRef.current.id}`])
+                      panelRoots[`${tbodyExtRef.current.id}`] = createRoot(tbodyExtRef.current);
                     if (!tbodyExtRef.current.querySelector("tr"))
-                      panelRoots[tbodyExtRef.current.id]?.render(
+                      panelRoots[`${tbodyExtRef.current.id}`]?.render(
                         externalProfs.map((prof, i) => (
                           <ProfRow
                             nRow={i + 2}
@@ -448,14 +436,9 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                     );
                   }
                 }, 1000);
-              } else
-                panelRoots[tbodyExtRef.current.id] = registerRoot(
-                  panelRoots[tbodyExtRef.current.id],
-                  `#${tbodyExtRef.current.id}`,
-                  tbodyExtRef,
-                );
+              } else panelRoots[`${tbodyExtRef.current.id}`] = createRoot(tbodyExtRef.current);
               if (!tbodyExtRef.current.querySelector("tr"))
-                panelRoots[tbodyExtRef.current.id]?.render(
+                panelRoots[`${tbodyExtRef.current.id}`]?.render(
                   externalProfs.map((prof, i) => {
                     return Array.from(tbodyExtRef.current?.querySelectorAll("output") ?? []).some(
                       outp => outp.innerText === (prof as ProfInfo)["idf"],
@@ -489,7 +472,13 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                   );
               }, 300);
               setTimeout(() => {
-                if (!document.querySelector("tr") && document.querySelector("table")) renderTable();
+                if (!document.querySelector("tr") && document.querySelector("table")) {
+                  if (!panelRoots[`${document.querySelector("table")!.id}`])
+                    panelRoots[`${document.querySelector("table")!.id}`] = createRoot(document.querySelector("table")!);
+                  panelRoots[`${document.querySelector("table")!.id}`]?.render(
+                    <GenericErrorComponent message='Failed to render table' />,
+                  );
+                }
               }, 5000);
             } catch (e) {
               console.error(`Error executing rendering of Table Body Content:\n${(e as Error).message}`);
@@ -675,13 +664,9 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                         <em className='noInvert'>
                           Lista Recuperada da Ficha de Profissionais registrados. Acesse
                           <samp>
-                            <Link
-                              href={`${location.origin}/panel?panel-regist-prof`}
-                              id='registProfLink'
-                              style={{ display: "inline" }}>
-                              Cadastrar Membro Profissional
-                            </Link>
-                          </samp>
+                            {" "}
+                            <a> ROTA_PLACEHOLDER </a>{" "}
+                          </samp>{" "}
                           para cadastrar
                         </em>
                       </small>
@@ -754,13 +739,9 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                         <em className='noInvert'>
                           Lista Recuperada da Ficha de Profissionais registrados. Acesse
                           <samp>
-                            <Link
-                              href={`${location.origin}/panel?panel-regist-prof`}
-                              id='registProfLink'
-                              style={{ display: "inline" }}>
-                              Cadastrar Membro Profissional
-                            </Link>
-                          </samp>
+                            {" "}
+                            <a> ROTA_PLACEHOLDER </a>{" "}
+                          </samp>{" "}
                           para cadastrar
                         </em>
                       </small>

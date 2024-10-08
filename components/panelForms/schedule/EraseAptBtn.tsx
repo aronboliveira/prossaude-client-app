@@ -18,7 +18,8 @@ export default function EraseAptBtn(): JSX.Element {
         throw elementNotFound(relSlot, "slot for erase appointment btn", extLine(new Error()));
       btnRef.current.id = btnRef.current.id.replace("unfilled", relSlot.id.replace("slot_", ""));
     } catch (err) {
-      return;
+      console.warn(`Error with reference for button:
+      ${(err as Error).message}`);
     }
   }, [btnRef]);
   return (

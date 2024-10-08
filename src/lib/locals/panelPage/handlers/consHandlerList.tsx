@@ -15,9 +15,6 @@ import {
   elementNotFound,
   stringError,
 } from "../../../global/handlers/errorHandler";
-import { registerRoot } from "@/lib/global/handlers/gHandlers";
-import { panelRoots } from "@/vars";
-import GenericErrorComponent from "../../../../../components/error/GenericErrorComponent";
 
 //nesse arquivo estão as funções para handling de casos dos modais de listas tabeladas
 
@@ -294,6 +291,14 @@ export function addListenerAlocation(
     tabs.length > 0
       ? tabs.forEach(tab => {
           const btnAloc = tab.querySelectorAll(`button[class*=btnAloc${context}]`) || `button[id*=btnAloc${context}]`;
+          if (tab instanceof HTMLTableElement && btnAloc.length !== tab.rows.length - 1)
+            console.warn(
+              `Number of rows in ${context} Table id ${
+                tab?.id || "UNIDENTIFIED"
+              } and buttons for alocation are not equal. This might result in misleading data.
+            Computed number of buttons: ${btnAloc.length};
+            Computed number of rows (-1): ${tab.rows.length - 1}`,
+            );
           btnAloc.forEach(btn => {
             (userClass === "coordenador" || userClass === "supervisor") &&
               btn.addEventListener("click", () => {
@@ -528,10 +533,4 @@ export function fillTabAttr(tab: targEl, context: string = "pac"): void {
         stringError("Reading context for fillTabAttr()", context, extLine(new Error()));
     }
   } else elementNotFound(tab, "Table called in fillTabAttr()", extLine(new Error()));
-}
-export function renderTable(): void {
-  const firstTable = document.querySelector("table");
-  if (!firstTable) return;
-  registerRoot(panelRoots[firstTable.id], `#${firstTable.id}`);
-  panelRoots[firstTable.id]?.render(<GenericErrorComponent message='Failed to render table' />);
 }

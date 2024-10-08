@@ -74,6 +74,8 @@ export async function handleLogin(
       }
       const data = await res.json();
       if (res.status !== 200) {
+        console.warn(`Error on processing HTTP Response:\n`);
+        console.warn(data);
         status = res.status;
         resData = data;
         return {
@@ -82,6 +84,8 @@ export async function handleLogin(
         };
       }
       if (!("access" in data)) {
+        console.warn(`Error on processing JSONified HTTP Response:\n`);
+        console.warn(data);
         status = res.status;
         resData = data;
         return {
@@ -101,6 +105,8 @@ export async function handleLogin(
       });
       const { ok, res: user } = decodeToken(data);
       if (!ok) {
+        console.warn(`Error processing tokens :\n`);
+        console.warn(user);
         status = res.status;
         resData = data;
         return {
@@ -122,6 +128,7 @@ export async function handleLogin(
     }
   } catch (e) {
     console.error(`Error executing handleFetchStuds:\n${(e as Error).message}`);
+    console.warn(`Error on processing HTTP Response:\n${resData}`);
     return {
       valid: false,
       message: navigator.language.startsWith("pt-")

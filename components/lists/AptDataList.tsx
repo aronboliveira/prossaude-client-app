@@ -2,17 +2,17 @@ import { ErrorBoundary } from "react-error-boundary";
 import { AptDataListProps } from "@/lib/global/declarations/interfacesCons";
 import { addExportFlags } from "@/lib/global/gController";
 import { consVariablesData } from "../consRegst/consVariables";
+import { createRoot } from "react-dom/client";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { isClickOutside } from "@/lib/global/gStyleScript";
 import { nullishDlg } from "@/lib/global/declarations/types";
-import { registerRoot, syncAriaStates } from "@/lib/global/handlers/gHandlers";
+import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useContext, useEffect, useRef } from "react";
 import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
 import { PanelCtx } from "../panelForms/defs/client/SelectLoader";
 import { ExportHandler } from "@/lib/global/declarations/classes";
 import { exporters } from "@/vars";
 import useExportHandler from "@/lib/hooks/useExportHandler";
-import Link from "next/link";
 export default function AptDataList({
   setDisplayAptList,
   data,
@@ -21,7 +21,9 @@ export default function AptDataList({
   isDirectRender = false,
 }: AptDataListProps): JSX.Element {
   const userClass = useContext(PanelCtx).userClass,
-    transferBtn = document.querySelector(`[id*="${btnId}"]`),
+    transfArea = document.getElementById("transfArea")!;
+  if (!transfArea) console.warn(`Transfer area was not found by AptDataList.`);
+  const transferBtn = document.querySelector(`[id*="${btnId}"]`),
     aptDlgRef = useRef<nullishDlg>(null),
     renderDirectly = (): void => {
       try {
@@ -38,14 +40,14 @@ export default function AptDataList({
                 />,
               );
       } catch (e) {
+        console.warn(`Error rendering AptDataList:
+      ${(e as Error).message};
+      Initiating root recovering attempt.`);
         try {
           const fallbackRootDlg = document.getElementById("rootDlgList");
           if (!(fallbackRootDlg instanceof HTMLElement))
             throw elementNotFound(fallbackRootDlg, `attemp to recreate rootDlg`, extLine(new Error()));
-          registerRoot(
-            undefined,
-            `${fallbackRootDlg.id || fallbackRootDlg.className.replace(/\s/g, "__") || fallbackRootDlg.tagName}`,
-          )?.unmount();
+          createRoot(fallbackRootDlg).unmount();
         } catch (e2) {
           console.error(`Error rendering AptDataList:
         ${(e2 as Error).message};
@@ -69,14 +71,14 @@ export default function AptDataList({
                 />,
               );
       } catch (e) {
+        console.warn(`Error rendering AptDataList:
+        ${(e as Error).message};
+        Initiating root recovering attempt.`);
         try {
           const fallbackRootDlg = document.getElementById("rootDlgList");
           if (!(fallbackRootDlg instanceof HTMLElement))
             throw elementNotFound(fallbackRootDlg, `attemp to recreate rootDlg`, extLine(new Error()));
-          registerRoot(
-            undefined,
-            `${fallbackRootDlg.id || fallbackRootDlg.className.replace(/\s/g, "__") || fallbackRootDlg.tagName}`,
-          )?.unmount();
+          createRoot(fallbackRootDlg).unmount();
         } catch (e2) {
           console.error(`Error rendering AptDataList:
           ${(e2 as Error).message};
@@ -155,12 +157,7 @@ export default function AptDataList({
                     <em className='noInvert'>
                       Lista Recuperada da Ficha de Consultas registradas. Acesse
                       <samp>
-                        <Link
-                          href={`${location.origin}/panel?panel=agenda&new-cons=open`}
-                          style={{ display: "inline" }}
-                          id='addAppointmentLink'>
-                          Adicionar Consulta
-                        </Link>
+                        <a> ROTA_PLACEHOLDER </a>
                       </samp>
                       para cadastrar
                     </em>

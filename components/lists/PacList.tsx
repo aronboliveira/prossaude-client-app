@@ -1,26 +1,21 @@
 "use client";
 import { ErrorBoundary } from "react-error-boundary";
+import { createRoot } from "react-dom/client";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { equalizeTabCells } from "@/lib/global/gStyleScript";
 import { handleFetch } from "@/lib/locals/panelPage/handlers/handlers";
 import { panelRoots } from "@/vars";
 import { strikeEntries } from "@/lib/locals/panelPage/consStyleScript";
-import { registerRoot, syncAriaStates } from "@/lib/global/handlers/gHandlers";
+import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useContext, useEffect, useMemo, useRef } from "react";
 import GenericErrorComponent from "../error/GenericErrorComponent";
 import PacRow from "../panelForms/pacs/PacRow";
 import Spinner from "../icons/Spinner";
 import { nullishHtEl, nullishTab, nullishTabSect } from "@/lib/global/declarations/types";
 import { PacInfo, PacListProps } from "@/lib/global/declarations/interfacesCons";
-import {
-  addListenerAlocation,
-  checkLocalIntervs,
-  fillTabAttr,
-  renderTable,
-} from "@/lib/locals/panelPage/handlers/consHandlerList";
+import { addListenerAlocation, checkLocalIntervs, fillTabAttr } from "@/lib/locals/panelPage/handlers/consHandlerList";
 import { handleClientPermissions } from "@/lib/locals/panelPage/handlers/consHandlerUsers";
 import { PanelCtx } from "../panelForms/defs/client/SelectLoader";
-import Link from "next/link";
 export default function PacList({
   shouldDisplayRowData,
   setDisplayRowData,
@@ -62,7 +57,10 @@ export default function PacList({
                 throw elementNotFound(tabPacRef.current, `Validation of Table reference`, extLine(new Error()));
               if (!(tbodyRef.current instanceof HTMLElement))
                 throw elementNotFound(tbodyRef.current, `Validation of Table Body Reference`, extLine(new Error()));
-              if (panelRoots[tbodyRef.current.id] && !(panelRoots[tbodyRef.current.id] as any)["_internalRoot"]) {
+              if (
+                panelRoots[`${tbodyRef.current.id}`] &&
+                !(panelRoots[`${tbodyRef.current.id}`] as any)["_internalRoot"]
+              ) {
                 setTimeout(() => {
                   try {
                     if (!(tabPacRef.current instanceof HTMLElement))
@@ -74,15 +72,12 @@ export default function PacList({
                         extLine(new Error()),
                       );
                     if (tbodyRef.current.querySelector("tr")) return;
-                    panelRoots[tbodyRef.current.id]?.unmount();
-                    delete panelRoots[tbodyRef.current.id];
+                    panelRoots[`${tbodyRef.current.id}`]?.unmount();
+                    delete panelRoots[`${tbodyRef.current.id}`];
                     tbodyRef.current.remove() as void;
-                    panelRoots[tabPacRef.current.id] = registerRoot(
-                      panelRoots[tabPacRef.current.id],
-                      `#${tabPacRef.current.id}`,
-                      tabPacRef,
-                    );
-                    panelRoots[tabPacRef.current.id]?.render(
+                    if (!panelRoots[`${tabPacRef.current.id}`])
+                      panelRoots[`${tabPacRef.current.id}`] = createRoot(tabPacRef.current);
+                    panelRoots[`${tabPacRef.current.id}`]?.render(
                       <ErrorBoundary
                         FallbackComponent={() => (
                           <GenericErrorComponent message='Error reloading replacement for table body' />
@@ -93,9 +88,7 @@ export default function PacList({
                               <em className='noInvert'>
                                 Lista Recuperada da Ficha de Pacientes registrados. Acesse
                                 <samp>
-                                  <Link href={`${location.origin}/ag`} id='agLink' style={{ display: "inline" }}>
-                                    &nbsp;Anamnese Geral&nbsp;
-                                  </Link>
+                                  <a> ROTA_PLACEHOLDER </a>
                                 </samp>
                                 para cadastrar
                               </em>
@@ -103,12 +96,18 @@ export default function PacList({
                           </strong>
                         </caption>
                         <colgroup>
-                          {Array.from({ length: 8 }, (_, i) => (
-                            <col key={i + 1} data-col={i + 1} />
-                          ))}
-                          {userClass === "coordenador" &&
-                            Array.from({ length: 3 }, (_, i) => <col key={i + 9} data-col={i + 9} />)}
-                          {shouldShowAlocBtn && <col data-col={12} />}
+                          <col data-col={1}></col>
+                          <col data-col={2}></col>
+                          <col data-col={3}></col>
+                          <col data-col={4}></col>
+                          <col data-col={5}></col>
+                          <col data-col={6}></col>
+                          <col data-col={7}></col>
+                          <col data-col={8}></col>
+                          {userClass === "coordenador" && <col data-col={9}></col>}
+                          {userClass === "coordenador" && <col data-col={10}></col>}
+                          {userClass === "coordenador" && <col data-col={11}></col>}
+                          {shouldShowAlocBtn && <col data-col={12}></col>}
                         </colgroup>
                         <thead className='thead-dark'>
                           <tr id={`avPacs-rowUnfilled0`} data-row={1}>
@@ -182,13 +181,10 @@ export default function PacList({
                     tbodyRef.current = document.querySelector(".pacTbody");
                     if (!(tbodyRef.current instanceof HTMLElement))
                       throw elementNotFound(tbodyRef.current, `Validation of replaced tbody`, extLine(new Error()));
-                    panelRoots[tbodyRef.current.id] = registerRoot(
-                      panelRoots[tbodyRef.current.id],
-                      `#${tbodyRef.current.id}`,
-                      tbodyRef,
-                    );
+                    if (!panelRoots[`${tbodyRef.current.id}`])
+                      panelRoots[`${tbodyRef.current.id}`] = createRoot(tbodyRef.current);
                     if (!tbodyRef.current.querySelector("tr"))
-                      panelRoots[tbodyRef.current.id]?.render(
+                      panelRoots[`${tbodyRef.current.id}`]?.render(
                         pacs.map((pac, i) => (
                           <PacRow
                             nRow={i + 2}
@@ -218,14 +214,9 @@ export default function PacList({
                     );
                   }
                 }, 1000);
-              } else
-                panelRoots[tbodyRef.current.id] = registerRoot(
-                  panelRoots[tbodyRef.current.id],
-                  `#${tbodyRef.current.id}`,
-                  tbodyRef,
-                );
+              } else panelRoots[`${tbodyRef.current.id}`] = createRoot(tbodyRef.current);
               if (!tbodyRef.current.querySelector("tr"))
-                panelRoots[tbodyRef.current.id]?.render(
+                panelRoots[`${tbodyRef.current.id}`]?.render(
                   pacs.map((pac, i) => {
                     return Array.from(tbodyRef.current?.querySelectorAll("output") ?? []).some(
                       outp => outp.innerText === (pac as PacInfo)["idf"],
@@ -257,7 +248,13 @@ export default function PacList({
                   );
               }, 300);
               setTimeout(() => {
-                if (!document.querySelector("tr") && document.querySelector("table")) renderTable();
+                if (!document.querySelector("tr") && document.querySelector("table")) {
+                  if (!panelRoots[`${document.querySelector("table")!.id}`])
+                    panelRoots[`${document.querySelector("table")!.id}`] = createRoot(document.querySelector("table")!);
+                  panelRoots[`${document.querySelector("table")!.id}`]?.render(
+                    <GenericErrorComponent message='Failed to render table' />,
+                  );
+                }
               }, 5000);
             } catch (e) {
               console.error(`Error executing rendering of Table Body Content:\n${(e as Error).message}`);
@@ -332,9 +329,7 @@ export default function PacList({
               <em className='noInvert'>
                 Lista Recuperada da Ficha de Pacientes registrados. Acesse
                 <samp>
-                  <Link href={`${location.origin}/ag`} id='idLink' style={{ display: "inline" }}>
-                    &nbsp;Anamnese Geral&nbsp;
-                  </Link>
+                  <a> ROTA_PLACEHOLDER </a>
                 </samp>
                 para cadastrar
               </em>
@@ -342,11 +337,18 @@ export default function PacList({
           </strong>
         </caption>
         <colgroup>
-          {Array.from({ length: 8 }, (_, i) => (
-            <col key={i + 1} data-col={i + 1} />
-          ))}
-          {userClass === "coordenador" && Array.from({ length: 3 }, (_, i) => <col key={i + 9} data-col={i + 9} />)}
-          {shouldShowAlocBtn && <col key={12} data-col={12} />}
+          <col data-col={1}></col>
+          <col data-col={2}></col>
+          <col data-col={3}></col>
+          <col data-col={4}></col>
+          <col data-col={5}></col>
+          <col data-col={6}></col>
+          <col data-col={7}></col>
+          <col data-col={8}></col>
+          {userClass === "coordenador" && <col data-col={9}></col>}
+          {userClass === "coordenador" && <col data-col={10}></col>}
+          {userClass === "coordenador" && <col data-col={11}></col>}
+          {shouldShowAlocBtn && <col data-col={12}></col>}
         </colgroup>
         <thead className='thead-dark'>
           <tr id={`avPacs-rowUnfilled0`} data-row={1}>
