@@ -1,5 +1,5 @@
 import { root } from "../vars";
-import { nullishBtn } from "../../../../lib/global/declarations/types";
+import { nlBtn } from "../../../../lib/global/declarations/types";
 import { ExcludeConsDlgProps } from "../../..//lib/global/declarations/interfacesCons";
 import { render, screen, fireEvent, RenderResult } from "@testing-library/react";
 import ExcludeConsDlg from "../../../../../components/alerts/ExcludeConsDlg";
@@ -33,9 +33,9 @@ jest.mock(
 jest.mock(
   `${root}/lib/locals/panelPage/handlers/consHandlerCmn`,
   (): {
-    addEraseEvent: jest.Mock<void, [nullishBtn, string]>;
+    addEraseEvent: jest.Mock<void, [nlBtn, string]>;
   } => ({
-    addEraseEvent: jest.fn<void, [nullishBtn, string]>(),
+    addEraseEvent: jest.fn<void, [nlBtn, string]>(),
   }),
 ) as typeof jest;
 describe("ExcludeConsDlg Component", (): void => {
@@ -47,7 +47,7 @@ describe("ExcludeConsDlg Component", (): void => {
     shouldDisplayExcludeDlg: true,
     btn: {
       id: "confirm-btn",
-    } as nullishBtn,
+    } as nlBtn,
     userClass: "estudante",
   };
   const renderComponent = (

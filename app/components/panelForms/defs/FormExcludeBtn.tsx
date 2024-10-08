@@ -1,6 +1,6 @@
 import { ErrorBoundary } from "react-error-boundary";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
-import { formCases, nullishBtn } from "@/lib/global/declarations/types";
+import { formCases, nlBtn } from "@/lib/global/declarations/types";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useEffect, useRef, useState } from "react";
 import ExcludeDlg from "../../alerts/ExcludeDlg";
@@ -9,7 +9,7 @@ export default function FormExcludeBtn({ context = "Stud" }: { context: string }
   const [shouldDisplayExcludeDlg, setDisplayExcludeDlg] = useState(false);
   const toggleDisplayExcludeDlg = (shouldDisplayExcludeDlg: boolean = true): void =>
     setDisplayExcludeDlg(!shouldDisplayExcludeDlg);
-  const excludeBtnRef = useRef<nullishBtn>(null);
+  const excludeBtnRef = useRef<nlBtn>(null);
   useEffect(() => {
     if (excludeBtnRef.current instanceof HTMLButtonElement)
       syncAriaStates([...excludeBtnRef.current!.querySelectorAll("*"), excludeBtnRef.current]);

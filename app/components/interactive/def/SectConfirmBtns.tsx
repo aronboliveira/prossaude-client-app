@@ -1,13 +1,13 @@
 "use client";
 import { ExportHandler } from "@/lib/global/declarations/classes";
-import { nullishBtn } from "@/lib/global/declarations/types";
+import { nlBtn } from "@/lib/global/declarations/types";
 import { addExportFlags } from "@/lib/global/gController";
 import { checkForReset } from "@/lib/global/handlers/gHandlers";
 import { exporters } from "@/vars";
 import { useEffect, useRef } from "react";
 let exporter: ExportHandler | undefined = undefined;
 export default function SectConfirmBtns(): JSX.Element {
-  const btnRef = useRef<nullishBtn>(null);
+  const btnRef = useRef<nlBtn>(null);
   useEffect(() => {
     exporter = (() => {
       if (/ag/gi.test(location.pathname)) {

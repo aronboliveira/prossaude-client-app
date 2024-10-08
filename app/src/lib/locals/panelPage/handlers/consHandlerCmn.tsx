@@ -1,5 +1,5 @@
 import { clearPhDates } from "../../../global/gStyleScript";
-import { entryEl, queryableNode, targEl, vRoot } from "../../../global/declarations/types";
+import { entryEl, queryableNode, rMouseEvent, targEl, vRoot } from "../../../global/declarations/types";
 import { handleClientPermissions } from "./consHandlerUsers";
 import { isValidElement, Fragment, Dispatch, SetStateAction } from "react";
 import { parseNotNaN, textTransformPascal } from "../../../global/gModel";
@@ -446,7 +446,7 @@ export function handleRenderRefLost(id: string, prevRef: HTMLElement, userClass:
     console.error(`Error executing handleRenderRefLost:\n${(e as Error).message}`);
   }
 }
-export function handleAptBtnClick(ev: MouseEvent, userClass: string): void {
+export function handleAptBtnClick(ev: rMouseEvent, userClass: string): void {
   try {
     if (!(ev.currentTarget instanceof HTMLElement && ev.currentTarget.id !== ""))
       throw new Error(
@@ -594,8 +594,8 @@ export function createAptBtn(
       <em> : ${textTransformPascal(formData.name) || "noName"}</em>
     `);
     newAppointmentBtn.classList.add(...["btn", "btn-info", "appointmentBtn", "forceInvert"]);
-    const transfArea = document.getElementById("transfArea");
-    const replaceSlot = document.getElementById("replaceSlot");
+    const transfArea = document.getElementById("transfArea"),
+      replaceSlot = document.getElementById("replaceSlot");
     if (transfArea instanceof HTMLElement && replaceSlot instanceof HTMLElement) {
       transfArea.replaceChild(newAppointmentBtn, replaceSlot);
       if (document.getElementById(newAppointmentBtn.id))
@@ -632,20 +632,20 @@ let isDragging = false,
 export function handleDragAptBtn(newAppointmentBtn: targEl, userClass: string = "estudante"): void {
   if (newAppointmentBtn instanceof HTMLButtonElement) {
     const slots = Array.from(document.getElementsByClassName("consSlot")).filter(
-      slot => slot instanceof HTMLSlotElement,
-    );
-    const slotsCoords = slots.map(slot => {
-      const rect = slot.getBoundingClientRect();
-      return Object.assign(
-        {},
-        {
-          upperLeftVert: [rect.x, rect.y],
-          upperRightVert: [rect.x + rect.width, rect.y],
-          lowerLeftVert: [rect.x, rect.y + rect.height],
-          lowerRightVert: [rect.x + rect.width, rect.y + rect.height],
-        },
-      );
-    });
+        slot => slot instanceof HTMLSlotElement,
+      ),
+      slotsCoords = slots.map(slot => {
+        const rect = slot.getBoundingClientRect();
+        return Object.assign(
+          {},
+          {
+            upperLeftVert: [rect.x, rect.y],
+            upperRightVert: [rect.x + rect.width, rect.y],
+            lowerLeftVert: [rect.x, rect.y + rect.height],
+            lowerRightVert: [rect.x + rect.width, rect.y + rect.height],
+          },
+        );
+      });
     newAppointmentBtn.addEventListener("dragend", end => {
       try {
         for (let c = 0; c < slotsCoords.length; c++) {

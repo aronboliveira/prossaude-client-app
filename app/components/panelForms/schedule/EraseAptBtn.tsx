@@ -1,13 +1,13 @@
 import { ErrorBoundary } from "react-error-boundary";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
-import { nullishBtn } from "@/lib/global/declarations/types";
+import { nlBtn } from "@/lib/global/declarations/types";
 import { useContext, useEffect, useRef, useState } from "react";
 import ExcludeConsDlg from "../../alerts/ExcludeConsDlg";
 import GenericErrorComponent from "../../error/GenericErrorComponent";
 import { PanelCtx } from "../defs/client/SelectLoader";
 export default function EraseAptBtn(): JSX.Element {
   const [shouldShowExcludeDlg, setDisplayExcludeDlg] = useState(false),
-    btnRef = useRef<nullishBtn>(null),
+    btnRef = useRef<nlBtn>(null),
     userClass = useContext(PanelCtx).userClass;
   useEffect(() => {
     try {

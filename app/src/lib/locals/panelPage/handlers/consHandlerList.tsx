@@ -1,7 +1,7 @@
 import { MutableRefObject } from "react";
 import {
   nullishDlg,
-  nullishHtEl,
+  nlHtEl,
   personAbrvClasses,
   personAbrvUpperClasses,
   targEl,
@@ -278,7 +278,7 @@ export function transferDataAloc(
 export function addListenerAlocation(
   alocBtn: targEl,
   parentRef: Exclude<targEl, HTMLTableElement>,
-  forwardedRef: nullishHtEl,
+  forwardedRef: nlHtEl,
   context: personAbrvUpperClasses | personAbrvClasses = "Stud",
   state: boolean = true,
   dispatch: (state: boolean) => void,

@@ -1,6 +1,6 @@
 import { cursorCheckTimer } from "./handlers/gHandlers";
 import { fadeElement } from "./gStyleScript";
-import type { entryEl, textEl, targStr, targEl, nullishForm } from "./declarations/types";
+import type { entryEl, textEl, targStr, targEl, nlFm } from "./declarations/types";
 //nesse file estão presentes principalmente as funções relacionadas à exigência de modelo textual e de visualização
 import {
   extLine,
@@ -1054,7 +1054,7 @@ export function modelScripts(): void {
     console.error(`Error executing modelScripts:\n${(e as Error).message}`);
   }
 }
-export function assignFormAttrs(fr: nullishForm): void {
+export function assignFormAttrs(fr: nlFm): void {
   if (!(fr instanceof HTMLFormElement)) throw new Error(`Failed to validate Form Reference`);
   try {
     const metaCs = document.querySelector('meta[charset*="utf-"]') ?? document.querySelector('meta[charset*="UTF-"]');

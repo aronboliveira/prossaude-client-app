@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from "react";
-import { nullishForm } from "@glSrc/types";
+import { nlFm } from "@glSrc/types";
 export interface FormData {
   [key: string]: any;
 }
@@ -15,7 +15,7 @@ export interface DataContextType {
   updateFormData: (newData: FormData) => void;
 }
 export interface PanelFormProps {
-  formCallback: (form: nullishForm) => void;
+  formCallback: (form: nlFm) => void;
 }
 export interface userProfileDropdownProps {
   user: userProfile;

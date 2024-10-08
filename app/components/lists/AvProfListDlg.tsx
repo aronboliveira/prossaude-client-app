@@ -11,7 +11,7 @@ import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
 import GenericErrorComponent from "../error/GenericErrorComponent";
 import ProfRow from "../panelForms/profs/ProfRow";
 import Spinner from "../icons/Spinner";
-import { nullishDlg, nullishHtEl, nullishTab, nullishTabSect } from "@/lib/global/declarations/types";
+import { nullishDlg, nlHtEl, nullishTab, nullishTabSect } from "@/lib/global/declarations/types";
 import { AvProfListDlgProps, ProfInfo } from "@/lib/global/declarations/interfacesCons";
 import {
   addListenerAlocation,
@@ -31,7 +31,7 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
     tabProfExtRef = useRef<nullishTab>(null),
     tbodyIntRef = useRef<nullishTabSect>(null),
     tbodyExtRef = useRef<nullishTabSect>(null),
-    secttabProfIntRef = useRef<nullishHtEl>(null);
+    secttabProfIntRef = useRef<nlHtEl>(null);
   //push em history
   useEffect(() => {
     !/av-prof=open/gi.test(location.search) &&
@@ -215,6 +215,7 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                         <tbody id='profsIntTbody' ref={tbodyIntRef}>
                           <span style={{ margin: "2rem", position: "absolute" }}>
                             <Spinner
+                            key={crypto.randomUUID()}
                               spinnerClass='spinner-border'
                               spinnerColor='text-info'
                               message='Loading Internal Professionals Table...'
@@ -405,6 +406,7 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                         <tbody id='profsExtTbody' ref={tbodyExtRef}>
                           <span style={{ margin: "2rem", position: "absolute" }}>
                             <Spinner
+                            key={crypto.randomUUID()}
                               spinnerClass='spinner-border'
                               spinnerColor='text-info'
                               message='Loading External Professionals Table...'
@@ -739,6 +741,7 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                 <tbody id='profsIntTbody' ref={tbodyIntRef}>
                   <span style={{ margin: "2rem", position: "absolute" }}>
                     <Spinner
+                      key={crypto.randomUUID()}
                       spinnerClass='spinner-border'
                       spinnerColor='text-info'
                       message='Loading Internal Professionals Table...'
@@ -818,6 +821,7 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                 <tbody id='profsExtTbody' ref={tbodyExtRef}>
                   <span style={{ margin: "2rem", position: "absolute" }}>
                     <Spinner
+                      key={crypto.randomUUID()}
                       spinnerClass='spinner-border'
                       spinnerColor='text-info'
                       message='Loading External Professionals Table...'

@@ -3,13 +3,13 @@ import { FillerProps } from "@/lib/global/declarations/interfacesCons";
 import { addListenerAvMembers } from "@/lib/locals/panelPage/handlers/consHandlerList";
 import { providers } from "@/vars";
 ("../panelForms/defs/client/SelectPanel");
-import { nullishBtn, nullishDiv } from "@/lib/global/declarations/types";
+import { nlBtn, nlDiv } from "@/lib/global/declarations/types";
 import { useEffect, useRef, useState } from "react";
 import AvStudListDlg from "../lists/AvStudListDlg";
 import { handleCondtReq, syncAriaStates } from "@/lib/global/handlers/gHandlers";
 export default function DREFiller({ forwardedRef }: FillerProps): JSX.Element {
-  const btnStudListRef = useRef<nullishBtn>(null);
-  const fillerDivRef = useRef<nullishDiv>(null);
+  const btnStudListRef = useRef<nlBtn>(null);
+  const fillerDivRef = useRef<nlDiv>(null);
   const [shouldDisplayStudList, setStudListDisplay] = useState<boolean>(false);
   const toggleStudListDisplay = (s: boolean = false): void => setStudListDisplay(!s);
   useEffect(() => {

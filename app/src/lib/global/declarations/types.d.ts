@@ -42,17 +42,17 @@ export interface objInnerTabs {
   areColGroupsSimilar: boolean;
 }
 export type nlEl = Element | null;
-export type nullishHtEl = HTMLElement | null;
-export type nullishForm = HTMLFormElement | null;
+export type nlHtEl = HTMLElement | null;
+export type nlFm = HTMLFormElement | null;
 export type nullishDlg = HTMLDialogElement | null;
-export type nullishInp = HTMLInputElement | null;
-export type nullishSel = HTMLSelectElement | null;
-export type nullishBtn = HTMLButtonElement | null;
-export type nlDsb = HTMLButtonElement | nullishInp;
+export type nlInp = HTMLInputElement | null;
+export type nlSel = HTMLSelectElement | null;
+export type nlBtn = HTMLButtonElement | null;
+export type nlDsb = HTMLButtonElement | nlInp;
 export type nullishTab = HTMLTableElement | null;
 export type nullishTabSect = HTMLTableSectionElement | null;
 export type nullishAnchor = HTMLAnchorElement | null;
-export type nullishDiv = HTMLDivElement | null;
+export type nlDiv = HTMLDivElement | null;
 export type nullishSpan = HTMLSpanElement | null;
 export type nullishFs = HTMLFieldSetElement | null;
 export type nullishLab = HTMLLabelElement | null;
@@ -124,6 +124,8 @@ export type pageStyleCases =
   | "Panel Page Style"
   | "Recover Page Style";
 export type validSchedHours = 18 | 19 | 20 | 21;
+export type validSchedCols = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+export type thunkReqStatus = "idle" | "loading" | "submitting" | "fulfilled" | "rejected";
 export type userClasses = "coordenador" | "supervisor" | "estudante";
 export type personAbrvClasses = "stud" | "prof" | "pac";
 export type personAbrvUpperClasses = "Stud" | "Prof" | "Pac";
