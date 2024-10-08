@@ -1,5 +1,5 @@
 import { SetStateAction } from "react";
-import { TabCelCtxs, ctxRot, looseNum, quadrCases, targEl, validTabLabs, vRoot } from "./types";
+import { TabCelCtxs, ctxRot, looseNum, quadrCases, targEl, validTabLabs, vRoot, validSchedHours } from "./types";
 export interface DocumentNodeProps {
   html: string;
   head?: (JSX.Element | null)[];
@@ -16,6 +16,11 @@ export interface AppRootContextType {
 export interface ENContextProps {
   age: looseNum;
   gen: Gender;
+}
+export interface ScheduleCtxProps {
+  nHrs: validSchedHours[];
+  nCols: number[];
+  month: number;
 }
 export interface CounterAction {
   type: "INCREMENT" | "DECREMENT";
