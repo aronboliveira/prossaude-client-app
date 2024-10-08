@@ -24,6 +24,7 @@ import { defUser } from "@/redux/slices/userSlice";
 import ScheduleLoader from "../../schedule/ScheduleLoader";
 import { PanelCtx } from "./SelectLoader";
 import { panelRoots } from "@/vars";
+import Spinner from "../../../icons/Spinner";
 export default function SelectPanel({ defOp = "agenda" }: MainPanelProps): JSX.Element {
   const { userClass, setUserClass: setPrivilege } = useContext(PanelCtx),
     [selectedOption, setSelectedOption] = useState<string>(defOp),
@@ -180,7 +181,7 @@ export default function SelectPanel({ defOp = "agenda" }: MainPanelProps): JSX.E
   }, [mounted]);
   //Snippet para repassar para CSR totalmente (erro ainda não investigado)
   return !mounted ? (
-    <></>
+    <Spinner spinnerClass='spinner-grow' />
   ) : (
     <ErrorBoundary
       FallbackComponent={() => <GenericErrorComponent message='Error loading Selector for Working Panel' />}>
