@@ -5,22 +5,25 @@ import { nullishFs } from "@/lib/global/declarations/types";
 import { switchRowComorb } from "@/lib/locals/edFisNutPage/edFisNutHandler";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useEffect, useReducer, useRef, useState } from "react";
+import Spinner from "../../icons/Spinner";
 export default function TabComorb({ children = <></> }: { children: JSX.Element }): JSX.Element {
-  const mainRef = useRef<nullishFs>(null);
-  const [mounted, setMounted] = useState(false);
+  const mainRef = useRef<nullishFs>(null),
+    [mounted, setMounted] = useState(false),
+    [blockCount, setBlockCount] = useReducer((s: number, a: CounterAction) => {
+      switch (a.type) {
+        case "INCREMENT":
+          console.log("State " + (s + 1));
+          return s + 1;
+        case "DECREMENT":
+          console.log("State " + (s > 3 ? s - 1 : s));
+          return s > 3 ? s - 1 : s;
+        default:
+          return s;
+      }
+    }, 3);
   useEffect(() => {
     setMounted(true);
   }, []);
-  const [blockCount, setBlockCount] = useReducer((s: number, a: CounterAction) => {
-    switch (a.type) {
-      case "INCREMENT":
-        return s + 1;
-      case "DECREMENT":
-        return s > 3 ? s - 1 : s;
-      default:
-        return s;
-    }
-  }, 3);
   useEffect(() => {
     try {
       if (mounted) {
@@ -33,7 +36,7 @@ export default function TabComorb({ children = <></> }: { children: JSX.Element 
     }
   }, [blockCount, mounted]);
   return !mounted ? (
-    <></>
+    <Spinner spinnerClass='spinner-grow' />
   ) : (
     <fieldset name='fsComorbName' id='fsComorbId' className='fsMain divTab' ref={mainRef}>
       <legend id='fsComorbLeg'>

@@ -24,7 +24,12 @@ export default function MainContainer(): JSX.Element {
     localStorage.setItem("activeUser", JSON.stringify(experimentalProps.experimentalUser));
     baseRootUser = document.getElementById("rootUserInfo");
     baseRootUser instanceof HTMLElement && !context.roots.baseRootedUser
-      ? (context.roots.baseRootedUser = registerRoot(context.roots.baseRootedUser, `#${baseRootUser.id}`))
+      ? (context.roots.baseRootedUser = registerRoot(
+          context.roots.baseRootedUser,
+          `#${baseRootUser.id}`,
+          undefined,
+          true,
+        ))
       : setTimeout(() => {
           baseRootUser = document.getElementById("rootUserInfo");
           !baseRootUser && elementNotFound(baseRootUser, "Root for user painel", extLine(new Error()));

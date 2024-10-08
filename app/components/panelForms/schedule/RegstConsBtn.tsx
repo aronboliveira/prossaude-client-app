@@ -13,10 +13,10 @@ export default function RegstConsBtn({ rootEl, secondOp = "Arraste" }: RegsConst
     RegstBtnRef = useRef<nullishBtn>(null),
     toggleDisplayRegstDlg = (rootEl: HTMLElement | voidVal, shouldDisplayFailRegstDlg: boolean = true): void => {
       rootEl instanceof HTMLElement
-        ? (root = registerRoot(root, `#${rootEl.id}`))
+        ? (root = registerRoot(root, `#${rootEl.id}`, undefined, false))
         : (rootEl = document.getElementById("regstDaySubDiv"));
       rootEl instanceof HTMLElement
-        ? (root = registerRoot(root, `#${rootEl.id}`))
+        ? (root = registerRoot(root, `#${rootEl.id}`, undefined, false))
         : elementNotFound(rootEl, "Root for placing failed register for new appointment", extLine(new Error()));
       if (
         !checkRegstBtn(

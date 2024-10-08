@@ -464,6 +464,8 @@ export function handleAptBtnClick(ev: MouseEvent, userClass: string): void {
       consVariablesData.rootDlg = registerRoot(
         consVariablesData.rootDlg,
         `#${rootDlg.id || rootDlg.className.replace(/\s/g, "__") || rootDlg.tagName}`,
+        undefined,
+        false,
       );
     }
     if (!rootDlgContext.aptBtnsRoots[`rootDlgList`]) {
@@ -507,7 +509,7 @@ export function handleAptBtnClick(ev: MouseEvent, userClass: string): void {
           `#${ev.currentTarget.id}`,
         );
       }
-      if (!rootDlgContext.aptBtnsRoots[`${ev.currentTarget.id}`]) {
+      if (!rootDlgContext.aptBtnsRoots[ev.currentTarget.id]) {
         const targRoot = document.getElementById(
           `rootDlgList-${rootDlgContext.aptBtnsRoots[`${ev.currentTarget.id}`] ?? "null"}-${ev.currentTarget.id}`,
         );
@@ -1043,7 +1045,7 @@ export function addEraseEvent(eraser: HTMLButtonElement, userClass: string = "es
     eraser.addEventListener("click", () => {
       const relCel = eraser.closest("slot");
       relCel instanceof HTMLElement
-        ? replaceBtnSlot(relCel.querySelector("[id*=appointmentBtn]"), relCel, eraser)
+        ? replaceBtnSlot(relCel.querySelector("[id*=appointmentBtn]"), relCel)
         : elementNotFound(
             relCel,
             `Table cell related to button for erasing day/hour appointment id ${eraser.id}`,
@@ -1067,7 +1069,7 @@ export function addEraseEvent(eraser: HTMLButtonElement, userClass: string = "es
     }, 200);
   }
 }
-export function replaceBtnSlot(aptBtn: targEl, parent: HTMLElement, caller: HTMLElement): void {
+export function replaceBtnSlot(aptBtn: targEl, parent: HTMLElement): void {
   if (aptBtn instanceof HTMLElement) {
     const relTr = aptBtn.closest("tr")!;
     let [slotNum] = Array.from(relTr.querySelectorAll(".consSlot"))
@@ -1408,8 +1410,7 @@ export function addListenerForSchedUpdates(monthSelector: targEl): void {
           el instanceof HTMLInputElement && (el.type === "checkbox" || el.type === "radio")
             ? (arrEntry[1] = el.checked.toString())
             : (arrEntry[1] = el.value);
-        } catch (err) {
-        }
+        } catch (err) {}
       }, 300);
     };
     setTimeout(() => {
@@ -1481,6 +1482,5 @@ export function fillSchedStateValues(month: string): void {
         extLine(new Error()),
       );
     sessionScheduleState[`${month}Values`] = entriesData as Array<[string, string]>;
-  } catch (err) {
-  }
+  } catch (err) {}
 }

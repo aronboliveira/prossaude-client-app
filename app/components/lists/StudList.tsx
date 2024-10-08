@@ -74,6 +74,7 @@ export default function StudList({ mainDlgRef, dispatch, state = true }: StudLis
                       panelRoots[tabRef.current.id],
                       `#${tabRef.current.id}}`,
                       tabRef,
+                      true,
                     );
                     panelRoots[tabRef.current.id]?.render(
                       <ErrorBoundary
@@ -153,6 +154,7 @@ export default function StudList({ mainDlgRef, dispatch, state = true }: StudLis
                       panelRoots[tbodyRef.current.id],
                       `#${tbodyRef.current.id}}`,
                       tbodyRef,
+                      true,
                     );
                     if (!tbodyRef.current.querySelector("tr"))
                       panelRoots[tbodyRef.current.id]?.render(
@@ -182,6 +184,7 @@ export default function StudList({ mainDlgRef, dispatch, state = true }: StudLis
                   panelRoots[tbodyRef.current.id],
                   `#${tbodyRef.current.id}}`,
                   tbodyRef,
+                  true,
                 );
               if (!tbodyRef.current.querySelector("tr"))
                 panelRoots[tbodyRef.current.id]?.render(

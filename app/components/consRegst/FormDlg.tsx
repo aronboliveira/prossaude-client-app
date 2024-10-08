@@ -168,7 +168,7 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
           });
         } else elementNotPopulated(allEntryEls, "allEntryEls in generateSchedBtn()", extLine(new Error()));
         const selected = document.getElementById("rootDlgList") ?? document.getElementById("transfArea");
-        consVariablesData.rootDlg = registerRoot(consVariablesData.rootDlg, `#${selected?.id ?? "DEFAULT"}`);
+        consVariablesData.rootDlg = registerRoot(consVariablesData.rootDlg, `#${selected?.id ?? "DEFAULT"}`, undefined, false);
         const newBtn = createAptBtn(
           formData,
           providerFormData[accFormData] as any,

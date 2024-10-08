@@ -45,6 +45,7 @@ export default function OptGrpUsers({ grp, area }: { grp: formCases; area: valid
                   panelRoots[optGrpRef.current.id],
                   `#${optGrpRef.current.id}`,
                   optGrpRef,
+                  true,
                 );
                 panelRoots[optGrpRef.current.id]?.render(
                   <ErrorBoundary
@@ -63,6 +64,7 @@ export default function OptGrpUsers({ grp, area }: { grp: formCases; area: valid
                   panelRoots[optGrpRef.current.id],
                   `#${optGrpRef.current.id}`,
                   optGrpRef,
+                  true,
                 );
                 if (!optGrpRef.current.querySelector("option"))
                   panelRoots[optGrpRef.current.id]?.render(
@@ -86,6 +88,7 @@ export default function OptGrpUsers({ grp, area }: { grp: formCases; area: valid
               panelRoots[optGrpRef.current.id],
               `#${optGrpRef.current.id}`,
               optGrpRef,
+              true,
             );
           if (!optGrpRef.current.querySelector("option"))
             panelRoots[optGrpRef.current.id]?.render(

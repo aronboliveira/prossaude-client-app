@@ -45,6 +45,8 @@ export default function AptDataList({
           registerRoot(
             undefined,
             `${fallbackRootDlg.id || fallbackRootDlg.className.replace(/\s/g, "__") || fallbackRootDlg.tagName}`,
+            undefined,
+            true,
           )?.unmount();
         } catch (e2) {
           console.error(`Error rendering AptDataList:
@@ -76,6 +78,8 @@ export default function AptDataList({
           registerRoot(
             undefined,
             `${fallbackRootDlg.id || fallbackRootDlg.className.replace(/\s/g, "__") || fallbackRootDlg.tagName}`,
+            undefined,
+            true,
           )?.unmount();
         } catch (e2) {
           console.error(`Error rendering AptDataList:

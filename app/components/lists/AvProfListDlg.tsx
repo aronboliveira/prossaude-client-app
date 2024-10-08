@@ -140,6 +140,7 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                       panelRoots[tabProfIntRef.current.id],
                       `#${tabProfIntRef.current.id}`,
                       tabProfIntRef,
+                      true,
                     );
                     panelRoots[tabProfIntRef.current.id]?.render(
                       <ErrorBoundary
@@ -229,6 +230,7 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                       panelRoots[tbodyIntRef.current.id],
                       `#${tbodyIntRef.current.id}`,
                       tbodyIntRef,
+                      true,
                     );
                     if (!tbodyIntRef.current.querySelector("tr"))
                       panelRoots[tbodyIntRef.current.id]?.render(
@@ -266,6 +268,7 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                   panelRoots[tbodyIntRef.current.id],
                   `#${tbodyIntRef.current.id}`,
                   tbodyIntRef,
+                  true,
                 );
               if (!tbodyIntRef.current.querySelector("tr"))
                 panelRoots[tbodyIntRef.current.id]?.render(
@@ -327,6 +330,7 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                       panelRoots[tabProfIntRef.current.id],
                       `#${tabProfIntRef.current.id}`,
                       tabProfIntRef,
+                      true,
                     );
                     panelRoots[tabProfIntRef.current.id]?.render(
                       <ErrorBoundary
@@ -416,6 +420,7 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                       panelRoots[tbodyExtRef.current.id],
                       `#${tbodyExtRef.current.id}`,
                       tbodyExtRef,
+                      true,
                     );
                     if (!tbodyExtRef.current.querySelector("tr"))
                       panelRoots[tbodyExtRef.current.id]?.render(
@@ -453,6 +458,7 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                   panelRoots[tbodyExtRef.current.id],
                   `#${tbodyExtRef.current.id}`,
                   tbodyExtRef,
+                  true,
                 );
               if (!tbodyExtRef.current.querySelector("tr"))
                 panelRoots[tbodyExtRef.current.id]?.render(

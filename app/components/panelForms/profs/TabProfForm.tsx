@@ -87,6 +87,7 @@ export default function TabProfForm(): JSX.Element {
                       panelRoots[tabRef.current.id],
                       `#${tabRef.current.id}`,
                       tabRef,
+                      true,
                     );
                     panelRoots[tabRef.current.id]?.render(
                       <ErrorBoundary
@@ -158,6 +159,7 @@ export default function TabProfForm(): JSX.Element {
                       panelRoots[tbodyRef.current.id],
                       `#${tbodyRef.current.id}`,
                       tbodyRef,
+                      true,
                     );
                     if (!tbodyRef.current.querySelector("tr"))
                       panelRoots[tbodyRef.current.id]?.render(
@@ -187,6 +189,7 @@ export default function TabProfForm(): JSX.Element {
                   panelRoots[tbodyRef.current.id],
                   `#${tbodyRef.current.id}`,
                   tbodyRef,
+                  true,
                 );
               if (!tbodyRef.current.querySelector("tr"))
                 panelRoots[tbodyRef.current.id]?.render(
