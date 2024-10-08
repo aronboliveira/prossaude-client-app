@@ -81,6 +81,7 @@ export default function PacList({
                       panelRoots[tabPacRef.current.id],
                       `#${tabPacRef.current.id}`,
                       tabPacRef,
+                      true,
                     );
                     panelRoots[tabPacRef.current.id]?.render(
                       <ErrorBoundary
@@ -186,6 +187,7 @@ export default function PacList({
                       panelRoots[tbodyRef.current.id],
                       `#${tbodyRef.current.id}`,
                       tbodyRef,
+                      true,
                     );
                     if (!tbodyRef.current.querySelector("tr"))
                       panelRoots[tbodyRef.current.id]?.render(
@@ -223,6 +225,7 @@ export default function PacList({
                   panelRoots[tbodyRef.current.id],
                   `#${tbodyRef.current.id}`,
                   tbodyRef,
+                  true,
                 );
               if (!tbodyRef.current.querySelector("tr"))
                 panelRoots[tbodyRef.current.id]?.render(

@@ -464,6 +464,8 @@ export function handleAptBtnClick(ev: MouseEvent, userClass: string): void {
       consVariablesData.rootDlg = registerRoot(
         consVariablesData.rootDlg,
         `#${rootDlg.id || rootDlg.className.replace(/\s/g, "__") || rootDlg.tagName}`,
+        undefined,
+        false,
       );
     }
     if (!rootDlgContext.aptBtnsRoots[`rootDlgList`]) {
@@ -507,7 +509,7 @@ export function handleAptBtnClick(ev: MouseEvent, userClass: string): void {
           `#${ev.currentTarget.id}`,
         );
       }
-      if (!rootDlgContext.aptBtnsRoots[`${ev.currentTarget.id}`]) {
+      if (!rootDlgContext.aptBtnsRoots[ev.currentTarget.id]) {
         const targRoot = document.getElementById(
           `rootDlgList-${rootDlgContext.aptBtnsRoots[`${ev.currentTarget.id}`] ?? "null"}-${ev.currentTarget.id}`,
         );

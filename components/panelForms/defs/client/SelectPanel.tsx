@@ -36,7 +36,7 @@ export default function SelectPanel({ defOp = "agenda" }: MainPanelProps): JSX.E
         const formRoot = document.getElementById("formRoot");
         if (!(formRoot instanceof HTMLElement))
           throw elementNotFound(formRoot, `Validation of Form Roots Element in Schedule`, extLine(new Error()));
-        context.roots.formRoot = registerRoot(context.roots.formRoot, `#formRoot`);
+        context.roots.formRoot = registerRoot(context.roots.formRoot, `#formRoot`, undefined, true);
         if (!context.roots.formRoot) throw new Error(`Failed to validate Form root`);
         context.roots.formRoot.render(
           ((opt: panelOpts): JSX.Element => {
@@ -102,7 +102,7 @@ export default function SelectPanel({ defOp = "agenda" }: MainPanelProps): JSX.E
           throw elementNotFound(formRoot, `Validation of Option Selection Element`, extLine(new Error()));
         if (!(panelSelect instanceof HTMLSelectElement || panelSelect instanceof HTMLInputElement))
           throw inputNotFound(panelSelect, `Validation of Select for panel instance`, extLine(new Error()));
-        context.roots.formRoot = registerRoot(context.roots.formRoot, `#formRoot`);
+        context.roots.formRoot = registerRoot(context.roots.formRoot, `#formRoot`, undefined, true);
         const camel = kebabToCamel(location.search);
         formRoot.style.transition = "";
         formRoot.style.opacity = "0";
@@ -152,7 +152,7 @@ export default function SelectPanel({ defOp = "agenda" }: MainPanelProps): JSX.E
       const selDiv = document.getElementById("formSelDiv");
       if (mounted && selDiv instanceof HTMLElement && !document.querySelector("select")) {
         selDiv.innerHTML = ``;
-        context.roots.rootSel = registerRoot(context.roots.rootSel, `#formSelDiv`);
+        context.roots.rootSel = registerRoot(context.roots.rootSel, `#formSelDiv`, undefined, true);
         if (!context.roots.rootSel) throw new Error(`Failed to validate Select root`);
         context.roots.rootSel.render(<ErrorMainDiv />);
       } else
@@ -162,7 +162,7 @@ export default function SelectPanel({ defOp = "agenda" }: MainPanelProps): JSX.E
             elementNotFound(selDiv, "selDiv during DOM initialization", extLine(new Error()));
             if (selDiv instanceof HTMLElement) {
               selDiv.innerHTML = ``;
-              context.roots.rootSel = registerRoot(context.roots.rootSel, `#formSelDiv`);
+              context.roots.rootSel = registerRoot(context.roots.rootSel, `#formSelDiv`, undefined, true);
               if (!context.roots.rootSel) throw new Error(`Failed to validate Select root`);
               context.roots.rootSel.render(<ErrorMainDiv />);
             }

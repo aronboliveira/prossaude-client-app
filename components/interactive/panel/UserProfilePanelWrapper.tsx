@@ -16,7 +16,7 @@ export default function UserProfilePanelWrapper(): JSX.Element {
     const profileSpan = document.getElementById("rootUserInfo");
     if (profileSpan instanceof HTMLElement) {
       if (!hasInitializedRoot.current) {
-        context.roots.userRoot = registerRoot(context.roots.userRoot, `#${profileSpan.id}`);
+        context.roots.userRoot = registerRoot(context.roots.userRoot, `#${profileSpan.id}`, undefined, true);
         hasInitializedRoot.current = true;
       }
       if (!profileSpan.hasChildNodes()) context.roots.userRoot?.render(<UserProfilePanel router={nextRouter} />);

@@ -1469,7 +1469,13 @@ export function registerPersistInputs({
     console.error(`Error executing persistInputs:\n${(e as Error).message}`);
   }
 }
-export function registerRoot(root: vRoot, selector: string, selectorRef?: MutableRefObject<nullishHtEl>): vRoot {
+export const loops: { [k: string]: boolean } = {};
+export function registerRoot(
+  root: vRoot,
+  selector: string,
+  selectorRef?: MutableRefObject<nullishHtEl>,
+  renderFollows: boolean = true,
+): vRoot {
   try {
     const rootEl =
       typeof selectorRef === "object" && "current" in selectorRef
@@ -1480,12 +1486,22 @@ export function registerRoot(root: vRoot, selector: string, selectorRef?: Mutabl
     if (!root && rootEl) {
       if (rootEl.dataset.rooted === "true") {
         if (!rootEl.hasChildNodes()) {
-          console.log(`Root ${selector} has no children `);
+          console.log(`Root Element ${selector} has no children `);
           rootEl.dataset.rooted = "false";
           root = createRoot(rootEl);
         } else {
-          console.log(`Root ${selector} has children`);
-          root = createRoot(rootEl);
+          console.log(`Root Element ${selector} has children`);
+          if (renderFollows) {
+            root = createRoot(rootEl);
+            loops[selector] = false;
+            const lto = setTimeout(() => (loops[selector] = true), 3000);
+            while (rootEl?.firstChild) {
+              if (loops[selector]) return root;
+              rootEl?.removeChild(rootEl.firstChild);
+            }
+            clearTimeout(lto);
+            loops[selector] = false;
+          }
         }
       } else root = createRoot(rootEl);
     } else if (root && !(root as any)["_internalRoot"]) {
@@ -1497,6 +1513,7 @@ export function registerRoot(root: vRoot, selector: string, selectorRef?: Mutabl
     rootEl.dataset.rooted = "true";
   } catch (e) {
     console.error(`Error executing registerRoot:\n${(e as Error).message}`);
+    return root;
   }
   return root;
 }
