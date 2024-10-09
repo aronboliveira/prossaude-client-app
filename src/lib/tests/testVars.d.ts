@@ -809,6 +809,7 @@ export type GordLvl = "abaixo" | "eutrofico" | "sobrepeso" | "obeso1" | "obeso2"
 export type Intensity = "sedentario" | "leve" | "moderado" | "intenso" | "muitoIntenso";
 export type BirthRelation = "cis" | "trans";
 export type TransitionLevel = "indefinido" | "inicial" | "intermediario" | "avancado";
+export type AlignType = 'masculinizado' | 'feminilizado' | 'neutro'
 export type Appointment = `${number}ª Consulta`;
 export type PersonMethod = "calcIMC" | "calcPGC" | "calcTMB" | "calcGET";
 export type ErrorHandler =

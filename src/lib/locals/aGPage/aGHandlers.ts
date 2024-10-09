@@ -278,7 +278,6 @@ export function handleDivAddShow(targ: targEl): void {
     if (!(divAdd instanceof HTMLElement && (divAdd.classList.contains("divAdd") as boolean)))
       throw elementNotFound(divAdd, `Validation of Div Add`, extLine(new Error()));
     if (targ.checked) {
-      console.log(divAdd);
       divAdd.style.display = "grid";
       divAdd.style.opacity = "0.8";
       innerWidth > 460 ? (divAdd.style.minWidth = "70vw") : (divAdd.style.minWidth = "88vw");

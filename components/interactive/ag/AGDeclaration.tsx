@@ -22,7 +22,6 @@ export default function AGDeclaration({ state, dispatch }: DlgProps): JSX.Elemen
         `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#").replaceAll("/&", "&"),
       );
       location.href.match(/conform=open/g)?.forEach((m, i) => {
-        console.log(m);
         try {
           if (i === 0) return;
           location.href.replace(m, "");

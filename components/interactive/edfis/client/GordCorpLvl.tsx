@@ -11,7 +11,7 @@ export default function GordCorpLvl(): JSX.Element {
       onChange={ev => {
         [person.atvLvl, tabProps.factorAtvLvl] = callbackAtvLvlElementNaf(
           [
-            [tabProps.factorAtvLvl, tabProps.IMC],
+            [tabProps.factorAtvLvl ?? 1.4, tabProps.IMC ?? 0],
             [
               document.getElementById("selectLvlAtFis"),
               ev.currentTarget,
@@ -22,12 +22,18 @@ export default function GordCorpLvl(): JSX.Element {
           ev.currentTarget.id,
         );
       }}>
-      <option value='abaixo'>Com Baixo Peso</option>
-      <option value='eutrofico'>Eutrófico</option>
-      <option value='sobrepeso'>Com Sobrepeso (não Obeso)</option>
-      <option value='obeso1'>Obeso Grau 1</option>
-      <option value='obeso2'>Obeso Grau 2</option>
-      <option value='obeso3'>Obeso Grau 3</option>
+      {[
+        { v: "abaixo", l: "Com Baixo Peso" },
+        { v: "eutrofico", l: "Eutrófico" },
+        { v: "sobrepeso", l: "Com Sobrepeso (não Obeso)" },
+        { v: "obeso1", l: "Obeso Grau 1" },
+        { v: "obeso2", l: "Obeso Grau 2" },
+        { v: "obeso3", l: "Obeso Grau 3" },
+      ].map((o, i) => (
+        <option key={`${o.v}__${i}`} value={o.v}>
+          {o.l}
+        </option>
+      ))}
     </select>
   );
 }

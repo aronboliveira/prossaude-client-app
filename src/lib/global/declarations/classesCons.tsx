@@ -237,7 +237,7 @@ export class DataProvider {
                 eraser.addEventListener("click", () => {
                   const relCel = eraser.closest("slot");
                   relCel instanceof HTMLElement && eraser instanceof HTMLElement
-                    ? replaceBtnSlot(relCel.querySelector("[id*=appointmentBtn]"), relCel, eraser)
+                    ? replaceBtnSlot(relCel.querySelector("[id*=appointmentBtn]"), relCel)
                     : elementNotFound(
                         relCel,
                         `Table cell related to button for erasing day/hour appointment id ${eraser.id}`,

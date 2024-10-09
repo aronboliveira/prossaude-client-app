@@ -8,7 +8,7 @@ import type {
   primitiveType,
   textEl,
   rMouseEvent,
-  nullishForm,
+  nlFm,
   nullishHtEl,
   formCases,
   queryableNode,
@@ -667,7 +667,7 @@ export function checkForReset(ev: rMouseEvent): void {
     console.error(`Error executing checkForReset:\n${(e as Error).message}`);
   }
 }
-export function resetForm(form: nullishForm): void {
+export function resetForm(form: nlFm): void {
   try {
     if (!(form instanceof HTMLFormElement)) throw elementNotFound(form, "Form for resetting", extLine(new Error()));
     [...form.querySelectorAll("input"), ...form.querySelectorAll("textarea")].forEach((inp, i) => {
@@ -1061,7 +1061,7 @@ export async function validateForm(
   }
   return [formValidated, invalidEntries.map(invalidIdf => `${invalidIdf} \n`), validEntries];
 }
-export async function submitForm(form: nullishForm, ep: formCases): Promise<void> {
+export async function submitForm(form: nlFm, ep: formCases): Promise<void> {
   try {
     if (!(form instanceof HTMLFormElement))
       throw elementNotFound(form, `Validation of form instance`, extLine(new Error()));
@@ -1434,7 +1434,7 @@ export function registerPersistInputs({
   inputTypes = ["text", "number", "date"],
   queriesToExclude,
 }: {
-  f: nullishForm;
+  f: nlFm;
   selects: boolean;
   textareas: boolean;
   inputTypes?: string[];

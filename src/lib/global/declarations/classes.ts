@@ -33,7 +33,15 @@ export class Person {
     this.sumDCut = sumDCut;
     this.atvLvl = atvLvl;
   }
-  checkAtvLvl(personInfo: Person | string): number {
+  public resetPerson(): void {
+    this.gen = "masculino";
+    this.age = 0;
+    this.weight = 0;
+    this.height = 0;
+    this.sumDCut = 0;
+    this.atvLvl = "leve";
+  }
+  public checkAtvLvl(personInfo: Person | string): number {
     if (
       (personInfo instanceof Person && "atvLvl" in personInfo && this.atvLvl !== "") ||
       typeof personInfo === "string"
@@ -67,7 +75,7 @@ export class Person {
     }
     return 0;
   }
-  calcIMC(personInfo: Person | [number, number]): [string, number] {
+  public calcIMC(personInfo: Person | [number, number]): [string, number] {
     try {
       if (
         (personInfo instanceof Person &&
@@ -110,7 +118,7 @@ export class Person {
     }
     return ["", 0];
   }
-  calcPGC(person: Person): [number, number] {
+  public calcPGC(person: Person): [number, number] {
     if (person instanceof Person && "sumDCut" in person && typeof this.sumDCut === "number" && this.sumDCut >= 0) {
       if (person.gen === "masculino") {
         let DC = 1.10938 - 0.0008267 * this.sumDCut + 0.0000016 * this.sumDCut ** 2 - 0.0002574 * person.age;
@@ -149,7 +157,7 @@ export class Person {
     }
     return [0, 0];
   }
-  calcTMB(person: Person, IMC: number = 0, MLG: number = 0, factorAtleta: string = "Peso"): [string, number] {
+  public calcTMB(person: Person, IMC: number = 0, MLG: number = 0, factorAtleta: string = "Peso"): [string, number] {
     if (factorAtleta === "peso") factorAtleta = "Peso";
     if (factorAtleta === "mlg") factorAtleta = "MLG";
     try {
@@ -242,7 +250,7 @@ export class Person {
     }
     return ["", 0];
   }
-  calcGET(TMB: number = 0, factorAtvLvl: number = 1.4): number {
+  public calcGET(TMB: number = 0, factorAtvLvl: number = 1.4): number {
     if (TMB && factorAtvLvl) return TMB * factorAtvLvl;
     else
       console.error(`Error validating arguments.

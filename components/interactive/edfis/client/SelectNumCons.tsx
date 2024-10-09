@@ -1,13 +1,18 @@
 "use client";
-import { elCollection } from "@/lib/global/declarations/types";
+import { elCollection, nlSel } from "@/lib/global/declarations/types";
 import { handleEventReq } from "@/lib/global/handlers/gHandlers";
 import { parseNotNaN } from "@/lib/global/gModel";
 import { switchRequiredCols } from "@/lib/locals/edFisNutPage/edFisNutHandler";
 import { tabProps } from "@/vars";
 import { extLine, inputNotFound, multipleElementsNotFound } from "@/lib/global/handlers/errorHandler";
+import { MutableRefObject, useContext } from "react";
+import { ENContext } from "../ENForm";
+import { ENContextProps } from "@/lib/global/declarations/interfaces";
 export default function SelectNumCons(): JSX.Element {
+  const snr = useContext<ENContextProps>(ENContext)?.refs?.snr;
   return (
     <select
+      ref={snr as MutableRefObject<nlSel>}
       id='selectNumCons'
       name='num_cons'
       className='form-select noInvert consInp'

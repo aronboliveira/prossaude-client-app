@@ -9,7 +9,7 @@ import { panelFormsVariables } from "../panelFormsData";
 import { useEffect, useRef, useState, useCallback, useContext } from "react";
 import GenericErrorComponent from "../../error/GenericErrorComponent";
 import ReseterBtn from "../defs/ReseterBtn";
-import { nullishBtn, nullishForm, nullishInp } from "@/lib/global/declarations/types";
+import { nlBtn, nlFm, nlInp } from "@/lib/global/declarations/types";
 import { addEmailExtension, assignFormAttrs, autoCapitalizeInputs, formatCPF, formatTel } from "@/lib/global/gModel";
 import { elementNotFound, elementNotPopulated, extLine, inputNotFound } from "@/lib/global/handlers/errorHandler";
 import { handleCondtReq, handleEventReq, validateForm, syncAriaStates } from "@/lib/global/handlers/gHandlers";
@@ -19,10 +19,10 @@ import useExportHandler from "@/lib/hooks/useExportHandler";
 export default function ProfForm({ mainRoot }: GlobalFormProps): JSX.Element {
   const userClass = useContext(PanelCtx).userClass,
     [showForm] = useState(true),
-    formRef = useRef<nullishForm>(null),
-    CPFProfRef = useRef<nullishInp>(null),
-    telProfRef = useRef<nullishInp>(null),
-    btnExportProfForm = useRef<nullishBtn>(null),
+    formRef = useRef<nlFm>(null),
+    CPFProfRef = useRef<nlInp>(null),
+    telProfRef = useRef<nlInp>(null),
+    btnExportProfForm = useRef<nlBtn>(null),
     callbackNormalizeSizeSb = useCallback(() => {
       normalizeSizeSb([
         ...document.querySelectorAll(".form-padded"),

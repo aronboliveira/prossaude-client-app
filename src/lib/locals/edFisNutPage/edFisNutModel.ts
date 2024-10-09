@@ -10,48 +10,33 @@ import {
   multipleElementsNotFound,
   stringError,
 } from "../../global/handlers/errorHandler";
+import { Gender } from "@/lib/tests/testVars";
 export function checkInnerColGroups(parentEl: targEl, areAllColGroupsSimilar: boolean = false): [number, boolean] {
   const validColGroupsChildCount: number[] = [],
     colGroups = Array.from(parentEl?.querySelectorAll("colgroup") ?? []);
-
-  if (parentEl instanceof HTMLElement && colGroups?.flat(1)?.length > 0) {
-    //popula arrays de colgroups com base em filtragem de instância
+  try {
+    if (!(parentEl instanceof HTMLElement && colGroups?.flat(1)?.length > 0))
+      throw multipleElementsNotFound(
+        extLine(new Error()),
+        `arguments for checkInnerColGroups(), areColGroupValids: ${areAllColGroupsSimilar ?? false}`,
+        parentEl,
+        `${JSON.stringify(colGroups) || null}`,
+      );
     for (let i = 0; i < colGroups.length; i++) {
       const arrColGrpChilds = Array.from(colGroups[i].children);
-      if (arrColGrpChilds?.every(col => col instanceof HTMLTableColElement))
-        validColGroupsChildCount.push(colGroups[i].childElementCount);
-      else {
-        //filtragem para incluir somente as instâncias validadas como colunas
-        validColGroupsChildCount.push(arrColGrpChilds.filter(col => col instanceof HTMLTableColElement).length);
-        //descreve as instâncias achadas, para detalhar quais elementos não foram validados como colunas
-        const colsInstances: string[] = [];
-        arrColGrpChilds.forEach(arrColGrpChild => {
-          const childInstance = `${Object.prototype.toString.call(arrColGrpChild).slice(8, -1) ?? "null"}`;
-          colsInstances.push(childInstance);
-          if (childInstance !== `HTMLTableColElement`)
-            elementNotFound(arrColGrpChild, "child <col>", extLine(new Error()));
-        });
-      }
+      arrColGrpChilds.every(col => col instanceof HTMLTableColElement)
+        ? validColGroupsChildCount.push(colGroups[i].childElementCount)
+        : validColGroupsChildCount.push(arrColGrpChilds.filter(col => col instanceof HTMLTableColElement).length);
     }
-    //filtra array de colgroups válida com base em colunas de tamanho similar
     const pairedColGroupsValid: boolean[] = [];
-    for (let m = 0; m < validColGroupsChildCount.length; m++) {
-      if (m === 0) continue;
-      else {
-        if ((validColGroupsChildCount[m] = validColGroupsChildCount[m - 1])) pairedColGroupsValid.push(true);
-      }
-    }
-    //verifica se todos os pares são válidos para, em caso negativo, fornecer warn
-    if (pairedColGroupsValid.every(pairedColGroup => pairedColGroup === true)) areAllColGroupsSimilar = true;
-    areAllColGroupsSimilar = false;
-  } else
-    multipleElementsNotFound(
-      extLine(new Error()),
-      `arguments for checkInnerColGroups(), areColGroupValids: ${areAllColGroupsSimilar ?? false}`,
-      parentEl,
-      `${JSON.stringify(colGroups) || null}`,
-    );
-  return [validColGroupsChildCount?.length ?? 0, areAllColGroupsSimilar];
+    for (let m = 1; m < validColGroupsChildCount.length; m++)
+      (validColGroupsChildCount[m] = validColGroupsChildCount[m - 1]) && pairedColGroupsValid.push(true);
+    areAllColGroupsSimilar = pairedColGroupsValid.every(pairedColGroup => pairedColGroup === true) ? true : false;
+  } catch (e) {
+    console.error(`Error executing checkInnerColGroups:\n${(e as Error).message}`);
+    return [validColGroupsChildCount.length, areAllColGroupsSimilar];
+  }
+  return [validColGroupsChildCount.length, areAllColGroupsSimilar];
 }
 export function checkTabRowsIds(tab: targEl): string[] {
   const arrTabRowsIds: string[] = [];
@@ -254,3 +239,4 @@ export function alertPGCRounding(targInpPGC: targEl): void {
       : elementNotFound(spanRoundingAlertIcon, "spanRoundingAlertIcon", extLine(new Error()));
   } else inputNotFound(targInpPGC, "targInpPGC in alertPGCRounding", extLine(new Error()));
 }
+export const evalGender = (g: string): g is Gender => ["masculino", "feminino", "neutro"].includes(g);

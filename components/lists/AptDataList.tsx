@@ -21,9 +21,7 @@ export default function AptDataList({
   isDirectRender = false,
 }: AptDataListProps): JSX.Element {
   const userClass = useContext(PanelCtx).userClass,
-    transfArea = document.getElementById("transfArea")!;
-  if (!transfArea) console.warn(`Transfer area was not found by AptDataList.`);
-  const transferBtn = document.querySelector(`[id*="${btnId}"]`),
+    transferBtn = document.querySelector(`[id*="${btnId}"]`),
     aptDlgRef = useRef<nullishDlg>(null),
     renderDirectly = (): void => {
       try {
@@ -40,9 +38,6 @@ export default function AptDataList({
                 />,
               );
       } catch (e) {
-        console.warn(`Error rendering AptDataList:
-      ${(e as Error).message};
-      Initiating root recovering attempt.`);
         try {
           const fallbackRootDlg = document.getElementById("rootDlgList");
           if (!(fallbackRootDlg instanceof HTMLElement))
@@ -71,9 +66,6 @@ export default function AptDataList({
                 />,
               );
       } catch (e) {
-        console.warn(`Error rendering AptDataList:
-        ${(e as Error).message};
-        Initiating root recovering attempt.`);
         try {
           const fallbackRootDlg = document.getElementById("rootDlgList");
           if (!(fallbackRootDlg instanceof HTMLElement))

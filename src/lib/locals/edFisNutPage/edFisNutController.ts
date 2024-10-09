@@ -106,37 +106,44 @@ export function addListenerInnerTabs(
   numColsCons: number = 1,
   areColGroupsSimilar: boolean = false,
 ): [number, boolean] {
-  if (
-    consTablesFs instanceof HTMLElement &&
-    typeof numColsCons === "number" &&
-    typeof areColGroupsSimilar === "boolean"
-  ) {
+  try {
+    if (
+      !(
+        consTablesFs instanceof HTMLElement &&
+        typeof numColsCons === "number" &&
+        typeof areColGroupsSimilar === "boolean"
+      )
+    )
+      throw multipleElementsNotFound(
+        extLine(new Error()),
+        "arguments for addListenerInnerTabs()",
+        consTablesFs,
+        numColsCons,
+        areColGroupsSimilar,
+      );
     [numColsCons, areColGroupsSimilar] = EdFisNutModel.checkInnerColGroups(consTablesFs, areColGroupsSimilar);
     const allTabledInps = consTablesFs.querySelectorAll("input");
-    if (allTabledInps?.length > 0) {
-      allTabledInps.forEach(tabInp => {
-        //para apagar retornos negativos anômalos
-        tabInp.addEventListener("input", (): string => {
-          if (parseInt(tabInp.value) < 0 || Number.isNaN(parseInt(tabInp.value))) tabInp.value = "0";
-          return tabInp.value;
-        });
-      });
-    } else
-      multipleElementsNotFound(
+    if (!(allTabledInps.length > 0))
+      throw multipleElementsNotFound(
         extLine(new Error()),
         "arguments for callbackInnerTabs()",
         consTablesFs,
         numColsCons,
         areColGroupsSimilar,
       );
-  } else
-    multipleElementsNotFound(
-      extLine(new Error()),
-      "arguments for addListenerInnerTabs()",
-      consTablesFs,
-      numColsCons,
-      areColGroupsSimilar,
-    );
+    allTabledInps.forEach(tabInp => {
+      //para apagar retornos negativos anômalos
+      if (!tabInp.dataset.iswhole || tabInp.dataset.iswhole !== "true") {
+        tabInp.addEventListener("input", (): void => {
+          if (parseFloat(tabInp.value) < 0 || !Number.isFinite(parseFloat(tabInp.value))) tabInp.value = "0";
+        });
+        tabInp.dataset.iswhole = "true";
+      }
+    });
+  } catch (e) {
+    console.error(`Error executing addListenerInnerTabs:\n${(e as Error).message}`);
+    return [numColsCons || 0, areColGroupsSimilar || false];
+  }
   return [numColsCons || 0, areColGroupsSimilar || false];
 }
 export function addListenerTrioReadNumCons(
@@ -172,12 +179,23 @@ export function callbackTrioReadNumCons(
   numTotalTabsCons: number = 1,
 ): Element[] {
   const numConsTextHeadCels = Array.from(document.getElementsByClassName("numConsTextHeadCel"));
-  if (
-    consTablesFs instanceof HTMLElement &&
-    (trioReadNumCons instanceof HTMLInputElement || trioReadNumCons instanceof HTMLSelectElement) &&
-    typeof numTotalColsCons === "number" &&
-    typeof numTotalTabsCons === "number"
-  ) {
+  try {
+    if (
+      !(
+        consTablesFs instanceof HTMLElement &&
+        (trioReadNumCons instanceof HTMLInputElement || trioReadNumCons instanceof HTMLSelectElement) &&
+        typeof numTotalColsCons === "number" &&
+        typeof numTotalTabsCons === "number"
+      )
+    )
+      throw multipleElementsNotFound(
+        extLine(new Error()),
+        "arguments for callbackTrioReadNumCons()",
+        consTablesFs,
+        trioReadNumCons,
+        numTotalColsCons,
+        numTotalTabsCons,
+      );
     if (
       trioReadNumCons instanceof HTMLInputElement &&
       parseInt(trioReadNumCons.value) <= 0 &&
@@ -200,18 +218,11 @@ export function callbackTrioReadNumCons(
           "numConsTextHeadCels in callbackTrioReadNumCons()",
           extLine(new Error()),
         );
-    numConsTextHeadCels.forEach(numConsCel => {
-      highlightChange(numConsCel, "rgba(250, 30, 0, 0.3)");
-    });
-  } else
-    multipleElementsNotFound(
-      extLine(new Error()),
-      "arguments for callbackTrioReadNumCons()",
-      consTablesFs,
-      trioReadNumCons,
-      numTotalColsCons,
-      numTotalTabsCons,
-    );
+    for (const n of numConsTextHeadCels) highlightChange(n, "rgba(250, 30, 0, 0.3)");
+  } catch (e) {
+    console.error(`Error executing callbackTrioReadNumCons:${(e as Error).message}`);
+    return numConsTextHeadCels;
+  }
   return numConsTextHeadCels;
 }
 export function callbackAutoFillBtn(autoFillBtn: targEl, isAutoFillActive: boolean = true): boolean {

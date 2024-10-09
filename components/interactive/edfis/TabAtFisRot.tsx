@@ -6,25 +6,28 @@ import { useEffect, useReducer, useRef } from "react";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { addRowAtivFis, removeRowAtivFis } from "@/lib/locals/edFisNutPage/edFisNutHandler";
 export default function TabAtFirsRot({ children = <></> }: { children: JSX.Element }): JSX.Element {
-  const mainRef = useRef<nullishDiv>(null);
-  const [blockCount, setBlockCount] = useReducer<(s: number, a: PayloadCounterAction) => number>(
-    (s: number, a: PayloadCounterAction) => {
-      switch (a.type) {
-        case "INCREMENT":
-          return s + 1;
-        case "DECREMENT":
-          return s > 3 ? s - 1 : s;
-        default:
-          return s;
-      }
-    },
-    3,
-  );
+  const mainRef = useRef<nullishDiv>(null),
+    [blockCount, setBlockCount] = useReducer<(s: number, a: PayloadCounterAction) => number>(
+      (s: number, a: PayloadCounterAction) => {
+        switch (a.type) {
+          case "INCREMENT":
+            return s + 1;
+          case "DECREMENT":
+            return s > 3 ? s - 1 : s;
+          default:
+            return s;
+        }
+      },
+      3,
+    );
   useEffect(() => {
     try {
       if (!(mainRef.current instanceof HTMLElement))
         throw elementNotFound(mainRef.current, `Main reference for AntMedFs`, extLine(new Error()));
-      syncAriaStates([mainRef.current, ...mainRef.current.querySelectorAll("*")]);
+      setTimeout(() => {
+        if (!mainRef.current) return;
+        syncAriaStates([mainRef.current, ...mainRef.current.querySelectorAll("*")]);
+      }, 500);
     } catch (e) {
       console.error(`Error executing useEffect for blockCount:\n${(e as Error).message}`);
     }

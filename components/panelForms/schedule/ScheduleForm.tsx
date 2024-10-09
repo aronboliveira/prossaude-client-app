@@ -24,7 +24,7 @@ import {
   elementNotFound,
   elementNotPopulated,
 } from "../../../src/lib/global/handlers/errorHandler";
-import { nullishSel, nullishForm, nullishBtn, validSchedHours } from "../../../src/lib/global/declarations/types";
+import { nlSel, nlFm, nlBtn, validSchedHours } from "../../../src/lib/global/declarations/types";
 import { correlateDayOpts, setListenersForDates } from "../../../src/lib/locals/panelPage/consStyleScript";
 import {
   addListenerForSchedUpdates,
@@ -61,14 +61,14 @@ export default function ScheduleForm({ mainRoot }: ScheduleFormProps): JSX.Eleme
       }
     };
   const [showForm] = useState(true);
-  const formRef = useRef<nullishForm>(null);
+  const formRef = useRef<nlFm>(null);
   const workingDefinitionsRef = useRef<HTMLDivElement | null>(null);
-  const monthRef = useRef<nullishSel>(null);
-  const btnExportSchedRef = useRef<nullishBtn>(null);
+  const monthRef = useRef<nlSel>(null);
+  const btnExportSchedRef = useRef<nlBtn>(null);
   const [pressState, setTogglePress] = useState<boolean>(false);
   const toggleForm = (): void => setTogglePress(() => !pressState);
   const formCallback = useCallback(
-    (form: nullishForm) => {
+    (form: nlFm) => {
       if (form instanceof HTMLFormElement) {
         //adição de listeners para confirmação de agendamentos
         const registDayBtn = form.querySelector("#regstDayBtn");
@@ -540,10 +540,7 @@ export default function ScheduleForm({ mainRoot }: ScheduleFormProps): JSX.Eleme
                                           `Validation of confirmRegst instance`,
                                           extLine(new Error()),
                                         );
-                                      if (!(relAptBtn instanceof HTMLElement)) {
-                                        console.warn(`No related button for day checkbox id ${confirmRegst.id}`);
-                                        return;
-                                      }
+                                      if (!(relAptBtn instanceof HTMLElement)) return;
                                       if (confirmRegst.checked) {
                                         relAptBtn.classList.remove("btn-info");
                                         relAptBtn.classList.add("btn-success");

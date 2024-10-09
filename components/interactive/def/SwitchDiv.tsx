@@ -1,6 +1,6 @@
 "use client";
 import { switchAutoFill } from "@/lib/locals/edFisNutPage/edFisNutHandler";
-import { tabProps } from "@/vars";
+import { agProps, odProps, tabProps } from "@/vars";
 export default function SwitchDiv({ autofill = false }: { autofill?: boolean }): JSX.Element {
   return (
     <div role='group' className='switchDiv flexQ900NoWC divTab'>
@@ -28,6 +28,14 @@ export default function SwitchDiv({ autofill = false }: { autofill?: boolean }):
           id='deactAutocorrectBtnPac'
           data-title='Autocorreção'
           defaultChecked
+          onClick={ev => {
+            if (location.pathname.toLowerCase().includes("edfis"))
+              ev.currentTarget.checked ? (tabProps.edIsAutoCorrectOn = true) : (tabProps.edIsAutoCorrectOn = false);
+            else if (location.pathname.toLowerCase().includes("od"))
+              ev.currentTarget.checked ? (odProps.odIsAutoCorrectOn = true) : (odProps.odIsAutoCorrectOn = false);
+            else if (location.pathname.toLowerCase().includes("ag"))
+              ev.currentTarget.checked ? (agProps.agIsAutoCorrectOn = true) : (agProps.agIsAutoCorrectOn = false);
+          }}
         />
         <label htmlFor='deactAutocorrectBtnPac' style={{ display: "inline", marginLeft: "0.3rem" }}>
           <strong>Autocorreção</strong>

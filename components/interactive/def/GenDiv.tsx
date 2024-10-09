@@ -1,33 +1,19 @@
 "use client";
 import { fluxGen } from "@/lib/global/gModel";
 import { person } from "@/vars";
-import { Dispatch, MutableRefObject, SetStateAction, useContext, useEffect, useRef, useState } from "react";
-import { elementNotFound, extLine, inputNotFound } from "@/lib/global/handlers/errorHandler";
-import { nullishDiv, nullishSel } from "@/lib/global/declarations/types";
-import { Gender } from "@/lib/tests/testVars";
-import { ENContext } from "../edfis/ENForm";
-import { ENContextProps } from "@/lib/global/declarations/interfaces";
-export default function GenDiv({
-  onSetGen,
-  genRef,
-  genBirthRef,
-}: {
-  onSetGen?: Dispatch<SetStateAction<Gender>>;
-  genRef?: MutableRefObject<nullishSel>;
-  genBirthRef?: MutableRefObject<nullishSel>;
-}): JSX.Element {
-  const ctxGen = useContext<ENContextProps>(ENContext).gen,
-    r = useRef<nullishDiv>(null),
-    gr = useRef<nullishSel>(null),
-    gbr = useRef<nullishSel>(null),
-    gtr = useRef<nullishSel>(null),
-    gar = useRef<nullishSel>(null),
-    tbr = useRef<nullishSel>(null),
-    [gen, setGen] = useState<string>(ctxGen),
-    [genBirthRel, setGenBirthRel] = useState<string>("cis"),
-    [genTrans, setGenTrans] = useState<string>("avancado"),
-    [genFisAlin, setGenFisAlin] = useState<string>("masculinizado"),
-    [, setTextBodytype] = useState<string>("");
+import { useEffect } from "react";
+import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
+import { AlignType, BirthRelation, Gender, TransitionLevel } from "@/lib/tests/testVars";
+import { GenDivProps } from "@/lib/global/declarations/interfacesCons";
+import useGenDiv from "@/lib/hooks/useGenDiv";
+import useResetPerson from "@/lib/hooks/useResetPerson";
+export default function GenDiv({ onSetGen, genRef, genBirthRef }: GenDivProps): JSX.Element {
+  const {
+    refs: { r, gr, gbr, gtr, gar },
+    values: { gen, genBirthRel, genTrans, genFisAlin },
+    setters: { setGen, setGenBirthRel, setGenTrans, setGenFisAlin },
+  } = useGenDiv({ onSetGen, genRef, genBirthRef });
+  useResetPerson();
   useEffect(() => {
     try {
       const agBody = document.getElementById("agBody");
@@ -46,14 +32,6 @@ export default function GenDiv({
       console.error(`Error executing procedure for agBody:\n${(e as Error).message}`);
     }
   }, [onSetGen]);
-  useEffect(() => {
-    try {
-      if (tbr.current instanceof HTMLSelectElement || (tbr.current as any) instanceof HTMLInputElement) return;
-      tbr.current = document.getElementById("textBodytype") as nullishSel;
-    } catch (e) {
-      console.error(`Error executing effect for assigning Text Body Type reference:\n${(e as Error).message}`);
-    }
-  }, []);
   useEffect(() => {
     const g = gr.current ?? (document.getElementById("genId") as HTMLSelectElement),
       gb = gbr.current ?? (document.getElementById("genBirthRelId") as HTMLSelectElement),
@@ -117,20 +95,13 @@ export default function GenDiv({
             value={gen}
             onChange={ev => {
               const selectedGen = ev.target.value;
-              setGen(selectedGen);
+              setGen(() => selectedGen);
               try {
                 const gb = gbr.current ?? (document.getElementById("genBirthRelId") as HTMLSelectElement),
                   gt = gtr.current ?? (document.getElementById("genTransId") as HTMLSelectElement),
-                  ga = gar.current ?? (document.getElementById("genFisAlinId") as HTMLSelectElement),
-                  tbt = document.getElementById("textBodytype") as HTMLInputElement | null;
+                  ga = gar.current ?? (document.getElementById("genFisAlinId") as HTMLSelectElement);
                 person.gen = fluxGen({ g: ev.target, gb, gt, ga }, selectedGen, setGenFisAlin) || "masculino";
                 onSetGen && onSetGen(() => person.gen as Gender);
-                if ((gt.value !== "avancado" || selectedGen === "naoBinario") && !gt.hidden && !ga.hidden) {
-                  if (tbt) {
-                    tbt.value = person.gen;
-                    setTextBodytype(tbt.value);
-                  } else inputNotFound(tbt, "textBodyType in callback for gender elements", extLine(new Error()));
-                }
               } catch (e) {
                 console.error(`Error executing callback for Gen Elements:\n${(e as Error).message}`);
               }
@@ -154,7 +125,7 @@ export default function GenDiv({
             required
             value={genBirthRel}
             onChange={ev => {
-              setGenBirthRel(ev.target.value);
+              setGenBirthRel(ev.target.value as BirthRelation);
               const g = gr.current ?? (document.getElementById("genId") as HTMLSelectElement),
                 gt = gtr.current ?? (document.getElementById("genTransId") as HTMLSelectElement),
                 ga = gar.current ?? (document.getElementById("genFisAlinId") as HTMLSelectElement);
@@ -178,7 +149,7 @@ export default function GenDiv({
             className='form-select inpIdentif noInvert'
             value={genTrans}
             onChange={ev => {
-              setGenTrans(ev.target.value);
+              setGenTrans(ev.target.value as TransitionLevel);
               const g = gr.current ?? (document.getElementById("genId") as HTMLSelectElement),
                 gb = gbr.current ?? (document.getElementById("genBirthRelId") as HTMLSelectElement),
                 ga = gar.current ?? (document.getElementById("genFisAlinId") as HTMLSelectElement);
@@ -204,7 +175,7 @@ export default function GenDiv({
             value={genFisAlin}
             onChange={ev => {
               const selectedGenFisAlin = ev.target.value;
-              setGenFisAlin(selectedGenFisAlin);
+              setGenFisAlin(selectedGenFisAlin as AlignType);
               const g = gr.current ?? (document.getElementById("genId") as HTMLSelectElement),
                 gb = gbr.current ?? (document.getElementById("genBirthRelId") as HTMLSelectElement),
                 gt = gtr.current ?? (document.getElementById("genTransId") as HTMLSelectElement);

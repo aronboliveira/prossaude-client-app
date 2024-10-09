@@ -1,5 +1,5 @@
-import { SetStateAction } from "react";
-import { TabCelCtxs, ctxRot, looseNum, quadrCases, targEl, validTabLabs, vRoot } from "./types";
+import { MutableRefObject, SetStateAction } from "react";
+import { TabCelCtxs, ctxRot, looseNum, quadrCases, targEl, validTabLabs, vRoot, nlSel, nullishHtEl } from "./types";
 export interface DocumentNodeProps {
   html: string;
   head?: (JSX.Element | null)[];
@@ -15,7 +15,26 @@ export interface AppRootContextType {
 }
 export interface ENContextProps {
   age: looseNum;
-  gen: Gender;
+  gen: string;
+  IMC: number;
+  MLG: number;
+  TMB: number;
+  GET: number;
+  PGC: number;
+  numCons: number;
+  factorAtvLvl: number;
+  factorAtleta: string;
+  targInpWeigth: targEl;
+  targInpHeigth: targEl;
+  targInpIMC: targEl;
+  targInpMLG: targEl;
+  targInpTMB: targEl;
+  targInpGET: targEl;
+  targInpPGC: targEl;
+  targInpSumDCut: targEl;
+  refs: {
+    [k: string]: null | MutableRefObject<nlSel | HTMLInputElement | HTMLFieldSetElement | HTMLDivElement | HTMLElement>;
+  };
 }
 export interface CounterAction {
   type: "INCREMENT" | "DECREMENT";
@@ -33,25 +52,26 @@ export interface ENTabsProps {
   areColGroupsSimilar: boolean;
   areNumConsOpsValid: boolean;
   numColsCons: number;
-  numCons: number;
   numConsLastOp: number;
   numCol: number;
-  IMC: number;
-  MLG: number;
-  TMB: number;
-  GET: number;
-  PGC: number;
-  factorAtvLvl: number;
-  factorAtleta: string;
-  edGenValue: string;
-  targInpWeigth: targEl;
-  targInpHeigth: targEl;
-  targInpIMC: targEl;
-  targInpMLG: targEl;
-  targInpTMB: targEl;
-  targInpGET: targEl;
-  targInpPGC: targEl;
-  targInpSumDCut: targEl;
+  numCons?: number;
+  age?: looseNum;
+  gen?: string;
+  IMC?: number;
+  MLG?: number;
+  TMB?: number;
+  GET?: number;
+  PGC?: number;
+  factorAtvLvl?: number;
+  factorAtleta?: string;
+  targInpWeigth?: targEl;
+  targInpHeigth?: targEl;
+  targInpIMC?: targEl;
+  targInpMLG?: targEl;
+  targInpTMB?: targEl;
+  targInpGET?: targEl;
+  targInpPGC?: targEl;
+  targInpSumDCut?: targEl;
 }
 export interface ChecksProps {
   name: string;

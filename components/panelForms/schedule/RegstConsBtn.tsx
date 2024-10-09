@@ -2,7 +2,7 @@ import { RegsConstBtnProps } from "@/lib/global/declarations/interfacesCons";
 import { Root, createRoot } from "react-dom/client";
 import { checkRegstBtn } from "@/lib/locals/panelPage/handlers/consHandlerCmn";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
-import { nullishBtn, voidVal } from "@/lib/global/declarations/types";
+import { nlBtn, voidVal } from "@/lib/global/declarations/types";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useContext, useEffect, useRef, useState } from "react";
 import FailRegstAlert from "../../alerts/FailRegsAlert";
@@ -11,7 +11,7 @@ export default function RegstConsBtn({ rootEl, secondOp = "Arraste" }: RegsConst
   let root: Root | undefined;
   const [shouldDisplayFailRegstDlg, setDisplayFailRegstDlg] = useState<boolean>(false),
     userClass = useContext(PanelCtx).userClass,
-    RegstBtnRef = useRef<nullishBtn>(null),
+    RegstBtnRef = useRef<nlBtn>(null),
     toggleDisplayRegstDlg = (rootEl: HTMLElement | voidVal, shouldDisplayFailRegstDlg: boolean = true): void => {
       rootEl instanceof HTMLElement
         ? (root = createRoot(rootEl))

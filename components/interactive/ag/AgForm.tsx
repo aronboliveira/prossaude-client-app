@@ -42,16 +42,16 @@ import OtherD from "./OtherD";
 import FamDiab from "./FamDiab";
 import FamDislip from "./FamDislip";
 import { useRef, useEffect } from "react";
-import { nullishForm, nullishInp, nullishSel } from "@/lib/global/declarations/types";
+import { nlFm, nlInp, nlSel } from "@/lib/global/declarations/types";
 import useDataProvider from "@/lib/hooks/useDataProvider";
 export default function AgForm(): JSX.Element {
-  const f = useRef<nullishForm>(null),
-    dnr = useRef<nullishInp>(null),
-    ar = useRef<nullishInp>(null),
-    sr = useRef<nullishSel>(null),
-    lnr = useRef<nullishInp>(null),
-    gr = useRef<nullishSel>(null),
-    gbr = useRef<nullishSel>(null);
+  const f = useRef<nlFm>(null),
+    dnr = useRef<nlInp>(null),
+    ar = useRef<nlInp>(null),
+    sr = useRef<nlSel>(null),
+    lnr = useRef<nlInp>(null),
+    gr = useRef<nlSel>(null),
+    gbr = useRef<nlSel>(null);
   useEffect(() => {
     registerPersistInputs({
       f: f.current,
@@ -81,7 +81,6 @@ export default function AgForm(): JSX.Element {
         dnr.current.style.width = getComputedStyle(gr.current).width;
         dnr.current.style.maxWidth = getComputedStyle(gr.current).width;
         if (gbr.current) {
-          console.log(getComputedStyle(gbr.current).width);
           ar.current.style.width = getComputedStyle(gbr.current).width;
           ar.current.style.maxWidth = getComputedStyle(gbr.current).width;
         } else {

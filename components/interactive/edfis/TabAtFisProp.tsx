@@ -21,7 +21,10 @@ export default function TabAtFirsProp({ children = <></> }: { children: JSX.Elem
     try {
       if (!(mainRef.current instanceof HTMLElement))
         throw elementNotFound(mainRef.current, `Main reference for AntMedFs`, extLine(new Error()));
-      syncAriaStates([mainRef.current, ...mainRef.current.querySelectorAll("*")]);
+      setTimeout(() => {
+        if (!mainRef.current) return;
+        syncAriaStates([mainRef.current, ...mainRef.current.querySelectorAll("*")]);
+      }, 500);
     } catch (e) {
       console.error(`Error executing useEffect for blockCount:\n${(e as Error).message}`);
     }

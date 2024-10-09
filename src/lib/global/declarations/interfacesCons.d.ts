@@ -1,6 +1,17 @@
 import { DlgProps } from "@/lib/global/declarations/interfaces";
-import { aptTypes, formCases, looseNum, panelOpts, vRoot } from "@/lib/global/declarations/types";
-import { nullishForm, nullishDlg, nullishTab, voidVal, nullishBtn } from "@glSrc/types";
+import {
+  aptTypes,
+  formCases,
+  looseNum,
+  nullishDiv,
+  nullishHtEl,
+  nlInp,
+  nlSel,
+  panelOpts,
+  vRoot,
+} from "@/lib/global/declarations/types";
+import { GordLvl } from "@/lib/tests/testVars";
+import { nlFm, nullishDlg, nullishTab, voidVal, nlBtn } from "@glSrc/types";
 import { NextRouter } from "next/router";
 import { MutableRefObject, Dispatch, SetStateAction, Component } from "react";
 import { Root } from "react-dom/client";
@@ -37,7 +48,7 @@ export interface DataContextType {
   updateFormData: (newData: FormData) => void;
 }
 export interface PanelFormProps {
-  formCallback: (form: nullishForm) => void;
+  formCallback: (form: nlFm) => void;
 }
 export interface BtnAddPacPros {
   context: boolean;
@@ -107,7 +118,7 @@ export interface ExcludeDlgProps {
   route: formCases;
 }
 export interface ExcludeConsDlgProps extends Omit<ExcludeDlgProps, "route"> {
-  btn: nullishBtn;
+  btn: nlBtn;
   userClass?: userClasses;
 }
 export interface FailedRegstProps {
@@ -218,4 +229,45 @@ export interface HistoricDlgProps extends DlgProps {
 export interface HistoricRowProps extends Pick<HistoricDlgProps, "name"> {
   historic: HistoricInfo;
   nRow: number;
+}
+type onRender = (
+  gen: string,
+  genBirthRel: string,
+  genTrans: string,
+  genFisAlin: string,
+  refs: { [k: string]: MutableRefObject<nlSel | HTMLInputElement | HTMLDivElement | HTMLElement> },
+  setters: {
+    setGen: React.Dispatch<React.SetStateAction<Gender>>;
+    setGenBirthRel: React.Dispatch<React.SetStateAction<BirthRelation>>;
+    setGenTrans: React.Dispatch<React.SetStateAction<TransitionLevel>>;
+    setGenFisAlin: React.Dispatch<React.SetStateAction<AlignType>>;
+  },
+) => JSX.Element;
+export interface GenDivProps {
+  onSetGen?: Dispatch<SetStateAction<Gender>>;
+  genRef?: MutableRefObject<nlSel>;
+  genBirthRef?: MutableRefObject<nlSel>;
+}
+export interface UseGenDivReturn {
+  refs: {
+    r: MutableRefObject<nullishDiv>;
+    gr: MutableRefObject<nlSel>;
+    gbr: MutableRefObject<nlSel>;
+    gtr: MutableRefObject<nlSel>;
+    gar: MutableRefObject<nlSel>;
+  };
+  values: {
+    gen: string;
+    genBirthRel: BirthRelation;
+    genTrans: TransitionLevel;
+    genFisAlin: AlignType;
+    textBodytype: GordLvl;
+  };
+  setters: {
+    setGen: Dispatch<SetStateAction<string>>;
+    setGenBirthRel: Dispatch<SetStateAction<BirthRelation>>;
+    setGenTrans: Dispatch<SetStateAction<TransitionLevel>>;
+    setGenFisAlin: Dispatch<SetStateAction<AlignType>>;
+    setTextBodytype: Dispatch<SetStateAction<GordLvl>>;
+  };
 }

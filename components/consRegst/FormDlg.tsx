@@ -27,14 +27,9 @@ import {
   inputNotFound,
   multipleElementsNotFound,
 } from "@/lib/global/handlers/errorHandler";
-import { nullishBtn, nullishDiv, nullishDlg, nullishForm, nullishInp } from "@/lib/global/declarations/types";
+import { nlBtn, nullishDiv, nullishDlg, nlFm, nlInp } from "@/lib/global/declarations/types";
 import { addEmailExtension, assignFormAttrs, autoCapitalizeInputs, formatCPF, formatTel } from "@/lib/global/gModel";
-import {
-  enableCPFBtn,
-  handleCondtReq,
-  validateForm,
-  syncAriaStates,
-} from "@/lib/global/handlers/gHandlers";
+import { enableCPFBtn, handleCondtReq, validateForm, syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import ListFirstNameCons from "./ListFirstNameCons";
 import ListCPFPacCons from "./ListCPFPacCons";
 import OptGrpUsers from "./OptGrpUsers";
@@ -50,19 +45,19 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
   //display de campos para identificadores de estudante
   const userClass = useContext(PanelCtx).userClass,
     dlgRef = useRef<nullishDlg>(null),
-    pacBtnRef = useRef<nullishBtn>(null);
+    pacBtnRef = useRef<nlBtn>(null);
   //autocompleção
-  const CPFPacInpRef = useRef<nullishInp>(null),
-    CPFPacBtnRef = useRef<nullishBtn>(null),
-    switchACConsRef = useRef<nullishInp>(null),
-    switchAFConsRef = useRef<nullishInp>(null),
-    telPacInpRef = useRef<nullishInp>(null),
-    CPFProfBtnRef = useRef<nullishBtn>(null),
-    hourRef = useRef<nullishInp>(null),
+  const CPFPacInpRef = useRef<nlInp>(null),
+    CPFPacBtnRef = useRef<nlBtn>(null),
+    switchACConsRef = useRef<nlInp>(null),
+    switchAFConsRef = useRef<nlInp>(null),
+    telPacInpRef = useRef<nlInp>(null),
+    CPFProfBtnRef = useRef<nlBtn>(null),
+    hourRef = useRef<nlInp>(null),
     dayRef = useRef<nullishDiv>(null),
-    exportRef = useRef<nullishBtn>(null),
-    submitRef = useRef<nullishBtn>(null),
-    formRef = useRef<nullishForm>(null),
+    exportRef = useRef<nlBtn>(null),
+    submitRef = useRef<nlBtn>(null),
+    formRef = useRef<nlFm>(null),
     [isDREFillerActive, setDREFiller] = useState<boolean>(false),
     toggleDREFiller = (): void => setDREFiller(!isDREFillerActive);
   //display de tabela para pacientes
@@ -123,10 +118,10 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
               .replaceAll(/D[aeo](?=[A-Z])/g, "")
               .replaceAll(/[Pp]aciente/g, "");
             keyFirstLvlMatch[inpTitle] && (inp.value = keyFirstLvlMatch[inpTitle].toString());
-          } else console.warn(`Field ${inp.id || "UNIDENTIFIED"} has no data-title. Could not match data.`);
+          }
         }
       } else multipleElementsNotFound(extLine(new Error()), `inputs in the dialog id ${dlgRef.current.id}`, cpfInp);
-    } else console.warn(`dlgRef.current not validated in callbackCPFPacBtnClick()`);
+    }
     return matchDataPh;
   }, []);
   //ativação de preenchimento de paciente com CPF
@@ -141,7 +136,7 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
   }, [CPFPacBtnRef, callbackCPFPacBtnClick]);
   //ativação de preenchimento de Profisional com tabela
   const [isCPFFillerActive, setCPFFiller] = useState<boolean>(false),
-    toggleCPFFiller = useCallback((CPFProfBtnRef: MutableRefObject<nullishBtn>, isCPFFillerActive: boolean) => {
+    toggleCPFFiller = useCallback((CPFProfBtnRef: MutableRefObject<nlBtn>, isCPFFillerActive: boolean) => {
       CPFProfBtnRef?.current instanceof HTMLButtonElement
         ? setCPFFiller(!isCPFFillerActive)
         : elementNotFound(CPFProfBtnRef.current, "CPFProfBtnRef for useCallback", extLine(new Error()));

@@ -76,7 +76,7 @@ export const tabPropsSlice = createSlice({
       state.factorAtleta = action.payload;
     },
     setEdGenValue: (state, action: PayloadAction<string>) => {
-      state.edGenValue = action.payload;
+      state.gen = action.payload;
     },
     setTargInpWeigth: (state, action: PayloadAction<Element | null>) => {
       state.targInpWeigth = action.payload as any;
@@ -148,7 +148,7 @@ export const tabPropsSlice = createSlice({
       state.factorAtleta = initialState.factorAtleta;
     },
     clearEdGenValue: state => {
-      state.edGenValue = initialState.edGenValue;
+      state.gen = initialState.gen;
     },
     clearTargInpWeigth: state => {
       state.targInpWeigth = initialState.targInpWeigth as any;

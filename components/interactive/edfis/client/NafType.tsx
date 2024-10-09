@@ -1,9 +1,15 @@
 "use client";
 import { callbackAtvLvlElementNaf } from "@/lib/locals/edFisNutPage/edFisNutHandler";
 import { person, tabProps } from "@/vars";
+import { MutableRefObject, useContext } from "react";
+import { ENContext } from "../ENForm";
+import { ENContextProps } from "@/lib/global/declarations/interfaces";
+import { nlSel } from "@/lib/global/declarations/types";
 export default function NafType(): JSX.Element {
+  const afr = useContext<ENContextProps>(ENContext)?.refs?.afr;
   return (
     <select
+      ref={afr as MutableRefObject<nlSel>}
       id='nafType'
       name='naf'
       className='form-select noInvert consInp'
@@ -11,7 +17,7 @@ export default function NafType(): JSX.Element {
       onChange={ev => {
         [person.atvLvl, tabProps.factorAtvLvl] = callbackAtvLvlElementNaf(
           [
-            [tabProps.factorAtvLvl, tabProps.IMC],
+            [tabProps.factorAtvLvl ?? 1.4, tabProps.IMC ?? 0],
             [
               document.getElementById("selectLvlAtFis"),
               document.getElementById("gordCorpLvl"),
@@ -22,11 +28,17 @@ export default function NafType(): JSX.Element {
           ev.currentTarget.id,
         );
       }}>
-      <option value='leve'>1.4</option>
-      <option value='moderado'>1.6</option>
-      <option value='intenso'>1.9</option>
-      <option value='muitoIntenso'>2.2</option>
-      <option value='sedentario'>1.2</option>
+      {[
+        { v: "leve", l: "1.4" },
+        { v: "moderado", l: "1.6" },
+        { v: "intenso", l: "1.9" },
+        { v: "muitoIntenso", l: "2.2" },
+        { v: "sedentario", l: "1.2" },
+      ].map(o => (
+        <option key={o.v} value={o.v}>
+          {o.l}
+        </option>
+      ))}
     </select>
   );
 }

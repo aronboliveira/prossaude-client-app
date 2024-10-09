@@ -1,9 +1,15 @@
 "use client";
+import { ENContextProps } from "@/lib/global/declarations/interfaces";
 import { callbackAtvLvlElementNaf } from "@/lib/locals/edFisNutPage/edFisNutHandler";
 import { person, tabProps } from "@/vars";
+import { MutableRefObject, useContext } from "react";
+import { ENContext } from "../ENForm";
+import { nlSel } from "@/lib/global/declarations/types";
 export default function FormCalcTmbType(): JSX.Element {
+  const { sar, afr, fct } = useContext<ENContextProps>(ENContext)?.refs;
   return (
     <select
+      ref={fct as MutableRefObject<nlSel>}
       id='formCalcTMBType'
       name='form_tmb'
       className='form-select noInvert lockSelect'
@@ -11,12 +17,12 @@ export default function FormCalcTmbType(): JSX.Element {
       onChange={ev => {
         [person.atvLvl, tabProps.factorAtvLvl] = callbackAtvLvlElementNaf(
           [
-            [tabProps.factorAtvLvl, tabProps.IMC],
+            [tabProps.factorAtvLvl ?? 1.4, tabProps.IMC ?? 0],
             [
-              document.getElementById("selectLvlAtFis"),
+              sar?.current ?? document.getElementById("selectLvlAtFis"),
               document.getElementById("gordCorpLvl"),
               ev.currentTarget,
-              document.getElementById("nafType"),
+              afr?.current ?? document.getElementById("nafType"),
             ],
           ],
           ev.currentTarget.id,

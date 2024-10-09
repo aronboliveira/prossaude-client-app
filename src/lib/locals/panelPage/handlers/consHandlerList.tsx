@@ -291,14 +291,6 @@ export function addListenerAlocation(
     tabs.length > 0
       ? tabs.forEach(tab => {
           const btnAloc = tab.querySelectorAll(`button[class*=btnAloc${context}]`) || `button[id*=btnAloc${context}]`;
-          if (tab instanceof HTMLTableElement && btnAloc.length !== tab.rows.length - 1)
-            console.warn(
-              `Number of rows in ${context} Table id ${
-                tab?.id || "UNIDENTIFIED"
-              } and buttons for alocation are not equal. This might result in misleading data.
-            Computed number of buttons: ${btnAloc.length};
-            Computed number of rows (-1): ${tab.rows.length - 1}`,
-            );
           btnAloc.forEach(btn => {
             (userClass === "coordenador" || userClass === "supervisor") &&
               btn.addEventListener("click", () => {

@@ -1,5 +1,5 @@
 "use client";
-import { lazy } from "react";
+import { MutableRefObject, lazy, useContext } from "react";
 import TrioReadNumCons from "./TrioReadNumCons";
 import FormCalcTmbType from "./client/FormCalcTmbType";
 import GordCorpLvl from "./client/GordCorpLvl";
@@ -10,10 +10,18 @@ import TextBodyType from "./client/TextBodyType";
 import LockTabInd from "./tabs/LobTackInd";
 import { Suspense } from "react";
 import ReactSpinner from "../../icons/ReactSpinner";
+import { ENContext } from "./ENForm";
+import { ENContextProps } from "@/lib/global/declarations/interfaces";
+import { nullishFs } from "@/lib/global/declarations/types";
 const FsTabs = lazy(() => import("./FsTabs"));
 export default function FsProgCons(): JSX.Element {
+  const fspr = useContext<ENContextProps>(ENContext)?.refs?.fspr;
   return (
-    <fieldset name='fsProgConsName' id='fsProgConsId' className='fsMain divTab'>
+    <fieldset
+      ref={fspr as MutableRefObject<nullishFs>}
+      name='fsProgConsName'
+      id='fsProgConsId'
+      className='fsMain divTab'>
       <h4 className='bolded' id='hProgCons'>
         Progresso em Consultas
       </h4>

@@ -101,13 +101,6 @@ export function correlateAptMonthDays(
         )
       )
         listDays.pop();
-      if (listDays.length !== dayRefs.length)
-        console.warn(`Error producing length of list for day references in correlateAptMonthDays().
-      Number of days passed: ${listDays?.length ?? 0}
-      Number of days expected: ${dayRefs.length ?? 0}`);
-      if (listDays.some(day => day === ""))
-        console.warn(`Error producing value for day reference in correlateAptMonthDays().
-      Value defaulted to current day.`);
       let counterOp = 0;
       if (shouldClearOptions) daySel.innerHTML = ``;
       let hasDuplicates = false;
@@ -278,10 +271,9 @@ export function correlateWorkingDays(
             /null/gi.test(lab.textContent) ||
             /NaN/g.test(lab.textContent) ||
             /infinity/gi.test(lab.textContent))
-        ) {
+        )
           (lab as HTMLElement).style.color = "transparent";
-          console.warn(`Error correlating textContent of labels. Process reverted.`);
-        } else if (
+        else if (
           getComputedStyle(lab).color === "rgba(0, 0, 0, 0)" ||
           getComputedStyle(lab).color === "rgb(0, 0, 0)" ||
           (lab as HTMLElement).style.color === "transparent"
@@ -594,7 +586,6 @@ export function createAptBtn(
       transfArea.replaceChild(newAppointmentBtn, replaceSlot);
       if (document.getElementById(newAppointmentBtn.id))
         rootDlgContext.aptBtnsIdx[`${newAppointmentBtn.id}`] = document.querySelectorAll(".appointmentBtn").length;
-      else console.warn(`Error locating New Appointment Button in the DOM. Reference index not updated.`);
       if (rootedDlg && typeof rootedDlg === "object") {
         const regstBtn = document.getElementById("regstDayBtn");
         regstBtn instanceof HTMLButtonElement
@@ -607,15 +598,6 @@ export function createAptBtn(
           "Dialog root for placing tabled list about registered appointment",
           extLine(new Error()),
         );
-    } else {
-      transfArea && transfArea.querySelector(".appointmentBtn")
-        ? console.warn(`Appointment Button already placed.`)
-        : multipleElementsNotFound(
-            extLine(new Error()),
-            "Elements for placing appointment in transfer area in createAptBtn()",
-            transfArea,
-            replaceSlot,
-          );
     }
     return newAppointmentBtn;
   } else elementNotFound(apppointBtn, `apppointBtn in ${arguments.callee.name}`, extLine(new Error()));
@@ -696,7 +678,7 @@ export function handleDragAptBtn(newAppointmentBtn: targEl, userClass: string = 
               ${(e as Error).message}`);
             }
             break;
-          } else console.warn(`No slot match found for dragend.`);
+          }
         }
       } catch (e) {
         console.error(`Error executing dragEnd callback:${(e as Error).message}`);
@@ -784,7 +766,7 @@ export function handleDragAptBtn(newAppointmentBtn: targEl, userClass: string = 
                 ${(e as Error).message}`);
                 }
                 break;
-              } else console.warn(`No slot match found for dragend.`);
+              }
             }
           } catch (e) {
             console.error(`Error executing handleToucEnd:\n${(e as Error).message}`);
@@ -965,25 +947,22 @@ export function checkRegstBtn(
 ): boolean | undefined {
   if (regstBtn instanceof HTMLButtonElement) {
     const daySel =
-      scope.querySelector("#changeDaySel") ||
-      scope.querySelector("[id$=ChangeDaySel]") ||
-      scope.querySelector("#formDayBodySchedSect")?.querySelector("select") ||
-      scope.querySelector("select");
-    const hourInp =
-      scope.querySelector("#hourDayInp") ||
-      scope.querySelector("[id$=HourDayInp]") ||
-      scope.querySelector("#formDayBodySchedSect")?.querySelector('input[type="time"]') ||
-      scope.querySelector('input[type="time"]');
-    const confirmInp =
-      scope.querySelector("#confirmDayInp") ||
-      scope.querySelector("#confirmPac") ||
-      scope.querySelector("#formDayBodySchedSect")?.querySelector('input[type="checkbox"]') ||
-      scope.querySelector('input[type="checkbox"]');
-    const dayTabRefs =
-      document.querySelectorAll(".dayTabRef") || document.querySelector("table")!.querySelectorAll(".dayTabRef");
-    dayTabRefs.length < document.querySelector("table")!.querySelectorAll("col").length - 1 &&
-      console.warn(`Error capturing number of date inputs for placing new appointment button`);
-
+        scope.querySelector("#changeDaySel") ||
+        scope.querySelector("[id$=ChangeDaySel]") ||
+        scope.querySelector("#formDayBodySchedSect")?.querySelector("select") ||
+        scope.querySelector("select"),
+      hourInp =
+        scope.querySelector("#hourDayInp") ||
+        scope.querySelector("[id$=HourDayInp]") ||
+        scope.querySelector("#formDayBodySchedSect")?.querySelector('input[type="time"]') ||
+        scope.querySelector('input[type="time"]'),
+      confirmInp =
+        scope.querySelector("#confirmDayInp") ||
+        scope.querySelector("#confirmPac") ||
+        scope.querySelector("#formDayBodySchedSect")?.querySelector('input[type="checkbox"]') ||
+        scope.querySelector('input[type="checkbox"]'),
+      dayTabRefs =
+        document.querySelectorAll(".dayTabRef") || document.querySelector("table")!.querySelectorAll(".dayTabRef");
     //isso é só pra checar o número de colunas com datas nos headers
     const shownDayTabRefs = Array.from(dayTabRefs).filter(
       ref => ref instanceof HTMLElement && !(ref.hidden === true || ref.style.display === "none"),
@@ -997,8 +976,8 @@ export function checkRegstBtn(
     ) {
       //aqui é a pesquisa pros slots de fato
       const matchedPhInps = Array.from(document.querySelectorAll(".slotableDay"));
-      let matchedPhInp;
-      let acc = 0;
+      let matchedPhInp,
+        acc = 0;
       for (const phInp of matchedPhInps) {
         ++acc;
         if (phInp.id === `_${hourInp.value.replace(":", "-")}_${acc}`) {
@@ -1009,8 +988,8 @@ export function checkRegstBtn(
           acc = 0;
         }
       }
-      const matchedSlot = matchedPhInp?.parentElement;
-      const newAppointmentBtn = document.querySelector('[id*="appointmentBtn"]');
+      const matchedSlot = matchedPhInp?.parentElement,
+        newAppointmentBtn = document.querySelector('[id*="appointmentBtn"]');
       if (
         matchedPhInp instanceof HTMLElement &&
         matchedSlot instanceof HTMLElement &&
@@ -1046,7 +1025,7 @@ export function addEraseEvent(eraser: HTMLButtonElement, userClass: string = "es
     eraser.addEventListener("click", () => {
       const relCel = eraser.closest("slot");
       relCel instanceof HTMLElement
-        ? replaceBtnSlot(relCel.querySelector("[id*=appointmentBtn]"), relCel, eraser)
+        ? replaceBtnSlot(relCel.querySelector("[id*=appointmentBtn]"), relCel)
         : elementNotFound(
             relCel,
             `Table cell related to button for erasing day/hour appointment id ${eraser.id}`,
@@ -1070,7 +1049,7 @@ export function addEraseEvent(eraser: HTMLButtonElement, userClass: string = "es
     }, 200);
   }
 }
-export function replaceBtnSlot(aptBtn: targEl, parent: HTMLElement, caller: HTMLElement): void {
+export function replaceBtnSlot(aptBtn: targEl, parent: HTMLElement): void {
   if (aptBtn instanceof HTMLElement) {
     const relTr = aptBtn.closest("tr")!;
     let [slotNum] = Array.from(relTr.querySelectorAll(".consSlot"))
@@ -1094,7 +1073,7 @@ export function replaceBtnSlot(aptBtn: targEl, parent: HTMLElement, caller: HTML
     replaceInp.placeholder = `Horário Livre`;
     replaceInp.id = `${trCels[0].innerText}_${slotNum || slotNumTry2}`;
     parent.replaceChild(replaceInp, aptBtn);
-  } else console.warn(`No related appointment details button for erasing button id ${caller.id}`);
+  }
 }
 export function checkConfirmApt(dayCheck: HTMLInputElement): void {
   const relAptBtn = (dayCheck.closest("td") || dayCheck.closest("th"))?.querySelector("[id*=appointmentBtn]");
@@ -1106,7 +1085,7 @@ export function checkConfirmApt(dayCheck: HTMLInputElement): void {
       relAptBtn.classList.remove("btn-success");
       relAptBtn.classList.add("btn-info");
     }
-  } else console.warn(`No related button for day checkbox id ${dayCheck.id}`);
+  }
 }
 export function handleScheduleChange(
   monthSelector: entryEl | null,
@@ -1263,10 +1242,8 @@ export function addListenersForSchedTab(
             appointmentBtns.length > 0 &&
             Array.from(appointmentBtns).every(aptbtn => aptbtn instanceof HTMLButtonElement)
           )
-        ) {
-          console.warn(`Failed to fetch appointment buttons. Retrying in 0.2 seconds...`);
+        )
           return;
-        }
         if (!rootDlgContext.addedAptListeners) {
           for (const aptBtn of appointmentBtns)
             aptBtn.addEventListener("click", ev => handleAptBtnClick(ev as MouseEvent, userClass));
@@ -1282,13 +1259,11 @@ export function addListenersForSchedTab(
         rootDlgContext.addedAptListeners = true;
         clearInterval(interv);
       } catch (e) {
-        console.warn(`Error trying to reapply listeners to appointment buttons:
-        ${(e as Error).message}`);
+        return;
       }
     }, 200);
     setTimeout(() => {
       clearInterval(aptInterv);
-
       try {
         const appointmentBtns = Array.from(document.querySelectorAll(".appointmentBtn")).filter(
           aptBtn => aptBtn instanceof HTMLButtonElement,
@@ -1299,18 +1274,15 @@ export function addListenersForSchedTab(
             Array.from(appointmentBtns).every(aptbtn => aptbtn instanceof HTMLButtonElement)
           )
         )
-          throw elementNotPopulated(appointmentBtns, "Appointment Buttons", extLine(new Error()));
+          return;
       } catch (e) {
-        console.error(`Error executing procedure for adding listeners to Appointment Buttons:${(e as Error).message}`);
+        return;
       }
     }, 2000);
     const checkInterv = setInterval(interv => {
       try {
         const dayChecks = scope.querySelectorAll('input[class*="apptCheck"]');
-        if (dayChecks.length < 0) {
-          console.warn(`Failed to fetch day checks list. Retrying in 0.2 seconds...`);
-          return;
-        }
+        if (dayChecks.length < 0) return;
         if (!rootDlgContext.addedDayListeners) {
           dayChecks.forEach(dayCheck => {
             verifyAptCheck(dayCheck);
@@ -1417,13 +1389,7 @@ export function addListenerForSchedUpdates(monthSelector: targEl): void {
             ? (arrEntry[1] = el.checked.toString())
             : (arrEntry[1] = el.value);
         } catch (err) {
-          console.warn(`Error matching input with available data in sessionScheduleState:
-          Obtained relatedArray: ${sessionScheduleState[`${monthSelector.value}Values`]}
-          Obtained entryArray: ${(sessionScheduleState[`${monthSelector.value}Values`] as Array<any>)?.find(
-            entry => entry[0] === el.id,
-          )}
-          Obtained element: ${el ?? "nullish"}
-          ${(err as Error).message}`);
+          return;
         }
       }, 300);
     };
@@ -1496,8 +1462,5 @@ export function fillSchedStateValues(month: string): void {
         extLine(new Error()),
       );
     sessionScheduleState[`${month}Values`] = entriesData as Array<[string, string]>;
-  } catch (err) {
-    console.warn(`Error initializating state for month ${month}:
-    ${(err as Error).message}`);
-  }
+  } catch (err) {}
 }

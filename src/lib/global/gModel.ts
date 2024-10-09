@@ -1,6 +1,6 @@
 import { cursorCheckTimer } from "./handlers/gHandlers";
 import { fadeElement } from "./gStyleScript";
-import type { entryEl, textEl, targStr, targEl, nullishForm } from "./declarations/types";
+import type { entryEl, textEl, targStr, targEl, nlFm } from "./declarations/types";
 //nesse file estão presentes principalmente as funções relacionadas à exigência de modelo textual e de visualização
 import {
   extLine,
@@ -11,6 +11,7 @@ import {
   typeError,
 } from "./handlers/errorHandler";
 import { Dispatch, SetStateAction } from "react";
+import { AlignType } from "../tests/testVars";
 export function numberLimit(inpEl: targEl): void {
   if (inpEl instanceof HTMLInputElement || inpEl instanceof HTMLTextAreaElement || inpEl instanceof HTMLSelectElement) {
     const isAtivFis = inpEl.classList.contains("inpAtivFis");
@@ -222,7 +223,7 @@ export function fluxGen(
     ga: entryEl;
   },
   genIniValue: targStr = "masculino",
-  alignSetter?: Dispatch<SetStateAction<string>>,
+  alignSetter?: Dispatch<SetStateAction<AlignType>>,
 ): string {
   if (
     Object.values(genConts).every(
@@ -1054,7 +1055,7 @@ export function modelScripts(): void {
     console.error(`Error executing modelScripts:\n${(e as Error).message}`);
   }
 }
-export function assignFormAttrs(fr: nullishForm): void {
+export function assignFormAttrs(fr: nlFm): void {
   if (!(fr instanceof HTMLFormElement)) throw new Error(`Failed to validate Form Reference`);
   try {
     const metaCs = document.querySelector('meta[charset*="utf-"]') ?? document.querySelector('meta[charset*="UTF-"]');

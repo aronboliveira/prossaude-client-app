@@ -1,12 +1,12 @@
 "use client";
 import { clearPhDates } from "@/lib/global/gStyleScript";
 import { inputNotFound } from "@/lib/global/handlers/errorHandler";
-import { nullishBtn, nullishInp } from "@/lib/global/declarations/types";
+import { nlBtn, nlInp } from "@/lib/global/declarations/types";
 import { useEffect, useRef } from "react";
 import { parseNotNaN } from "@/lib/global/gModel";
 export default function HeaderDate(): JSX.Element {
-  const dateRef = useRef<nullishInp>(null);
-  const btnRef = useRef<nullishBtn>(null);
+  const dateRef = useRef<nlInp>(null);
+  const btnRef = useRef<nlBtn>(null);
   useEffect(() => {
     try {
       if (!(dateRef.current instanceof HTMLInputElement && dateRef.current.type === "date"))

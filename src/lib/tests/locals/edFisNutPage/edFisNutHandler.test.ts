@@ -626,7 +626,7 @@ describe("filterCellsPattern", (): void => {
   it("should return filtered elements based on the ID pattern", (): void => {
     const result = filterCellsPattern(document.querySelectorAll("input") as NodeListOf<HTMLInputElement>, /_2/, 2);
     expect(result[0].length).toBe<number>(1) as void;
-    expect(result[0][0].id).toBe<string>("testInput_2") as void;
+    expect(result[0][0]?.id).toBe<string>("testInput_2") as void;
   }) as void;
   it("should log an error if inputs do not match the pattern", (): void => {
     console.warn = jest.fn() as jest.Mock;
@@ -636,7 +636,7 @@ describe("filterCellsPattern", (): void => {
     );
   }) as void;
   it("should throw an error if invalid arguments are provided", (): void => {
-    expect((): Array<Element[]> => filterCellsPattern(null as any, /_2/)).toThrow("Multiple elements not found");
+    expect((): Array<Element[]> => filterCellsPattern(null as any, /_2/) as any).toThrow("Multiple elements not found");
   }) as void;
 }) as void;
 describe("switchNumConsTitles", (): void => {
