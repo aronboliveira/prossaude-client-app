@@ -873,11 +873,11 @@ export function replaceRegstSlot(
           const trCels = [...tr.querySelectorAll("td"), ...tr.querySelectorAll("th")];
           trCels.forEach((cel, j) => {
             cel.dataset.row = `${i}`;
-            cel.dataset.column = `${j}`;
+            cel.dataset.col = `${j}`;
           });
         });
       matchedSlot.dataset.row = (matchedSlot.closest("td") || matchedSlot.closest("th"))?.dataset.row;
-      matchedSlot.dataset.column = (matchedSlot.closest("td") || matchedSlot.closest("th"))?.dataset.column;
+      matchedSlot.dataset.col = (matchedSlot.closest("td") || matchedSlot.closest("th"))?.dataset.col;
       const noMatchSlots = slots.filter(slot => !slot.isEqualNode(matchedSlot));
       for (let s = 0; s < noMatchSlots.length; s++) {
         const relTr = matchedSlot.closest("tr")!;
@@ -896,7 +896,7 @@ export function replaceRegstSlot(
               class="transparent-el slotableDay opaque-bluish wid100 form-control"
               placeholder="Horário Livre"
               id = ${trCels[0].innerText}_${
-            (noMatchSlots[s].closest("td") || noMatchSlots[s].closest("th"))?.dataset.column || slotNum
+            (noMatchSlots[s].closest("td") || noMatchSlots[s].closest("th"))?.dataset.col || slotNum
           }
             />
             <div role="group" class="flexNoWC flexAlItCt">
@@ -1462,5 +1462,7 @@ export function fillSchedStateValues(month: string): void {
         extLine(new Error()),
       );
     sessionScheduleState[`${month}Values`] = entriesData as Array<[string, string]>;
-  } catch (err) {}
+  } catch (err) {
+    return;
+  }
 }

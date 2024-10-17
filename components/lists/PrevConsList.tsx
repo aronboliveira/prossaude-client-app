@@ -3,7 +3,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import { HistoricDlgProps } from "@/lib/global/declarations/interfacesCons";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { isClickOutside } from "@/lib/global/gStyleScript";
-import { nullishDlg, nullishTab } from "@/lib/global/declarations/types";
+import { nullishDlg, nlTab } from "@/lib/global/declarations/types";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useEffect, useRef } from "react";
 import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
@@ -24,7 +24,7 @@ export default function PrevConsList({
   ],
 }: HistoricDlgProps): JSX.Element {
   const prevConsDlgRef = useRef<nullishDlg>(null);
-  const prevConsTabRef = useRef<nullishTab>(null);
+  const prevConsTabRef = useRef<nlTab>(null);
   //push em history
   useEffect(() => {
     history.pushState(

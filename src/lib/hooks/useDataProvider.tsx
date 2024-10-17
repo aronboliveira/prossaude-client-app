@@ -1,10 +1,10 @@
 import { providers } from "@/vars";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { nullishHtEl } from "../global/declarations/types";
+import { nlHtEl } from "../global/declarations/types";
 import { privilege } from "../locals/basePage/declarations/serverInterfaces";
 import { DataProvider } from "../global/declarations/classesCons";
 export default function useDataProvider(
-  el: nullishHtEl,
+  el: nlHtEl,
   userClass: privilege = "student",
 ): [boolean, Dispatch<SetStateAction<boolean>>] {
   const [mounted, setMounted] = useState<boolean>(false);
@@ -19,6 +19,6 @@ export default function useDataProvider(
     } catch (e) {
       console.error(`Error executing useDataProvider:\n${(e as Error).message}`);
     }
-  }, [mounted]);
+  }, [mounted, el, userClass]);
   return [mounted, setMounted];
 }

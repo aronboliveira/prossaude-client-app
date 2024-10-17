@@ -1,0 +1,45 @@
+/* EN Page Style */
+.autoFillBtnEn {
+  margin-right: 0.25rem;
+}
+.confirmAstDigtBtnEn {
+  @media screen and (max-width: 900px) {
+    margin-right: 0;
+  }
+}
+.confirmLocIdEn {
+  min-width: 12.5rem;
+}
+.deactAutocorrectBtnPacEn {
+  margin-right: 0.25rem;
+}
+.divTabEn {
+  border-radius: var(--bs-border-radius);
+  overflow: auto;
+  resize: vertical;
+}
+.fsAnamGLeg {
+  padding-left: 0.5rem;
+}
+.switchDivEn {
+  margin: 0;
+  padding: 0 0 0.5rem 0;
+  &.divTab {
+    resize: none;
+    overflow: visible;
+  }
+  .calcText {
+    margin-left: 0.3rem;
+  }
+  @media screen and (max-width: 900px) {
+    padding-top: 0.75rem;
+  }
+}
+.tipsBtn {
+  margin-bottom: 0.5rem;
+}
+.tipsBtnEn {
+  @media screen and (max-width: 900px) {
+    margin-bottom: 1.5rem;
+  }
+}

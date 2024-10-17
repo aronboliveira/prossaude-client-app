@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import MainContainer, { experimentalUser } from "../../../../../../components/interactive/base/MainContainer";
-import { AppRootContext } from "@/pages/_app";
+import { RootCtx } from "@/pages/_app";
 import { User } from "@/lib/global/declarations/classes";
 import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
@@ -10,7 +10,7 @@ jest.mock(
     useRouter: jest.Mock<any, any, any>;
   } => ({
     useRouter: jest.fn() as jest.Mock,
-  })
+  }),
 ) as typeof jest;
 jest.mock(
   "react-redux",
@@ -18,11 +18,11 @@ jest.mock(
     useDispatch: jest.Mock<any, any, any>;
   } => ({
     useDispatch: jest.fn() as jest.Mock,
-  })
+  }),
 ) as typeof jest;
 jest.mock(
   "../../../../../components/user/UserProfilePanel",
-  (): (() => JSX.Element) => (): JSX.Element => <div>UserProfilePanel</div>
+  (): (() => JSX.Element) => (): JSX.Element => <div>UserProfilePanel</div>,
 ) as typeof jest;
 describe("MainContainer Component", (): void => {
   const mockDispatch: jest.Mock<any, any, any> = jest.fn() as jest.Mock;
@@ -34,9 +34,9 @@ describe("MainContainer Component", (): void => {
   }) as void;
   it("renders the cards and the work panel button", (): void => {
     render(
-      <AppRootContext.Provider value={{ roots: { baseRootedUser: null } }}>
+      <RootCtx.Provider value={{ roots: { baseRootedUser: null } }}>
         <MainContainer />
-      </AppRootContext.Provider>
+      </RootCtx.Provider>,
     );
     expect(screen.getByText<HTMLElement>("Geral & Saúde Mental")).toBeInTheDocument() as void;
     expect(screen.getByText<HTMLElement>("Educação Física")).toBeInTheDocument() as void;
@@ -64,9 +64,9 @@ describe("MainContainer Component", (): void => {
     };
     localStorage.setItem("activeUser", JSON.stringify(mockUser));
     render(
-      <AppRootContext.Provider value={{ roots: { baseRootedUser: null } }}>
+      <RootCtx.Provider value={{ roots: { baseRootedUser: null } }}>
         <MainContainer />
-      </AppRootContext.Provider>
+      </RootCtx.Provider>,
     );
     expect(experimentalUser).toEqual<{
       loadedData: {
@@ -82,9 +82,9 @@ describe("MainContainer Component", (): void => {
   }) as void;
   it("calls router.push when a card button is clicked", (): void => {
     render(
-      <AppRootContext.Provider value={{ roots: { baseRootedUser: null } }}>
+      <RootCtx.Provider value={{ roots: { baseRootedUser: null } }}>
         <MainContainer />
-      </AppRootContext.Provider>
+      </RootCtx.Provider>,
     );
     fireEvent.click(screen.getByRole<HTMLButtonElement>("button", { name: /Geral & Saúde Mental/i })) as boolean;
     expect(mockRouter.push).toHaveBeenCalledWith<Parameters<typeof mockRouter.push>>("/ag") as void;
@@ -96,20 +96,20 @@ describe("MainContainer Component", (): void => {
       .spyOn<Console, "warn">(console, "warn")
       .mockImplementation((): void => {}) as jest.SpyInstance;
     render(
-      <AppRootContext.Provider value={{ roots: { baseRootedUser: null } }}>
+      <RootCtx.Provider value={{ roots: { baseRootedUser: null } }}>
         <MainContainer />
-      </AppRootContext.Provider>
+      </RootCtx.Provider>,
     );
     expect(consoleSpy).toHaveBeenCalledWith<[string]>(
-      "Failed to fetch user from local storage. Default user displayed."
+      "Failed to fetch user from local storage. Default user displayed.",
     );
     consoleSpy.mockRestore() as void;
   }) as void;
   it("handles window resize events correctly", (): void => {
     render(
-      <AppRootContext.Provider value={{ roots: { baseRootedUser: null } }}>
+      <RootCtx.Provider value={{ roots: { baseRootedUser: null } }}>
         <MainContainer />
-      </AppRootContext.Provider>
+      </RootCtx.Provider>,
     );
     fireEvent(window, new Event("resize"));
   }) as void;

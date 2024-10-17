@@ -2,6 +2,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import { RotProps } from "@/lib/global/declarations/interfaces";
 import GenericErrorComponent from "../../error/GenericErrorComponent";
 import InpRot from "./client/InpRot";
+import sEn from "@/styles/locals/modules/enStyles.module.scss";
 export default function DivRot({ quest, ctx, ur, ev, grp = "Alim" }: RotProps): JSX.Element {
   const maxes = ((): { max: number; maxLength: number } => {
     switch (ctx) {
@@ -34,7 +35,7 @@ export default function DivRot({ quest, ctx, ur, ev, grp = "Alim" }: RotProps): 
   })();
   return (
     <ErrorBoundary FallbackComponent={() => <GenericErrorComponent message='Error rendering Div for Routine' />}>
-      <div role='group' className='flexDiv divRot widMax900q80vw'>
+      <div role='group' className={`flexDiv divRot widMax900q80vw ${sEn.flexDivEn} ${sEn.divRot}`}>
         <label
           htmlFor={
             !ur && !ev

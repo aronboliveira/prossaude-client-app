@@ -11,7 +11,7 @@ import TratFs from "./TratFs";
 import SocialName from "../def/SocialName";
 import Name from "../def/Name";
 import { registerPersistInputs, validateForm } from "@/lib/global/handlers/gHandlers";
-import { handleSubmit } from "@/lib/locals/panelPage/handlers/handlers";
+import { handleSubmit } from "@/lib/global/data-service";
 import InspDlgElements from "./InspDlgElements";
 import { useRef, useEffect } from "react";
 import useDataProvider from "@/lib/hooks/useDataProvider";
@@ -79,7 +79,7 @@ export default function OdForm(): JSX.Element {
         <legend className='legMain' id='fsAvDentLeg'>
           <span className='mgr-1v bolded'>Avaliação Dentária</span>
         </legend>
-        <section className='sectionMain' id='sectAvDentId' itemScope itemProp='dentComp'>
+        <section className='sectionMain' id='sectAvDentId' itemScope>
           {["SupDir", "InfEsq", "SupEsq", "InfDir"].map((qr, i) => (
             <QuadrMainDiv qr={qr as quadrCases} key={`qr__${i}`} />
           ))}

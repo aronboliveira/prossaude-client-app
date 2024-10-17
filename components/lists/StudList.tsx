@@ -9,8 +9,8 @@ import {
   fillTabAttr,
   filterTabMembers,
 } from "@/lib/locals/panelPage/handlers/consHandlerList";
-import { handleFetch } from "@/lib/locals/panelPage/handlers/handlers";
-import { nullishTab, nullishTabSect } from "@/lib/global/declarations/types";
+import { handleFetch } from "@/lib/global/data-service";
+import { nlTab, nlTabSect } from "@/lib/global/declarations/types";
 import { panelRoots } from "@/vars";
 import { useRef, useEffect, useContext, useMemo } from "react";
 import GenericErrorComponent from "../error/GenericErrorComponent";
@@ -22,8 +22,8 @@ import { strikeEntries } from "@/lib/locals/panelPage/consStyleScript";
 import { handleClientPermissions } from "@/lib/locals/panelPage/handlers/consHandlerUsers";
 import { PanelCtx } from "../panelForms/defs/client/SelectLoader";
 export default function StudList({ mainDlgRef, dispatch, state = true }: StudListProps): JSX.Element {
-  const tabRef = useRef<nullishTab>(null),
-    tbodyRef = useRef<nullishTabSect>(null),
+  const tabRef = useRef<nlTab>(null),
+    tbodyRef = useRef<nlTabSect>(null),
     studs: StudInfo[] = useMemo(() => [], []),
     userClass = useContext(PanelCtx).userClass;
   useEffect(() => {
@@ -151,7 +151,7 @@ export default function StudList({ mainDlgRef, dispatch, state = true }: StudLis
                         </tbody>
                       </ErrorBoundary>,
                     );
-                    tbodyRef.current = document.getElementById("avStudsTbody") as nullishTabSect;
+                    tbodyRef.current = document.getElementById("avStudsTbody") as nlTabSect;
                     if (!(tbodyRef.current instanceof HTMLElement))
                       throw elementNotFound(tbodyRef.current, `Validation of replaced tbody`, extLine(new Error()));
                     if (!panelRoots[`${tbodyRef.current.id}`])

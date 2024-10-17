@@ -3,7 +3,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import { createRoot } from "react-dom/client";
 import { elementNotFound, extLine, inputNotFound } from "@/lib/global/handlers/errorHandler";
 import { equalizeTabCells, isClickOutside } from "@/lib/global/gStyleScript";
-import { handleFetch } from "@/lib/locals/panelPage/handlers/handlers";
+import { handleFetch } from "@/lib/global/data-service";
 import { panelRoots } from "@/vars";
 import { strikeEntries } from "@/lib/locals/panelPage/consStyleScript";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
@@ -12,7 +12,7 @@ import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
 import GenericErrorComponent from "../error/GenericErrorComponent";
 import ProfRow from "../panelForms/profs/ProfRow";
 import Spinner from "../icons/Spinner";
-import { nullishDlg, nullishHtEl, nullishTab, nullishTabSect } from "@/lib/global/declarations/types";
+import { nullishDlg, nlHtEl, nlTab, nlTabSect } from "@/lib/global/declarations/types";
 import { AvProfListDlgProps, ProfInfo } from "@/lib/global/declarations/interfacesCons";
 import {
   addListenerAlocation,
@@ -26,11 +26,11 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
     internalProfs: ProfInfo[] = useMemo(() => [], []),
     externalProfs: ProfInfo[] = useMemo(() => [], []),
     dialogRef = useRef<nullishDlg>(null),
-    tabProfIntRef = useRef<nullishTab>(null),
-    tabProfExtRef = useRef<nullishTab>(null),
-    tbodyIntRef = useRef<nullishTabSect>(null),
-    tbodyExtRef = useRef<nullishTabSect>(null),
-    secttabProfIntRef = useRef<nullishHtEl>(null);
+    tabProfIntRef = useRef<nlTab>(null),
+    tabProfExtRef = useRef<nlTab>(null),
+    tbodyIntRef = useRef<nlTabSect>(null),
+    tbodyExtRef = useRef<nlTabSect>(null),
+    secttabProfIntRef = useRef<nlHtEl>(null);
   //push em history
   useEffect(() => {
     !/av-prof=open/gi.test(location.search) &&
@@ -217,7 +217,7 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                         </tbody>
                       </ErrorBoundary>,
                     );
-                    tbodyIntRef.current = document.getElementById("profsIntTbody") as nullishTabSect;
+                    tbodyIntRef.current = document.getElementById("profsIntTbody") as nlTabSect;
                     if (!(tbodyIntRef.current instanceof HTMLElement))
                       throw elementNotFound(tbodyIntRef.current, `Validation of replaced tbody`, extLine(new Error()));
                     if (!panelRoots[`${tbodyIntRef.current.id}`])
@@ -400,7 +400,7 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                         </tbody>
                       </ErrorBoundary>,
                     );
-                    tbodyExtRef.current = document.getElementById("profsExtTbody") as nullishTabSect;
+                    tbodyExtRef.current = document.getElementById("profsExtTbody") as nlTabSect;
                     if (!(tbodyExtRef.current instanceof HTMLElement))
                       throw elementNotFound(tbodyExtRef.current, `Validation of replaced tbody`, extLine(new Error()));
                     if (!panelRoots[`${tbodyExtRef.current.id}`])

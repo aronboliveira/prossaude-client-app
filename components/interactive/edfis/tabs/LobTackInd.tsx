@@ -14,16 +14,14 @@ export default function LockTabInd({
     <span
       role='img'
       className={`noInvert lock_inpGet${addGroup ? addGroup.map(group => ` ${group}`).join("") : ""}`}
-      id={`lock${pascalCtx}`}
-    >
+      id={`lock${pascalCtx}`}>
       <svg
         xmlns='http://www.w3.org/2000/svg'
         width='16'
         height='16'
         fill='currentColor'
         className='bi bi-lock'
-        viewBox='0 0 16 16'
-      >
+        viewBox='0 0 16 16'>
         <defs>
           <linearGradient id='gradiente-lock' x1='0%' y1='0%' x2='100%' y2='0%'>
             <stop
@@ -46,20 +44,19 @@ export default function LockTabInd({
       </svg>
     </span>
   ) : (
-    <div role='group' className='divLock noInvert' id={`div${pascalCtx}`}>
+    <div style={{ border: "none", boxShadow: "none" }} role='group' className={`noInvert`} id={`div${pascalCtx}`}>
       <span
         role='img'
+        style={{ border: "none", boxShadow: "none" }}
         className={`noInvert lock_inpGet${addGroup ? addGroup.map(group => ` ${group}`).join("") : ""}`}
-        id={`lock${pascalCtx}`}
-      >
+        id={`lock${pascalCtx}`}>
         <svg
           xmlns='http://www.w3.org/2000/svg'
           width='16'
           height='16'
           fill='currentColor'
-          className='bi bi-lock'
-          viewBox='0 0 16 16'
-        >
+          className={`bi bi-lock`}
+          viewBox='0 0 16 16'>
           <defs>
             <linearGradient id='gradiente-lock' x1='0%' y1='0%' x2='100%' y2='0%'>
               <stop

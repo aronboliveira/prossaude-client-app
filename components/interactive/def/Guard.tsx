@@ -1,4 +1,5 @@
 "use client";
+import { execLogout } from "@/lib/global/auth";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 export default function Guard(): JSX.Element {
@@ -11,7 +12,7 @@ export default function Guard(): JSX.Element {
         return;
       }
       if (!localStorage.getItem("timer")) {
-        if (!localStorage.getItem("timer")) localStorage.setItem("timer", "20");
+        if (!localStorage.getItem("timer")) localStorage.setItem("time-r", "20");
         const timerCounter = setInterval(() => {
           const timer = localStorage.getItem("timer");
           console.log("Current Timer:", timer);
@@ -19,11 +20,8 @@ export default function Guard(): JSX.Element {
             const newTimer = parseInt(timer) - 1;
             if (newTimer <= 0) {
               alert("Timeout alcançado. Deslogando do sistema.");
-              localStorage.removeItem("user");
-              localStorage.removeItem("authorized");
-              localStorage.removeItem("pw");
+              execLogout(router);
               clearInterval(timerCounter);
-              router.replace("/login");
             } else {
               localStorage.setItem("timer", newTimer.toString());
               console.log("Updated Timer:", newTimer);

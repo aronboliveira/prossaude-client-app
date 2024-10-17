@@ -6,7 +6,7 @@ import { consVariablesData } from "./consVariables";
 import { createRoot } from "react-dom/client";
 import { providers, formData } from "@/vars";
 import { handleClientPermissions } from "@/lib/locals/panelPage/handlers/consHandlerUsers";
-import { handleSubmit } from "@/lib/locals/panelPage/handlers/handlers";
+import { handleSubmit } from "@/lib/global/data-service";
 import { isClickOutside } from "@/lib/global/gStyleScript";
 import { providerFormData } from "./consVariables";
 import AvPacListDlg from "../lists/AvPacListDlg";
@@ -27,8 +27,15 @@ import {
   inputNotFound,
   multipleElementsNotFound,
 } from "@/lib/global/handlers/errorHandler";
-import { nlBtn, nullishDiv, nullishDlg, nlFm, nlInp } from "@/lib/global/declarations/types";
-import { addEmailExtension, assignFormAttrs, autoCapitalizeInputs, formatCPF, formatTel } from "@/lib/global/gModel";
+import { nlBtn, nlDiv, nullishDlg, nlFm, nlInp } from "@/lib/global/declarations/types";
+import {
+  addEmailExtension,
+  assignFormAttrs,
+  autoCapitalizeInputs,
+  checkContext,
+  formatCPF,
+  formatTel,
+} from "@/lib/global/gModel";
 import { enableCPFBtn, handleCondtReq, validateForm, syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import ListFirstNameCons from "./ListFirstNameCons";
 import ListCPFPacCons from "./ListCPFPacCons";
@@ -46,6 +53,9 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
   const userClass = useContext(PanelCtx).userClass,
     dlgRef = useRef<nullishDlg>(null),
     pacBtnRef = useRef<nlBtn>(null);
+  //TODO REMOVER APÓS TESTE
+  const ctx = useContext(PanelCtx);
+  checkContext(ctx, "PanelCtx", FormDlg);
   //autocompleção
   const CPFPacInpRef = useRef<nlInp>(null),
     CPFPacBtnRef = useRef<nlBtn>(null),
@@ -54,7 +64,7 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
     telPacInpRef = useRef<nlInp>(null),
     CPFProfBtnRef = useRef<nlBtn>(null),
     hourRef = useRef<nlInp>(null),
-    dayRef = useRef<nullishDiv>(null),
+    dayRef = useRef<nlDiv>(null),
     exportRef = useRef<nlBtn>(null),
     submitRef = useRef<nlBtn>(null),
     formRef = useRef<nlFm>(null),

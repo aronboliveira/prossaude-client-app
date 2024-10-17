@@ -1,23 +1,28 @@
 "use client";
 import { switchAutoFill } from "@/lib/locals/edFisNutPage/edFisNutHandler";
 import { agProps, odProps, tabProps } from "@/vars";
+import { useRouter } from "next/router";
+import s from "@/styles/locals/modules/sharedComponents.module.scss";
 export default function SwitchDiv({ autofill = false }: { autofill?: boolean }): JSX.Element {
+  const router = useRouter(),
+    isEdFis = /edfis/gi.test(router.pathname);
   return (
-    <div role='group' className='switchDiv flexQ900NoWC divTab'>
+    <div role='group' className={`switchDiv flexQ900NoWC divTab ${isEdFis ? `${s.switchDivEn} ${s.divTabEn}` : ""}`}>
       {autofill && (
         <span role='group' className='form-switch spanLeft' id='autofillDiv'>
           <input
             type='checkbox'
             className='deActBtn form-check-input'
             role='switch'
-            id='autoFillBtn'
+            id={`autoFillBtn ${isEdFis ? `${s.autoFillBtnEn}` : ""}`}
             data-title='Cálculo automático'
             defaultChecked
             onChange={ev => {
-              tabProps.isAutoFillActive = switchAutoFill(ev.currentTarget, tabProps.isAutoFillActive);
+              ev.currentTarget.checked ? (tabProps.isAutoFillActive = true) : (tabProps.isAutoFillActive = false);
+              switchAutoFill(ev.currentTarget);
             }}
           />
-          <strong>Cálculo Automático</strong>
+          <strong className={s.calcText}>Cálculo Automático</strong>
         </span>
       )}
       <span role='group' className='form-switch spanRight' id='autocorrectDiv'>
@@ -25,7 +30,7 @@ export default function SwitchDiv({ autofill = false }: { autofill?: boolean }):
           type='checkbox'
           className='deActBtn form-check-input'
           role='switch'
-          id='deactAutocorrectBtnPac'
+          id={`deactAutocorrectBtnPac ${isEdFis ? `${s.deactAutocorrectBtnPacEn}` : ""}`}
           data-title='Autocorreção'
           defaultChecked
           onClick={ev => {

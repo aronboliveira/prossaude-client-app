@@ -1,6 +1,6 @@
 "use client";
 import { handleEventReq, validateForm } from "@/lib/global/handlers/gHandlers";
-import { handleSubmit } from "@/lib/locals/panelPage/handlers/handlers";
+import { handleSubmit } from "@/lib/global/data-service";
 import { useState, useRef, useEffect } from "react";
 import RecoverAlert from "../../alerts/RecoverAlert";
 import Link from "next/link";

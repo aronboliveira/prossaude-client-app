@@ -1,4 +1,6 @@
 /* Recover Page Style */
+@use "../abstracts/variables" as *;
+@use "../base/root" as *;
 .recoverBody {
   background-size: cover;
   padding-inline: 1rem;

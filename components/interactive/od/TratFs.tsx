@@ -2,11 +2,12 @@
 import { CounterAction } from "@/lib/global/declarations/interfaces";
 import { addSubDivTrat } from "@/lib/locals/odPage/odHandler";
 import { useEffect, useReducer, useRef } from "react";
-import { nlBtn, nullishFs, nlInp } from "@/lib/global/declarations/types";
+import { nlBtn, nlFs, nlInp } from "@/lib/global/declarations/types";
 import { elementNotFound, extLine, inputNotFound } from "@/lib/global/handlers/errorHandler";
 import { changeToAstDigit, syncAriaStates } from "@/lib/global/handlers/gHandlers";
+import sEn from "@/styles/locals/modules/enStyles.module.scss";
 export default function TratFs(props: { phCb?: () => void }): JSX.Element {
-  const mainRef = useRef<nullishFs>(null);
+  const mainRef = useRef<nlFs>(null);
   const btnRef = useRef<nlBtn>(null);
   const inpRef = useRef<nlInp>(null);
   const [blockCount, setBlockCount] = useReducer((s: number, a: CounterAction) => {
@@ -54,7 +55,7 @@ export default function TratFs(props: { phCb?: () => void }): JSX.Element {
               width='16'
               height='16'
               fill='currentColor'
-              className='bi bi-plus'
+              className={`bi bi-plus ${sEn.bi} ${sEn.biPlus}`}
               viewBox='0 0 16 16'>
               <path d='M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4' />
             </svg>
@@ -74,7 +75,7 @@ export default function TratFs(props: { phCb?: () => void }): JSX.Element {
               width='16'
               height='16'
               fill='currentColor'
-              className='bi bi-dash'
+              className={`bi bi-dash ${sEn.bi} ${sEn.biDash}`}
               viewBox='0 0 16 16'>
               <path d='M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8' />
             </svg>
@@ -84,10 +85,9 @@ export default function TratFs(props: { phCb?: () => void }): JSX.Element {
       <div role='group' className='tratDiv noInvert'>
         <table id='tratContainer'>
           <colgroup>
-            <col className='tratCol' />
-            <col className='tratCol' />
-            <col className='tratCol' />
-            <col className='tratCol' />
+            {Array.from({ length: 4 }, (_, i) => (
+              <col key={`trat_col__${i}`} id={`tratCol${i + 1}`}></col>
+            ))}
           </colgroup>
           <thead className='tratHead'>
             <tr className='tratHeader'>

@@ -4,7 +4,7 @@ import { ScheduleFormProps } from "../../../src/lib/global/declarations/interfac
 import { addExportFlags } from "../../../src/lib/global/gController";
 import { exporters, fillScheduleState, panelRoots, providers } from "@/vars";
 import { handleClientPermissions } from "../../../src/lib/locals/panelPage/handlers/consHandlerUsers";
-import { handleSubmit } from "@/lib/locals/panelPage/handlers/handlers";
+import { handleSubmit } from "@/lib/global/data-service";
 import { useState, useRef, useEffect, useCallback, JSX, useContext } from "react";
 import GenericErrorComponent from "../../error/GenericErrorComponent";
 import RegstConsBtn from "./RegstConsBtn";

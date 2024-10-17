@@ -1,6 +1,6 @@
 import { ErrorBoundary } from "react-error-boundary";
 import { ExcludeDlgProps } from "@/lib/global/declarations/interfacesCons";
-import { handleDelete } from "@/lib/locals/panelPage/handlers/handlers";
+import { handleDelete } from "@/lib/global/data-service";
 import { isClickOutside } from "@/lib/global/gStyleScript";
 import { nullishDlg, nlFm } from "@/lib/global/declarations/types";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";

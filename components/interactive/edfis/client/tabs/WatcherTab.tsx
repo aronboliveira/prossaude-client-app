@@ -1,16 +1,14 @@
 "use client";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
-import { useEffect, useState } from "react";
+import useMount from "@/lib/hooks/useMount";
+import { useEffect } from "react";
 export default function WatcherTab({
   tabName,
 }: {
   tabName: "divTabSVi" | "divTabMedAnt" | "divTabDobrCut" | "divTabInd";
 }): JSX.Element {
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const [mounted] = useMount();
   useEffect(() => {
     if (!document.getElementById(tabName) || !mounted) return;
     try {

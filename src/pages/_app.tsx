@@ -1,6 +1,6 @@
 import type { AppProps } from "next/app";
 import { Context, createContext } from "react";
-import { AppRootContextType } from "@/lib/global/declarations/interfaces";
+import { RootCtxType } from "@/lib/global/declarations/interfaces";
 import { Provider } from "react-redux";
 import "../styles/globals/gStyle.scss";
 import "../styles/locals/loginPageStyle.scss";
@@ -12,7 +12,16 @@ import "../styles/locals/panelPageStyle.scss";
 import "../styles/locals/recoverPageStyle.scss";
 import "../styles/locals/reactSpinner.scss";
 import mainStore from "@/redux/mainStore";
-export const AppRootContext: Context<AppRootContextType> = createContext<AppRootContextType>({
+export const RootCtx: Context<RootCtxType> = createContext<RootCtxType>({
+  divModal: {
+    current: null,
+  },
+  divModalSec: {
+    current: null,
+  },
+  divModalTerc: {
+    current: null,
+  },
   roots: {
     nextRoot: undefined,
   },
@@ -20,9 +29,15 @@ export const AppRootContext: Context<AppRootContextType> = createContext<AppRoot
 export default function ProSaudeApp({ Component, pageProps }: AppProps): JSX.Element {
   return (
     <Provider store={mainStore}>
-      <AppRootContext.Provider value={{ roots: { nextRoot: undefined } }}>
+      <RootCtx.Provider
+        value={{
+          divModal: { current: null },
+          divModalSec: { current: null },
+          divModalTerc: { current: null },
+          roots: { nextRoot: undefined },
+        }}>
         <Component {...pageProps} />
-      </AppRootContext.Provider>
+      </RootCtx.Provider>
     </Provider>
   );
 }

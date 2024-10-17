@@ -1,5 +1,6 @@
 /* Login Page Styles */
-
+@use "../abstracts/variables" as *;
+@use "../base/root" as *;
 @supports (scrollbar-width: thin) {
   * {
     &:not(:has(header)) {

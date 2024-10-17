@@ -1,6 +1,6 @@
 "use client";
-import { AppRootContext } from "@/pages/_app";
-import { AppRootContextType } from "@/lib/global/declarations/interfaces";
+import { RootCtx } from "@/pages/_app";
+import { RootCtxType } from "@/lib/global/declarations/interfaces";
 import { DataProvider } from "@/lib/global/declarations/classesCons";
 import { ErrorBoundary } from "react-error-boundary";
 import { MainPanelProps } from "@/lib/global/declarations/interfacesCons";
@@ -8,7 +8,7 @@ import { providers } from "@/vars";
 import { camelToKebab, kebabToCamel } from "@/lib/global/gModel";
 import { createRoot } from "react-dom/client";
 import { handleLinkChanges } from "@/lib/global/handlers/gRoutingHandlers";
-import { nullishDiv, panelOpts } from "@/lib/global/declarations/types";
+import { nlDiv, panelOpts } from "@/lib/global/declarations/types";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useState, useRef, useEffect, useContext } from "react";
 import DefaultForm from "../DefaultForm";
@@ -25,12 +25,13 @@ import { defUser } from "@/redux/slices/userSlice";
 import ScheduleLoader from "../../schedule/ScheduleLoader";
 import { PanelCtx } from "./SelectLoader";
 import { panelRoots } from "@/vars";
+import useMount from "@/lib/hooks/useMount";
 export default function SelectPanel({ defOp = "agenda" }: MainPanelProps): JSX.Element {
   const { userClass, setUserClass: setPrivilege } = useContext(PanelCtx),
     [selectedOption, setSelectedOption] = useState<string>(defOp),
-    [mounted, setMounted] = useState<boolean>(false),
-    formRootRef = useRef<nullishDiv>(null),
-    context = useContext<AppRootContextType>(AppRootContext),
+    [mounted] = useMount(),
+    formRootRef = useRef<nlDiv>(null),
+    context = useContext<RootCtxType>(RootCtx),
     renderSelectPanel = (opt: panelOpts): void => {
       try {
         const formRoot = document.getElementById("formRoot");
@@ -85,7 +86,6 @@ export default function SelectPanel({ defOp = "agenda" }: MainPanelProps): JSX.E
     if (privilege === "coordinator") translatedPrivilege = "coordenador";
     else translatedPrivilege = privilege;
     setPrivilege(translatedPrivilege);
-    setMounted(true);
   }, [setPrivilege]);
   useEffect(() => {
     providers.globalDataProvider = new DataProvider(sessionStorage);

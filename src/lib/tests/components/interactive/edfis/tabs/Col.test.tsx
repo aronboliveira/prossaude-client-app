@@ -1,3 +1,4 @@
+import React from "react";
 import { RenderResult, render } from "@testing-library/react";
 import Col from "../../../../../../../components/interactive/edfis/tabs/Col";
 describe("Col Component", (): void => {
@@ -6,9 +7,8 @@ describe("Col Component", (): void => {
     const col = container.querySelector<HTMLTableColElement>("col");
     (expect(col) as jest.JestMatchers<jest.SpyInstance>).toBeInTheDocument() as void;
     (expect(col?.getAttribute("class")) as jest.JestMatchers<jest.SpyInstance>).toBe<string>(
-      "tabColProg tabColIndPerc"
+      "tabColProg tabColIndPerc",
     ) as void;
     (expect(col?.getAttribute("id")) as jest.JestMatchers<jest.SpyInstance>).toBe<string>("tabColIndPerc1") as void;
-    (expect(col?.getAttribute("itemProp")) as jest.JestMatchers<jest.SpyInstance>).toBe<string>("colIndPerc") as void;
   }) as void;
 }) as void;

@@ -22,7 +22,7 @@ jest.mock(
     elementNotFound: jest.fn(),
   }),
 ) as typeof jest;
-describe("TabAtFirsRot component", (): void => {
+describe("TabAtFisRot component", (): void => {
   beforeEach((): void => {
     jest.clearAllMocks() as typeof jest;
   }) as void;

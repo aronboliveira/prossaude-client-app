@@ -2,7 +2,7 @@ import React from "react";
 import { render, fireEvent, RenderResult } from "@testing-library/react";
 import PacRow from "../../../../../../components/panelForms/pacs/PacRow";
 //@ts-ignore
-import { nullishTab } from "@/lib/global/declarations/types";
+import { nlTab } from "@/lib/global/declarations/types";
 import { useRef, MutableRefObject } from "react";
 //@ts-ignore
 import { PacInfo } from "@/lib/global/declarations/interfacesCons";
@@ -46,7 +46,7 @@ describe("PacRow Component", (): void => {
     ],
   };
   test("renders PacRow with default props", (): void => {
-    const tabRef: MutableRefObject<nullishTab> = useRef<nullishTab>(null);
+    const tabRef: MutableRefObject<nlTab> = useRef<nlTab>(null);
     (
       expect(
         (
@@ -64,7 +64,7 @@ describe("PacRow Component", (): void => {
     ).toBeInTheDocument() as void;
   }) as void;
   test("click on 'Atendimentos Anteriores' button", (): void => {
-    const tabRef: MutableRefObject<nullishTab> = useRef<nullishTab>(null);
+    const tabRef: MutableRefObject<nlTab> = useRef<nlTab>(null);
     const renderResult = render(
       <PacRow tabRef={tabRef} pac={defaultPac as PacInfo} nRow={0} userClass='estudante' shouldShowAlocBtn={false} />,
     ) as RenderResult;

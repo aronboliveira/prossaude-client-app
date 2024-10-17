@@ -9,7 +9,7 @@ import type {
   textEl,
   rMouseEvent,
   nlFm,
-  nullishHtEl,
+  nlHtEl,
   formCases,
   queryableNode,
   vRoot,
@@ -22,16 +22,21 @@ import {
   stringError,
   elementNotPopulated,
 } from "./errorHandler";
-import { handleSubmit } from "@/lib/locals/panelPage/handlers/handlers";
+import { handleSubmit } from "@/lib/global/data-service";
 import { createRoot } from "react-dom/client";
 //function for facilitating conversion of types when passing properties to DOM elements
 export function updateSimpleProperty(el: targEl): primitiveType {
   if (el instanceof HTMLInputElement) {
     if (el.type === "radio" || el.type === "checkbox") return (el as HTMLInputElement).checked.toString();
-    else if (el.type === "number" || el.type === "text") {
-      return !Number.isFinite(parseFloat(el.value?.replaceAll(/[^0-9.,+-]/g, "")))
-        ? 0
-        : parseFloat(el.value?.replaceAll(/[^0-9.,+-]/g, "")) ?? 0;
+    else if (
+      el.type === "number" ||
+      el.type === "text" ||
+      el.type === "tel" ||
+      el.type === "password" ||
+      el.type === "url"
+    ) {
+      const normalizedValue = parseFloat(el.value?.replaceAll(/[^0-9+\-.,]/g, "").replace(/,/g, "."));
+      return Number.isFinite(normalizedValue) ? normalizedValue : 0;
     } else return el.value || "0";
   } else if (el instanceof HTMLSelectElement || el instanceof HTMLTextAreaElement) return el.value;
   else inputNotFound(el, "el in updateSimpleProperty", extLine(new Error()));
@@ -1151,7 +1156,7 @@ export async function submitForm(form: nlFm, ep: formCases): Promise<void> {
                     appendRad(checked);
                   }
                 };
-                const checkParent = (refAncestral: nullishHtEl, group: string = 'input[type="radio"]'): void => {
+                const checkParent = (refAncestral: nlHtEl, group: string = 'input[type="radio"]'): void => {
                   if (el.dataset.parent && el.dataset.parent !== "") {
                     refAncestral = document.querySelector(el.dataset.parent);
                     if (refAncestral) {
@@ -1469,7 +1474,7 @@ export function registerPersistInputs({
     console.error(`Error executing persistInputs:\n${(e as Error).message}`);
   }
 }
-export function registerRoot(root: vRoot, selector: string, selectorRef?: MutableRefObject<nullishHtEl>): vRoot {
+export function registerRoot(root: vRoot, selector: string, selectorRef?: MutableRefObject<nlHtEl>): vRoot {
   try {
     const rootEl =
       typeof selectorRef === "object" && "current" in selectorRef

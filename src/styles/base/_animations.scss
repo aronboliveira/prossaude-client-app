@@ -1,0 +1,71 @@
+@keyframes highlightBtn {
+  0% {
+    filter: contrast(100%);
+    filter: grayscale(20%);
+    filter: hue-rotate(0deg);
+  }
+  50% {
+    filter: contrast(160%);
+    filter: grayscale(0%);
+    filter: hue-rotate(20deg);
+  }
+  100% {
+    filter: contrast(100%);
+    filter: grayscale(20%);
+    filter: hue-rotate(0deg);
+  }
+}
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes blurOut {
+  0% {
+    filter: blur(2px);
+  }
+  100% {
+    filter: blur(0);
+  }
+}
+@keyframes slidePo {
+  0% {
+    height: 0;
+  }
+  100% {
+    height: 26.45rem;
+  }
+}
+@keyframes slideUserInfo {
+  0% {
+    height: 0;
+  }
+  100% {
+    height: 9.857rem;
+  }
+}
+@keyframes dropIn {
+  0% {
+    top: -45%;
+  }
+  50% {
+    top: 0%;
+  }
+  100% {
+    top: 5%;
+  }
+}
+@keyframes giveOpacity {
+  0% {
+    opacity: initial;
+  }
+  50% {
+    opacity: red;
+  }
+  100% {
+    opacity: initial;
+  }
+}

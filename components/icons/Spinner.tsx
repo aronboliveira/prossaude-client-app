@@ -3,14 +3,14 @@ import { ErrorBoundary } from "react-error-boundary";
 import { SpinnerComponentProps } from "@/lib/global/declarations/interfaces";
 import GenericErrorComponent from "../error/GenericErrorComponent";
 import { useRef, useEffect } from "react";
-import { nullishDiv } from "@/lib/global/declarations/types";
+import { nlDiv } from "@/lib/global/declarations/types";
 export default function Spinner({
   spinnerClass = "spinner-border",
   spinnerColor = "text-info",
   message = "Loading...",
   fs = false,
 }: SpinnerComponentProps): JSX.Element {
-  const spinner = useRef<nullishDiv>(null);
+  const spinner = useRef<nlDiv>(null);
   useEffect(() => {
     try {
       const handleResize = (): void => {

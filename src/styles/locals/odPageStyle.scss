@@ -1,5 +1,7 @@
 /* Od Page Style */
-
+@use "../abstracts/variables" as *;
+@use "../base/root" as *;
+@use "../abstracts/mixins" as *;
 $scyan: rgb(10, 221, 245, 0.1);
 $stcyan: rgb(10, 221, 245, 0.9);
 $swhite: rgba(255, 255, 255, 0.8);

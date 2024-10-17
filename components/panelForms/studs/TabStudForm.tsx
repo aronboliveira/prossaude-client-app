@@ -5,14 +5,14 @@ import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { equalizeTabCells, normalizeSizeSb } from "@/lib/global/gStyleScript";
 import { fillTabAttr } from "@/lib/locals/panelPage/handlers/consHandlerList";
 import { handleClientPermissions } from "@/lib/locals/panelPage/handlers/consHandlerUsers";
-import { handleFetch } from "@/lib/locals/panelPage/handlers/handlers";
+import { handleFetch } from "@/lib/global/data-service";
 import { exporters, panelRoots } from "@/vars";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useEffect, useRef, useCallback, useContext, useMemo } from "react";
 import GenericErrorComponent from "../../error/GenericErrorComponent";
 import Spinner from "../../icons/Spinner";
 import StudRow from "./StudRow";
-import { nlBtn, nlFm, nullishTab, nullishTabSect } from "@/lib/global/declarations/types";
+import { nlBtn, nlFm, nlTab, nlTabSect } from "@/lib/global/declarations/types";
 import { StudInfo } from "@/lib/global/declarations/interfacesCons";
 import { strikeEntries } from "@/lib/locals/panelPage/consStyleScript";
 import { assignFormAttrs } from "@/lib/global/gModel";
@@ -23,7 +23,7 @@ export default function TabStudForm(): JSX.Element {
   const userClass = useContext(PanelCtx).userClass,
     studs: StudInfo[] = useMemo(() => [], []),
     formRef = useRef<nlFm>(null),
-    tabRef = useRef<nullishTab>(null),
+    tabRef = useRef<nlTab>(null),
     tbodyRef = useRef<HTMLTableSectionElement | null>(null),
     btnExportTabStudsRef = useRef<nlBtn>(null),
     callbackNormalizeSizeSb = useCallback(() => {
@@ -141,7 +141,7 @@ export default function TabStudForm(): JSX.Element {
                         </tbody>
                       </ErrorBoundary>,
                     );
-                    tbodyRef.current = document.getElementById("studsTbody") as nullishTabSect;
+                    tbodyRef.current = document.getElementById("studsTbody") as nlTabSect;
                     if (!(tbodyRef.current instanceof HTMLElement))
                       throw elementNotFound(tbodyRef.current, `Validation of replaced tbody`, extLine(new Error()));
                     if (!panelRoots[`${tbodyRef.current.id}`])

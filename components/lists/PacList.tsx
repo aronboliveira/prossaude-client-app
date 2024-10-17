@@ -3,7 +3,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import { createRoot } from "react-dom/client";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { equalizeTabCells } from "@/lib/global/gStyleScript";
-import { handleFetch } from "@/lib/locals/panelPage/handlers/handlers";
+import { handleFetch } from "@/lib/global/data-service";
 import { panelRoots } from "@/vars";
 import { strikeEntries } from "@/lib/locals/panelPage/consStyleScript";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
@@ -11,7 +11,7 @@ import { useContext, useEffect, useMemo, useRef } from "react";
 import GenericErrorComponent from "../error/GenericErrorComponent";
 import PacRow from "../panelForms/pacs/PacRow";
 import Spinner from "../icons/Spinner";
-import { nullishHtEl, nullishTab, nullishTabSect } from "@/lib/global/declarations/types";
+import { nlHtEl, nlTab, nlTabSect } from "@/lib/global/declarations/types";
 import { PacInfo, PacListProps } from "@/lib/global/declarations/interfacesCons";
 import { addListenerAlocation, checkLocalIntervs, fillTabAttr } from "@/lib/locals/panelPage/handlers/consHandlerList";
 import { handleClientPermissions } from "@/lib/locals/panelPage/handlers/consHandlerUsers";
@@ -25,9 +25,9 @@ export default function PacList({
 }: PacListProps): JSX.Element {
   const userClass = useContext(PanelCtx).userClass,
     pacs: PacInfo[] = useMemo(() => [], []),
-    tabPacRef = useRef<nullishTab>(null),
-    sectTabRef = useRef<nullishHtEl>(null),
-    tbodyRef = useRef<nullishTabSect>(null);
+    tabPacRef = useRef<nlTab>(null),
+    sectTabRef = useRef<nlHtEl>(null),
+    tbodyRef = useRef<nlTabSect>(null);
   useEffect(() => {
     try {
       if (!(tbodyRef.current instanceof HTMLTableSectionElement))

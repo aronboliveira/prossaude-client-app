@@ -4,16 +4,22 @@ import { odProps, agProps } from "@/vars";
 import { extLine, inputNotFound } from "@/lib/global/handlers/errorHandler";
 import { handleLinkChanges } from "@/lib/global/handlers/gRoutingHandlers";
 import { pageCases, targEl } from "@/lib/global/declarations/types";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { addExportFlags, getGlobalEls, watchLabels } from "@/lib/global/gController";
 import { clearPhDates, dinamicGridAdjust, equalizeFlexSibilings } from "@/lib/global/gStyleScript";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
-import { assignFormAttrs, modelScripts } from "@/lib/global/gModel";
+import { assignFormAttrs, checkContext, modelScripts } from "@/lib/global/gModel";
+import useMount from "@/lib/hooks/useMount";
+import { RootCtxType } from "@/lib/global/declarations/interfaces";
+import { RootCtx } from "@/pages/_app";
 export default function Watcher({ routeCase }: { routeCase?: pageCases }): JSX.Element {
-  const [handled, setHandle] = useState<boolean>(false);
-  const [isMounted, setMount] = useState<boolean>(false);
-  const [isExportListening, setExport] = useState<boolean>(false);
-  useEffect(() => setMount(true), []);
+  const [handled, setHandle] = useState<boolean>(false),
+    [isMounted] = useMount(),
+    [isExportListening, setExport] = useState<boolean>(false),
+    { divModal, divModalSec, divModalTerc } = useContext<RootCtxType>(RootCtx);
+  //TODO REMOVER APÓS TESTE
+  const ctx = useContext(RootCtx);
+  checkContext(ctx, "RootCtx", Watcher);
   useEffect(() => {
     if (!isMounted) return;
     const handleResize = (): void =>
@@ -60,10 +66,8 @@ export default function Watcher({ routeCase }: { routeCase?: pageCases }): JSX.E
     return (): void => {
       if (routeCase === "ag") removeEventListener("resize", handleResize);
     };
-  }, [isMounted]);
-  useEffect(() => {
-    modelScripts();
-  }, [handled]);
+  }, [isMounted, routeCase]);
+  useEffect(() => modelScripts(), [handled]);
   useEffect(() => {
     if (!isMounted) return;
     setTimeout(() => syncAriaStates(document.querySelectorAll("*")), 1000);
@@ -81,5 +85,10 @@ export default function Watcher({ routeCase }: { routeCase?: pageCases }): JSX.E
         if (a instanceof HTMLElement) a.style.display = "none";
     }, 1000);
   }, []);
+  useEffect(() => {
+    if (divModal) divModal.current = document.getElementById("divAdd") as HTMLDivElement;
+    if (divModalSec) divModalSec.current = document.getElementById("divAddSec") as HTMLDivElement;
+    if (divModalTerc) divModalTerc.current = document.getElementById("divAddTerc") as HTMLDivElement;
+  }, [divModal, divModalSec, divModalTerc]);
   return <div className='watcher' id={`watcher-${routeCase}`} style={{ display: "none" }}></div>;
 }

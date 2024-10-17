@@ -1,17 +1,18 @@
 import { DlgProps } from "@/lib/global/declarations/interfaces";
 import {
+  NlMRef,
   aptTypes,
   formCases,
   looseNum,
-  nullishDiv,
-  nullishHtEl,
+  nlDiv,
+  nlHtEl,
   nlInp,
   nlSel,
   panelOpts,
   vRoot,
 } from "@/lib/global/declarations/types";
-import { GordLvl } from "@/lib/tests/testVars";
-import { nlFm, nullishDlg, nullishTab, voidVal, nlBtn } from "@glSrc/types";
+import { FactorAtletaValue, Gender, GordLvl, NafTypeValue } from "@/lib/global/declarations/testVars";
+import { nlFm, nullishDlg, nlTab, voidVal, nlBtn } from "@glSrc/types";
 import { NextRouter } from "next/router";
 import { MutableRefObject, Dispatch, SetStateAction, Component } from "react";
 import { Root } from "react-dom/client";
@@ -91,7 +92,7 @@ export interface PrevConsListProps {
   shouldDisplayPrevList: boolean;
 }
 export interface AlterFieldListProps extends DlgProps {
-  tabRef: MutableRefObject<nullishTab>;
+  tabRef: MutableRefObject<nlTab>;
   name: string;
 }
 export interface ProviderAptDataListProps {
@@ -149,10 +150,9 @@ export interface UserPropsDlgProps {
   setPropDlg: Dispatch<SetStateAction<boolean>>;
   shouldDisplayPropDlg: boolean;
 }
-export interface UserDlgProps extends UserPropsDlgProps, ContactDlgProps, UserProfileDropdownProps {
+export interface UserDlgProps {
   setUserDlg: Dispatch<SetStateAction<boolean>>;
   shouldDisplayUserDlg: boolean;
-  callLogout: () => void;
 }
 export interface FallbackedMainPanelProps extends Omit<MainPanelProps, "mainRoot"> {
   renderError: Error;
@@ -167,7 +167,7 @@ export interface ErrorDlgProps {
   onClick: () => void;
 }
 export interface TabRowProps extends GlobalFormProps {
-  tabRef: MutableRefObject<nullishTab>;
+  tabRef: MutableRefObject<nlTab>;
   nRow: looseNum;
 }
 export interface UserRowProps extends TabRowProps {
@@ -230,44 +230,42 @@ export interface HistoricRowProps extends Pick<HistoricDlgProps, "name"> {
   historic: HistoricInfo;
   nRow: number;
 }
-type onRender = (
-  gen: string,
-  genBirthRel: string,
-  genTrans: string,
-  genFisAlin: string,
-  refs: { [k: string]: MutableRefObject<nlSel | HTMLInputElement | HTMLDivElement | HTMLElement> },
-  setters: {
-    setGen: React.Dispatch<React.SetStateAction<Gender>>;
-    setGenBirthRel: React.Dispatch<React.SetStateAction<BirthRelation>>;
-    setGenTrans: React.Dispatch<React.SetStateAction<TransitionLevel>>;
-    setGenFisAlin: React.Dispatch<React.SetStateAction<AlignType>>;
-  },
-) => JSX.Element;
 export interface GenDivProps {
   onSetGen?: Dispatch<SetStateAction<Gender>>;
-  genRef?: MutableRefObject<nlSel>;
-  genBirthRef?: MutableRefObject<nlSel>;
+  genRef?: NlMRef<nlSel>;
+  genBirthRef?: NlMRef<nlSel>;
+  genAlinRef?: NlMRef<nlSel>;
+  genValueRef?: MutableRefObject<Gender>;
+  rGenValue?: Gender;
 }
 export interface UseGenDivReturn {
   refs: {
-    r: MutableRefObject<nullishDiv>;
+    r: MutableRefObject<nlDiv>;
     gr: MutableRefObject<nlSel>;
     gbr: MutableRefObject<nlSel>;
     gtr: MutableRefObject<nlSel>;
     gar: MutableRefObject<nlSel>;
   };
   values: {
-    gen: string;
+    gen: Gender;
     genBirthRel: BirthRelation;
     genTrans: TransitionLevel;
     genFisAlin: AlignType;
-    textBodytype: GordLvl;
+    textBodytype: Gender;
   };
   setters: {
-    setGen: Dispatch<SetStateAction<string>>;
+    setGen: Dispatch<SetStateAction<Gender>>;
     setGenBirthRel: Dispatch<SetStateAction<BirthRelation>>;
     setGenTrans: Dispatch<SetStateAction<TransitionLevel>>;
     setGenFisAlin: Dispatch<SetStateAction<AlignType>>;
-    setTextBodytype: Dispatch<SetStateAction<GordLvl>>;
+    setTextBodytype: Dispatch<SetStateAction<Gender>>;
   };
+}
+export interface NafProps {
+  setFactorAtvLvl: Dispatch<SetStateAction<NafTypeValue>>;
+  factorAtvLvl?: NafTypeValue;
+}
+export interface SelFactorAtletaProps {
+  setFactorAtleta: Dispatch<SetStateAction<FactorAtletaValue>>;
+  factorAtleta?: FactorAtletaValue;
 }

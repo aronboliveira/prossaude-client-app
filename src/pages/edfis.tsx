@@ -1,13 +1,14 @@
 import { ErrorBoundary } from "react-error-boundary";
-import ENTipsBtnWrapper from "../../components/interactive/edfis/ENTipsBtnWrapper";
+import ENTipsBtnWrapper from "../../components/interactive/edfis/client/ENTipsBtnWrapper";
 import GenericErrorComponent from "../../components/error/GenericErrorComponent";
 import HeaderDate from "../../components/interactive/def/HeaderDate";
 import SwitchDiv from "../../components/interactive/def/SwitchDiv";
-import WatcherEN from "../../components/interactive/edfis/WatcherEN";
+import WatcherEN from "../../components/interactive/edfis/client/WatcherEN";
 import { Suspense, lazy } from "react";
 import Spinner from "../../components/icons/Spinner";
 import Guard from "../../components/interactive/def/Guard";
-const ENForm = lazy(() => import("../../components/interactive/edfis/ENForm"));
+import sEn from "@/styles/locals/modules/enStyles.module.scss";
+const ENForm = lazy(() => import("../../components/interactive/edfis/client/ENForm"));
 export default function EdFisNutPage(): JSX.Element {
   return (
     <ErrorBoundary
@@ -32,7 +33,7 @@ export default function EdFisNutPage(): JSX.Element {
             </div>
           </div>
         </header>
-        <main>
+        <main className={sEn.main}>
           <SwitchDiv autofill={true} />
           <hr />
           <Suspense fallback={<Spinner fs={true} />}>

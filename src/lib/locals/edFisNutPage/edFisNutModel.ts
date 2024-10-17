@@ -1,6 +1,6 @@
 import { Person } from "../../global/declarations/classes";
-import { entryEl, targEl } from "../../global/declarations/types";
-import { filterIdsByGender } from "../../global/gModel";
+import { entryEl, primitiveType, targEl } from "../../global/declarations/types";
+import { filterIdsByGender, parseNotNaN } from "../../global/gModel";
 import { handleEventReq } from "@/lib/global/handlers/gHandlers";
 //nesse file estão presentes principalmente as funções relacionadas à exigência de modelo textual e de visualização
 import {
@@ -10,7 +10,8 @@ import {
   multipleElementsNotFound,
   stringError,
 } from "../../global/handlers/errorHandler";
-import { Gender } from "@/lib/tests/testVars";
+import { FactorAtletaValue, Gender, NafTypeValue } from "@/lib/global/declarations/testVars";
+import { person, tabProps } from "@/vars";
 export function checkInnerColGroups(parentEl: targEl, areAllColGroupsSimilar: boolean = false): [number, boolean] {
   const validColGroupsChildCount: number[] = [],
     colGroups = Array.from(parentEl?.querySelectorAll("colgroup") ?? []);
@@ -45,10 +46,9 @@ export function checkTabRowsIds(tab: targEl): string[] {
         const rowId = tabRow?.id;
         rowId?.match(/^row/)?.toString()
           ? arrTabRowsIds?.push(rowId.slice(3).toLowerCase())
-          : stringError(`obtendo id da row ${tabRow}`, rowId, extLine(new Error()));
+          : stringError(`Obtained id from row ${tabRow}`, rowId, extLine(new Error()));
       })
     : elementNotFound(tab, "tabDC in checkTabRowsIds", extLine(new Error()));
-
   return arrTabRowsIds || [""];
 }
 export function changeTabDCutLayout(protocolo: targEl, tabDC: targEl, bodyType: targEl): string {
@@ -175,30 +175,28 @@ export function defineHiddenRows(
     );
 }
 //correção para limitação da fórmula de PGC
-export function evaluatePGCDecay(person: Person, targInpPGC: targEl, PGC: number = 0): [boolean, number] {
+export function evaluatePGCDecay(person: Person, tipgc: targEl, PGC: number = 0): [boolean, number] {
   let foundDecayPoint = false;
   if (
     person instanceof Person &&
-    (targInpPGC instanceof HTMLInputElement ||
-      targInpPGC instanceof HTMLSelectElement ||
-      targInpPGC instanceof HTMLTextAreaElement) &&
+    (tipgc instanceof HTMLInputElement || tipgc instanceof HTMLSelectElement || tipgc instanceof HTMLTextAreaElement) &&
     typeof PGC === "number"
   ) {
     const initSumDCut = person.sumDCut,
       decreasedPerson = new Person(person.gen, person.age, person.weight, person.height, person.sumDCut, person.atvLvl);
     decreasedPerson.sumDCut = decreasedPerson.sumDCut - 1;
-    let decreasedPGC = decreasedPerson.calcPGC(decreasedPerson)[0],
+    let decreasedPGC = decreasedPerson.calcPGC(decreasedPerson).pgc,
       sumAcc = 1;
     //caso padrão de decay
     if (decreasedPGC > PGC) {
       foundDecayPoint = true;
-      alertPGCRounding(targInpPGC);
+      alertPGCRounding(tipgc);
       const arrDecreasedPGC: number[] = [];
       //busca pontos de decay anteriores
       while (decreasedPerson?.sumDCut > 0) {
         sumAcc++;
         decreasedPerson.sumDCut = decreasedPerson.sumDCut - 1;
-        decreasedPGC = decreasedPerson.calcPGC(decreasedPerson)[0];
+        decreasedPGC = decreasedPerson.calcPGC(decreasedPerson).pgc;
         arrDecreasedPGC.push(decreasedPGC);
         if (decreasedPGC < PGC) break;
         if (sumAcc > 999) break;
@@ -216,7 +214,7 @@ export function evaluatePGCDecay(person: Person, targInpPGC: targEl, PGC: number
     /* eslint-enable */
     if (decreasedPGC <= PGC && (PGC > 100 || decreasedPerson?.sumDCut > 514)) {
       foundDecayPoint = true;
-      alertPGCRounding(targInpPGC);
+      alertPGCRounding(tipgc);
       PGC = 60.45 + 0.05 * ((decreasedPerson?.sumDCut ?? 514) - 513);
     }
   } else
@@ -224,19 +222,71 @@ export function evaluatePGCDecay(person: Person, targInpPGC: targEl, PGC: number
       extLine(new Error()),
       "argumentos para evaluatePGCDecay",
       `${JSON.stringify(person) || null}`,
-      targInpPGC,
+      tipgc,
       PGC,
     );
 
   if (PGC < 0 || Number.isNaN(PGC) || PGC === Math.abs(Infinity)) PGC = 0;
   return [foundDecayPoint, PGC];
 }
-export function alertPGCRounding(targInpPGC: targEl): void {
-  if (targInpPGC instanceof HTMLInputElement) {
-    const spanRoundingAlertIcon = document.getElementById(`alert_${(targInpPGC as entryEl).id}`);
+export function alertPGCRounding(tipgc: targEl): void {
+  if (tipgc instanceof HTMLInputElement) {
+    const spanRoundingAlertIcon = document.getElementById(`alert_${(tipgc as entryEl).id}`);
     spanRoundingAlertIcon instanceof HTMLSpanElement && spanRoundingAlertIcon.hidden === false
       ? (spanRoundingAlertIcon.hidden = true)
       : elementNotFound(spanRoundingAlertIcon, "spanRoundingAlertIcon", extLine(new Error()));
-  } else inputNotFound(targInpPGC, "targInpPGC in alertPGCRounding", extLine(new Error()));
+  } else inputNotFound(tipgc, "tipgc in alertPGCRounding", extLine(new Error()));
 }
 export const evalGender = (g: string): g is Gender => ["masculino", "feminino", "neutro"].includes(g);
+export function evalFactorAtleta(): boolean {
+  if (typeof tabProps.factorAtleta !== "string" || tabProps.factorAtleta === ("" as any)) {
+    console.warn(`Factor for Athlete not a string. Defaulting value...`);
+    tabProps.factorAtleta = "peso";
+  }
+  if (tabProps.factorAtleta !== ("peso" as any)) tabProps.factorAtleta = tabProps.factorAtleta.toLowerCase() as any;
+  if (tabProps.factorAtleta !== ("mlg" as any))
+    tabProps.factorAtleta = (tabProps.factorAtleta?.toLowerCase() as any) ?? "peso";
+  if (tabProps.factorAtleta !== "peso" && tabProps.factorAtleta !== "mlg") tabProps.factorAtleta = "peso";
+  return (["peso", "mlg"] as FactorAtletaValue[]).includes(tabProps.factorAtleta);
+}
+export function evalFactorAtvLvl(): boolean {
+  if (
+    (typeof tabProps.factorAtvLvl !== "string" && typeof tabProps.factorAtvLvl !== "number") ||
+    (typeof tabProps.factorAtvLvl === "number" && !Number.isFinite(tabProps.factorAtvLvl))
+  )
+    tabProps.factorAtvLvl = 1.4;
+  if (typeof tabProps.factorAtvLvl === "string")
+    tabProps.factorAtvLvl = parseNotNaN(tabProps.factorAtvLvl) as NafTypeValue;
+  if (![1.2, 1.4, 1.6, 1.9, 2.2].includes(tabProps.factorAtvLvl as number)) tabProps.factorAtvLvl = 1.4;
+  return ([1.2, 1.4, 1.6, 1.9, 2.2] as Omit<NafTypeValue, "1.2" | "1.4" | "1.6" | "1.9" | "2.2">[]).includes(
+    tabProps.factorAtvLvl as number,
+  );
+}
+export function evalActivityLvl(): boolean {
+  if (
+    typeof person.atvLvl !== "string" ||
+    !["sedentario", "leve", "moderado", "intenso", "muitoIntenso"].includes(person.atvLvl)
+  )
+    person.atvLvl = "leve";
+  return ["sedentario", "leve", "moderado", "intenso", "muitoIntenso"].includes(person.atvLvl);
+}
+export function evalIMC(): boolean {
+  if (typeof tabProps.IMC !== "number" || !Number.isFinite(tabProps.IMC)) tabProps.IMC = 0;
+  return typeof tabProps.IMC === "number" && Number.isFinite(tabProps.IMC);
+}
+export function evalPseudoNum(n: primitiveType): number {
+  if (typeof n === "number") {
+    if (!Number.isFinite(n)) return 0;
+    return n;
+  } else if (typeof n === "string") {
+    n = n.replaceAll(/[^0-9]/g, "");
+    if (n === "") n = "0";
+    return parseNotNaN(n);
+  } else if (typeof n === "boolean") return n ? 1 : 0;
+  else return 0;
+}
+export function evalMatchTMBElements(): boolean {
+  if (!(tabProps.lockGl instanceof Element)) tabProps.lockGl = document.getElementById("lockGordCorpLvl");
+  if (!(tabProps.spanFa instanceof HTMLElement)) tabProps.spanFa = document.getElementById("spanFactorAtleta");
+  return tabProps.lockGl instanceof Element && tabProps.spanFa instanceof HTMLElement;
+}

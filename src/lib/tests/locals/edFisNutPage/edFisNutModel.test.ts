@@ -31,7 +31,7 @@ describe("checkInnerColGroups", (): void => {
   it("should call multipleElementsNotFound when no colgroups are found", (): void => {
     const mockMultipleElementsNotFound = jest.spyOn<any, ErrorHandler>(
       require("../../../global/handlers/errorHandler"),
-      "multipleElementsNotFound"
+      "multipleElementsNotFound",
     );
     checkInnerColGroups(parentEl);
     (expect(mockMultipleElementsNotFound) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalled() as void;
@@ -43,7 +43,7 @@ describe("checkInnerColGroups", (): void => {
     parentEl.appendChild(colgroup);
     const mockElementNotFound = jest.spyOn<any, ErrorHandler>(
       require("../../../global/handlers/errorHandler"),
-      "elementNotFound"
+      "elementNotFound",
     );
     checkInnerColGroups(parentEl);
     (expect(mockElementNotFound) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalled() as void;
@@ -74,13 +74,13 @@ describe("checkTabRowsIds", (): void => {
     tab.appendChild(row);
     checkTabRowsIds(tab);
     expect(
-      jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "stringError")
+      jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "stringError"),
     ).toHaveBeenCalled() as void;
   }) as void;
   it("should call elementNotFound when the table is invalid", (): void => {
     checkTabRowsIds(document.createElement("div") as HTMLDivElement as any);
     expect(
-      jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "elementNotFound")
+      jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "elementNotFound"),
     ).toHaveBeenCalled() as void;
   }) as void;
 }) as void;
@@ -97,19 +97,19 @@ describe("changeTabDCutLayout", (): void => {
   it("should return 'pollock7' when protocolo matches 'pollock7'", (): void => {
     protocolo.value = "pollock7";
     (expect(changeTabDCutLayout(protocolo, tabDC, bodyType)) as jest.JestMatchers<jest.SpyInstance>).toBe<Protocol>(
-      "pollock7"
+      "pollock7",
     ) as void;
   }) as void;
   it("should return 'pollock3' when protocolo matches 'pollock3'", (): void => {
     protocolo.value = "pollock3";
     (expect(changeTabDCutLayout(protocolo, tabDC, bodyType)) as jest.JestMatchers<jest.SpyInstance>).toBe<Protocol>(
-      "pollock3"
+      "pollock3",
     ) as void;
   }) as void;
   it("should call elementNotFound when elements are invalid", (): void => {
     changeTabDCutLayout(null as any, null as any, null as any);
     expect(
-      jest.spyOn<any, ErrorHandler>(require("../../global/handlers/errorHandler"), "elementNotFound")
+      jest.spyOn<any, ErrorHandler>(require("../../global/handlers/errorHandler"), "elementNotFound"),
     ).toHaveBeenCalled() as void;
   }) as void;
   it("should call stringError when invalid body type is provided", (): void => {
@@ -117,7 +117,7 @@ describe("changeTabDCutLayout", (): void => {
     bodyType.value = "invalidType";
     changeTabDCutLayout(protocolo, tabDC, bodyType);
     expect(
-      jest.spyOn<any, ErrorHandler>(require("../../global/handlers/errorHandler"), "stringError")
+      jest.spyOn<any, ErrorHandler>(require("../../global/handlers/errorHandler"), "stringError"),
     ).toHaveBeenCalled() as void;
   }) as void;
 }) as void;
@@ -153,37 +153,37 @@ describe("defineHiddenRows", (): void => {
   it("should call multipleElementsNotFound when input is invalid", (): void => {
     defineHiddenRows(null as any, [], [], "invalid");
     expect(
-      jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "multipleElementsNotFound")
+      jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "multipleElementsNotFound"),
     ).toHaveBeenCalled() as void;
   }) as void;
 }) as void;
 describe("evaluatePGCDecay", (): void => {
   let person: Person;
-  let targInpPGC: HTMLInputElement;
+  let tipgc: HTMLInputElement;
   beforeEach((): void => {
     person = new Person("male", 30, 80, 180, 100, "1.2");
-    targInpPGC = document.createElement("input") as HTMLInputElement;
+    tipgc = document.createElement("input") as HTMLInputElement;
     jest.clearAllMocks() as typeof jest;
   }) as void;
   it("should return true and correct PGC value when decay point is found", (): void => {
-    const [foundDecayPoint, PGC] = evaluatePGCDecay(person, targInpPGC, 25);
+    const [foundDecayPoint, PGC] = evaluatePGCDecay(person, tipgc, 25);
     (expect(foundDecayPoint) as jest.JestMatchers<jest.SpyInstance>).toBe<boolean>(true) as void;
     (expect(PGC) as jest.JestMatchers<jest.SpyInstance>).toBeGreaterThan(0);
   }) as void;
   it("should call multipleElementsNotFound when invalid arguments are provided", (): void => {
     const mockMultipleElementsNotFound = jest.spyOn<any, ErrorHandler>(
       require("../../../global/handlers/errorHandler"),
-      "multipleElementsNotFound"
+      "multipleElementsNotFound",
     );
     evaluatePGCDecay(null as any, null as any, NaN);
     (expect(mockMultipleElementsNotFound) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalled() as void;
   }) as void;
 }) as void;
 describe("alertPGCRounding", (): void => {
-  let targInpPGC: HTMLInputElement;
+  let tipgc: HTMLInputElement;
   beforeEach((): void => {
-    targInpPGC = document.createElement("input") as HTMLInputElement;
-    targInpPGC.id = "pgcInput";
+    tipgc = document.createElement("input") as HTMLInputElement;
+    tipgc.id = "pgcInput";
     jest.clearAllMocks() as typeof jest;
   }) as void;
   it("should hide the alert icon when it is visible", (): void => {
@@ -191,19 +191,19 @@ describe("alertPGCRounding", (): void => {
     spanRoundingAlertIcon.id = "alert_pgcInput";
     spanRoundingAlertIcon.hidden = false;
     document.body.appendChild(spanRoundingAlertIcon);
-    alertPGCRounding(targInpPGC);
+    alertPGCRounding(tipgc);
     (expect(spanRoundingAlertIcon.hidden) as jest.JestMatchers<jest.SpyInstance>).toBe<boolean>(true) as void;
   }) as void;
   it("should call elementNotFound when the alert icon is not found", (): void => {
-    alertPGCRounding(targInpPGC);
+    alertPGCRounding(tipgc);
     expect(
-      jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "elementNotFound")
+      jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "elementNotFound"),
     ).toHaveBeenCalled() as void;
   }) as void;
-  it("should call inputNotFound when targInpPGC is not an input element", (): void => {
+  it("should call inputNotFound when tipgc is not an input element", (): void => {
     alertPGCRounding(null as any);
     expect(
-      jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "inputNotFound")
+      jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "inputNotFound"),
     ).toHaveBeenCalled() as void;
   }) as void;
 }) as void;
