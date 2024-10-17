@@ -1,8 +1,11 @@
 import { nlDsb, queryableNode, rMouseEvent, voidVal } from "./types";
 import { WorkBook, utils, writeFile } from "xlsx";
-import { textTransformPascal } from "../gModel";
+import { limitedError, parseNotNaN, textTransformPascal } from "../gModel";
 import { exportSignaler } from "../gController";
 import JSZip from "jszip";
+import { tabProps } from "@/vars";
+import { Gender, GordLvl, Intensity, NafTypeValue, TMBFormula } from "@/lib/global/declarations/testVars";
+import { evalFactorAtleta, evalGender } from "@/lib/locals/edFisNutPage/edFisNutModel";
 export interface UndefinedPerson {
   gen: string;
   age: number;
@@ -12,12 +15,12 @@ export interface UndefinedPerson {
   atvLvl: string;
 }
 export class Person {
-  gen;
-  age;
-  weight;
-  height;
-  sumDCut;
-  atvLvl;
+  gen: Gender;
+  age: number;
+  weight: number;
+  height: number;
+  sumDCut: number;
+  atvLvl: Intensity;
   constructor(
     gen: string = "masculino",
     age: number = 0,
@@ -26,19 +29,27 @@ export class Person {
     sumDCut: number = 0,
     atvLvl: string = "leve",
   ) {
-    this.gen = gen;
+    this.gen = gen as Gender;
     this.age = age;
     this.weight = weight;
     this.height = height;
     this.sumDCut = sumDCut;
-    this.atvLvl = atvLvl;
+    this.atvLvl = atvLvl as Intensity;
   }
-  checkAtvLvl(personInfo: Person | string): number {
+  public resetPerson(): void {
+    this.gen = "masculino";
+    this.age = 0;
+    this.weight = 0;
+    this.height = 0;
+    this.sumDCut = 0;
+    this.atvLvl = "leve";
+  }
+  public checkAtvLvl(personInfo: Person | string): number {
     if (
-      (personInfo instanceof Person && "atvLvl" in personInfo && this.atvLvl !== "") ||
+      (personInfo instanceof Person && "atvLvl" in personInfo && this.atvLvl !== ("" as any)) ||
       typeof personInfo === "string"
     ) {
-      if (typeof personInfo === "string") this.atvLvl = personInfo;
+      if (typeof personInfo === "string") this.atvLvl = personInfo as Intensity;
       switch (this.atvLvl) {
         case "sedentario":
           return 1.2;
@@ -67,183 +78,153 @@ export class Person {
     }
     return 0;
   }
-  calcIMC(personInfo: Person | [number, number]): [string, number] {
+  public calcIMC(personInfo: Person | { weight: number; height: number }): {
+    l: GordLvl;
+    v: number;
+  } {
     try {
       if (
-        (personInfo instanceof Person &&
-          "weight" in personInfo &&
-          typeof this.weight === "number" &&
-          this.weight >= 0 &&
-          "height" in this &&
-          typeof this.height === "number" &&
-          this.height >= 0) ||
-        (Array.isArray(personInfo) && typeof personInfo[0] === "number" && typeof personInfo[1] === "number")
-      ) {
-        if (Array.isArray(personInfo)) {
-          [this.weight, this.height] = personInfo;
-        }
-        let IMC = this.weight / this.height ** 2;
-        if (Number.isNaN(IMC) || IMC === Math.abs(Infinity)) IMC = 0;
-        if (IMC >= 0) {
-          if (IMC < 18.5) return ["abaixo", IMC];
-          else if (IMC >= 18.5 && IMC < 25.0) return ["eutrofico", IMC];
-          else if (IMC >= 25.0 && IMC < 30) return ["sobrepeso", IMC];
-          else if (IMC >= 30 && IMC < 35) return ["obeso1", IMC];
-          else if (IMC >= 35 && IMC < 40) return ["obeso2", IMC];
-          else if (IMC > 40) return ["obeso3", IMC];
-          else throw new Error(`Error classifying IMC. Obtained value: ${IMC ?? 0}; Values have to be positive.`);
-        } else
-          throw new Error(
-            `Error calculating IMC. Used values: Weight ${this.weight ?? 0} and Height ${this.height ?? 0}`,
-          );
+        !(
+          personInfo instanceof Person ||
+          (typeof personInfo.weight !== "number" && typeof personInfo.height !== "number")
+        )
+      )
+        throw new Error(`Failed to valid arguments for calcIMC`);
+      let IMC = personInfo.weight / personInfo.height ** 2;
+      if (!Number.isFinite(IMC) || IMC < 0) IMC = 0;
+      if (IMC >= 0) {
+        if (IMC < 18.5) return { l: "abaixo", v: IMC };
+        else if (IMC >= 18.5 && IMC < 25.0) return { l: "eutrofico", v: IMC };
+        else if (IMC >= 25.0 && IMC < 30) return { l: "sobrepeso", v: IMC };
+        else if (IMC >= 30 && IMC < 35) return { l: "obeso1", v: IMC };
+        else if (IMC >= 35 && IMC < 40) return { l: "obeso2", v: IMC };
+        else if (IMC > 40) return { l: "obeso3", v: IMC };
+        else throw new Error(`Error classifying IMC. Obtained value: ${IMC ?? 0}; Values have to be positive.`);
       } else
         throw new Error(
-          `Error validating data for person. 
-          Element person: ${Object.prototype.toString.call(personInfo).slice(8, -1) ?? "null"}; 
-          Weight present: ${"weight" in personInfo || false};
-          Weight obtained: ${this.weight ?? 0};
-          Height present: ${"height" in personInfo || false};
-          Height obtained: ${this.height ?? 0}`,
+          `Error calculating IMC. Used values: Weight ${this.weight ?? 0} and Height ${this.height ?? 0}`,
         );
-    } catch (IMCError) {
-      console.error((IMCError as Error).message);
+    } catch (e) {
+      limitedError(`Error executing calcIMC:\n${(e as Error).message}`, crypto.randomUUID());
+      return { l: "abaixo", v: tabProps.IMC ?? 0 };
     }
-    return ["", 0];
   }
-  calcPGC(person: Person): [number, number] {
-    if (person instanceof Person && "sumDCut" in person && typeof this.sumDCut === "number" && this.sumDCut >= 0) {
-      if (person.gen === "masculino") {
-        let DC = 1.10938 - 0.0008267 * this.sumDCut + 0.0000016 * this.sumDCut ** 2 - 0.0002574 * person.age;
-        if (DC <= 0 || Number.isNaN(DC)) DC = 0.01;
-        let PGC = 495 / DC - 450;
-        if (PGC <= 0 || Number.isNaN(PGC)) PGC = 0.01;
-        if (PGC > 100) PGC = 100;
-        let MLG = 100 - PGC > 0 ? 100 - PGC : 0;
-        if (Number.isNaN(MLG) || MLG === Math.abs(Infinity)) MLG = 0;
-        return [PGC, MLG];
-      } else if (person.gen === "feminino") {
-        let DC = 1.0994921 - 0.0009929 * this.sumDCut + 0.0000023 * this.sumDCut ** 2 - 0.0001392 * person.age;
-        if (DC <= 0 || Number.isNaN(DC)) DC = 0.01;
-        let PGC = 495 / DC - 450;
-        if (PGC <= 0 || Number.isNaN(PGC)) PGC = 0.01;
-        if (PGC > 100) PGC = 100;
-        let MLG = 100 - PGC > 0 ? 100 - PGC : 0;
-        if (Number.isNaN(MLG) || MLG === Math.abs(Infinity)) MLG = 0;
-        return [PGC, MLG];
-      } else if (person.gen === "neutro") {
-        let DC = 1.10443605 - 0.0009098 * this.sumDCut + 0.00000195 * this.sumDCut ** 2 - 0.0001983 * person.age;
-        if (DC <= 0 || Number.isNaN(DC)) DC = 0.01;
-
-        let PGC = 495 / DC - 450;
-        if (PGC <= 0 || Number.isNaN(PGC)) PGC = 0.01;
-        if (PGC > 100) PGC = 100;
-        let MLG = 100 - PGC > 0 ? 100 - PGC : 0;
-        if (Number.isNaN(MLG) || MLG === Math.abs(Infinity)) MLG = 0;
-        return [PGC, MLG];
-      } else
-        console.error(
-          `Invalid instance of object. Obtained instance: ${
-            Object.prototype.toString.call(person).slice(8, -1) ?? "null"
-          }`,
-        );
-    }
-    return [0, 0];
-  }
-  calcTMB(person: Person, IMC: number = 0, MLG: number = 0, factorAtleta: string = "Peso"): [string, number] {
-    if (factorAtleta === "peso") factorAtleta = "Peso";
-    if (factorAtleta === "mlg") factorAtleta = "MLG";
+  public calcPGC(person: Person): { pgc: number; mlg: number } {
     try {
-      if (
-        person instanceof Person &&
-        "atvLvl" in person &&
-        this.atvLvl &&
-        typeof this.atvLvl === "string" &&
-        typeof IMC === "number" &&
-        typeof MLG === "number" &&
-        typeof factorAtleta === "string"
-      ) {
-        if (this.atvLvl === "muitoIntenso" && (factorAtleta === "MLG" || factorAtleta === "Peso")) {
-          if (factorAtleta === "MLG") {
-            if (MLG && MLG >= 0) return ["tinsley", 25.9 * MLG + 284];
-            else
-              throw new Error(`Error validating MLG.
-              Obtained value: ${MLG ?? 0}`);
-          } else if (factorAtleta === "Peso") {
-            if ("weight" in person && this.weight >= 0) return ["tinsley", 24.8 * this.weight + 10];
-            else
-              throw new Error(`Error validating weight.
-              Obtained value: ${this.weight ?? 0}`);
-          }
-        } else if (
-          this.atvLvl === "sedentario" ||
-          this.atvLvl === "leve" ||
-          this.atvLvl === "moderado" ||
-          this.atvLvl === "intenso"
-        ) {
-          if ("weight" in person && this.weight >= 0 && "height" in person && this.height >= 0 && "age" in person) {
-            if (IMC < 25.0 && IMC >= 0) {
-              if (person.gen === "masculino")
-                return ["harrisBenedict", 66 + (13.8 * this.weight + 5.0 * this.height - 6.8 * this.age)];
-              else if (person.gen === "feminino")
-                return ["harrisBenedict", 655 + (9.6 * this.weight + 1.9 * this.height - 4.7 * this.age)];
-              else if (person.gen === "neutro")
-                return ["harrisBenedict", 360.5 + (11.7 * this.weight + 3.45 * this.height - 5.75 * this.age)];
-              else
-                throw new Error(
-                  `Error validating instance of Person. Obtained instance: ${
-                    Object.prototype.toString.call(person).slice(8, -1) ?? "null"
-                  }`,
-                );
-            } else if (IMC >= 25.0) {
-              if (person.gen === "masculino")
-                return ["mifflinStJeor", 10 * this.weight + 6.25 * this.height - 5.0 * this.age + 5];
-              else if (person.gen === "feminino")
-                return ["mifflinStJeor", 10 * this.weight + 6.25 * this.height - 5.0 * this.age - 161];
-              else if (person.gen === "neutro")
-                return ["mifflinStJeor", 10 * this.weight + 6.25 * this.height - 5.0 * this.age - 78];
-              else
-                throw new Error(
-                  `Error validating instance of Person. Obtained instance: ${Object.prototype.toString
-                    .call(person)
-                    .slice(8, -1)}`,
-                );
-            } else
-              throw new Error(
-                `Error validating IMC. IMC obtained: ${IMC ?? 0}; Valor deve ser númerico, positivo e float`,
-              );
-          } else
-            throw new Error(`Error validating properties of person.
-            Weight present: ${"weight" in person || false};
-            Value of weight obtained: ${this.weight ?? 0};
-            Height present: ${"height" in person || false};
-            Value of height obtained: ${this.height ?? 0};
-            age present: ${"age" in person || false};
-            `);
-        } else {
-          throw new Error(
-            `Error validating atvLvl and/or factorAtleta.
-            atvLvl obtained: ${this.atvLvl ?? "null"}
-            Fator obtained: ${factorAtleta ?? "null"}; Fatores válidos: "MLG" || "Peso"`,
-          );
-        }
-      } else {
-        throw new Error(`Error validating person.
-        Elemento: ${person ?? "null"};
-        instance: ${Object.prototype.toString.call(person).slice(8, -1) ?? "null"};
-        atvLvl present: ${"atvLvl" in person || false};
-        Value of atvLvl obtained: ${this.atvLvl ?? "null"};
-        Primitive type of .atvLvl: ${typeof this.atvLvl};
-        Primitive type of IMC: ${typeof IMC};
-        Primitive type of MLG: ${typeof MLG};
-        Primitive type of factorAtleta: ${typeof factorAtleta}.`);
+      if (!("sumDCut" in person && typeof person.sumDCut === "number" && person.sumDCut >= 0))
+        throw new Error(`Failed to validate person props`);
+      const sdc = person.sumDCut,
+        g = person.gen;
+      let DC = 0,
+        PGC = 0,
+        MLG = 0;
+      if (g === "masculino") {
+        DC = 1.10938 - 0.0008267 * sdc + 0.0000016 * sdc ** 2 - 0.0002574 * person.age;
+        if (DC <= 0 || !Number.isFinite(DC)) DC = 0.01;
+        PGC = 495 / DC - 450;
+        if (PGC <= 0 || !Number.isFinite(PGC)) PGC = 0.01;
+        if (PGC > 100) PGC = 100;
+        MLG = 100 - PGC > 0 ? 100 - PGC : 0;
+      } else if (g === "feminino") {
+        DC = 1.0994921 - 0.0009929 * sdc + 0.0000023 * sdc ** 2 - 0.0001392 * person.age;
+        if (DC <= 0 || !Number.isFinite(DC)) DC = 0.01;
+        PGC = 495 / DC - 450;
+        if (PGC <= 0 || !Number.isFinite(PGC)) PGC = 0.01;
+        if (PGC > 100) PGC = 100;
+        MLG = 100 - PGC > 0 ? 100 - PGC : 0;
+      } else if (g === "naoBinario" || g === "outros" || g === "undefined" || g === ("neutro" as any)) {
+        DC = 1.10443605 - 0.0009098 * sdc + 0.00000195 * sdc ** 2 - 0.0001983 * person.age;
+        if (DC <= 0 || !Number.isFinite(DC)) DC = 0.01;
+        PGC = 495 / DC - 450;
+        if (PGC <= 0 || !Number.isFinite(PGC)) PGC = 0.01;
+        if (PGC > 100) PGC = 100;
+        MLG = 100 - PGC > 0 ? 100 - PGC : 0;
       }
-    } catch (TMBError) {
-      console.error((TMBError as Error).message);
+      if (!Number.isFinite(MLG)) MLG = 0;
+      return { pgc: PGC, mlg: MLG };
+    } catch (e) {
+      limitedError(`Error executing calcPGC:\n${(e as Error).message}`, "calcPGC");
+      return { pgc: tabProps.PGC ?? 0, mlg: tabProps.MLG ?? 0 };
     }
-    return ["", 0];
   }
-  calcGET(TMB: number = 0, factorAtvLvl: number = 1.4): number {
-    if (TMB && factorAtvLvl) return TMB * factorAtvLvl;
+  public calcTMB(person: Person): { l: TMBFormula; v: number } {
+    evalFactorAtleta();
+    try {
+      if (!(person instanceof Person)) throw new Error(`Failed to validate Person instance.`);
+      const fa = tabProps.factorAtleta,
+        atv = person.atvLvl,
+        w = person.weight;
+      if (atv === "muitoIntenso" && (fa === "mlg" || fa === "peso")) {
+        if (fa === "mlg") {
+          const MLG = tabProps.MLG;
+          if (MLG && MLG >= 0) return { l: "tinsley", v: 25.9 * MLG + 284 };
+          else
+            throw new Error(`Error validating MLG.
+            Obtained value: ${MLG ?? 0}`);
+        } else if (fa === "peso") {
+          if ("weight" in person && w >= 0) return { l: "tinsley", v: 24.8 * w + 10 };
+          else
+            throw new Error(`Error validating weight.
+            Obtained value: ${w ?? 0}`);
+        } else throw new Error(`Failed to validate Factor for Athletes.\nObtained value: ${fa || "falsish"}`);
+      } else if (atv === "sedentario" || atv === "leve" || atv === "moderado" || atv === "intenso") {
+        const IMC = tabProps.IMC ?? 0,
+          a = person.age,
+          g = person.gen,
+          h = person.height;
+        if (
+          !(
+            "weight" in person &&
+            w >= 0 &&
+            "height" in person &&
+            h >= 0 &&
+            "age" in person &&
+            person.age >= 0 &&
+            "gen" in person &&
+            evalGender(person.gen)
+          )
+        )
+          throw new Error(
+            `Failed to validate person props instance.\nObtained values: Age as ${a ?? "void"},\nWeight as ${
+              w ?? "void"
+            },\nHeight as ${h ?? "void"},\nGender: ${g || "falsish"}`,
+          );
+        if (IMC < 25.0 && IMC >= 0) {
+          if (g === "masculino") return { l: "harrisBenedict", v: 66 + (13.8 * w + 5.0 * h - 6.8 * a) };
+          else if (g === "feminino") return { l: "harrisBenedict", v: 655 + (9.6 * w + 1.9 * h - 4.7 * a) };
+          else if (g === "naoBinario" || g === "outros" || g === "undefined" || g === ("neutro" as any))
+            return { l: "harrisBenedict", v: 360.5 + (11.7 * w + 3.45 * h - 5.75 * a) };
+          else
+            throw new Error(
+              `Error validating instance of Person. Obtained instance: ${
+                Object.prototype.toString.call(person).slice(8, -1) ?? "null"
+              }`,
+            );
+        } else if (IMC >= 25.0) {
+          if (g === "masculino") return { l: "mifflinStJeor", v: 10 * w + 6.25 * h - 5.0 * a + 5 };
+          else if (g === "feminino") return { l: "mifflinStJeor", v: 10 * w + 6.25 * h - 5.0 * a - 161 };
+          else if (g === "naoBinario" || g === "outros" || g === "undefined" || g === ("neutro" as any))
+            return { l: "mifflinStJeor", v: 10 * w + 6.25 * h - 5.0 * a - 78 };
+          else
+            throw new Error(
+              `Error validating instance of Person. Obtained instance: ${Object.prototype.toString
+                .call(person)
+                .slice(8, -1)}`,
+            );
+        } else
+          throw new Error(`Error validating IMC. IMC obtained: ${IMC ?? 0}; Valor deve ser númerico, positivo e float`);
+      } else throw new Error(`Failed to validate Physical Activity level of person:\nObtained value: ${fa}`);
+    } catch (e) {
+      limitedError(`Error executing calcTMB:\n${(e as Error).message}`, "calcTMB");
+      return { l: "harrisBenedict", v: tabProps.TMB ?? 0 };
+    }
+  }
+  public calcGET(): number {
+    const TMB = tabProps.TMB;
+    if (typeof tabProps.factorAtvLvl === "string")
+      tabProps.factorAtvLvl = parseNotNaN(tabProps.factorAtvLvl) as NafTypeValue;
+    const factorAtvLvl = tabProps.factorAtvLvl ?? 0;
+    if (TMB && factorAtvLvl) return TMB * (factorAtvLvl as number);
     else
       console.error(`Error validating arguments.
       TMB obtained: ${TMB ?? 0};

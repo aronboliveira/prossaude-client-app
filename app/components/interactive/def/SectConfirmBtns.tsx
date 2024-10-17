@@ -5,7 +5,7 @@ import { addExportFlags } from "@/lib/global/gController";
 import { checkForReset } from "@/lib/global/handlers/gHandlers";
 import { exporters } from "@/vars";
 import { useEffect, useRef } from "react";
-let exporter: ExportHandler | undefined = undefined;
+let exporter: ExportHandler | undefined;
 export default function SectConfirmBtns(): JSX.Element {
   const btnRef = useRef<nlBtn>(null);
   useEffect(() => {

@@ -1,29 +1,29 @@
 import { ErrorBoundary } from "react-error-boundary";
 import { addExportFlags } from "@/lib/global/gController";
+import { createRoot } from "react-dom/client";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { equalizeTabCells, normalizeSizeSb } from "@/lib/global/gStyleScript";
-import { fillTabAttr, renderTable } from "@/lib/locals/panelPage/handlers/consHandlerList";
+import { fillTabAttr } from "@/lib/locals/panelPage/handlers/consHandlerList";
 import { handleClientPermissions } from "@/lib/locals/panelPage/handlers/consHandlerUsers";
-import { handleFetch } from "@/lib/locals/panelPage/handlers/handlers";
+import { handleFetch } from "@/lib/global/data-service";
 import { exporters, panelRoots } from "@/vars";
-import { registerRoot, syncAriaStates } from "@/lib/global/handlers/gHandlers";
+import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useEffect, useRef, useCallback, useContext, useMemo } from "react";
 import GenericErrorComponent from "../../error/GenericErrorComponent";
 import Spinner from "../../icons/Spinner";
 import StudRow from "./StudRow";
-import { nlBtn, nlFm, nullishTab, nullishTabSect } from "@/lib/global/declarations/types";
+import { nlBtn, nlFm, nlTab, nlTabSect } from "@/lib/global/declarations/types";
 import { StudInfo } from "@/lib/global/declarations/interfacesCons";
 import { strikeEntries } from "@/lib/locals/panelPage/consStyleScript";
 import { assignFormAttrs } from "@/lib/global/gModel";
 import { PanelCtx } from "../defs/client/SelectLoader";
 import { ExportHandler } from "@/lib/global/declarations/classes";
 import useExportHandler from "@/lib/hooks/useExportHandler";
-import Link from "next/link";
 export default function TabStudForm(): JSX.Element {
   const userClass = useContext(PanelCtx).userClass,
     studs: StudInfo[] = useMemo(() => [], []),
     formRef = useRef<nlFm>(null),
-    tabRef = useRef<nullishTab>(null),
+    tabRef = useRef<nlTab>(null),
     tbodyRef = useRef<HTMLTableSectionElement | null>(null),
     btnExportTabStudsRef = useRef<nlBtn>(null),
     callbackNormalizeSizeSb = useCallback(() => {
@@ -67,7 +67,10 @@ export default function TabStudForm(): JSX.Element {
                 throw elementNotFound(tabRef.current, `Validation of Table reference`, extLine(new Error()));
               if (!(tbodyRef.current instanceof HTMLElement))
                 throw elementNotFound(tbodyRef.current, `Validation of Table Body Reference`, extLine(new Error()));
-              if (panelRoots[tbodyRef.current.id] && !(panelRoots[tbodyRef.current.id] as any)["_internalRoot"]) {
+              if (
+                panelRoots[`${tbodyRef.current.id}`] &&
+                !(panelRoots[`${tbodyRef.current.id}`] as any)["_internalRoot"]
+              ) {
                 setTimeout(() => {
                   try {
                     if (!(tabRef.current instanceof HTMLElement))
@@ -79,16 +82,12 @@ export default function TabStudForm(): JSX.Element {
                         extLine(new Error()),
                       );
                     if (tbodyRef.current.querySelector("tr")) return;
-                    panelRoots[tbodyRef.current.id]?.unmount();
-                    delete panelRoots[tbodyRef.current.id];
+                    panelRoots[`${tbodyRef.current.id}`]?.unmount();
+                    delete panelRoots[`${tbodyRef.current.id}`];
                     tbodyRef.current.remove() as void;
-                    panelRoots[tabRef.current.id] = registerRoot(
-                      panelRoots[tabRef.current.id],
-                      `#${tabRef.current.id}`,
-                      tabRef,
-                      true,
-                    );
-                    panelRoots[tabRef.current.id]?.render(
+                    if (!panelRoots[`${tabRef.current.id}`])
+                      panelRoots[`${tabRef.current.id}`] = createRoot(tabRef.current);
+                    panelRoots[`${tabRef.current.id}`]?.render(
                       <ErrorBoundary
                         FallbackComponent={() => (
                           <GenericErrorComponent message='Error reloading replacement for table body' />
@@ -99,12 +98,7 @@ export default function TabStudForm(): JSX.Element {
                               <em>
                                 Lista Recuperada da Ficha de Estudantes registrados. Acesse
                                 <samp>
-                                  <Link
-                                    href={`${location.origin}/panel?panel=regist-stud`}
-                                    id='linkRegistStud'
-                                    style={{ display: "inline" }}>
-                                    &nbsp;Cadastrar Aluno&nbsp;
-                                  </Link>
+                                  <a> ROTA_PLACEHOLDER </a>
                                 </samp>
                                 para cadastrar
                               </em>
@@ -112,48 +106,28 @@ export default function TabStudForm(): JSX.Element {
                           </strong>
                         </caption>
                         <colgroup>
-                          {Array.from({ length: 5 }, (_, i) => (
-                            <col key={`tab_stud_col__${i}`} data-col={i + 1}></col>
-                          ))}
-                          {userClass === "coordenador" &&
-                            Array.from({ length: 4 }, (_, i) => (
-                              <col key={`tab_stud_col__${i + 6}`} data-col={i + 6}></col>
-                            ))}
+                          {userClass === "coordenador" && <col></col>}
+                          {userClass === "coordenador" && <col></col>}
+                          <col></col>
+                          <col></col>
+                          <col></col>
+                          <col></col>
+                          <col></col>
+                          {userClass === "coordenador" && <col></col>}
+                          {userClass === "coordenador" && <col></col>}
                         </colgroup>
                         <thead className='thead-dark'>
                           <tr id='avPacs-row1'>
-                            {userClass === "coordenador" && (
-                              <th scope='col' data-col='1'>
-                                CPF
-                              </th>
-                            )}
-                            {userClass === "coordenador" && (
-                              <th scope='col' data-col='2'>
-                                DRE
-                              </th>
-                            )}
-                            {[
-                              "Nome",
-                              "E-mail",
-                              "Telefone",
-                              "Área de Atividade",
-                              "Dia de Atividade",
-                              "Período de Atividade",
-                            ].map((l, i) => (
-                              <th key={`tab_stud_th__${i}`} data-col={userClass === "coordenador" ? i + 3 : i + 1}>
-                                {l}
-                              </th>
-                            ))}
-                            {userClass === "coordenador" && (
-                              <th scope='col' data-col='9'>
-                                Alteração
-                              </th>
-                            )}
-                            {userClass === "coordenador" && (
-                              <th scope='col' data-col='10'>
-                                Exclusão
-                              </th>
-                            )}
+                            {userClass === "coordenador" && <th scope='col'>CPF</th>}
+                            {userClass === "coordenador" && <th scope='col'>DRE</th>}
+                            <th scope='col'>Nome</th>
+                            <th scope='col'>E-mail</th>
+                            <th scope='col'>Telefone</th>
+                            <th scope='col'>Área de Atividade</th>
+                            <th scope='col'>Dia de Atividade</th>
+                            <th scope='col'>Período de Atividade</th>
+                            {userClass === "coordenador" && <th scope='col'>Alteração</th>}
+                            {userClass === "coordenador" && <th scope='col'>Exclusão</th>}
                           </tr>
                         </thead>
                         <tbody ref={tbodyRef}>
@@ -167,17 +141,13 @@ export default function TabStudForm(): JSX.Element {
                         </tbody>
                       </ErrorBoundary>,
                     );
-                    tbodyRef.current = document.getElementById("studsTbody") as nullishTabSect;
+                    tbodyRef.current = document.getElementById("studsTbody") as nlTabSect;
                     if (!(tbodyRef.current instanceof HTMLElement))
                       throw elementNotFound(tbodyRef.current, `Validation of replaced tbody`, extLine(new Error()));
-                    panelRoots[tbodyRef.current.id] = registerRoot(
-                      panelRoots[tbodyRef.current.id],
-                      `#${tbodyRef.current.id}`,
-                      tbodyRef,
-                      true,
-                    );
+                    if (!panelRoots[`${tbodyRef.current.id}`])
+                      panelRoots[`${tbodyRef.current.id}`] = createRoot(tbodyRef.current);
                     if (!tbodyRef.current.querySelector("tr"))
-                      panelRoots[tbodyRef.current.id]?.render(
+                      panelRoots[`${tbodyRef.current.id}`]?.render(
                         studs.map((stud, i) => (
                           <StudRow nRow={i + 2} stud={stud} tabRef={tabRef} key={`stud_row__${i + 2}`} />
                         )),
@@ -199,15 +169,9 @@ export default function TabStudForm(): JSX.Element {
                     );
                   }
                 }, 1000);
-              } else
-                panelRoots[tbodyRef.current.id] = registerRoot(
-                  panelRoots[tbodyRef.current.id],
-                  `#${tbodyRef.current.id}`,
-                  tbodyRef,
-                  true,
-                );
+              } else panelRoots[`${tbodyRef.current.id}`] = createRoot(tbodyRef.current);
               if (!tbodyRef.current.querySelector("tr"))
-                panelRoots[tbodyRef.current.id]?.render(
+                panelRoots[`${tbodyRef.current.id}`]?.render(
                   studs.map((stud, i) => {
                     return Array.from(tbodyRef.current?.querySelectorAll("output") ?? []).some(
                       outp => outp.innerText === (stud as StudInfo)["cpf"],
@@ -233,7 +197,13 @@ export default function TabStudForm(): JSX.Element {
                   );
               }, 300);
               setTimeout(() => {
-                if (!document.querySelector("tr") && document.querySelector("table")) renderTable();
+                if (!document.querySelector("tr") && document.querySelector("table")) {
+                  if (!panelRoots[`${document.querySelector("table")!.id}`])
+                    panelRoots[`${document.querySelector("table")!.id}`] = createRoot(document.querySelector("table")!);
+                  panelRoots[`${document.querySelector("table")!.id}`]?.render(
+                    <GenericErrorComponent message='Failed to render table' />,
+                  );
+                }
               }, 5000);
             } catch (e) {
               console.error(`Error executing rendering of Table Body Content:\n${(e as Error).message}`);
@@ -322,12 +292,7 @@ export default function TabStudForm(): JSX.Element {
                 <em>
                   Lista Recuperada da Ficha de Estudantes registrados. Acesse
                   <samp>
-                    <Link
-                      href={`${location.origin}/panel?panel=regist-stud`}
-                      id='linkRegistStud'
-                      style={{ display: "inline" }}>
-                      &nbsp;Cadastrar Aluno&nbsp;
-                    </Link>
+                    <a> ROTA_PLACEHOLDER </a>
                   </samp>
                   para cadastrar
                 </em>
@@ -335,41 +300,28 @@ export default function TabStudForm(): JSX.Element {
             </strong>
           </caption>
           <colgroup>
-            {Array.from({ length: 5 }, (_, i) => (
-              <col key={`tab_stud_col__${i}`} data-col={i + 1}></col>
-            ))}
-            {userClass === "coordenador" &&
-              Array.from({ length: 4 }, (_, i) => <col key={`tab_stud_col__${i + 6}`} data-col={i + 6}></col>)}
+            {userClass === "coordenador" && <col></col>}
+            {userClass === "coordenador" && <col></col>}
+            <col></col>
+            <col></col>
+            <col></col>
+            <col></col>
+            <col></col>
+            {userClass === "coordenador" && <col></col>}
+            {userClass === "coordenador" && <col></col>}
           </colgroup>
           <thead className='thead-dark'>
             <tr id='avPacs-row1'>
-              {userClass === "coordenador" && (
-                <th scope='col' data-col='1'>
-                  CPF
-                </th>
-              )}
-              {userClass === "coordenador" && (
-                <th scope='col' data-col='2'>
-                  DRE
-                </th>
-              )}
-              {["Nome", "E-mail", "Telefone", "Área de Atividade", "Dia de Atividade", "Período de Atividade"].map(
-                (l, i) => (
-                  <th key={`tab_stud_th__${i}`} data-col={userClass === "coordenador" ? i + 3 : i + 1}>
-                    {l}
-                  </th>
-                ),
-              )}
-              {userClass === "coordenador" && (
-                <th scope='col' data-col='9'>
-                  Alteração
-                </th>
-              )}
-              {userClass === "coordenador" && (
-                <th scope='col' data-col='10'>
-                  Exclusão
-                </th>
-              )}
+              {userClass === "coordenador" && <th scope='col'>CPF</th>}
+              {userClass === "coordenador" && <th scope='col'>DRE</th>}
+              <th scope='col'>Nome</th>
+              <th scope='col'>E-mail</th>
+              <th scope='col'>Telefone</th>
+              <th scope='col'>Área de Atividade</th>
+              <th scope='col'>Dia de Atividade</th>
+              <th scope='col'>Período de Atividade</th>
+              {userClass === "coordenador" && <th scope='col'>Alteração</th>}
+              {userClass === "coordenador" && <th scope='col'>Exclusão</th>}
             </tr>
           </thead>
           <tbody ref={tbodyRef}>

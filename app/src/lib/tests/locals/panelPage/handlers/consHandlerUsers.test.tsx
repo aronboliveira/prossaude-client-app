@@ -1,6 +1,6 @@
 import { handleClientPermissions } from "../../../../locals/panelPage/handlers/consHandlerUsers";
 import { typeError, elementNotPopulated } from "../../../../global/handlers/errorHandler";
-import { ConsoleMethod } from "../../../testVars";
+import { ConsoleMethod } from "@/lib/tests/testVars";
 jest.mock(
   "../../../../global/handlers/errorHandler",
   (): {
@@ -11,7 +11,7 @@ jest.mock(
     extLine: jest.fn() as jest.Mock,
     typeError: jest.fn() as jest.Mock,
     elementNotPopulated: jest.fn() as jest.Mock,
-  }),
+  })
 ) as typeof jest;
 describe("handleClientPermissions", (): void => {
   beforeEach((): void => {
@@ -59,7 +59,7 @@ describe("handleClientPermissions", (): void => {
       "estudante",
       ["coordenador"],
       document.getElementById("datalist1") as HTMLDataListElement,
-      document.getElementById("table1") as HTMLTableElement,
+      document.getElementById("table1") as HTMLTableElement
     );
     expect(document.getElementById("datalist1")).toBeNull() as void;
     expect(document.getElementById("table1")).toBeNull() as void;
@@ -73,7 +73,7 @@ describe("handleClientPermissions", (): void => {
       "coordenador",
       ["coordenador"],
       document.getElementById("datalist1") as HTMLDataListElement,
-      document.getElementById("table1") as HTMLTableElement,
+      document.getElementById("table1") as HTMLTableElement
     );
     expect(document.getElementById("datalist1")).toBeTruthy() as void;
     expect(document.getElementById("table1")).toBeTruthy() as void;
@@ -84,7 +84,7 @@ describe("handleClientPermissions", (): void => {
       "validating type of userClass in handleClientPermissions",
       123,
       "string",
-      expect.any(Function),
+      expect.any(Function)
     );
   }) as void;
   test("should throw an elementNotPopulated error if allowedClasses is not an array of strings", (): void => {
@@ -92,7 +92,7 @@ describe("handleClientPermissions", (): void => {
     expect(elementNotPopulated).toHaveBeenCalledWith<Parameters<typeof elementNotPopulated>>(
       "[123]",
       "allowedClasses",
-      expect.any(Function),
+      expect.any(Function)
     );
   }) as void;
   test("should throw an elementNotPopulated error if elements are not valid HTML elements", (): void => {
@@ -100,7 +100,7 @@ describe("handleClientPermissions", (): void => {
     expect(elementNotPopulated).toHaveBeenCalledWith<Parameters<typeof elementNotPopulated>>(
       [""],
       "Elements for handleSupervisionCredential",
-      expect.any(Function),
+      expect.any(Function)
     );
   }) as void;
   test("should log an error if an unexpected error occurs", (): void => {

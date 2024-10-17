@@ -1,5 +1,8 @@
 /* Base Page Style */
-
+@use "../abstracts/variables" as *;
+@use "../base/root" as *;
+@use "../base/animations" as *;
+@use "../abstracts/mixins" as *;
 @supports (scrollbar-width: thin) {
   * {
     scrollbar-width: thin;

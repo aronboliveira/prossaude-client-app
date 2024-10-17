@@ -1,5 +1,6 @@
 "use client";
 import { ErrorBoundary } from "react-error-boundary";
+import { createRoot } from "react-dom/client";
 import { elementNotFound, extLine, inputNotFound } from "@/lib/global/handlers/errorHandler";
 import { equalizeTabCells } from "@/lib/global/gStyleScript";
 import {
@@ -7,24 +8,22 @@ import {
   checkLocalIntervs,
   fillTabAttr,
   filterTabMembers,
-  renderTable,
 } from "@/lib/locals/panelPage/handlers/consHandlerList";
-import { handleFetch } from "@/lib/locals/panelPage/handlers/handlers";
-import { nullishTab, nullishTabSect } from "@/lib/global/declarations/types";
+import { handleFetch } from "@/lib/global/data-service";
+import { nlTab, nlTabSect } from "@/lib/global/declarations/types";
 import { panelRoots } from "@/vars";
 import { useRef, useEffect, useContext, useMemo } from "react";
 import GenericErrorComponent from "../error/GenericErrorComponent";
 import Spinner from "../icons/Spinner";
 import StudRow from "../panelForms/studs/StudRow";
 import { StudInfo, StudListProps } from "@/lib/global/declarations/interfacesCons";
-import { registerRoot, syncAriaStates } from "@/lib/global/handlers/gHandlers";
+import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { strikeEntries } from "@/lib/locals/panelPage/consStyleScript";
 import { handleClientPermissions } from "@/lib/locals/panelPage/handlers/consHandlerUsers";
 import { PanelCtx } from "../panelForms/defs/client/SelectLoader";
-import Link from "next/link";
 export default function StudList({ mainDlgRef, dispatch, state = true }: StudListProps): JSX.Element {
-  const tabRef = useRef<nullishTab>(null),
-    tbodyRef = useRef<nullishTabSect>(null),
+  const tabRef = useRef<nlTab>(null),
+    tbodyRef = useRef<nlTabSect>(null),
     studs: StudInfo[] = useMemo(() => [], []),
     userClass = useContext(PanelCtx).userClass;
   useEffect(() => {
@@ -55,7 +54,10 @@ export default function StudList({ mainDlgRef, dispatch, state = true }: StudLis
                 throw elementNotFound(tabRef.current, `Validation of Table reference`, extLine(new Error()));
               if (!(tbodyRef.current instanceof HTMLElement))
                 throw elementNotFound(tbodyRef.current, `Validation of Table Body Reference`, extLine(new Error()));
-              if (panelRoots[tbodyRef.current.id] && !(panelRoots[tbodyRef.current.id] as any)["_internalRoot"]) {
+              if (
+                panelRoots[`${tbodyRef.current.id}`] &&
+                !(panelRoots[`${tbodyRef.current.id}`] as any)["_internalRoot"]
+              ) {
                 setTimeout(() => {
                   try {
                     if (!(tabRef.current instanceof HTMLElement))
@@ -67,16 +69,12 @@ export default function StudList({ mainDlgRef, dispatch, state = true }: StudLis
                         extLine(new Error()),
                       );
                     if (tbodyRef.current.querySelector("tr")) return;
-                    panelRoots[tbodyRef.current.id]?.unmount();
-                    delete panelRoots[tbodyRef.current.id];
+                    panelRoots[`${tbodyRef.current.id}`]?.unmount();
+                    delete panelRoots[`${tbodyRef.current.id}`];
                     tbodyRef.current.remove() as void;
-                    panelRoots[tabRef.current.id] = registerRoot(
-                      panelRoots[tabRef.current.id],
-                      `#${tabRef.current.id}}`,
-                      tabRef,
-                      true,
-                    );
-                    panelRoots[tabRef.current.id]?.render(
+                    if (!panelRoots[`${tabRef.current.id}`])
+                      panelRoots[`${tabRef.current.id}`] = createRoot(tabRef.current);
+                    panelRoots[`${tabRef.current.id}`]?.render(
                       <ErrorBoundary
                         FallbackComponent={() => (
                           <GenericErrorComponent message='Error reloading replacement for table body' />
@@ -87,22 +85,21 @@ export default function StudList({ mainDlgRef, dispatch, state = true }: StudLis
                               <em className='noInvert'>
                                 Lista Recuperada da Ficha de Estudantes registrados. Acesse
                                 <samp>
-                                  <Link
-                                    href={`${location.origin}/panel?panel=regist-stud`}
-                                    id='linkRegistStud'
-                                    style={{ display: "inline" }}>
-                                    &nbsp;Cadastrar Aluno&nbsp;
-                                  </Link>
-                                </samp>
+                                  <a> ROTA_PLACEHOLDER </a>
+                                </samp>{" "}
                                 para cadastrar
                               </em>
                             </small>
                           </strong>
                         </caption>
                         <colgroup>
-                          {Array.from({ length: 7 }, (_, i) => (
-                            <col key={`stud_col__${i}`} data-col={i + 1}></col>
-                          ))}
+                          <col data-col='1'></col>
+                          <col data-col='2'></col>
+                          <col data-col='3'></col>
+                          <col data-col='4'></col>
+                          <col data-col='5'></col>
+                          <col data-col='6'></col>
+                          <col data-col='7'></col>
                           {userClass === "coordenador" && <col data-col='8'></col>}
                           {userClass === "coordenador" && <col data-col='9'></col>}
                         </colgroup>
@@ -118,28 +115,34 @@ export default function StudList({ mainDlgRef, dispatch, state = true }: StudLis
                                 DRE
                               </th>
                             )}
-                            {[
-                              "Nome",
-                              "E-mail",
-                              "Telefone",
-                              "Próximo Dia de Consulta",
-                              "Período de Acompanhamento",
-                              "",
-                            ].map((l, i) => (
-                              <th
-                                scope='col'
-                                key={`pac_th__${i}`}
-                                data-row={1}
-                                data-col={userClass === "coordenador" ? i + 3 : i + 1}>
-                                {l}
-                              </th>
-                            ))}
+                            <th scope='col' data-row='1' data-col={userClass === "coordenador" ? "3" : "1"}>
+                              Nome
+                            </th>
+                            <th scope='col' data-row='1' data-col={userClass === "coordenador" ? "4" : "2"}>
+                              E-mail
+                            </th>
+                            <th scope='col' data-row='1' data-col={userClass === "coordenador" ? "5" : "3"}>
+                              Telefone
+                            </th>
+                            <th scope='col' data-row='1' data-col={userClass === "coordenador" ? "6" : "4"}>
+                              Curso
+                            </th>
+                            <th scope='col' data-row='1' data-col={userClass === "coordenador" ? "7" : "5"}>
+                              Dia De Atividade
+                            </th>
+                            <th scope='col' data-row='1' data-col={userClass === "coordenador" ? "8" : "6"}>
+                              Período de Participação
+                            </th>
+                            <th
+                              className='alocCel'
+                              scope='col'
+                              data-row='1'
+                              data-col={userClass === "coordenador" ? "9" : "7"}></th>
                           </tr>
                         </thead>
                         <tbody id='avStudsTbody' ref={tbodyRef}>
                           <span style={{ margin: "2rem", position: "absolute" }}>
                             <Spinner
-                              key={crypto.randomUUID()}
                               spinnerClass='spinner-border'
                               spinnerColor='text-info'
                               message='Loading Students Table...'
@@ -148,17 +151,13 @@ export default function StudList({ mainDlgRef, dispatch, state = true }: StudLis
                         </tbody>
                       </ErrorBoundary>,
                     );
-                    tbodyRef.current = document.getElementById("avStudsTbody") as nullishTabSect;
+                    tbodyRef.current = document.getElementById("avStudsTbody") as nlTabSect;
                     if (!(tbodyRef.current instanceof HTMLElement))
                       throw elementNotFound(tbodyRef.current, `Validation of replaced tbody`, extLine(new Error()));
-                    panelRoots[tbodyRef.current.id] = registerRoot(
-                      panelRoots[tbodyRef.current.id],
-                      `#${tbodyRef.current.id}}`,
-                      tbodyRef,
-                      true,
-                    );
+                    if (!panelRoots[`${tbodyRef.current.id}`])
+                      panelRoots[`${tbodyRef.current.id}`] = createRoot(tbodyRef.current);
                     if (!tbodyRef.current.querySelector("tr"))
-                      panelRoots[tbodyRef.current.id]?.render(
+                      panelRoots[`${tbodyRef.current.id}`]?.render(
                         studs.map((stud, i) => (
                           <StudRow nRow={i + 2} stud={stud} tabRef={tabRef} key={`stud_row__${i + 2}`} inDlg={true} />
                         )),
@@ -180,15 +179,9 @@ export default function StudList({ mainDlgRef, dispatch, state = true }: StudLis
                     );
                   }
                 }, 1000);
-              } else
-                panelRoots[tbodyRef.current.id] = registerRoot(
-                  panelRoots[tbodyRef.current.id],
-                  `#${tbodyRef.current.id}}`,
-                  tbodyRef,
-                  true,
-                );
+              } else panelRoots[`${tbodyRef.current.id}`] = createRoot(tbodyRef.current);
               if (!tbodyRef.current.querySelector("tr"))
-                panelRoots[tbodyRef.current.id]?.render(
+                panelRoots[`${tbodyRef.current.id}`]?.render(
                   studs.map((stud, i) => {
                     return Array.from(tbodyRef.current?.querySelectorAll("output") ?? []).some(
                       outp => outp.innerText === (stud as StudInfo)["cpf"],
@@ -214,7 +207,13 @@ export default function StudList({ mainDlgRef, dispatch, state = true }: StudLis
                   );
               }, 300);
               setTimeout(() => {
-                if (!document.querySelector("tr") && document.querySelector("table")) renderTable();
+                if (!document.querySelector("tr") && document.querySelector("table")) {
+                  if (!panelRoots[`${document.querySelector("table")!.id}`])
+                    panelRoots[`${document.querySelector("table")!.id}`] = createRoot(document.querySelector("table")!);
+                  panelRoots[`${document.querySelector("table")!.id}`]?.render(
+                    <GenericErrorComponent message='Failed to render table' />,
+                  );
+                }
               }, 5000);
             } catch (e) {
               console.error(`Error executing rendering of Table Body Content:\n${(e as Error).message}`);
@@ -296,22 +295,21 @@ export default function StudList({ mainDlgRef, dispatch, state = true }: StudLis
             <em className='noInvert'>
               Lista Recuperada da Ficha de Estudantes registrados. Acesse
               <samp>
-                <Link
-                  href={`${location.origin}/panel?panel=regist-stud`}
-                  id='linkRegistStud'
-                  style={{ display: "inline" }}>
-                  &nbsp;Cadastrar Aluno&nbsp;
-                </Link>
-              </samp>
+                <a> ROTA_PLACEHOLDER </a>
+              </samp>{" "}
               para cadastrar
             </em>
           </small>
         </strong>
       </caption>
       <colgroup>
-        {Array.from({ length: 7 }, (_, i) => (
-          <col key={`stud_col__${i}`} data-col={i + 1}></col>
-        ))}
+        <col data-col='1'></col>
+        <col data-col='2'></col>
+        <col data-col='3'></col>
+        <col data-col='4'></col>
+        <col data-col='5'></col>
+        <col data-col='6'></col>
+        <col data-col='7'></col>
         {userClass === "coordenador" && <col data-col='8'></col>}
         {userClass === "coordenador" && <col data-col='9'></col>}
       </colgroup>
@@ -327,21 +325,30 @@ export default function StudList({ mainDlgRef, dispatch, state = true }: StudLis
               DRE
             </th>
           )}
-          {["Nome", "E-mail", "Telefone", "Próximo Dia de Consulta", "Período de Acompanhamento", ""].map((l, i) => (
-            <th scope='col' key={`pac_th__${i}`} data-row={1} data-col={userClass === "coordenador" ? i + 3 : i + 1}>
-              {l}
-            </th>
-          ))}
+          <th scope='col' data-row='1' data-col={userClass === "coordenador" ? "3" : "1"}>
+            Nome
+          </th>
+          <th scope='col' data-row='1' data-col={userClass === "coordenador" ? "4" : "2"}>
+            E-mail
+          </th>
+          <th scope='col' data-row='1' data-col={userClass === "coordenador" ? "5" : "3"}>
+            Telefone
+          </th>
+          <th scope='col' data-row='1' data-col={userClass === "coordenador" ? "6" : "4"}>
+            Curso
+          </th>
+          <th scope='col' data-row='1' data-col={userClass === "coordenador" ? "7" : "5"}>
+            Dia De Atividade
+          </th>
+          <th scope='col' data-row='1' data-col={userClass === "coordenador" ? "8" : "6"}>
+            Período de Participação
+          </th>
+          <th className='alocCel' scope='col' data-row='1' data-col={userClass === "coordenador" ? "9" : "7"}></th>
         </tr>
       </thead>
       <tbody id='avStudsTbody' ref={tbodyRef}>
         <span style={{ margin: "2rem", position: "absolute" }}>
-          <Spinner
-            key={crypto.randomUUID()}
-            spinnerClass='spinner-border'
-            spinnerColor='text-info'
-            message='Loading Students Table...'
-          />
+          <Spinner spinnerClass='spinner-border' spinnerColor='text-info' message='Loading Students Table...' />
         </span>
       </tbody>
     </table>

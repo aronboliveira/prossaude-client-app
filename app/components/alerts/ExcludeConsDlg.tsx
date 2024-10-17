@@ -8,6 +8,7 @@ import { useContext, useEffect, useRef } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
 import { PanelCtx } from "../panelForms/defs/client/SelectLoader";
+import { checkContext } from "@/lib/global/gModel";
 export default function ExcludeConsDlg({
   setDisplayExcludeDlg,
   shouldDisplayExcludeDlg = true,
@@ -20,6 +21,9 @@ export default function ExcludeConsDlg({
       setDisplayExcludeDlg(!shouldDisplayExcludeDlg);
       if (!shouldDisplayExcludeDlg && excludeDlgRef.current instanceof HTMLDialogElement) excludeDlgRef.current.close();
     };
+  //TODO REMOVER APÓS TESTE
+  const ctx = useContext(PanelCtx);
+  checkContext(ctx, "Panel Context", ExcludeConsDlg);
   useEffect(() => {
     const toggleClose = (): void => {
       setDisplayExcludeDlg(!shouldDisplayExcludeDlg);

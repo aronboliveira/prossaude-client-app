@@ -1,4 +1,5 @@
 import { ENTabsProps } from "@/lib/global/declarations/interfaces";
+import { FactorAtletaValue, NafTypeValue } from "@/lib/global/declarations/testVars";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 const initialState = {
   edIsAutoCorrectOn: true,
@@ -15,16 +16,16 @@ const initialState = {
   GET: 0,
   PGC: 0,
   factorAtvLvl: 1.4,
-  factorAtleta: "Peso",
+  factorAtleta: "peso",
   edGenValue: "masculino",
-  targInpWeigth: null,
-  targInpHeigth: null,
-  targInpIMC: null,
-  targInpMLG: null,
-  targInpTMB: null,
-  targInpGET: null,
-  targInpPGC: null,
-  targInpSumDCut: null,
+  tiw: null,
+  tih: null,
+  tiimc: null,
+  timlg: null,
+  titmb: null,
+  tiget: null,
+  tipgc: null,
+  tidc: null,
 } as ENTabsProps;
 export const tabPropsSlice = createSlice({
   name: "tabProps",
@@ -70,37 +71,34 @@ export const tabPropsSlice = createSlice({
       state.PGC = action.payload;
     },
     setFactorAtvLvl: (state, action: PayloadAction<number>) => {
-      state.factorAtvLvl = action.payload;
+      state.factorAtvLvl = action.payload as NafTypeValue;
     },
     setFactorAtleta: (state, action: PayloadAction<string>) => {
-      state.factorAtleta = action.payload;
+      state.factorAtleta = action.payload as FactorAtletaValue;
     },
-    setEdGenValue: (state, action: PayloadAction<string>) => {
-      state.edGenValue = action.payload;
+    settiw: (state, action: PayloadAction<Element | null>) => {
+      state.tiw = action.payload as any;
     },
-    setTargInpWeigth: (state, action: PayloadAction<Element | null>) => {
-      state.targInpWeigth = action.payload as any;
+    settih: (state, action: PayloadAction<Element | null>) => {
+      state.tih = action.payload as any;
     },
-    setTargInpHeigth: (state, action: PayloadAction<Element | null>) => {
-      state.targInpHeigth = action.payload as any;
+    settiimc: (state, action: PayloadAction<Element | null>) => {
+      state.tiimc = action.payload as any;
     },
-    setTargInpIMC: (state, action: PayloadAction<Element | null>) => {
-      state.targInpIMC = action.payload as any;
+    settimlg: (state, action: PayloadAction<Element | null>) => {
+      state.timlg = action.payload as any;
     },
-    setTargInpMLG: (state, action: PayloadAction<Element | null>) => {
-      state.targInpMLG = action.payload as any;
+    settitmb: (state, action: PayloadAction<Element | null>) => {
+      state.titmb = action.payload as any;
     },
-    setTargInpTMB: (state, action: PayloadAction<Element | null>) => {
-      state.targInpTMB = action.payload as any;
+    settiget: (state, action: PayloadAction<Element | null>) => {
+      state.tiget = action.payload as any;
     },
-    setTargInpGET: (state, action: PayloadAction<Element | null>) => {
-      state.targInpGET = action.payload as any;
+    settipgc: (state, action: PayloadAction<Element | null>) => {
+      state.tipgc = action.payload as any;
     },
-    setTargInpPGC: (state, action: PayloadAction<Element | null>) => {
-      state.targInpPGC = action.payload as any;
-    },
-    setTargInpSumDCut: (state, action: PayloadAction<Element | null>) => {
-      state.targInpSumDCut = action.payload as any;
+    settidc: (state, action: PayloadAction<Element | null>) => {
+      state.tidc = action.payload as any;
     },
     clearEdIsAutoCorrectOn: state => {
       state.edIsAutoCorrectOn = initialState.edIsAutoCorrectOn;
@@ -147,32 +145,29 @@ export const tabPropsSlice = createSlice({
     clearFactorAtleta: state => {
       state.factorAtleta = initialState.factorAtleta;
     },
-    clearEdGenValue: state => {
-      state.edGenValue = initialState.edGenValue;
+    cleartiw: state => {
+      state.tiw = initialState.tiw as any;
     },
-    clearTargInpWeigth: state => {
-      state.targInpWeigth = initialState.targInpWeigth as any;
+    cleartih: state => {
+      state.tih = initialState.tih as any;
     },
-    clearTargInpHeigth: state => {
-      state.targInpHeigth = initialState.targInpHeigth as any;
+    cleartiimc: state => {
+      state.tiimc = initialState.tiimc as any;
     },
-    clearTargInpIMC: state => {
-      state.targInpIMC = initialState.targInpIMC as any;
+    cleartimlg: state => {
+      state.timlg = initialState.timlg as any;
     },
-    clearTargInpMLG: state => {
-      state.targInpMLG = initialState.targInpMLG as any;
+    cleartitmb: state => {
+      state.titmb = initialState.titmb as any;
     },
-    clearTargInpTMB: state => {
-      state.targInpTMB = initialState.targInpTMB as any;
+    cleartiget: state => {
+      state.tiget = initialState.tiget as any;
     },
-    clearTargInpGET: state => {
-      state.targInpGET = initialState.targInpGET as any;
+    cleartipgc: state => {
+      state.tipgc = initialState.tipgc as any;
     },
-    clearTargInpPGC: state => {
-      state.targInpPGC = initialState.targInpPGC as any;
-    },
-    clearTargInpSumDCut: state => {
-      state.targInpSumDCut = initialState.targInpSumDCut as any;
+    cleartidc: state => {
+      state.tidc = initialState.tidc as any;
     },
   },
 });
@@ -192,15 +187,14 @@ export const {
   setPGC,
   setFactorAtvLvl,
   setFactorAtleta,
-  setEdGenValue,
-  setTargInpWeigth,
-  setTargInpHeigth,
-  setTargInpIMC,
-  setTargInpMLG,
-  setTargInpTMB,
-  setTargInpGET,
-  setTargInpPGC,
-  setTargInpSumDCut,
+  settiw,
+  settih,
+  settiimc,
+  settimlg,
+  settitmb,
+  settiget,
+  settipgc,
+  settidc,
   clearEdIsAutoCorrectOn,
   clearIsAutoFillActive,
   clearAreColGroupsSimilar,
@@ -216,14 +210,13 @@ export const {
   clearPGC,
   clearFactorAtvLvl,
   clearFactorAtleta,
-  clearEdGenValue,
-  clearTargInpWeigth,
-  clearTargInpHeigth,
-  clearTargInpIMC,
-  clearTargInpMLG,
-  clearTargInpTMB,
-  clearTargInpGET,
-  clearTargInpPGC,
-  clearTargInpSumDCut,
+  cleartiw,
+  cleartih,
+  cleartiimc,
+  cleartimlg,
+  cleartitmb,
+  cleartiget,
+  cleartipgc,
+  cleartidc,
 } = tabPropsSlice.actions;
 export default tabPropsSlice.reducer;

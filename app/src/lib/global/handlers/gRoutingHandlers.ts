@@ -1,12 +1,10 @@
 import { elementNotFound, extLine } from "./errorHandler";
 import { pageCases, pageStyleCases } from "../declarations/types";
-import { decodeToken } from "@/lib/locals/panelPage/handlers/handlers";
-import { pageProps } from "../vars";
+import { decodeToken } from "../auth";
+import { pageProps } from "@/vars";
 export function handleLinkChanges(componentCase: pageCases, styleFlag: pageStyleCases): void {
   try {
-    if (!decodeToken("", true).ok) {
-      window.location.replace(window.location.origin);
-    }
+    if (!decodeToken("", true).ok) location.replace(window.location.origin);
     if (typeof componentCase !== "string") throw new Error(`invalid componentCase argument given to handleLinkChanges`);
     if (typeof styleFlag !== "string") throw new Error(`invalid StyleFlag given to handleLinkChanges`);
     const heads = document.querySelectorAll("head");

@@ -4,6 +4,26 @@ import { UserState } from "./lib/locals/basePage/declarations/serverInterfaces";
 import { defUser } from "./redux/slices/userSlice";
 import { DataProvider } from "./lib/global/declarations/classesCons";
 import { voidVal, vRoot } from "./lib/global/declarations/types";
+import {
+  AlignType,
+  AlignTypeLab,
+  BirthRelation,
+  BirthRelationLab,
+  Gender,
+  GenderLabs,
+  TransitionLevel,
+  TransitionLevelLab,
+} from "./lib/global/declarations/testVars";
+export const ERROR_LIMIT = 3;
+export const inpProgWidFix = "14.7rem";
+export const inpGenWidFix = "calc(0.4rem + 76.5vw)";
+export const errorLabels: { [k: string]: number } = {};
+export const pageProps = {
+  base: "https://prossaude-client.netlify.app",
+  origin: "",
+  name: "PROSSaúde — UFRJ",
+  firstPub: "2024-07-02T18:00:00Z",
+};
 export const basePath = {
   path: "",
   ph: "undefined",
@@ -31,18 +51,24 @@ export const tabProps: ENTabsProps = {
   GET: 0,
   PGC: 0,
   factorAtvLvl: 1.4,
-  factorAtleta: "Peso",
-  edGenValue: "masculino",
-  targInpWeigth: undefined,
-  targInpHeigth: undefined,
-  targInpIMC: undefined,
-  targInpMLG: undefined,
-  targInpTMB: undefined,
-  targInpGET: undefined,
-  targInpPGC: undefined,
-  targInpSumDCut: undefined,
+  factorAtleta: "peso",
+  tiw: undefined,
+  tih: undefined,
+  tiimc: undefined,
+  timlg: undefined,
+  titmb: undefined,
+  tiget: undefined,
+  tipgc: undefined,
+  tidc: undefined,
+  fsp: undefined,
+  gl: undefined,
+  fct: undefined,
+  sa: undefined,
+  naf: undefined,
+  spanFa: undefined,
+  lockGl: undefined,
 };
-export const person = new Person("masculino", 0, 0, 0, 0, "leve");
+export let person: Person = {} as any;
 export const experimentalProps: { experimentalUser: UserState } & { [k: string]: object } = {
   experimentalUser: defUser as UserState,
 };
@@ -68,3 +94,31 @@ export const exporters: { [k: string]: ExportHandler | undefined } = {
   tabStudExporter: undefined,
   scheduleExporter: undefined,
 };
+export const gens: { v: Gender; l: GenderLabs }[] = [
+  { v: "masculino", l: "Masculino | Homem binário" },
+  { v: "feminino", l: "Feminino | Mulher binária" },
+  { v: "naoBinario", l: "Não-Binário" },
+  { v: "outros", l: "Outros" },
+  { v: "undefined", l: "Não deseja declarar" },
+];
+export const birthRelations: { v: BirthRelation; l: BirthRelationLab }[] = [
+  { v: "cis", l: "Cisgênero | Cissexual" },
+  { v: "trans", l: "Transgênero | Transsexual" },
+  { v: "outros", l: "Outros" },
+  { v: "undefined", l: "Não deseja declarar" },
+];
+export const transOpts: { v: TransitionLevel; l: TransitionLevelLab }[] = [
+  { v: "avancado", l: "Avançado" },
+  { v: "undefined", l: "Indefinido" },
+  { v: "no", l: "Não está em transição" },
+  { v: "inicial", l: "Inicial" },
+  { v: "intermediario", l: "Intermediário" },
+];
+export const alignOpts: { v: AlignType; l: AlignTypeLab }[] = [
+  { v: "masculinizado", l: "Masculino | Masculinizado" },
+  { v: "feminilizado", l: "Feminino | Feminilizado" },
+  { v: "neutro", l: "Neutro" },
+];
+import("./lib/global/declarations/classes").then(({ Person }) => {
+  person = new Person("masculino", 0, 0, 0, 0, "leve");
+});

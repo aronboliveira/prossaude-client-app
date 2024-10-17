@@ -7,7 +7,7 @@ import { nullishDlg } from "@/lib/global/declarations/types";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useEffect, useRef } from "react";
 import GenericErrorComponent from "../../error/GenericErrorComponent";
-import st from "../../../src/styles/locals/declarationStyles.module.scss";
+import st from "@/styles/locals/modules/declarationStyles.module.scss";
 import DefaultDeclaration from "../def/DefaultDeclaration";
 export default function AGDeclaration({ state, dispatch }: DlgProps): JSX.Element {
   const mainRef = useRef<nullishDlg>(null);
@@ -22,7 +22,6 @@ export default function AGDeclaration({ state, dispatch }: DlgProps): JSX.Elemen
         `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#").replaceAll("/&", "&"),
       );
       location.href.match(/conform=open/g)?.forEach((m, i) => {
-        console.log(m);
         try {
           if (i === 0) return;
           location.href.replace(m, "");

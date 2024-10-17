@@ -44,6 +44,6 @@ export default function useExportHandler(
       removeEventListener("beforeunload", handleUnload);
       clearNames && removeEventListener("beforeunload", cleanStorageName);
     };
-  }, [exportHandlerProperty, timeout]);
+  }, [exportHandlerProperty, timeout, clearNames, exporter, ref]);
   return exporter;
 }

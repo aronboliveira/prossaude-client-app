@@ -13,7 +13,7 @@ import FamPulm from "./FamPulm";
 import RadioPairDoces from "./RadioPairDoces";
 import AntMedFs from "./AntMedFs";
 import { registerPersistInputs, validateForm } from "@/lib/global/handlers/gHandlers";
-import { handleSubmit } from "@/lib/locals/panelPage/handlers/handlers";
+import { handleSubmit } from "@/lib/global/data-service";
 import Name from "../def/Name";
 import SocialName from "../def/SocialName";
 import CPFElement from "./CPFElement";
@@ -60,7 +60,7 @@ export default function AgForm(): JSX.Element {
       inputTypes: ["date", "number", "text", "checkbox", "radio"],
       queriesToExclude: ['[role="switch"]'],
     });
-  }, [registerPersistInputs, f]);
+  }, [f]);
   useEffect(() => {
     const handleResize = (): void => {
       if (!(dnr.current instanceof HTMLElement && ar.current instanceof HTMLElement)) return;
@@ -81,7 +81,6 @@ export default function AgForm(): JSX.Element {
         dnr.current.style.width = getComputedStyle(gr.current).width;
         dnr.current.style.maxWidth = getComputedStyle(gr.current).width;
         if (gbr.current) {
-          console.log(getComputedStyle(gbr.current).width);
           ar.current.style.width = getComputedStyle(gbr.current).width;
           ar.current.style.maxWidth = getComputedStyle(gbr.current).width;
         } else {
@@ -98,7 +97,7 @@ export default function AgForm(): JSX.Element {
       handleResize();
     }
     (): void => removeEventListener("resize", handleResize);
-  }, [sr, ar, gr.current]);
+  }, [sr, ar, gr]);
   useDataProvider(f.current);
   return (
     <form
@@ -182,13 +181,13 @@ export default function AgForm(): JSX.Element {
                 </label>
               </span>
               <span role='group' className='fsAnamGSpan' id='fsAnamGSpan12'>
-                <label htmlFor='dateAgeId' className='labelIdentif'>
+                <label htmlFor='ageId' className='labelIdentif'>
                   <span>Idade:</span>
                   <AgeElement inpRef={ar} />
                 </label>
               </span>
             </div>
-            <GenDiv genRef={gr} genBirthRef={gbr} />
+            <GenDiv />
             <hr />
             <div
               className='divMain fsAnamGDiv alItSt900Q flexQ900NoWC gridAlItE gridTwoCol noGapDiv noEqualize'

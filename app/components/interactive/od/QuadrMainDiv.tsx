@@ -36,7 +36,6 @@ export default function QuadrMainDiv({ qr }: qrProps): JSX.Element {
       role='group'
       className='quadrAvDent quadrMainDiv form-control'
       id={`divMain${qr}`}
-      itemProp='dentQuadr'
       draggable='true'
       onMouseMove={ev => dragHover(ev.currentTarget)}
       onDragStart={ev => dragStart(ev, Array.from(document.getElementsByClassName("quadrMainDiv")))}
@@ -65,7 +64,6 @@ export default function QuadrMainDiv({ qr }: qrProps): JSX.Element {
         role='group'
         className={`contInQuadrs divSub quadrAvDent quadrSubDiv tabCelBottom`}
         id={`divSub${qr}`}
-        itemProp='dentQuadr'
         ref={subDivRef}>
         {teethList.map(teethNum => (
           <InpAvDent qr={qr} num={teethNum} key={`${qr}_${teethNum}`} />

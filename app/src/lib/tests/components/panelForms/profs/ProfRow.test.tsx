@@ -1,18 +1,18 @@
 import { render, fireEvent, RenderResult } from "@testing-library/react";
 import { useRef, MutableRefObject } from "react";
 import ProfRow from "../../../../../../components/panelForms/profs/ProfRow";
-import { nullishTab } from "@/lib/global/declarations/types";
+import { nlTab } from "@/lib/global/declarations/types";
 jest.mock(
   "@/lib/global/gModel",
   (): {
     dateISOtoBRL: jest.Mock<string, [date: string], any>;
   } => ({
     dateISOtoBRL: jest.fn((date: string) => date) as jest.Mock,
-  })
+  }),
 ) as typeof jest;
 describe("ProfRow Component", (): void => {
   test("renders ProfRow with default props", (): void => {
-    const tabRef: MutableRefObject<nullishTab> = useRef<nullishTab>(null);
+    const tabRef: MutableRefObject<nlTab> = useRef<nlTab>(null);
     (
       expect(
         (
@@ -32,14 +32,14 @@ describe("ProfRow Component", (): void => {
                 external: false,
               }}
               userClass={"coordenador"}
-            />
+            />,
           ) as RenderResult
-        ).getByText(/John Doe/i)
+        ).getByText(/John Doe/i),
       ) as jest.JestMatchers<HTMLElement>
     ).toBeInTheDocument() as void;
   }) as void;
   test("calls toggle dialog for altering row data", (): void => {
-    const tabRef: MutableRefObject<nullishTab> = useRef<nullishTab>(null);
+    const tabRef: MutableRefObject<nlTab> = useRef<nlTab>(null);
     (
       expect(
         fireEvent.click(
@@ -60,10 +60,10 @@ describe("ProfRow Component", (): void => {
                   idf: "12345678900",
                   external: false,
                 }}
-              />
+              />,
             ) as RenderResult
-          ).getByText(/Alterar/i) as HTMLButtonElement
-        ) as boolean
+          ).getByText(/Alterar/i) as HTMLButtonElement,
+        ) as boolean,
       ) as jest.JestMatchers<HTMLElement>
     ).toBe<boolean>(true) as void;
   }) as void;

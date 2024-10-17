@@ -1,9 +1,9 @@
 "use client";
 import { basePath } from "@/vars";
 import { clearDefInvalidMsg, resetPhs } from "@/lib/global/gStyleScript";
-import { handleLogin } from "@/lib/locals/panelPage/handlers/handlers";
-import { nullishAnchor, nlFm, nlHtEl, nullishSpan } from "@/lib/global/declarations/types";
-import { useEffect, useRef, useState } from "react";
+import { handleLogin } from "@/lib/global/auth";
+import { nullishAnchor, nlFm, nlHtEl, nlSpan } from "@/lib/global/declarations/types";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { elementNotFound, extLine, inputNotFound, multipleElementsNotFound } from "@/lib/global/handlers/errorHandler";
 import { callbackShowPw, callbackSubmitBtn } from "@/lib/locals/loginPage/loginController";
 import Link from "next/link";
@@ -16,61 +16,26 @@ export default function LoginInputs(): JSX.Element {
   let isSpinning = false;
   const anchorRef = useRef<nullishAnchor>(null),
     formRef = useRef<nlFm>(null),
-    spanRef = useRef<nullishSpan>(null),
+    spanRef = useRef<nlSpan>(null),
     router = useRouter(),
     [msg, setMsg] = useState<string | JSX.Element>(""),
-    exeLogin = (resSpan: nlHtEl): void => {
-      try {
-        if (!(formRef.current instanceof HTMLFormElement)) throw new Error(`Failed to validate form instance`);
-        if (!(resSpan instanceof HTMLElement)) throw new Error(`Failed to validate span reference`);
-        const uW = document.getElementById("userWarn");
-        if (uW instanceof HTMLElement) uW.style.display = "none";
-        const spin = (): void => {
-          isSpinning = true;
-          setMsg(<Spinner fs={true} />);
-          const form = formRef.current ?? resSpan.closest("form");
-          if (form instanceof HTMLElement) {
-            form.style.opacity = "0.3";
-            form.style.filter = "grayscale(40%)";
-          }
-        };
-        if (typeof router === "object" && "beforePopState" in router && "push" in router && !isSpinning) {
-          spin();
-          navigator.language.startsWith("pt-")
-            ? alert(
-                "Esta é apenas uma versão de teste estático do sistema. O login irá prosseguir independente da validez do formulário.",
-              )
-            : alert(
-                "This is a client only, static, test execution. The login will be forwarded regardless of the form validity.",
-              );
-          router.beforePopState(() => {
-            return true;
-          });
-          setTimeout(() => {
-            const spinTime =
-              parseFloat(
-                document
-                  .getAnimations()
-                  .find(a => (a as CSSAnimation).animationName === "spinner-border")
-                  ?.timeline?.currentTime?.toString() ?? "",
-              ) -
-              parseFloat(
-                document
-                  .getAnimations()
-                  .find(a => (a as CSSAnimation).animationName === "spinner-border")
-                  ?.startTime?.toString() ?? "",
-              );
-            setTimeout(
-              () => {
-                localStorage.removeItem("pw");
-                localStorage.setItem("authorized", "true");
-                router.push("/base");
-              },
-              Number.isFinite(spinTime) ? spinTime : 2000,
-            );
-          }, 1200);
-        } else {
-          if (!isSpinning) {
+    exeLogin = useCallback(
+      (resSpan: nlHtEl): void => {
+        try {
+          if (!(formRef.current instanceof HTMLFormElement)) throw new Error(`Failed to validate form instance`);
+          if (!(resSpan instanceof HTMLElement)) throw new Error(`Failed to validate span reference`);
+          const uW = document.getElementById("userWarn");
+          if (uW instanceof HTMLElement) uW.style.display = "none";
+          const spin = (): void => {
+            isSpinning = true;
+            setMsg(<Spinner fs={true} />);
+            const form = formRef.current ?? resSpan.closest("form");
+            if (form instanceof HTMLElement) {
+              form.style.opacity = "0.3";
+              form.style.filter = "grayscale(40%)";
+            }
+          };
+          if (typeof router === "object" && "beforePopState" in router && "push" in router && !isSpinning) {
             spin();
             navigator.language.startsWith("pt-")
               ? alert(
@@ -79,13 +44,51 @@ export default function LoginInputs(): JSX.Element {
               : alert(
                   "This is a client only, static, test execution. The login will be forwarded regardless of the form validity.",
                 );
-            setTimeout(() => (location.href = "/base"), 1000);
+            router.beforePopState(() => {
+              return true;
+            });
+            setTimeout(() => {
+              const spinTime =
+                parseFloat(
+                  document
+                    .getAnimations()
+                    .find(a => (a as CSSAnimation).animationName === "spinner-border")
+                    ?.timeline?.currentTime?.toString() ?? "",
+                ) -
+                parseFloat(
+                  document
+                    .getAnimations()
+                    .find(a => (a as CSSAnimation).animationName === "spinner-border")
+                    ?.startTime?.toString() ?? "",
+                );
+              setTimeout(
+                () => {
+                  localStorage.removeItem("pw");
+                  localStorage.setItem("authorized", "true");
+                  router.push("/base");
+                },
+                Number.isFinite(spinTime) ? spinTime : 2000,
+              );
+            }, 1200);
+          } else {
+            if (!isSpinning) {
+              spin();
+              navigator.language.startsWith("pt-")
+                ? alert(
+                    "Esta é apenas uma versão de teste estático do sistema. O login irá prosseguir independente da validez do formulário.",
+                  )
+                : alert(
+                    "This is a client only, static, test execution. The login will be forwarded regardless of the form validity.",
+                  );
+              setTimeout(() => (location.href = "/base"), 1000);
+            }
           }
+        } catch (e) {
+          console.error(`Error executing exeLogin:\n${(e as Error).message}`);
         }
-      } catch (e) {
-        console.error(`Error executing exeLogin:\n${(e as Error).message}`);
-      }
-    };
+      },
+      [router, formRef],
+    );
   useEffect(() => {
     try {
       if (!(anchorRef.current instanceof HTMLAnchorElement))
@@ -135,6 +138,10 @@ export default function LoginInputs(): JSX.Element {
     addEventListener("keyup", handleEnter);
     (): void => removeEventListener("keyup", handleEnter);
   }, [anchorRef]);
+  useEffect(() => {
+    localStorage.setItem("authorized", "false");
+    localStorage.setItem("activeUser", "");
+  }, []);
   return (
     <form
       ref={formRef}
@@ -147,7 +154,14 @@ export default function LoginInputs(): JSX.Element {
       autoComplete='on'>
       <div role='group' id='loginCont'>
         <section id='logoCont'>
-          <img className='fade-in-element' id='logo' src='/img/PROS_Saude_Modelo1-Final.png' alt='logo' />
+          <img
+            decoding='async'
+            loading='lazy'
+            className='fade-in-element'
+            id='logo'
+            src='/img/PROS_Saude_Modelo1-Final.png'
+            alt='logo'
+          />
         </section>
         <section id='headerCont'>
           <div role='group' id='titleCont1'>

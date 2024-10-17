@@ -63,7 +63,7 @@ describe("switchAutoFill", (): void => {
   }) as void;
   it("should throw an error if autoFillBtn is not found", (): void => {
     expect((): boolean => switchAutoFill(document.createElement("div") as HTMLDivElement as any)).toThrow(
-      "Element not found: autoFillBtn"
+      "Element not found: autoFillBtn",
     );
   }) as void;
 }) as void;
@@ -94,7 +94,7 @@ describe("switchLockInputs", (): void => {
   }) as void;
   it("should throw an error if input not found", (): void => {
     expect((): void => switchLockInputs([document.createElement("div") as HTMLDivElement as any], true)).toThrow(
-      "Element not found: siblingInput"
+      "Element not found: siblingInput",
     ) as void;
   }) as void;
 }) as void;
@@ -126,7 +126,7 @@ describe("validateEvResultNum", (): void => {
   }) as void;
   it("should throw an error when element is not valid", (): void => {
     expect((): number => validateEvResultNum(document.createElement("div") as HTMLDivElement as any)).toThrow(
-      "Multiple elements not found"
+      "Multiple elements not found",
     );
   }) as void;
 }) as void;
@@ -172,12 +172,12 @@ describe("matchPersonPropertiesDC", (): void => {
   }) as void;
   it("should throw an error if input element is not found", (): void => {
     expect((): number =>
-      matchPersonPropertiesDC(person, document.createElement("div") as HTMLDivElement as any)
-    ).toThrow("Element not found: targInpSumDCut");
+      matchPersonPropertiesDC(person, document.createElement("div") as HTMLDivElement as any),
+    ).toThrow("Element not found: tidc");
   }) as void;
   it("should throw an error if person object is not valid", (): void => {
     expect((): number => matchPersonPropertiesDC(null as any, inputElement)).toThrow(
-      "Object error: arguments for matchPersonPropertiesDC"
+      "Object error: arguments for matchPersonPropertiesDC",
     );
   }) as void;
 }) as void;
@@ -216,7 +216,7 @@ describe("updateIndexesContexts", (): void => {
       document.createElement("div") as HTMLDivElement as any,
     ] as [targEl, targEl, targEl];
     expect((): [number, number, number, number] => updateIndexesContexts(person, invalidArray, arrMetab)).toThrow(
-      "Multiple elements not found"
+      "Multiple elements not found",
     );
   }) as void;
   it("should log a warning if TMB and/or factorAtvLvl are invalid", (): void => {
@@ -224,7 +224,7 @@ describe("updateIndexesContexts", (): void => {
     jest.spyOn<Person, PersonMethod>(person, "calcTMB").mockReturnValue(["Invalid", NaN]) as jest.Mock;
     updateIndexesContexts(person, arrGord, arrMetab, -1);
     expect(console.warn).toHaveBeenCalledWith<[any]>(
-      expect.stringContaining("TMB and/or factorAtvLvl not updated or invalid")
+      expect.stringContaining("TMB and/or factorAtvLvl not updated or invalid"),
     );
   }) as void;
 }) as void;
@@ -252,14 +252,14 @@ describe("updateIMCContext", (): void => {
           document.createElement("div") as HTMLDivElement as any,
           document.createElement("div") as HTMLDivElement as any,
         ] as [targEl, targEl, targEl],
-        formTMBTypeElement
-      )
+        formTMBTypeElement,
+      ),
     ).toThrow("Multiple elements not found");
   }) as void;
   it("should call highlightChange when IMC conditions are met", (): void => {
     updateIMCContext(arrGord, formTMBTypeElement, ["abaixo", 18.0]);
     expect(
-      jest.spyOn<any, GlobalStyleFunction>(require("../../../global/gStyleScript"), "highlightChange")
+      jest.spyOn<any, GlobalStyleFunction>(require("../../../global/gStyleScript"), "highlightChange"),
     ).toHaveBeenCalled() as void;
   }) as void;
 }) as void;
@@ -284,8 +284,8 @@ describe("updateTMBContext", (): void => {
           document.createElement("div") as HTMLDivElement as any,
           document.createElement("div") as HTMLDivElement as any,
         ] as [targEl, targEl],
-        ["eutrofico", 22, 15]
-      )
+        ["eutrofico", 22, 15],
+      ),
     ).toThrow("Multiple elements not found");
   }) as void;
 }) as void;
@@ -303,7 +303,7 @@ describe("updateGETContext", (): void => {
   }) as void;
   it("should throw an error if input element is not found", (): void => {
     expect((): number => updateGETContext(person, document.createElement("div") as HTMLDivElement as any)).toThrow(
-      "Element not found: targInpGET em updateGETContext"
+      "Element not found: tiget em updateGETContext",
     );
   }) as void;
 }) as void;
@@ -338,7 +338,7 @@ describe("matchTMBElements", (): void => {
     mainSelect.id = "LvlAtFis";
     const mockInputNotFound = jest.spyOn<any, ErrorHandler>(
       require("../../global/handlers/errorHandler"),
-      "inputNotFound"
+      "inputNotFound",
     );
     matchTMBElements(mainSelect, gordCorpLvl, formTMBTypeElement, spanFactorAtleta, lockGordCorpLvl);
     expect(mockInputNotFound).toHaveBeenCalled() as void;
@@ -352,7 +352,7 @@ describe("matchTMBElements", (): void => {
   it("should call multipleElementsNotFound when elements are invalid", (): void => {
     const mockMultipleElementsNotFound = jest.spyOn<any, ErrorHandler>(
       require("../../global/handlers/errorHandler"),
-      "multipleElementsNotFound"
+      "multipleElementsNotFound",
     );
     matchTMBElements(null as any, null as any, null as any, null as any, null as any);
     expect(mockMultipleElementsNotFound).toHaveBeenCalled() as void;
@@ -379,16 +379,16 @@ describe("updatePGC", (): void => {
     expect(result[1]).toBe<HTMLInputElement>(inputSumDCut) as void;
     expect(result[2]).toBe<HTMLInputElement>(inputPGC) as void;
   }) as void;
-  it("should call inputNotFound when targInpSumDCut is invalid", (): void => {
+  it("should call inputNotFound when tidc is invalid", (): void => {
     updatePGC(person, parentEl, 1, "cons");
     expect(
-      jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "inputNotFound")
+      jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "inputNotFound"),
     ).toHaveBeenCalled() as void;
   }) as void;
   it("should call multipleElementsNotFound when arguments are invalid", (): void => {
     updatePGC(null as any, null as any, NaN);
     expect(
-      jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "multipleElementsNotFound")
+      jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "multipleElementsNotFound"),
     ).toHaveBeenCalled() as void;
   }) as void;
 }) as void;
@@ -416,7 +416,7 @@ describe("updateAtvLvl", (): void => {
   it("should call multipleElementsNotFound when elements are invalid", (): void => {
     updateAtvLvl(null as any, null as any, "leve");
     expect(
-      jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "multipleElementsNotFound")
+      jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "multipleElementsNotFound"),
     ).toHaveBeenCalled() as void;
   }) as void;
 }) as void;
@@ -443,19 +443,19 @@ describe("defineTargInps", (): void => {
   it("should call stringError when numRef is invalid", (): void => {
     defineTargInps(parentEl, "invalidRef", "cons");
     expect(
-      jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "stringError")
+      jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "stringError"),
     ).toHaveBeenCalled() as void;
   }) as void;
   it("should call inputNotFound when a target input is not found", (): void => {
     defineTargInps(parentEl, 1, "cons");
     expect(
-      jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "inputNotFound")
+      jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "inputNotFound"),
     ).toHaveBeenCalled() as void;
   }) as void;
   it("should call multipleElementsNotFound when elements are invalid", (): void => {
     defineTargInps(null as any, NaN, "cons");
     expect(
-      jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "multipleElementsNotFound")
+      jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "multipleElementsNotFound"),
     ).toHaveBeenCalled() as void;
   }) as void;
 }) as void;
@@ -477,7 +477,7 @@ describe("addRowAtivFis", (): void => {
     document.getElementById("tbodyAtFisRot")?.remove() as void;
     addRowAtivFis(3, "Rot");
     expect(
-      jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "multipleElementsNotFound")
+      jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "multipleElementsNotFound"),
     ).toHaveBeenCalled() as void;
   }) as void;
 }) as void;
@@ -533,7 +533,7 @@ describe("switchRowComorb", (): void => {
   }) as void;
   it("should throw an error if comorbContainer is not found", (): void => {
     expect((): void => switchRowComorb(null as any) as void).toThrow(
-      "Element not found: comorbContainer in switchRowComorb"
+      "Element not found: comorbContainer in switchRowComorb",
     );
   }) as void;
 }) as void;
@@ -568,7 +568,7 @@ describe("switchRequiredCols", (): void => {
   }) as void;
   it("should throw an error if consTablesFs or other tables are not found", (): void => {
     expect((): void =>
-      switchRequiredCols([document.createElement("input") as HTMLInputElement, null as any, null as any], 2)
+      switchRequiredCols([document.createElement("input") as HTMLInputElement, null as any, null as any], 2),
     ).toThrow("Multiple elements not found");
   }) as void;
   it("should log an error if numCons is invalid", (): void => {
@@ -597,19 +597,19 @@ describe("defineMatrixAxes", (): void => {
 describe("validateTabInpList", (): void => {
   it("should return true if input list and matrix size are valid", (): void => {
     expect(validateTabInpList(document.querySelectorAll("input") as NodeListOf<HTMLInputElement>, 2)).toBe<boolean>(
-      true
+      true,
     ) as void;
   }) as void;
   it("should return false if input list length does not match matrix size", (): void => {
     expect(validateTabInpList(document.querySelectorAll("input") as NodeListOf<HTMLInputElement>, 5)).toBe<boolean>(
-      false
+      false,
     ) as void;
   }) as void;
   it("should log a warning if inputs are not valid", (): void => {
     console.warn = jest.fn() as jest.Mock;
     validateTabInpList(document.querySelectorAll("div") as NodeListOf<HTMLElement>, 2);
     expect(console.warn).toHaveBeenCalledWith<[any]>(
-      expect.stringContaining("Error capturings inputs of Sinais Vitais")
+      expect.stringContaining("Error capturings inputs of Sinais Vitais"),
     );
   }) as void;
 }) as void;
@@ -626,17 +626,17 @@ describe("filterCellsPattern", (): void => {
   it("should return filtered elements based on the ID pattern", (): void => {
     const result = filterCellsPattern(document.querySelectorAll("input") as NodeListOf<HTMLInputElement>, /_2/, 2);
     expect(result[0].length).toBe<number>(1) as void;
-    expect(result[0][0].id).toBe<string>("testInput_2") as void;
+    expect(result[0][0]?.id).toBe<string>("testInput_2") as void;
   }) as void;
   it("should log an error if inputs do not match the pattern", (): void => {
     console.warn = jest.fn() as jest.Mock;
     filterCellsPattern(document.querySelectorAll("input") as NodeListOf<HTMLInputElement>, /_10/, 2);
     expect(console.warn).toHaveBeenCalledWith<[any]>(
-      expect.stringContaining("Error filtering .id of Elements in the table for Sinais Vitais")
+      expect.stringContaining("Error filtering .id of Elements in the table for Sinais Vitais"),
     );
   }) as void;
   it("should throw an error if invalid arguments are provided", (): void => {
-    expect((): Array<Element[]> => filterCellsPattern(null as any, /_2/)).toThrow("Multiple elements not found");
+    expect((): Array<Element[]> => filterCellsPattern(null as any, /_2/) as any).toThrow("Multiple elements not found");
   }) as void;
 }) as void;
 describe("switchNumConsTitles", (): void => {
@@ -661,13 +661,13 @@ describe("switchNumConsTitles", (): void => {
       .mockReturnValue([document.createElement("div") as HTMLDivElement]) as jest.Mock;
     switchNumConsTitles(consTitles, trioEl, 3, 1);
     expect(
-      jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "inputNotFound")
+      jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "inputNotFound"),
     ).toHaveBeenCalled() as void;
   }) as void;
   it("should call multipleElementsNotFound when invalid arguments are passed", (): void => {
     switchNumConsTitles(null as any, null as any, NaN, NaN);
     expect(
-      jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "multipleElementsNotFound")
+      jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "multipleElementsNotFound"),
     ).toHaveBeenCalled() as void;
   }) as void;
 }) as void;
@@ -700,7 +700,7 @@ describe("createArraysRels", (): void => {
   it("should call multipleElementsNotFound when invalid arguments are passed", (): void => {
     createArraysRels(null as any, "", "");
     expect(
-      jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "multipleElementsNotFound")
+      jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "multipleElementsNotFound"),
     ).toHaveBeenCalled() as void;
   }) as void;
 }) as void;
@@ -721,7 +721,7 @@ describe("getConsultasNums", (): void => {
   it("should call elementNotFound when arrayRow is not a table row", (): void => {
     getConsultasNums(null as any);
     expect(
-      jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "elementNotFound")
+      jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "elementNotFound"),
     ).toHaveBeenCalled() as void;
   }) as void;
 }) as void;

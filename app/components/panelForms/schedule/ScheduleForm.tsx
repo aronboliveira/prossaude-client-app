@@ -4,11 +4,13 @@ import { ScheduleFormProps } from "../../../src/lib/global/declarations/interfac
 import { addExportFlags } from "../../../src/lib/global/gController";
 import { exporters, fillScheduleState, panelRoots, providers } from "@/vars";
 import { handleClientPermissions } from "../../../src/lib/locals/panelPage/handlers/consHandlerUsers";
-import { handleSubmit } from "@/lib/locals/panelPage/handlers/handlers";
+import { handleSubmit } from "@/lib/global/data-service";
 import { useState, useRef, useEffect, useCallback, JSX, useContext } from "react";
 import GenericErrorComponent from "../../error/GenericErrorComponent";
 import RegstConsBtn from "./RegstConsBtn";
 import ReseterBtn from "../defs/ReseterBtn";
+import ThDate from "./ThDate";
+import TrBSchedTab from "./TrBSchedTab";
 import {
   clearPhDates,
   equalizeFlexSibilings,
@@ -22,7 +24,7 @@ import {
   elementNotFound,
   elementNotPopulated,
 } from "../../../src/lib/global/handlers/errorHandler";
-import { nlSel, nlFm, nlBtn, nlDiv, nlHtEl, nlInp } from "../../../src/lib/global/declarations/types";
+import { nlSel, nlFm, nlBtn, validSchedHours } from "../../../src/lib/global/declarations/types";
 import { correlateDayOpts, setListenersForDates } from "../../../src/lib/locals/panelPage/consStyleScript";
 import {
   addListenerForSchedUpdates,
@@ -39,26 +41,10 @@ import { PanelCtx } from "../defs/client/SelectLoader";
 import { ExportHandler } from "@/lib/global/declarations/classes";
 import useExportHandler from "@/lib/hooks/useExportHandler";
 import { privilege } from "@/lib/locals/basePage/declarations/serverInterfaces";
-import { useDispatch } from "react-redux";
-import { fetchSchedHours } from "@/redux/slices/schedHoursSlice";
-import { fetchSchedCols } from "@/redux/slices/schedColsSlice";
-import { AppDispatch } from "@/lib/global/declarations/interfacesRedux";
-export default function ScheduleForm({ mainRoot, children }: ScheduleFormProps): JSX.Element {
-  const userClass = useContext(PanelCtx).userClass,
-    fr = useRef<nlFm>(null),
-    wkdr = useRef<nlDiv>(null),
-    hdi = useRef<nlInp>(null),
-    ber = useRef<nlBtn>(null),
-    bscr = useRef<nlHtEl>(null),
-    fwd = useRef<nlSel>(null),
-    swd = useRef<nlSel>(null),
-    mr = useRef<nlSel>(null),
-    cdr = useRef<nlSel>(null),
-    cdi = useRef<nlInp>(null),
-    tra = useRef<nlHtEl>(null),
-    rdd = useRef<nlDiv>(null),
-    [showForm] = useState(true),
-    [pressState, setTogglePress] = useState<boolean>(false),
+export default function ScheduleForm({ mainRoot }: ScheduleFormProps): JSX.Element {
+  const cols = [1, 2, 3, 4, 5, 6, 7, 8, 9],
+    hours: validSchedHours[] = [18, 19, 20, 21],
+    userClass = useContext(PanelCtx).userClass,
     handleResize = (): void => {
       if (innerWidth === 900 || innerWidth === 600 || innerWidth === 460) {
         normalizeSizeSb(
@@ -70,132 +56,121 @@ export default function ScheduleForm({ mainRoot, children }: ScheduleFormProps):
           ],
           [true, 1],
           true,
-          [bscr.current ?? document.getElementById("formBodySchedSect")],
+          [document.getElementById("formBodySchedSect")],
         );
       }
-    },
-    toggleForm = (): void => setTogglePress(() => !pressState),
-    formCallback = useCallback(
-      (form: nlFm) => {
-        if (form instanceof HTMLFormElement) {
-          //adição de listeners para confirmação de agendamentos
-          const registDayBtn = form.querySelector("#regstDayBtn");
-          if (registDayBtn instanceof HTMLButtonElement) {
-            registDayBtn.disabled = true;
-          } else
-            elementNotFound(
-              registDayBtn,
-              "Button for completing day of appointment in schedule form",
-              extLine(new Error()),
-            );
-          //adição de listeners para drag events
-          const dayChecks = form.querySelectorAll('input[class*="apptCheck"]');
-          if (dayChecks.length > 0) {
-            dayChecks.forEach(dayCheck => {
-              (userClass === "coordenador" || userClass === "supervisor") &&
-                dayCheck.addEventListener("change", () => {
-                  dayCheck instanceof HTMLInputElement && (dayCheck.type === "checkbox" || dayCheck.type === "radio")
-                    ? checkConfirmApt(dayCheck)
-                    : inputNotFound(dayCheck, `dayCheck id ${dayCheck?.id || "UNIDENTIFIED"}`, extLine(new Error()));
-                });
-            });
-          } else elementNotPopulated(dayChecks, "Checkboxes for day checks", extLine(new Error()));
-          //adição de listeners para exportação de excel
-          const btnExportSched = ber.current || form.querySelector("#btnExport");
-          btnExportSched instanceof HTMLButtonElement
-            ? addExportFlags(form)
-            : elementNotFound(
-                btnExportSched,
-                "Button for generating spreadsheet in schedule form",
-                extLine(new Error()),
-              );
-          //ajustes de estilo
-          clearPhDates(Array.from(form.querySelectorAll('input[type="date"]')));
-          equalizeWidWithPhs([
-            ...Array.from(form.querySelectorAll("input")).filter(
-              inp =>
-                inp.type === "text" ||
-                inp.type === "number" ||
-                inp.type === "date" ||
-                inp.type === "search" ||
-                inp.type === "hour",
-            ),
-            ...form.querySelectorAll("select"),
-            ...form.querySelectorAll("textarea"),
-          ]);
-          setTimeout(() => {
-            const ancestorForTwins = form.querySelectorAll('[class*="ancestorTwins"]');
-            if (ancestorForTwins.length > 0) {
-              ancestorForTwins.forEach(ancestor => {
-                equalizeFlexSibilings(ancestor.querySelectorAll('[class*="flexTwin"]'), [["height", "px"]]);
+    };
+  const [showForm] = useState(true);
+  const formRef = useRef<nlFm>(null);
+  const workingDefinitionsRef = useRef<HTMLDivElement | null>(null);
+  const monthRef = useRef<nlSel>(null);
+  const btnExportSchedRef = useRef<nlBtn>(null);
+  const [pressState, setTogglePress] = useState<boolean>(false);
+  const toggleForm = (): void => setTogglePress(() => !pressState);
+  const formCallback = useCallback(
+    (form: nlFm) => {
+      if (form instanceof HTMLFormElement) {
+        //adição de listeners para confirmação de agendamentos
+        const registDayBtn = form.querySelector("#regstDayBtn");
+        if (registDayBtn instanceof HTMLButtonElement) {
+          registDayBtn.disabled = true;
+        } else
+          elementNotFound(
+            registDayBtn,
+            "Button for completing day of appointment in schedule form",
+            extLine(new Error()),
+          );
+        //adição de listeners para drag events
+        const dayChecks = form.querySelectorAll('input[class*="apptCheck"]');
+        if (dayChecks.length > 0) {
+          dayChecks.forEach(dayCheck => {
+            (userClass === "coordenador" || userClass === "supervisor") &&
+              dayCheck.addEventListener("change", () => {
+                dayCheck instanceof HTMLInputElement && (dayCheck.type === "checkbox" || dayCheck.type === "radio")
+                  ? checkConfirmApt(dayCheck)
+                  : inputNotFound(dayCheck, `dayCheck id ${dayCheck?.id || "UNIDENTIFIED"}`, extLine(new Error()));
               });
-            }
-          }, 300);
-          const hourInp = hdi.current ?? form.querySelector("#hourDayInp") ?? form.querySelector('input[type="hour"]');
-          hourInp instanceof HTMLInputElement && hourInp.type === "time"
-            ? (hourInp.value = "18:00")
-            : inputNotFound(hourInp, "hourInp in form for schedule", extLine(new Error()));
-        } else elementNotFound(form, "fr for callbackFormSchedule()", extLine(new Error()));
-        normalizeSizeSb(
-          [
-            ...document.querySelectorAll(".form-padded"),
-            ...document.querySelectorAll(".ovFlAut"),
-            ...document.querySelectorAll("[scrollbar-width=none]"),
-            ...document.querySelectorAll("table"),
-          ],
-          [true, 1],
-          true,
-          [bscr.current ?? document.getElementById("formBodySchedSect")],
-        );
-        const daysCont = document.getElementById("mainConsDaysCont");
-        if (daysCont instanceof HTMLElement) scheduleReset[`outerHTML`] = daysCont.outerHTML;
-        else
-          setTimeout(() => {
-            const daysCont = document.getElementById("mainConsDaysCont");
-            if (daysCont instanceof HTMLElement) scheduleReset[`outerHTML`] = daysCont.outerHTML;
-          }, 200);
-        addEventListener("resize", handleResize);
-        return (): void => removeEventListener("resize", handleResize);
-      },
-      [userClass],
-    ),
-    dispatch = useDispatch() as AppDispatch;
-  useEffect(() => {
-    const revalidateData = (): void => {
-      dispatch(fetchSchedHours());
-      dispatch(fetchSchedCols());
-    };
-    revalidateData();
-    const intervalId = setInterval(revalidateData, 300000),
-      handleFocus = (): void => revalidateData();
-    addEventListener("focus", handleFocus);
-    return (): void => {
-      clearInterval(intervalId);
-      removeEventListener("focus", handleFocus);
-    };
-  }, [dispatch]);
+          });
+        } else elementNotPopulated(dayChecks, "Checkboxes for day checks", extLine(new Error()));
+        //adição de listeners para exportação de excel
+        const btnExportSched = btnExportSchedRef.current || form.querySelector("#btnExport");
+        btnExportSched instanceof HTMLButtonElement
+          ? addExportFlags(form)
+          : elementNotFound(btnExportSched, "Button for generating spreadsheet in schedule form", extLine(new Error()));
+        //ajustes de estilo
+        clearPhDates(Array.from(form.querySelectorAll('input[type="date"]')));
+        equalizeWidWithPhs([
+          ...Array.from(form.querySelectorAll("input")).filter(
+            inp =>
+              inp.type === "text" ||
+              inp.type === "number" ||
+              inp.type === "date" ||
+              inp.type === "search" ||
+              inp.type === "hour",
+          ),
+          ...form.querySelectorAll("select"),
+          ...form.querySelectorAll("textarea"),
+        ]);
+        setTimeout(() => {
+          const ancestorForTwins = form.querySelectorAll('[class*="ancestorTwins"]');
+          if (ancestorForTwins.length > 0) {
+            ancestorForTwins.forEach(ancestor => {
+              equalizeFlexSibilings(ancestor.querySelectorAll('[class*="flexTwin"]'), [["height", "px"]]);
+            });
+          }
+        }, 300);
+        const hourInp = form.querySelector("#hourDayInp") ?? form.querySelector('input[type="hour"]');
+        hourInp instanceof HTMLInputElement && hourInp.type === "time"
+          ? (hourInp.value = "18:00")
+          : inputNotFound(hourInp, "hourInp in form for schedule", extLine(new Error()));
+      } else elementNotFound(form, "formRef for callbackFormSchedule()", extLine(new Error()));
+      normalizeSizeSb(
+        [
+          ...document.querySelectorAll(".form-padded"),
+          ...document.querySelectorAll(".ovFlAut"),
+          ...document.querySelectorAll("[scrollbar-width=none]"),
+          ...document.querySelectorAll("table"),
+        ],
+        [true, 1],
+        true,
+        [document.getElementById("formBodySchedSect")],
+      );
+      const daysCont = document.getElementById("mainConsDaysCont");
+      if (daysCont instanceof HTMLElement) scheduleReset[`outerHTML`] = daysCont.outerHTML;
+      else
+        setTimeout(() => {
+          const daysCont = document.getElementById("mainConsDaysCont");
+          if (daysCont instanceof HTMLElement) scheduleReset[`outerHTML`] = daysCont.outerHTML;
+        }, 200);
+      addEventListener("resize", handleResize);
+      return (): void => removeEventListener("resize", handleResize);
+    },
+    [userClass],
+  );
   useEffect(() => {
     /new-cons=open/gi.test(location.search) && setTogglePress(true);
   }, []);
   useEffect(() => {
-    if (fr?.current instanceof HTMLElement) {
+    if (formRef?.current instanceof HTMLElement) {
       //chamada de callback principal do form de agenda e inclusão de aria
-      formCallback(fr.current);
-      syncAriaStates([...fr.current!.querySelectorAll("*"), fr.current]);
+      formCallback(formRef.current);
+      syncAriaStates([...formRef.current!.querySelectorAll("*"), formRef.current]);
       // const scheduleDataProvider = new DataProvider(
-      //   DataProvider.persistSessionEntries(fr.current)
+      //   DataProvider.persistSessionEntries(formRef.current)
       // );
       providers.globalDataProvider &&
         providers.globalDataProvider.initPersist(
-          fr.current,
+          formRef.current,
           providers.globalDataProvider,
           (userClass as privilege) ?? "student",
         );
       const saveInterv = setInterval(() => {
         try {
-          if (!(fr.current instanceof HTMLFormElement))
-            throw elementNotFound(fr.current, `Validation of Form instance`, extLine(new Error()));
-          validateForm(fr.current, fr.current).then(validation => handleSubmit("schedule", validation[2], true));
+          if (!(formRef.current instanceof HTMLFormElement))
+            throw elementNotFound(formRef.current, `Validation of Form instance`, extLine(new Error()));
+          validateForm(formRef.current, formRef.current).then(validation =>
+            handleSubmit("schedule", validation[2], true),
+          );
         } catch (e) {
           console.error(
             `Error executing interval for saving schedule at ${new Date().getMinutes()}:\n${(e as Error).message}`,
@@ -203,13 +178,14 @@ export default function ScheduleForm({ mainRoot, children }: ScheduleFormProps):
         }
       }, 60000);
       return (): void => clearInterval(saveInterv);
-    } else elementNotFound(fr.current, `fr for useEffect() in ${ScheduleForm.name}`, extLine(new Error()));
-  }, [fr, formCallback, userClass]);
+    } else elementNotFound(formRef.current, `formRef for useEffect() in ${ScheduleForm.name}`, extLine(new Error()));
+  }, [formRef, formCallback, userClass]);
   useEffect(() => {
-    if (wkdr?.current instanceof HTMLElement && wkdr.current.id.match(/working/gi)) {
+    if (workingDefinitionsRef?.current instanceof HTMLElement && workingDefinitionsRef.current.id.match(/working/gi)) {
       //adição de listeners para autoajuste de atributos da agenda
       const toggleAutofillMonth =
-        wkdr.current.querySelector("#toggleAutofillMonth") || wkdr.current.querySelector('input[type="checkbox"]');
+        workingDefinitionsRef.current.querySelector("#toggleAutofillMonth") ||
+        workingDefinitionsRef.current.querySelector('input[type="checkbox"]');
       if (
         toggleAutofillMonth instanceof HTMLInputElement &&
         (toggleAutofillMonth.type === "checkbox" || toggleAutofillMonth.type === "radio")
@@ -217,39 +193,44 @@ export default function ScheduleForm({ mainRoot, children }: ScheduleFormProps):
         toggleAutofillMonth.checked = true;
         panelFormsVariables.isAutoFillMonthOn = true;
       } else inputNotFound(toggleAutofillMonth, "Input for toggling autofill in working month", extLine(new Error()));
-      const firstOrderWorkDay = fwd.current ?? document.getElementById("firstWorkingDay"),
-        secondOrderWorkDay = swd.current ?? document.getElementById("secondWorkingDay");
+      const firstOrderWorkDay = document.getElementById("firstWorkingDay");
+      const secondOrderWorkDay = document.getElementById("secondWorkingDay");
       if (firstOrderWorkDay instanceof HTMLSelectElement || firstOrderWorkDay instanceof HTMLInputElement)
         firstOrderWorkDay.value = "Quarta-feira";
       if (secondOrderWorkDay instanceof HTMLSelectElement || secondOrderWorkDay instanceof HTMLInputElement)
         secondOrderWorkDay.value = "Sexta-feira";
-    } else elementNotFound(wkdr.current, "wkdr.current in useEffect()", extLine(new Error()));
-  }, [wkdr]);
+    } else
+      elementNotFound(
+        workingDefinitionsRef.current,
+        "workingDefinitionsRef.current in useEffect()",
+        extLine(new Error()),
+      );
+  }, [workingDefinitionsRef]);
   useEffect(() => {
-    if (fr.current instanceof HTMLFormElement && mr?.current instanceof HTMLSelectElement) {
+    if (formRef.current instanceof HTMLFormElement && monthRef?.current instanceof HTMLSelectElement) {
       //adição de listeners para autoajuste de opções e validação de datas
-      const inpDates = Array.from<HTMLInputElement>(fr.current!.querySelectorAll(".dayTabRef")),
-        [monthPattern] = setListenersForDates(
-          inpDates,
-          mr.current ?? document.getElementById("monthSelector"),
-          panelFormsVariables.isAutoFillMonthOn,
-          true,
-        );
+      const inpDates = Array.from<HTMLInputElement>(formRef.current!.querySelectorAll(".dayTabRef"));
+      const [monthPattern] = setListenersForDates(
+        inpDates,
+        document.getElementById("monthSelector"),
+        panelFormsVariables.isAutoFillMonthOn,
+        true,
+      );
       addListenerForValidities(inpDates, monthPattern);
       correlateDayOpts(
         Array.from(document.querySelectorAll(".dayTabRef")),
-        cdr.current ?? document.getElementById("changeDaySel"),
+        document.getElementById("changeDaySel"),
         userClass,
       );
     } else {
       inputNotFound(
-        mr.current,
-        `mr in useEffect()
-        parentForm present: ${fr instanceof HTMLFormElement}`,
+        monthRef.current,
+        `monthRef in useEffect()
+        parentForm present: ${formRef instanceof HTMLFormElement}`,
         extLine(new Error()),
       );
     }
-  }, [mr, userClass]);
+  }, [monthRef, userClass]);
   useEffect(() => {
     //populando inicialmente o array de state para agenda, tirando as mensagens default de erro
     //os states das agendas começam iguais e vão sendo atualizados com a sessionStorage e change no monthSelector
@@ -261,51 +242,49 @@ export default function ScheduleForm({ mainRoot, children }: ScheduleFormProps):
         sessionScheduleState[month] = Def;
         fillSchedStateValues(month);
         //adição de events para atualizar state da agenda relativa ao mês toda vez que houver mudança em algum input/select/textarea/slot
-        addListenerForSchedUpdates(mr.current ?? document.getElementById("monthSelector"));
+        addListenerForSchedUpdates(monthRef.current || document.getElementById("monthSelector"));
       });
       fillScheduleState.acc = fillScheduleState.acc++;
     }
     //controle de classes
-    if (fr.current instanceof HTMLElement) {
+    if (formRef.current instanceof HTMLElement) {
       handleClientPermissions(
         userClass,
         ["supervisor", "coordenador"],
-        cdi.current ?? document.getElementById("confirmDayInp"),
+        document.getElementById("confirmDayInp"),
         ...document.querySelectorAll(".apptCheck"),
         ...document.querySelectorAll(".eraseAptBtn"),
       );
       handleClientPermissions(
         userClass,
         ["coordenador"],
-        fwd.current ?? document.getElementById("firstWorkingDay"),
-        swd.current ?? document.getElementById("secondWorkingDay"),
+        document.getElementById("firstWorkingDay"),
+        document.getElementById("secondWorkingDay"),
         document.getElementById("btnResetTab"),
         ...document.querySelectorAll(".dayTabRef"),
       );
     }
-  }, [fr, userClass]);
+  }, [formRef, userClass]);
   useEffect(() => {
     const confInterv = setInterval(interv => {
-        const confCons = cdi.current ?? document.getElementById("confirmDayInp");
-        if (!(confCons instanceof HTMLInputElement)) {
-          clearInterval(interv);
-          return;
-        }
-        if ((tra.current ?? document.getElementById("transfArea"))?.querySelector(".appointmentBtn"))
-          confCons.disabled = false;
-        else confCons.disabled = true;
-      }, 200),
-      regstInterv = setInterval(interv => {
-        const regstDay = document.getElementById("regstDayBtn");
-        if (!(regstDay instanceof HTMLButtonElement)) {
-          clearInterval(interv);
-          return;
-        }
-        if ((tra.current ?? document.getElementById("transfArea"))?.querySelector(".appointmentBtn"))
-          regstDay.disabled = false;
-        else regstDay.disabled = true;
-      }, 200),
-      aptIntervs: any[] = [],
+      const confCons = document.getElementById("confirmDayInp");
+      if (!(confCons instanceof HTMLInputElement)) {
+        clearInterval(interv);
+        return;
+      }
+      if (document.getElementById("transfArea")?.querySelector(".appointmentBtn")) confCons.disabled = false;
+      else confCons.disabled = true;
+    }, 200);
+    const regstInterv = setInterval(interv => {
+      const regstDay = document.getElementById("regstDayBtn");
+      if (!(regstDay instanceof HTMLButtonElement)) {
+        clearInterval(interv);
+        return;
+      }
+      if (document.getElementById("transfArea")?.querySelector(".appointmentBtn")) regstDay.disabled = false;
+      else regstDay.disabled = true;
+    }, 200);
+    const aptIntervs: any[] = [],
       slotsIntervs: any[] = [];
     let transfInterv: any;
     [...document.querySelectorAll(".apptCheck"), ...document.querySelectorAll(".eraseAptBtn")].forEach(aptBtn => {
@@ -340,7 +319,7 @@ export default function ScheduleForm({ mainRoot, children }: ScheduleFormProps):
       slotsIntervs.push(slotInterv);
     });
     try {
-      const transfArea = tra.current ?? document.getElementById("transfArea");
+      const transfArea = document.getElementById("transfArea");
       if (!(transfArea instanceof HTMLElement))
         throw elementNotFound(transfArea, `Transference Element`, extLine(new Error()));
       transfInterv = setInterval(() => {
@@ -366,14 +345,14 @@ export default function ScheduleForm({ mainRoot, children }: ScheduleFormProps):
         clearInterval(regstInterv);
         for (const aptInterv of aptIntervs) clearInterval(aptInterv);
         for (const slotInterv of slotsIntervs) clearInterval(slotInterv);
-        (tra.current ?? document.getElementById("transfArea")) && transfInterv && clearInterval(transfInterv);
+        document.getElementById("transfArea") && transfInterv && clearInterval(transfInterv);
       } catch (e) {
         console.error(`Error clearing intervals for Schedule:\n${(e as Error).message}`);
       }
     };
   }, [userClass]);
-  useExportHandler("scheduleExporter", fr.current);
-  useEffect(() => assignFormAttrs(fr.current));
+  useExportHandler("scheduleExporter", formRef.current);
+  useEffect(() => assignFormAttrs(formRef.current));
   return (
     <ErrorBoundary FallbackComponent={() => <GenericErrorComponent message='Erro carregando agenda!' />}>
       {showForm && (
@@ -386,7 +365,7 @@ export default function ScheduleForm({ mainRoot, children }: ScheduleFormProps):
             action='schedule_form'
             method='post'
             target='_top'
-            ref={fr}>
+            ref={formRef}>
             <section
               id='formHSchedSect'
               className='mg-3b widMaxFullView ovFlAut-fix flexNoW flexQ900NoWC flexAlItCt cGap2v rGapQ9002v noInvert'>
@@ -422,7 +401,6 @@ export default function ScheduleForm({ mainRoot, children }: ScheduleFormProps):
                         Dia de Inclusão:
                       </label>
                       <select
-                        ref={cdr}
                         className='form-select widMin75Q460v ssPersist'
                         id='changeDaySel'
                         title='Selecione aqui o dia para inclusão dentre os encaixados automaticamente na agenda'
@@ -436,7 +414,6 @@ export default function ScheduleForm({ mainRoot, children }: ScheduleFormProps):
                         Horário do Dia:
                       </label>
                       <input
-                        ref={hdi}
                         type='time'
                         className='form-control widMin75Q460v ssPersist'
                         id='hourDayInp'
@@ -451,7 +428,7 @@ export default function ScheduleForm({ mainRoot, children }: ScheduleFormProps):
                               ev.currentTarget.style.color = `#c10f0fd8`;
                               ev.currentTarget.style.borderColor = `#c10f0fd8`;
                               setTimeout(() => {
-                                const hourInp = hdi.current ?? document.getElementById("hourDayInp");
+                                const hourInp = document.getElementById("hourDayInp");
                                 if (hourInp instanceof HTMLInputElement || hourInp instanceof HTMLSelectElement) {
                                   hourInp.style.borderColor = `rgb(179, 205, 242)`;
                                   const absHours = hours.map(hour => hour.slice(0, 2));
@@ -492,7 +469,7 @@ export default function ScheduleForm({ mainRoot, children }: ScheduleFormProps):
                               ev.currentTarget.style.color = `#c10f0fd8`;
                               ev.currentTarget.style.borderColor = `#c10f0fd8`;
                               setTimeout(() => {
-                                const hourInp = hdi.current ?? document.getElementById("hourDayInp");
+                                const hourInp = document.getElementById("hourDayInp");
                                 if (hourInp instanceof HTMLInputElement || hourInp instanceof HTMLSelectElement) {
                                   hourInp.style.borderColor = `rgb(179, 205, 242)`;
                                   const absHours = hours.map(hour => hour.slice(0, 2));
@@ -540,7 +517,6 @@ export default function ScheduleForm({ mainRoot, children }: ScheduleFormProps):
                         </label>
                         <div role='group' id='confirmDaySubDiv'>
                           <input
-                            ref={cdi}
                             type='checkbox'
                             className='form-check-input checkGreen mdGreen noInvert invtSignal dkGreen'
                             id='confirmDayInp'
@@ -551,8 +527,8 @@ export default function ScheduleForm({ mainRoot, children }: ScheduleFormProps):
                               userClass === "coordenador" || userClass === "supervisor"
                                 ? (): void => {
                                     try {
-                                      const confirmRegst = cdi.current ?? document.getElementById("confirmDayInp"),
-                                        relAptBtn = document.querySelector("[id*=appointmentBtn]");
+                                      const confirmRegst = document.getElementById("confirmDayInp");
+                                      const relAptBtn = document.querySelector("[id*=appointmentBtn]");
                                       if (
                                         !(
                                           confirmRegst instanceof HTMLInputElement &&
@@ -581,9 +557,9 @@ export default function ScheduleForm({ mainRoot, children }: ScheduleFormProps):
                           />
                         </div>
                       </div>
-                      <div ref={rdd} role='group' id='regstDaySubDiv' className='hovBlock'>
+                      <div role='group' id='regstDaySubDiv' className='hovBlock'>
                         <RegstConsBtn
-                          rootEl={rdd.current ?? (document.getElementById("regstDaySubDiv") as HTMLElement)}
+                          rootEl={document.getElementById("regstDaySubDiv") as HTMLElement}
                           secondOp={"Arraste"}
                         />
                       </div>
@@ -591,7 +567,6 @@ export default function ScheduleForm({ mainRoot, children }: ScheduleFormProps):
                   </fieldset>
                 </section>
                 <section
-                  ref={tra}
                   className='flexJC flexAlItCt flexNoW flexBasis25 form-control transfArea cGap1v noInvert'
                   id='transfArea'>
                   <slot
@@ -606,7 +581,7 @@ export default function ScheduleForm({ mainRoot, children }: ScheduleFormProps):
                     id='btnEraseTransfApt'
                     title='Resetar a Área de transferêrncia'
                     onClick={() => {
-                      const transfArea = tra.current ?? document.getElementById("transfArea");
+                      const transfArea = document.getElementById("transfArea");
                       if (transfArea instanceof HTMLElement) {
                         if (
                           !transfArea.hasChildNodes() ||
@@ -651,7 +626,7 @@ export default function ScheduleForm({ mainRoot, children }: ScheduleFormProps):
               <section
                 className='flexLineDiv flexQ460NoWC widQ460MinFull widQ900MinFull flexTwin-height widHalf'
                 id='workingDefinitionsDiv'
-                ref={wkdr}>
+                ref={workingDefinitionsRef}>
                 <div role='group' className='flexAlItCt flexJSe flexAlItSt flexNoWC flexBasis75 widQ900MinFull'>
                   <div role='group' className='flexJBt cGap2v flexQ460NoWC widQ900MinFull flexJtSb900Q'>
                     <div role='group' className='flexJBt cGap1v flexAlItBs flexQ900NoWC widHalf900Q'>
@@ -659,7 +634,6 @@ export default function ScheduleForm({ mainRoot, children }: ScheduleFormProps):
                         Primeiro dia de Trabalho:
                       </label>
                       <select
-                        ref={fwd}
                         id='firstWorkingDay'
                         className='form-select widMin18CImp widFull900Q widMin75Q460v widQ460FullW lcPersist'
                         title='Selecione aqui o primeiro dia de trabalho na semana ou edite manualmente os rótulos na agenda'
@@ -669,27 +643,35 @@ export default function ScheduleForm({ mainRoot, children }: ScheduleFormProps):
                             ? (): void => {
                                 if (panelFormsVariables.isAutoFillMonthOn)
                                   setListenersForDates(
-                                    Array.from<HTMLInputElement>(fr.current?.querySelectorAll(".dayTabRef") ?? []),
-                                    mr.current ?? document.getElementById("monthSelector"),
+                                    Array.from<HTMLInputElement>(formRef.current?.querySelectorAll(".dayTabRef") ?? []),
+                                    document.getElementById("monthSelector"),
                                     panelFormsVariables.isAutoFillMonthOn,
                                     false,
                                   );
                               }
                             : (): void => {}
                         }>
-                        {[
-                          "Segunda-feira",
-                          "Terça-feira",
-                          "Quarta-feira",
-                          "Quinta-feira",
-                          "Sexta-feira",
-                          "Sábado",
-                          "Domingo",
-                        ].map((d, i) => (
-                          <option key={`wk_1_${i}`} value={d} data-weekday={i === 6 ? 0 : i + 1}>
-                            {d}
-                          </option>
-                        ))}
+                        <option value='Segunda-feira' data-weekday='1'>
+                          Segunda-feira
+                        </option>
+                        <option value='Terça-feira' data-weekday='2'>
+                          Terça-feira
+                        </option>
+                        <option value='Quarta-feira' data-weekday='3'>
+                          Quarta-feira
+                        </option>
+                        <option value='Quinta-feira' data-weekday='4'>
+                          Quinta-feira
+                        </option>
+                        <option value='Sexta-feira' data-weekday='5'>
+                          Sexta-feira
+                        </option>
+                        <option value='Sábado' data-weekday='6'>
+                          Sábado
+                        </option>
+                        <option value='Domingo' data-weekday='0'>
+                          Domingo
+                        </option>
                       </select>
                     </div>
                     <div role='group' className='flexJBt cGap1v flexAlItBs flexQ900NoWC widHalf900Q'>
@@ -697,7 +679,6 @@ export default function ScheduleForm({ mainRoot, children }: ScheduleFormProps):
                         Segundo dia de Trabalho:
                       </label>
                       <select
-                        ref={swd}
                         id='secondWorkingDay'
                         className='form-select widMin18CImp wid90-900Q widQ460FullW lcPersist'
                         title='Selecione aqui o segundo dia de trabalho na semana ou edite manualmente os rótulos na agenda'
@@ -707,27 +688,35 @@ export default function ScheduleForm({ mainRoot, children }: ScheduleFormProps):
                             ? (): void => {
                                 if (panelFormsVariables.isAutoFillMonthOn)
                                   setListenersForDates(
-                                    Array.from<HTMLInputElement>(fr.current?.querySelectorAll(".dayTabRef") ?? []),
-                                    mr.current ?? document.getElementById("monthSelector"),
+                                    Array.from<HTMLInputElement>(formRef.current?.querySelectorAll(".dayTabRef") ?? []),
+                                    document.getElementById("monthSelector"),
                                     panelFormsVariables.isAutoFillMonthOn,
                                     false,
                                   );
                               }
                             : (): void => {}
                         }>
-                        {[
-                          "Segunda-feira",
-                          "Terça-feira",
-                          "Quarta-feira",
-                          "Quinta-feira",
-                          "Sexta-feira",
-                          "Sábado",
-                          "Domingo",
-                        ].map((d, i) => (
-                          <option key={`wk_2_${i}`} value={d} data-weekday={i === 6 ? 0 : i + 1}>
-                            {d}
-                          </option>
-                        ))}
+                        <option value='Segunda-feira' data-weekday='1'>
+                          Segunda-feira
+                        </option>
+                        <option value='Terça-feira' data-weekday='2'>
+                          Terça-feira
+                        </option>
+                        <option value='Quarta-feira' data-weekday='3'>
+                          Quarta-feira
+                        </option>
+                        <option value='Quinta-feira' data-weekday='4'>
+                          Quinta-feira
+                        </option>
+                        <option value='Sexta-feira' data-weekday='5'>
+                          Sexta-feira
+                        </option>
+                        <option value='Sábado' data-weekday='6'>
+                          Sábado
+                        </option>
+                        <option value='Domingo' data-weekday='0'>
+                          Domingo
+                        </option>
                       </select>
                     </div>
                   </div>
@@ -744,12 +733,12 @@ export default function ScheduleForm({ mainRoot, children }: ScheduleFormProps):
                         name='working_month'
                         title='Selecione aqui o mês de trabalho'
                         data-title='Mês da tabela de agendamento'
-                        ref={mr}
+                        ref={monthRef}
                         //Em todo mudança de Month selection, checa o state da agenda do mês e retorna o HTML
                         //aplicando listeners, restrições e chamadas de estilo
                         onChange={() => {
                           try {
-                            const monthSelector = mr.current ?? document.getElementById("monthSelector");
+                            const monthSelector = monthRef.current || document.getElementById("monthSelector");
                             if (
                               !(monthSelector instanceof HTMLSelectElement || monthSelector instanceof HTMLInputElement)
                             )
@@ -777,7 +766,7 @@ export default function ScheduleForm({ mainRoot, children }: ScheduleFormProps):
                             rootDlgContext.addedAptListeners = false;
                             rootDlgContext.addedDayListeners = false;
                             handleScheduleChange(
-                              mr.current,
+                              monthRef.current,
                               document.getElementById("tbSchedule"),
                               userClass,
                               panelFormsVariables.isAutoFillMonthOn,
@@ -842,24 +831,18 @@ export default function ScheduleForm({ mainRoot, children }: ScheduleFormProps):
                             ${(err as Error).message}`);
                           }
                         }}>
-                        {[
-                          { s: "jan", f: "Janeiro" },
-                          { s: "feb", f: "Fevereiro" },
-                          { s: "mar", f: "Março" },
-                          { s: "apr", f: "Abril" },
-                          { s: "may", f: "Maio" },
-                          { s: "jun", f: "Junho" },
-                          { s: "jul", f: "Julho" },
-                          { s: "aug", f: "Agosto" },
-                          { s: "sep", f: "Setembro" },
-                          { s: "oct", f: "Outubro" },
-                          { s: "nov", f: "Novembro" },
-                          { s: "dec", f: "Dezembro" },
-                        ].map((l, i) => (
-                          <option key={`month__${i}`} data-month={i} value={l.s}>
-                            {l.f}
-                          </option>
-                        ))}
+                        <option value='jan'>Janeiro</option>
+                        <option value='feb'>Fevereiro</option>
+                        <option value='mar'>Março</option>
+                        <option value='apr'>Abril</option>
+                        <option value='may'>Maio</option>
+                        <option value='jun'>Junho</option>
+                        <option value='jul'>Julho</option>
+                        <option value='aug'>Agosto</option>
+                        <option value='sep'>Setembro</option>
+                        <option value='oct'>Outubro</option>
+                        <option value='nov'>Novembro</option>
+                        <option value='dec'>Dezembro</option>
                       </select>
                     </div>
                     <div role='group' className='form-check form-switch flexAlE900Q widHalf900Q mgT1vh900Q mgB1v900Q'>
@@ -874,8 +857,8 @@ export default function ScheduleForm({ mainRoot, children }: ScheduleFormProps):
                           panelFormsVariables.isAutoFillMonthOn = !panelFormsVariables.isAutoFillMonthOn;
                           if (panelFormsVariables.isAutoFillMonthOn)
                             setListenersForDates(
-                              Array.from<HTMLInputElement>(fr.current?.querySelectorAll(".dayTabRef") ?? []),
-                              mr.current ?? document.getElementById("monthSelector"),
+                              Array.from<HTMLInputElement>(formRef.current?.querySelectorAll(".dayTabRef") ?? []),
+                              document.getElementById("monthSelector"),
                               panelFormsVariables.isAutoFillMonthOn,
                               false,
                             );
@@ -890,8 +873,37 @@ export default function ScheduleForm({ mainRoot, children }: ScheduleFormProps):
               </section>
             </section>
             <hr className='rdc02rHr460Q' />
-            <section ref={bscr} id='formBodySchedSect' className='widMaxFullView ovFlAut'>
-              {children}
+            <section id='formBodySchedSect' className='widMaxFullView ovFlAut'>
+              <table
+                className='table table-responsive table-striped table-hover form-padded table-transparent'
+                id='mainConsDaysCont'>
+                <colgroup>
+                  {cols.map(nCol => (
+                    <col id={`schedule-col-${nCol}`} data-col={nCol} key={`schedule_col__${nCol}`}></col>
+                  ))}
+                </colgroup>
+                <thead className='thead-light'>
+                  <tr>
+                    <th scope='col'>
+                      <div role='group' className='flexAlItCt mg-40b noInvert'>
+                        <strong>Horário</strong>
+                      </div>
+                    </th>
+                    {cols.map((nCol, _, arr) =>
+                      nCol === arr.slice(-1)[0] ? (
+                        <ThDate nCol={nCol} last={true} key={`th_date__${nCol}`} />
+                      ) : (
+                        <ThDate nCol={nCol} key={`th_date__${nCol}`} />
+                      ),
+                    )}
+                  </tr>
+                </thead>
+                <tbody id='tbSchedule'>
+                  {hours.map((nHr, i) => (
+                    <TrBSchedTab mainRoot={mainRoot} nHr={nHr} nRow={i + 1} key={`tr_${i + 1}__${nHr}`} />
+                  ))}
+                </tbody>
+              </table>
             </section>
             <hr />
             <div role='group' className='flexNoW flexQ460NoWC cGap1v rGapQ4601v widThird widFull900Q'>
@@ -900,7 +912,7 @@ export default function ScheduleForm({ mainRoot, children }: ScheduleFormProps):
                 id='btnExport'
                 className='btn btn-success flexAlItCt flexJC flexBasis50 bolded noInvert'
                 name='btnExportSched'
-                ref={ber}
+                ref={btnExportSchedRef}
                 data-active='false'
                 title='Gere um .xlsx com os dados preenchidos'
                 onClick={ev => {
@@ -908,8 +920,8 @@ export default function ScheduleForm({ mainRoot, children }: ScheduleFormProps):
                   exporters.scheduleExporter.handleExportClick(
                     ev,
                     `Agenda__d${new Date().getDay()}_m${new Date().getMonth() + 1}_y${new Date().getFullYear()}`,
-                    fr.current ?? document,
-                    Array.from(fr.current?.querySelectorAll("table") ?? []).at(-1) ??
+                    formRef.current ?? document,
+                    Array.from(formRef.current?.querySelectorAll("table") ?? []).at(-1) ??
                       Array.from(document.querySelectorAll("table") ?? []).at(-1) ??
                       "TabelaDeAgenda",
                   ),

@@ -1,10 +1,10 @@
 import { DocumentNodeProps } from "@/lib/global/declarations/interfaces";
-import { pageProps } from "@/lib/global/vars";
+import { pageProps } from "@/vars";
 import Document, { Html, Head, Main, NextScript, DocumentContext } from "next/document";
 import Script from "next/script";
 import path from "path";
 import { promises as fs } from "fs";
-export async function getServerSideProps(): Promise<any> {
+export async function getStaticProps(): Promise<any> {
   const packageJsonPath = path.join(process.cwd(), "../../package.json");
   const packageJson = JSON.parse(await fs.readFile(packageJsonPath, "utf-8"));
   return {
@@ -67,6 +67,7 @@ export default function MyDocument({ deps }: { deps: any }): JSX.Element {
           id='bootstrapLink'></link>
       </Head>
       <body>
+        <span className='divModal' id='divModal'></span>
         <Main />
         <Script
           defer
@@ -96,6 +97,8 @@ export default function MyDocument({ deps }: { deps: any }): JSX.Element {
             },`,
           }}
         />
+        <span className='divModal' id='divModalSec'></span>
+        <span className='divModal' id='divModalTerc'></span>
       </body>
       <NextScript />
     </Html>

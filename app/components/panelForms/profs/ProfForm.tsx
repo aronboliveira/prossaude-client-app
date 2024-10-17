@@ -4,7 +4,7 @@ import { addExportFlags } from "@/lib/global/gController";
 import { clearPhDates, normalizeSizeSb } from "@/lib/global/gStyleScript";
 import { providers, panelRoots, exporters } from "@/vars";
 import { handleClientPermissions } from "@/lib/locals/panelPage/handlers/consHandlerUsers";
-import { handleSubmit } from "@/lib/locals/panelPage/handlers/handlers";
+import { handleSubmit } from "@/lib/global/data-service";
 import { panelFormsVariables } from "../panelFormsData";
 import { useEffect, useRef, useState, useCallback, useContext } from "react";
 import GenericErrorComponent from "../../error/GenericErrorComponent";

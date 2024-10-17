@@ -1,9 +1,9 @@
 module.exports = {
   env: {
-    browser: true,
-    es2022: true,
     node: true,
+    browser: true,
     es6: true,
+    es2022: true,
   },
   extends: ["next/core-web-vitals", "eslint:recommended", "plugin:@typescript-eslint/recommended"],
   parser: "@typescript-eslint/parser",

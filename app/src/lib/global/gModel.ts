@@ -1,6 +1,6 @@
 import { cursorCheckTimer } from "./handlers/gHandlers";
 import { fadeElement } from "./gStyleScript";
-import type { entryEl, textEl, targStr, targEl, nlFm } from "./declarations/types";
+import type { entryEl, textEl, targStr, targEl, nlFm, nlEl } from "./declarations/types";
 //nesse file estão presentes principalmente as funções relacionadas à exigência de modelo textual e de visualização
 import {
   extLine,
@@ -11,6 +11,8 @@ import {
   typeError,
 } from "./handlers/errorHandler";
 import { Dispatch, SetStateAction } from "react";
+import { AlignType } from "./declarations/testVars";
+import { ERROR_LIMIT, errorLabels } from "@/vars";
 export function numberLimit(inpEl: targEl): void {
   if (inpEl instanceof HTMLInputElement || inpEl instanceof HTMLTextAreaElement || inpEl instanceof HTMLSelectElement) {
     const isAtivFis = inpEl.classList.contains("inpAtivFis");
@@ -49,7 +51,7 @@ export function normalizeNegatives(tabInp: Element): string {
 
   return parsedInpValue.toString() ?? "";
 }
-export function parseNotNaN(iniVal: string, def: number = 0, context: string = "int", fixed: number = 4): number {
+export function parseNotNaN(iniVal: string, def: number = 0, context: string = "float", fixed: number = 4): number {
   let returnVal = 0;
   try {
     if (typeof iniVal !== "string") throw new Error("Failed to validate argument: iniVal must be a string.");
@@ -222,7 +224,7 @@ export function fluxGen(
     ga: entryEl;
   },
   genIniValue: targStr = "masculino",
-  alignSetter?: Dispatch<SetStateAction<string>>,
+  alignSetter?: Dispatch<SetStateAction<AlignType>>,
 ): string {
   if (
     Object.values(genConts).every(
@@ -953,6 +955,18 @@ export function camelToKebab(str: string): string {
     return iniStr;
   }
 }
+export function camelToRegular(str: string, capitalize = true): string {
+  const iniStr = str;
+  if (typeof capitalize !== "boolean") capitalize = true;
+  try {
+    return capitalize
+      ? `${str.charAt(0).toUpperCase()}${str.slice(1).replace(/([a-z])([A-Z])/g, "$1 $2")}`
+      : `${str.charAt(0)}${str.slice(1).replace(/([a-z])([A-Z])/g, "$1 $2")}`;
+  } catch (e) {
+    console.error(`Error executing camelToRegular:\n${(e as Error).message}`);
+    return iniStr;
+  }
+}
 export function kebabToCamel(str: string): string {
   const iniStr = str;
   try {
@@ -1194,4 +1208,91 @@ export function assignFormAttrs(fr: nlFm): void {
   } catch (e) {
     console.error(`Failed to execute assignFormAttrs: ${(e as Error).name} : ${(e as Error).message}`);
   }
+}
+export function limitedError(msg: string, idf: string) {
+  try {
+    if (typeof msg !== "string" || typeof idf !== "string") return;
+    if (!errorLabels[idf]) errorLabels[idf] = 0;
+    errorLabels[idf] = +1;
+    if (errorLabels[idf] <= ERROR_LIMIT) console.error(msg);
+    if (errorLabels[idf] === ERROR_LIMIT + 1)
+      setTimeout(() => {
+        if (errorLabels?.[idf]) errorLabels[idf] = 0;
+      }, 5000);
+  } catch (e) {
+    console.error(`Error executing limitedError:\n${(e as Error).message}`);
+  }
+}
+export function applyFieldConstraints(el: nlEl): void {
+  try {
+    if (
+      !(
+        el instanceof HTMLInputElement ||
+        el instanceof HTMLTextAreaElement ||
+        (el instanceof HTMLElement && el.contentEditable)
+      )
+    )
+      throw inputNotFound(el, `Changed element at ${new Date().getTime()}`, extLine(new Error()));
+    if (el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement) {
+      if (el.maxLength !== -1 && el.value.length > el.maxLength) el.value = el.value.slice(0, el.maxLength);
+      if (el instanceof HTMLInputElement) {
+        const parsedValue = parseNotNaN(el.value);
+        if (el.type === "number") {
+          if (el.min !== "" && Number.isFinite(parseNotNaN(el.min)) && parsedValue < Math.abs(parseNotNaN(el.min)))
+            el.value = el.min;
+          if (
+            el.max !== "" &&
+            el.max !== "0" &&
+            el.max !== "-0" &&
+            Number.isFinite(parseNotNaN(el.max)) &&
+            parsedValue > Math.abs(parseNotNaN(el.max))
+          )
+            el.value = el.max;
+        }
+      }
+    } else {
+      if (
+        el.dataset.max &&
+        el.dataset.max !== "" &&
+        el.dataset.max !== "0" &&
+        el.dataset.max !== "-0" &&
+        Number.isFinite(parseNotNaN(el.dataset.max)) &&
+        el.innerText.length > Math.abs(parseNotNaN(el.dataset.max))
+      )
+        el.innerText = el.innerText.slice(0, Math.abs(parseNotNaN(el.dataset.max)));
+      if (el.dataset.type && el.dataset.type === "number") {
+        if (el.innerText && el.innerText.length > 0) el.innerText = el.innerText.replace(/[^0-9]/g, "");
+        if (
+          el.dataset.maxNum &&
+          el.dataset.maxNum !== "" &&
+          el.dataset.maxNum !== "0" &&
+          el.dataset.maxNum !== "-0" &&
+          Number.isFinite(parseNotNaN(el.dataset.maxNum)) &&
+          el.innerText &&
+          el.innerText.length > 0 &&
+          parseNotNaN(el.innerText) > Math.abs(parseNotNaN(el.dataset.maxNum))
+        )
+          el.innerText = el.dataset.maxNum;
+        if (
+          el.dataset.minNum &&
+          el.dataset.minNum !== "" &&
+          el.dataset.minNum !== "0" &&
+          el.dataset.minNum !== "-0" &&
+          Number.isFinite(parseNotNaN(el.dataset.minNum)) &&
+          el.innerText &&
+          el.innerText.length > 0 &&
+          parseNotNaN(el.innerText) < Math.abs(parseNotNaN(el.dataset.minNum))
+        )
+          el.innerText = el.dataset.minNum;
+      }
+    }
+  } catch (e) {
+    limitedError(
+      el?.id || el?.className.replace(/\s/g, "__") || el?.tagName || "default",
+      `Error executing applyFieldConstraints:\n${(e as Error).message}`,
+    );
+  }
+}
+export function checkContext(ctx: any, alias: string, caller: any): void {
+  if (!ctx) console.warn(`Component ${caller.prototype.constructor.name} out of Context ${alias}`);
 }

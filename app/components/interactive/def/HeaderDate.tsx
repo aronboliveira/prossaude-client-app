@@ -15,8 +15,8 @@ export default function HeaderDate(): JSX.Element {
       const equalizeBtn = (): void => {
         btnRef.current ??= document.getElementById("headerDatBtn") as HTMLButtonElement;
         dateRef.current ??= document.getElementById("dateHeader") as HTMLInputElement;
-        const dateWidth = parseNotNaN(getComputedStyle(dateRef.current).width.replace("px", "").trim());
-        const btnWidth = parseNotNaN(getComputedStyle(btnRef.current).width.replace("px", "").trim());
+        const dateWidth = parseNotNaN(getComputedStyle(dateRef.current).width.replace("px", "").trim()),
+          btnWidth = parseNotNaN(getComputedStyle(btnRef.current).width.replace("px", "").trim());
         if (dateWidth > btnWidth) btnRef.current.style.width = `${dateWidth}px`;
         else if (dateWidth < btnWidth) dateRef.current.style.width = `${btnWidth}px`;
       };
@@ -28,7 +28,7 @@ export default function HeaderDate(): JSX.Element {
     }
   }, []);
   return (
-    <span role='group' className='control flexJSt flexQ900NoW' id='spanHFlex'>
+    <span role='group' className='control flexJSt flexQ900NoW' id='spanHFlex' style={{ width: "30vw" }}>
       <input
         type='date'
         className='form-control d-ibl minCurrDate'

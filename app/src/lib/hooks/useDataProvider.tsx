@@ -19,6 +19,6 @@ export default function useDataProvider(
     } catch (e) {
       console.error(`Error executing useDataProvider:\n${(e as Error).message}`);
     }
-  }, [mounted]);
+  }, [mounted, el, userClass]);
   return [mounted, setMounted];
 }

@@ -1,5 +1,7 @@
 /* Panel Page Style */
-
+@use "../abstracts/variables" as *;
+@use "../base/root" as *;
+@use "../base/animations" as *;
 @keyframes slideUserInfo {
   0% {
     width: 0;

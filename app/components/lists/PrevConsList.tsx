@@ -3,13 +3,12 @@ import { ErrorBoundary } from "react-error-boundary";
 import { HistoricDlgProps } from "@/lib/global/declarations/interfacesCons";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { isClickOutside } from "@/lib/global/gStyleScript";
-import { nullishDlg, nullishTab } from "@/lib/global/declarations/types";
+import { nullishDlg, nlTab } from "@/lib/global/declarations/types";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useEffect, useRef } from "react";
 import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
 import GenericErrorComponent from "../error/GenericErrorComponent";
 import PrevConsRow from "./PrevConsRow";
-import Link from "next/link";
 export default function PrevConsList({
   dispatch,
   state = true,
@@ -25,7 +24,7 @@ export default function PrevConsList({
   ],
 }: HistoricDlgProps): JSX.Element {
   const prevConsDlgRef = useRef<nullishDlg>(null);
-  const prevConsTabRef = useRef<nullishTab>(null);
+  const prevConsTabRef = useRef<nlTab>(null);
   //push em history
   useEffect(() => {
     history.pushState(
@@ -98,9 +97,7 @@ export default function PrevConsList({
                     <em className='noInvert'>
                       Lista Recuperada da Ficha de Pacientes registrados. Acesse
                       <samp>
-                        <Link href={`${location.origin}/ag`} id='agLink' style={{ display: "inline" }}>
-                          &nbsp;Anamnese Geral&nbsp;
-                        </Link>
+                        <a> ROTA_PLACEHOLDER </a>
                       </samp>
                       para cadastrar
                     </em>
@@ -108,24 +105,33 @@ export default function PrevConsList({
                 </strong>
               </caption>
               <colgroup>
-                {Array.from({ length: 5 }, (_, i) => (
-                  <col key={`pac_col__${i}`} data-col={i + 1}></col>
-                ))}
+                <col data-col={1}></col>
+                <col data-col={2}></col>
+                <col data-col={3}></col>
+                <col data-col={4}></col>
+                <col data-col={5}></col>
+                <col data-col={6}></col>
               </colgroup>
               <thead className='thead-dark'>
                 <tr id='avPacs-row1' data-row={1}>
-                  {[
-                    "Nome",
-                    "Data",
-                    "Tipo de Consulta",
-                    "Profissional Responsável",
-                    "Estudante Alocado",
-                    "Anotações",
-                  ].map((l, i) => (
-                    <th key={`pac_th__${i}`} scope='col' data-row={1} data-col={i + 1}>
-                      {l}
-                    </th>
-                  ))}
+                  <th scope='col' data-row={1} data-col={1}>
+                    Nome
+                  </th>
+                  <th scope='col' data-row={1} data-col={2}>
+                    Data
+                  </th>
+                  <th scope='col' data-row={1} data-col={3}>
+                    Tipo da Consulta
+                  </th>
+                  <th scope='col' data-row={1} data-col={4}>
+                    Profissional Responsável
+                  </th>
+                  <th scope='col' data-row={1} data-col={5}>
+                    Estudante Alocado
+                  </th>
+                  <th scope='col' data-row={1} data-col={6}>
+                    Anotações
+                  </th>
                 </tr>
               </thead>
               <tbody>

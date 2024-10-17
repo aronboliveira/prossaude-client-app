@@ -1,7 +1,6 @@
 "use client";
 import { HrCelProps } from "@/lib/global/declarations/interfacesCons";
 import EraseAptBtn from "./EraseAptBtn";
-import TdSlotInput from "./TdSlotInput";
 export default function TdBSchedTab({ nHr, nRow, nCol, last = false }: HrCelProps): JSX.Element {
   const dayOrder = ((): string => {
       switch (nCol) {
@@ -50,7 +49,15 @@ export default function TdBSchedTab({ nHr, nRow, nCol, last = false }: HrCelProp
         id={`slot_${nHr}-00_${nCol}`}
         data-row={nRow}
         data-col={nCol}>
-        <TdSlotInput nHr={nHr} nCol={nCol} nRow={nRow} dayOrder={dayOrder} hourOrder={hourOrder} />
+        <input
+          className={`transparent-el lcPersist slotableDay opaque-bluish wid100 form-control inp${nHr}-00 inp-text-${nHr}-00`}
+          placeholder='Horário Livre'
+          id={`_${nHr}-00_${nCol}`}
+          name={`date_${nHr}-00_${nCol}`}
+          data-title={`${hourOrder} Horário, ${dayOrder} dia`}
+          data-row={nRow}
+          data-col={nCol}
+        />
         <div role='group' className='flexNoWC flexAlItCt'>
           <input
             type='checkbox'

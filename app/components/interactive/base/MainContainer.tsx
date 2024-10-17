@@ -1,43 +1,33 @@
 "use client";
-import { AppRootContext } from "@/pages/_app";
+import { RootCtx } from "@/pages/_app";
+import { createRoot } from "react-dom/client";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { equalizeParagraphs } from "@/lib/locals/basePage/baseStylescript";
 import { expandContent } from "@/lib/global/gStyleScript";
-import { parseNotNaN } from "@/lib/global/gModel";
+import { checkContext, parseNotNaN } from "@/lib/global/gModel";
 import { targEl } from "@/lib/global/declarations/types";
 import { useEffect, useContext } from "react";
 import { useRouter } from "next/router";
-import UserProfilePanel from "../../user/UserProfilePanel";
-import { defUser } from "@/redux/slices/userSlice";
-import { experimentalProps } from "@/vars";
 import Link from "next/link";
-import { registerRoot } from "@/lib/global/handlers/gHandlers";
-import { AppRootContextType } from "@/lib/global/declarations/interfaces";
+import EnhancedUserProfilePanel from "../../user/EnhancedUserProfilePanel";
 let baseRootUser: targEl;
 export default function MainContainer(): JSX.Element {
-  const context = useContext<AppRootContextType>(AppRootContext);
-  const nextRouter = useRouter();
+  const ctx = useContext(RootCtx),
+    router = useRouter();
+  //TODO REMOVER APÓS TESTE
+  checkContext(ctx, "RootCtx", MainContainer);
   useEffect(() => {
-    experimentalProps.experimentalUser = localStorage.getItem("activeUser")
-      ? JSON.parse(localStorage.getItem("activeUser")!)
-      : defUser;
-    localStorage.setItem("activeUser", JSON.stringify(experimentalProps.experimentalUser));
     baseRootUser = document.getElementById("rootUserInfo");
-    baseRootUser instanceof HTMLElement && !context.roots.baseRootedUser
-      ? (context.roots.baseRootedUser = registerRoot(
-          context.roots.baseRootedUser,
-          `#${baseRootUser.id}`,
-          undefined,
-          true,
-        ))
+    baseRootUser instanceof HTMLElement && !ctx.roots.baseRootedUser
+      ? (ctx.roots.baseRootedUser = createRoot(baseRootUser))
       : setTimeout(() => {
           baseRootUser = document.getElementById("rootUserInfo");
           !baseRootUser && elementNotFound(baseRootUser, "Root for user painel", extLine(new Error()));
         }, 2000);
-    typeof context.roots.baseRootedUser === "object"
-      ? context.roots.baseRootedUser?.render(<UserProfilePanel router={nextRouter} />)
+    typeof ctx.roots.baseRootedUser === "object"
+      ? ctx.roots.baseRootedUser?.render(<EnhancedUserProfilePanel router={router} />)
       : elementNotFound(
-          `${JSON.stringify(context.roots.baseRootedUser)}`,
+          `${JSON.stringify(ctx.roots.baseRootedUser)}`,
           "Root instance for User panel",
           extLine(new Error()),
         );
@@ -179,11 +169,12 @@ export default function MainContainer(): JSX.Element {
     handleBgResize();
     addEventListener("resize", handleBgResize);
     return (): void => removeEventListener("resize", handleBgResize);
-  }, [context.roots, nextRouter]);
+  }, [ctx.roots, router]);
   return (
     <main className='main-container gridAlItCt widFull gridAlItBs750Q gridAuto750Q rGap4v750Q'>
       <section id='cardsSect' className='grid4col grid4r750Q gridJICt rGap2v750Q pd-t4v750Q fade-in-early-element'>
         <div
+          onMouseEnter={() => router.prefetch("/ag")}
           className='card card23v htMinMaxC751Qmin brd-rd2r wid90p750Q htMaxC460Q fd1el'
           style={{ maxWidth: "12rem" }}>
           <button className='card-hborder transparent-el fade-in-early-element' id='agAnchoredBtn'>
@@ -193,8 +184,14 @@ export default function MainContainer(): JSX.Element {
               target='_self'
               href='/ag'
               rel='nofollow'
-              onClick={() => nextRouter.push("/ag")}>
-              <img className='card-img-top' src='../img/icon-psy.png' alt='imagem-card-geral' />
+              onClick={() => router.push("/ag")}>
+              <img
+                decoding='async'
+                loading='lazy'
+                className='card-img-top'
+                src='../img/icon-psy.png'
+                alt='imagem-card-geral'
+              />
             </Link>
           </button>
           <div className='card-body txAlCt pdT3v flexNoWC rGap2v750Q rGap0-5v fd2el'>
@@ -204,7 +201,7 @@ export default function MainContainer(): JSX.Element {
               target='_self'
               href='/ag'
               rel='nofollow'
-              onClick={() => nextRouter.push("/ag")}>
+              onClick={() => router.push("/ag")}>
               Geral & Saúde Mental
             </Link>
             <small className='mg-1bv460Q fd3el formDesc'>
@@ -212,7 +209,9 @@ export default function MainContainer(): JSX.Element {
             </small>
           </div>
         </div>
-        <div className='card card23v htMinMaxC751Qmin brd-rd2r wid90p750Q htMaxC460Q fd2el'>
+        <div
+          className='card card23v htMinMaxC751Qmin brd-rd2r wid90p750Q htMaxC460Q fd2el'
+          onMouseEnter={() => router.prefetch("/edfis")}>
           <button className='card-hborder transparent-el' id='efAnchoredBtn'>
             <Link
               className='card-header anchoredBtn noInvert'
@@ -220,8 +219,14 @@ export default function MainContainer(): JSX.Element {
               target='_self'
               href='/edfis'
               rel='nofollow'
-              onClick={() => nextRouter.push("/edfis")}>
-              <img className='card-img-top' src='../img/PROS_edfis_icon.png' alt='imagem-card-edFis' />
+              onClick={() => router.push("/edfis")}>
+              <img
+                decoding='async'
+                loading='lazy'
+                className='card-img-top'
+                src='../img/PROS_edfis_icon.png'
+                alt='imagem-card-edFis'
+              />
             </Link>
           </button>
           <div className='card-body txAlCt pdT3v flexNoWC rGap2v750Q rGap0-5v fd3el'>
@@ -231,7 +236,7 @@ export default function MainContainer(): JSX.Element {
               target='_self'
               href='/edfis'
               rel='nofollow'
-              onClick={() => nextRouter.push("/edfis")}>
+              onClick={() => router.push("/edfis")}>
               Educação Física
             </Link>
             <p>
@@ -239,7 +244,9 @@ export default function MainContainer(): JSX.Element {
             </p>
           </div>
         </div>
-        <div className='card card23v htMinMaxC751Qmin brd-rd2r wid90p750Q htMaxC460Q fd4el'>
+        <div
+          className='card card23v htMinMaxC751Qmin brd-rd2r wid90p750Q htMaxC460Q fd4el'
+          onMouseEnter={() => router.prefetch("/edfis")}>
           <button className='card-hborder transparent-el' id='nutAnchoredBtn'>
             <Link
               className='card-header anchoredBtn noInvert'
@@ -247,8 +254,14 @@ export default function MainContainer(): JSX.Element {
               target='_self'
               href='/edfis'
               rel='nofollow'
-              onClick={() => nextRouter.push("/edfis")}>
-              <img className='card-img-top' src='../img/PROS_nut_icon.png' alt='imagem-card-nut' />
+              onClick={() => router.push("/edfis")}>
+              <img
+                decoding='async'
+                loading='lazy'
+                className='card-img-top'
+                src='../img/PROS_nut_icon.png'
+                alt='imagem-card-nut'
+              />
             </Link>
           </button>
           <div className='card-body txAlCt pdT3v flexNoWC rGap2v750Q rGap0-5v fd5el'>
@@ -258,7 +271,7 @@ export default function MainContainer(): JSX.Element {
               id='nut_but_sec'
               href='/edfis'
               rel='nofollow'
-              onClick={() => nextRouter.push("/edfis")}>
+              onClick={() => router.push("/edfis")}>
               Nutrição
             </Link>
             <p>
@@ -266,7 +279,9 @@ export default function MainContainer(): JSX.Element {
             </p>
           </div>
         </div>
-        <div className='card card23v htMinMaxC751Qmin brd-rd2r wid90p750Q htMaxC460Q fd5el'>
+        <div
+          className='card card23v htMinMaxC751Qmin brd-rd2r wid90p750Q htMaxC460Q fd5el'
+          onMouseEnter={() => router.prefetch("/od")}>
           <button className='card-hborder transparent-el' id='odAnchoredBtn'>
             <Link
               className='card-header anchoredBtn noInvert'
@@ -274,8 +289,14 @@ export default function MainContainer(): JSX.Element {
               target='_self'
               href='/od'
               rel='nofollow'
-              onClick={() => nextRouter.push("/od")}>
-              <img className='card-img-top' src='../img/pros-od-icon.png' alt='imagem-card-odonto' />
+              onClick={() => router.push("/od")}>
+              <img
+                decoding='async'
+                loading='lazy'
+                className='card-img-top'
+                src='../img/pros-od-icon.png'
+                alt='imagem-card-odonto'
+              />
             </Link>
           </button>
           <div className='card-body txAlCt pdT3v flexNoWC rGap2v750Q rGap0-5v fd6el'>
@@ -285,14 +306,14 @@ export default function MainContainer(): JSX.Element {
               target='_self'
               href='/od'
               rel='nofollow'
-              onClick={() => nextRouter.push("/od")}>
+              onClick={() => router.push("/od")}>
               Odontologia
             </Link>
             <small className='mg-1bv460Q fade-in-late-element'>Acesse aqui o formulário para Odontologia</small>
           </div>
         </div>
       </section>
-      <section id='panelSect' className='gridJICt pd-b4v750Q fd2el'>
+      <section id='panelSect' className='gridJICt pd-b4v750Q fd2el' onMouseEnter={() => router.prefetch("/panel")}>
         <button type='button' id='panelBtn' className='btn btn-primary btn-rounded wid80p750Q'>
           <Link
             href='/panel'

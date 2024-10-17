@@ -224,8 +224,6 @@ export function dragDrop(
     validTargEl instanceof HTMLElement &&
     validTargEl.classList.contains("quadrAvDent")
   ) {
-    console.log(validSrcEl);
-    console.log(validTargEl);
     const targCSt = window.getComputedStyle(validTargEl); //captura estilos do target na área de drop
     const targCStCol = targCSt.getPropertyValue("grid-column");
     const targCStRow = targCSt.getPropertyValue("grid-row");

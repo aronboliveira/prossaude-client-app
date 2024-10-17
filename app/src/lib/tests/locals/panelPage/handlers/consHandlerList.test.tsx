@@ -10,16 +10,10 @@ import {
   filterAvMembers,
   filterTabMembers,
   fillTabAttr,
-  renderTable,
 } from "../../../../locals/panelPage/handlers/consHandlerList";
 import { elementNotFound, multipleElementsNotFound } from "../../../../global/handlers/errorHandler";
-import { personAbrvClasses } from "../../../../global/declarations/types";
-import { AppointmentHandler, ErrorHandler, EventTargetMethod } from "../../../testVars";
-import { registerRoot } from "../../../../global/handlers/gHandlers";
-import { panelRoots } from "../../../../../vars";
-import GenericErrorComponent from "../../../../../../components/error/GenericErrorComponent";
-import { createRoot } from "react-dom/client";
-import React from "react";
+import { personAbrvClasses } from "@/lib/global/declarations/types";
+import { AppointmentHandler, ErrorHandler, EventTargetMethod } from "@/lib/tests/testVars";
 jest.mock(
   "../../../../global/handlers/errorHandler",
   (): {
@@ -30,7 +24,7 @@ jest.mock(
     extLine: jest.fn() as jest.Mock,
     elementNotFound: jest.fn() as jest.Mock,
     multipleElementsNotFound: jest.fn() as jest.Mock,
-  }),
+  })
 ) as typeof jest;
 describe("checkIntervDate", (): void => {
   let mockSwitchBtnBS: jest.Mock;
@@ -66,7 +60,7 @@ describe("checkIntervDate", (): void => {
     expect(
       jest
         .spyOn<any, ErrorHandler>(require("../../../../global/handlers/errorHandler"), "elementNotPopulated")
-        .mockImplementation((): void => {}) as jest.SpyInstance,
+        .mockImplementation((): void => {}) as jest.SpyInstance
     ).toHaveBeenCalled() as void;
   }) as void;
 }) as void;
@@ -81,9 +75,9 @@ describe("checkLocalIntervs", (): void => {
       jest
         .spyOn<any, AppointmentHandler>(
           require("../../../../locals/panelPage/handlers/consHandlerList"),
-          "checkIntervDate",
+          "checkIntervDate"
         )
-        .mockImplementation((): void => {}) as jest.SpyInstance,
+        .mockImplementation((): void => {}) as jest.SpyInstance
     ).toHaveBeenCalledWith<[HTMLButtonElement[]]>([btnAloc]) as void;
   }) as void;
   it("should call elementNotPopulated if no buttons are found", (): void => {
@@ -91,7 +85,7 @@ describe("checkLocalIntervs", (): void => {
     expect(
       jest
         .spyOn<any, ErrorHandler>(require("../../../../global/handlers/errorHandler"), "elementNotPopulated")
-        .mockImplementation((): void => {}) as jest.SpyInstance,
+        .mockImplementation((): void => {}) as jest.SpyInstance
     ).toHaveBeenCalled() as void;
   }) as void;
 }) as void;
@@ -114,7 +108,7 @@ describe("transferDataAloc", (): void => {
     expect(
       jest
         .spyOn<any, ErrorHandler>(require("../../../../global/handlers/errorHandler"), "elementNotFound")
-        .mockImplementation((): void => {}) as jest.SpyInstance,
+        .mockImplementation((): void => {}) as jest.SpyInstance
     ).toHaveBeenCalled() as void;
   }) as void;
 }) as void;
@@ -132,7 +126,7 @@ describe("addListenerAlocation", (): void => {
     transferDataAlocMock = jest
       .spyOn<any, AppointmentHandler>(
         require("../../../../locals/panelPage/handlers/consHandlerList"),
-        "transferDataAloc",
+        "transferDataAloc"
       )
       .mockReturnValue(true) as jest.Mock;
   }) as void;
@@ -152,7 +146,7 @@ describe("addListenerAlocation", (): void => {
       btnAloc,
       parentRef,
       forwardedRef,
-      "stud",
+      "stud"
     );
     expect(dispatch).toHaveBeenCalledWith<[boolean]>(false) as void;
   }) as void;
@@ -171,17 +165,17 @@ describe("addListenerAlocation", (): void => {
   it("should call elementNotPopulated if no tables are found", (): void => {
     addListenerAlocation(alocBtn, parentRef, forwardedRef, "Stud", true, dispatch, "coordenador");
     expect(
-      jest.spyOn<any, ErrorHandler>(require("../../../../global/handlers/errorHandler"), "elementNotPopulated"),
+      jest.spyOn<any, ErrorHandler>(require("../../../../global/handlers/errorHandler"), "elementNotPopulated")
     ).toHaveBeenCalledWith<[any, string, any]>(
       expect.anything() as any,
       `tabs in addListenerAlocation(), context Stud`,
-      expect.anything() as any,
+      expect.anything() as any
     );
   }) as void;
   it("should call multipleElementsNotFound if alocBtn or parentRef are invalid", (): void => {
     addListenerAlocation(null as any, parentRef, forwardedRef, "Stud", true, dispatch, "coordenador");
     expect(
-      jest.spyOn<any, ErrorHandler>(require("../../../../global/handlers/errorHandler"), "multipleElementsNotFound"),
+      jest.spyOn<any, ErrorHandler>(require("../../../../global/handlers/errorHandler"), "multipleElementsNotFound")
     ).toHaveBeenCalled() as void;
   }) as void;
   it("should not add event listeners for non-coordenador or supervisor user classes", (): void => {
@@ -225,7 +219,7 @@ describe("addListenerAvMembers", (): void => {
     expect(elementNotFound).toHaveBeenCalledWith<Parameters<typeof elementNotFound>>(
       null,
       "<select> for defining type of possible appointments",
-      expect.any(Function),
+      expect.any(Function)
     );
   }) as void;
 }) as void;
@@ -259,7 +253,7 @@ describe("filterAvMembers", (): void => {
   test("should throw multipleElementsNotFound if elements are not found", (): void => {
     filterAvMembers(
       document.querySelectorAll("non-existing-element") as NodeListOf<HTMLOptGroupElement>,
-      document.querySelectorAll("non-existing-element") as NodeListOf<HTMLOptGroupElement>,
+      document.querySelectorAll("non-existing-element") as NodeListOf<HTMLOptGroupElement>
     );
     expect(multipleElementsNotFound).toHaveBeenCalled() as void;
   }) as void;
@@ -336,51 +330,3 @@ describe("fillTabAttr", (): void => {
     expect(elementNotFound).toHaveBeenCalled() as void;
   }) as void;
 }) as void;
-describe("renderTable", () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-    document.body.innerHTML = "";
-  });
-  test("should return early if no table is found", () => {
-    jest.spyOn(document, "querySelector").mockReturnValue(null);
-    renderTable();
-    expect(registerRoot).not.toHaveBeenCalled();
-    expect(panelRoots).toEqual({});
-  });
-  test("should call registerRoot if a table is found", () => {
-    const mockTable = document.createElement("table");
-    mockTable.id = "testTable";
-    document.body.appendChild(mockTable);
-    panelRoots["testTable"] = {
-      render: jest.fn(),
-      unmount: jest.fn(),
-    };
-    jest.spyOn(document, "querySelector").mockReturnValue(mockTable);
-    renderTable();
-    expect(registerRoot).toHaveBeenCalledWith(panelRoots["testTable"], "#testTable");
-  });
-  test("should call render on the root after registering", () => {
-    const mockTable = document.createElement("table");
-    mockTable.id = "testTable";
-    document.body.appendChild(mockTable);
-    const mockRender = jest.fn(),
-      mockUnmount = jest.fn();
-    panelRoots["testTable"] = {
-      render: mockRender,
-      unmount: mockUnmount,
-    };
-    jest.spyOn(document, "querySelector").mockReturnValue(mockTable);
-    renderTable();
-    expect(mockRender).toHaveBeenCalledWith(<GenericErrorComponent message='Failed to render table' />);
-  });
-  test("should not call render if panelRoots entry is undefined", () => {
-    const mockTable = document.createElement("table");
-    mockTable.id = "testTable";
-    document.body.appendChild(mockTable);
-    panelRoots["testTable"] = undefined;
-    jest.spyOn(document, "querySelector").mockReturnValue(mockTable);
-    renderTable();
-    expect(registerRoot).toHaveBeenCalledWith(undefined, "#testTable");
-    expect(createRoot).not.toHaveBeenCalled();
-  });
-});

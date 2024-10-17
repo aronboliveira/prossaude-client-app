@@ -4,6 +4,8 @@ import LockTabInd from "./LobTackInd";
 import TabBtnDCut from "../client/tabs/TabBtnDCut";
 import TabBtnInd from "../client/tabs/TabBtnInd";
 import TabInpProg from "../client/tabs/TabInpProg";
+import TabInpSvi from "../client/tabs/TabInpSvi";
+import sEn from "@/styles/locals/modules/enStyles.module.scss";
 export default function Td({ nRow, nCol, ctx, lab }: TdProps): JSX.Element {
   const pascalLab = textTransformPascal(lab);
   return (
@@ -14,15 +16,17 @@ export default function Td({ nRow, nCol, ctx, lab }: TdProps): JSX.Element {
       data-row={nRow}
       data-col={nCol}>
       {ctx === "IndPerc" ? (
-        <div role='group' className={`flexDiv flexDivTab flexAlItCt noInvert div${ctx} div${lab}`}>
+        <div
+          role='group'
+          className={`flexDiv flexDivTab flexAlItCt noInvert div${ctx} div${lab} ${sEn.flexDivEn} ${sEn.flexDivTab}`}>
           <label
             htmlFor={`inp${pascalLab}${nCol - 1}Cel${nRow}_${nCol}`}
             id={`lab${pascalLab}${nCol - 1}Cel${nRow}_${nCol}`}
-            className={`form-control tabLabProgCons tabLabRow${ctx}${nRow} labInd lab${pascalLab}`}
+            className={`form-control tabLabProgCons tabLabRow${ctx}${nRow} labInd lab${pascalLab} ${sEn.tabLabProgCons} ${sEn.formControl}`}
             data-row={nRow}
             data-col={nCol}>
             <TabInpProg nRow={nRow} nCol={nCol} ctx={ctx} lab={lab} />
-            <p className={`msrProgCons indMsr`}>mm</p>
+            <p className={`${sEn.msrProgCons} ${sEn.indMsr}`}>mm</p>
           </label>
           <TabBtnInd nRow={nRow} nCol={nCol} lab={lab} />
           <LockTabInd addGroup={["lockTabInd"]} ctx={lab} />
@@ -34,26 +38,39 @@ export default function Td({ nRow, nCol, ctx, lab }: TdProps): JSX.Element {
               <label
                 htmlFor={`tabInpRow${ctx}${nRow}_${nCol}`}
                 id={`labInpRow${ctx}${nRow}_${nCol}`}
-                className={`form-control tabLabProgCons tabLabRow${ctx}${nRow}`}
+                className={`form-control tabLabProgCons tabLabRow${ctx}${nRow} ${sEn.tabLabProgCons} ${sEn.formControl}`}
                 data-row={nRow}
                 data-col={nCol}>
                 <TabInpProg nRow={nRow} nCol={nCol} ctx={ctx} lab={lab} />
-                <p className={`msrProgCons`}>mm</p>
+                <p className={`${sEn.msrProgCons}`}>mm</p>
               </label>
             );
-          else
+          else if (ctx === "DCut") {
             return (
               <label
                 htmlFor={`tabInpRow${ctx}${nRow}_${nCol}`}
                 id={`labInpRow${ctx}${nRow}_${nCol}`}
-                className={`form-control tabLabProgCons tabLabRow${ctx}${nRow}`}
+                className={`form-control tabLabProgCons tabLabRow${ctx}${nRow} ${sEn.tabLabProgCons} ${sEn.formControl}`}
                 data-row={nRow}
                 data-col={nCol}>
                 <TabInpProg nRow={nRow} nCol={nCol} ctx={ctx} lab={lab} />
-                <p className={`msrProgCons${ctx === "DCut" && lab === "Soma" ? " sumMsr" : ""}`}>mm</p>
-                {ctx === "DCut" && lab === "Soma" ? <TabBtnDCut nCol={nCol}></TabBtnDCut> : <></>}
+                <p className={`${sEn.msrProgCons}${lab === "Soma" ? ` ${sEn.sumMsr}` : ""}`}>mm</p>
+                {lab === "Soma" ? <TabBtnDCut nCol={nCol}></TabBtnDCut> : <></>}
               </label>
             );
+          } else {
+            return (
+              <label
+                htmlFor={`tabInpRow${ctx}${nRow}_${nCol}`}
+                id={`labInpRow${ctx}${nRow}_${nCol}`}
+                className={`form-control tabLabProgCons tabLabRow${ctx}${nRow} ${sEn.tabLabProgCons} ${sEn.formControl}`}
+                data-row={nRow}
+                data-col={nCol}>
+                <TabInpSvi nRow={nRow} nCol={nCol} ctx={ctx} lab={lab} />
+                <p className={`${sEn.msrProgCons}`}>mm</p>
+              </label>
+            );
+          }
         })()
       )}
     </td>

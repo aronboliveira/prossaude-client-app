@@ -1,3 +1,4 @@
+import { MutableRefObject, SetStateAction } from "react";
 import { Root } from "react-dom/client";
 export type voidVal = null | undefined;
 export type looseNum = string | number;
@@ -25,9 +26,35 @@ export type trioNumTargEl = [number, targEl, targEl];
 export type trioTargEl = [targEl, targEl, targEl];
 export type sixTargEl = [targEl, targEl, targEl, targEl, targEl, targEl];
 export type fiveNums = [number, number, number, number, number];
-export type contextAutofill = [targEl, targEl, targEl, targEl[]];
-export type contextAutofillNums = [number, number, string, [number, number, number, number, number]];
-export type autofillResult = [number, number[], number[], targEl[]];
+export type contextAutofill = {
+  gl: targEl;
+  fct: targEl;
+  naf: targEl;
+};
+export type autofillResult = {
+  ncl: number;
+  ps: {
+    w: number;
+    h: number;
+    sd: number;
+  };
+  i: {
+    imc: number;
+    mlg: number;
+    tmb: number;
+    get: number;
+    pgc: number;
+  };
+  ts: {
+    tiw: targEl;
+    tih: targEl;
+    tii: targEl;
+    tim: targEl;
+    tit: targEl;
+    tidc: targEl;
+    tip: targEl;
+  };
+};
 export type btnFillResult = [number[], number[], targEl[]];
 export type btnContext = [[number, string, fiveNums], contextAutofill];
 //errors
@@ -49,13 +76,13 @@ export type nlInp = HTMLInputElement | null;
 export type nlSel = HTMLSelectElement | null;
 export type nlBtn = HTMLButtonElement | null;
 export type nlDsb = HTMLButtonElement | nlInp;
-export type nullishTab = HTMLTableElement | null;
-export type nullishTabSect = HTMLTableSectionElement | null;
+export type nlTab = HTMLTableElement | null;
+export type nlTabSect = HTMLTableSectionElement | null;
 export type nullishAnchor = HTMLAnchorElement | null;
 export type nlDiv = HTMLDivElement | null;
-export type nullishSpan = HTMLSpanElement | null;
-export type nullishFs = HTMLFieldSetElement | null;
-export type nullishLab = HTMLLabelElement | null;
+export type nlSpan = HTMLSpanElement | null;
+export type nlFs = HTMLFieldSetElement | null;
+export type nlLab = HTMLLabelElement | null;
 export type nullishArtc = HTMLElement & {
   tagName: "ARTICLE";
 };
@@ -65,7 +92,10 @@ export type nullishOptGrp = HTMLOptGroupElement | null;
 export type queryableNode = Document | Element | null;
 export type vRoot = Root | voidVal;
 export type rMouseEvent = MouseEvent | React.MouseEvent;
+export type rKbEv = KeyboardEvent | React.KeyboardEvent;
 export type rDragEvent = DragEvent | React.DragEvent;
+export type NlMRef<T> = MutableRefObject<T> | null;
+export type NlrDispatch<T> = Dispatch<SetStateAction<T>> | null;
 export type pageCases = "login" | "base" | "ag" | "ed" | "od" | "panel" | "recover";
 export type formCases = "schedule" | "studs" | "profs" | "patients" | "cons" | pageCases;
 export type fetchSuffixes = "_table" | "_form";
@@ -124,8 +154,6 @@ export type pageStyleCases =
   | "Panel Page Style"
   | "Recover Page Style";
 export type validSchedHours = 18 | 19 | 20 | 21;
-export type validSchedCols = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
-export type thunkReqStatus = "idle" | "loading" | "submitting" | "fulfilled" | "rejected";
 export type userClasses = "coordenador" | "supervisor" | "estudante";
 export type personAbrvClasses = "stud" | "prof" | "pac";
 export type personAbrvUpperClasses = "Stud" | "Prof" | "Pac";

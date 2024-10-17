@@ -1,8 +1,15 @@
 "use client";
 import { DlgProps } from "@/lib/global/declarations/interfaces";
+import s from "@/styles/locals/modules/sharedComponents.module.scss";
+import { useRouter } from "next/router";
 export default function TipsBtn({ dispatch, state }: DlgProps): JSX.Element {
+  const router = useRouter();
   return (
-    <button className='transparent-el-bg' id='tipsBtn' aria-label='Abrir Dicas' onClick={() => dispatch(!state)}>
+    <button
+      className={`transparent-el-bg ${/edfis/gi.test(router.pathname) ? `${s.tipsBtnEn}` : ""}`}
+      id='tipsBtn'
+      aria-label='Abrir Dicas'
+      onClick={() => dispatch(!state)}>
       <svg
         xmlns='http://www.w3.org/2000/svg'
         width='16'
