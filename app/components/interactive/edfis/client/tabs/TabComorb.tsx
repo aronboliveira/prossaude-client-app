@@ -6,7 +6,6 @@ import { switchRowComorb } from "@/lib/locals/edFisNutPage/edFisNutHandler";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useEffect, useReducer, useRef } from "react";
 import useMount from "@/lib/hooks/useMount";
-import Spinner from "../../../../icons/Spinner";
 import { styled } from "styled-components";
 import s from "@/styles/locals/modules/sharedComponents.module.scss";
 import sEn from "@/styles/locals/modules/enStyles.module.scss";
@@ -40,9 +39,7 @@ export default function TabComorb({ children = <></> }: { children: JSX.Element 
       console.error(`Error executing useEffect for blockCount:\n${(e as Error).message}`);
     }
   }, [blockCount, mounted]);
-  return !mounted ? (
-    <Spinner spinnerClass='spinner-grow' />
-  ) : (
+  return (
     <fieldset name='fsComorbName' id='fsComorbId' className={`fsMain divTab ${s.divTabEn}`} ref={mainRef}>
       <FsComorbLeg id='fsComorbLeg'>
         Comorbidades

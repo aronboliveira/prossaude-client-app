@@ -1,4 +1,4 @@
-import { MutableRefObject, SetStateAction } from "react";
+import { Dispatch, MutableRefObject, SetStateAction } from "react";
 import {
   TabCelCtxs,
   ctxRot,
@@ -18,7 +18,7 @@ import {
   NlrDispatch,
   elCollection,
 } from "./types";
-import { FactorAtletaValue, Gender, NafTypeValue } from "@/lib/global/declarations/testVars";
+import { BodyType, FactorAtletaValue, Gender, Intensity, NafTypeValue } from "@/lib/global/declarations/testVars";
 export interface DocumentNodeProps {
   html: string;
   head?: (JSX.Element | null)[];
@@ -49,11 +49,15 @@ export interface ENCtxProps {
     sar: NlMRef<nlSel>;
     txbr: NlMRef<nlSel>;
   };
+  bt: {
+    s: BodyType;
+    d: NlrDispatch<BodyType>;
+  };
 }
 export interface FspCtxProps {
   cons: {
     numCons: number;
-    setNumCons: Dispatch<SetStateAction<number>> | null;
+    setNumCons: NlrDispatch<number>;
   };
   refs: {
     snc: NlMRef<nlSel>;

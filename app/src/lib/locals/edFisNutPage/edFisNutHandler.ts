@@ -8,7 +8,7 @@ import {
   evalIMC,
   evalMatchTMBElements,
   evalPseudoNum,
-  evaluatePGCDecay,
+  evalPGCDecay,
 } from "./edFisNutModel";
 import { checkReturnIndex, formatValue } from "./edFisNutController";
 import { highlightChange, fadeElement } from "../../global/gStyleScript";
@@ -345,7 +345,7 @@ export function updateIndexesContexts({ gl, fct }: { gl: targEl; fct: targEl }):
     if (tipgc instanceof HTMLInputElement || tipgc instanceof HTMLSelectElement) formatValue(tipgc, tabProps.PGC);
     updateTMBContext(fct);
     evalFactorAtvLvl();
-    if (!(tabProps.TMB && tabProps.TMB >= 0 && (tabProps.factorAtvLvl as number) >= 0)) throw new Error(`Invalid TMB`);
+    if (!(tabProps.TMB && tabProps.TMB >= 0 && (tabProps.factorAtvLvl as number) >= 0)) return; //invalid tmb
     updateGETContext(person);
   } catch (e) {
     limitedError(`Error executing updateIndexesContexts:\n${(e as Error).message}`, "updateIndexesContexts");
@@ -613,15 +613,19 @@ export function updatePGC(parentEl: targEl | Document, ctx: string = "cons"): vo
     if (!(parentEl instanceof HTMLElement)) parentEl = document;
     const tidc = tabProps.tidc,
       tipgc = tabProps.tipgc;
-    if ((tidc instanceof HTMLInputElement || tidc instanceof HTMLSelectElement) && tidc.type === "number") {
+    if (
+      (tidc instanceof HTMLInputElement && (tidc.type === "number" || tidc.type === "text")) ||
+      tidc instanceof HTMLSelectElement
+    ) {
       person.sumDCut = parseNotNaN(tidc?.value) || 0;
       tidc.value = person.sumDCut.toString();
     } else inputNotFound(tidc, "tidc", extLine(new Error()));
-    if ((tipgc instanceof HTMLInputElement || tipgc instanceof HTMLSelectElement) && tipgc.type === "number") {
+    if (
+      (tipgc instanceof HTMLInputElement && (tipgc.type === "number" || tipgc.type === "text")) ||
+      tipgc instanceof HTMLSelectElement
+    ) {
       tabProps.PGC = parseNotNaN(person.calcPGC(person).pgc.toFixed(4)) ?? 0;
-      evaluatePGCDecay(person, tipgc, tabProps.PGC)[0] === true
-        ? formatValue(tipgc, tabProps.PGC)
-        : formatValue(tipgc, tabProps.PGC, 2);
+      evalPGCDecay(tipgc) ? formatValue(tipgc, tabProps.PGC) : formatValue(tipgc, tabProps.PGC, 2);
     } else inputNotFound(tipgc, "tipgc", extLine(new Error()));
   } catch (e) {
     console.error(`Error executing updatePGC:\n${(e as Error).message}`);
@@ -629,13 +633,20 @@ export function updatePGC(parentEl: targEl | Document, ctx: string = "cons"): vo
 }
 export function updateAtvLvl(caller: "naf" | "sa"): void {
   try {
-    evalFactorAtvLvl();
     if (!(tabProps.naf instanceof HTMLSelectElement || tabProps.naf instanceof HTMLInputElement))
       throw inputNotFound(tabProps.naf, `Validation of Selector for Physical Activity Factor`, extLine(new Error()));
     if (!(tabProps.sa instanceof HTMLSelectElement || tabProps.sa instanceof HTMLInputElement))
       throw inputNotFound(tabProps.sa, `Validation of Selector for Physical Activity Intensity`, extLine(new Error()));
+    const nafIntensity =
+      tabProps.naf instanceof HTMLSelectElement
+        ? tabProps.naf.dataset.intensity ||
+          tabProps.naf.innerText.toLowerCase().replace("á", "").replace("intenso", "Intenso") ||
+          tabProps.naf.value
+        : tabProps.naf.innerText.toLowerCase().replace("á", "").replace("intenso", "Intenso") || tabProps.naf.value;
+    evalFactorAtvLvl();
     evalActivityLvl();
-    caller === "naf" ? (tabProps.sa.value = tabProps.naf.value) : (tabProps.naf.value = tabProps.sa.value);
+    console.log("Intensidade de NAF: " + nafIntensity);
+    caller === "naf" ? (tabProps.sa.value = nafIntensity) : (tabProps.naf.dataset.intensity = tabProps.sa.value);
   } catch (e) {
     limitedError(`Error executing updateAtvLvl:${(e as Error).message}`, "updateAtvLvl");
   }
@@ -659,6 +670,22 @@ export function defineTargInps({
     switch (ctx) {
       case "cons": {
         let num = evalPseudoNum(tabProps.numCons) || 1;
+        console.log("---CASE CONS---");
+        console.log("Appointment Number: " + (tabProps.numCons ?? "Indefinido") + " vs. " + num);
+        if (refs) {
+          console.log(
+            Object.values(refs).map((col: { [k: string]: NlMRef<nlInp> }) =>
+              Object.values(col).every((t: NlMRef<nlInp>) => t?.current instanceof HTMLElement),
+            ),
+          );
+          console.log(
+            Object.values(refs)
+              .map((col: { [k: string]: NlMRef<nlInp> }) =>
+                Object.values(col).every((t: NlMRef<nlInp>) => t?.current instanceof HTMLElement),
+              )
+              .every(colEval => colEval),
+          );
+        }
         if (
           refs &&
           Object.values(refs)
@@ -688,15 +715,16 @@ export function defineTargInps({
         } else {
           //TODO REMOVER APÓS TESTE
           console.log("Nem toda referência foi validada");
+          const relNum = num + 1;
           for (const [k, v] of [
-            ["tiw", `#tabInpRowMedAnt2_${num + 1}`],
-            ["tih", `#tabInpRowMedAnt3_${num + 1}`],
-            ["tidc", `#tabInpRowDCut9_${num + 1}`],
-            ["tiimc", `#inpImc${num}Cel2_${num + 1}`],
-            ["timlg", `#inpMlg${num}Cel3_${num + 1}`],
-            [`tipgc`, `#inpPgc${num}Cel4_${num + 1}`],
-            ["titmb", `#inpTmb${num}Cel5_${num + 1}`],
-            ["tiget", `#inpGet${num}Cel6_${num + 1}`],
+            ["tiw", `#tabInpRowMedAnt2_${relNum}`],
+            ["tih", `#tabInpRowMedAnt3_${relNum}`],
+            ["tidc", `#tabInpRowDCut9_${relNum}`],
+            ["tiimc", `#inpImc${num}Cel2_${relNum}`],
+            ["timlg", `#inpMlg${num}Cel3_${relNum}`],
+            [`tipgc`, `#inpPgc${num}Cel4_${relNum}`],
+            ["titmb", `#inpTmb${num}Cel5_${relNum}`],
+            ["tiget", `#inpGet${num}Cel6_${relNum}`],
           ])
             arrayTargInps.push([k, parent.querySelector(v)]);
           return Object.fromEntries(arrayTargInps) as {
@@ -712,6 +740,21 @@ export function defineTargInps({
             ? parseInt(el.id.slice(el.id.lastIndexOf("_") + 1).replace(/[^0-9]/g, ""), 10)
             : 1;
         if (!Number.isFinite(num)) num = 2;
+        if (refs) {
+          console.log("Validation for Col");
+          console.log(
+            Object.values(refs).map((col: { [k: string]: NlMRef<nlInp> }) =>
+              Object.values(col).every((t: NlMRef<nlInp>) => t?.current instanceof HTMLElement),
+            ),
+          );
+          console.log(
+            Object.values(refs)
+              .map((col: { [k: string]: NlMRef<nlInp> }) =>
+                Object.values(col).every((t: NlMRef<nlInp>) => t?.current instanceof HTMLElement),
+              )
+              .every(colEval => colEval),
+          );
+        }
         if (
           refs &&
           Object.values(refs)
@@ -741,15 +784,16 @@ export function defineTargInps({
         } else {
           //TODO REMOVER APÓS TESTE
           console.log("Nem toda referência foi validada");
+          const relNum = num - 1;
           for (const [k, v] of [
             ["tiw", `#tabInpRowMedAnt2_${num}`],
             ["tih", `#tabInpRowMedAnt3_${num}`],
             ["tidc", `#tabInpRowDCut9_${num}`],
-            ["tiimc", `#inpImc${num - 1}Cel2_${num}`],
-            ["timlg", `#inpMlg${num - 1}Cel3_${num}`],
-            [`tipgc`, `#inpPgc${num - 1}Cel4_${num}`],
-            ["titmb", `#inpTmb${num - 1}Cel5_${num}`],
-            ["tiget", `#inpGet${num - 1}Cel6_${num}`],
+            ["tiimc", `#inpImc${relNum}Cel2_${num}`],
+            ["timlg", `#inpMlg${relNum}Cel3_${num}`],
+            [`tipgc`, `#inpPgc${relNum}Cel4_${num}`],
+            ["titmb", `#inpTmb${relNum}Cel5_${num}`],
+            ["tiget", `#inpGet${relNum}Cel6_${num}`],
           ])
             arrayTargInps.push([k, parent.querySelector(v)]);
           return Object.fromEntries(arrayTargInps) as {
@@ -811,6 +855,8 @@ export function switchRequiredCols({
     if (!areNumConsOpsValid) throw new Error(`Invalidated Number of Appointments Options`);
     tabProps.numCons = evalPseudoNum(tabProps.numCons) || 1;
     const numCons = tabProps.numCons;
+    //TODO REMOVER APÓS TESTE
+    console.log("Número de consulta: " + tabProps.numCons);
     if (typeof numCons !== "number" || numCons <= 0 || numCons > 3)
       throw new Error(`Invalidated Number for Appointment: Obtained value as ${numCons ?? "undefined"}`);
     //inicia construção de matriz para reset de required na tabela
@@ -1178,25 +1224,21 @@ export function handleIndEv(
         refs: refs ?? undefined,
         ctx,
       });
-      console.log([
-        tiw ?? "NOT FOUND",
-        tih ?? "NOT FOUND",
-        tidc ?? "NOT FOUND",
-        tiimc ?? "NOT FOUND",
-        timlg ?? "NOT FOUND",
-        titmb ?? "NOT FOUND",
-        tiget ?? "NOT FOUND",
-        tipgc ?? "NOT FOUND",
-      ]);
+      //todo remover após teste
+      if ([tiw, tih, tidc, tiimc, timlg, titmb, tiget, tipgc].some(v => !v)) {
+        console.log("Failed to fetch some ref...");
+        const invalids = [tiw, tih, tidc, tiimc, timlg, titmb, tiget, tipgc].filter(v => !v);
+        console.log(invalids.map((_, i) => `Ref ${i} is invalid`));
+      }
       Object.assign(tabProps, {
-        tiw,
-        tih,
-        tidc,
-        tiimc,
-        timlg,
-        titmb,
-        tiget,
-        tipgc,
+        ...(tiw && { tiw }),
+        ...(tih && { tih }),
+        ...(tidc && { tidc }),
+        ...(tiimc && { tiimc }),
+        ...(timlg && { timlg }),
+        ...(titmb && { titmb }),
+        ...(tiget && { tiget }),
+        ...(tipgc && { tipgc }),
       });
       updatePGC(consTablesFs, "col");
       for (const t of [
@@ -1354,26 +1396,22 @@ export function runAutoFill(
     else t?.setAttribute("data-target", "false");
   });
   const { tiw, tih, tidc, tiimc, timlg, titmb, tiget, tipgc } = defineTargInps({ el, parent: fsp, refs, ctx });
-  console.log([
-    tiw ?? "NOT FOUND",
-    tih ?? "NOT FOUND",
-    tidc ?? "NOT FOUND",
-    tiimc ?? "NOT FOUND",
-    timlg ?? "NOT FOUND",
-    titmb ?? "NOT FOUND",
-    tiget ?? "NOT FOUND",
-    tipgc ?? "NOT FOUND",
-  ]);
   Object.assign(tabProps, {
-    tiw,
-    tih,
-    tidc,
-    tiimc,
-    timlg,
-    titmb,
-    tiget,
-    tipgc,
+    ...(tiw && { tiw }),
+    ...(tih && { tih }),
+    ...(tidc && { tidc }),
+    ...(tiimc && { tiimc }),
+    ...(timlg && { timlg }),
+    ...(titmb && { titmb }),
+    ...(tiget && { tiget }),
+    ...(tipgc && { tipgc }),
   });
+  //TODO REMOVER APÓS TESTE
+  if ([tiw, tih, tidc, tiimc, timlg, titmb, tiget, tipgc].some(v => !v)) {
+    console.log("Failed to fetch some ref...");
+    const invalids = [tiw, tih, tidc, tiimc, timlg, titmb, tiget, tipgc].filter(v => !v);
+    console.log(invalids.map((_, i) => `Ref ${i} is invalid`));
+  }
   [
     tabProps.tiw,
     tabProps.tih,
@@ -1479,21 +1517,7 @@ export function callbackTextBodyEl({
       throw elementNotFound(genFisAlin, `Gen Physical Alignment Element`, extLine(new Error()));
     changeTabDCutLayout(protocolo, tde, textBodytype);
     person.gen = textBodytype.value as Gender;
-    if ((genElement.value === "masculino" || genElement.value === "feminino") && genBirthRel.value === "cis")
-      genElement.value = textBodytype.value;
-    switch (textBodytype.value) {
-      case "masculino":
-        genFisAlin.value = "masculinizado";
-        break;
-      case "feminino":
-        genFisAlin.value = "feminilizado";
-        break;
-      case "neutro":
-        genFisAlin.value = "neutro";
-        break;
-      default:
-        stringError("verifying textBodytype.value", textBodytype?.value, extLine(new Error()));
-    }
+    console.log("Persons gender is: " + person.gen);
   } catch (e) {
     console.error(`Error executing callbackTextBodyEl:\n${(e as Error).message}`);
   }
@@ -1541,16 +1565,14 @@ export function callbackAtvLvlElementNaf(
     evalIMC();
     fluxFormIMC(gl, fct);
     evalMatchTMBElements();
-    if (/LvlAtFis/gi.test(idf) || /TMBType/gi.test(idf) || /gordCorpLvl/gi.test(idf)) {
-      matchTMBElements({ idf, sa, gl, fct, naf });
-      updateAtvLvl("sa");
-    } else if (/nafType/gi.test(idf)) {
-      matchTMBElements({ idf, sa, gl, fct, naf });
-      updateAtvLvl("naf");
-    } else
+    matchTMBElements({ idf, sa, gl, fct, naf });
+    if (/LvlAtFis/gi.test(idf) || /TMBType/gi.test(idf) || /gordCorpLvl/gi.test(idf)) updateAtvLvl("sa");
+    else if (/nafType/gi.test(idf)) updateAtvLvl("naf");
+    else
       console.error(`Error validating idf.
         obtained .id: ${idf ?? "UNDEFINED ID"}`);
-    person.atvLvl = sa.value as Intensity;
+    person.atvLvl = sa.dataset.intensity as Intensity;
+    evalActivityLvl();
     const returnedFactorAtvLvl = person.checkAtvLvl(person);
     typeof returnedFactorAtvLvl === "number"
       ? (tabProps.factorAtvLvl = (returnedFactorAtvLvl as NafTypeValue) || 1.4)

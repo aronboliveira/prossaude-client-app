@@ -1902,6 +1902,9 @@ td {
 
 #confirmAstDigtBtn {
   margin-right: 0.75rem;
+  @media (max-width: 900px) {
+    margin-right: 0;
+  }
 }
 
 #confirmDatId {
@@ -1979,6 +1982,7 @@ td {
 #genId {
   width: 103%;
   max-width: 77vw;
+  white-space: break-spaces;
 }
 
 #hForm {
@@ -2143,7 +2147,7 @@ td {
   }
 
   .min88_900 {
-    min-width: 87.3vw !important;
+    min-width: 88.3vw !important;
   }
 
   .min92_900 {
@@ -2822,5 +2826,14 @@ td {
 
   .widHalf460Q {
     width: 50%;
+  }
+}
+
+@media screen and (max-width: 200px) {
+  #dateHeader {
+    min-width: 13ch;
+  }
+  #headerDatBtn {
+    min-width: 12.2ch;
   }
 }

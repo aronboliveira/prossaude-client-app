@@ -28,7 +28,7 @@ export default function HeaderDate(): JSX.Element {
     }
   }, []);
   return (
-    <span role='group' className='control flexJSt flexQ900NoW' id='spanHFlex' style={{ width: "30vw" }}>
+    <span role='group' className='control flexJSt flexQ900NoW' id='spanHFlex'>
       <input
         type='date'
         className='form-control d-ibl minCurrDate'

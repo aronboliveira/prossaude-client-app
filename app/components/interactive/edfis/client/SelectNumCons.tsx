@@ -2,9 +2,9 @@
 import { handleEventReq } from "@/lib/global/handlers/gHandlers";
 import { checkContext, limitedError, parseNotNaN } from "@/lib/global/gModel";
 import { switchRequiredCols } from "@/lib/locals/edFisNutPage/edFisNutHandler";
-import { tabProps } from "@/vars";
+import { tabProps, timers } from "@/vars";
 import { extLine, inputNotFound } from "@/lib/global/handlers/errorHandler";
-import { useContext, useState, useEffect, useCallback } from "react";
+import { useContext, useState, useEffect, useCallback, useRef } from "react";
 import { ENCtx } from "./ENForm";
 import { ENCtxProps, FspCtxProps } from "@/lib/global/declarations/interfaces";
 import { FspCtx } from "./FsProgCons";
@@ -20,7 +20,8 @@ export default function SelectNumCons(): JSX.Element {
     tip: NlMRef<nlTab> = null,
     setNumCons: NlrDispatch<number> = null;
   const ctx1 = useContext<ENCtxProps>(ENCtx),
-    ctx2 = useContext<FspCtxProps>(FspCtx);
+    ctx2 = useContext<FspCtxProps>(FspCtx),
+    trusted = useRef<boolean>(false);
   if (ctx1?.refs) ({ fspr } = ctx1.refs);
   if (ctx2) {
     if (ctx2.refs) ({ snc, td, tsv, tma, tip } = ctx2.refs);
@@ -92,7 +93,29 @@ export default function SelectNumCons(): JSX.Element {
         );
       }
     }, [snc, fspr, td, tsv, tma, tip, v]);
-  useEffect(switchNumCons, [v, switchNumCons]);
+  useEffect(() => {
+    try {
+      if (!trusted.current) return;
+      switchNumCons();
+      console.log("Índice da Consulta: " + (tabProps.numCons || "INDEFINIDO"));
+    } catch (e) {
+      console.error(`Error executing effect for ${SelectNumCons.prototype.constructor.name}:\n${(e as Error).message}`);
+    }
+  }, [v, switchNumCons]);
+  useEffect(() => {
+    setTimeout(() => {
+      const query = document.getElementById("selectNumCons");
+      tabProps.numCons =
+        parseNotNaN(snc?.current?.value || "1", 1, "int") ||
+        parseNotNaN(
+          ((query instanceof HTMLSelectElement || query instanceof HTMLInputElement) &&
+            (query as HTMLSelectElement).value) ||
+            "1",
+          1,
+          "int",
+        );
+    }, timers.personENTimer * 0.75);
+  }, [snc]);
   //TODO REMOVER APÓS TESTE
   checkContext(ctx1, "ENCtx", SelectNumCons);
   checkContext(ctx2, "FspCtx", SelectNumCons);
@@ -105,6 +128,7 @@ export default function SelectNumCons(): JSX.Element {
       className={`form-select noInvert consInp min52_900 ${sEn.select} ${sEn.selectNumCons}`}
       data-title='Consulta Lida'
       onChange={ev => {
+        if (ev.isTrusted) trusted.current = true;
         setValue(() => evalPseudoNum(ev.currentTarget.value).toString());
         setNumCons && setNumCons(() => evalPseudoNum(tabProps.numCons));
       }}>

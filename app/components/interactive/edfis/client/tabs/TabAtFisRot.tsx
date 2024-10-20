@@ -10,6 +10,7 @@ import sEn from "@/styles/locals/modules/enStyles.module.scss";
 export default function TabAtFisRot({ children = <></> }: { children: JSX.Element }): JSX.Element {
   const mainRef = useRef<nlDiv>(null),
     flag = useRef<string>("+"),
+    trusted = useRef<boolean>(false),
     [blockCount, setBlockCount] = useReducer((s: number, a: PayloadCounterAction) => {
       switch (a.type) {
         case "INCREMENT":
@@ -25,6 +26,7 @@ export default function TabAtFisRot({ children = <></> }: { children: JSX.Elemen
     }, 2);
   useEffect(() => {
     try {
+      if (!trusted.current) return;
       if (!(mainRef.current instanceof HTMLElement))
         throw elementNotFound(mainRef.current, `Main reference for AntMedFs`, extLine(new Error()));
       if (flag.current === "+") addRowAtivFis(blockCount, "Rot");
@@ -36,7 +38,7 @@ export default function TabAtFisRot({ children = <></> }: { children: JSX.Elemen
     } catch (e) {
       console.error(`Error executing useEffect for blockCount:\n${(e as Error).message}`);
     }
-  }, [blockCount]);
+  }, [blockCount, trusted]);
   return (
     <div role='group' className={`divTab ${s.divTabEn} ${sEn.divDynamicTabs}`} ref={mainRef}>
       <legend className='legAtFis' id='tabLegAtFisRot'>
@@ -48,6 +50,7 @@ export default function TabAtFisRot({ children = <></> }: { children: JSX.Elemen
           className={`countAtFis countAtFisRot addAtFis addAtFisRot biBtn ${sEn.biBtn} ${sEn.countAtFis} ${sEn.addAtFis}`}
           defaultValue='addComorb'
           onClick={ev => {
+            if (ev.isTrusted) trusted.current = true;
             flag.current = "+";
             setBlockCount({
               type: "INCREMENT",
@@ -71,6 +74,7 @@ export default function TabAtFisRot({ children = <></> }: { children: JSX.Elemen
           className={`countAtFis countAtFisRot removeAtFis removeAtFisRot biBtn ${sEn.biBtn} ${sEn.countAtFis}`}
           defaultValue='removeComorb'
           onClick={ev => {
+            if (ev.isTrusted) trusted.current = true;
             flag.current = "-";
             setBlockCount({
               type: "DECREMENT",

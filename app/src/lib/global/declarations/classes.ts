@@ -111,8 +111,12 @@ export class Person {
   }
   public calcPGC(person: Person): { pgc: number; mlg: number } {
     try {
+      person.sumDCut = Math.abs(person.sumDCut);
       if (!("sumDCut" in person && typeof person.sumDCut === "number" && person.sumDCut >= 0))
-        throw new Error(`Failed to validate person props`);
+        throw new Error(`Failed to validate person props:
+        sumDCut in props: ${"sumDCut" in person}
+        Type of sumDCut: ${typeof person.sumDCut === "number"}
+        Value of sumDCut: ${person.sumDCut || "Falsish"}`);
       const sdc = person.sumDCut,
         g = person.gen;
       let DC = 0,

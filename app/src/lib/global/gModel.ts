@@ -1293,6 +1293,71 @@ export function applyFieldConstraints(el: nlEl): void {
     );
   }
 }
+export function applyConstraintsTitle(fm: nlFm): void {
+  try {
+    if (!(fm instanceof HTMLElement)) throw new Error(`Failed to validate Form instance`);
+    [
+      ...Array.from(fm.querySelectorAll("input")).filter(
+        i =>
+          i.type !== "button" &&
+          i.type !== "color" &&
+          i.type !== "hidden" &&
+          i.type !== "image" &&
+          i.type !== "range" &&
+          i.type !== "reset" &&
+          i.type !== "submit",
+      ),
+      ...fm.querySelectorAll("textarea"),
+    ].forEach((inp, i) => {
+      try {
+        if (!(inp instanceof HTMLInputElement || inp instanceof HTMLTextAreaElement)) return;
+        let title = "";
+        if (inp.required) title += "Obrigatório!\n";
+        const checkTextConstraints = (): void => {
+          const minLength =
+            inp.dataset.reqlength && inp.dataset.reqlength !== ""
+              ? inp.dataset.reqlength.replace(/[^0-9]/g, "")
+              : inp.minLength;
+          if (minLength !== "" && minLength !== "-1") title += `O campo deve conter no mínimo ${minLength} dígitos\n`;
+          const maxLength =
+            inp.dataset.maxlength && inp.dataset.maxlength !== ""
+              ? inp.dataset.maxlength.replace(/[^0-9]/g, "")
+              : inp.maxLength;
+          if (maxLength !== "" && maxLength !== "-1") title += `O campo deve conter no máximo ${maxLength} dígitos\n`;
+          if (inp.dataset.pattern && inp.dataset.pattern.includes("^[d,.]+$"))
+            title += "O campo só pode conter números\n";
+        };
+        if (inp instanceof HTMLInputElement) {
+          if (inp.type === "checkbox" || inp.type === "radio") {
+            if (inp.type === "radio" && inp.dataset.required && inp.dataset.required === "true")
+              title += "Obrigatório!\n";
+            return;
+          } else {
+            checkTextConstraints();
+            if (inp.type === "email") title += "O campo deve contar @ e ao menos um .";
+            if (inp.type === "number") {
+              const minNum =
+                inp.dataset.minnum && inp.dataset.minnum !== "" ? inp.dataset.minnum.replace(/[^0-9]/g, "") : inp.min;
+              if (minNum !== "" && minNum !== "-1") title += `O campo deve equivaler a no mínimo ${minNum}\n`;
+              const maxNum =
+                inp.dataset.maxnum && inp.dataset.maxnum !== "" ? inp.dataset.maxnum.replace(/[^0-9]/g, "") : inp.max;
+              if (maxNum !== "" && maxNum !== "-1") title += `O campo deve equivaler a no máximo ${maxNum}\n`;
+            }
+          }
+        } else checkTextConstraints();
+        if (title !== "") inp.title += `\n${title}`;
+      } catch (e) {
+        console.error(
+          `Error executing iteration ${i} for inputs in the form ${fm.id || fm.name || fm.className || fm.tagName}:${
+            (e as Error).message
+          }`,
+        );
+      }
+    });
+  } catch (e) {
+    console.error(`Error executing applyConstrainstTitle:\n${(e as Error).message}`);
+  }
+}
 export function checkContext(ctx: any, alias: string, caller: any): void {
   if (!ctx) console.warn(`Component ${caller.prototype.constructor.name} out of Context ${alias}`);
 }

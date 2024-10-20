@@ -1,7 +1,7 @@
 "use client";
 import { registerPersistInputs, syncAriaStates, validateForm } from "@/lib/global/handlers/gHandlers";
 import { handleSubmit } from "@/lib/global/data-service";
-import { Fragment, createContext, lazy, useEffect, useRef } from "react";
+import { Fragment, createContext, lazy, useEffect, useRef, useState } from "react";
 import Name from "../../def/Name";
 import SocialName from "../../def/SocialName";
 import AgeElement from "../defaulted/AgeElement";
@@ -27,10 +27,12 @@ import { Suspense } from "react";
 import { ENCtxProps } from "../../../../src/lib/global/declarations/interfaces";
 import { clearPhDates, equalizeFlexSibilings } from "@/lib/global/gStyleScript";
 import { watchLabels } from "@/lib/global/gController";
-import GenDivED from "../../def/GenDivEN";
+import GenDivEN from "../../def/GenDivEN";
 import useMount from "@/lib/hooks/useMount";
 import { styled } from "styled-components";
 import sEn from "@/styles/locals/modules/enStyles.module.scss";
+import { BodyType } from "@/lib/global/declarations/testVars";
+import { applyConstraintsTitle } from "@/lib/global/gModel";
 const FsProgCons = lazy(() => import("./FsProgCons")),
   TbodyComorb = lazy(() => import("../tabs/TbodyComorb")),
   TbodyAtFisRot = lazy(() => import("./tabs/TbodyAtFisRot")),
@@ -85,6 +87,10 @@ export const ENCtx = createContext<ENCtxProps>({
     sar: null,
     txbr: null,
   },
+  bt: {
+    s: "masculino",
+    d: null,
+  },
 });
 export default function ENForm(): JSX.Element {
   const f = useRef<nlFm>(null),
@@ -98,22 +104,11 @@ export default function ENForm(): JSX.Element {
     nafr = useRef<nlSel>(null),
     sar = useRef<nlSel>(null),
     txbr = useRef<nlSel>(null),
+    [bodyType, setBodyType] = useState<BodyType>("masculino"),
     [mounted] = useMount();
   useDataProvider(f.current);
   useEffect(() => {
     if (!mounted) return;
-    console.log([
-      f.current?.id ?? "NOT FOUND",
-      af.current?.id ?? "NOT FOUND",
-      gr.current?.id ?? "NOT FOUND",
-      gar.current?.id ?? "NOT FOUND",
-      fspr.current?.id ?? "NOT FOUND",
-      fct.current?.id ?? "NOT FOUND",
-      sar.current?.id ?? "NOT FOUND",
-      nafr.current?.id ?? "NOT FOUND",
-      txbr.current?.id ?? "NOT FOUND",
-      gl.current?.id ?? "NOT FOUND",
-    ]);
     setTimeout(() => {
       registerPersistInputs({
         f: f.current ?? (document.getElementById("formEdFis") as HTMLFormElement),
@@ -167,7 +162,18 @@ export default function ENForm(): JSX.Element {
     const inp8_4 = document.getElementById("tabInpRowDCut8_4");
     if (inp8_4 instanceof HTMLInputElement) inp8_4.value = "40";
   }, [mounted]);
-  return (
+  useEffect(() => {
+    if (!mounted) return;
+    try {
+      setTimeout(() => {
+        if (!(f.current instanceof HTMLElement)) return;
+        applyConstraintsTitle(f.current);
+      }, 1000);
+    } catch (e) {
+      console.error(`Error executing effect for filling input titles:\n${(e as Error).message}`);
+    }
+  }, [f, mounted]);
+  return mounted ? (
     <Suspense fallback={<ReactSpinner scale={0.8} key={crypto.randomUUID()} />}>
       <ENCtx.Provider
         value={{
@@ -183,6 +189,10 @@ export default function ENForm(): JSX.Element {
             nafr,
             sar,
             txbr,
+          },
+          bt: {
+            s: bodyType,
+            d: setBodyType,
           },
         }}>
         <StyledFormEd
@@ -212,7 +222,7 @@ export default function ENForm(): JSX.Element {
                   <AgeElement inpRef={af} />
                 </label>
               </span>
-              <GenDivED genRef={gr} genAlinRef={gar} />
+              <GenDivEN genRef={gr} genAlinRef={gar} />
             </section>
           </FsG>
           <hr />
@@ -300,6 +310,7 @@ export default function ENForm(): JSX.Element {
                       id='CpbinpProtUrRadioYes'
                       name='protur'
                       data-title='Proteinuria_Sim'
+                      data-required='true'
                       style={{ marginTop: "0.7rem" }}
                     />
                     <label htmlFor='CpbinpProtUrRadioYes' id='labCpbinpProtUrRadioYes'>
@@ -358,16 +369,12 @@ export default function ENForm(): JSX.Element {
                 <SelectLvlAtFis />
               </span>
               <TabAtFisRot>
-                <Suspense fallback={<ReactSpinner scale={0.3} display='table-row-group' key={crypto.randomUUID()} />}>
-                  <TbodyAtFisRot />
-                </Suspense>
+                <TbodyAtFisRot />
               </TabAtFisRot>
               <br role='presentation' />
               <hr />
               <TabAtFirsProp>
-                <Suspense fallback={<ReactSpinner scale={0.3} display='table-row-group' key={crypto.randomUUID()} />}>
-                  <TbodyAtFisProps />
-                </Suspense>
+                <TbodyAtFisProps />
               </TabAtFirsProp>
             </DivAtFisRot>
             <br role='presentation' />
@@ -403,5 +410,7 @@ export default function ENForm(): JSX.Element {
         </StyledFormEd>
       </ENCtx.Provider>
     </Suspense>
+  ) : (
+    <></>
   );
 }

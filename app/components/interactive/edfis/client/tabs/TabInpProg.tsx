@@ -1,11 +1,11 @@
 "use client";
-import { ENCtxProps, ENTabsCtxProps, TdProps } from "@/lib/global/declarations/interfaces";
+import { ENCtxProps, ENTabsCtxProps, TargInps, TdProps } from "@/lib/global/declarations/interfaces";
 import { handleCallbackWHS } from "@/lib/locals/edFisNutPage/edFisNutHandler";
 import { handleIndEv } from "@/lib/locals/edFisNutPage/edFisNutHandler";
-import { applyFieldConstraints, checkContext, textTransformPascal } from "@/lib/global/gModel";
+import { applyFieldConstraints, checkContext, limitedError, textTransformPascal } from "@/lib/global/gModel";
 import { handleCondtReq, handleEventReq } from "@/lib/global/handlers/gHandlers";
-import { useState, useEffect, useRef, useContext } from "react";
-import { NlMRef, nlFs, nlInp, nlSel } from "@/lib/global/declarations/types";
+import { useRef, useContext } from "react";
+import { NlMRef, nlFs, nlSel } from "@/lib/global/declarations/types";
 import { tabProps } from "@/vars";
 import { ENCtx } from "../ENForm";
 import { ENTabsCtx } from "../FsTabs";
@@ -13,10 +13,11 @@ import sEn from "@/styles/locals/modules/enStyles.module.scss";
 export default function TabInpProg({ nRow, nCol, ctx, lab }: TdProps): JSX.Element {
   let gl: NlMRef<nlSel> = null,
     fspr: NlMRef<nlFs> = null,
-    fct: NlMRef<nlSel> = null;
+    fct: NlMRef<nlSel> = null,
+    targs: TargInps | null = null;
   const ctx1 = useContext<ENCtxProps>(ENCtx),
-    { targs } = useContext<ENTabsCtxProps>(ENTabsCtx),
-    inpRef = useRef<nlInp>(null),
+    ctx2 = useContext<ENTabsCtxProps>(ENTabsCtx),
+    trusted = useRef<boolean>(false),
     pascalLab = textTransformPascal(lab),
     fullName = ((): string => {
       switch (lab) {
@@ -57,77 +58,13 @@ export default function TabInpProg({ nRow, nCol, ctx, lab }: TdProps): JSX.Eleme
         default:
           return lab;
       }
-    })(),
-    [v, setValue] = useState<string>("");
+    })();
   if (ctx1?.refs) ({ gl, fspr, fct } = ctx1.refs);
+  if (ctx2?.targs) ({ targs } = ctx2);
   let medAntCase = "";
   //TODO REMOVER APÓS TESTE
   checkContext(ctx1, "ENCtx", TabInpProg);
-  const ctx2 = useContext<ENTabsCtxProps>(ENTabsCtx);
   checkContext(ctx2, "ENTabsCtx", TabInpProg);
-  useEffect(() => {
-    if (!inpRef.current) {
-      //TODO REMOVER APÓS TESTE
-      console.warn("Failed to recognize input reference");
-      return;
-    }
-    if (inpRef.current.required) handleEventReq(inpRef.current);
-    else {
-      if (inpRef.current.required) handleEventReq(inpRef.current);
-      else {
-        inpRef.current.type === "number"
-          ? handleCondtReq(inpRef.current, {
-              minNum: 0.05,
-              maxNum: 999999,
-              min: 1,
-              max: 99,
-              pattern: ["^[\\d,.]+$", ""],
-            })
-          : handleCondtReq(inpRef.current as HTMLInputElement, {
-              min: 1,
-              max: 99,
-              pattern: ["^[\\d,.]+$", ""],
-            });
-      }
-      if (
-        inpRef.current.classList.contains("inpInd") &&
-        (lab === "IMC" || lab === "MLG" || lab === "PGC" || lab === "TMB" || lab === "GET")
-      )
-        handleIndEv(lab, {
-          el: inpRef.current,
-          fsp: fspr?.current ?? document.getElementById("fsProgConsId"),
-          gl: gl?.current ?? document.getElementById("gordCorpLvl"),
-          fct: fct?.current ?? document.getElementById("formCalcTMBType"),
-          refs: targs,
-        });
-      if (inpRef.current.classList.contains("tabInpProgMedAnt") || inpRef.current.classList.contains("tabInpProgDCut"))
-        handleCallbackWHS(inpRef.current);
-    }
-  }, [v, inpRef, fct, fspr, gl, lab, targs]);
-  useEffect(() => {
-    setTimeout(() => {
-      let col: { [k: string]: NlMRef<nlInp> } = targs.firstCol;
-      if (nCol === 3) col = targs.secondCol;
-      else if (nCol === 4) col = targs.thirdCol;
-      const sign = (() => {
-        const l = lab.toLowerCase();
-        switch (l) {
-          case "peso":
-            return "w";
-          case "altura":
-            return "h";
-          case "somadcut":
-            return "dc";
-          default:
-            return l;
-        }
-      })();
-      const k = `ti${sign}${nRow - 1}`;
-      col[k] = inpRef;
-      //TODO REMOVER APÓS TESTE
-      console.log(`Assigned ${inpRef.current ?? "undefined"} to ${k}`);
-    }, 1000);
-  }, [inpRef, lab, nCol, nRow, targs.firstCol, targs.secondCol, targs.thirdCol]);
   if (ctx === "MedAnt") {
     medAntCase = ((): string => {
       switch (lab) {
@@ -159,19 +96,47 @@ export default function TabInpProg({ nRow, nCol, ctx, lab }: TdProps): JSX.Eleme
   return ctx === "IndPerc" ? (
     <input
       type='number'
-      value={v}
-      ref={inpRef}
       name={`${lab.toLowerCase()}_${nRow}_${nCol}`}
       id={`inp${pascalLab}${nCol - 1}Cel${nRow}_${nCol}`}
       className={`form-control tabInpProg tabInpProgIndPerc inpInd inp${pascalLab} inpCol${nCol} sevenCharLongNum ${sEn.tabInpProg}`}
+      maxLength={lab === "MLG" || lab === "PGC" || lab === "IMC" ? 2 : 6}
       min={nCol - 1 === tabProps.numCons ? "0.05" : "0"}
+      max={lab === "MLG" || lab === "PGC" || lab === "IMC" ? "99" : "999999"}
+      data-max={lab === "MLG" || lab === "PGC" || lab === "IMC" ? "2" : "6"}
+      data-minnum={nCol - 1 === tabProps.numCons ? "0.05" : "0"}
+      data-maxnum={lab === "MLG" || lab === "PGC" || lab === "IMC" ? "99" : "999999"}
       data-title={`${lab} (Consulta ${nCol - 1})`}
+      data-pattern='^[d,.]+$'
       data-row={nRow}
       data-col={nCol}
       required={nCol - 1 === tabProps.numCons ? true : false}
       onInput={ev => {
-        tabProps.edIsAutoCorrectOn && applyFieldConstraints(ev.currentTarget);
-        setValue(ev.currentTarget.value);
+        try {
+          if (ev.isTrusted) trusted.current = true;
+          if (!trusted.current) return;
+          tabProps.edIsAutoCorrectOn && applyFieldConstraints(ev.currentTarget);
+          if (ev.currentTarget.required) handleEventReq(ev.currentTarget);
+          else
+            handleCondtReq(ev.currentTarget, {
+              minNum: 0.05,
+              maxNum: 999999,
+              min: 1,
+              max: 99,
+              pattern: ["^[\\d,.]+$", ""],
+            });
+          if (!(lab === "IMC" || lab === "MLG" || lab === "PGC" || lab === "TMB" || lab === "GET")) return;
+          handleIndEv(lab, {
+            el: ev.currentTarget,
+            fsp: fspr?.current ?? document.getElementById("fsProgConsId"),
+            gl: gl?.current ?? document.getElementById("gordCorpLvl"),
+            fct: fct?.current ?? document.getElementById("formCalcTMBType"),
+            refs: targs,
+          });
+        } catch (e) {
+          const identifier =
+            ev.currentTarget.id || ev.currentTarget.name || ev.currentTarget.className || ev.currentTarget.tagName;
+          limitedError(`Error executing ${ev.type} callback for ${identifier}:$\n{(e as Error).message}`, identifier);
+        }
       }}
     />
   ) : (
@@ -180,8 +145,6 @@ export default function TabInpProg({ nRow, nCol, ctx, lab }: TdProps): JSX.Eleme
         return (
           <input
             type='number'
-            value={v}
-            ref={inpRef}
             name={`${lab.toLowerCase()}_${nRow}_${nCol}`}
             className={`form-control tabInpProg tabInpProg${ctx} tabInpProg${lab}${ctx} tabInpRow${ctx}${nRow} float sevenCharLongNum ${
               sEn.tabInpProg
@@ -194,8 +157,31 @@ export default function TabInpProg({ nRow, nCol, ctx, lab }: TdProps): JSX.Eleme
             data-col={nCol}
             required={nCol - 1 === tabProps.numCons ? true : false}
             onInput={ev => {
-              tabProps.edIsAutoCorrectOn && applyFieldConstraints(ev.currentTarget);
-              setValue(ev.currentTarget.value);
+              try {
+                if (ev.isTrusted) trusted.current = true;
+                if (!trusted.current) return;
+                tabProps.edIsAutoCorrectOn && applyFieldConstraints(ev.currentTarget);
+                if (ev.currentTarget.required) handleEventReq(ev.currentTarget);
+                else
+                  handleCondtReq(ev.currentTarget, {
+                    minNum: 0.05,
+                    maxNum: 999999,
+                    min: 1,
+                    max: 99,
+                    pattern: ["^[\\d,.]+$", ""],
+                  });
+                handleCallbackWHS(ev.currentTarget);
+              } catch (e) {
+                const identifier =
+                  ev.currentTarget.id ||
+                  ev.currentTarget.name ||
+                  ev.currentTarget.className ||
+                  ev.currentTarget.tagName;
+                limitedError(
+                  `Error executing ${ev.type} callback for ${identifier}:$\n{(e as Error).message}`,
+                  identifier,
+                );
+              }
             }}
           />
         );
@@ -203,8 +189,6 @@ export default function TabInpProg({ nRow, nCol, ctx, lab }: TdProps): JSX.Eleme
         return (
           <input
             type='number'
-            value={v}
-            ref={inpRef}
             name={`${lab.toLowerCase()}_${nRow}_${nCol}`}
             className={`form-control tabInpProg tabInpProg${ctx} tabInpProg${lab}${ctx} tabInpRow${ctx}${nRow} float sevenCharLongNum ${sEn.tabInpProg}`}
             id={`tabInpRow${ctx}${nRow}_${nCol}`}
@@ -215,8 +199,31 @@ export default function TabInpProg({ nRow, nCol, ctx, lab }: TdProps): JSX.Eleme
             data-col={nCol}
             required={nCol - 1 === tabProps.numCons ? true : false}
             onInput={ev => {
-              tabProps.edIsAutoCorrectOn && applyFieldConstraints(ev.currentTarget);
-              setValue(ev.currentTarget.value);
+              try {
+                if (ev.isTrusted) trusted.current = true;
+                if (!trusted.current) return;
+                tabProps.edIsAutoCorrectOn && applyFieldConstraints(ev.currentTarget);
+                if (ev.currentTarget.required) handleEventReq(ev.currentTarget);
+                else
+                  handleCondtReq(ev.currentTarget, {
+                    minNum: 0.05,
+                    maxNum: 999999,
+                    min: 1,
+                    max: 99,
+                    pattern: ["^[\\d,.]+$", ""],
+                  });
+                if (ev.currentTarget.classList.contains("tabInpProgDCut")) handleCallbackWHS(ev.currentTarget);
+              } catch (e) {
+                const identifier =
+                  ev.currentTarget.id ||
+                  ev.currentTarget.name ||
+                  ev.currentTarget.className ||
+                  ev.currentTarget.tagName;
+                limitedError(
+                  `Error executing ${ev.type} callback for ${identifier}:$\n{(e as Error).message}`,
+                  identifier,
+                );
+              }
             }}
           />
         );

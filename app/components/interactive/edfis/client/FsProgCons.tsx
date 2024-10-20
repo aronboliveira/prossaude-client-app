@@ -19,7 +19,7 @@ import { handleCondtReq } from "@/lib/global/handlers/gHandlers";
 import { person, tabProps } from "@/vars";
 import { checkContext, limitedError, parseNotNaN } from "@/lib/global/gModel";
 import { addListenerInnerTabs } from "@/lib/locals/edFisNutPage/edFisNutController";
-import { Gender, Intensity, NafTypeValue } from "@/lib/global/declarations/testVars";
+import { NafTypeValue } from "@/lib/global/declarations/testVars";
 import { styled } from "styled-components";
 import s from "@/styles/locals/modules/sharedComponents.module.scss";
 import sEn from "@/styles/locals/modules/enStyles.module.scss";
@@ -29,6 +29,9 @@ const FsTabs = lazy(() => import("./FsTabs")),
       width: 93vw;
       margin-left: 0.5rem;
       opacity: 0.25;
+    }
+    @media screen and (max-width: 900px) {
+      margin-left: 0.25rem;
     }
     @media screen and (max-width: 550px) {
       display: flex;
@@ -78,9 +81,7 @@ export default function FsProgCons(): JSX.Element {
     if (!mounted || document.querySelectorAll("table").length <= 3) return;
     if (gr) gr.current ??= document.getElementById("genId") as HTMLSelectElement;
     const selectNumCons = snc?.current ?? document.getElementById("selectNumCons"),
-      consTablesFs = fspr?.current ?? document.getElementById(id),
-      genElement = gr?.current ?? document.getElementById("genId"),
-      atvLvlElement = sar?.current ?? document.getElementById("selectLvlAtFis");
+      consTablesFs = fspr?.current ?? document.getElementById(id);
     //TODO TAB ONLY
     document.querySelectorAll(".tabInpProg").forEach((inp, i) => {
       try {
@@ -88,34 +89,35 @@ export default function FsProgCons(): JSX.Element {
           throw inputNotFound(inp, `Validation of Input instance and type`, extLine(new Error()));
         if (inp.dataset.conditioned && inp.dataset.conditioned === "true") return;
         if (inp.required) {
-          inp.minLength = 1;
-          inp.maxLength = 99;
-          inp.pattern = "^[\\d,.]+$";
+          if (inp.minLength === -1) inp.minLength = 1;
+          if (inp.maxLength === -1) inp.maxLength = 99;
+          if (inp.pattern === "") inp.pattern = "^[\\d,.]+$";
           inp.classList.add("minText", "maxText", "pattern");
           if (inp.type === "number") {
-            inp.min = "0.05";
-            inp.max = "999999";
+            if (inp.min === "") inp.min = "0.05";
+            if (inp.max === "") inp.max = "999999";
             inp.classList.add("minNum", "maxNum");
           }
+        } else {
+          inp.type === "number"
+            ? inp.addEventListener("input", ev =>
+                handleCondtReq(ev.currentTarget as HTMLInputElement, {
+                  minNum: 0.05,
+                  maxNum: 999999,
+                  min: 1,
+                  max: 99,
+                  pattern: ["^[\\d,.]+$", ""],
+                }),
+              )
+            : inp.addEventListener("input", ev =>
+                handleCondtReq(ev.currentTarget as HTMLInputElement, {
+                  min: 1,
+                  max: 99,
+                  pattern: ["^[\\d,.]+$", ""],
+                }),
+              );
+          inp.dataset.conditioned = "true";
         }
-        inp.type === "number"
-          ? inp.addEventListener("input", ev =>
-              handleCondtReq(ev.currentTarget as HTMLInputElement, {
-                minNum: 0.05,
-                maxNum: 999999,
-                min: 1,
-                max: 99,
-                pattern: ["^[\\d,.]+$", ""],
-              }),
-            )
-          : inp.addEventListener("input", ev =>
-              handleCondtReq(ev.currentTarget as HTMLInputElement, {
-                min: 1,
-                max: 99,
-                pattern: ["^[\\d,.]+$", ""],
-              }),
-            );
-        inp.dataset.conditioned = "true";
       } catch (e) {
         console.error(
           `Error executing iteration ${i} for Tab Inp Prog application of requirements:\n${(e as Error).message}`,
@@ -165,9 +167,7 @@ export default function FsProgCons(): JSX.Element {
     } catch (e) {
       console.error(`Error executing procedure for determining Número de Consulta:\n${(e as Error).message}`);
     }
-    person.gen = ((genElement as entryEl)?.value as Gender) || "masculino";
-    person.age = parseNotNaN((af?.current ?? (document.getElementById("ageId") as entryEl))?.value ?? "0") || 0;
-    tabProps.numCons = parseNotNaN((selectNumCons as entryEl)?.value || "1") || 1;
+    tabProps.numCons ||= 1;
     //TODOS TABS ONLY
     person.sumDCut =
       parseNotNaN(
@@ -187,8 +187,7 @@ export default function FsProgCons(): JSX.Element {
         0,
         "float",
       ) || 0;
-    person.atvLvl = ((atvLvlElement as entryEl)?.value as Intensity) ?? "leve";
-    addListenerInnerTabs(consTablesFs, tabProps.numColsCons, tabProps.areColGroupsSimilar);
+    addListenerInnerTabs(consTablesFs, tabProps.numColsCons);
   }, [mounted, gr, snc, fspr, sar, af, nafr]);
   useEffect(() => {
     tabProps.fsp = fspr?.current ?? document.getElementById(id);
@@ -260,7 +259,7 @@ export default function FsProgCons(): JSX.Element {
               <NafType />
             </div>
             <div role='group' className={`${sEn.divLab} spanForm max52_900`}>
-              <span>Fórmula aplicada para Cálculo de TMB:</span>
+              <span>Fórmula para Cálculo de TMB:</span>
               <span
                 ref={fctSpan}
                 id='fctSpan'

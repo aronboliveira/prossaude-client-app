@@ -3,7 +3,6 @@ import { nlDiv, nlSel } from "../global/declarations/types";
 import { AlignType, BirthRelation, Gender, TransitionLevel } from "../global/declarations/testVars";
 import { elementNotFound, extLine } from "../global/handlers/errorHandler";
 import { GenDivProps, UseGenDivReturn } from "../global/declarations/interfacesCons";
-import { evalGender } from "../locals/edFisNutPage/edFisNutModel";
 import { handleGenRender } from "../locals/edFisNutPage/edFisNutReactHandlers";
 import { person } from "@/vars";
 export default function useGenDiv({ onSetGen, genValueRef }: GenDivProps): UseGenDivReturn {
@@ -15,8 +14,7 @@ export default function useGenDiv({ onSetGen, genValueRef }: GenDivProps): UseGe
     [gen, setGen] = useState<Gender>("masculino"),
     [genBirthRel, setGenBirthRel] = useState<BirthRelation>("cis"),
     [genTrans, setGenTrans] = useState<TransitionLevel>("avancado"),
-    [genFisAlin, setGenFisAlin] = useState<AlignType>("masculinizado"),
-    [textBodytype, setTextBodytype] = useState<Gender>("masculino");
+    [genFisAlin, setGenFisAlin] = useState<AlignType>("masculinizado");
   useEffect(() => {
     (gr.current ??= document.getElementById("genId") as HTMLSelectElement),
       (gbr.current ??= document.getElementById("genBirthRelId") as HTMLSelectElement),
@@ -40,10 +38,6 @@ export default function useGenDiv({ onSetGen, genValueRef }: GenDivProps): UseGe
       console.error(`Error executing procedure for agBody:\n${(e as Error).message}`);
     }
   }, [gr, gbr, gtr, gar, onSetGen, setGen, setGenFisAlin, genValueRef]);
-  useEffect(() => {
-    const g = gr.current ?? (document.getElementById("genId") as HTMLSelectElement);
-    if (g && evalGender(g.value)) setGen(() => g.value as Gender);
-  }, [setGen]);
   useEffect(() => {
     const handleResize = (): void => {
       if (!(gbr.current instanceof HTMLElement && gtr.current instanceof HTMLElement)) return;
@@ -86,14 +80,12 @@ export default function useGenDiv({ onSetGen, genValueRef }: GenDivProps): UseGe
       genBirthRel,
       genTrans,
       genFisAlin,
-      textBodytype,
     },
     setters: {
       setGen,
       setGenBirthRel,
       setGenTrans,
       setGenFisAlin,
-      setTextBodytype,
     },
   };
 }

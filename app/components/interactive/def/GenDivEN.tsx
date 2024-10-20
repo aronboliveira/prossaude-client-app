@@ -1,49 +1,27 @@
 "use client";
-import { alignOpts, birthRelations, gens, person, transOpts } from "@/vars";
-import { useContext, useEffect, useCallback, useMemo } from "react";
+import { alignOpts, birthRelations, gens, person, timers, transOpts } from "@/vars";
+import { useContext, useEffect, useCallback, useRef } from "react";
 import { extLine, inputNotFound } from "@/lib/global/handlers/errorHandler";
-import { nlInp } from "@/lib/global/declarations/types";
-import { AlignType, BirthRelation, Gender, TransitionLevel } from "@/lib/global/declarations/testVars";
+import { NlMRef, NlrDispatch, nlSel } from "@/lib/global/declarations/types";
+import { AlignType, BirthRelation, BodyType, Gender, TransitionLevel } from "@/lib/global/declarations/testVars";
 import { ENCtx } from "../edfis/client/ENForm";
 import { ENCtxProps } from "@/lib/global/declarations/interfaces";
 import useGenDiv from "@/lib/hooks/useGenDiv";
 import { handleGenRender } from "@/lib/locals/edFisNutPage/edFisNutReactHandlers";
 import { GenDivProps } from "@/lib/global/declarations/interfacesCons";
-import { checkContext } from "@/lib/global/gModel";
+import { checkContext, fluxGen, limitedError } from "@/lib/global/gModel";
 import sEn from "@/styles/locals/modules/enStyles.module.scss";
 export default function GenDivEN({ genRef, genAlinRef }: GenDivProps): JSX.Element {
-  const {
-      refs: { txbr, gbr },
-    } = useContext<ENCtxProps>(ENCtx),
+  let txbr: NlMRef<nlSel> = null,
+    gbr: NlMRef<nlSel> = null,
+    onSetBodyType: NlrDispatch<BodyType>;
+  const trusted = useRef<boolean>(false),
+    ctx1 = useContext<ENCtxProps>(ENCtx),
     {
       refs: { r, gtr },
       values: { gen, genBirthRel, genTrans, genFisAlin },
-      setters: { setGen, setGenBirthRel, setGenTrans, setGenFisAlin, setTextBodytype },
+      setters: { setGen, setGenBirthRel, setGenTrans, setGenFisAlin },
     } = useGenDiv({}),
-    memoizedResult = useMemo(
-      () =>
-        (gt: HTMLSelectElement | HTMLInputElement, ga: HTMLSelectElement | HTMLInputElement, selectedGen: Gender) => {
-          const tbt = (txbr?.current ?? document.getElementById("textBodytype")) as nlInp;
-          if ((gt.value !== "avancado" || selectedGen === "naoBinario") && !gt.hidden && !ga.hidden && tbt)
-            return person.gen as Gender;
-          else {
-            inputNotFound(tbt, "textBodyType in callback for gender elements", extLine(new Error()));
-            return "masculino";
-          }
-        },
-      [txbr],
-    ),
-    handleGENCtx = useCallback(
-      ({ gt, ga, selectedGen }: { gt: HTMLSelectElement; ga: HTMLSelectElement; selectedGen: string }) => {
-        const res = memoizedResult(gt, ga, selectedGen as Gender);
-        if (res) {
-          const tbt = (txbr?.current ?? document.getElementById("textBodytype")) as nlInp;
-          if (tbt) tbt.value = res;
-          setTextBodytype(res);
-        }
-      },
-      [setTextBodytype, txbr, memoizedResult],
-    ),
     handleGenUpdate = useCallback(() => {
       const g = genRef?.current ?? (document.getElementById("genId") as HTMLSelectElement),
         gb = gbr?.current ?? (document.getElementById("genBirthRelId") as HTMLSelectElement),
@@ -52,14 +30,27 @@ export default function GenDivEN({ genRef, genAlinRef }: GenDivProps): JSX.Eleme
       handleGenRender({ g, gb, gt, ga, setGen, selectedGen: gen, setGenFisAlin });
     }, [gen, genRef, gbr, gtr, genAlinRef, setGen, setGenFisAlin]),
     handlePersonGenUpdate = useCallback(() => {
-      const gt = gtr.current ?? (document.getElementById("genTransId") as HTMLSelectElement),
-        ga = genAlinRef?.current ?? (document.getElementById("genFisAlinId") as HTMLSelectElement);
-      handleGENCtx({ gt, ga, selectedGen: gen });
-    }, [gtr, genFisAlin, gen, genAlinRef, handleGENCtx]);
+      if (!onSetBodyType) return;
+      try {
+        if (!txbr) throw new Error(`Reference object wasn't valid`);
+        txbr.current ??= document.getElementById("textBodytype") as nlSel;
+        if (!(txbr?.current instanceof HTMLSelectElement || (txbr?.current as any) instanceof HTMLInputElement))
+          throw inputNotFound(txbr?.current, "textBodyType in callback for gender elements", extLine(new Error()));
+        console.log("Updating to text type to " + person.gen);
+        const bodyType: BodyType = person.gen === "masculino" || person.gen === "feminino" ? person.gen : "neutro";
+        onSetBodyType(bodyType);
+      } catch (e) {
+        limitedError(`Error executiong handlePersonGenUpdate:\n${(e as Error).message}`, "handleGENCtx");
+      }
+    }, [onSetBodyType, txbr, person.gen]);
+  if (ctx1) {
+    if (ctx1.refs) ({ txbr, gbr } = ctx1.refs);
+    if (ctx1.bt) onSetBodyType = ctx1.bt.d;
+  }
   //TODO REMOVER APÓS TESTE
-  const ctx = useContext(ENCtx);
-  checkContext(ctx, "ENCtx", GenDivEN);
+  checkContext(ctx1, "ENCtx", GenDivEN);
   useEffect(() => {
+    if (!trusted.current) return;
     if (/edfis/gi.test(location.pathname) || document.body.id.toLowerCase() === "edfisnutbody") {
       const genElement = genRef?.current ?? document.getElementById("genId");
       person.gen =
@@ -69,9 +60,28 @@ export default function GenDivEN({ genRef, genAlinRef }: GenDivProps): JSX.Eleme
           ? (genElement.value as Gender)
           : "masculino";
     }
-  }, [genRef]);
-  useEffect(handleGenUpdate, [gen, handleGenUpdate, genBirthRel, genTrans, genFisAlin]);
-  useEffect(handlePersonGenUpdate, [person.gen, handlePersonGenUpdate]);
+  }, [genRef, trusted]);
+  useEffect(() => {
+    if (!trusted.current) return;
+    handleGenUpdate();
+  }, [gen, handleGenUpdate, genBirthRel, genTrans, genFisAlin, trusted]);
+  useEffect(() => {
+    if (!trusted.current) return;
+    handlePersonGenUpdate();
+  }, [person.gen, handlePersonGenUpdate, trusted]);
+  useEffect(() => {
+    setTimeout(() => {
+      try {
+        const g = genRef?.current ?? (document.getElementById("genId") as HTMLSelectElement),
+          gb = gbr?.current ?? (document.getElementById("genBirthRelId") as HTMLSelectElement),
+          gt = gtr.current ?? (document.getElementById("genTransId") as HTMLSelectElement),
+          ga = genAlinRef?.current ?? (document.getElementById("genFisAlinId") as HTMLSelectElement);
+        person.gen = fluxGen({ g, gb, gt, ga }, g.value, setGenFisAlin) as Gender;
+      } catch (e) {
+        return;
+      }
+    }, timers.personENTimer * 0.75);
+  }, [genRef, gbr, gtr, genAlinRef]);
   return (
     <div
       className={`noInvert ${sEn.genDivEn}`}
@@ -84,13 +94,16 @@ export default function GenDivEN({ genRef, genAlinRef }: GenDivProps): JSX.Eleme
           Gênero:
           <select
             ref={genRef}
+            value={gen}
             id='genId'
             className={`form-select inpIdentif noInvert min88_900 ${sEn.select} ${sEn.gEn}`}
             data-title='genero'
             data-xls='Gênero'
             required
-            value={gen}
-            onChange={ev => setGen(ev.currentTarget.value as Gender)}>
+            onChange={ev => {
+              if (ev.isTrusted) trusted.current = true;
+              setGen(ev.currentTarget.value as Gender);
+            }}>
             {gens.map(({ v, l }, i) => (
               <option key={`gender__${i}`} value={v} className='genderOpt'>
                 {l}
@@ -105,11 +118,14 @@ export default function GenDivEN({ genRef, genAlinRef }: GenDivProps): JSX.Eleme
           Identidade de gênero:
           <select
             ref={gbr}
+            value={genBirthRel}
             id='genBirthRelId'
             className={`form-select inpIdentif noInvert min88_900 ${sEn.select} ${sEn.gbEn}`}
             required
-            value={genBirthRel}
-            onChange={ev => setGenBirthRel(ev.target.value as BirthRelation)}>
+            onChange={ev => {
+              if (ev.isTrusted) trusted.current = true;
+              setGenBirthRel(ev.target.value as BirthRelation);
+            }}>
             {birthRelations.map(b => (
               <option key={`br___${b.v}`} value={b.v} className='birthRelationOpt'>
                 {b.l}
@@ -124,10 +140,13 @@ export default function GenDivEN({ genRef, genAlinRef }: GenDivProps): JSX.Eleme
           Estágio da Transição Hormonal:
           <select
             ref={gtr}
+            value={genTrans}
             id='genTransId'
             className={`form-select inpIdentif noInvert min88_900 ${sEn.select}`}
-            value={genTrans}
-            onChange={ev => setGenTrans(ev.target.value as TransitionLevel)}>
+            onChange={ev => {
+              if (ev.isTrusted) trusted.current = true;
+              setGenTrans(ev.target.value as TransitionLevel);
+            }}>
             {transOpts.map((o, i) => (
               <option key={`trans_lvl__${i}`} value={o.v} className='transOpt'>
                 {o.l}
@@ -142,10 +161,13 @@ export default function GenDivEN({ genRef, genAlinRef }: GenDivProps): JSX.Eleme
           Alinhamento físico:
           <select
             ref={genAlinRef}
+            value={genFisAlin}
             id='genFisAlinId'
             className={`form-select inpIdentif noInvert min88_900 ${sEn.select}`}
-            value={genFisAlin}
-            onChange={ev => setGenFisAlin(ev.target.value as AlignType)}>
+            onChange={ev => {
+              if (ev.isTrusted) trusted.current = true;
+              setGenFisAlin(ev.target.value as AlignType);
+            }}>
             {alignOpts.map(a => (
               <option key={`align__${a.v}`} value={a.v} className='alignOpt'>
                 {a.l}

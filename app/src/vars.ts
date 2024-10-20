@@ -69,6 +69,9 @@ export const tabProps: ENTabsProps = {
   lockGl: undefined,
 };
 export let person: Person = {} as any;
+import("./lib/global/declarations/classes").then(({ Person }) => {
+  person = new Person("masculino", 0, 0, 0, 0, "leve");
+});
 export const experimentalProps: { experimentalUser: UserState } & { [k: string]: object } = {
   experimentalUser: defUser as UserState,
 };
@@ -93,6 +96,9 @@ export const exporters: { [k: string]: ExportHandler | undefined } = {
   tabProfExporter: undefined,
   tabStudExporter: undefined,
   scheduleExporter: undefined,
+};
+export const timers = {
+  personENTimer: 4500,
 };
 export const gens: { v: Gender; l: GenderLabs }[] = [
   { v: "masculino", l: "Masculino | Homem binário" },
@@ -119,6 +125,3 @@ export const alignOpts: { v: AlignType; l: AlignTypeLab }[] = [
   { v: "feminilizado", l: "Feminino | Feminilizado" },
   { v: "neutro", l: "Neutro" },
 ];
-import("./lib/global/declarations/classes").then(({ Person }) => {
-  person = new Person("masculino", 0, 0, 0, 0, "leve");
-});

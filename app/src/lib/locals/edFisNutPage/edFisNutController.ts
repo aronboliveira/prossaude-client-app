@@ -1,16 +1,10 @@
 //nesse file ocorrem principalmente as adições de listeners, sincronização das chamadas de funções para manipulação de informação/layout e validação dos elementos no DOM
 import { parseNotNaN } from "../../global/gModel";
 import { updateSimpleProperty } from "../../global/handlers/gHandlers";
-import * as EdFisNutHandler from "./edFisNutHandler";
 import * as EdFisNutModel from "./edFisNutModel";
-import {
-  extLine,
-  elementNotFound,
-  elementNotPopulated,
-  multipleElementsNotFound,
-  typeError,
-} from "../../global/handlers/errorHandler";
+import { extLine, multipleElementsNotFound, typeError } from "../../global/handlers/errorHandler";
 import { entryEl, targEl } from "../../global/declarations/types";
+import { tabProps } from "@/vars";
 export const formatValue = (targ: entryEl, numValue: number | string = "0", fix: number = 4): void => {
   const parsedValue = parseNotNaN(typeof numValue === "string" ? numValue : numValue.toString(), 0, "float", fix);
   if (targ.type === "number") {
@@ -41,41 +35,20 @@ export function checkReturnIndex(targInp: targEl, prop: number = 0): number {
   } else multipleElementsNotFound(extLine(new Error()), "arguments for checkReturnIndex", targInp, prop);
   return prop || 0;
 }
-export function addListenerComorbBtns(rowCountComorb: number = 3): [number, Element[]] {
-  const comorbBtnsArray = Array.from(document.getElementsByClassName("countComorb"));
-  if (comorbBtnsArray?.length > 0) {
-    comorbBtnsArray.forEach(comorbBtn => {
-      comorbBtn instanceof HTMLButtonElement
-        ? comorbBtn.addEventListener("click", (): number => {
-            EdFisNutHandler.switchRowComorb(comorbBtn, rowCountComorb);
-            return rowCountComorb;
-          })
-        : elementNotFound(comorbBtn, "comorbBtn", extLine(new Error()));
-    });
-  } else elementNotPopulated(comorbBtnsArray ?? "null", "comorbBtnsArray", extLine(new Error()));
-  return [rowCountComorb, comorbBtnsArray];
-}
-export function addListenerInnerTabs(
-  consTablesFs: targEl,
-  numColsCons: number = 1,
-  areColGroupsSimilar: boolean = false,
-): [number, boolean] {
+export function addListenerInnerTabs(consTablesFs: targEl, numColsCons: number = 1): void {
   try {
+    const colgrpsSimilar = tabProps.areColGroupsSimilar;
     if (
-      !(
-        consTablesFs instanceof HTMLElement &&
-        typeof numColsCons === "number" &&
-        typeof areColGroupsSimilar === "boolean"
-      )
+      !(consTablesFs instanceof HTMLElement && typeof numColsCons === "number" && typeof colgrpsSimilar === "boolean")
     )
       throw multipleElementsNotFound(
         extLine(new Error()),
         "arguments for addListenerInnerTabs()",
         consTablesFs,
         numColsCons,
-        areColGroupsSimilar,
+        colgrpsSimilar,
       );
-    [numColsCons, areColGroupsSimilar] = EdFisNutModel.checkInnerColGroups(consTablesFs, areColGroupsSimilar);
+    EdFisNutModel.checkInnerColGroups(consTablesFs);
     const allTabledInps = consTablesFs.querySelectorAll("input");
     if (!(allTabledInps.length > 0))
       throw multipleElementsNotFound(
@@ -83,7 +56,7 @@ export function addListenerInnerTabs(
         "arguments for callbackInnerTabs()",
         consTablesFs,
         numColsCons,
-        areColGroupsSimilar,
+        colgrpsSimilar,
       );
     allTabledInps.forEach(tabInp => {
       //para apagar retornos negativos anômalos
@@ -96,7 +69,5 @@ export function addListenerInnerTabs(
     });
   } catch (e) {
     console.error(`Error executing addListenerInnerTabs:\n${(e as Error).message}`);
-    return [numColsCons || 0, areColGroupsSimilar || false];
   }
-  return [numColsCons || 0, areColGroupsSimilar || false];
 }
