@@ -2,7 +2,7 @@
 import { ENCtxProps, ENTabsCtxProps, TabBtnProps, TargInps } from "@/lib/global/declarations/interfaces";
 import { handleIndEv } from "@/lib/locals/edFisNutPage/edFisNutHandler";
 import { checkContext, textTransformPascal } from "@/lib/global/gModel";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { ENCtx } from "../ENForm";
 import { ENTabsCtx } from "../FsTabs";
 import sEn from "@/styles/locals/modules/enStyles.module.scss";
@@ -20,11 +20,6 @@ export default function TabBtnInd({ nRow, nCol, lab }: TabBtnProps): JSX.Element
   //TODO REMOVER APÓS TESTE
   checkContext(ctx1, "ENCtx", TabBtnInd);
   checkContext(ctx2, "ENCtx", TabBtnInd);
-  useEffect(() => {
-    setTimeout(() => {
-      console.log(ctx2);
-    }, 5000);
-  }, []);
   return (
     <button
       type='button'

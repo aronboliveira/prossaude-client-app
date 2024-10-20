@@ -2,7 +2,7 @@
 import { nlSel } from "@/lib/global/declarations/types";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { handleCallbackWHS } from "@/lib/locals/edFisNutPage/edFisNutHandler";
-import { tabProps } from "@/vars";
+import { tabProps, timers } from "@/vars";
 import { useEffect, useRef, useState } from "react";
 import useMount from "@/lib/hooks/useMount";
 import { FactorAtletaRegular, FactorAtletaValue } from "@/lib/global/declarations/testVars";
@@ -27,6 +27,7 @@ export default function SelFactorAtleta(): JSX.Element {
       if (!(r.current instanceof HTMLSelectElement || (r.current as any) instanceof HTMLInputElement))
         throw new Error(`Failed to validate Selector for Athlete Factor type`);
       tabProps.factorAtleta = (r.current?.value ?? "peso") as FactorAtletaValue;
+      console.log("Factor atleta is: " + tabProps.factorAtleta);
       handleCallbackWHS(r.current);
     } catch (e) {
       limitedError(
@@ -35,6 +36,20 @@ export default function SelFactorAtleta(): JSX.Element {
       );
     }
   }, [v, r]);
+  useEffect(() => {
+    setTimeout(() => {
+      try {
+        const query = document.getElementById("selFactorAtleta");
+        tabProps.factorAtleta =
+          (r.current?.value as FactorAtletaValue) ||
+          (((query instanceof HTMLSelectElement || query instanceof HTMLInputElement) &&
+            (query as HTMLSelectElement).value) as FactorAtletaValue) ||
+          "Peso";
+      } catch (e) {
+        return;
+      }
+    }, timers.personENTimer * 0.75);
+  }, [r]);
   return (
     <select
       ref={r}

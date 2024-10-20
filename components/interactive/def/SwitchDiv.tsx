@@ -1,20 +1,49 @@
 "use client";
 import { switchAutoFill } from "@/lib/locals/edFisNutPage/edFisNutHandler";
-import { agProps, odProps, tabProps } from "@/vars";
+import { agProps, odProps, tabProps, timers } from "@/vars";
 import { useRouter } from "next/router";
+import { useRef, useEffect } from "react";
 import s from "@/styles/locals/modules/sharedComponents.module.scss";
+import { nlInp } from "@/lib/global/declarations/types";
 export default function SwitchDiv({ autofill = false }: { autofill?: boolean }): JSX.Element {
   const router = useRouter(),
-    isEdFis = /edfis/gi.test(router.pathname);
+    isEdFis = /edfis/gi.test(router.pathname),
+    fillRef = useRef<nlInp>(null),
+    correctRef = useRef<nlInp>(null),
+    spanStyle = { display: "flex", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" };
+  useEffect(() => {
+    if (!isEdFis) return;
+    setTimeout(() => {
+      try {
+        const query = document.getElementById("autoFillBtn");
+        tabProps.isAutoFillActive =
+          fillRef.current?.checked ||
+          (query instanceof HTMLInputElement && (query as HTMLInputElement).checked) ||
+          tabProps.isAutoFillActive;
+      } catch (e) {
+        return;
+      }
+      try {
+        const query = document.getElementById("deactAutocorrectBtnPac");
+        tabProps.edIsAutoCorrectOn =
+          correctRef.current?.checked ||
+          (query instanceof HTMLInputElement && (query as HTMLInputElement).checked) ||
+          tabProps.edIsAutoCorrectOn;
+      } catch (e) {
+        return;
+      }
+    }, timers.personENTimer * 0.75);
+  }, [correctRef, isEdFis, fillRef]);
   return (
     <div role='group' className={`switchDiv flexQ900NoWC divTab ${isEdFis ? `${s.switchDivEn} ${s.divTabEn}` : ""}`}>
       {autofill && (
-        <span role='group' className='form-switch spanLeft' id='autofillDiv'>
+        <span role='group' className='form-switch spanLeft' id='autofillDiv' style={spanStyle}>
           <input
+            ref={fillRef}
             type='checkbox'
-            className='deActBtn form-check-input'
+            className={`deActBtn form-check-input ${isEdFis ? `${s.autoFillBtnEn}` : ""}`}
             role='switch'
-            id={`autoFillBtn ${isEdFis ? `${s.autoFillBtnEn}` : ""}`}
+            id={`autoFillBtn`}
             data-title='Cálculo automático'
             defaultChecked
             onChange={ev => {
@@ -25,12 +54,13 @@ export default function SwitchDiv({ autofill = false }: { autofill?: boolean }):
           <strong className={s.calcText}>Cálculo Automático</strong>
         </span>
       )}
-      <span role='group' className='form-switch spanRight' id='autocorrectDiv'>
+      <span role='group' className='form-switch spanRight' id='autocorrectDiv' style={spanStyle}>
         <input
+          ref={correctRef}
           type='checkbox'
-          className='deActBtn form-check-input'
+          className={`deActBtn form-check-input ${isEdFis ? `${s.deactAutocorrectBtnPacEn}` : ""}`}
           role='switch'
-          id={`deactAutocorrectBtnPac ${isEdFis ? `${s.deactAutocorrectBtnPacEn}` : ""}`}
+          id={`deactAutocorrectBtnPac`}
           data-title='Autocorreção'
           defaultChecked
           onClick={ev => {

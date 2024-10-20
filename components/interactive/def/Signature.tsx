@@ -17,7 +17,6 @@ export default function Signature(): JSX.Element {
       draw(e);
     },
     startDrawingTouch = (e: React.TouchEvent<HTMLCanvasElement>): void => {
-      e.preventDefault();
       setDrawing(true);
       drawTouch(e);
     },

@@ -75,20 +75,6 @@ export default function FsTab(): JSX.Element {
   checkContext(ctx, "FspCtx", FsTab);
   useEffect(() => {
     if (!mounted) return;
-    setTimeout(() => {
-      console.log(tiw1.current?.id ?? "NOT FOUND");
-      console.log(tiw2.current?.id ?? "NOT FOUND");
-      console.log(tiw3.current?.id ?? "NOT FOUND");
-      console.log(tih1.current?.id ?? "NOT FOUND");
-      console.log(tih2.current?.id ?? "NOT FOUND");
-      console.log(tih3.current?.id ?? "NOT FOUND");
-      console.log(tidc1.current?.id ?? "NOT FOUND");
-      console.log(tidc2.current?.id ?? "NOT FOUND");
-      console.log(tidc3.current?.id ?? "NOT FOUND");
-    }, 3000);
-  }, [mounted]);
-  useEffect(() => {
-    if (!mounted) return;
     const queryForTargs = (): void => {
       handleQueryForRefs(
         {
@@ -108,6 +94,21 @@ export default function FsTab(): JSX.Element {
         { id: "tabInpRowDCut9_2", r: tidc1, fallback: { p: "tabCelRowDCut9_2", selector: "input" } },
         { id: "tabInpRowDCut9_3", r: tidc2, fallback: { p: "tabCelRowDCut9_3", selector: "input" } },
         { id: "tabInpRowDCut9_4", r: tidc3, fallback: { p: "tabCelRowDCut9_4", selector: "input" } },
+        { id: "inpImc1Cel2_2", r: tiimc1, fallback: { p: "tabCelRowIndPerc2_2", selector: "input" } },
+        { id: "inpImc2Cel2_3", r: tiimc2, fallback: { p: "tabCelRowIndPerc2_3", selector: "input" } },
+        { id: "inpImc3Cel2_4", r: tiimc3, fallback: { p: "tabCelRowIndPerc2_4", selector: "input" } },
+        { id: "inpMlg1Cel3_2", r: timlg1, fallback: { p: "tabCelRowIndPerc3_2", selector: "input" } },
+        { id: "inpMlg2Cel3_3", r: timlg2, fallback: { p: "tabCelRowIndPerc3_3", selector: "input" } },
+        { id: "inpMlg3Cel3_4", r: timlg3, fallback: { p: "tabCelRowIndPerc3_4", selector: "input" } },
+        { id: "inpPgc1Cel4_2", r: tipgc1, fallback: { p: "tabCelRowIndPerc4_2", selector: "input" } },
+        { id: "inpPgc2Cel4_3", r: tipgc2, fallback: { p: "tabCelRowIndPerc4_3", selector: "input" } },
+        { id: "inpPgc3Cel4_4", r: tipgc3, fallback: { p: "tabCelRowIndPerc4_4", selector: "input" } },
+        { id: "inpTmb1Cel5_2", r: titmb1, fallback: { p: "tabCelRowIndPerc5_2", selector: "input" } },
+        { id: "inpTmb2Cel5_3", r: titmb2, fallback: { p: "tabCelRowIndPerc5_3", selector: "input" } },
+        { id: "inpTmb3Cel5_4", r: titmb3, fallback: { p: "tabCelRowIndPerc5_4", selector: "input" } },
+        { id: "inpGet1Cel6_2", r: tiget1, fallback: { p: "tabCelRowIndPerc6_2", selector: "input" } },
+        { id: "inpGet2Cel6_3", r: tiget2, fallback: { p: "tabCelRowIndPerc6_3", selector: "input" } },
+        { id: "inpGet3Cel6_4", r: tiget3, fallback: { p: "tabCelRowIndPerc6_4", selector: "input" } },
       );
     };
     setTimeout(

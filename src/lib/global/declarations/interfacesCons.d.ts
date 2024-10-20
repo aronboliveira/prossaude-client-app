@@ -11,7 +11,7 @@ import {
   panelOpts,
   vRoot,
 } from "@/lib/global/declarations/types";
-import { FactorAtletaValue, Gender, GordLvl, NafTypeValue } from "@/lib/global/declarations/testVars";
+import { BodyType, FactorAtletaValue, Gender, GordLvl, NafTypeValue } from "@/lib/global/declarations/testVars";
 import { nlFm, nullishDlg, nlTab, voidVal, nlBtn } from "@glSrc/types";
 import { NextRouter } from "next/router";
 import { MutableRefObject, Dispatch, SetStateAction, Component } from "react";
@@ -232,6 +232,7 @@ export interface HistoricRowProps extends Pick<HistoricDlgProps, "name"> {
 }
 export interface GenDivProps {
   onSetGen?: Dispatch<SetStateAction<Gender>>;
+  onSetBodyType?: Dispatch<SetStateAction<BodyType>>;
   genRef?: NlMRef<nlSel>;
   genBirthRef?: NlMRef<nlSel>;
   genAlinRef?: NlMRef<nlSel>;
@@ -251,14 +252,12 @@ export interface UseGenDivReturn {
     genBirthRel: BirthRelation;
     genTrans: TransitionLevel;
     genFisAlin: AlignType;
-    textBodytype: Gender;
   };
   setters: {
     setGen: Dispatch<SetStateAction<Gender>>;
     setGenBirthRel: Dispatch<SetStateAction<BirthRelation>>;
     setGenTrans: Dispatch<SetStateAction<TransitionLevel>>;
     setGenFisAlin: Dispatch<SetStateAction<AlignType>>;
-    setTextBodytype: Dispatch<SetStateAction<Gender>>;
   };
 }
 export interface NafProps {

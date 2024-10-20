@@ -1,8 +1,8 @@
 import { exeAutoFill } from "@/lib/locals/edFisNutPage/edFisNutHandler";
 import { handleEventReq } from "@/lib/global/handlers/gHandlers";
 import { looseNum, nlInp } from "@/lib/global/declarations/types";
-import { person, tabProps } from "@/vars";
-import { useState, useEffect, Dispatch, SetStateAction, MutableRefObject, useCallback } from "react";
+import { person, tabProps, timers } from "@/vars";
+import { useState, useEffect, Dispatch, SetStateAction, MutableRefObject, useCallback, useRef } from "react";
 import { applyFieldConstraints, limitedError, parseNotNaN } from "@/lib/global/gModel";
 import { PseudoNum } from "@/lib/global/declarations/testVars";
 export default function AgeElement({
@@ -14,7 +14,8 @@ export default function AgeElement({
   inpRef?: MutableRefObject<nlInp>;
   ageRef?: MutableRefObject<number>;
 }): JSX.Element {
-  const [age, setAge] = useState<PseudoNum>("0"),
+  const [age, setAge] = useState<PseudoNum | "">(""),
+    trusted = useRef<boolean>(false),
     evaluateNum = useCallback((a: string): PseudoNum => {
       if (a.startsWith("0") && a.length > 1) a = parseNotNaN(a, 0, "int").toString();
       if (a.length > 3) a = a.slice(0, 4);
@@ -24,26 +25,29 @@ export default function AgeElement({
       return a as PseudoNum;
     }, []);
   useEffect(() => {
-    if (inpRef?.current && inpRef.current.value === "") {
-      if (!/edfis/gi.test(location.pathname.toLowerCase())) return;
+    try {
+      if (!(inpRef?.current instanceof HTMLInputElement) || !/edfis/gi.test(location.pathname.toLowerCase())) return;
       person.age = parseNotNaN(inpRef.current.value, 0, "int");
-      if (ageRef) ageRef.current = person.age;
       setAge(person.age.toString() as PseudoNum);
+      if (ageRef) ageRef.current = person.age;
       onSetAge && onSetAge(evaluateNum(person.age.toString()) as PseudoNum);
-      tabProps.isAutoFillActive && exeAutoFill(inpRef.current, "cons");
+    } catch (e) {
+      limitedError(`Error executing effect for setting age:\n${(e as Error).message}`, "AgeEffect1");
     }
-  }, [setAge, onSetAge, inpRef, ageRef, evaluateNum]);
+  }, [setAge, onSetAge, inpRef, ageRef, evaluateNum, trusted]);
   useEffect(() => {
     try {
+      if (!trusted.current) return;
       if (!(inpRef?.current && inpRef.current instanceof HTMLElement))
         throw new Error(`Failed to validate instance of input`);
       handleEventReq(inpRef.current);
       if (!/edfis/gi.test(location.pathname.toLowerCase())) return;
       const evaluatedNum = parseNotNaN(evaluateNum(age) || "0", 0, "int");
       person.age = Number.isFinite(evaluatedNum) ? evaluatedNum : 0;
+      if (ageRef) ageRef.current = person.age;
+      tabProps.isAutoFillActive && exeAutoFill(inpRef.current, "cons");
       //TODO REMOVER APÓS TESTE
       console.log(`Person's age: ` + person.age);
-      tabProps.isAutoFillActive && exeAutoFill(inpRef.current, "cons");
       if (ageRef) ageRef.current = person.age;
     } catch (e) {
       limitedError(
@@ -51,7 +55,25 @@ export default function AgeElement({
         AgeElement.prototype.constructor.name,
       );
     }
-  }, [age, ageRef, inpRef, evaluateNum]);
+  }, [age, ageRef, inpRef, evaluateNum, trusted]);
+  useEffect(() => {
+    setTimeout(() => {
+      try {
+        person.age =
+          parseNotNaN(inpRef?.current?.value || "0", 0, "int") ||
+          parseNotNaN(
+            (document.getElementById("ageId") instanceof HTMLInputElement &&
+              (document.getElementById("ageId") as HTMLInputElement).value) ||
+              "0",
+            0,
+            "int",
+          ) ||
+          0;
+      } catch (e) {
+        return;
+      }
+    }, timers.personENTimer * 0.75);
+  }, [inpRef]);
   return (
     <input
       value={age}
@@ -70,6 +92,7 @@ export default function AgeElement({
       data-maxnum='255'
       data-pattern='^[\d,.]+$'
       onInput={ev => {
+        if (ev.isTrusted) trusted.current = true;
         try {
           let newValue = ev.currentTarget.value.replace(/[^0-9]/g, "").trim();
           applyFieldConstraints(ev.currentTarget);

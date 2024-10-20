@@ -5,13 +5,12 @@ import { UserProfileCtxProps } from "@/lib/global/declarations/interfaces";
 import { UserProfileCtx } from "./UserProfileDropdown";
 import ContactDlg from "./ContactDlg";
 import { execLogout } from "@/lib/global/auth";
-import { UserPanelCtx } from "./UserProfilePanel";
 import { checkContext } from "@/lib/global/gModel";
 export default function UserList({ end = "" }: { end?: string }): JSX.Element {
   const { user, router, shouldDisplayContact, shouldDisplayPropDlg, setContact, setPropDlg } =
     useContext<UserProfileCtxProps>(UserProfileCtx);
   //TODO REMOVER APÓS TESTE
-  const ctx = useContext(UserPanelCtx);
+  const ctx = useContext(UserProfileCtx);
   checkContext(ctx, "UserProfileCtx", UserList);
   return (
     <>
@@ -33,7 +32,7 @@ export default function UserList({ end = "" }: { end?: string }): JSX.Element {
           type='button'
           className='transparent-el-bg'
           id={`alterUserPropBtn${end}`}
-          onClick={setPropDlg(!shouldDisplayPropDlg)}>
+          onClick={() => setPropDlg(!shouldDisplayPropDlg)}>
           <svg
             xmlns='http://www.w3.org/2000/svg'
             width='16'
@@ -85,7 +84,7 @@ export default function UserList({ end = "" }: { end?: string }): JSX.Element {
           type='button'
           className='transparent-el-bg noInvert'
           id={`contactBtn${end}`}
-          onClick={setContact(!shouldDisplayContact)}>
+          onClick={() => setContact(!shouldDisplayContact)}>
           <svg
             xmlns='http://www.w3.org/2000/svg'
             width='16'

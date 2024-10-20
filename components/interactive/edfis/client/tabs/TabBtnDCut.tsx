@@ -17,7 +17,7 @@ export default function TabBtnDCut({ nCol }: { nCol: number }): JSX.Element {
       type='button'
       id={`sumDCBtn9_${nCol}`}
       data-col={nCol}
-      className={`btn btn-secondary tabBtnProgCons tabBtnSum tabBtnRowDCut9 ${sEn.tabBtn} ${sEn.btnSecondary}`}
+      className={`btn btn-secondary tabBtnProgCons tabBtnSum tabBtnRowDCut9 ${sEn.tabBtn} ${sEn.btnSecondary} ${sEn.tabBtnSum}`}
       onClick={ev =>
         handleSumClick(ev, {
           prt: prt?.current ?? document.getElementById("tabSelectDCutId"),

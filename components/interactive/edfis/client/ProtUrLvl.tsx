@@ -8,9 +8,11 @@ import { useRef, useEffect, useState } from "react";
 import sEn from "@/styles/locals/modules/enStyles.module.scss";
 export default function ProtUrLvl(): JSX.Element {
   const r = useRef<nlInp>(null),
+    trusted = useRef<boolean>(false),
     [v, setValue] = useState<PseudoNum>("0");
   useEffect(() => {
     try {
+      if (!trusted.current) return;
       if (!(r.current instanceof HTMLElement)) throw new Error(`Failed to validate reference for input`);
       handleCondtReq(r.current, {
         minNum: 0,
@@ -25,7 +27,7 @@ export default function ProtUrLvl(): JSX.Element {
         ProtUrLvl.prototype.constructor.name,
       );
     }
-  }, [v, r]);
+  }, [v, r, trusted]);
   return (
     <input
       ref={r}
@@ -36,6 +38,7 @@ export default function ProtUrLvl(): JSX.Element {
       className={`form-control noInvert opProtUr ${sEn.protUrLvl}`}
       data-title='Proteinuria (mg/dL)'
       onInput={ev => {
+        if (ev.isTrusted) trusted.current = true;
         tabProps.edIsAutoCorrectOn && applyFieldConstraints(r.current);
         setValue(ev.currentTarget.value as PseudoNum);
       }}

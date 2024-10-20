@@ -3,23 +3,17 @@ import { entryEl, primitiveType, targEl } from "../../global/declarations/types"
 import { filterIdsByGender, parseNotNaN } from "../../global/gModel";
 import { handleEventReq } from "@/lib/global/handlers/gHandlers";
 //nesse file estão presentes principalmente as funções relacionadas à exigência de modelo textual e de visualização
-import {
-  extLine,
-  elementNotFound,
-  inputNotFound,
-  multipleElementsNotFound,
-  stringError,
-} from "../../global/handlers/errorHandler";
+import { extLine, elementNotFound, multipleElementsNotFound, stringError } from "../../global/handlers/errorHandler";
 import { FactorAtletaValue, Gender, NafTypeValue } from "@/lib/global/declarations/testVars";
 import { person, tabProps } from "@/vars";
-export function checkInnerColGroups(parentEl: targEl, areAllColGroupsSimilar: boolean = false): [number, boolean] {
+export function checkInnerColGroups(parentEl: targEl): number {
   const validColGroupsChildCount: number[] = [],
     colGroups = Array.from(parentEl?.querySelectorAll("colgroup") ?? []);
   try {
     if (!(parentEl instanceof HTMLElement && colGroups?.flat(1)?.length > 0))
       throw multipleElementsNotFound(
         extLine(new Error()),
-        `arguments for checkInnerColGroups(), areColGroupValids: ${areAllColGroupsSimilar ?? false}`,
+        `arguments for checkInnerColGroups(), areColGroupValids: ${tabProps.areColGroupsSimilar ?? false}`,
         parentEl,
         `${JSON.stringify(colGroups) || null}`,
       );
@@ -32,12 +26,12 @@ export function checkInnerColGroups(parentEl: targEl, areAllColGroupsSimilar: bo
     const pairedColGroupsValid: boolean[] = [];
     for (let m = 1; m < validColGroupsChildCount.length; m++)
       (validColGroupsChildCount[m] = validColGroupsChildCount[m - 1]) && pairedColGroupsValid.push(true);
-    areAllColGroupsSimilar = pairedColGroupsValid.every(pairedColGroup => pairedColGroup === true) ? true : false;
+    tabProps.areColGroupsSimilar = pairedColGroupsValid.every(pairedColGroup => pairedColGroup === true) ? true : false;
   } catch (e) {
     console.error(`Error executing checkInnerColGroups:\n${(e as Error).message}`);
-    return [validColGroupsChildCount.length, areAllColGroupsSimilar];
+    return validColGroupsChildCount.length;
   }
-  return [validColGroupsChildCount.length, areAllColGroupsSimilar];
+  return validColGroupsChildCount.length;
 }
 export function checkTabRowsIds(tab: targEl): string[] {
   const arrTabRowsIds: string[] = [];
@@ -175,67 +169,59 @@ export function defineHiddenRows(
     );
 }
 //correção para limitação da fórmula de PGC
-export function evaluatePGCDecay(person: Person, tipgc: targEl, PGC: number = 0): [boolean, number] {
+export function evalPGCDecay(tipgc: targEl): boolean {
   let foundDecayPoint = false;
-  if (
-    person instanceof Person &&
-    (tipgc instanceof HTMLInputElement || tipgc instanceof HTMLSelectElement || tipgc instanceof HTMLTextAreaElement) &&
-    typeof PGC === "number"
-  ) {
+  try {
+    if (!(person instanceof Person)) throw new Error(`Failed to validate instance of Person`);
+    if (
+      !(tipgc instanceof HTMLInputElement || tipgc instanceof HTMLSelectElement || tipgc instanceof HTMLTextAreaElement)
+    )
+      throw new Error(`Failed to validate Target Input for PGC`);
+    tabProps.PGC = evalPseudoNum(tabProps.PGC);
     const initSumDCut = person.sumDCut,
       decreasedPerson = new Person(person.gen, person.age, person.weight, person.height, person.sumDCut, person.atvLvl);
     decreasedPerson.sumDCut = decreasedPerson.sumDCut - 1;
     let decreasedPGC = decreasedPerson.calcPGC(decreasedPerson).pgc,
       sumAcc = 1;
     //caso padrão de decay
-    if (decreasedPGC > PGC) {
+    if (decreasedPGC > tabProps.PGC) {
       foundDecayPoint = true;
-      alertPGCRounding(tipgc);
       const arrDecreasedPGC: number[] = [];
       //busca pontos de decay anteriores
-      while (decreasedPerson?.sumDCut > 0) {
+      while (decreasedPerson.sumDCut > 0) {
+        if (sumAcc > 100) break;
+        console.log("while");
         sumAcc++;
         decreasedPerson.sumDCut = decreasedPerson.sumDCut - 1;
         decreasedPGC = decreasedPerson.calcPGC(decreasedPerson).pgc;
+        if (decreasedPGC < 0 || !Number.isFinite(decreasedPGC)) decreasedPGC = 0;
         arrDecreasedPGC.push(decreasedPGC);
-        if (decreasedPGC < PGC) break;
-        if (sumAcc > 999) break;
+        if (decreasedPGC < tabProps.PGC) break;
       }
       //caso ponto de decays sejam validados, normaliza valor para evitar anomalias de entrada
-      if (arrDecreasedPGC?.length > 0) {
-        decreasedPerson?.sumDCut > 515
-          ? (PGC = 60.5)
-          : (PGC = Math.ceil((Math.max(...arrDecreasedPGC) + 0.05) * 10) / 10 + ((initSumDCut - 260) / 100) * 5);
-      } else PGC = decreasedPGC;
-    }
-    /* eslint-disable */
-    /*casos específicos para handling de input anômalo (além do possível para um ser humano) 
+      if (arrDecreasedPGC.length > 0) {
+        decreasedPerson.sumDCut > 515
+          ? (tabProps.PGC = 60.5) //limite hardcodado
+          : (tabProps.PGC =
+              Math.ceil((Math.max(...arrDecreasedPGC) + 0.05) * 10) / 10 + ((initSumDCut - 260) / 100) * 5);
+      } else tabProps.PGC = decreasedPGC;
+    } else if (decreasedPGC <= tabProps.PGC && (tabProps.PGC > 100 || decreasedPerson.sumDCut > 514)) {
+      /* eslint-disable */
+      /*casos específicos para handling de input anômalo (além do possível para um ser humano) 
       evitando bugs nos listeners devido a NaN e loops de normalização */
-    /* eslint-enable */
-    if (decreasedPGC <= PGC && (PGC > 100 || decreasedPerson?.sumDCut > 514)) {
+      /* eslint-enable */
       foundDecayPoint = true;
-      alertPGCRounding(tipgc);
-      PGC = 60.45 + 0.05 * ((decreasedPerson?.sumDCut ?? 514) - 513);
+      tabProps.PGC = 60.45 + 0.05 * (decreasedPerson.sumDCut - 513);
     }
-  } else
-    multipleElementsNotFound(
-      extLine(new Error()),
-      "argumentos para evaluatePGCDecay",
-      `${JSON.stringify(person) || null}`,
-      tipgc,
-      PGC,
-    );
-
-  if (PGC < 0 || Number.isNaN(PGC) || PGC === Math.abs(Infinity)) PGC = 0;
-  return [foundDecayPoint, PGC];
-}
-export function alertPGCRounding(tipgc: targEl): void {
-  if (tipgc instanceof HTMLInputElement) {
-    const spanRoundingAlertIcon = document.getElementById(`alert_${(tipgc as entryEl).id}`);
-    spanRoundingAlertIcon instanceof HTMLSpanElement && spanRoundingAlertIcon.hidden === false
-      ? (spanRoundingAlertIcon.hidden = true)
-      : elementNotFound(spanRoundingAlertIcon, "spanRoundingAlertIcon", extLine(new Error()));
-  } else inputNotFound(tipgc, "tipgc in alertPGCRounding", extLine(new Error()));
+    if (tabProps.PGC < 0 || !Number.isFinite(tabProps.PGC)) tabProps.PGC = 0;
+    if (person.sumDCut < 0 || !Number.isFinite(person.sumDCut)) person.sumDCut = 0;
+    return foundDecayPoint;
+  } catch (e) {
+    console.error(`Error executing evalPGCDecay:\n${(e as Error).message}`);
+    tabProps.PGC = 0;
+    person.sumDCut = 0;
+    return foundDecayPoint;
+  }
 }
 export const evalGender = (g: string): g is Gender => ["masculino", "feminino", "neutro"].includes(g);
 export function evalFactorAtleta(): boolean {

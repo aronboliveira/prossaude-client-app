@@ -41,6 +41,7 @@ export default function TabInpSvi({ nRow, nCol, ctx, lab }: TdProps): JSX.Elemen
   return (
     <input
       ref={inpRef}
+      value={v}
       type='number'
       name={`${lab.toLowerCase()}_${nRow}_${nCol}`}
       className={`form-control tabInpProg tabInpProg${ctx} tabInpProg${lab}${ctx} tabInpRow${ctx}${nRow} float sevenCharLongNum ${sEn.tabInpProg}`}

@@ -10,6 +10,7 @@ import { applyFieldConstraints, limitedError } from "@/lib/global/gModel";
 import { tabProps } from "@/vars";
 export default function InpRot(props: InpRotProps): JSX.Element {
   const inpRef = useRef<nlInp>(null),
+    trusted = useRef<boolean>(false),
     [v, setValue] = useState<string>(""),
     title = ((): string => {
       let mainCtx: mainContextRot = "Diário";
@@ -56,6 +57,7 @@ export default function InpRot(props: InpRotProps): JSX.Element {
   }, [props.ctx, props.flags, props.grp]);
   useEffect(() => {
     try {
+      if (!trusted.current) return;
       if (!(inpRef.current instanceof HTMLElement)) throw new Error(`Failed to validate current reference for input`);
       handleEventReq(inpRef.current);
     } catch (e) {
@@ -64,7 +66,7 @@ export default function InpRot(props: InpRotProps): JSX.Element {
         InpRot.prototype.constructor.name,
       );
     }
-  }, [inpRef, v]);
+  }, [inpRef, v, trusted]);
   return (
     <ErrorBoundary
       FallbackComponent={() => <GenericErrorComponent message={`Error rendering Input for ${props.quest}`} />}>
@@ -119,6 +121,7 @@ export default function InpRot(props: InpRotProps): JSX.Element {
         data-maxnum={props.max}
         data-pattern={props.pattern ? props.pattern : "^[\\d,.]+$"}
         onInput={ev => {
+          if (ev.isTrusted) trusted.current = true;
           tabProps.edIsAutoCorrectOn && applyFieldConstraints(ev.currentTarget);
           setValue(ev.currentTarget.value);
         }}

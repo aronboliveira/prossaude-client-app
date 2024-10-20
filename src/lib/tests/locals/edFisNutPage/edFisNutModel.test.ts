@@ -4,7 +4,7 @@ import {
   checkTabRowsIds,
   changeTabDCutLayout,
   defineHiddenRows,
-  evaluatePGCDecay,
+  evalPGCDecay,
   alertPGCRounding,
 } from "../../../locals/edFisNutPage/edFisNutModel";
 import { Person } from "../../../global/declarations/classes";
@@ -157,7 +157,7 @@ describe("defineHiddenRows", (): void => {
     ).toHaveBeenCalled() as void;
   }) as void;
 }) as void;
-describe("evaluatePGCDecay", (): void => {
+describe("evalPGCDecay", (): void => {
   let person: Person;
   let tipgc: HTMLInputElement;
   beforeEach((): void => {
@@ -166,7 +166,7 @@ describe("evaluatePGCDecay", (): void => {
     jest.clearAllMocks() as typeof jest;
   }) as void;
   it("should return true and correct PGC value when decay point is found", (): void => {
-    const [foundDecayPoint, PGC] = evaluatePGCDecay(person, tipgc, 25);
+    const [foundDecayPoint, PGC] = evalPGCDecay(person, tipgc, 25);
     (expect(foundDecayPoint) as jest.JestMatchers<jest.SpyInstance>).toBe<boolean>(true) as void;
     (expect(PGC) as jest.JestMatchers<jest.SpyInstance>).toBeGreaterThan(0);
   }) as void;
@@ -175,7 +175,7 @@ describe("evaluatePGCDecay", (): void => {
       require("../../../global/handlers/errorHandler"),
       "multipleElementsNotFound",
     );
-    evaluatePGCDecay(null as any, null as any, NaN);
+    evalPGCDecay(null as any, null as any, NaN);
     (expect(mockMultipleElementsNotFound) as jest.JestMatchers<jest.SpyInstance>).toHaveBeenCalled() as void;
   }) as void;
 }) as void;

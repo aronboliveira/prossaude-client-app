@@ -1,4 +1,3 @@
-import { textTransformPascal } from "@/lib/global/gModel";
 import { validTabLabs } from "@/lib/global/declarations/types";
 export default function LockTabInd({
   ctx,
@@ -9,12 +8,11 @@ export default function LockTabInd({
   addGroup?: string[];
   isSpan?: boolean;
 }): JSX.Element {
-  const pascalCtx = textTransformPascal(ctx);
   return isSpan ? (
     <span
       role='img'
       className={`noInvert lock_inpGet${addGroup ? addGroup.map(group => ` ${group}`).join("") : ""}`}
-      id={`lock${pascalCtx}`}>
+      id={`lock${ctx}`}>
       <svg
         xmlns='http://www.w3.org/2000/svg'
         width='16'
@@ -44,12 +42,12 @@ export default function LockTabInd({
       </svg>
     </span>
   ) : (
-    <div style={{ border: "none", boxShadow: "none" }} role='group' className={`noInvert`} id={`div${pascalCtx}`}>
+    <div style={{ border: "none", boxShadow: "none" }} role='group' className={`noInvert`} id={`div${ctx}`}>
       <span
         role='img'
         style={{ border: "none", boxShadow: "none" }}
         className={`noInvert lock_inpGet${addGroup ? addGroup.map(group => ` ${group}`).join("") : ""}`}
-        id={`lock${pascalCtx}`}>
+        id={`lock${ctx}`}>
         <svg
           xmlns='http://www.w3.org/2000/svg'
           width='16'

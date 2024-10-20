@@ -51,7 +51,7 @@ export default function SectConfirmBtns(): JSX.Element {
     };
   }, []);
   return (
-    <section className='sectionMain sectionConfirm' id='sectConfirmBut'>
+    <section className='sectionMain sectionConfirm' id='sectConfirmBut' style={{ overflow: "visible" }}>
       <button
         type='submit'
         name='submitFormButName'

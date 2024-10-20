@@ -1412,7 +1412,7 @@ export function handleEventReq(entry: textEl | Event, alertColor: string = "#e52
     )
       isValid = false;
   }
-  if (!isValid) entry.style.color = alertColor;
+  if (!isValid && entry.value.length > 2) entry.style.color = alertColor;
   setTimeout(() => {
     if (entry instanceof Event) {
       if (!(entry.currentTarget instanceof HTMLInputElement || entry.currentTarget instanceof HTMLTextAreaElement))
@@ -1420,7 +1420,7 @@ export function handleEventReq(entry: textEl | Event, alertColor: string = "#e52
       entry = entry.currentTarget;
     }
     entry.style.color = "rgb(33, 37, 41)";
-  }, 2000);
+  }, 200);
 }
 export function cleanStorageName(): void {
   if (!window) return;

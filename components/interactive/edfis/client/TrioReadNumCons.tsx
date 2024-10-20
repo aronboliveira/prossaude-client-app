@@ -14,6 +14,7 @@ import sEn from "@/styles/locals/modules/enStyles.module.scss";
 export default function TrioReadNumCons(): JSX.Element {
   const mainRef = useRef<nlLab>(null),
     r = useRef<nlInp | HTMLSelectElement>(null),
+    trusted = useRef<boolean>(false),
     { fspr } = useContext<ENCtxProps>(ENCtx).refs,
     [v, setValue] = useState<PseudoNum>("1"),
     switchCons = useCallback(() => {
@@ -35,13 +36,13 @@ export default function TrioReadNumCons(): JSX.Element {
         const numConsTextHeadCels = Array.from(document.querySelectorAll(".numConsTextHeadCel"));
         const tabsNum = fsProgCons?.querySelectorAll("table")?.length || 0;
         numTotalTitledColsCons = numTotalTitledColsCons - tabsNum;
-        numConsTextHeadCels.length === numTotalTitledColsCons
-          ? switchNumConsTitles(numConsTextHeadCels, r.current, numTotalTitledColsCons, numTotalTabsCons)
-          : elementNotPopulated(
-              numConsTextHeadCels,
-              "numConsTextHeadCels in callbackTrioReadNumCons()",
-              extLine(new Error()),
-            );
+        if (numConsTextHeadCels.length !== numTotalTitledColsCons)
+          throw elementNotPopulated(
+            numConsTextHeadCels,
+            "numConsTextHeadCels in callbackTrioReadNumCons()",
+            extLine(new Error()),
+          );
+        switchNumConsTitles(numConsTextHeadCels, r.current, numTotalTitledColsCons, numTotalTabsCons);
         numConsTextHeadCels.forEach(numConsCel => highlightChange(numConsCel, "rgba(250, 30, 0, 0.3)"));
       } catch (e) {
         console.error(
@@ -50,19 +51,20 @@ export default function TrioReadNumCons(): JSX.Element {
           }`,
         );
       }
-    }, [v, r, fspr]);
+    }, [v, r, fspr, trusted]);
   //TODO REMOVER APÓS TESTE
   const ctx = useContext(ENCtx);
   checkContext(ctx, "ENCtx", TrioReadNumCons);
   useEffect(() => {
     try {
+      if (!trusted.current) return;
       if (!(mainRef.current instanceof HTMLElement))
         throw elementNotFound(mainRef.current, `Main Reference for TrioReadNumCons`, extLine(new Error()));
       syncAriaStates([mainRef.current, ...mainRef.current.querySelectorAll("*")]);
     } catch (e) {
       console.error(`Error executing useEffect for TrioReadNumCons:\n${(e as Error).message}`);
     }
-  }, [mainRef]);
+  }, [mainRef, trusted]);
   useEffect(switchCons, [switchCons, v]);
   return (
     <label htmlFor='trioReadNumCons' id='labTrioReadNumCons' className={`min52_900 ${sEn.consLab}`} ref={mainRef}>
@@ -83,6 +85,7 @@ export default function TrioReadNumCons(): JSX.Element {
         data-maxnum='255'
         data-pattern='^\d+$'
         onInput={ev => {
+          if (ev.isTrusted) trusted.current = true;
           tabProps.edIsAutoCorrectOn && applyFieldConstraints(r.current);
           setValue(ev.currentTarget.value as PseudoNum);
         }}

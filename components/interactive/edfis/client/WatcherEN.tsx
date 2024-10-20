@@ -1,7 +1,7 @@
 "use client";
 import { handleLinkChanges } from "@/lib/global/handlers/gRoutingHandlers";
 import { assignFormAttrs } from "@/lib/global/gModel";
-import { tabProps } from "@/vars";
+import { person, tabProps, timers } from "@/vars";
 import { useEffect, useRef, useState } from "react";
 import { addExportFlags, getGlobalEls } from "@/lib/global/gController";
 import useResetPerson from "@/lib/hooks/useResetPerson";
@@ -60,43 +60,32 @@ export default function WatcherEN(): JSX.Element {
   useResetPerson();
   useEffect(() => {
     const populateCache = (): void => {
-        //TODO REMOVER APÓS TESTE
-        console.log("populating...");
-        CacheEN.dcisDoc = Array.from(document.querySelectorAll(".tabInpProgDCut"));
-        CacheEN.indisDoc = Array.from(document.querySelectorAll(".tabInpProgIndPerc"));
-        CacheEN.ncthc = Array.from(document.querySelectorAll(".numConsTextHeadCel"));
-        CacheEN.locksinds = Array.from(document.querySelectorAll(".lockTabInd"));
-        CacheEN.tip = Array.from(document.querySelectorAll(".tabInpProg"));
-        CacheEN.his = Array.from(document.querySelectorAll(".inpHeight"));
-        CacheEN.wis = Array.from(document.querySelectorAll(".inpWeight"));
-        CacheEN.indis = Array.from(document.querySelectorAll(".tabInpProgIndPerc"));
+        (
+          [
+            { k: "dcisDoc", s: ".tabInpProgDCut" },
+            { k: "indisDoc", s: ".tabInpProgIndPerc" },
+            { k: "ncthc", s: ".numConsTextHeadCel" },
+            { k: "locksinds", s: ".lockTabInd" },
+            { k: "tip", s: ".tabInpProg" },
+            { k: "his", s: ".inpHeight" },
+            { k: "wis", s: ".inpWeight" },
+          ] as { k: keyof CacheENProps; s: string }[]
+        ).forEach(({ k, s }, i) => {
+          try {
+            if (!CacheEN.hasOwnProperty(k)) return;
+            CacheEN[k] = Array.from(document.querySelectorAll(s)) as any;
+          } catch (e) {
+            console.error(
+              `Error executing iteration ${i} for querying the DOM for filling the Cache:\n${(e as Error).message}`,
+            );
+          }
+        });
         if (!(fsp.current instanceof HTMLElement)) fsp.current = document.getElementById("fsProgConsId") as nlFs;
         (() => {
           if (!(fsp.current instanceof HTMLElement)) return;
           CacheEN.fsptb = Array.from(fsp.current.querySelectorAll("table"));
           CacheEN.fsptrs = Array.from(fsp.current.querySelectorAll("tr"));
           CacheEN.fspcols = Array.from(fsp.current.querySelectorAll("col"));
-        })();
-        if (!(tsv.current instanceof HTMLElement)) tsv.current = document.getElementById("tabProgSVi") as nlTab;
-        (() => {
-          if (!(tsv.current instanceof HTMLElement)) return;
-          CacheEN.tsvis = Array.from(tsv.current.querySelectorAll(".tabInpProgSVi"));
-        })();
-        if (!(tma.current instanceof HTMLElement)) tma.current = document.getElementById("tabMedAnt") as nlTab;
-        (() => {
-          if (!(tma.current instanceof HTMLElement)) return;
-          CacheEN.tmais = Array.from(tma.current.querySelectorAll(".tabInpProgMedAnt"));
-        })();
-        if (!(td.current instanceof HTMLElement)) td.current = document.getElementById("tabDCut") as nlTab;
-        (() => {
-          if (!(td.current instanceof HTMLElement)) return;
-          CacheEN.dcis = Array.from(td.current.querySelectorAll(".tabInpProg"));
-          CacheEN.dctrs = Array.from(td.current.querySelectorAll(".tabRowDCutMed"));
-        })();
-        if (!(tip.current instanceof HTMLElement)) tip.current = document.getElementById("tabIndPerc") as nlTab;
-        (() => {
-          if (!(tip.current instanceof HTMLElement)) return;
-          CacheEN.indis = Array.from(tip.current.querySelectorAll(".inpInd"));
         })();
         tsv.current ??= document.getElementById("tabProgSVi") as nlTab;
         tma.current ??= document.getElementById("tabMedAnt") as nlTab;
@@ -113,16 +102,24 @@ export default function WatcherEN(): JSX.Element {
             ],
           },
           { tab: tip.current, queries: [{ k: "indis", s: ".inpInd" }] },
-        ].forEach(({ tab, queries }) => {
-          if (!(tab instanceof HTMLElement)) return;
-          CacheEN.lists[tab.id] = tab.querySelectorAll("col");
-          for (const { k, s } of queries) (CacheEN as any)[k] = tab.querySelectorAll(s);
-          if (!(tab instanceof HTMLTableElement)) return;
-          for (const row of tab.rows) CacheEN.targs[`${row.id}__inputs`] = Array.from(row.querySelectorAll("input"));
+        ].forEach(({ tab, queries }, i) => {
+          try {
+            if (!(tab instanceof HTMLElement)) return;
+            CacheEN.lists[tab.id] = tab.querySelectorAll("col");
+            for (const { k, s } of queries) (CacheEN as any)[k] = tab.querySelectorAll(s);
+            if (!(tab instanceof HTMLTableElement)) return;
+            for (const row of Array.from(tab.rows).filter(r => !r.id.endsWith("1") && !/svi[0-9]/gi.test(r.id)))
+              CacheEN.targs[`${row.id}__inputs`] = Array.from(row.querySelectorAll("input"));
+          } catch (e) {
+            console.error(
+              `Error executing iteration ${i} for querying the Cache for assinging the Mutable References:\n${
+                (e as Error).message
+              }`,
+            );
+          }
         });
-        console.log(CacheEN);
       },
-      cacheInterv = setInterval(populateCache, 120000),
+      cacheInterv = setInterval(populateCache, 20000),
       handleUnload = (): void => {
         for (const k in CacheEN)
           if (CacheEN.hasOwnProperty(k)) {
@@ -132,12 +129,35 @@ export default function WatcherEN(): JSX.Element {
               : ((CacheEN as any)[l] = {});
           }
       };
-    populateCache();
     addEventListener("beforeunload", handleUnload);
+    if (!mounted) return;
+    setTimeout(populateCache, 1000);
     return (): void => {
       clearInterval(cacheInterv);
       removeEventListener("beforeunload", handleUnload);
     };
+  }, [mounted]);
+  //TODO REMOVER APÓS TESTE
+  useEffect(() => {
+    setTimeout(() => {
+      console.log(new Date().getHours() + ":" + new Date().getUTCMinutes());
+      console.log("Person");
+      console.log(person);
+      // console.log("Tab Properties");
+      // console.log(tabProps);
+      // console.log("Cache");
+      // console.log(CacheEN);
+    }, timers.personENTimer);
+    const i = setInterval(() => {
+      console.log(new Date().getHours() + ":" + new Date().getUTCMinutes());
+      console.log("Person");
+      console.log(person);
+      // console.log("Tab Properties");
+      // console.log(tabProps);
+      // console.log("Cache");
+      // console.log(CacheEN);
+    }, 10000);
+    return (): void => clearInterval(i);
   }, []);
   return <div className='watcher' id='watcher-en' style={{ display: "none" }}></div>;
 }

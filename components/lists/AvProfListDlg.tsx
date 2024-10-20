@@ -640,7 +640,7 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
             FallbackComponent={() => (
               <ErrorFallbackDlg
                 renderError={new Error(`Erro carregando a janela modal!`)}
-                onClick={props.dispatch(props.state)}
+                onClick={() => props.dispatch(props.state)}
               />
             )}>
             <section className='flexRNoWBetCt widFull' id='headProfList'>

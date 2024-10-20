@@ -17,7 +17,6 @@ import Td from "../../tabs/Td";
 import Th from "../../tabs/Th";
 import { ENTabsCtx } from "../FsTabs";
 import { checkContext } from "@/lib/global/gModel";
-import { CacheEN } from "@/lib/locals/edFisNutPage/cache";
 const DTsCtx = createContext<DTsCtxProps>({ exeAutoFillCtx: null }),
   DivDCut = lazy(() => import("../../DivDCut"));
 export default function DynamicTabsBlock(): JSX.Element {
@@ -113,14 +112,14 @@ export default function DynamicTabsBlock(): JSX.Element {
   checkContext(ctx3, "ENTabsCtx", DynamicTabsBlock);
   useEffect(() => {
     setTimeout(() => {
-      console.log("Form Context:");
-      console.log(ctx1);
-      console.log("Fieldset Context:");
-      console.log(ctx2);
-      console.log("Tables Context:");
-      console.log(ctx3);
-      console.log("Cache");
-      console.log(CacheEN);
+      // console.log("Form Context:");
+      // console.log(ctx1);
+      // console.log("Fieldset Context:");
+      // console.log(ctx2);
+      // console.log("Cache");
+      // console.log(CacheEN);
+      // console.log("Tables Context:");
+      // console.log(ctx3?.targs);
     }, 6000);
   }, []);
   return (
