@@ -46,6 +46,9 @@ export default function WatcherEN(): JSX.Element {
     setTimeout(() => {
       for (const f of document.querySelectorAll("form")) assignFormAttrs(f);
     }, 1000);
+    setTimeout(() => {
+      for (const f of document.querySelectorAll("form")) assignFormAttrs(f);
+    }, timers.personENTimer + 100);
     const fInterv = setInterval(() => {
       for (const f of document.querySelectorAll("form")) assignFormAttrs(f);
     }, 120000);

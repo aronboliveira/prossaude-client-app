@@ -63,6 +63,7 @@ export default function TextBodyType(): JSX.Element {
       data-title='Tipo Corporal por Gênero'
       onChange={ev => {
         if (ev.isTrusted) trusted.current = true;
+        if (!trusted.current) return;
         onSetBodyType(ev.currentTarget.value as BodyType);
       }}>
       {bodyTypes.map(b => (

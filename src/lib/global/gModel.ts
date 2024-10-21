@@ -11,8 +11,8 @@ import {
   typeError,
 } from "./handlers/errorHandler";
 import { Dispatch, SetStateAction } from "react";
-import { AlignType } from "./declarations/testVars";
-import { ERROR_LIMIT, errorLabels } from "@/vars";
+import { AlignType, BirthRelation, BodyType, TransitionLevel } from "./declarations/testVars";
+import { ERROR_LIMIT, errorLabels, person } from "@/vars";
 export function numberLimit(inpEl: targEl): void {
   if (inpEl instanceof HTMLInputElement || inpEl instanceof HTMLTextAreaElement || inpEl instanceof HTMLSelectElement) {
     const isAtivFis = inpEl.classList.contains("inpAtivFis");
@@ -223,104 +223,100 @@ export function fluxGen(
     gt: entryEl;
     ga: entryEl;
   },
-  genIniValue: targStr = "masculino",
+  transSetter?: Dispatch<SetStateAction<TransitionLevel>>,
+  birthSetter?: Dispatch<SetStateAction<BirthRelation>>,
   alignSetter?: Dispatch<SetStateAction<AlignType>>,
-): string {
+): BodyType {
   if (
     Object.values(genConts).every(
       genCont =>
         genCont instanceof HTMLSelectElement ||
         genCont instanceof HTMLInputElement ||
         genCont instanceof HTMLTextAreaElement,
-    ) &&
-    typeof genIniValue === "string"
+    )
   ) {
     const switchAlign = (): void => {
-      if (gb.value === "cis") return;
-      showGenFisAlin(ga, g);
-      const contFeminilizado =
-        ga instanceof HTMLSelectElement
-          ? Array.from(ga.options).find(o => o.value === "feminilizado") ??
-            ga.querySelector('option[value="masculinizado"]')
-          : document.querySelector('option[value="feminilizado"]');
-      const contMasculinizado =
-        ga instanceof HTMLSelectElement
-          ? Array.from(ga.options).find(o => o.value === "masculinizado") ??
-            ga.querySelector('option[value="masculinizado"]')
-          : document.querySelector('option[value="masculinizado"]');
-      if (contFeminilizado instanceof HTMLOptionElement && contMasculinizado instanceof HTMLOptionElement) {
-        if (gt.value === "intermediario" || gt.value === "avancado") {
-          if (g.value === "masculino") {
-            if (alignSetter) alignSetter("masculinizado");
-            else {
-              contFeminilizado?.selected && contFeminilizado.removeAttribute("selected");
-              contMasculinizado.setAttribute("selected", "");
+        if (gb.value === "cis") return;
+        const contFeminilizado =
+          ga instanceof HTMLSelectElement
+            ? Array.from(ga.options).find(o => o.value === "feminilizado") ??
+              ga.querySelector('option[value="masculinizado"]')
+            : document.querySelector('option[value="feminilizado"]');
+        const contMasculinizado =
+          ga instanceof HTMLSelectElement
+            ? Array.from(ga.options).find(o => o.value === "masculinizado") ??
+              ga.querySelector('option[value="masculinizado"]')
+            : document.querySelector('option[value="masculinizado"]');
+        if (contFeminilizado instanceof HTMLOptionElement && contMasculinizado instanceof HTMLOptionElement) {
+          if (gt.value === "avancado" || gb.value === "undefined") {
+            if (g.value === "masculino") {
+              if (alignSetter) alignSetter("masculinizado");
+              else {
+                contFeminilizado?.selected && contFeminilizado.removeAttribute("selected");
+                contMasculinizado.setAttribute("selected", "");
+              }
             }
-          }
-          if (g.value === "feminino") {
-            if (alignSetter) alignSetter("feminilizado");
-            else {
-              contMasculinizado?.selected && contMasculinizado.removeAttribute("selected");
-              contFeminilizado.setAttribute("selected", "");
+            if (g.value === "feminino") {
+              if (alignSetter) alignSetter("feminilizado");
+              else {
+                contMasculinizado?.selected && contMasculinizado.removeAttribute("selected");
+                contFeminilizado.setAttribute("selected", "");
+              }
             }
-          }
-        } else {
-          if (alignSetter) alignSetter("neutro");
-          else {
-            contMasculinizado?.selected && contMasculinizado.removeAttribute("selected");
-            contFeminilizado?.selected && contFeminilizado.removeAttribute("selected");
           }
         }
-      }
-    };
-    const { g, gb, gt, ga } = genConts;
-    if (g.value === "masculino" || g.value === "feminino") {
-      if (gb.value === "cis") {
-        switchAlign();
-        hideGenFisAlin(ga);
-        hideStgTransHorm(gt);
-        return genIniValue || g.value;
-      } else if (gb.value === "trans") {
+      },
+      fluxAlign = (): BodyType => {
         switchAlign();
         showStgTransHorm(gt);
-        if (gt.value === "avancado") {
-          hideGenFisAlin(ga);
-          return genIniValue || g.value;
-        } else if (
-          gt.value === "undefined" ||
-          gt.value === "no" ||
-          gt.value === "inicial" ||
-          gt.value === "intermediario"
-        ) {
-          showGenFisAlin(ga, g);
-          switchAlign();
-          switch (ga.value) {
-            case "masculinizado":
-              return "masculino";
-            case "feminilizado":
-              return "feminino";
-            case "neutro":
-              return "neutro";
-            default:
-              stringError("argument for ga.value switch", ga?.value, extLine(new Error()));
-          }
-          if (ga.value === "masculinizado") return "masculino";
-          else if (ga.value === "feminilizado") return "feminino";
-          else if (ga.value === "neutro") return "neutro";
-        }
-      } else if (gb.value === "outros" || gb.value === "undefined") {
         showGenFisAlin(ga, g);
-        if (ga.value === "masculinizado") return "masculino";
-        else if (ga.value === "feminilizado") return "feminino";
-        else if (ga.value === "neutro") return "neutro";
+        switch (ga.value) {
+          case "masculinizado":
+            return "masculino";
+          case "feminilizado":
+            return "feminino";
+          case "neutro":
+            return "neutro";
+          default:
+            return person.gen;
+        }
+      },
+      { g, gb, gt, ga } = genConts;
+    gb.disabled = false;
+    gt.disabled = false;
+    ga.disabled = false;
+    if (g.value === "masculino" || g.value === "feminino") {
+      if (gb.value === "cis" || gb.value === "undefined") {
+        switchAlign();
+        hideStgTransHorm(gt);
+        hideGenFisAlin(ga);
+        gt.disabled = true;
+        ga.disabled = true;
+        return g.value || person.gen;
       }
-    } else if (g.value === "naoBinario" || g.value === "outros" || g.value === "undefined") {
-      gb.value === "trans" ? showStgTransHorm(gt) : hideStgTransHorm(gt);
-      showGenFisAlin(ga, g);
-      if (ga.value === "masculinizado") return "masculino";
-      else if (ga.value === "feminilizado") return "feminino";
-      else if (ga.value === "neutro") return "neutro";
-    } else stringError("obtendo g.value", g?.value ?? "UNDEFINED VALUE", extLine(new Error()));
+      switchAlign();
+      showStgTransHorm(gt);
+      if (gb.value === "trans" && gt.value === "avancado") {
+        hideGenFisAlin(ga);
+        ga.disabled = true;
+        return g.value || person.gen;
+      }
+      return fluxAlign();
+    }
+    if (g.value === "naoBinario") {
+      gb.disabled = true;
+      if (birthSetter) birthSetter("trans");
+      else gb.value = "trans";
+    } else if (g.value === "undefined") {
+      gb.disabled = true;
+      if (birthSetter) birthSetter("undefined");
+      else gb.value = "undefined";
+      gt.disabled = true;
+      if (transSetter) transSetter("undefined");
+      else gt.value = "undefined";
+      hideStgTransHorm(gt);
+    }
+    return fluxAlign();
   } else
     multipleElementsNotFound(extLine(new Error()), "arguments for fluxGen()", `${JSON.stringify(genConts)}` || null);
   return "masculino";
@@ -356,9 +352,7 @@ export function hideGenFisAlin(ga: targEl): boolean {
     if ((ga.closest(".genSpan") as HTMLElement)?.hidden === false) {
       setTimeout(() => {
         fadeElement(ga.closest(".genSpan"), "0");
-        setTimeout(() => {
-          ga.closest(".genSpan")?.setAttribute("hidden", "");
-        }, 500);
+        setTimeout(() => ga.closest(".genSpan")?.setAttribute("hidden", ""), 500);
       }, 250);
     }
     return false;

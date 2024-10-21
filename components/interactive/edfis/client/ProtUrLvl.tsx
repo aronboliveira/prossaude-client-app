@@ -39,6 +39,7 @@ export default function ProtUrLvl(): JSX.Element {
       data-title='Proteinuria (mg/dL)'
       onInput={ev => {
         if (ev.isTrusted) trusted.current = true;
+        if (!trusted.current) return;
         tabProps.edIsAutoCorrectOn && applyFieldConstraints(r.current);
         setValue(ev.currentTarget.value as PseudoNum);
       }}

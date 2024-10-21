@@ -51,6 +51,7 @@ export default function TabAtFisRot({ children = <></> }: { children: JSX.Elemen
           defaultValue='addComorb'
           onClick={ev => {
             if (ev.isTrusted) trusted.current = true;
+            if (!trusted.current) return;
             flag.current = "+";
             setBlockCount({
               type: "INCREMENT",
@@ -75,6 +76,7 @@ export default function TabAtFisRot({ children = <></> }: { children: JSX.Elemen
           defaultValue='removeComorb'
           onClick={ev => {
             if (ev.isTrusted) trusted.current = true;
+            if (!trusted.current) return;
             flag.current = "-";
             setBlockCount({
               type: "DECREMENT",

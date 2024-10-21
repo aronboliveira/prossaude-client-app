@@ -4,7 +4,7 @@ import { filterIdsByGender, parseNotNaN } from "../../global/gModel";
 import { handleEventReq } from "@/lib/global/handlers/gHandlers";
 //nesse file estão presentes principalmente as funções relacionadas à exigência de modelo textual e de visualização
 import { extLine, elementNotFound, multipleElementsNotFound, stringError } from "../../global/handlers/errorHandler";
-import { FactorAtletaValue, Gender, NafTypeValue } from "@/lib/global/declarations/testVars";
+import { BodyType, FactorAtletaValue, NafTypeValue } from "@/lib/global/declarations/testVars";
 import { person, tabProps } from "@/vars";
 export function checkInnerColGroups(parentEl: targEl): number {
   const validColGroupsChildCount: number[] = [],
@@ -190,9 +190,8 @@ export function evalPGCDecay(tipgc: targEl): boolean {
       //busca pontos de decay anteriores
       while (decreasedPerson.sumDCut > 0) {
         if (sumAcc > 100) break;
-        console.log("while");
         sumAcc++;
-        decreasedPerson.sumDCut = decreasedPerson.sumDCut - 1;
+        decreasedPerson.sumDCut -= -1;
         decreasedPGC = decreasedPerson.calcPGC(decreasedPerson).pgc;
         if (decreasedPGC < 0 || !Number.isFinite(decreasedPGC)) decreasedPGC = 0;
         arrDecreasedPGC.push(decreasedPGC);
@@ -223,7 +222,7 @@ export function evalPGCDecay(tipgc: targEl): boolean {
     return foundDecayPoint;
   }
 }
-export const evalGender = (g: string): g is Gender => ["masculino", "feminino", "neutro"].includes(g);
+export const evalBodyType = (g: string): g is BodyType => ["masculino", "feminino", "neutro"].includes(g);
 export function evalFactorAtleta(): boolean {
   if (typeof tabProps.factorAtleta !== "string" || tabProps.factorAtleta === ("" as any)) {
     console.warn(`Factor for Athlete not a string. Defaulting value...`);
@@ -265,7 +264,7 @@ export function evalPseudoNum(n: primitiveType): number {
     if (!Number.isFinite(n)) return 0;
     return n;
   } else if (typeof n === "string") {
-    n = n.replaceAll(/[^0-9]/g, "");
+    n = n.replaceAll(/[^0-9\.]/g, "");
     if (n === "") n = "0";
     return parseNotNaN(n);
   } else if (typeof n === "boolean") return n ? 1 : 0;

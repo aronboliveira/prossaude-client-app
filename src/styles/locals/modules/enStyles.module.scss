@@ -158,6 +158,12 @@
     @include fixGenWid;
   }
 }
+.glSpan {
+  min-width: 15rem;
+  @media (max-width: 900px) {
+    min-width: 52vw;
+  }
+}
 .h2 {
   margin-left: 0.5rem;
 }
@@ -267,6 +273,11 @@
   @media screen and (max-width: 900px) {
     width: $inpProgWidFix;
     margin-right: 0.1rem;
+  }
+}
+.selFactorAtleta {
+  @media (max-width: 900px) {
+    width: 54vw;
   }
 }
 .spanDiur {

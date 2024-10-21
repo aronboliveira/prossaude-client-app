@@ -1,4 +1,4 @@
-import { AlignType, Gender } from "@/lib/global/declarations/testVars";
+import { AlignType, BirthRelation, TransitionLevel } from "@/lib/global/declarations/testVars";
 import { fluxGen } from "@/lib/global/gModel";
 import { Dispatch, MutableRefObject, SetStateAction } from "react";
 import { person } from "@/vars";
@@ -7,15 +7,15 @@ export function handleGenRender({
   gb,
   gt,
   ga,
-  selectedGen,
+  setGenTrans,
+  setGenBirthRel,
   setGenFisAlin,
 }: {
-  setGen: Dispatch<SetStateAction<Gender>>;
-  onSetGen?: Dispatch<SetStateAction<Gender>>;
-  selectedGen: string;
-  setGenFisAlin: Dispatch<SetStateAction<AlignType>>;
+  setGenTrans?: Dispatch<SetStateAction<TransitionLevel>>;
+  setGenBirthRel?: Dispatch<SetStateAction<BirthRelation>>;
+  setGenFisAlin?: Dispatch<SetStateAction<AlignType>>;
 } & Parameters<typeof fluxGen>[0]): void {
-  person.gen = (fluxGen({ g, gb, gt, ga }, selectedGen, setGenFisAlin) as Gender) || "masculino";
+  person.dispatchGen(fluxGen({ g, gb, gt, ga }, setGenTrans, setGenBirthRel, setGenFisAlin));
   console.log("Person's Gender: " + person.gen);
 }
 export function handleQueryForRefs(

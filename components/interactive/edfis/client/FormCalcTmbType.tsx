@@ -33,6 +33,7 @@ export default function FormCalcTmbType(): JSX.Element {
       onChange={ev => {
         try {
           if (ev.isTrusted) trusted.current = true;
+          if (!trusted.current) return;
           callbackAtvLvlElementNaf(idf, {
             sa: sar?.current ?? document.getElementById("selectLvlAtFis"),
             gl: gl?.current ?? document.getElementById("gordCorpLvl"),

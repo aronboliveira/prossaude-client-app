@@ -27,7 +27,7 @@ export default function GenDivEN({ genRef, genAlinRef }: GenDivProps): JSX.Eleme
         gb = gbr?.current ?? (document.getElementById("genBirthRelId") as HTMLSelectElement),
         gt = gtr.current ?? (document.getElementById("genTransId") as HTMLSelectElement),
         ga = genAlinRef?.current ?? (document.getElementById("genFisAlinId") as HTMLSelectElement);
-      handleGenRender({ g, gb, gt, ga, setGen, selectedGen: gen, setGenFisAlin });
+      handleGenRender({ g, gb, gt, ga, setGenBirthRel, setGenFisAlin });
     }, [gen, genRef, gbr, gtr, genAlinRef, setGen, setGenFisAlin]),
     handlePersonGenUpdate = useCallback(() => {
       if (!onSetBodyType) return;
@@ -37,8 +37,7 @@ export default function GenDivEN({ genRef, genAlinRef }: GenDivProps): JSX.Eleme
         if (!(txbr?.current instanceof HTMLSelectElement || (txbr?.current as any) instanceof HTMLInputElement))
           throw inputNotFound(txbr?.current, "textBodyType in callback for gender elements", extLine(new Error()));
         console.log("Updating to text type to " + person.gen);
-        const bodyType: BodyType = person.gen === "masculino" || person.gen === "feminino" ? person.gen : "neutro";
-        onSetBodyType(bodyType);
+        onSetBodyType(person.gen === "masculino" || person.gen === "feminino" ? person.gen : ("neutro" as BodyType));
       } catch (e) {
         limitedError(`Error executiong handlePersonGenUpdate:\n${(e as Error).message}`, "handleGENCtx");
       }
@@ -53,12 +52,12 @@ export default function GenDivEN({ genRef, genAlinRef }: GenDivProps): JSX.Eleme
     if (!trusted.current) return;
     if (/edfis/gi.test(location.pathname) || document.body.id.toLowerCase() === "edfisnutbody") {
       const genElement = genRef?.current ?? document.getElementById("genId");
-      person.gen =
+      if (
         genElement instanceof HTMLSelectElement ||
         genElement instanceof HTMLInputElement ||
         genElement instanceof HTMLTextAreaElement
-          ? (genElement.value as Gender)
-          : "masculino";
+      )
+        person.dispatchGen(genElement.value);
     }
   }, [genRef, trusted]);
   useEffect(() => {
@@ -76,7 +75,7 @@ export default function GenDivEN({ genRef, genAlinRef }: GenDivProps): JSX.Eleme
           gb = gbr?.current ?? (document.getElementById("genBirthRelId") as HTMLSelectElement),
           gt = gtr.current ?? (document.getElementById("genTransId") as HTMLSelectElement),
           ga = genAlinRef?.current ?? (document.getElementById("genFisAlinId") as HTMLSelectElement);
-        person.gen = fluxGen({ g, gb, gt, ga }, g.value, setGenFisAlin) as Gender;
+        person.dispatchGen(fluxGen({ g, gb, gt, ga }, setGenTrans, setGenBirthRel, setGenFisAlin));
       } catch (e) {
         return;
       }
@@ -102,6 +101,7 @@ export default function GenDivEN({ genRef, genAlinRef }: GenDivProps): JSX.Eleme
             required
             onChange={ev => {
               if (ev.isTrusted) trusted.current = true;
+              if (!trusted.current) return;
               setGen(ev.currentTarget.value as Gender);
             }}>
             {gens.map(({ v, l }, i) => (
@@ -124,6 +124,7 @@ export default function GenDivEN({ genRef, genAlinRef }: GenDivProps): JSX.Eleme
             required
             onChange={ev => {
               if (ev.isTrusted) trusted.current = true;
+              if (!trusted.current) return;
               setGenBirthRel(ev.target.value as BirthRelation);
             }}>
             {birthRelations.map(b => (
@@ -145,6 +146,7 @@ export default function GenDivEN({ genRef, genAlinRef }: GenDivProps): JSX.Eleme
             className={`form-select inpIdentif noInvert min88_900 ${sEn.select}`}
             onChange={ev => {
               if (ev.isTrusted) trusted.current = true;
+              if (!trusted.current) return;
               setGenTrans(ev.target.value as TransitionLevel);
             }}>
             {transOpts.map((o, i) => (
@@ -166,6 +168,7 @@ export default function GenDivEN({ genRef, genAlinRef }: GenDivProps): JSX.Eleme
             className={`form-select inpIdentif noInvert min88_900 ${sEn.select}`}
             onChange={ev => {
               if (ev.isTrusted) trusted.current = true;
+              if (!trusted.current) return;
               setGenFisAlin(ev.target.value as AlignType);
             }}>
             {alignOpts.map(a => (

@@ -39,6 +39,9 @@ export default function NafType(): JSX.Element {
               "1.4",
           ) as NafTypeValue) ||
           "1.4";
+        if (!(nafr?.current instanceof HTMLSelectElement)) return;
+        const selected = nafr.current.selectedOptions[0];
+        if (selected.dataset.intensity) nafr.current.dataset.intensity = selected.dataset.intensity;
       } catch (e) {
         return;
       }
@@ -57,7 +60,9 @@ export default function NafType(): JSX.Element {
         try {
           if (ev.isTrusted) trusted.current = true;
           if (!trusted.current) return;
-          callbackAtvLvlElementNaf(idf ?? document.getElementById(idf)?.id ?? "", {
+          const selected = ev.currentTarget.selectedOptions[0];
+          if (selected.dataset.intensity) ev.currentTarget.dataset.intensity = selected.dataset.intensity;
+          callbackAtvLvlElementNaf(idf, {
             sa: sar?.current ?? document.getElementById("selectLvlAtFis"),
             gl: gl?.current ?? document.getElementById("gordCorpLvl"),
             naf: nafr?.current ?? document.getElementById("nafType"),

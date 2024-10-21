@@ -60,11 +60,11 @@ export const tabProps: ENTabsProps = {
   tiget: undefined,
   tipgc: undefined,
   tidc: undefined,
+  fct: undefined,
   fsp: undefined,
   gl: undefined,
-  fct: undefined,
-  sa: undefined,
   naf: undefined,
+  sa: undefined,
   spanFa: undefined,
   lockGl: undefined,
 };
@@ -72,6 +72,17 @@ export let person: Person = {} as any;
 import("./lib/global/declarations/classes").then(({ Person }) => {
   person = new Person("masculino", 0, 0, 0, 0, "leve");
 });
+export const MAX_SMALLINT = 65535;
+export const maxProps = {
+  age: 255,
+  weight: 635,
+  height: 3,
+  imc: 99,
+  perc: 99,
+  tmb: 4500,
+  get: 11000,
+  dc: 999,
+};
 export const experimentalProps: { experimentalUser: UserState } & { [k: string]: object } = {
   experimentalUser: defUser as UserState,
 };

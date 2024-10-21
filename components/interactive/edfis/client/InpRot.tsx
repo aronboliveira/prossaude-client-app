@@ -122,6 +122,7 @@ export default function InpRot(props: InpRotProps): JSX.Element {
         data-pattern={props.pattern ? props.pattern : "^[\\d,.]+$"}
         onInput={ev => {
           if (ev.isTrusted) trusted.current = true;
+          if (!trusted.current) return;
           tabProps.edIsAutoCorrectOn && applyFieldConstraints(ev.currentTarget);
           setValue(ev.currentTarget.value);
         }}

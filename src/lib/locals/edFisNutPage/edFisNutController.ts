@@ -60,11 +60,11 @@ export function addListenerInnerTabs(consTablesFs: targEl, numColsCons: number =
       );
     allTabledInps.forEach(tabInp => {
       //para apagar retornos negativos anômalos
-      if (!tabInp.dataset.iswhole || tabInp.dataset.iswhole !== "true") {
+      if (!tabInp.dataset.isreal || tabInp.dataset.isreal !== "true") {
         tabInp.addEventListener("input", (): void => {
           if (parseFloat(tabInp.value) < 0 || !Number.isFinite(parseFloat(tabInp.value))) tabInp.value = "0";
         });
-        tabInp.dataset.iswhole = "true";
+        tabInp.dataset.isreal = "true";
       }
     });
   } catch (e) {

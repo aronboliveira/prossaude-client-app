@@ -6,7 +6,7 @@ import { applyFieldConstraints, checkContext, limitedError, textTransformPascal 
 import { handleCondtReq, handleEventReq } from "@/lib/global/handlers/gHandlers";
 import { useRef, useContext } from "react";
 import { NlMRef, nlFs, nlSel } from "@/lib/global/declarations/types";
-import { tabProps } from "@/vars";
+import { MAX_SMALLINT, maxProps, tabProps } from "@/vars";
 import { ENCtx } from "../ENForm";
 import { ENTabsCtx } from "../FsTabs";
 import sEn from "@/styles/locals/modules/enStyles.module.scss";
@@ -58,6 +58,26 @@ export default function TabInpProg({ nRow, nCol, ctx, lab }: TdProps): JSX.Eleme
         default:
           return lab;
       }
+    })(),
+    max = ((): number => {
+      switch (lab.toLowerCase()) {
+        case "peso":
+          return maxProps.weight;
+        case "altura":
+          return maxProps.height;
+        case "imc":
+          return maxProps.perc;
+        case "mlg":
+          return maxProps.perc;
+        case "pgc":
+          return maxProps.perc;
+        case "tmb":
+          return maxProps.tmb;
+        case "get":
+          return maxProps.get;
+        default:
+          return MAX_SMALLINT;
+      }
     })();
   if (ctx1?.refs) ({ gl, fspr, fct } = ctx1.refs);
   if (ctx2?.targs) ({ targs } = ctx2);
@@ -99,12 +119,12 @@ export default function TabInpProg({ nRow, nCol, ctx, lab }: TdProps): JSX.Eleme
       name={`${lab.toLowerCase()}_${nRow}_${nCol}`}
       id={`inp${pascalLab}${nCol - 1}Cel${nRow}_${nCol}`}
       className={`form-control tabInpProg tabInpProgIndPerc inpInd inp${pascalLab} inpCol${nCol} sevenCharLongNum ${sEn.tabInpProg}`}
-      maxLength={lab === "MLG" || lab === "PGC" || lab === "IMC" ? 2 : 6}
+      maxLength={max.toString().length + 4}
+      data-max={max.toString().length + 4}
       min={nCol - 1 === tabProps.numCons ? "0.05" : "0"}
-      max={lab === "MLG" || lab === "PGC" || lab === "IMC" ? "99" : "999999"}
-      data-max={lab === "MLG" || lab === "PGC" || lab === "IMC" ? "2" : "6"}
+      max={max}
       data-minnum={nCol - 1 === tabProps.numCons ? "0.05" : "0"}
-      data-maxnum={lab === "MLG" || lab === "PGC" || lab === "IMC" ? "99" : "999999"}
+      data-maxnum={max}
       data-title={`${lab} (Consulta ${nCol - 1})`}
       data-pattern='^[d,.]+$'
       data-row={nRow}
@@ -150,8 +170,13 @@ export default function TabInpProg({ nRow, nCol, ctx, lab }: TdProps): JSX.Eleme
               sEn.tabInpProg
             } ${medAntCase !== "" ? ` inp${medAntCase}` : ""}`}
             id={`tabInpRow${ctx}${nRow}_${nCol}`}
+            maxLength={max.toString().length + 4}
+            data-max={max.toString().length + 4}
             min={nCol - 1 === tabProps.numCons ? "0.05" : "0"}
-            max='65535'
+            max={max}
+            data-minnum={nCol - 1 === tabProps.numCons ? "0.05" : "0"}
+            data-maxnum={max}
+            data-pattern='^[d,.]+$'
             data-title={`Medidas Antropométricas ${fullName} (Consulta ${nCol - 1})`}
             data-row={nRow}
             data-col={nCol}
@@ -192,8 +217,13 @@ export default function TabInpProg({ nRow, nCol, ctx, lab }: TdProps): JSX.Eleme
             name={`${lab.toLowerCase()}_${nRow}_${nCol}`}
             className={`form-control tabInpProg tabInpProg${ctx} tabInpProg${lab}${ctx} tabInpRow${ctx}${nRow} float sevenCharLongNum ${sEn.tabInpProg}`}
             id={`tabInpRow${ctx}${nRow}_${nCol}`}
+            maxLength={max.toString().length + 4}
+            data-max={max.toString().length + 4}
             min={nCol - 1 === tabProps.numCons ? "0.05" : "0"}
-            max='65535'
+            max={max}
+            data-minnum={nCol - 1 === tabProps.numCons ? "0.05" : "0"}
+            data-maxnum={max}
+            data-pattern='^[d,.]+$'
             data-title={`${ctx === "DCut" ? "Dobras Cutâneas" : "Sinais Vitais"} ${fullName} (Consulta ${nCol - 1})`}
             data-row={nRow}
             data-col={nCol}
