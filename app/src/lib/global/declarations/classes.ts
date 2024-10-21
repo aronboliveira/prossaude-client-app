@@ -1,11 +1,16 @@
-import { nlDsb, queryableNode, rMouseEvent, voidVal } from "./types";
+import { looseNum, nlDsb, queryableNode, rMouseEvent, voidVal } from "./types";
 import { WorkBook, utils, writeFile } from "xlsx";
 import { limitedError, parseNotNaN, textTransformPascal } from "../gModel";
 import { exportSignaler } from "../gController";
 import JSZip from "jszip";
-import { tabProps } from "@/vars";
-import { Gender, GordLvl, Intensity, NafTypeValue, TMBFormula } from "@/lib/global/declarations/testVars";
-import { evalFactorAtleta, evalGender } from "@/lib/locals/edFisNutPage/edFisNutModel";
+import { maxProps, person, tabProps } from "@/vars";
+import { BodyType, GordLvl, Intensity, NafTypeValue, TMBFormula } from "@/lib/global/declarations/testVars";
+import {
+  evalFactorAtleta,
+  evalBodyType,
+  evalPseudoNum,
+  evalActivityLvl,
+} from "@/lib/locals/edFisNutPage/edFisNutModel";
 export interface UndefinedPerson {
   gen: string;
   age: number;
@@ -15,42 +20,42 @@ export interface UndefinedPerson {
   atvLvl: string;
 }
 export class Person {
-  gen: Gender;
+  gen: BodyType;
   age: number;
   weight: number;
   height: number;
   sumDCut: number;
   atvLvl: Intensity;
   constructor(
-    gen: string = "masculino",
+    gen: BodyType = "masculino",
     age: number = 0,
     weight: number = 0,
     height: number = 0,
     sumDCut: number = 0,
-    atvLvl: string = "leve",
+    atvLvl: Intensity = "leve",
   ) {
-    this.gen = gen as Gender;
-    this.age = age;
-    this.weight = weight;
-    this.height = height;
-    this.sumDCut = sumDCut;
-    this.atvLvl = atvLvl as Intensity;
+    this.gen = evalBodyType(gen) ? gen : "masculino";
+    this.age = evalPseudoNum(age);
+    this.weight = evalPseudoNum(weight);
+    this.height = evalPseudoNum(height);
+    this.sumDCut = evalPseudoNum(sumDCut);
+    this.atvLvl = evalActivityLvl() ? atvLvl : "leve";
   }
   public resetPerson(): void {
-    this.gen = "masculino";
-    this.age = 0;
-    this.weight = 0;
-    this.height = 0;
-    this.sumDCut = 0;
-    this.atvLvl = "leve";
+    person.gen = "masculino";
+    person.age = 0;
+    person.weight = 0;
+    person.height = 0;
+    person.sumDCut = 0;
+    person.atvLvl = "leve";
   }
   public checkAtvLvl(personInfo: Person | string): number {
     if (
       (personInfo instanceof Person && "atvLvl" in personInfo && this.atvLvl !== ("" as any)) ||
       typeof personInfo === "string"
     ) {
-      if (typeof personInfo === "string") this.atvLvl = personInfo as Intensity;
-      switch (this.atvLvl) {
+      if (typeof personInfo === "string") this.dispatchAtvLvl(personInfo);
+      switch (person.atvLvl) {
         case "sedentario":
           return 1.2;
         case "leve":
@@ -63,8 +68,8 @@ export class Person {
           return 2.2;
         default:
           console.error(
-            `Error validating case. Obtained this.atvLvl: ${
-              this.atvLvl ?? "null"
+            `Error validating case. Obtained person.atvLvl: ${
+              person.atvLvl ?? "null"
             }; Accepted values: sedentário || leve || moderado || intenso || muitoIntenso`,
           );
       }
@@ -72,7 +77,7 @@ export class Person {
       console.error(
         `Error validating instance of person. Obtained value: ${personInfo ?? "null"}; instance ${
           Object.prototype.toString.call(personInfo).slice(8, -1) ?? "null"
-        }; Value of Nível of Atividade Física obtained: ${this.atvLvl ?? "null"}`,
+        }; Value of Nível of Atividade Física obtained: ${person.atvLvl ?? "null"}`,
       );
       return 0;
     }
@@ -112,6 +117,7 @@ export class Person {
   public calcPGC(person: Person): { pgc: number; mlg: number } {
     try {
       person.sumDCut = Math.abs(person.sumDCut);
+      console.log("Person dcut is: " + person.sumDCut);
       if (!("sumDCut" in person && typeof person.sumDCut === "number" && person.sumDCut >= 0))
         throw new Error(`Failed to validate person props:
         sumDCut in props: ${"sumDCut" in person}
@@ -136,7 +142,7 @@ export class Person {
         if (PGC <= 0 || !Number.isFinite(PGC)) PGC = 0.01;
         if (PGC > 100) PGC = 100;
         MLG = 100 - PGC > 0 ? 100 - PGC : 0;
-      } else if (g === "naoBinario" || g === "outros" || g === "undefined" || g === ("neutro" as any)) {
+      } else if (g === "neutro") {
         DC = 1.10443605 - 0.0009098 * sdc + 0.00000195 * sdc ** 2 - 0.0001983 * person.age;
         if (DC <= 0 || !Number.isFinite(DC)) DC = 0.01;
         PGC = 495 / DC - 450;
@@ -185,7 +191,7 @@ export class Person {
             "age" in person &&
             person.age >= 0 &&
             "gen" in person &&
-            evalGender(person.gen)
+            evalBodyType(person.gen)
           )
         )
           throw new Error(
@@ -196,8 +202,7 @@ export class Person {
         if (IMC < 25.0 && IMC >= 0) {
           if (g === "masculino") return { l: "harrisBenedict", v: 66 + (13.8 * w + 5.0 * h - 6.8 * a) };
           else if (g === "feminino") return { l: "harrisBenedict", v: 655 + (9.6 * w + 1.9 * h - 4.7 * a) };
-          else if (g === "naoBinario" || g === "outros" || g === "undefined" || g === ("neutro" as any))
-            return { l: "harrisBenedict", v: 360.5 + (11.7 * w + 3.45 * h - 5.75 * a) };
+          else if (g === "neutro") return { l: "harrisBenedict", v: 360.5 + (11.7 * w + 3.45 * h - 5.75 * a) };
           else
             throw new Error(
               `Error validating instance of Person. Obtained instance: ${
@@ -207,8 +212,7 @@ export class Person {
         } else if (IMC >= 25.0) {
           if (g === "masculino") return { l: "mifflinStJeor", v: 10 * w + 6.25 * h - 5.0 * a + 5 };
           else if (g === "feminino") return { l: "mifflinStJeor", v: 10 * w + 6.25 * h - 5.0 * a - 161 };
-          else if (g === "naoBinario" || g === "outros" || g === "undefined" || g === ("neutro" as any))
-            return { l: "mifflinStJeor", v: 10 * w + 6.25 * h - 5.0 * a - 78 };
+          else if (g === "neutro") return { l: "mifflinStJeor", v: 10 * w + 6.25 * h - 5.0 * a - 78 };
           else
             throw new Error(
               `Error validating instance of Person. Obtained instance: ${Object.prototype.toString
@@ -234,6 +238,31 @@ export class Person {
       TMB obtained: ${TMB ?? 0};
       factorAtvLvl obtained: ${factorAtvLvl ?? 0}`);
     return 0;
+  }
+  public dispatchGen(g: string): void {
+    person.gen = evalBodyType(g) ? g : person.gen || "masculino";
+  }
+  public dispatchAge(a: looseNum): void {
+    const age = evalPseudoNum(a);
+    person.age = age > maxProps.age ? maxProps.age : age;
+  }
+  public dispatchWeight(w: looseNum): void {
+    const weight = Math.abs(evalPseudoNum(w));
+    person.weight = weight > maxProps.weight ? maxProps.weight : weight;
+  }
+  public dispatchHeight(h: looseNum): void {
+    const height = Math.abs(evalPseudoNum(h));
+    person.height = height > maxProps.height ? maxProps.height : height;
+  }
+  public dispatchDC(d: looseNum): void {
+    const dc = Math.abs(evalPseudoNum(d));
+    person.sumDCut = dc > maxProps.dc ? maxProps.dc : dc;
+  }
+  public dispatchAtvLvl(a: string): void {
+    person.atvLvl = ((a: string): a is Intensity =>
+      ["sedentario", "leve", "moderado", "intenso", "muitoIntenso"].includes(a))(a)
+      ? a
+      : person.atvLvl || "leve";
   }
 }
 export class UniqueMap extends Map {

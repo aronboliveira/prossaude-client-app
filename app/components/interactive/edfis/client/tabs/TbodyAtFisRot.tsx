@@ -26,6 +26,7 @@ export default function TbodyAtFisRot(): JSX.Element {
           <input
             type='text'
             className='tabInpAtFisRot tabInpRowAtFisRot2 form-control noInvert minText'
+            placeholder='Preencha aqui o nome da Atividade Física Rotineira 1'
             id='tabInpRowAtFisRot2_1'
             data-xls='Nome da Atividade Física Rotineira 1'
             data-title='Atividade_Fisica_Rotineira_Nome_1'
@@ -37,6 +38,7 @@ export default function TbodyAtFisRot(): JSX.Element {
         <td className='tabCelAtFis tabCelAtFisRot tabCelLeft' id='tabCelRowAtFisRot2_3'>
           <input
             type='number'
+            placeholder='Preencha aqui o Número de Semanas para a Atividade Física Rotineira 1'
             minLength={1}
             maxLength={5}
             min='0'
@@ -56,6 +58,7 @@ export default function TbodyAtFisRot(): JSX.Element {
         <td className='tabCelAtFis tabCelAtFisRot' id='tabCelRowAtFisRot2_4'>
           <input
             type='number'
+            placeholder='Preencha aqui o Tempo de Sessão da Atividade Física Rotineira 1'
             minLength={1}
             maxLength={7}
             min='0'
@@ -75,6 +78,7 @@ export default function TbodyAtFisRot(): JSX.Element {
         <td className='tabCelAtFis tabCelAtFisRot tabCelRight' id='tabCelRowAtFisRot2_5'>
           <input
             type='number'
+            placeholder='Preencha aqui o Número de Meses para a Atividade Física Rotineira 1'
             minLength={1}
             maxLength={7}
             min='0'

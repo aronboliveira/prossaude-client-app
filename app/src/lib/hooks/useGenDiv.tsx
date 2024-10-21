@@ -31,7 +31,7 @@ export default function useGenDiv({ onSetGen, genValueRef }: GenDivProps): UseGe
           gb = gbr.current ?? (document.getElementById("genBirthRelId") as HTMLSelectElement),
           gt = gtr.current ?? (document.getElementById("genTransId") as HTMLSelectElement),
           ga = gar.current ?? (document.getElementById("genFisAlinId") as HTMLSelectElement);
-        handleGenRender({ g, gb, gt, ga, setGen, onSetGen, selectedGen: g?.value || "masculino", setGenFisAlin });
+        handleGenRender({ g, gb, gt, ga, setGenTrans, setGenBirthRel, setGenFisAlin });
         if (genValueRef) genValueRef.current = person.gen as Gender;
       } else elementNotFound(agGenElement, "instance of agGenElement for DOM initialization", extLine(new Error()));
     } catch (e) {

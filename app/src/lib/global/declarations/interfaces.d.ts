@@ -39,12 +39,12 @@ export interface ENCtxProps {
   refs: {
     af: NlMRef<nlInp>;
     f: NlMRef<nlFm>;
-    fct: NlMRef<nlSel>;
-    fspr: NlMRef<nlFs>;
     gar: NlMRef<nlSel>;
     gbr: NlMRef<nlSel>;
-    gl: NlMRef<nlSel>;
     gr: NlMRef<nlSel>;
+    fct: NlMRef<nlSel>;
+    fspr: NlMRef<nlFs>;
+    gl: NlMRef<nlSel>;
     nafr: NlMRef<nlSel>;
     sar: NlMRef<nlSel>;
     txbr: NlMRef<nlSel>;

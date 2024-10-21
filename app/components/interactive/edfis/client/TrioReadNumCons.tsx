@@ -86,6 +86,7 @@ export default function TrioReadNumCons(): JSX.Element {
         data-pattern='^\d+$'
         onInput={ev => {
           if (ev.isTrusted) trusted.current = true;
+          if (!trusted.current) return;
           tabProps.edIsAutoCorrectOn && applyFieldConstraints(r.current);
           setValue(ev.currentTarget.value as PseudoNum);
         }}

@@ -21,8 +21,7 @@ export default function GenDiv(): JSX.Element {
         gb,
         gt,
         ga,
-        setGen,
-        selectedGen: g?.value || "masculino",
+        setGenBirthRel,
         setGenFisAlin,
       });
     }, [gen, gr, gbr, gtr, gar, setGen, setGenFisAlin]);

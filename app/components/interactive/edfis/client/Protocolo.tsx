@@ -50,6 +50,7 @@ export default function Protocolo(): JSX.Element {
       required
       onChange={ev => {
         if (ev.isTrusted) trusted.current = true;
+        if (!trusted.current) return;
         setValue(ev.currentTarget.value as Protocol);
       }}>
       {protocols.map(p => (

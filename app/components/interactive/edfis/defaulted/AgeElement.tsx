@@ -93,6 +93,7 @@ export default function AgeElement({
       data-pattern='^[\d,.]+$'
       onInput={ev => {
         if (ev.isTrusted) trusted.current = true;
+        if (!trusted.current) return;
         try {
           let newValue = ev.currentTarget.value.replace(/[^0-9]/g, "").trim();
           applyFieldConstraints(ev.currentTarget);

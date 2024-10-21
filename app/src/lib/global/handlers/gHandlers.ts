@@ -1324,7 +1324,7 @@ export function handleCondtReq(
   }
 }
 export const iniFontColors: { [k: string]: string } = {};
-export function handleEventReq(entry: textEl | Event, alertColor: string = "#e52626"): void {
+export function handleEventReq(entry: textEl | Event, alertColor: string = "#e13010"): void {
   let isValid = true;
   if (entry instanceof Event) {
     if (!(entry.currentTarget instanceof HTMLInputElement || entry.currentTarget instanceof HTMLTextAreaElement))
@@ -1412,15 +1412,17 @@ export function handleEventReq(entry: textEl | Event, alertColor: string = "#e52
     )
       isValid = false;
   }
-  if (!isValid && entry.value.length > 2) entry.style.color = alertColor;
-  setTimeout(() => {
-    if (entry instanceof Event) {
-      if (!(entry.currentTarget instanceof HTMLInputElement || entry.currentTarget instanceof HTMLTextAreaElement))
-        return;
-      entry = entry.currentTarget;
-    }
-    entry.style.color = "rgb(33, 37, 41)";
-  }, 200);
+  if (!isValid && entry.value.length > 2) {
+    entry.style.color = alertColor;
+    setTimeout(() => {
+      if (entry instanceof Event) {
+        if (!(entry.currentTarget instanceof HTMLInputElement || entry.currentTarget instanceof HTMLTextAreaElement))
+          return;
+        entry = entry.currentTarget;
+      }
+      entry.style.color = "rgb(33, 37, 41)";
+    }, 10000);
+  } else entry.style.color = "rgb(33, 37, 41)";
 }
 export function cleanStorageName(): void {
   if (!window) return;

@@ -57,7 +57,7 @@ const FsProgCons = lazy(() => import("./FsProgCons")),
       #genDiv {
         input,
         select {
-          min-width: 85vw !important;
+          min-width: 86.5vw !important;
         }
       }
     }

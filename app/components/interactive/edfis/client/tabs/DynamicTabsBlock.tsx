@@ -8,7 +8,6 @@ import TabIndPerc from "../../tabs/TabIndPerc";
 import { NlMRef, autofillResult, nlFs, nlSel, targEl, validTabLabs } from "@/lib/global/declarations/types";
 import { person, tabProps } from "@/vars";
 import { Person } from "@/lib/global/declarations/classes";
-import { extLine, inputNotFound } from "@/lib/global/handlers/errorHandler";
 import { getNumCol, runAutoFill } from "@/lib/locals/edFisNutPage/edFisNutHandler";
 import { DTsCtxProps, ENCtxProps, ENTabsCtxProps, FspCtxProps, TargInps } from "@/lib/global/declarations/interfaces";
 import { ENCtx } from "../ENForm";
@@ -65,13 +64,8 @@ export default function DynamicTabsBlock(): JSX.Element {
             throw new Error(`Failed to validate target instance`);
           if (!(person instanceof Person)) throw new Error(`Failed to validate person instance`);
           if (typeof ctx !== "string") throw new Error(`Failed to validate typeof ctx argument`);
-          if (ctx === "cons") {
-            const selectNumCons = snc?.current ?? document.getElementById("selectNumCons");
-            selectNumCons instanceof HTMLInputElement || selectNumCons instanceof HTMLSelectElement
-              ? (tabProps.numCons = parseInt(selectNumCons?.value || "1"))
-              : inputNotFound(selectNumCons, "selectNumCons in exeAutoFillCtx()", extLine(new Error()));
-            numRef = tabProps.numCons ?? 1;
-          } else {
+          if (ctx === "cons") numRef = tabProps.numCons || 1;
+          else {
             getNumCol(el);
             numRef = Number.isFinite(tabProps.numCol) ? tabProps.numCol || 2 : 2;
           }

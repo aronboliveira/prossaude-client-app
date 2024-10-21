@@ -40,9 +40,9 @@ import {
   nlSel,
   nlTab,
 } from "../../global/declarations/types";
-import { person, tabProps } from "@/vars";
+import { maxProps, person, tabProps } from "@/vars";
 import { ActiveTargInps, TargInps } from "@/lib/global/declarations/interfaces";
-import { Gender, GordLvl, Intensity, NafTypeValue, Protocol } from "@/lib/global/declarations/testVars";
+import { GordLvl, NafTypeValue, Protocol } from "@/lib/global/declarations/testVars";
 import { CacheEN as cen } from "./cache";
 export function addRowAtivFis(count: number = 3, context: string = "Rot"): void {
   const tBodyContainer = document.getElementById(`tbodyAtFis${context}`);
@@ -57,25 +57,41 @@ export function addRowAtivFis(count: number = 3, context: string = "Rot"): void 
     newRow.innerHTML = `
     <td class="tabCelAtFis tabCelAtFis${context}" id="tabCelRowAtFis${context}${count}_1">${count - 1}&#41</td>
     <td class="tabCelAtFis tabCelAtFis${context} tabCelLeft" id="tabCelRowAtFis${context}${count}_2">
-      <input type="text" class="tabInpAtFis${context} tabInpRowAtFis${context}2 form-control minText" id="tabInpRowAtFis${context}${count}_1"Nome da Atividade Física ${title} ${
+      <input type="text" placeholder='Preencha aqui o nome da Atividade Física ${title} ${count - 1}' 
+    class="tabInpAtFis${context} tabInpRowAtFis${context}2 form-control minText" id="tabInpRowAtFis${context}${count}_1"Nome da Atividade Física ${title} ${
       count - 1
-    }" data-title="Atividade_Fisica_${title}_Nome_${count - 1}" data-reqlength="3" required />
+    }" 
+    data-title="Atividade_Fisica_${title}_Nome_${count - 1}" 
+    data-xls='Nome da Atividade Física ${title} ${count - 1}'
+    data-reqlength="3" required />
     <td class="tabCelAtFis tabCelAtFis${context} tabCelLeft" id="tabCelRowAtFis${context}${count}_3">
-      <input type="number" min-length="1" max-length"5" min="0" max="255" class="inpAtivFis tabInpAtFis${context} tabInpRowAtFis${context}2 form-control minText maxText minNum maxNum patternText" id="tabInpRowAtFis${context}${count}_2"Número de Semanas para a Atividade Física Proposta ${
+      <input type="number" 
+      placeholder='Preencha aqui o Número de Semanas para a Atividade Física ${title} ${count - 1}'
+      min-length="1" max-length"5" min="0" max="255" class="inpAtivFis tabInpAtFis${context} tabInpRowAtFis${context}2 form-control minText maxText minNum maxNum patternText" id="tabInpRowAtFis${context}${count}_2"Número de Semanas para a Atividade Física Proposta ${
       count - 1
     }" data-title="Atividade_Fisica_${title}_NSemana_${
       count - 1
-    }" data-reqlength="1" data-maxlength='3' data-minnum="0" data-maxnum="255" required />
+    }" data-reqlength="1" data-maxlength='3' data-minnum="0" data-maxnum="255" 
+    data-xls='Número de Semanas para a Atividade Física ${title} ${count - 1}'
+    required />
     </td>
     <td class="tabCelAtFis tabCelAtFis${context}" id="tabCelRowAtFis${context}${count}_4">
-      <input type="number" min-length="1" max-length="7" min="0" max="255" class="tabInpAtFis${context} tabInpRowAtFis${context}2 form-control minText maxText minNum maxNum patternText" id="tabInpRowAtFis${context}${count}_3"Tempo de Sessão Mínimo para Atividade Física ${title} ${
+      <input type="number" 
+      placeholder='Preencha aqui o Tempo de Sessão da Atividade Física ${title} ${count - 1}'
+      min-length="1" max-length="7" min="0" max="255" class="tabInpAtFis${context} tabInpRowAtFis${context}2 form-control minText maxText minNum maxNum patternText" id="tabInpRowAtFis${context}${count}_3"Tempo de Sessão Mínimo para Atividade Física ${title} ${
       count - 1
     }' data-title="Atividade_Fisica_${title}_SessãoMin_${
       count - 1
-    }" data-reqlength="1" data-maxlength="3" data-minnum="0" data-maxnum="65535"required />
+    }" data-reqlength="1" data-maxlength="3" data-minnum="0" data-maxnum="65535"
+    data-xls='Tempo de Sessão Mínimo para Atividade Física ${title} ${count - 1}'
+    required />
     </td>
     <td class="tabCelAtFis tabCelAtFis${context} tabCelRight" id="tabCelRowAtFis${context}${count}_5">
-      <input type="number" min-length="1" max-length="7" min="0" max="255" class="tabInpAtFis${context} tabInpRowAtFis${context}2 form-control minText maxText minNum maxNum patternText" id="tabInpRowAtFis${context}${count}_4"Número de Meses para a Atividade Física ${title} ${
+      <input type="number" 
+      placeholder='Preencha aqui o Número de Meses para a Atividade Física ${title} ${count - 1}'
+      min-length="1" 
+      data-xls='Número de Meses para a Atividade Física ${title} ${count - 1}'
+      max-length="7" min="0" max="255" class="tabInpAtFis${context} tabInpRowAtFis${context}2 form-control minText maxText minNum maxNum patternText" id="tabInpRowAtFis${context}${count}_4"Número de Meses para a Atividade Física ${title} ${
       count - 1
     }" data-title="Atividade_Fisica_${title}_Meses_${
       count - 1
@@ -85,16 +101,17 @@ export function addRowAtivFis(count: number = 3, context: string = "Rot"): void 
     tBodyContainer.appendChild(newRow);
     newRow.querySelectorAll('input[type="number"]').forEach(numInp => {
       numInp.addEventListener("input", () => {
-        numberLimit(numInp as HTMLInputElement);
+        tabProps.edIsAutoCorrectOn && numberLimit(numInp as HTMLInputElement);
         handleEventReq(numInp as textEl);
       });
     });
     newRow.querySelectorAll('input[type="text"]').forEach(textEl => {
       textEl.addEventListener("input", () => {
-        autoCapitalizeInputs(
-          textEl as entryEl,
-          checkAutoCorrect(document.querySelector('button[id^="deactAutocorrectBtn"]')),
-        );
+        tabProps.edIsAutoCorrectOn &&
+          autoCapitalizeInputs(
+            textEl as entryEl,
+            checkAutoCorrect(document.querySelector('button[id^="deactAutocorrectBtn"]')),
+          );
         handleEventReq(textEl as textEl);
       });
     });
@@ -299,10 +316,10 @@ export function matchPersonPropertiesWH(): void {
     if (!("weight" in person && typeof person.weight !== "number" && Number.isFinite(person.weight))) person.weight = 0;
     if (!("height" in person && typeof person.height !== "number" && Number.isFinite(person.height))) person.height = 0;
     tiw instanceof HTMLInputElement
-      ? (person.weight = validateEvResultNum(tiw, person.weight))
+      ? person.dispatchWeight(validateEvResultNum(tiw, person.weight))
       : inputNotFound(tiw, "tiw", extLine(new Error()));
     tih instanceof HTMLInputElement
-      ? (person.height = validateEvResultNum(tih, person.height))
+      ? person.dispatchHeight(validateEvResultNum(tih, person.height))
       : inputNotFound(tih, "tih", extLine(new Error()));
   } catch (e) {
     limitedError(`Error executing matchPersonPropertiesWH:${(e as Error).message}`, "matchPersonPropertiesWH");
@@ -314,8 +331,9 @@ export function matchPersonPropertiesDC(): void {
     if (!("sumDCut" in person && typeof person.sumDCut !== "number" && Number.isFinite(person.sumDCut)))
       person.sumDCut = 0;
     tidc instanceof HTMLInputElement
-      ? (person.sumDCut = validateEvResultNum(tidc, person.sumDCut))
+      ? person.dispatchDC(validateEvResultNum(tidc, person.sumDCut))
       : inputNotFound(tidc, "tidc", extLine(new Error()));
+    console.log("Dispatched " + person.sumDCut);
   } catch (e) {
     limitedError(`Error execu:${(e as Error).message}`, "matchPersonPropertiesDC");
   }
@@ -383,7 +401,7 @@ export function updateIMCContext({
     limitedError(`Error executing updateIMCContext:\n${(e as Error).message}`, "updateIMCContext");
   }
 }
-export function fluxFormIMC(gl: targEl, fct: targEl): void {
+export function fluxFormIMC(gl: targEl, fct: targEl): { glChanged: boolean; fctChanged: boolean } {
   try {
     gl ??=
       tabProps.gl ??
@@ -401,43 +419,50 @@ export function fluxFormIMC(gl: targEl, fct: targEl): void {
       document.querySelector('[data-title*="Fator de Nível de Atividade Física"');
     if (!(naf instanceof HTMLSelectElement || naf instanceof HTMLInputElement))
       throw new Error(`Failed to validate instance of Level of Physical Activity element`);
-    if (naf.value === "muitoIntenso") {
-      if (!(fct.value === "tinsley")) highlightChange(fct);
+    let prevGl = gl.value;
+    let prevFct = fct.value;
+    if (naf.value === "2.2") {
+      if (fct.value !== "tinsley") highlightChange(fct, "#fdaa0b");
       fct.value = "tinsley";
     } else {
       const IMC = tabProps.IMC ?? 0;
       if (IMC >= 0 && IMC < 25.0) {
-        if (!(fct.value === "harrisBenedict")) highlightChange(fct);
+        if (fct.value !== "harrisBenedict") highlightChange(fct, "#fdaa0b");
         fct.value = "harrisBenedict";
         if (IMC < 18.5) {
-          if (!(gl.value === "abaixo")) highlightChange(gl);
+          if (gl.value !== "abaixo") highlightChange(gl, "#fdaa0b");
           gl.value = "abaixo";
         } else {
-          if (!(gl.value === "eutrofico")) highlightChange(gl);
+          if (gl.value !== "eutrofico") highlightChange(gl, "#fdaa0b");
           gl.value = "eutrofico";
         }
       } else if (IMC >= 25.0) {
-        if (!(fct.value === "mifflinStJeor")) highlightChange(fct);
+        if (fct.value !== "mifflinStJeor") highlightChange(fct, "#fdaa0b");
         fct.value = "mifflinStJeor";
         if (IMC < 30) {
-          if (!(gl.value === "sobrepeso")) highlightChange(gl);
+          if (gl.value !== "sobrepeso") highlightChange(gl, "#fdaa0b");
           gl.value = "sobrepeso";
         } else if (IMC >= 30 && IMC < 35) {
-          if (!(gl.value === "obeso1")) highlightChange(gl);
+          if (gl.value !== "obeso1") highlightChange(gl, "#fdaa0b");
           gl.value = "obeso1";
         } else if (IMC >= 35 && IMC < 40) {
-          if (!(gl.value === "obeso2")) highlightChange(gl);
+          if (gl.value !== "obeso2") highlightChange(gl, "#fdaa0b");
           gl.value = "obeso2";
         } else if (IMC > 40) {
-          if (!(gl.value === "obeso3")) highlightChange(gl);
+          if (gl.value !== "obeso3") highlightChange(gl, "#fdaa0b");
           gl.value = "obeso3";
         }
       } else
         throw new Error(`Error obtaining IMC value in fluxFormIMC(), line ${extLine(new Error())}.
       Obtained value: ${IMC ?? "NaN"}`);
     }
+    return {
+      glChanged: prevGl !== gl.value,
+      fctChanged: prevFct !== fct.value,
+    };
   } catch (e) {
     limitedError(`Error executing fluxFormIMC:\n${(e as Error).message}`, "fluxFormIMC");
+    return { glChanged: false, fctChanged: false };
   }
 }
 export function updateTMBContext(fct: targEl): void {
@@ -476,6 +501,7 @@ export function matchTMBElements({
   gl: targEl;
   fct: targEl;
   sa: targEl;
+  changes: { glChanged: boolean; fctChanged: boolean };
 }): void {
   try {
     if (typeof idf !== "string") throw new Error(`Failed to validate target string`);
@@ -502,7 +528,14 @@ export function matchTMBElements({
     if (!(lockGl instanceof Element))
       throw elementNotFound(lockGl, `Element for Displaying Lock for Body Fat Level`, extLine(new Error()));
     //update em selects secundários (nível de gordura e fórmula)
-    const switchSecSelects = (fct: entryEl): false | void => fct.value !== "tinsley" && fluxFormIMC(gl, fct);
+    const switchSecSelects = (
+      fct: entryEl,
+    ):
+      | false
+      | {
+          glChanged: boolean;
+          fctChanged: boolean;
+        } => fct.value !== "tinsley" && fluxFormIMC(gl, fct);
     //garante coesão de selects primários (nível e fator)
     if (/LvlAtFis/gi.test(idf)) {
       switchSecSelects(fct);
@@ -516,65 +549,62 @@ export function matchTMBElements({
         throw inputNotFound(sa, "Selector for Level of Physical Activity factor", extLine(new Error()));
       switchSecSelects(fct);
     } else stringError("testing idf in matchTMBElements()", idf, extLine(new Error()));
-    if (naf.value === "muitoIntenso") {
+    if (naf.value === "2.2") {
       fct.value = "tinsley";
       spanFactorAtleta.hidden = false;
       fadeElement(spanFactorAtleta, "0");
       setTimeout(() => fadeElement(spanFactorAtleta, "1"), 500);
-      fadeElement(lockGl, "0");
-      setTimeout(() => {
-        lockGl.innerHTML = `<svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="16"
-          height="16"
-          fill="currentColor"
-          class="bi bi-unlock"
-          viewBox="0 0 16 16"
-        >
-          <defs>
-            <linearGradient
-              id="gradiente-unlock"
-              x1="0%"
-              y1="0%"
-              x2="100%"
-              y2="0%"
-            >
-              <stop
-                offset="0%"
-                style="stop-color:rgb(233, 180, 7)"
-              />
-              <stop
-                offset="100%"
-                style="stop-color:rgb(243, 221, 93)"
-              />
-            </linearGradient>
-          </defs>
-          <path
-            d="M11 1 a2 2 0 0 1 2 2 v4 H9 V3 a2 2 0 0 1 2-2 m3 6 V3 a3 3 0 0 0-6 0 v4"
-            class="svg-unlock-hook"
-            fill="url(#gradiente-unlock)"
-          />
-          <path
-            d="M3 7 a2 2 0 0 0-2 2 v5 a2 2 0 0 0 2 2h 6 a2 2 0 0 0 2-2 V9 a2 2 0 0 0-2-2"
-            class="svg-unlock-body"
-            fill="url(#gradiente-unlock)"
-          />
-          <line
-            x1="2.2"
-            y1="7.05"
-            x2="9.3"
-            y2="7.05"
-            stroke="black"
-          />
-          </svg>`;
-        fadeElement(lockGl, "1");
-      }, 500);
-    } else if (
-      naf.value === "sedentario" ||
-      naf.value === "leve" ||
-      naf.value === "moderado" ||
-      naf.value === "intenso"
-    ) {
+      if (/bi-lock/gi.test(lockGl.innerHTML)) {
+        fadeElement(lockGl, "0");
+        setTimeout(() => {
+          lockGl.innerHTML = `<svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            class="bi bi-unlock"
+            viewBox="0 0 16 16"
+          >
+            <defs>
+              <linearGradient
+                id="gradiente-unlock"
+                x1="0%"
+                y1="0%"
+                x2="100%"
+                y2="0%"
+              >
+                <stop
+                  offset="0%"
+                  style="stop-color:rgb(233, 180, 7)"
+                />
+                <stop
+                  offset="100%"
+                  style="stop-color:rgb(243, 221, 93)"
+                />
+              </linearGradient>
+            </defs>
+            <path
+              d="M11 1 a2 2 0 0 1 2 2 v4 H9 V3 a2 2 0 0 1 2-2 m3 6 V3 a3 3 0 0 0-6 0 v4"
+              class="svg-unlock-hook"
+              fill="url(#gradiente-unlock)"
+            />
+            <path
+              d="M3 7 a2 2 0 0 0-2 2 v5 a2 2 0 0 0 2 2h 6 a2 2 0 0 0 2-2 V9 a2 2 0 0 0-2-2"
+              class="svg-unlock-body"
+              fill="url(#gradiente-unlock)"
+            />
+            <line
+              x1="2.2"
+              y1="7.05"
+              x2="9.3"
+              y2="7.05"
+              stroke="black"
+            />
+            </svg>`;
+          fadeElement(lockGl, "1");
+        }, 500);
+      }
+    } else if (naf.value === "1.2" || naf.value === "1.4" || naf.value === "1.6" || naf.value === "1.9") {
       setTimeout(() => {
         fadeElement(spanFactorAtleta, "0");
         setTimeout(() => (spanFactorAtleta.hidden = true), 500);
@@ -589,15 +619,13 @@ export function matchTMBElements({
         fct.value = "mifflinStJeor";
       else if (gl.value === "abaixo" || gl.value === "eutrofico" || (tabProps.IMC && tabProps.IMC < 25))
         fct.value = "harrisBenedict";
-      else
-        console.error(`Error obtaining the value for Body Fat, line ${extLine(new Error())}.
-            Obtained level of Gordura Corporal: ${gl?.value};
-            Obtained IMC: ${tabProps.IMC ?? 0}.`);
-      fadeElement(lockGl, "0");
-      setTimeout(() => {
-        lockGl.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lock" viewBox="0 0 16 16"><defs><linearGradient id="gradiente-lock" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" style="stop-color:rgb(233, 180, 7)"></stop><stop offset="100%" style="stop-color:rgb(243, 221, 93)"></stop></linearGradient></defs><path d="M8 1 a2 2 0 0 1 2 2 v4 H6 V3 a2 2 0 0 1 2-2 m3 6 V3 a3 3 0 0 0-6 0 v4" class="svg-lock-hook"></path><path d="M5 7 a2 2 0 0 0-2 2 v5 a2 2 0 0 0 2 2h 6 a2 2 0 0 0 2-2 V9 a2 2 0 0 0-2-2" class="svg-lock-body"></path><line x1="5" y1="7" x2="11" y2="7" stroke="black"></line></svg>`;
-        fadeElement(lockGl, "1");
-      }, 500);
+      if (/bi-unlock/gi.test(lockGl.innerHTML)) {
+        fadeElement(lockGl, "0");
+        setTimeout(() => {
+          lockGl.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lock" viewBox="0 0 16 16"><defs><linearGradient id="gradiente-lock" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" style="stop-color:rgb(233, 180, 7)"></stop><stop offset="100%" style="stop-color:rgb(243, 221, 93)"></stop></linearGradient></defs><path d="M8 1 a2 2 0 0 1 2 2 v4 H6 V3 a2 2 0 0 1 2-2 m3 6 V3 a3 3 0 0 0-6 0 v4" class="svg-lock-hook"></path><path d="M5 7 a2 2 0 0 0-2 2 v5 a2 2 0 0 0 2 2h 6 a2 2 0 0 0 2-2 V9 a2 2 0 0 0-2-2" class="svg-lock-body"></path><line x1="5" y1="7" x2="11" y2="7" stroke="black"></line></svg>`;
+          fadeElement(lockGl, "1");
+        }, 500);
+      }
     } else
       console.error(`Error obtaining the value for Targeted Main Selector, line ${extLine(new Error())}.
           Obtained value: ${naf?.value ?? "undefined"}`);
@@ -617,7 +645,7 @@ export function updatePGC(parentEl: targEl | Document, ctx: string = "cons"): vo
       (tidc instanceof HTMLInputElement && (tidc.type === "number" || tidc.type === "text")) ||
       tidc instanceof HTMLSelectElement
     ) {
-      person.sumDCut = parseNotNaN(tidc?.value) || 0;
+      person.dispatchDC(parseNotNaN(tidc?.value ?? "0"));
       tidc.value = person.sumDCut.toString();
     } else inputNotFound(tidc, "tidc", extLine(new Error()));
     if (
@@ -625,7 +653,9 @@ export function updatePGC(parentEl: targEl | Document, ctx: string = "cons"): vo
       tipgc instanceof HTMLSelectElement
     ) {
       tabProps.PGC = parseNotNaN(person.calcPGC(person).pgc.toFixed(4)) ?? 0;
+      console.log("Evaluating...");
       evalPGCDecay(tipgc) ? formatValue(tipgc, tabProps.PGC) : formatValue(tipgc, tabProps.PGC, 2);
+      console.log("Evaluation: " + person.sumDCut);
     } else inputNotFound(tipgc, "tipgc", extLine(new Error()));
   } catch (e) {
     console.error(`Error executing updatePGC:\n${(e as Error).message}`);
@@ -640,7 +670,10 @@ export function updateAtvLvl(caller: "naf" | "sa"): void {
     const nafIntensity =
       tabProps.naf instanceof HTMLSelectElement
         ? tabProps.naf.dataset.intensity ||
-          tabProps.naf.innerText.toLowerCase().replace("á", "").replace("intenso", "Intenso") ||
+          Array.from(tabProps.naf.options)
+            [tabProps.naf.options.selectedIndex].innerText.toLowerCase()
+            .replace("á", "")
+            .replace("intenso", "Intenso") ||
           tabProps.naf.value
         : tabProps.naf.innerText.toLowerCase().replace("á", "").replace("intenso", "Intenso") || tabProps.naf.value;
     evalFactorAtvLvl();
@@ -853,7 +886,6 @@ export function switchRequiredCols({
     if (!(tma instanceof HTMLElement)) throw new Error(`Failed to validate Table for Anthropometric measurements`);
     if (!(tip instanceof HTMLElement)) throw new Error(`Failed to validate instance of Table for Indexes`);
     if (!areNumConsOpsValid) throw new Error(`Invalidated Number of Appointments Options`);
-    tabProps.numCons = evalPseudoNum(tabProps.numCons) || 1;
     const numCons = tabProps.numCons;
     //TODO REMOVER APÓS TESTE
     console.log("Número de consulta: " + tabProps.numCons);
@@ -918,14 +950,14 @@ export function switchRequiredCols({
         ou seja, length dos arrays formados pelas querries === length do número de consulta === número de colunas
         + são extraídas as células de interesse, com base na .id relativa à coluna, e então populam requiredCels */
     for (let iC = 0; iC < numCons; iC++) {
-      const pattern = new RegExp(`_${iC + 2}`);
+      const pattern = new RegExp(`_${iC + 2}`, "g");
       reqSV.push(filterCellsPattern({ inps: inpsSvi, pattern }));
       reqMA.push(filterCellsPattern({ inps: inpsMedAnt, pattern }));
       reqDC.push(filterCellsPattern({ inps: inpsDC, pattern }));
-      reqPI.push(filterCellsPattern({ inps: inpsInd, pattern, attr: "name" }));
+      reqPI.push(filterCellsPattern({ inps: inpsInd, pattern }));
     }
     const flatRequiredCells = [...reqSV, ...reqMA, ...reqDC, ...reqPI].flat(1);
-    if (!(flatRequiredCells?.length > 0 && flatRequiredCells.length === nTotalRows * numCons))
+    if (!(flatRequiredCells.length > 0 && flatRequiredCells.length === nTotalRows * numCons))
       throw new Error(`Failed to validate number of required inputs for tables`);
     for (const i of flatRequiredCells) {
       highlightChange(i, "red", "both");
@@ -1085,13 +1117,20 @@ export function handleSumClick(ev: React.MouseEvent, refs: { prt: targEl; td: ta
     if (typeof person !== "object" || !("sumDCut" in person))
       throw typeError(`validating typeof person object`, "person", "object", extLine(new Error()));
     if (!cen.dctrs || cen.dctrs.length === 0) cen.dctrs = Array.from(td.querySelectorAll(".tabRowDCutMed"));
-    const rowsDCArray = cen.dctrs.filter(rowDC => rowDC instanceof HTMLTableRowElement);
+    const rowsDCArray: Array<any> = Array.isArray(cen.dctrs)
+      ? cen.dctrs.filter(rowDC => rowDC instanceof HTMLTableRowElement)
+      : (cen.dctrs as any) instanceof NodeList || (cen.dctrs as any) instanceof HTMLCollection
+      ? Array.from(cen.dctrs).filter(rowDC => rowDC instanceof HTMLTableRowElement)
+      : [];
+    if (rowsDCArray.length === 0) throw new Error(`Failed to populate rowsDCArray`);
     if (!(ev.currentTarget instanceof HTMLElement)) throw new Error(`Failed to validate event target instance`);
-    person.sumDCut = createArraysRels({
-      btn: ev.currentTarget,
-      arrayRows: rowsDCArray,
-      protocolValue: prt.value as Protocol,
-    });
+    person.dispatchDC(
+      createArraysRels({
+        btn: ev.currentTarget,
+        arrayRows: rowsDCArray,
+        protocolValue: prt.value as Protocol,
+      }),
+    );
     if (!Number.isFinite(person.sumDCut) || person.sumDCut < 0) person.sumDCut = 0;
     if (
       !(
@@ -1147,40 +1186,30 @@ export function createArraysRels({
           cen.targs[`${row.id}__inputs`] = Array.from(row.querySelectorAll("input"));
         const list = cen.targs[`${row.id}__inputs`];
         return list && list.length > 0
-          ? Array.from(list).filter(inp =>
-              inp instanceof HTMLElement && inp.dataset.col && inp.dataset.col !== ""
-                ? inp.dataset.col === btn.dataset.col
-                : (inp as any).id.match(`_${btnCol.toString()}`) ?? false,
-            )[0]
-          : Array.from(row.querySelectorAll("input")).filter(inp =>
-              inp instanceof HTMLElement && inp.dataset.col && inp.dataset.col !== ""
-                ? inp.dataset.col === btn.dataset.col
-                : inp.id.match(`_${btnCol.toString()}`) ?? false,
-            )[0];
+          ? Array.from(list).find(inp => {
+              return (
+                inp instanceof HTMLElement &&
+                ((inp.dataset.col && inp.dataset.col === btn.dataset.col) ||
+                  (inp.id.match(`_${btnCol.toString()}`) ? true : false))
+              );
+            }) ?? null
+          : null;
       }),
-      inpsIds = targColInps.map(inp => (inp as any).id);
-    if (inpsIds.length !== arrayRows.length) throw new Error(`Error validating length of columnValues.`);
+      inpsIds = targColInps.map(inp => (inp ? (inp as HTMLInputElement).id : null));
+    if (inpsIds.filter(id => id !== null).length !== arrayRows.length)
+      throw new Error(`Error validating length of columnValues.`);
     //define qual coluna será utilizada de acordo com a posição do botão e validando se há algum preenchimento na coluna
     const protocoloNum = parseNotNaN(protocolValue.slice(-1));
     if (!(protocoloNum === 3 || protocoloNum === 7))
       throw new Error(`Error obtaining the protocol number.
       Obtained number: ${protocoloNum ?? 0}`);
     for (let iC = 0; iC < arrayRows.length; iC++) {
-      if (
-        !(
-          arrayRows[iC] instanceof HTMLInputElement ||
-          arrayRows[iC] instanceof HTMLSelectElement ||
-          arrayRows[iC] instanceof HTMLTextAreaElement
-        ) ||
-        ((arrayRows[iC] instanceof HTMLInputElement ||
-          arrayRows[iC] instanceof HTMLSelectElement ||
-          arrayRows[iC] instanceof HTMLTextAreaElement) &&
-          (arrayRows[iC] as HTMLElement).hidden === true)
-      )
-        continue;
-      colAcc += parseNotNaN((targColInps[iC] as HTMLInputElement).value);
+      if (!(arrayRows[iC] instanceof HTMLElement && !arrayRows[iC].hasAttribute("hidden"))) continue;
+      const inp = targColInps[iC] as HTMLInputElement;
+      console.log(inp.id + " -> " + inp.value);
+      if (inp && inp.value) colAcc += evalPseudoNum(inp.value);
     }
-    const sumInp = document.getElementById(`tabInpRowDCut9_${btnCol}`);
+    const sumInp = document.getElementById(`tabInpRowDCut9_${btnCol}`) as nlEl;
     if (
       !(
         sumInp instanceof HTMLInputElement ||
@@ -1349,13 +1378,8 @@ export function exeAutoFill(el: targEl, context: string = "cons"): autofillResul
       throw new Error(`Failed to validate target instance`);
     if (!(person instanceof Person)) throw new Error(`Failed to validate person instance`);
     if (typeof context !== "string") throw new Error(`Failed to validate typeof context argument`);
-    if (context === "cons") {
-      const selectNumCons = tabProps.sa ?? document.getElementById("selectNumCons");
-      selectNumCons instanceof HTMLInputElement || selectNumCons instanceof HTMLSelectElement
-        ? (tabProps.numCons = evalPseudoNum(selectNumCons?.value || "1") || 1)
-        : inputNotFound(selectNumCons, "selectNumCons in exeAutoFill()", extLine(new Error()));
-      numRef = evalPseudoNum(tabProps.numCons) || 1;
-    } else {
+    if (context === "cons") numRef = evalPseudoNum(tabProps.numCons) || 1;
+    else {
       getNumCol(el);
       numRef = Number.isFinite(tabProps.numCol) ? tabProps.numCol || 2 : 2;
     }
@@ -1516,7 +1540,7 @@ export function callbackTextBodyEl({
     if (!(genFisAlin instanceof HTMLSelectElement || genFisAlin instanceof HTMLInputElement))
       throw elementNotFound(genFisAlin, `Gen Physical Alignment Element`, extLine(new Error()));
     changeTabDCutLayout(protocolo, tde, textBodytype);
-    person.gen = textBodytype.value as Gender;
+    person.dispatchGen(textBodytype.value);
     console.log("Persons gender is: " + person.gen);
   } catch (e) {
     console.error(`Error executing callbackTextBodyEl:\n${(e as Error).message}`);
@@ -1563,20 +1587,15 @@ export function callbackAtvLvlElementNaf(
       throw new Error(`Identifier for callback invalid`);
     evalFactorAtvLvl();
     evalIMC();
-    fluxFormIMC(gl, fct);
     evalMatchTMBElements();
-    matchTMBElements({ idf, sa, gl, fct, naf });
+    evalActivityLvl();
+    const changes = fluxFormIMC(gl, fct);
+    matchTMBElements({ idf, sa, gl, fct, naf, changes });
     if (/LvlAtFis/gi.test(idf) || /TMBType/gi.test(idf) || /gordCorpLvl/gi.test(idf)) updateAtvLvl("sa");
     else if (/nafType/gi.test(idf)) updateAtvLvl("naf");
-    else
-      console.error(`Error validating idf.
-        obtained .id: ${idf ?? "UNDEFINED ID"}`);
-    person.atvLvl = sa.dataset.intensity as Intensity;
-    evalActivityLvl();
+    person.dispatchAtvLvl(sa.value);
     const returnedFactorAtvLvl = person.checkAtvLvl(person);
-    typeof returnedFactorAtvLvl === "number"
-      ? (tabProps.factorAtvLvl = (returnedFactorAtvLvl as NafTypeValue) || 1.4)
-      : typeError("returnedFactorAtvLvl", returnedFactorAtvLvl, "number", extLine(new Error()));
+    if (typeof returnedFactorAtvLvl === "number") tabProps.factorAtvLvl = (returnedFactorAtvLvl as NafTypeValue) || 1.4;
   } catch (e) {
     console.error(`Error executing callbackAtvLvlElementNaf:\n${(e as Error).message}`);
   }
@@ -1607,47 +1626,26 @@ export function handleCallbackWHS(inpWHS: targEl): void {
           if (t instanceof HTMLElement)
             t.dataset.target ? (t.dataset["target"] = "false") : t.setAttribute("data-target", "false");
     }
-    const fillResult = (autofillResult: autofillResult, mainNum: number): void => {
+    const fillResult = (autofillResult: autofillResult): void => {
       const {
         ts: { tiw, tih, tidc },
       } = autofillResult;
-      switch (mainNum) {
-        case 1:
-          if (tiw instanceof HTMLElement) tiw.dataset.target = "true";
-          break;
-        case 2:
-          if (tih instanceof HTMLElement) tih.dataset.target = "true";
-          break;
-        case 3:
-          if (tidc instanceof HTMLElement) tidc.dataset.target = "true";
-          break;
-        default:
-          document.insertBefore(document.createComment("Input failed to active dataset.target"), inpWHS);
-      }
-      if (mainNum === 0) {
-        if (tiw instanceof HTMLElement)
-          tiw.dataset.target ? (tiw.dataset[`target`] = "true") : tiw?.setAttribute("data-target", "true");
-      } else if (mainNum === 1) {
-        if (tih instanceof HTMLElement)
-          tih.dataset.target ? (tih.dataset[`target`] = "true") : tih?.setAttribute("data-target", "true");
-      } else if (mainNum === 2) {
-        if (tidc instanceof HTMLElement)
-          tidc.dataset.target ? (tidc.dataset[`target`] = "true") : tidc?.setAttribute("data-target", "true");
-      }
+      if (tiw instanceof HTMLElement) tiw.dataset.target = "true";
+      if (tih instanceof HTMLElement) tih.dataset.target = "true";
+      if (tidc instanceof HTMLElement) tidc.dataset.target = "true";
     };
     [
-      { p: "weight", m: 600 },
-      { p: "height", m: 3 },
-      { p: "sumDCut", m: 999 },
-    ].forEach(({ p, m }, i) => {
+      { p: "weight", m: maxProps.weight },
+      { p: "height", m: maxProps.height },
+      { p: "sumDCut", m: maxProps.dc },
+    ].forEach(({ p, m }) => {
       if (inpWHS.classList.contains(`inp${p.charAt(0).toUpperCase()}${p.slice(1).toLowerCase()}`)) {
         if (!(p in person)) {
           console.warn(`Failed to locate ${p} in person props`);
           return;
         }
-        if (parseNotNaN(inpWHS.value, 0) > m) inpWHS.value = m.toString();
         (person as any)[p] = validateEvResultNum(inpWHS, parseFloat(inpWHS.value || "0"));
-        tabProps.isAutoFillActive && fillResult(exeAutoFill(inpWHS, "col"), i);
+        tabProps.isAutoFillActive && fillResult(exeAutoFill(inpWHS, "col"));
       }
     });
   } catch (e) {

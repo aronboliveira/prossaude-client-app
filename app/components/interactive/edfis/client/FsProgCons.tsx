@@ -169,24 +169,15 @@ export default function FsProgCons(): JSX.Element {
     }
     tabProps.numCons ||= 1;
     //TODOS TABS ONLY
-    person.sumDCut =
-      parseNotNaN(
-        (document.getElementById(`tabInpRowDCut9_${tabProps.numCons + 1}`) as entryEl)?.value ?? "0",
-        0,
-        "float",
-      ) || 0;
-    person.weight =
-      parseNotNaN(
-        (document.getElementById(`tabInpRowMedAnt2_${tabProps.numCons + 1}`) as entryEl)?.value ?? "0",
-        0,
-        "float",
-      ) || 0;
-    person.height =
-      parseNotNaN(
-        (document.getElementById(`tabInpRowMedAnt3_${tabProps.numCons + 1}`) as entryEl)?.value ?? "0",
-        0,
-        "float",
-      ) || 0;
+    person.dispatchDC(
+      parseNotNaN((document.getElementById(`tabInpRowDCut9_${tabProps.numCons + 1}`) as entryEl)?.value ?? "0"),
+    );
+    person.dispatchWeight(
+      parseNotNaN((document.getElementById(`tabInpRowMedAnt2_${tabProps.numCons + 1}`) as entryEl)?.value ?? "0"),
+    );
+    person.dispatchHeight(
+      parseNotNaN((document.getElementById(`tabInpRowMedAnt3_${tabProps.numCons + 1}`) as entryEl)?.value ?? "0"),
+    );
     addListenerInnerTabs(consTablesFs, tabProps.numColsCons);
   }, [mounted, gr, snc, fspr, sar, af, nafr]);
   useEffect(() => {
@@ -243,8 +234,7 @@ export default function FsProgCons(): JSX.Element {
                 ref={glSpan}
                 role='group'
                 id='glSpan'
-                style={{ minWidth: "15rem" }}
-                className='form-control noInvert spanSubForm consInp max52_900'>
+                className={`form-control noInvert spanSubForm consInp max52_900 ${sEn.glSpan}`}>
                 <GordCorpLvl />
                 <LockTabInd ctx='GordCorpLvl' addGroup={["spanLock"]} isSpan={true} />
               </span>
@@ -264,8 +254,7 @@ export default function FsProgCons(): JSX.Element {
                 ref={fctSpan}
                 id='fctSpan'
                 role='group'
-                style={{ minWidth: "15rem" }}
-                className='form-control noInvert spanSubForm consInp'>
+                className={`form-control noInvert spanSubForm consInp ${sEn.glSpan}`}>
                 <FormCalcTmbType />
                 <LockTabInd ctx='formCalcTMB' addGroup={["spanLock"]} isSpan={true} />
               </span>

@@ -25,7 +25,8 @@ export default function TbodyAtFisProps(): JSX.Element {
         <td className='tabCelAtFis tabCelAtFisProp tabCelLeft' id='tabCelRowAtFisProp2_2'>
           <input
             type='text'
-            className='tabInpAtFisProp tabInpRowAtFisProp2 form-control noInvert'
+            placeholder='Preencha aqui o nome da Atividade Física Proposta 1'
+            className='tabInpAtFisProp tabInpRowAtFisProp2 form-control noInvert min46_900'
             id='tabInpRowAtFisProp2_1'
             data-xls='Nome da Atividade Física Proposta 1'
             data-title='Atividade_Fisica_Proposta_Nome_1'
@@ -37,6 +38,7 @@ export default function TbodyAtFisProps(): JSX.Element {
         <td className='tabCelAtFis tabCelAtFisProp tabCelLeft' id='tabCelRowAtFisProp2_3'>
           <input
             type='number'
+            placeholder='Preencha aqui o Número de Semanas para a Atividade Física Proposta 1'
             minLength={1}
             maxLength={5}
             min='0'
@@ -56,6 +58,7 @@ export default function TbodyAtFisProps(): JSX.Element {
         <td className='tabCelAtFis tabCelAtFisProp' id='tabCelRowAtFisProp2_4'>
           <input
             type='number'
+            placeholder='Preencha aqui o Tempo de Sessão da Atividade Física Proposta 1'
             minLength={1}
             maxLength={7}
             min='0'
@@ -75,6 +78,7 @@ export default function TbodyAtFisProps(): JSX.Element {
         <td className='tabCelAtFis tabCelAtFisProp tabCelRight' id='tabCelRowAtFisProp2_5'>
           <input
             type='number'
+            placeholder='Preencha aqui o Número de Meses para a Atividade Física Proposta 1'
             minLength={1}
             maxLength={7}
             min='0'

@@ -1,21 +1,28 @@
 "use client";
-import { nlSel } from "@/lib/global/declarations/types";
+import { NlMRef, nlSel } from "@/lib/global/declarations/types";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { handleCallbackWHS } from "@/lib/locals/edFisNutPage/edFisNutHandler";
 import { tabProps, timers } from "@/vars";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import useMount from "@/lib/hooks/useMount";
 import { FactorAtletaRegular, FactorAtletaValue } from "@/lib/global/declarations/testVars";
-import { limitedError } from "@/lib/global/gModel";
+import { checkContext, limitedError } from "@/lib/global/gModel";
 import sEn from "@/styles/locals/modules/enStyles.module.scss";
+import { ENCtxProps } from "@/lib/global/declarations/interfaces";
+import { ENCtx } from "./ENForm";
 export default function SelFactorAtleta(): JSX.Element {
+  let nafr: NlMRef<nlSel> = null;
   const r = useRef<nlSel>(null),
+    ctx = useContext<ENCtxProps>(ENCtx),
     [v, setValue] = useState<FactorAtletaValue>("peso"),
     [mounted] = useMount(),
     factors: { v: FactorAtletaValue; l: FactorAtletaRegular }[] = [
       { v: "peso", l: "Peso" },
       { v: "mlg", l: "MLG" },
     ];
+  if (ctx?.refs) ({ nafr } = ctx.refs);
+  //TODO REMOVER APÓS TESTE
+  checkContext(ctx, "ENCtx", SelFactorAtleta);
   useEffect(() => {
     const sel = r.current ?? document.getElementById("selFactorAtleta");
     sel instanceof HTMLSelectElement
@@ -50,11 +57,30 @@ export default function SelFactorAtleta(): JSX.Element {
       }
     }, timers.personENTimer * 0.75);
   }, [r]);
+  useEffect(() => {
+    if (!mounted) return;
+    setTimeout(() => {
+      if (!nafr) return;
+      nafr.current ??= document.getElementById("nafType") as nlSel;
+      if (
+        !(r.current instanceof HTMLElement) ||
+        !(nafr.current instanceof HTMLSelectElement) ||
+        nafr.current?.dataset.intensity !== "muitoIntenso"
+      )
+        return;
+      r.current.hidden = false;
+      r.current.style.display = "block";
+      r.current.style.opacity = "1";
+      const parent = r.current.closest("#spanFactorAtleta") || r.current.closest("div");
+      if (!(parent instanceof HTMLElement) || !parent.hidden) return;
+      parent.hidden = false;
+    }, timers.personENTimer);
+  }, [mounted, nafr, r]);
   return (
     <select
       ref={r}
       value={v}
-      className={`selFactorAtletaClass form-select noInvert consInp min52_900 ${sEn.select}`}
+      className={`selFactorAtletaClass form-select noInvert consInp min52_900 ${sEn.select} ${sEn.selFactorAtleta}`}
       id='selFactorAtleta'
       name='factor_atl'
       data-title='Fator de TMB para Atletas'

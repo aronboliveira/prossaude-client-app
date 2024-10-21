@@ -25,11 +25,12 @@ export default function SelectLvlAtFis(): JSX.Element {
     setTimeout(() => {
       try {
         const query = document.getElementById(idf);
-        person.atvLvl =
+        person.dispatchAtvLvl(
           (sar?.current?.value as Intensity) ||
-          (((query instanceof HTMLSelectElement || query instanceof HTMLInputElement) &&
-            (query as HTMLSelectElement).value) as Intensity) ||
-          "leve";
+            (((query instanceof HTMLSelectElement || query instanceof HTMLInputElement) &&
+              (query as HTMLSelectElement).value) as Intensity) ||
+            "leve",
+        );
       } catch (e) {
         return;
       }
@@ -55,7 +56,7 @@ export default function SelectLvlAtFis(): JSX.Element {
             naf: nafr?.current ?? document.getElementById("nafType"),
             fct: fct?.current ?? document.getElementById("formCalcTMBType"),
           });
-          person.atvLvl = ev.currentTarget.value as Intensity;
+          person.dispatchAtvLvl(ev.currentTarget.value);
           console.log("Person's Activity Level is: " + person.atvLvl);
           tabProps.edIsAutoCorrectOn && exeAutoFill(tabProps.sa);
         } catch (e) {

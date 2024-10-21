@@ -170,7 +170,12 @@ export function fadeElement(el: targEl, opacity: string = "1", timer: string = "
     }, timeout);
   } else elementNotFound(el, `element ${el?.id || "UNDEFINED ELEMENT"}`, extLine(new Error()));
 }
-export function highlightChange(el: targEl, color: string = "red", context: string = "both"): void {
+export function highlightChange(
+  el: targEl,
+  color: string = "red",
+  context: string = "both",
+  double: boolean = false,
+): void {
   if (el instanceof HTMLElement && typeof color === "string") {
     const iniColor = "rgb(222, 226, 230)";
     const iniFontColor = "rgb(33, 37, 41)";
@@ -202,19 +207,13 @@ export function highlightChange(el: targEl, color: string = "red", context: stri
         }, 500);
       }, 250);
     };
-
     if (context === "both" || context === "border") {
       pulseBColor(el);
-      setTimeout(() => {
-        pulseBColor(el);
-      }, 1600);
+      double && setTimeout(() => pulseBColor(el), 1600);
     }
     if (context === "both" || context === "font") {
-      // if (el )
       pulseFColor(el);
-      setTimeout(() => {
-        pulseFColor(el);
-      }, 1600);
+      double && setTimeout(() => pulseFColor(el), 1600);
     }
   } else multipleElementsNotFound(extLine(new Error()), "arguments for highlightChange()", el, color);
 }
