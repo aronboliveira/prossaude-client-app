@@ -12,7 +12,7 @@ import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
 import GenericErrorComponent from "../error/GenericErrorComponent";
 import ProfRow from "../panelForms/profs/ProfRow";
 import Spinner from "../icons/Spinner";
-import { nullishDlg, nlHtEl, nlTab, nlTabSect } from "@/lib/global/declarations/types";
+import { nlDlg, nlHtEl, nlTab, nlTabSect } from "@/lib/global/declarations/types";
 import { AvProfListDlgProps, ProfInfo } from "@/lib/global/declarations/interfacesCons";
 import {
   addListenerAlocation,
@@ -25,7 +25,7 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
   const userClass = useContext(PanelCtx).userClass,
     internalProfs: ProfInfo[] = useMemo(() => [], []),
     externalProfs: ProfInfo[] = useMemo(() => [], []),
-    dialogRef = useRef<nullishDlg>(null),
+    dialogRef = useRef<nlDlg>(null),
     tabProfIntRef = useRef<nlTab>(null),
     tabProfExtRef = useRef<nlTab>(null),
     tbodyIntRef = useRef<nlTabSect>(null),

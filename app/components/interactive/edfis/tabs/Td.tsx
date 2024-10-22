@@ -12,7 +12,6 @@ export default function Td({ nRow, nCol, ctx, lab }: TdProps): JSX.Element {
     <td
       className={`tabCelProgCons tabCel${ctx} tabCelRow${ctx}${nRow}`}
       id={`tabCelRow${ctx}${nRow}_${nCol}`}
-      itemProp={`${lab.toLowerCase()}Num`}
       data-row={nRow}
       data-col={nCol}>
       {ctx === "IndPerc" ? (
@@ -26,7 +25,9 @@ export default function Td({ nRow, nCol, ctx, lab }: TdProps): JSX.Element {
             data-row={nRow}
             data-col={nCol}>
             <TabInpProg nRow={nRow} nCol={nCol} ctx={ctx} lab={lab} />
-            <p className={`${sEn.msrProgCons} ${sEn.indMsr}`}>mm</p>
+            <p className={`${sEn.msrProgCons} ${sEn.indMsr}`}>
+              {lab === "MLG" || lab === "PGC" ? "%" : lab === "TMB" || lab === "GET" ? "kcal" : "—"}
+            </p>
           </label>
           <TabBtnInd nRow={nRow} nCol={nCol} lab={lab} />
           <LockTabInd addGroup={["lockTabInd"]} ctx={lab} />
@@ -42,7 +43,7 @@ export default function Td({ nRow, nCol, ctx, lab }: TdProps): JSX.Element {
                 data-row={nRow}
                 data-col={nCol}>
                 <TabInpProg nRow={nRow} nCol={nCol} ctx={ctx} lab={lab} />
-                <p className={`${sEn.msrProgCons}`}>mm</p>
+                <p className={`${sEn.msrProgCons}`}>{/peso|weight/gi.test(lab) ? "kg" : "cm"}</p>
               </label>
             );
           else if (ctx === "DCut") {

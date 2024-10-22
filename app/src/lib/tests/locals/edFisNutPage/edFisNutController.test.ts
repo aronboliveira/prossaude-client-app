@@ -20,7 +20,7 @@ jest.mock(
     parseNotNaN: jest.Mock<any, any, any>;
   } => ({
     parseNotNaN: jest.fn() as jest.Mock,
-  })
+  }),
 ) as typeof jest;
 jest.mock(
   "../../../global/handlers/gHandlers",
@@ -28,7 +28,7 @@ jest.mock(
     updateSimpleProperty: jest.Mock<any, any, any>;
   } => ({
     updateSimpleProperty: jest.fn() as jest.Mock,
-  })
+  }),
 ) as typeof jest;
 jest.mock(
   "../../../locals/edFisNutPage/edFisNutHandler",
@@ -36,7 +36,7 @@ jest.mock(
     switchRowComorb: jest.Mock<any, any, any>;
   } => ({
     switchRowComorb: jest.fn() as jest.Mock,
-  })
+  }),
 ) as typeof jest;
 jest.mock(
   "../../../locals/edFisNutPage/edFisNutModel",
@@ -44,7 +44,7 @@ jest.mock(
     checkInnerColGroups: jest.Mock<any, any, any>;
   } => ({
     checkInnerColGroups: jest.fn() as jest.Mock,
-  })
+  }),
 ) as typeof jest;
 describe("formatValue", (): void => {
   let targetInput: HTMLInputElement;
@@ -165,20 +165,20 @@ describe("addListenerTrioReadNumCons", (): void => {
     expect(addListenerTrioReadNumCons(consTablesFs, 3, 3)).toBe<HTMLInputElement>(trioReadNumCons) as void;
     expect(trioReadNumCons.addEventListener).toHaveBeenCalledWith<Parameters<typeof trioReadNumCons.addEventListener>>(
       "input",
-      expect.any(Function)
+      expect.any(Function),
     );
   }) as void;
   it("should call inputNotFound when trioReadNumCons is not found or invalid", (): void => {
     document.getElementById = jest.fn(() => null);
     addListenerTrioReadNumCons(consTablesFs, 3, 3);
     expect(
-      jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "inputNotFound")
+      jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "inputNotFound"),
     ).toHaveBeenCalled() as void;
   }) as void;
   it("should call multipleElementsNotFound when invalid arguments are provided", (): void => {
     addListenerTrioReadNumCons(null as any, NaN, NaN);
     expect(
-      jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "multipleElementsNotFound")
+      jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "multipleElementsNotFound"),
     ).toHaveBeenCalled() as void;
   }) as void;
 }) as void;
@@ -198,19 +198,19 @@ describe("callbackTrioReadNumCons", (): void => {
     document.body.appendChild(numConsTextHeadCel);
     callbackTrioReadNumCons(consTablesFs, trioReadNumCons, 3, 1);
     expect(
-      jest.spyOn<any, EdHandler>(require("../../../locals/edFisNutPage/edFisNutHandler"), "switchNumConsTitles")
+      jest.spyOn<any, EdHandler>(require("../../../locals/edFisNutPage/edFisNutHandler"), "switchNumConsTitles"),
     ).toHaveBeenCalled() as void;
   }) as void;
   it("should call elementNotPopulated when numConsTextHeadCels array length is invalid", (): void => {
     callbackTrioReadNumCons(consTablesFs, trioReadNumCons, 3, 2);
     expect(
-      jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "elementNotPopulated")
+      jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "elementNotPopulated"),
     ).toHaveBeenCalled() as void;
   }) as void;
   it("should call multipleElementsNotFound when invalid arguments are passed", (): void => {
     callbackTrioReadNumCons(null as any, null as any, NaN, NaN);
     expect(
-      jest.spyOn<any, ErrorHandler>(require("../../global/handlers/errorHandler"), "multipleElementsNotFound")
+      jest.spyOn<any, ErrorHandler>(require("../../global/handlers/errorHandler"), "multipleElementsNotFound"),
     ).toHaveBeenCalled() as void;
   }) as void;
 }) as void;
@@ -225,13 +225,13 @@ describe("callbackAutoFillBtn", (): void => {
     expect(
       jest
         .spyOn<any, EdHandler>(require("../../../locals/edFisNutPage/edFisNutHandler"), "switchAutoFill")
-        .mockReturnValue(true)
+        .mockReturnValue(true),
     ).toHaveBeenCalledWith<[HTMLButtonElement, boolean]>(autoFillBtn, false) as void;
   }) as void;
   it("should call elementNotFound when the autoFillBtn is invalid", (): void => {
     callbackAutoFillBtn(null as any);
     expect(
-      jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "elementNotFound")
+      jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "elementNotFound"),
     ).toHaveBeenCalled() as void;
   }) as void;
 }) as void;
@@ -251,13 +251,13 @@ describe("addListenerProtocolo", (): void => {
     expect(
       jest
         .spyOn<any, EdModeler>(require("../../../locals/edFisNutPage/edFisNutModel"), "changeTabDCutLayout")
-        .mockReturnValue("pollock7")
+        .mockReturnValue("pollock7"),
     ).toHaveBeenCalledWith<[HTMLSelectElement, HTMLElement, HTMLElement]>(protocolo, tabDC, textBodytype) as void;
   }) as void;
   it("should call multipleElementsNotFound when invalid arguments are passed", (): void => {
     addListenerProtocolo(null as any, null as any, null as any);
     expect(
-      jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "multipleElementsNotFound")
+      jest.spyOn<any, ErrorHandler>(require("../../../global/handlers/errorHandler"), "multipleElementsNotFound"),
     ).toHaveBeenCalled() as void;
   }) as void;
 }) as void;

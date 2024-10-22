@@ -6,14 +6,17 @@ import { equalizeParagraphs } from "@/lib/locals/basePage/baseStylescript";
 import { expandContent } from "@/lib/global/gStyleScript";
 import { checkContext, parseNotNaN } from "@/lib/global/gModel";
 import { targEl } from "@/lib/global/declarations/types";
-import { useEffect, useContext } from "react";
+import { useEffect, useContext, useRef } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import EnhancedUserProfilePanel from "../../user/EnhancedUserProfilePanel";
+import { toast } from "react-hot-toast";
+import sMc from "@/styles/locals/modules/mainContainer.module.scss";
 let baseRootUser: targEl;
 export default function MainContainer(): JSX.Element {
   const ctx = useContext(RootCtx),
-    router = useRouter();
+    router = useRouter(),
+    toasted = useRef<boolean>(false);
   //TODO REMOVER APÓS TESTE
   checkContext(ctx, "RootCtx", MainContainer);
   useEffect(() => {
@@ -170,157 +173,211 @@ export default function MainContainer(): JSX.Element {
     addEventListener("resize", handleBgResize);
     return (): void => removeEventListener("resize", handleBgResize);
   }, [ctx.roots, router]);
+  useEffect(() => {
+    if (!toasted.current) toast("Navegue pelas áreas de trabalho através dos cards!", { icon: "🚢🧭" });
+    setTimeout(() => toast.dismiss(), 10000);
+    toasted.current = true;
+  }, [toasted]);
   return (
-    <main className='main-container gridAlItCt widFull gridAlItBs750Q gridAuto750Q rGap4v750Q'>
-      <section id='cardsSect' className='grid4col grid4r750Q gridJICt rGap2v750Q pd-t4v750Q fade-in-early-element'>
-        <div
-          onMouseEnter={() => router.prefetch("/ag")}
-          className='card card23v htMinMaxC751Qmin brd-rd2r wid90p750Q htMaxC460Q fd1el'
-          style={{ maxWidth: "12rem" }}>
-          <button className='card-hborder transparent-el fade-in-early-element' id='agAnchoredBtn'>
-            <Link
-              className='card-header anchoredBtn noInvert'
-              id='ag_but'
-              target='_self'
-              href='/ag'
-              rel='nofollow'
-              onClick={() => router.push("/ag")}>
-              <img
-                decoding='async'
-                loading='lazy'
-                className='card-img-top'
-                src='../img/icon-psy.png'
-                alt='imagem-card-geral'
-              />
-            </Link>
-          </button>
-          <div className='card-body txAlCt pdT3v flexNoWC rGap2v750Q rGap0-5v fd2el'>
-            <Link
-              className='card-title bolded btn btn-grey btn-rounded anchoredBtn noInvert'
-              id='ag_but_sec'
-              target='_self'
-              href='/ag'
-              rel='nofollow'
-              onClick={() => router.push("/ag")}>
-              Geral & Saúde Mental
-            </Link>
-            <small className='mg-1bv460Q fd3el formDesc'>
-              Acesse aqui o formulário para Anamnese Geral e Saúde Mental
-            </small>
+    // <main className='main-container gridAlItCt widFull gridAlItBs750Q gridAuto750Q rGap4v750Q'>
+    //   <section id='cardsSect' className='grid4col grid4r750Q gridJICt rGap2v750Q pd-t4v750Q fade-in-early-element'>
+    //     <div
+    //       onMouseEnter={() => router.prefetch("/ag")}
+    //       className='card card23v htMinMaxC751Qmin brd-rd2r wid90p750Q htMaxC460Q fd1el'
+    //       style={{ maxWidth: "12rem" }}>
+    //       <button className='card-hborder transparent-el fade-in-early-element' id='agAnchoredBtn'>
+    //         <Link
+    //           className='card-header anchoredBtn noInvert'
+    //           id='ag_but'
+    //           target='_self'
+    //           href='/ag'
+    //           rel='nofollow'
+    //           onClick={() => router.push("/ag")}>
+    //           <img
+    //             decoding='async'
+    //             loading='lazy'
+    //             className='card-img-top'
+    //             src='../img/icon-psy.png'
+    //             alt='imagem-card-geral'
+    //           />
+    //         </Link>
+    //       </button>
+    //       <div className='card-body txAlCt pdT3v flexNoWC rGap2v750Q rGap0-5v fd2el'>
+    //         <Link
+    //           className='card-title bolded btn btn-grey btn-rounded anchoredBtn noInvert'
+    //           id='ag_but_sec'
+    //           target='_self'
+    //           href='/ag'
+    //           rel='nofollow'
+    //           onClick={() => router.push("/ag")}>
+    //           Geral & Saúde Mental
+    //         </Link>
+    //         <small className='mg-1bv460Q fd3el formDesc'>
+    //           Acesse aqui o formulário para Anamnese Geral e Saúde Mental
+    //         </small>
+    //       </div>
+    //     </div>
+    //     <div
+    //       className='card card23v htMinMaxC751Qmin brd-rd2r wid90p750Q htMaxC460Q fd2el'
+    //       onMouseEnter={() => router.prefetch("/edfis")}>
+    //       <button className='card-hborder transparent-el' id='efAnchoredBtn'>
+    //         <Link
+    //           className='card-header anchoredBtn noInvert'
+    //           id='ef_but'
+    //           target='_self'
+    //           href='/edfis'
+    //           rel='nofollow'
+    //           onClick={() => router.push("/edfis")}>
+    //           <img
+    //             decoding='async'
+    //             loading='lazy'
+    //             className='card-img-top'
+    //             src='../img/PROS_edfis_icon.webp'
+    //             alt='imagem-card-edFis'
+    //           />
+    //         </Link>
+    //       </button>
+    //       <div className='card-body txAlCt pdT3v flexNoWC rGap2v750Q rGap0-5v fd3el'>
+    //         <Link
+    //           className='card-title bolded btn btn-orange btn-rounded anchoredBtn noInvert'
+    //           id='ef_but_sec'
+    //           target='_self'
+    //           href='/edfis'
+    //           rel='nofollow'
+    //           onClick={() => router.push("/edfis")}>
+    //           Educação Física
+    //         </Link>
+    //         <p>
+    //           <small className='noInvert fd4el'>Acesse aqui o formulário para Educação Física</small>
+    //         </p>
+    //       </div>
+    //     </div>
+    //     <div
+    //       className='card card23v htMinMaxC751Qmin brd-rd2r wid90p750Q htMaxC460Q fd4el'
+    //       onMouseEnter={() => router.prefetch("/edfis")}>
+    //       <button className='card-hborder transparent-el' id='nutAnchoredBtn'>
+    //         <Link
+    //           className='card-header anchoredBtn noInvert'
+    //           id='nut_but'
+    //           target='_self'
+    //           href='/edfis'
+    //           rel='nofollow'
+    //           onClick={() => router.push("/edfis")}>
+    //           <img
+    //             decoding='async'
+    //             loading='lazy'
+    //             className='card-img-top'
+    //             src='../img/PROS_nut_icon.webp'
+    //             alt='imagem-card-nut'
+    //           />
+    //         </Link>
+    //       </button>
+    //       <div className='card-body txAlCt pdT3v flexNoWC rGap2v750Q rGap0-5v fd5el'>
+    //         <Link
+    //           className='card-title bolded btn btn-green btn-rounded anchoredBtn'
+    //           target='_self'
+    //           id='nut_but_sec'
+    //           href='/edfis'
+    //           rel='nofollow'
+    //           onClick={() => router.push("/edfis")}>
+    //           Nutrição
+    //         </Link>
+    //         <p>
+    //           <small className='noInvert fd6el'>Acesse aqui o formulário para Nutrição</small>
+    //         </p>
+    //       </div>
+    //     </div>
+    //     <div
+    //       className='card card23v htMinMaxC751Qmin brd-rd2r wid90p750Q htMaxC460Q fd5el'
+    //       onMouseEnter={() => router.prefetch("/od")}>
+    //       <button className='card-hborder transparent-el' id='odAnchoredBtn'>
+    //         <Link
+    //           className='card-header anchoredBtn noInvert'
+    //           id='od_but'
+    //           target='_self'
+    //           href='/od'
+    //           rel='nofollow'
+    //           onClick={() => router.push("/od")}>
+    //           <img
+    //             decoding='async'
+    //             loading='lazy'
+    //             className='card-img-top'
+    //             src='../img/pros-od-icon.webp'
+    //             alt='imagem-card-odonto'
+    //           />
+    //         </Link>
+    //       </button>
+    //       <div className='card-body txAlCt pdT3v flexNoWC rGap2v750Q rGap0-5v fd6el'>
+    //         <Link
+    //           className='card-title bolded btn btn-blue btn-rounded anchoredBtn'
+    //           id='od_but_sec'
+    //           target='_self'
+    //           href='/od'
+    //           rel='nofollow'
+    //           onClick={() => router.push("/od")}>
+    //           Odontologia
+    //         </Link>
+    //         <small className='mg-1bv460Q fade-in-late-element'>Acesse aqui o formulário para Odontologia</small>
+    //       </div>
+    //     </div>
+    //   </section>
+    //   <section id='panelSect' className='gridJICt pd-b4v750Q fd2el' onMouseEnter={() => router.prefetch("/panel")}>
+    //     <button type='button' id='panelBtn' className='btn btn-primary btn-rounded wid80p750Q'>
+    //       <Link
+    //         href='/panel'
+    //         id='panelAnchor'
+    //         target='_self'
+    //         rel='nofollow'
+    //         style={{ color: "#ffff", fontWeight: "600" }}>
+    //         Painel de Trabalho
+    //       </Link>
+    //     </button>
+    //   </section>
+    // </main>
+    <main className={sMc.mainContainer} id='main-container'>
+      <section id='cardsSect' className={sMc.cardsSect}>
+        {["/ag", "/edfis", "/nut", "/od"].map((href, index) => (
+          <div
+            key={href}
+            id={href === "/ag" ? "agCard" : href === "/edfis" ? "edfisCard" : href === "/nut" ? "nutCard" : "odCard"}
+            className={sMc.card}
+            onMouseEnter={() => router.prefetch(href)}>
+            <div className={sMc.cardInner}>
+              <div className={sMc.cardFront}>
+                <Link
+                  href={/nut/gi.test(href) ? "/edfis" : href}
+                  className={sMc.cardLink}
+                  id={
+                    href === "/ag" ? "ag_but" : href === "/edfis" ? "ef_but" : href === "/nut" ? "nut_but" : "od_but"
+                  }>
+                  <img
+                    decoding='async'
+                    loading='lazy'
+                    className={sMc.cardImg}
+                    src={`../img/${/ag/g.test(href) ? "icon-psy" : `PROS_${href.replace("/", "")}_icon`}.webp`}
+                    alt={`imagem-card-${index}`}
+                  />
+                </Link>
+              </div>
+              <div className={sMc.cardBack}>
+                <small className={sMc.cardDescription}>
+                  Acesse aqui o formulário para{" "}
+                  {href === "/ag"
+                    ? "Anamnese Geral e Saúde Mental"
+                    : href === "/edfis"
+                    ? "Educação Física"
+                    : href === "/nut"
+                    ? "Nutrição"
+                    : "Odontologia"}
+                </small>
+              </div>
+            </div>
           </div>
-        </div>
-        <div
-          className='card card23v htMinMaxC751Qmin brd-rd2r wid90p750Q htMaxC460Q fd2el'
-          onMouseEnter={() => router.prefetch("/edfis")}>
-          <button className='card-hborder transparent-el' id='efAnchoredBtn'>
-            <Link
-              className='card-header anchoredBtn noInvert'
-              id='ef_but'
-              target='_self'
-              href='/edfis'
-              rel='nofollow'
-              onClick={() => router.push("/edfis")}>
-              <img
-                decoding='async'
-                loading='lazy'
-                className='card-img-top'
-                src='../img/PROS_edfis_icon.png'
-                alt='imagem-card-edFis'
-              />
-            </Link>
-          </button>
-          <div className='card-body txAlCt pdT3v flexNoWC rGap2v750Q rGap0-5v fd3el'>
-            <Link
-              className='card-title bolded btn btn-orange btn-rounded anchoredBtn noInvert'
-              id='ef_but_sec'
-              target='_self'
-              href='/edfis'
-              rel='nofollow'
-              onClick={() => router.push("/edfis")}>
-              Educação Física
-            </Link>
-            <p>
-              <small className='noInvert fd4el'>Acesse aqui o formulário para Educação Física</small>
-            </p>
-          </div>
-        </div>
-        <div
-          className='card card23v htMinMaxC751Qmin brd-rd2r wid90p750Q htMaxC460Q fd4el'
-          onMouseEnter={() => router.prefetch("/edfis")}>
-          <button className='card-hborder transparent-el' id='nutAnchoredBtn'>
-            <Link
-              className='card-header anchoredBtn noInvert'
-              id='nut_but'
-              target='_self'
-              href='/edfis'
-              rel='nofollow'
-              onClick={() => router.push("/edfis")}>
-              <img
-                decoding='async'
-                loading='lazy'
-                className='card-img-top'
-                src='../img/PROS_nut_icon.png'
-                alt='imagem-card-nut'
-              />
-            </Link>
-          </button>
-          <div className='card-body txAlCt pdT3v flexNoWC rGap2v750Q rGap0-5v fd5el'>
-            <Link
-              className='card-title bolded btn btn-green btn-rounded anchoredBtn'
-              target='_self'
-              id='nut_but_sec'
-              href='/edfis'
-              rel='nofollow'
-              onClick={() => router.push("/edfis")}>
-              Nutrição
-            </Link>
-            <p>
-              <small className='noInvert fd6el'>Acesse aqui o formulário para Nutrição</small>
-            </p>
-          </div>
-        </div>
-        <div
-          className='card card23v htMinMaxC751Qmin brd-rd2r wid90p750Q htMaxC460Q fd5el'
-          onMouseEnter={() => router.prefetch("/od")}>
-          <button className='card-hborder transparent-el' id='odAnchoredBtn'>
-            <Link
-              className='card-header anchoredBtn noInvert'
-              id='od_but'
-              target='_self'
-              href='/od'
-              rel='nofollow'
-              onClick={() => router.push("/od")}>
-              <img
-                decoding='async'
-                loading='lazy'
-                className='card-img-top'
-                src='../img/pros-od-icon.png'
-                alt='imagem-card-odonto'
-              />
-            </Link>
-          </button>
-          <div className='card-body txAlCt pdT3v flexNoWC rGap2v750Q rGap0-5v fd6el'>
-            <Link
-              className='card-title bolded btn btn-blue btn-rounded anchoredBtn'
-              id='od_but_sec'
-              target='_self'
-              href='/od'
-              rel='nofollow'
-              onClick={() => router.push("/od")}>
-              Odontologia
-            </Link>
-            <small className='mg-1bv460Q fade-in-late-element'>Acesse aqui o formulário para Odontologia</small>
-          </div>
-        </div>
+        ))}
       </section>
-      <section id='panelSect' className='gridJICt pd-b4v750Q fd2el' onMouseEnter={() => router.prefetch("/panel")}>
-        <button type='button' id='panelBtn' className='btn btn-primary btn-rounded wid80p750Q'>
-          <Link
-            href='/panel'
-            id='panelAnchor'
-            target='_self'
-            rel='nofollow'
-            style={{ color: "#ffff", fontWeight: "600" }}>
+      <section id='panelSect' className={sMc.panelSect} onMouseEnter={() => router.prefetch("/panel")}>
+        <button type='button' id='panelBtn' className={sMc.panelBtn}>
+          <Link href='/panel' id='panelAnchor' rel='nofollow' style={{ color: "#ffff", fontWeight: "600" }}>
             Painel de Trabalho
           </Link>
         </button>

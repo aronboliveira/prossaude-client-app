@@ -27,7 +27,7 @@ import {
   inputNotFound,
   multipleElementsNotFound,
 } from "@/lib/global/handlers/errorHandler";
-import { nlBtn, nlDiv, nullishDlg, nlFm, nlInp } from "@/lib/global/declarations/types";
+import { nlBtn, nlDiv, nlDlg, nlFm, nlInp } from "@/lib/global/declarations/types";
 import {
   addEmailExtension,
   assignFormAttrs,
@@ -51,7 +51,7 @@ let accFormData = 0;
 export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
   //display de campos para identificadores de estudante
   const userClass = useContext(PanelCtx).userClass,
-    dlgRef = useRef<nullishDlg>(null),
+    dlgRef = useRef<nlDlg>(null),
     pacBtnRef = useRef<nlBtn>(null);
   //TODO REMOVER APÓS TESTE
   const ctx = useContext(PanelCtx);

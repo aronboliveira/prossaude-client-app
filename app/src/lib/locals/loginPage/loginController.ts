@@ -2,6 +2,7 @@ import { checkPasswordPattern } from "../../global/gModel";
 import { targEl } from "../../global/declarations/types";
 import { fillCustomValidityWarn, highlightChange } from "../../global/gStyleScript";
 import { extLine, elementNotFound, inputNotFound } from "../../global/handlers/errorHandler";
+import { toast } from "react-hot-toast";
 export function addListenerShowPw(): targEl {
   const spanShowPw = document.getElementById("spanShowPw");
 
@@ -67,7 +68,7 @@ export function callbackSubmitBtn(): boolean {
       if (tryDetails.attempts > 4) {
         const submitBtn = document.getElementById("submitBtn") || document.querySelector('a[href*="/base"]');
         if (submitBtn instanceof HTMLButtonElement || submitBtn instanceof HTMLInputElement) submitBtn.disabled = true;
-        alert("Tentativas excedidas para o intervalo de tempo. Aguarde para tentat novamente.");
+        toast("Tentativas excedidas para o intervalo de tempo. Aguarde para tentat novamente.", { icon: "⏳" });
         setTimeout(() => {
           const submitBtn = document.getElementById("submitBtn") || document.querySelector('a[href*="/base"]');
           if (submitBtn instanceof HTMLButtonElement || submitBtn instanceof HTMLInputElement)

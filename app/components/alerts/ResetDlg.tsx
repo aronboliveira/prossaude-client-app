@@ -1,7 +1,7 @@
 import { ErrorBoundary } from "react-error-boundary";
 import { ResetDlgProps } from "@/lib/global/declarations/interfacesCons";
 import { createRoot } from "react-dom/client";
-import { nullishDlg } from "@/lib/global/declarations/types";
+import { nlDlg } from "@/lib/global/declarations/types";
 import { panelRoots } from "@/vars";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useEffect, useRef } from "react";
@@ -17,7 +17,7 @@ export default function ResetDlg({
     panelRoots.mainRoot = createRoot(document.getElementById("formRoot")!);
     root = panelRoots.mainRoot;
   }
-  const ResetDlgRef = useRef<nullishDlg>(null),
+  const ResetDlgRef = useRef<nlDlg>(null),
     resetForm = (): void => {
       document.querySelector("form")!.reset();
       root?.render(<MainFormPanel />);

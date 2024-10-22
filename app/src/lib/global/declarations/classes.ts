@@ -11,6 +11,8 @@ import {
   evalPseudoNum,
   evalActivityLvl,
 } from "@/lib/locals/edFisNutPage/edFisNutModel";
+import { toast } from "react-hot-toast";
+import promptToast from "../../../../components/interactive/def/PromptToast";
 export interface UndefinedPerson {
   gen: string;
   age: number;
@@ -95,7 +97,7 @@ export class Person {
         )
       )
         throw new Error(`Failed to valid arguments for calcIMC`);
-      let IMC = personInfo.weight / personInfo.height ** 2;
+      let IMC = personInfo.weight / (personInfo.height / 100) ** 2;
       if (!Number.isFinite(IMC) || IMC < 0) IMC = 0;
       if (IMC >= 0) {
         if (IMC < 18.5) return { l: "abaixo", v: IMC };
@@ -117,7 +119,6 @@ export class Person {
   public calcPGC(person: Person): { pgc: number; mlg: number } {
     try {
       person.sumDCut = Math.abs(person.sumDCut);
-      console.log("Person dcut is: " + person.sumDCut);
       if (!("sumDCut" in person && typeof person.sumDCut === "number" && person.sumDCut >= 0))
         throw new Error(`Failed to validate person props:
         sumDCut in props: ${"sumDCut" in person}
@@ -165,6 +166,12 @@ export class Person {
         atv = person.atvLvl,
         w = person.weight;
       if (atv === "muitoIntenso" && (fa === "mlg" || fa === "peso")) {
+        console.groupCollapsed("Valores em calcTMB");
+        console.log("Factor for Atleta " + fa);
+        console.log("Activity Level " + atv);
+        console.log("Weight " + w);
+        console.log("MLG " + tabProps.MLG);
+        console.groupEnd();
         if (fa === "mlg") {
           const MLG = tabProps.MLG;
           if (MLG && MLG >= 0) return { l: "tinsley", v: 25.9 * MLG + 284 };
@@ -182,6 +189,13 @@ export class Person {
           a = person.age,
           g = person.gen,
           h = person.height;
+        console.groupCollapsed("Valores em calcTMB");
+        console.log("Age " + a);
+        console.log("Gender " + g);
+        console.log("Height " + h);
+        console.log("Activity Level " + atv);
+        console.log("Weight " + w);
+        console.groupEnd();
         if (
           !(
             "weight" in person &&
@@ -189,9 +203,9 @@ export class Person {
             "height" in person &&
             h >= 0 &&
             "age" in person &&
-            person.age >= 0 &&
+            a >= 0 &&
             "gen" in person &&
-            evalBodyType(person.gen)
+            evalBodyType(g)
           )
         )
           throw new Error(
@@ -199,45 +213,62 @@ export class Person {
               w ?? "void"
             },\nHeight as ${h ?? "void"},\nGender: ${g || "falsish"}`,
           );
-        if (IMC < 25.0 && IMC >= 0) {
-          if (g === "masculino") return { l: "harrisBenedict", v: 66 + (13.8 * w + 5.0 * h - 6.8 * a) };
-          else if (g === "feminino") return { l: "harrisBenedict", v: 655 + (9.6 * w + 1.9 * h - 4.7 * a) };
-          else if (g === "neutro") return { l: "harrisBenedict", v: 360.5 + (11.7 * w + 3.45 * h - 5.75 * a) };
-          else
+        switch (true) {
+          case IMC < 25.0 && IMC >= 0:
+            switch (g) {
+              case "masculino":
+                return { l: "harrisBenedict", v: 66 + (13.8 * w + 5.0 * h - 6.8 * a) };
+              case "feminino":
+                return { l: "harrisBenedict", v: 655 + (9.6 * w + 1.9 * h - 4.7 * a) };
+              case "neutro":
+                return { l: "harrisBenedict", v: 360.5 + (11.7 * w + 3.45 * h - 5.75 * a) };
+              default:
+                throw new Error(
+                  `Error validating instance of Person. Obtained instance: ${
+                    Object.prototype.toString.call(person).slice(8, -1) ?? "null"
+                  }`,
+                );
+            }
+          case IMC >= 25.0:
+            switch (g) {
+              case "masculino":
+                return { l: "mifflinStJeor", v: 10 * w + 6.25 * h - 5.0 * a + 5 };
+              case "feminino":
+                return { l: "mifflinStJeor", v: 10 * w + 6.25 * h - 5.0 * a - 161 };
+              case "neutro":
+                return { l: "mifflinStJeor", v: 10 * w + 6.25 * h - 5.0 * a - 78 };
+              default:
+                throw new Error(
+                  `Error validating instance of Person. Obtained instance: ${
+                    Object.prototype.toString.call(person).slice(8, -1) ?? "null"
+                  }`,
+                );
+            }
+          default:
             throw new Error(
-              `Error validating instance of Person. Obtained instance: ${
-                Object.prototype.toString.call(person).slice(8, -1) ?? "null"
-              }`,
+              `Error validating IMC. IMC obtained: ${IMC ?? 0}; Valor deve ser numérico, positivo e float`,
             );
-        } else if (IMC >= 25.0) {
-          if (g === "masculino") return { l: "mifflinStJeor", v: 10 * w + 6.25 * h - 5.0 * a + 5 };
-          else if (g === "feminino") return { l: "mifflinStJeor", v: 10 * w + 6.25 * h - 5.0 * a - 161 };
-          else if (g === "neutro") return { l: "mifflinStJeor", v: 10 * w + 6.25 * h - 5.0 * a - 78 };
-          else
-            throw new Error(
-              `Error validating instance of Person. Obtained instance: ${Object.prototype.toString
-                .call(person)
-                .slice(8, -1)}`,
-            );
-        } else
-          throw new Error(`Error validating IMC. IMC obtained: ${IMC ?? 0}; Valor deve ser númerico, positivo e float`);
+        }
       } else throw new Error(`Failed to validate Physical Activity level of person:\nObtained value: ${fa}`);
     } catch (e) {
       limitedError(`Error executing calcTMB:\n${(e as Error).message}`, "calcTMB");
-      return { l: "harrisBenedict", v: tabProps.TMB ?? 0 };
+      return {
+        l: (() =>
+          tabProps.fct instanceof HTMLSelectElement || tabProps.fct instanceof HTMLInputElement
+            ? (tabProps.fct.value as TMBFormula)
+            : "harrisBenedict")(),
+        v: tabProps.TMB ?? 0,
+      };
     }
   }
   public calcGET(): number {
-    const TMB = tabProps.TMB;
     if (typeof tabProps.factorAtvLvl === "string")
       tabProps.factorAtvLvl = parseNotNaN(tabProps.factorAtvLvl) as NafTypeValue;
-    const factorAtvLvl = tabProps.factorAtvLvl ?? 0;
-    if (TMB && factorAtvLvl) return TMB * (factorAtvLvl as number);
-    else
-      console.error(`Error validating arguments.
-      TMB obtained: ${TMB ?? 0};
-      factorAtvLvl obtained: ${factorAtvLvl ?? 0}`);
-    return 0;
+    console.groupCollapsed("Valores em calcGET");
+    console.log("TMB " + tabProps.TMB ?? 0);
+    console.log("Factor " + tabProps.factorAtvLvl ?? 0);
+    console.groupEnd();
+    return (tabProps.TMB ?? 0) * ((tabProps.factorAtvLvl ?? 0) as number);
   }
   public dispatchGen(g: string): void {
     person.gen = evalBodyType(g) ? g : person.gen || "masculino";
@@ -502,24 +533,28 @@ export class ExportHandler {
     }
     this.#setExports(this.#exports + 1);
     if (this.exports > 10 || suspicious) {
-      suspicious && alert(message);
+      suspicious && toast.error(message);
       this.#setTimeoutForExport(ev, idf);
       return;
     }
-    const pw = navigator.language.startsWith("pt-")
-      ? prompt("Por favor insira a senha:")
-      : prompt("Please input the password:");
-    if (!pw || btoa(pw) !== "cGFzc3dvcmQ=") {
-      if (navigator.language.startsWith("pt-")) {
-        alert("Senha incorreta");
-        alert("Esta versão de teste de UX usa a seguinte senha: password");
-      } else {
-        alert("Wrong password");
-        alert("This UX testing version uses the following password: password");
+    promptToast(
+      navigator.language.startsWith("pt-") ? "Por favor insira a senha:" : "Please input the password:",
+      "Digite aqui a senha",
+    ).then(res => {
+      const pw = res;
+      if (!pw || btoa(pw) !== "cGFzc3dvcmQ=") {
+        if (navigator.language.startsWith("pt-")) {
+          toast.error("Senha incorreta");
+          toast("Esta versão de teste de UX usa a seguinte senha: password", { icon: "🗝" });
+        } else {
+          toast.error("Wrong password");
+          toast("This UX testing version uses the following password: password", { icon: "🗝" });
+        }
+        return;
       }
-      return;
-    }
-    this.#processExportData(context, scope, namer);
+      navigator.language.startsWith("pt-") ? toast.success("Senha validada!") : toast.success("Password validated!");
+      this.#processExportData(context, scope, namer);
+    });
   }
   #getTarget(targ: nlDsb, idf: string): nlDsb {
     const el = targ || document.getElementById(idf) || document.getElementsByName(idf)[0];
@@ -537,8 +572,8 @@ export class ExportHandler {
       clearInterval(interv);
     }, this.timer);
     navigator.language.startsWith("pt-")
-      ? alert(`Você está em timeout para exportações. Por favor aguarde ${this.currTime} ou recarregue a página.`)
-      : alert(`You are in a timeout for exporting. Please wait for ${this.currTime} or reload the page.`);
+      ? toast.error(`Você está em timeout para exportações. Por favor aguarde ${this.currTime} ou recarregue a página.`)
+      : toast.error(`You are in a timeout for exporting. Please wait for ${this.currTime} or reload the page.`);
   }
   #processExportData(
     context: string = "undefined",

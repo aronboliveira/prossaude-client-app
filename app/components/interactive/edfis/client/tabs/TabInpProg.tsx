@@ -121,9 +121,9 @@ export default function TabInpProg({ nRow, nCol, ctx, lab }: TdProps): JSX.Eleme
       className={`form-control tabInpProg tabInpProgIndPerc inpInd inp${pascalLab} inpCol${nCol} sevenCharLongNum ${sEn.tabInpProg}`}
       maxLength={max.toString().length + 4}
       data-max={max.toString().length + 4}
-      min={nCol - 1 === tabProps.numCons ? "0.05" : "0"}
+      min='0'
       max={max}
-      data-minnum={nCol - 1 === tabProps.numCons ? "0.05" : "0"}
+      data-minnum='0'
       data-maxnum={max}
       data-title={`${lab} (Consulta ${nCol - 1})`}
       data-pattern='^[d,.]+$'
@@ -138,7 +138,7 @@ export default function TabInpProg({ nRow, nCol, ctx, lab }: TdProps): JSX.Eleme
           if (ev.currentTarget.required) handleEventReq(ev.currentTarget);
           else
             handleCondtReq(ev.currentTarget, {
-              minNum: 0.05,
+              minNum: 0,
               maxNum: 999999,
               min: 1,
               max: 99,
@@ -172,9 +172,9 @@ export default function TabInpProg({ nRow, nCol, ctx, lab }: TdProps): JSX.Eleme
             id={`tabInpRow${ctx}${nRow}_${nCol}`}
             maxLength={max.toString().length + 4}
             data-max={max.toString().length + 4}
-            min={nCol - 1 === tabProps.numCons ? "0.05" : "0"}
+            min='0'
             max={max}
-            data-minnum={nCol - 1 === tabProps.numCons ? "0.05" : "0"}
+            data-minnum='0'
             data-maxnum={max}
             data-pattern='^[d,.]+$'
             data-title={`Medidas Antropométricas ${fullName} (Consulta ${nCol - 1})`}
@@ -189,7 +189,7 @@ export default function TabInpProg({ nRow, nCol, ctx, lab }: TdProps): JSX.Eleme
                 if (ev.currentTarget.required) handleEventReq(ev.currentTarget);
                 else
                   handleCondtReq(ev.currentTarget, {
-                    minNum: 0.05,
+                    minNum: 0,
                     maxNum: 999999,
                     min: 1,
                     max: 99,
@@ -219,9 +219,9 @@ export default function TabInpProg({ nRow, nCol, ctx, lab }: TdProps): JSX.Eleme
             id={`tabInpRow${ctx}${nRow}_${nCol}`}
             maxLength={max.toString().length + 4}
             data-max={max.toString().length + 4}
-            min={nCol - 1 === tabProps.numCons ? "0.05" : "0"}
+            min='0'
             max={max}
-            data-minnum={nCol - 1 === tabProps.numCons ? "0.05" : "0"}
+            data-minnum='0'
             data-maxnum={max}
             data-pattern='^[d,.]+$'
             data-title={`${ctx === "DCut" ? "Dobras Cutâneas" : "Sinais Vitais"} ${fullName} (Consulta ${nCol - 1})`}
@@ -236,7 +236,7 @@ export default function TabInpProg({ nRow, nCol, ctx, lab }: TdProps): JSX.Eleme
                 if (ev.currentTarget.required) handleEventReq(ev.currentTarget);
                 else
                   handleCondtReq(ev.currentTarget, {
-                    minNum: 0.05,
+                    minNum: 0,
                     maxNum: 999999,
                     min: 1,
                     max: 99,

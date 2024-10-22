@@ -24,6 +24,7 @@ import {
 } from "./errorHandler";
 import { handleSubmit } from "@/lib/global/data-service";
 import { createRoot } from "react-dom/client";
+import { toast } from "react-hot-toast";
 //function for facilitating conversion of types when passing properties to DOM elements
 export function updateSimpleProperty(el: targEl): primitiveType {
   if (el instanceof HTMLInputElement) {
@@ -662,8 +663,8 @@ export function checkForReset(ev: rMouseEvent): void {
       const form = ev.currentTarget.closest("form");
       if (!form) {
         navigator.language.startsWith("pt-")
-          ? alert("Não foi possível localizar o formulário")
-          : alert("Failed to locate the formulary");
+          ? toast.error("Não foi possível localizar o formulário")
+          : toast.error("Failed to locate the formulary");
         return;
       }
       resetForm(form);

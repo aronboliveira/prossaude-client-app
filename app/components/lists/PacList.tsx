@@ -337,18 +337,12 @@ export default function PacList({
           </strong>
         </caption>
         <colgroup>
-          <col data-col={1}></col>
-          <col data-col={2}></col>
-          <col data-col={3}></col>
-          <col data-col={4}></col>
-          <col data-col={5}></col>
-          <col data-col={6}></col>
-          <col data-col={7}></col>
-          <col data-col={8}></col>
-          {userClass === "coordenador" && <col data-col={9}></col>}
-          {userClass === "coordenador" && <col data-col={10}></col>}
-          {userClass === "coordenador" && <col data-col={11}></col>}
-          {shouldShowAlocBtn && <col data-col={12}></col>}
+          {Array.from({ length: 9 }, (_, i) => (
+            <col key={`col__pac__${i}`} data-col={i + 1}></col>
+          ))}
+          {userClass === "coordenador" &&
+            Array.from({ length: 3 }, (_, i) => <col key={`col__pac__${i + 10}`} data-col={i + 10}></col>)}
+          {shouldShowAlocBtn && <col data-col={userClass === "coordnador" ? 12 : 11}></col>}
         </colgroup>
         <thead className='thead-dark'>
           <tr id={`avPacs-rowUnfilled0`} data-row={1}>

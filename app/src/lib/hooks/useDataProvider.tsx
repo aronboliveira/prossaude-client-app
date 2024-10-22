@@ -26,6 +26,6 @@ export default function useDataProvider(
         console.error(`Error executing useDataProvider:\n${(e as Error).message}`);
       }
     }, 500);
-  }, [ready]);
+  }, [ready, mounted, userClass, el]);
   return [mounted, setMounted];
 }

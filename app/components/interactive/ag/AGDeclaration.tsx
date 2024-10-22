@@ -1,70 +1,14 @@
 "use client";
 import { DlgProps } from "@/lib/global/declarations/interfaces";
 import { ErrorBoundary } from "react-error-boundary";
-import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { isClickOutside } from "@/lib/global/gStyleScript";
-import { nullishDlg } from "@/lib/global/declarations/types";
-import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
-import { useEffect, useRef } from "react";
+import { memo } from "react";
 import GenericErrorComponent from "../../error/GenericErrorComponent";
 import st from "@/styles/locals/modules/declarationStyles.module.scss";
 import DefaultDeclaration from "../def/DefaultDeclaration";
-export default function AGDeclaration({ state, dispatch }: DlgProps): JSX.Element {
-  const mainRef = useRef<nullishDlg>(null);
-  //push em history
-  useEffect(() => {
-    if (!/conform=open/gi.test(location.href))
-      history.pushState({}, "", `${location.origin}${location.pathname}${location.search}&conform=open`);
-    setTimeout(() => {
-      history.replaceState(
-        {},
-        "",
-        `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#").replaceAll("/&", "&"),
-      );
-      location.href.match(/conform=open/g)?.forEach((m, i) => {
-        try {
-          if (i === 0) return;
-          location.href.replace(m, "");
-        } catch (e) {
-          console.error(`Error executing iteration ${i} for reading conform in URL:${(e as Error).message}`);
-        }
-      });
-      if (!/\?/g.test(location.href) && /&/g.test(location.href))
-        history.replaceState({}, "", location.href.replace("&", "?"));
-    }, 300);
-    return (): void => {
-      history.replaceState(
-        {},
-        "",
-        `${location.origin}${location.pathname}${location.search}`.replaceAll(/[\?&]conform=open/g, ""),
-      );
-      setTimeout(() => {
-        history.replaceState({}, "", `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#"));
-      }, 300);
-    };
-  }, []);
-  useEffect(() => {
-    const handleKp = (kp: KeyboardEvent): void => {
-      if (kp.key === "ESCAPE") {
-        dispatch(!state);
-        !state && mainRef.current?.close();
-      }
-    };
-    try {
-      if (!(mainRef.current instanceof HTMLElement))
-        throw elementNotFound(
-          mainRef.current,
-          `Main Reference for ${AGDeclaration.prototype.constructor.name}`,
-          extLine(new Error()),
-        );
-      syncAriaStates([mainRef.current, ...mainRef.current.querySelectorAll("*")]);
-      mainRef.current instanceof HTMLDialogElement && mainRef.current.showModal();
-      addEventListener("keypress", handleKp);
-      return (): void => removeEventListener("keypress", handleKp);
-    } catch (e) {
-      console.error(`Error executing useEffect:\n${(e as Error).message}`);
-    }
-  }, [mainRef, dispatch]);
+import useDialog from "@/lib/hooks/useDialog";
+const AGDeclaration = memo(({ state, dispatch }: DlgProps): JSX.Element => {
+  const { mainRef } = useDialog({ state, dispatch, param: "conform" });
   return !state ? (
     <></>
   ) : (
@@ -97,4 +41,5 @@ export default function AGDeclaration({ state, dispatch }: DlgProps): JSX.Elemen
       </dialog>
     </ErrorBoundary>
   );
-}
+});
+export default AGDeclaration;

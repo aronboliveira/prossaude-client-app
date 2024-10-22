@@ -33,6 +33,8 @@ import { styled } from "styled-components";
 import sEn from "@/styles/locals/modules/enStyles.module.scss";
 import { BodyType } from "@/lib/global/declarations/testVars";
 import { applyConstraintsTitle } from "@/lib/global/gModel";
+import { toast } from "react-hot-toast";
+import { timers } from "@/vars";
 const FsProgCons = lazy(() => import("./FsProgCons")),
   TbodyComorb = lazy(() => import("../tabs/TbodyComorb")),
   TbodyAtFisRot = lazy(() => import("./tabs/TbodyAtFisRot")),
@@ -104,6 +106,7 @@ export default function ENForm(): JSX.Element {
     nafr = useRef<nlSel>(null),
     sar = useRef<nlSel>(null),
     txbr = useRef<nlSel>(null),
+    toasted = useRef<boolean>(false),
     [bodyType, setBodyType] = useState<BodyType>("masculino"),
     [mounted] = useMount();
   useDataProvider(f.current);
@@ -131,36 +134,38 @@ export default function ENForm(): JSX.Element {
   //teste de pré-preenchimento
   useEffect(() => {
     if (!mounted) return;
-    const inp2_2 = document.getElementById("tabInpRowMedAnt2_2");
-    if (inp2_2 instanceof HTMLInputElement) inp2_2.value = "70";
-    const inp2_3 = document.getElementById("tabInpRowMedAnt2_3");
-    if (inp2_3 instanceof HTMLInputElement) inp2_3.value = "30";
-    const inp2_4 = document.getElementById("tabInpRowMedAnt2_4");
-    if (inp2_4 instanceof HTMLInputElement) inp2_4.value = "200";
-    const inp3_2 = document.getElementById("tabInpRowMedAnt3_2");
-    if (inp3_2 instanceof HTMLInputElement) inp3_2.value = "2";
-    const inp3_3 = document.getElementById("tabInpRowMedAnt3_3");
-    if (inp3_3 instanceof HTMLInputElement) inp3_3.value = "1";
-    const inp3_4 = document.getElementById("tabInpRowMedAnt3_4");
-    if (inp3_4 instanceof HTMLInputElement) inp3_4.value = "1.8";
-    const inp4_2 = document.getElementById("tabInpRowDCut4_2");
-    if (inp4_2 instanceof HTMLInputElement) inp4_2.value = "18";
-    const inp7_2 = document.getElementById("tabInpRowDCut7_2");
-    if (inp7_2 instanceof HTMLInputElement) inp7_2.value = "18";
-    const inp8_2 = document.getElementById("tabInpRowDCut8_2");
-    if (inp8_2 instanceof HTMLInputElement) inp8_2.value = "18";
-    const inp4_3 = document.getElementById("tabInpRowDCut4_3");
-    if (inp4_3 instanceof HTMLInputElement) inp4_3.value = "10";
-    const inp7_3 = document.getElementById("tabInpRowDCut7_3");
-    if (inp7_3 instanceof HTMLInputElement) inp7_3.value = "10";
-    const inp8_3 = document.getElementById("tabInpRowDCut8_3");
-    if (inp8_3 instanceof HTMLInputElement) inp8_3.value = "10";
-    const inp4_4 = document.getElementById("tabInpRowDCut4_4");
-    if (inp4_4 instanceof HTMLInputElement) inp4_4.value = "40";
-    const inp7_4 = document.getElementById("tabInpRowDCut7_4");
-    if (inp7_4 instanceof HTMLInputElement) inp7_4.value = "40";
-    const inp8_4 = document.getElementById("tabInpRowDCut8_4");
-    if (inp8_4 instanceof HTMLInputElement) inp8_4.value = "40";
+    setTimeout(() => {
+      const inp2_2 = document.getElementById("tabInpRowMedAnt2_2");
+      if (inp2_2 instanceof HTMLInputElement) inp2_2.value = "70";
+      const inp2_3 = document.getElementById("tabInpRowMedAnt2_3");
+      if (inp2_3 instanceof HTMLInputElement) inp2_3.value = "30";
+      const inp2_4 = document.getElementById("tabInpRowMedAnt2_4");
+      if (inp2_4 instanceof HTMLInputElement) inp2_4.value = "200";
+      const inp3_2 = document.getElementById("tabInpRowMedAnt3_2");
+      if (inp3_2 instanceof HTMLInputElement) inp3_2.value = "200";
+      const inp3_3 = document.getElementById("tabInpRowMedAnt3_3");
+      if (inp3_3 instanceof HTMLInputElement) inp3_3.value = "1";
+      const inp3_4 = document.getElementById("tabInpRowMedAnt3_4");
+      if (inp3_4 instanceof HTMLInputElement) inp3_4.value = "1.8";
+      const inp4_2 = document.getElementById("tabInpRowDCut4_2");
+      if (inp4_2 instanceof HTMLInputElement) inp4_2.value = "18";
+      const inp7_2 = document.getElementById("tabInpRowDCut7_2");
+      if (inp7_2 instanceof HTMLInputElement) inp7_2.value = "18";
+      const inp8_2 = document.getElementById("tabInpRowDCut8_2");
+      if (inp8_2 instanceof HTMLInputElement) inp8_2.value = "18";
+      const inp4_3 = document.getElementById("tabInpRowDCut4_3");
+      if (inp4_3 instanceof HTMLInputElement) inp4_3.value = "10";
+      const inp7_3 = document.getElementById("tabInpRowDCut7_3");
+      if (inp7_3 instanceof HTMLInputElement) inp7_3.value = "10";
+      const inp8_3 = document.getElementById("tabInpRowDCut8_3");
+      if (inp8_3 instanceof HTMLInputElement) inp8_3.value = "10";
+      const inp4_4 = document.getElementById("tabInpRowDCut4_4");
+      if (inp4_4 instanceof HTMLInputElement) inp4_4.value = "40";
+      const inp7_4 = document.getElementById("tabInpRowDCut7_4");
+      if (inp7_4 instanceof HTMLInputElement) inp7_4.value = "40";
+      const inp8_4 = document.getElementById("tabInpRowDCut8_4");
+      if (inp8_4 instanceof HTMLInputElement) inp8_4.value = "40";
+    }, timers.personENTimer);
   }, [mounted]);
   useEffect(() => {
     if (!mounted) return;
@@ -173,6 +178,25 @@ export default function ENForm(): JSX.Element {
       console.error(`Error executing effect for filling input titles:\n${(e as Error).message}`);
     }
   }, [f, mounted]);
+  useEffect(() => {
+    if (!toasted.current)
+      toast(t => (
+        <div style={{ lineHeight: "1.6rem" }}>
+          <b>Dica!</b>
+          <hr />
+          <span>Você pode desativar ou ativar</span>
+          <br />o Cálculo Automático e a Autocorreção nos alternadores.
+          <hr />
+          <button
+            style={{ height: "2.1rem", fontSize: "0.8rem" }}
+            className='btn btn-secondary'
+            onClick={() => toast.dismiss(t.id)}>
+            Fechar
+          </button>
+        </div>
+      ));
+    toasted.current = true;
+  }, []);
   return mounted ? (
     <Suspense fallback={<ReactSpinner scale={0.8} key={crypto.randomUUID()} />}>
       <ENCtx.Provider
@@ -336,12 +360,6 @@ export default function ENForm(): JSX.Element {
                         <br role='presentation' />
                       </Fragment>
                     ))}
-                    <OpProtUr ctx='Persist' />
-                    <br role='presentation' />
-                    <OpProtUr ctx='Ort' />
-                    <br role='presentation' />
-                    <OpProtUr ctx='Tr' />
-                    <br role='presentation' />
                     <label
                       htmlFor='protUrLvl'
                       id='labProtUrLvl'

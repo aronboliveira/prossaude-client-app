@@ -9,6 +9,8 @@ import useMount from "@/lib/hooks/useMount";
 import { CacheEN } from "@/lib/locals/edFisNutPage/cache";
 import { CacheENProps } from "@/lib/global/declarations/interfaces";
 import { nlFs, nlTab } from "@/lib/global/declarations/types";
+import { evalMatchTMBElements } from "@/lib/locals/edFisNutPage/edFisNutModel";
+import { exeAutoFill } from "@/lib/locals/edFisNutPage/edFisNutHandler";
 export default function WatcherEN(): JSX.Element {
   const [mounted, setMounted] = useMount(),
     [isExportListening, setExport] = useState<boolean>(false),
@@ -143,23 +145,39 @@ export default function WatcherEN(): JSX.Element {
   //TODO REMOVER APÓS TESTE
   useEffect(() => {
     setTimeout(() => {
-      console.log(new Date().getHours() + ":" + new Date().getUTCMinutes());
+      evalMatchTMBElements();
+      const filledTabInpProg = Array.from(document.querySelectorAll(".tabInpProg")).filter(
+        e =>
+          (e instanceof HTMLInputElement || e instanceof HTMLSelectElement || e instanceof HTMLTextAreaElement) &&
+          e.value !== "",
+      )[0];
+      if (filledTabInpProg instanceof HTMLElement && tabProps.edIsAutoCorrectOn) {
+        [2, 3, 4].forEach(n => {
+          const sumBtn = document.getElementById(`sumDCBtn9_${n}`);
+          if (!(sumBtn instanceof HTMLElement)) return;
+          sumBtn.click();
+        });
+        exeAutoFill(filledTabInpProg, "col");
+      }
+      console.groupCollapsed(`Log at ${new Date().getHours()}:${new Date().getUTCMinutes()}`);
       console.log("Person");
       console.log(person);
-      // console.log("Tab Properties");
-      // console.log(tabProps);
-      // console.log("Cache");
-      // console.log(CacheEN);
-    }, timers.personENTimer);
+      console.log("Tab Properties");
+      console.log(tabProps);
+      console.log("Cache");
+      console.log(CacheEN);
+      console.groupEnd();
+    }, timers.personENTimer + 200);
     const i = setInterval(() => {
-      console.log(new Date().getHours() + ":" + new Date().getUTCMinutes());
+      console.groupCollapsed(`Log at ${new Date().getHours()}:${new Date().getUTCMinutes()}`);
       console.log("Person");
       console.log(person);
-      // console.log("Tab Properties");
-      // console.log(tabProps);
-      // console.log("Cache");
-      // console.log(CacheEN);
-    }, 10000);
+      console.log("Tab Properties");
+      console.log(tabProps);
+      console.log("Cache");
+      console.log(CacheEN);
+      console.groupEnd();
+    }, 60000);
     return (): void => clearInterval(i);
   }, []);
   return <div className='watcher' id='watcher-en' style={{ display: "none" }}></div>;

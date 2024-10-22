@@ -1,0 +1,94 @@
+@use "../../base/animations" as *;
+.mainContainer {
+  padding: 5%;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+  @media (min-width: 521px) {
+    .cardsSect {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: repeat(2, 1fr);
+      gap: 2rem;
+    }
+  }
+  @media (max-width: 520px) {
+    .cardsSect {
+      display: grid;
+      grid-template-columns: 1fr;
+      grid-template-rows: auto;
+      gap: 1rem;
+    }
+  }
+}
+.cardsSect {
+  width: 80%;
+  padding: 5%;
+  display: grid;
+  gap: 1.5rem;
+}
+.card {
+  perspective: 62.5rem;
+  width: 100%;
+  max-width: 18.75rem;
+  height: 25rem;
+  &Inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.8s;
+    cursor: pointer;
+    &:hover {
+      transform: rotateY(180deg);
+    }
+  }
+  &Front,
+  &Back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 1rem;
+  }
+  &Front {
+    background: #fff;
+  }
+  &Back {
+    background: #f0f0f0;
+    transform: rotateY(180deg);
+    padding: 10%;
+    text-align: center;
+  }
+}
+.cardImg {
+  max-width: 80%;
+  border-radius: 1rem;
+}
+.cardLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.panelSect {
+  margin-top: 2rem;
+  width: 80%;
+  display: flex;
+  justify-content: center;
+  .panelBtn {
+    padding: 1rem 2rem;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    &:hover {
+      background-color: #0056b3;
+    }
+  }
+}

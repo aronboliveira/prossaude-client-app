@@ -17,7 +17,27 @@ export default function ReactBrand(): JSX.Element {
           fontSize: "1.2rem",
           textAlign: "center",
         }}>
-        Built with Next.js ©
+        Built with{" "}
+        <a
+          style={{
+            backgroundClip: "text",
+            textShadow: "1px 0 2px #323231, 1px 0 2px rgba(128, 128, 128, 0.7), 1px 0 2px rgba(0, 0, 0, 0.5)",
+            color: "#323231",
+          }}
+          href='https://nextjs.org/'
+          target='_blank'
+          rel='noopener noreferrer'
+          id='nextjs_open'>
+          Next.js ©
+          <span
+            style={{
+              filter: "grayscale(100%)",
+              fontSize: "0.75rem",
+              verticalAlign: "middle",
+            }}>
+            🔺
+          </span>
+        </a>
       </h2>
       <ReactSpinner scale={1} width={50} height={50} />
     </div>

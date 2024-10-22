@@ -3,13 +3,13 @@ import { AvStudListDlgProps } from "@/lib/global/declarations/interfacesCons";
 import { ErrorBoundary } from "react-error-boundary";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { isClickOutside } from "@/lib/global/gStyleScript";
-import { nullishDlg } from "@/lib/global/declarations/types";
+import { nlDlg } from "@/lib/global/declarations/types";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useEffect, useRef } from "react";
 import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
 import StudList from "./StudList";
 export default function AvStudListDlg({ forwardedRef, dispatch, state = false }: AvStudListDlgProps): JSX.Element {
-  const dialogRef = useRef<nullishDlg>(null),
+  const dialogRef = useRef<nlDlg>(null),
     sectTabRef = useRef<HTMLElement | null>(null);
   //push em history
   useEffect(() => {

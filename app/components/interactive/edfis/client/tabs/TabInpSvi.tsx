@@ -25,7 +25,7 @@ export default function TabInpSvi({ nRow, nCol, ctx, lab }: TdProps): JSX.Elemen
     else {
       inpRef.current.type === "number"
         ? handleCondtReq(inpRef.current, {
-            minNum: 0.05,
+            minNum: 0,
             maxNum: 999999,
             min: 1,
             max: 99,
@@ -46,7 +46,7 @@ export default function TabInpSvi({ nRow, nCol, ctx, lab }: TdProps): JSX.Elemen
       name={`${lab.toLowerCase()}_${nRow}_${nCol}`}
       className={`form-control tabInpProg tabInpProg${ctx} tabInpProg${lab}${ctx} tabInpRow${ctx}${nRow} float sevenCharLongNum ${sEn.tabInpProg}`}
       id={`tabInpRow${ctx}${nRow}_${nCol}`}
-      min={nCol === 2 ? "0.05" : "0"}
+      min={"0"}
       max='65535'
       data-title={`${"Sinais Vitais"} ${fullName} (Consulta ${nCol - 1})`}
       data-row={nRow}

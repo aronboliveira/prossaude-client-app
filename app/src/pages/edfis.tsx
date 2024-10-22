@@ -8,11 +8,15 @@ import { Suspense, lazy } from "react";
 import Spinner from "../../components/icons/Spinner";
 import Guard from "../../components/interactive/def/Guard";
 import sEn from "@/styles/locals/modules/enStyles.module.scss";
+import { Toaster } from "react-hot-toast";
 const ENForm = lazy(() => import("../../components/interactive/edfis/client/ENForm"));
 export default function EdFisNutPage(): JSX.Element {
   return (
     <ErrorBoundary
       FallbackComponent={() => <GenericErrorComponent message='Error loading form Physical Education and Nutrition' />}>
+      <div>
+        <Toaster />
+      </div>
       <div id='bgDiv'>
         <header>
           <div role='group' className='pad1pc'>

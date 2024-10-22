@@ -40,13 +40,11 @@ html {
     scrollbar-width: auto !important;
   }
 }
-
 @supports (scrollbar-width: none) {
   .scbw-fh {
     scrollbar-width: none !important;
   }
 }
-
 @supports not (scrollbar-color: red) {
   ::-webkit-scrollbar-track,
   ::-ms-scrollbar-track,
@@ -65,7 +63,6 @@ html {
     background: var(--sbthumbdef);
   }
 } 
-
 ::-webkit-scrollbar-track,
 ::-ms-scrollbar-track,
 ::-moz-scrollbar-track,

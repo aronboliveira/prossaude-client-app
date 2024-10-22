@@ -4,11 +4,11 @@ import { isClickOutside } from "@/lib/global/gStyleScript";
 import { useEffect, useRef, useState } from "react";
 import { validateForm, syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import GenericErrorComponent from "../error/GenericErrorComponent";
-import { nlBtn, nullishDlg, nlInp, nlSel } from "@/lib/global/declarations/types";
+import { nlBtn, nlDlg, nlInp, nlSel } from "@/lib/global/declarations/types";
 import { addEmailExtension, autoCapitalizeInputs, formatTel } from "@/lib/global/gModel";
 import { elementNotFound, extLine, multipleElementsNotFound } from "@/lib/global/handlers/errorHandler";
 export default function UserPropsDlg({ setPropDlg, shouldDisplayPropDlg = true }: UserPropsDlgProps): JSX.Element {
-  const userPropsDlgRef = useRef<nullishDlg>(null),
+  const userPropsDlgRef = useRef<nlDlg>(null),
     userPropsBtnRef = useRef<nlBtn>(null),
     newUserValueRef = useRef<nlInp | HTMLSelectElement>(null),
     userPropsSelRef = useRef<nlSel>(null),

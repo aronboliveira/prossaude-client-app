@@ -3,14 +3,14 @@ import { AvPacListDlgProps } from "@/lib/global/declarations/interfacesCons";
 import { ErrorBoundary } from "react-error-boundary";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { isClickOutside } from "@/lib/global/gStyleScript";
-import { nullishDlg } from "@/lib/global/declarations/types";
+import { nlDlg } from "@/lib/global/declarations/types";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useEffect, useRef, useState } from "react";
 import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
 import PacList from "./PacList";
 export default function AvPacListDlg({ dispatch, state, shouldShowAlocBtn }: AvPacListDlgProps): JSX.Element {
   const [shouldDisplayRowData, setDisplayRowData] = useState<boolean>(false),
-    dialogRef = useRef<nullishDlg>(null);
+    dialogRef = useRef<nlDlg>(null);
   //push em history
   useEffect(() => {
     !/av-pac=open/gi.test(location.search) &&

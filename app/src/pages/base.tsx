@@ -2,9 +2,13 @@ import { ErrorBoundary } from "react-error-boundary";
 import MainContainer from "../../components/interactive/base/MainContainer";
 import Watcher from "../../components/interactive/def/Watcher";
 import Guard from "../../components/interactive/def/Guard";
+import { Toaster } from "react-hot-toast";
 export default function BasePage(): JSX.Element {
   return (
     <ErrorBoundary FallbackComponent={() => <div>Erro!</div>}>
+      <div>
+        <Toaster position='top-left' reverseOrder={false} />
+      </div>
       <div id='bgDiv'>
         <nav className='main-article flexNoWC widFullView widAt750Q htFullView htAuto750Q noMargin'>
           <header className='header-main-container bolded ht10 flexAlItCt noMargin bolded flexJBt flexNoWC900Q pd1r900Q htAt900Q htpd-2vQ460 pdL2r rGap1v mg-0lm601Q bolded'>

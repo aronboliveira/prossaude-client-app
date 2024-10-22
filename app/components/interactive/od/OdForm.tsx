@@ -15,8 +15,11 @@ import { handleSubmit } from "@/lib/global/data-service";
 import InspDlgElements from "./InspDlgElements";
 import { useRef, useEffect } from "react";
 import useDataProvider from "@/lib/hooks/useDataProvider";
+import { odProps } from "@/vars";
+import { toast } from "react-hot-toast";
 export default function OdForm(): JSX.Element {
-  const f = useRef<nlFm>(null);
+  const f = useRef<nlFm>(null),
+    toasted = useRef<boolean>(false);
   useEffect(() => {
     registerPersistInputs({
       f: f.current,
@@ -25,6 +28,33 @@ export default function OdForm(): JSX.Element {
       inputTypes: ["date", "number", "text", "checkbox", "radio"],
       queriesToExclude: ['[role="switch"]'],
     });
+  }, []);
+  useEffect(() => {
+    odProps.odIsAutoCorrectOn = true;
+    return (): void => {
+      odProps.odIsAutoCorrectOn = true;
+    };
+  }, []);
+  useEffect(() => {
+    if (!toasted.current)
+      toast(t => (
+        <div style={{ lineHeight: "1.6rem" }}>
+          <b>Dica!</b>
+          <hr />
+          <span>Você pode desativar ou ativar</span>
+          <br />a Autocorreção nos alternadores.
+          <br />
+          <span>Arraste os quadrantes para movê-los!</span>
+          <hr />
+          <button
+            style={{ height: "2.1rem", fontSize: "0.8rem" }}
+            className='btn btn-secondary'
+            onClick={() => toast.dismiss(t.id)}>
+            Fechar
+          </button>
+        </div>
+      ));
+    toasted.current = true;
   }, []);
   useDataProvider(f.current);
   return (

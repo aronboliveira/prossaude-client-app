@@ -1,30 +1,21 @@
 import { RootCtxType, DlgProps } from "@/lib/global/declarations/interfaces";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { isClickOutside } from "@/lib/global/gStyleScript";
-import { nlDiv, nullishDlg, rKbEv } from "@/lib/global/declarations/types";
+import { nlDiv } from "@/lib/global/declarations/types";
 import { useRef, useEffect, useContext, memo, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { RootCtx } from "@/pages/_app";
-import { useRouter } from "next/router";
 import { checkContext } from "@/lib/global/gModel";
+import useDialog from "@/lib/hooks/useDialog";
 const ENTips = memo(({ state, dispatch }: DlgProps): JSX.Element => {
-  const dlgRef = useRef<nullishDlg>(null),
-    m1 = useRef<nlDiv>(null),
+  const m1 = useRef<nlDiv>(null),
     m2 = useRef<HTMLDetailsElement | null>(null),
     m3 = useRef<nlDiv>(null),
     m4 = useRef<nlDiv>(null),
     m5 = useRef<nlDiv>(null),
     hb = useRef<nlDiv>(null),
     DivAdd = useContext<RootCtxType>(RootCtx).divModal,
-    router = useRouter(),
-    handleEsc = useCallback(
-      (ev: rKbEv) => {
-        if (ev.key !== "ESCAPE") return;
-        dispatch(!state);
-        !state && dlgRef.current?.close();
-      },
-      [dispatch, state],
-    ),
+    { mainRef } = useDialog({ state, dispatch, param: "tips" }),
     render = useCallback(() => {
       try {
         const mathFirstBlock = m1.current ?? document.getElementById("mathFirstBlock");
@@ -210,31 +201,13 @@ const ENTips = memo(({ state, dispatch }: DlgProps): JSX.Element => {
   //TODO REMOVER APÓS TESTE
   const ctx = useContext(RootCtx);
   checkContext(ctx, "RootCtx", ENTips);
-  useEffect(() => {
-    if (!router.query.conform) router.push({ pathname: router.pathname, query: { ...router.query, tips: "open" } });
-    return (): void => {
-      const { conform, ...rest } = router.query;
-      router.replace({ pathname: router.pathname, query: rest });
-    };
-  }, [router]);
-  useEffect(() => {
-    try {
-      if (!(dlgRef.current instanceof HTMLDialogElement))
-        throw elementNotFound(dlgRef.current, `${ENTips.prototype.constructor.name}`, extLine(new Error()));
-      dlgRef.current.showModal();
-    } catch (e) {
-      console.error(`Error executing useEffect for PanelTips:\n${(e as Error).message}`);
-    }
-    addEventListener("keypress", handleEsc);
-    return (): void => removeEventListener("keypress", handleEsc);
-  }, [dlgRef, handleEsc, state]);
   useEffect(() => render(), [render]);
   return createPortal(
     !state ? (
       <></>
     ) : (
       <dialog
-        ref={dlgRef}
+        ref={mainRef}
         onClick={ev => {
           if (isClickOutside(ev, ev.currentTarget).some(coord => coord === true)) {
             ev.currentTarget.close();

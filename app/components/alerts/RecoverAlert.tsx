@@ -1,12 +1,12 @@
 import { ErrorBoundary } from "react-error-boundary";
-import { nullishDlg } from "@/lib/global/declarations/types";
+import { nlDlg } from "@/lib/global/declarations/types";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useEffect, useRef } from "react";
 import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
 import { DlgProps } from "@/lib/global/declarations/interfaces";
 import { isClickOutside } from "@/lib/global/gStyleScript";
 export default function RecoverAlert({ dispatch, state = true }: DlgProps): JSX.Element {
-  const FailRegstDlgRef = useRef<nullishDlg>(null);
+  const FailRegstDlgRef = useRef<nlDlg>(null);
   const toggleClose = (): void => {
     dispatch(!state);
     if (!state && FailRegstDlgRef.current instanceof HTMLDialogElement) FailRegstDlgRef.current.close();

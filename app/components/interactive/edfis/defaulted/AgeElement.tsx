@@ -14,7 +14,7 @@ export default function AgeElement({
   inpRef?: MutableRefObject<nlInp>;
   ageRef?: MutableRefObject<number>;
 }): JSX.Element {
-  const [age, setAge] = useState<PseudoNum | "">(""),
+  const [age, setAge] = useState<PseudoNum | "">("30"),
     trusted = useRef<boolean>(false),
     evaluateNum = useCallback((a: string): PseudoNum => {
       if (a.startsWith("0") && a.length > 1) a = parseNotNaN(a, 0, "int").toString();

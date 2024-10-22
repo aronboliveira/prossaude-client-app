@@ -214,6 +214,8 @@ export function evalPGCDecay(tipgc: targEl): boolean {
     }
     if (tabProps.PGC < 0 || !Number.isFinite(tabProps.PGC)) tabProps.PGC = 0;
     if (person.sumDCut < 0 || !Number.isFinite(person.sumDCut)) person.sumDCut = 0;
+    if (foundDecayPoint) tipgc.style.color = "#ff59";
+    else tipgc.style.color = "rgb(33, 37, 41)";
     return foundDecayPoint;
   } catch (e) {
     console.error(`Error executing evalPGCDecay:\n${(e as Error).message}`);

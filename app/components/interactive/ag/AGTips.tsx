@@ -1,52 +1,16 @@
 "use client";
 import { DlgProps } from "@/lib/global/declarations/interfaces";
-import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { isClickOutside } from "@/lib/global/gStyleScript";
-import { nullishDlg } from "@/lib/global/declarations/types";
-import { useRef, useEffect } from "react";
+import useDialog from "@/lib/hooks/useDialog";
 export default function AGTips({ state, dispatch }: DlgProps): JSX.Element {
-  const dlgRef = useRef<nullishDlg>(null);
-  //push em history
-  useEffect(() => {
-    history.pushState({}, "", `${location.origin}${location.pathname}${location.search}&tips=open`);
-    setTimeout(() => {
-      history.replaceState({}, "", `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#"));
-    }, 300);
-    return (): void => {
-      history.replaceState(
-        {},
-        "",
-        `${location.origin}${location.pathname}${location.search}`.replaceAll("&tips=open", ""),
-      );
-      setTimeout((): void => {
-        history.replaceState({}, "", `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#"));
-      }, 300);
-    };
-  }, []);
-  useEffect(() => {
-    const handleEscape = (ev: KeyboardEvent): void => {
-      if (ev.key === "ESCAPE") {
-        dispatch(!state);
-        !state && dlgRef.current?.close();
-      }
-    };
-    try {
-      if (!(dlgRef.current instanceof HTMLDialogElement))
-        throw elementNotFound(dlgRef.current, `${AGTips.prototype.constructor.name}`, extLine(new Error()));
-      dlgRef.current.showModal();
-      addEventListener("keypress", handleEscape);
-    } catch (e) {
-      console.error(`Error executing useEffect for PanelTips:\n${(e as Error).message}`);
-    }
-    return (): void => removeEventListener("keypress", handleEscape);
-  }, [dlgRef, dispatch]);
+  const { mainRef } = useDialog({ state, dispatch, param: "tips" });
   return !state ? (
     <></>
   ) : (
     <dialog
       className='modal-content-fit defDp wid50v'
       id='tipsDlg'
-      ref={dlgRef}
+      ref={mainRef}
       onClick={ev => {
         if (isClickOutside(ev, ev.currentTarget).some(coord => coord === true)) {
           ev.currentTarget.close();

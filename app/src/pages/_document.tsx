@@ -4,6 +4,7 @@ import Document, { Html, Head, Main, NextScript, DocumentContext } from "next/do
 import Script from "next/script";
 import path from "path";
 import { promises as fs } from "fs";
+import { Toaster } from "react-hot-toast";
 export async function getStaticProps(): Promise<any> {
   const packageJsonPath = path.join(process.cwd(), "../../package.json");
   const packageJson = JSON.parse(await fs.readFile(packageJsonPath, "utf-8"));
@@ -67,6 +68,9 @@ export default function MyDocument({ deps }: { deps: any }): JSX.Element {
           id='bootstrapLink'></link>
       </Head>
       <body>
+        <div>
+          <Toaster />
+        </div>
         <span className='divModal' id='divModal'></span>
         <Main />
         <Script
