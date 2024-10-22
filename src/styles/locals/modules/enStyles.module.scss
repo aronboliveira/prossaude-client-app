@@ -159,9 +159,8 @@
   }
 }
 .glSpan {
-  min-width: 15rem;
   @media (max-width: 900px) {
-    min-width: 52vw;
+    min-width: 52vw !important;
   }
 }
 .h2 {
@@ -231,6 +230,10 @@
   }
   &.sumMsr {
     transform: scale(1.008);
+  }
+  &.indMsr {
+    min-width: 6ch;
+    text-align: center;
   }
 }
 .nafType {

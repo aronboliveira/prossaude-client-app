@@ -71,7 +71,7 @@ export interface objInnerTabs {
 export type nlEl = Element | null;
 export type nlHtEl = HTMLElement | null;
 export type nlFm = HTMLFormElement | null;
-export type nullishDlg = HTMLDialogElement | null;
+export type nlDlg = HTMLDialogElement | null;
 export type nlInp = HTMLInputElement | null;
 export type nlSel = HTMLSelectElement | null;
 export type nlBtn = HTMLButtonElement | null;

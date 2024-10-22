@@ -1,6 +1,6 @@
 import { ErrorBoundary } from "react-error-boundary";
 import { FailedRegstProps } from "@/lib/global/declarations/interfacesCons";
-import { nullishDlg } from "@/lib/global/declarations/types";
+import { nlDlg } from "@/lib/global/declarations/types";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useEffect, useRef } from "react";
 import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
@@ -10,7 +10,7 @@ export default function FailRegstAlert({
   shouldDisplayFailRegstDlg = false,
   secondOp = "Arraste",
 }: FailedRegstProps): JSX.Element {
-  const FailRegstDlgRef = useRef<nullishDlg>(null);
+  const FailRegstDlgRef = useRef<nlDlg>(null);
   const toggleClose = (): void => {
     setDisplayFailRegstDlg(!shouldDisplayFailRegstDlg);
     if (!shouldDisplayFailRegstDlg && FailRegstDlgRef.current instanceof HTMLDialogElement)

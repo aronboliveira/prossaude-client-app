@@ -64,10 +64,11 @@ export function loadCEPXML(xmlReq: XMLHttpRequest = new XMLHttpRequest(), reqAcc
   return xmlReq.status;
 }
 export async function searchCEP(cepElement: targEl): Promise<string> {
+  let status = 404;
   try {
     const initTime = Date.now();
     if (!(cepElement instanceof HTMLInputElement)) {
-      elementNotFound(cepElement, "argument for searchCEPXML", extLine(new Error()));
+      elementNotFound(cepElement, "argument for searchCEP", extLine(new Error()));
       return "fail";
     }
     const progInts = displayCEPLoadBar(cepElement) ?? [0, 100, null];
@@ -87,19 +88,21 @@ export async function searchCEP(cepElement: targEl): Promise<string> {
       } else {
         console.error(`Both requests failed. Aborting process.`);
         progBar && progMax && uploadCEPLoadBar(cepElement, progBar, initTime, progMax, progValue);
+        status = res.status;
       }
     } catch (error) {
       console.error(`Error in both requests: ${(error as Error).message}`);
       if (document.getElementById("divCEPWarn")) {
         document.getElementById("divCEPWarn")!.textContent =
           "*Erro carregando informações a partir de CEP. \n Inclua manualmente";
+        setTimeout(() => (document.getElementById("divCEPWarn")!.textContent = ""), 3000);
       }
       progBar && progMax && uploadCEPLoadBar(cepElement, progBar, initTime, progMax, progValue);
     }
   } catch (err) {
     console.error(`Error initializing searchCEP`);
   }
-  return "fail";
+  return `${status}`;
 }
 export async function makeCEPRequest(url: string): Promise<Response> {
   const response = await fetch(url);
@@ -191,15 +194,14 @@ export function uploadCEPLoadBar(
     );
 }
 export function enableCEPBtn(cepBtn: targEl, cepLength: number = 0): boolean {
-  let isCepElemenBtnOff = true;
+  let isCepElemenBtnOn = false;
   if (cepBtn instanceof HTMLButtonElement && typeof cepLength === "number") {
     if (cepLength === 9) {
       cepBtn.removeAttribute("disabled");
-      isCepElemenBtnOff = false;
+      isCepElemenBtnOn = true;
     } else cepBtn.setAttribute("disabled", "");
   } else multipleElementsNotFound(extLine(new Error()), "argumentos para enableCEPBtn", cepBtn, cepLength);
-
-  return isCepElemenBtnOff;
+  return isCepElemenBtnOn;
 }
 export function addMedHistHandler(click: targEv | React.MouseEvent, blockCount: number = 1): number {
   if (click?.currentTarget instanceof HTMLButtonElement && typeof blockCount === "number") {
@@ -290,9 +292,9 @@ export function handleDivAddShow(targ: targEl): void {
         innerWidth > 460 ? (d.style.minWidth = "60vw !important") : (d.style.minWidth = "70vw !important");
       });
       for (const radio of [
-        ...(divAdd.querySelectorAll('input[type="radio"') as NodeListOf<HTMLInputElement>),
-        ...(divAdd.querySelectorAll('input[type="number"]') as NodeListOf<HTMLInputElement>),
-        ...(divAdd.querySelectorAll('input[type="date"]') as NodeListOf<HTMLInputElement>),
+        ...divAdd.querySelectorAll('input[type="radio"'),
+        ...divAdd.querySelectorAll('input[type="number"]'),
+        ...divAdd.querySelectorAll('input[type="date"]'),
       ])
         if (radio instanceof HTMLInputElement) radio.dataset.required = "true";
     } else {
@@ -306,9 +308,9 @@ export function handleDivAddShow(targ: targEl): void {
         innerWidth > 460 ? (d.style.minWidth = "60vw !important") : (d.style.minWidth = "70vw !important");
       });
       for (const radio of [
-        ...(divAdd.querySelectorAll('input[type="radio"') as NodeListOf<HTMLInputElement>),
-        ...(divAdd.querySelectorAll('input[type="number"]') as NodeListOf<HTMLInputElement>),
-        ...(divAdd.querySelectorAll('input[type="date"]') as NodeListOf<HTMLInputElement>),
+        ...divAdd.querySelectorAll('input[type="radio"'),
+        ...divAdd.querySelectorAll('input[type="number"]'),
+        ...divAdd.querySelectorAll('input[type="date"]'),
       ])
         if (radio instanceof HTMLInputElement) delete radio.dataset.required;
     }

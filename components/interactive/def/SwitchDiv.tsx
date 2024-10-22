@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import { useRef, useEffect } from "react";
 import s from "@/styles/locals/modules/sharedComponents.module.scss";
 import { nlInp } from "@/lib/global/declarations/types";
+import { toast } from "react-hot-toast";
 export default function SwitchDiv({ autofill = false }: { autofill?: boolean }): JSX.Element {
   const router = useRouter(),
     isEdFis = /edfis/gi.test(router.pathname),
@@ -48,6 +49,14 @@ export default function SwitchDiv({ autofill = false }: { autofill?: boolean }):
             defaultChecked
             onChange={ev => {
               ev.currentTarget.checked ? (tabProps.isAutoFillActive = true) : (tabProps.isAutoFillActive = false);
+              tabProps.isAutoFillActive
+                ? toast(navigator.language.startsWith("pt-") ? "Autopreenchimento ativado" : "Autofill activated", {
+                    icon: "🔢",
+                  })
+                : toast(
+                    navigator.language.startsWith("pt-") ? "Autopreenchimento desativado" : "Autofill deactivated",
+                    { icon: "📝" },
+                  );
               switchAutoFill(ev.currentTarget);
             }}
           />
@@ -64,12 +73,29 @@ export default function SwitchDiv({ autofill = false }: { autofill?: boolean }):
           data-title='Autocorreção'
           defaultChecked
           onClick={ev => {
-            if (location.pathname.toLowerCase().includes("edfis"))
+            const toastMsg = (autoCorrect: boolean): void => {
+              autoCorrect
+                ? toast(navigator.language.startsWith("pt-") ? "Autocorreção ativada" : "Autocorrection activated", {
+                    icon: "🔢",
+                  })
+                : toast(
+                    navigator.language.startsWith("pt-") ? "Autocorreção desativada" : "Autocorrection deactivated",
+                    {
+                      icon: "📝",
+                    },
+                  );
+              setTimeout(() => toast.dismiss(), 2000);
+            };
+            if (location.pathname.toLowerCase().includes("edfis")) {
               ev.currentTarget.checked ? (tabProps.edIsAutoCorrectOn = true) : (tabProps.edIsAutoCorrectOn = false);
-            else if (location.pathname.toLowerCase().includes("od"))
+              toastMsg(tabProps.edIsAutoCorrectOn);
+            } else if (location.pathname.toLowerCase().includes("od")) {
               ev.currentTarget.checked ? (odProps.odIsAutoCorrectOn = true) : (odProps.odIsAutoCorrectOn = false);
-            else if (location.pathname.toLowerCase().includes("ag"))
+              toastMsg(odProps.odIsAutoCorrectOn);
+            } else if (location.pathname.toLowerCase().includes("ag")) {
               ev.currentTarget.checked ? (agProps.agIsAutoCorrectOn = true) : (agProps.agIsAutoCorrectOn = false);
+              toastMsg(agProps.agIsAutoCorrectOn);
+            }
           }}
         />
         <label htmlFor='deactAutocorrectBtnPac' style={{ display: "inline", marginLeft: "0.3rem" }}>

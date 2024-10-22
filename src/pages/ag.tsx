@@ -6,10 +6,14 @@ import HeaderDate from "../../components/interactive/def/HeaderDate";
 import Watcher from "../../components/interactive/def/Watcher";
 import SwitchDiv from "../../components/interactive/def/SwitchDiv";
 import Spinner from "../../components/icons/Spinner";
+import { Toaster } from "react-hot-toast";
 const Form = lazy(() => import("../../components/interactive/ag/AgForm"));
 export default function AGPage(): JSX.Element {
   return (
     <ErrorBoundary FallbackComponent={() => <GenericErrorComponent message='Error loading form for Anamnesis' />}>
+      <div>
+        <Toaster />
+      </div>
       <div className='pad1pc' id='bgDiv' role='document'>
         <header>
           <div className='flexNoW flexDiv flexAlItT flexSimple flexQ900NoWC' id='hDiv' role='group'>

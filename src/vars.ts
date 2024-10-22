@@ -76,7 +76,7 @@ export const MAX_SMALLINT = 65535;
 export const maxProps = {
   age: 255,
   weight: 635,
-  height: 3,
+  height: 300,
   imc: 99,
   perc: 99,
   tmb: 4500,

@@ -2,29 +2,12 @@
 @use "../abstracts/variables" as *;
 @use "../base/root" as *;
 @use "../abstracts/mixins" as *;
-$scyan: rgb(10, 221, 245, 0.1);
-$stcyan: rgb(10, 221, 245, 0.9);
-$swhite: rgba(255, 255, 255, 0.8);
-
-@mixin form-border {
-  border: var(--bs-border-width) solid var(--bs-border-color);
-  border-radius: var(--bs-border-radius);
-  box-shadow: 0.2vh 0.2vh 0.2vh grey;
-}
-
-@mixin form-clip {
-  background-clip: padding-box;
-  margin: 0;
-  padding: 0.7rem;
-  line-height: 1.5;
-}
-
+@use "../base/animations" as *;
 @supports (scrollbar-width: thin) {
   * {
     scrollbar-width: thin;
   }
 }
-
 .odBody {
   td,
   th {
@@ -440,7 +423,6 @@ $swhite: rgba(255, 255, 255, 0.8);
     margin-bottom: 1rem;
   }
 }
-
 @media screen and (max-width: 900px) {
   .odBody {
     div {
@@ -523,7 +505,6 @@ $swhite: rgba(255, 255, 255, 0.8);
     }
   }
 }
-
 @media screen and (max-width: 460px) {
   .odBody {
     .inspSpanSub {
@@ -547,7 +528,6 @@ $swhite: rgba(255, 255, 255, 0.8);
     }
   }
 }
-
 @media screen and (max-width: 413px) {
   .odBody {
     #tratButSpan1 {

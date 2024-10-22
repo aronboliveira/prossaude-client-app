@@ -5,7 +5,7 @@ import * as EdFisNutModel from "./edFisNutModel";
 import { extLine, multipleElementsNotFound, typeError } from "../../global/handlers/errorHandler";
 import { entryEl, targEl } from "../../global/declarations/types";
 import { tabProps } from "@/vars";
-export const formatValue = (targ: entryEl, numValue: number | string = "0", fix: number = 4): void => {
+export const assignFormatedValue = (targ: entryEl, numValue: number | string = "0", fix: number = 4): void => {
   const parsedValue = parseNotNaN(typeof numValue === "string" ? numValue : numValue.toString(), 0, "float", fix);
   if (targ.type === "number") {
     targ.value = parsedValue.toString();

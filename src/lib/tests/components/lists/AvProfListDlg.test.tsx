@@ -5,7 +5,7 @@ import { panelRoots } from "../../../../../components/panelForms/defs/client/Sel
 import { createRoot } from "react-dom/client";
 import { MutableRefObject } from "react";
 import { fireEvent } from "@testing-library/react";
-import { nullishDlg } from "@/lib/global/declarations/types";
+import { nlDlg } from "@/lib/global/declarations/types";
 import "@testing-library/jest-dom/extend-expect";
 jest.mock("react-dom/client", (): { createRoot: jest.Mock<any, any, any> } => ({
   createRoot: (jest.fn() as jest.Mock).mockReturnValue({
@@ -33,7 +33,7 @@ describe("AvProfListDlg useEffect tests", (): void => {
     userClass: "coordenador",
     mainDlgRef: {
       current: document.createElement("dialog"),
-    } as MutableRefObject<nullishDlg>,
+    } as MutableRefObject<nlDlg>,
   };
   const renderComponent = (): RenderResult<
     typeof import("@testing-library/dom/types/queries"),

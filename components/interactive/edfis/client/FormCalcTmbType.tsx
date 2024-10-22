@@ -30,6 +30,7 @@ export default function FormCalcTmbType(): JSX.Element {
       name='form_tmb'
       className={`form-select noInvert lockSelect ${sEn.select} ${sEn.formCalcTMBType}`}
       data-title='Fórmula para TMB'
+      disabled
       onChange={ev => {
         try {
           if (ev.isTrusted) trusted.current = true;

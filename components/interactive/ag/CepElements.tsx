@@ -4,6 +4,7 @@ import { handleEventReq } from "@/lib/global/handlers/gHandlers";
 import { useEffect } from "react";
 import { elementNotFound, extLine, inputNotFound } from "@/lib/global/handlers/errorHandler";
 import { enableCEPBtn, searchCEP, searchCEPXML } from "@/lib/locals/aGPage/aGHandlers";
+import { toast } from "react-hot-toast";
 export default function CepElements(): JSX.Element {
   const equalizeCepElements = (): void => {
     try {
@@ -51,8 +52,23 @@ export default function CepElements(): JSX.Element {
           const cepElementBtn = document.getElementById("autoCompCepBtn");
           formatCEP(ev.currentTarget);
           handleEventReq(ev.currentTarget);
-          !enableCEPBtn(cepElementBtn, ev.currentTarget.value.length) &&
-            searchCEP(ev.currentTarget).then(res => res === "fail" && searchCEPXML(ev.currentTarget));
+          if (!enableCEPBtn(cepElementBtn, ev.currentTarget.value.length)) return;
+          toast.promise(
+            searchCEP(ev.currentTarget).then(res => {
+              if (res === "fail") return searchCEPXML(ev.currentTarget);
+              return res;
+            }),
+            {
+              loading: navigator.language.startsWith("pt-") ? "Pesquisando CEP..." : "Searching CEP...",
+              success: () =>
+                navigator.language.startsWith("pt-") ? "Sucesso carregando os dados!" : "Success on loading data!",
+              error: err =>
+                navigator.language.startsWith("pt-")
+                  ? `Erro obtendo dados para o CEP: Código ${err?.status || "indefinido"}`
+                  : `Failed to retrieve CEP information: Code ${err?.status || "undefined"}`,
+            },
+          );
+          setTimeout(() => toast.dismiss(), 4000);
         }}
       />
       <button type='button' id='autoCompCepBtn' className='btn btn-secondary' disabled>

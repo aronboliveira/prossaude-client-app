@@ -1,11 +1,5 @@
 import { MutableRefObject } from "react";
-import {
-  nullishDlg,
-  nlHtEl,
-  personAbrvClasses,
-  personAbrvUpperClasses,
-  targEl,
-} from "../../../global/declarations/types";
+import { nlDlg, nlHtEl, personAbrvClasses, personAbrvUpperClasses, targEl } from "../../../global/declarations/types";
 import { parseNotNaN } from "../../../global/gModel";
 import { switchBtnBS } from "../../../global/gStyleScript";
 import {
@@ -15,6 +9,7 @@ import {
   elementNotFound,
   stringError,
 } from "../../../global/handlers/errorHandler";
+import { toast } from "react-hot-toast";
 
 //nesse arquivo estão as funções para handling de casos dos modais de listas tabeladas
 
@@ -297,7 +292,7 @@ export function addListenerAlocation(
                 state = transferDataAloc(btn, parentRef, forwardedRef, context.toLowerCase() as personAbrvClasses);
                 if (typeof state === "boolean" && dispatch) dispatch(!state);
                 else {
-                  alert(`Erro obtendo dados para alocação selecionada. Feche manualmente.`);
+                  toast.error(`Erro obtendo dados para alocação selecionada. Feche manualmente.`);
                 }
               });
           });
@@ -308,7 +303,7 @@ export function addListenerAlocation(
   }
 }
 export function addListenerAvMembers(
-  dialogRef: MutableRefObject<nullishDlg | HTMLDivElement>,
+  dialogRef: MutableRefObject<nlDlg | HTMLDivElement>,
   shouldAddListener: boolean = true,
 ): void {
   const typeCons = document.getElementById("typeConsSel");

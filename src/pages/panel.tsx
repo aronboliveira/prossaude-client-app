@@ -4,9 +4,13 @@ import MainFormPanel from "../../components/mainPanel/MainFormPanel";
 import TipsBtnWrapper from "../../components/interactive/panel/TipsBtnWrapper";
 import UserProfilePanelWrapper from "../../components/interactive/panel/UserProfilePanelWrapper";
 import Guard from "../../components/interactive/def/Guard";
+import { Toaster } from "react-hot-toast";
 export default function PanelPage(): JSX.Element {
   return (
     <ErrorBoundary FallbackComponent={() => <GenericErrorComponent message='Error rendering Panel Page' />}>
+      <div>
+        <Toaster />
+      </div>
       <div role='group' className='pad1pc' id='bgDiv'>
         <header className='flexJBt flexAlItSt flexNoWC600Q flexAlItCt600Q pd-2vQ460 rGap1v mg-0lm601Q pd-1rbm601Q'>
           <div role='group' className='flexNoW flexAlItSE flexSimple flexQ900NoWC flexAlItSt900Q'>

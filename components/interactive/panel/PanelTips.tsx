@@ -2,10 +2,10 @@
 import { DlgProps } from "@/lib/global/declarations/interfaces";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { isClickOutside } from "@/lib/global/gStyleScript";
-import { nullishDlg } from "@/lib/global/declarations/types";
+import { nlDlg } from "@/lib/global/declarations/types";
 import { useRef, useEffect } from "react";
 export default function PanelTips({ state, dispatch }: DlgProps): JSX.Element {
-  const dlgRef = useRef<nullishDlg>(null);
+  const dlgRef = useRef<nlDlg>(null);
   //push em history
   useEffect(() => {
     history.pushState({}, "", `${location.origin}${location.pathname}${location.search}&tips=open`);

@@ -1,7 +1,7 @@
 import { ErrorBoundary } from "react-error-boundary";
 import { UserDlgProps } from "@/lib/global/declarations/interfacesCons";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
-import { nullishDlg } from "@/lib/global/declarations/types";
+import { nlDlg } from "@/lib/global/declarations/types";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useContext, useEffect, useRef } from "react";
 import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
@@ -14,7 +14,7 @@ import UserList from "./UserList";
 import { checkContext } from "@/lib/global/gModel";
 export default function UserDlg({ setUserDlg, shouldDisplayUserDlg }: UserDlgProps): JSX.Element {
   //REPLICA DO USERDROPDOWN PARA CASOS DE ERRO EM STACKING CONTEXT
-  const userDlgRef = useRef<nullishDlg>(null),
+  const userDlgRef = useRef<nlDlg>(null),
     divModal = useContext<RootCtxType>(RootCtx)?.divModal,
     { setDropdown, shouldShowDropdown } = useContext<UserPanelCtxProps>(UserPanelCtx);
   //TODO REMOVER APÓS TESTE

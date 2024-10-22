@@ -3,18 +3,6 @@
 @use "../base/root" as *;
 @use "../base/animations" as *;
 @use "../abstracts/mixins" as *;
-@mixin formCheckOpaque {
-  opacity: 0.3;
-  margin-right: 0.4rem;
-  &:checked {
-    opacity: 1;
-    accent-color: mintcream;
-    &.form-check-input {
-      background-color: mintcream;
-      border-color: mintcream;
-    }
-  }
-}
 @supports (scrollbar-width: none) {
   * {
     scrollbar-width: thin;
@@ -501,10 +489,6 @@
     }
   }
 
-  #genDiv {
-    column-gap: 10.2%;
-  }
-
   #hivCargId {
     height: 2.5rem;
   }
@@ -554,6 +538,9 @@
   .agBody {
     .addAntMed {
       margin-right: 0.5rem;
+    }
+    #ageId {
+      width: 24.8vw !important;
     }
     #labHivCarg {
       margin-top: 0.5rem;

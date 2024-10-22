@@ -2,24 +2,7 @@
 @use "../abstracts/variables" as *;
 @use "../base/root" as *;
 @use "../base/animations" as *;
-@keyframes slideUserInfo {
-  0% {
-    width: 0;
-  }
-  100% {
-    width: 9.857rem;
-  }
-}
-
-@keyframes fadeIn {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-
+@use "../abstracts/mixins" as *;
 @supports (scrollbar-width: thin) {
   * {
     &:has(header) {

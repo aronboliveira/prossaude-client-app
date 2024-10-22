@@ -1232,8 +1232,10 @@ export function applyFieldConstraints(el: nlEl): void {
       if (el instanceof HTMLInputElement) {
         const parsedValue = parseNotNaN(el.value);
         if (el.type === "number") {
-          if (el.min !== "" && Number.isFinite(parseNotNaN(el.min)) && parsedValue < Math.abs(parseNotNaN(el.min)))
+          if (el.min !== "" && Number.isFinite(parseNotNaN(el.min)) && parsedValue < Math.abs(parseNotNaN(el.min))) {
             el.value = el.min;
+            el.setSelectionRange(0, 0);
+          }
           if (
             el.max !== "" &&
             el.max !== "0" &&

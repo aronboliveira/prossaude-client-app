@@ -1,14 +1,14 @@
 import { ContactDlgProps } from "@/lib/global/declarations/interfacesCons";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { isClickOutside } from "@/lib/global/gStyleScript";
-import { nlBtn, nullishDlg } from "@/lib/global/declarations/types";
+import { nlBtn, nlDlg } from "@/lib/global/declarations/types";
 import { useContext, useEffect, useRef } from "react";
 import { validateForm, syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { createPortal } from "react-dom";
 import { RootCtxType } from "@/lib/global/declarations/interfaces";
 import { RootCtx } from "@/pages/_app";
 export default function ContactDlg({ setContact, shouldDisplayContact = true }: ContactDlgProps): JSX.Element {
-  const contactDlgRef = useRef<nullishDlg>(null),
+  const contactDlgRef = useRef<nlDlg>(null),
     contacBtnRef = useRef<nlBtn>(null),
     divModalSec = useContext<RootCtxType>(RootCtx)?.divModalSec;
   useEffect(() => {

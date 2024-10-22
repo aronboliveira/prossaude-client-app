@@ -55,11 +55,6 @@ export default function DynamicTabsBlock(): JSX.Element {
           },
         };
         try {
-          const { fsp, gle, fcte } = {
-            fsp: fspr?.current ?? document.getElementById("fsProgConsId"),
-            gle: gl?.current ?? document.getElementById("gordCorpLvl"),
-            fcte: fct?.current ?? document.getElementById("formCalcTMBType"),
-          };
           if (!(el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement || el instanceof HTMLSelectElement))
             throw new Error(`Failed to validate target instance`);
           if (!(person instanceof Person)) throw new Error(`Failed to validate person instance`);
@@ -69,7 +64,7 @@ export default function DynamicTabsBlock(): JSX.Element {
             getNumCol(el);
             numRef = Number.isFinite(tabProps.numCol) ? tabProps.numCol || 2 : 2;
           }
-          return runAutoFill({ el, fsp, gl: gle, fct: fcte }, ctx, targs ?? undefined);
+          return runAutoFill(el, ctx, targs ?? undefined);
         } catch (e) {
           console.error(`Error executing exeAutoFillCtx:\n${(e as Error).message}`);
           return iniResult;

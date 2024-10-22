@@ -28,7 +28,7 @@ export default function GenDivEN({ genRef, genAlinRef }: GenDivProps): JSX.Eleme
         gt = gtr.current ?? (document.getElementById("genTransId") as HTMLSelectElement),
         ga = genAlinRef?.current ?? (document.getElementById("genFisAlinId") as HTMLSelectElement);
       handleGenRender({ g, gb, gt, ga, setGenBirthRel, setGenFisAlin });
-    }, [gen, genRef, gbr, gtr, genAlinRef, setGen, setGenFisAlin]),
+    }, [gen, genRef, gbr, gtr, genAlinRef, setGen, setGenFisAlin, setGenBirthRel]),
     handlePersonGenUpdate = useCallback(() => {
       if (!onSetBodyType) return;
       try {
@@ -41,7 +41,7 @@ export default function GenDivEN({ genRef, genAlinRef }: GenDivProps): JSX.Eleme
       } catch (e) {
         limitedError(`Error executiong handlePersonGenUpdate:\n${(e as Error).message}`, "handleGENCtx");
       }
-    }, [onSetBodyType, txbr, person.gen]);
+    }, [onSetBodyType, txbr]);
   if (ctx1) {
     if (ctx1.refs) ({ txbr, gbr } = ctx1.refs);
     if (ctx1.bt) onSetBodyType = ctx1.bt.d;
@@ -67,7 +67,7 @@ export default function GenDivEN({ genRef, genAlinRef }: GenDivProps): JSX.Eleme
   useEffect(() => {
     if (!trusted.current) return;
     handlePersonGenUpdate();
-  }, [person.gen, handlePersonGenUpdate, trusted]);
+  }, [handlePersonGenUpdate, trusted]);
   useEffect(() => {
     setTimeout(() => {
       try {
@@ -80,7 +80,7 @@ export default function GenDivEN({ genRef, genAlinRef }: GenDivProps): JSX.Eleme
         return;
       }
     }, timers.personENTimer * 0.75);
-  }, [genRef, gbr, gtr, genAlinRef]);
+  }, [genRef, gbr, gtr, genAlinRef, setGenBirthRel, setGenFisAlin, setGenTrans]);
   return (
     <div
       className={`noInvert ${sEn.genDivEn}`}

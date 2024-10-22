@@ -12,7 +12,7 @@ import {
   vRoot,
 } from "@/lib/global/declarations/types";
 import { BodyType, FactorAtletaValue, Gender, GordLvl, NafTypeValue } from "@/lib/global/declarations/testVars";
-import { nlFm, nullishDlg, nlTab, voidVal, nlBtn } from "@glSrc/types";
+import { nlFm, nlDlg, nlTab, voidVal, nlBtn } from "@glSrc/types";
 import { NextRouter } from "next/router";
 import { MutableRefObject, Dispatch, SetStateAction, Component } from "react";
 import { Root } from "react-dom/client";
@@ -59,23 +59,23 @@ export interface ConsDlgProps extends Omit<BtnAddPacPros, "context"> {
   onClose: () => void;
 }
 export interface FormDlgProps extends ConsDlgProps {
-  dialogRef: MutableRefObject<nullishDlg>;
+  dialogRef: MutableRefObject<nlDlg>;
 }
 export interface FillerProps {
-  forwardedRef: MutableRefObject<nullishDlg>;
+  forwardedRef: MutableRefObject<nlDlg>;
   userClass?: userClasses;
 }
 export interface AvStudListDlgProps extends FillerProps, DlgProps {}
 export interface StudListProps extends GlobalFormProps, Partial<DlgProps> {
-  mainDlgRef: MutableRefObject<nullishDlg>;
+  mainDlgRef: MutableRefObject<nlDlg>;
 }
 export interface AvProfListDlgProps extends DlgProps, GlobalFormProps {
-  mainDlgRef: MutableRefObject<nullishDlg>;
+  mainDlgRef: MutableRefObject<nlDlg>;
   btnProf: HTMLButtonElement | null;
 }
 export interface AvPacListDlgProps extends DlgProps, GlobalFormProps {
   shouldShowAlocBtn: boolean;
-  mainDlgRef: MutableRefObject<nullishDlg>;
+  mainDlgRef: MutableRefObject<nlDlg>;
 }
 export interface PacListProps
   extends Omit<AvPacListDlgProps, "mainDlgRef" | "onClick" | "shouldDisplayPacList">,
@@ -83,7 +83,7 @@ export interface PacListProps
   setDisplayRowData: Dispatch<SetStateAction<boolean>>;
   shouldDisplayRowData: boolean;
   shouldShowAlocBtn: boolean;
-  mainDlgRef?: MutableRefObject<nullishDlg>;
+  mainDlgRef?: MutableRefObject<nlDlg>;
   dispatch?: Dispatch<SetStateAction<boolean>>;
   state?: boolean;
 }

@@ -51,7 +51,7 @@ export default function TextBodyType(): JSX.Element {
     } catch (e) {
       console.error(`Error executing effect for ${TextBodyType.prototype.constructor.name}:\n${(e as Error).message}`);
     }
-  }, [bodyType, onSetBodyType, trusted]);
+  }, [bodyType, onSetBodyType, trusted, gar, gbr, prt, td, txbr]);
   return (
     <select
       ref={txbr}

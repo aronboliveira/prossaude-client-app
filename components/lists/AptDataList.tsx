@@ -5,7 +5,7 @@ import { consVariablesData } from "../consRegst/consVariables";
 import { createRoot } from "react-dom/client";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { isClickOutside } from "@/lib/global/gStyleScript";
-import { nullishDlg } from "@/lib/global/declarations/types";
+import { nlDlg } from "@/lib/global/declarations/types";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useContext, useEffect, useRef } from "react";
 import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
@@ -22,7 +22,7 @@ export default function AptDataList({
 }: AptDataListProps): JSX.Element {
   const userClass = useContext(PanelCtx).userClass,
     transferBtn = document.querySelector(`[id*="${btnId}"]`),
-    aptDlgRef = useRef<nullishDlg>(null),
+    aptDlgRef = useRef<nlDlg>(null),
     renderDirectly = (): void => {
       try {
         shouldDisplayAptList = !shouldDisplayAptList;

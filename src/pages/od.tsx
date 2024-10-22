@@ -7,10 +7,14 @@ import SwitchDiv from "../../components/interactive/def/SwitchDiv";
 import Watcher from "../../components/interactive/def/Watcher";
 import Spinner from "../../components/icons/Spinner";
 import Guard from "../../components/interactive/def/Guard";
+import { Toaster } from "react-hot-toast";
 const Form = lazy(() => import("../../components/interactive/od/OdForm"));
 export default function OdPage(): JSX.Element {
   return (
     <ErrorBoundary FallbackComponent={() => <GenericErrorComponent message='Error loading form for Odontology' />}>
+      <div>
+        <Toaster />
+      </div>
       <div role='group' className='pad1pc' id='bgDiv'>
         <header>
           <div role='group' className='flexNoW flexDiv flexAlItT flexSimple flexQ900NoWC' id='hDiv'>

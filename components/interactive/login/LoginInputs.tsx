@@ -12,6 +12,7 @@ import Spinner from "../../icons/Spinner";
 import { useRouter } from "next/router";
 import { ClickEvaluator } from "@/lib/global/declarations/classes";
 import { defUser, setFullUser } from "@/redux/slices/userSlice";
+import toast from "react-hot-toast";
 export default function LoginInputs(): JSX.Element {
   let isSpinning = false;
   const anchorRef = useRef<nullishAnchor>(null),
@@ -38,12 +39,32 @@ export default function LoginInputs(): JSX.Element {
           if (typeof router === "object" && "beforePopState" in router && "push" in router && !isSpinning) {
             spin();
             navigator.language.startsWith("pt-")
-              ? alert(
-                  "Esta é apenas uma versão de teste estático do sistema. O login irá prosseguir independente da validez do formulário.",
-                )
-              : alert(
-                  "This is a client only, static, test execution. The login will be forwarded regardless of the form validity.",
-                );
+              ? toast.promise(new Promise(resolve => setTimeout(() => resolve("Loading..."), 1000)), {
+                  loading: "Avaliando dados...",
+                  success: (
+                    <div>
+                      <div>
+                        Esta é apenas uma versão de <b>teste estático do sistema.</b>
+                      </div>
+                      <div>
+                        O login irá prosseguir <em>independente da validez do formulário.</em>
+                      </div>
+                    </div>
+                  ),
+                  error: <b>Erro!</b>,
+                })
+              : toast.promise(new Promise(resolve => setTimeout(() => resolve("Loading..."), 1000)), {
+                  loading: "Checking data...",
+                  success: (
+                    <div>
+                      <div>
+                        This is a <b>client-only, static version of the system</b>
+                      </div>
+                      The login will be forwarded <em>regardless of the form validity</em>.
+                    </div>
+                  ),
+                  error: <b>Error.</b>,
+                });
             router.beforePopState(() => {
               return true;
             });
@@ -67,19 +88,39 @@ export default function LoginInputs(): JSX.Element {
                   localStorage.setItem("authorized", "true");
                   router.push("/base");
                 },
-                Number.isFinite(spinTime) ? spinTime : 2000,
+                Number.isFinite(spinTime) ? spinTime * 1.5 : 2000,
               );
             }, 1200);
           } else {
             if (!isSpinning) {
               spin();
               navigator.language.startsWith("pt-")
-                ? alert(
-                    "Esta é apenas uma versão de teste estático do sistema. O login irá prosseguir independente da validez do formulário.",
-                  )
-                : alert(
-                    "This is a client only, static, test execution. The login will be forwarded regardless of the form validity.",
-                  );
+                ? toast.promise(new Promise(resolve => setTimeout(() => resolve("Loading..."), 1000)), {
+                    loading: "Entrando...",
+                    success: (
+                      <div>
+                        <div>
+                          Esta é apenas uma versão de <b>teste estático do sistema.</b>
+                        </div>
+                        <div>
+                          O login irá prosseguir <em>independente da validez do formulário.</em>
+                        </div>
+                      </div>
+                    ),
+                    error: <b>Erro!</b>,
+                  })
+                : toast.promise(new Promise(resolve => setTimeout(() => resolve("Loading..."), 1000)), {
+                    loading: "Logging in...",
+                    success: (
+                      <div>
+                        <div>
+                          This is a <b>client-only, static version of the system</b>
+                        </div>
+                        The login will be forwarded <em>regardless of the form validity</em>.
+                      </div>
+                    ),
+                    error: <b>Error.</b>,
+                  });
               setTimeout(() => (location.href = "/base"), 1000);
             }
           }
@@ -159,7 +200,7 @@ export default function LoginInputs(): JSX.Element {
             loading='lazy'
             className='fade-in-element'
             id='logo'
-            src='/img/PROS_Saude_Modelo1-Final.png'
+            src='/img/PROS_Saude_Modelo1-Final.webp'
             alt='logo'
           />
         </section>
@@ -300,7 +341,7 @@ export default function LoginInputs(): JSX.Element {
                   loginForm.append("password", pw);
                   const [message, suspicious] = new ClickEvaluator().evaluateClickMovements(ev);
                   if (suspicious || !callbackSubmitBtn) {
-                    alert(message);
+                    toast.error(message);
                     const parent = ev.currentTarget.parentElement;
                     let parentIdf = "";
                     if (parent instanceof HTMLButtonElement || parent instanceof HTMLInputElement) {

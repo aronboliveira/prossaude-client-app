@@ -57,10 +57,10 @@ export default function Watcher({ routeCase }: { routeCase?: pageCases }): JSX.E
     else if (routeCase === "base") handleLinkChanges("base", "Base Page Style");
     else if (routeCase === "ag") {
       handleLinkChanges("ag", "AG Page Style");
-      agProps.agIsAutoCorrectOn = getGlobalEls(agProps.agIsAutoCorrectOn, "num");
+      getGlobalEls(agProps.agIsAutoCorrectOn, "num");
     } else if (routeCase === "od") {
       handleLinkChanges("od", "Od Page Style");
-      odProps.odIsAutoCorrectOn = getGlobalEls(odProps.odIsAutoCorrectOn, "notNum");
+      getGlobalEls(odProps.odIsAutoCorrectOn, "notNum");
     } else if (routeCase === "recover") handleLinkChanges("recover", "Recover Page Style");
     setHandle(true);
     return (): void => {

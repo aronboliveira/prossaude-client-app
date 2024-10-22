@@ -10,7 +10,7 @@ import {
   evalPseudoNum,
   evalPGCDecay,
 } from "./edFisNutModel";
-import { checkReturnIndex, formatValue } from "./edFisNutController";
+import { checkReturnIndex, assignFormatedValue } from "./edFisNutController";
 import { highlightChange, fadeElement } from "../../global/gStyleScript";
 import { parseNotNaN, numberLimit, autoCapitalizeInputs, checkAutoCorrect, limitedError } from "../../global/gModel";
 import { handleEventReq, syncAriaStates, updateSimpleProperty } from "../../global/handlers/gHandlers";
@@ -19,7 +19,6 @@ import {
   inputNotFound,
   elementNotFound,
   multipleElementsNotFound,
-  elementNotPopulated,
   matchError,
   stringError,
   typeError,
@@ -42,7 +41,7 @@ import {
 } from "../../global/declarations/types";
 import { maxProps, person, tabProps } from "@/vars";
 import { ActiveTargInps, TargInps } from "@/lib/global/declarations/interfaces";
-import { GordLvl, NafTypeValue, Protocol } from "@/lib/global/declarations/testVars";
+import { NafTypeValue, Protocol } from "@/lib/global/declarations/testVars";
 import { CacheEN as cen } from "./cache";
 export function addRowAtivFis(count: number = 3, context: string = "Rot"): void {
   const tBodyContainer = document.getElementById(`tbodyAtFis${context}`);
@@ -182,20 +181,15 @@ export function switchAutoFill(autoFillBtn: targEl): void {
       autoFillBtn.textContent = "Ativar Cálculo Automático";
     else if (autoFillBtn.innerText.match(/Ativar C[aá]lculo Autom[aá]tico/gi))
       autoFillBtn.textContent = "Desativar Cálculo Automático";
-    locksTabInd?.length > 0 && locksTabInd.every(lockTabInd => lockTabInd instanceof HTMLElement)
-      ? switchLockInputs(locksTabInd)
-      : elementNotPopulated(locksTabInd, "locksTabInd", extLine(new Error()));
-  } catch (e) {
-    limitedError(`Error executing switchAutoFill:\n${(e as Error).message}`, "switchAutoFill");
-  }
-}
-export function switchLockInputs(locksTabInd: targEl[]): void {
-  try {
-    locksTabInd.filter(l => l instanceof Element);
-    if (locksTabInd.length === 0) throw new Error(`List of Locks empty`);
-    locksTabInd.forEach((lock, i) => {
-      const siblingInput = lock?.parentElement?.parentElement?.querySelector(".tabInpProg");
+    const filteredLocks = locksTabInd.filter(lockTabInd => lockTabInd instanceof HTMLElement);
+    if (filteredLocks.length === 0) return;
+    filteredLocks.forEach((lock, i) => {
       try {
+        if (!(lock instanceof Element)) return;
+        const td = lock.closest("td") || lock.closest("th");
+        if (!td) return;
+        const siblingInput = td.querySelector(".tabInpProg");
+        const siblingButton = td.querySelector(".tabBtnInd");
         if (
           !(
             siblingInput instanceof HTMLInputElement ||
@@ -212,6 +206,10 @@ export function switchLockInputs(locksTabInd: targEl[]): void {
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lock" viewBox="0 0 16 16"><defs><linearGradient id="gradiente-lock" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" style="stop-color:rgb(233, 180, 7)"></stop><stop offset="100%" style="stop-color:rgb(243, 221, 93)"></stop></linearGradient></defs><path d="M8 1 a2 2 0 0 1 2 2 v4 H6 V3 a2 2 0 0 1 2-2 m3 6 V3 a3 3 0 0 0-6 0 v4" class="svg-lock-hook"></path><path d="M5 7 a2 2 0 0 0-2 2 v5 a2 2 0 0 0 2 2h 6 a2 2 0 0 0 2-2 V9 a2 2 0 0 0-2-2" class="svg-lock-body"></path><line x1="5" y1="7" x2="11" y2="7" stroke="black"></line></svg>`;
             fadeElement(lock, "1");
           }, 500);
+          if (siblingInput instanceof HTMLInputElement) siblingInput.readOnly = true;
+          else if (siblingInput instanceof HTMLSelectElement) siblingInput.disabled = true;
+          if (siblingButton instanceof HTMLButtonElement || siblingButton instanceof HTMLInputElement)
+            siblingButton.disabled = true;
         } else {
           fadeElement(lock, "0");
           setTimeout(() => {
@@ -261,13 +259,18 @@ export function switchLockInputs(locksTabInd: targEl[]): void {
             </svg>`;
             fadeElement(lock, "1");
           }, 500);
+          if (!(tabProps.gl instanceof HTMLSelectElement || tabProps.gl instanceof HTMLInputElement)) return;
+          if (siblingInput instanceof HTMLInputElement) siblingInput.readOnly = false;
+          else if (siblingInput instanceof HTMLSelectElement) siblingInput.disabled = false;
+          if (siblingButton instanceof HTMLButtonElement || siblingButton instanceof HTMLInputElement)
+            siblingButton.disabled = false;
         }
       } catch (e) {
         console.error(`Error executing iteration ${i} for Locks change:\n${(e as Error).message}`);
       }
     });
   } catch (e) {
-    console.error(`Error executing switchLockInputs:\n${(e as Error).message}`);
+    limitedError(`Error executing switchAutoFill:\n${(e as Error).message}`, "switchAutoFill");
   }
 }
 export function getNumCol(evEl: targEl): void {
@@ -315,108 +318,74 @@ export function matchPersonPropertiesWH(): void {
       tih = tabProps.tih;
     if (!("weight" in person && typeof person.weight !== "number" && Number.isFinite(person.weight))) person.weight = 0;
     if (!("height" in person && typeof person.height !== "number" && Number.isFinite(person.height))) person.height = 0;
-    tiw instanceof HTMLInputElement
-      ? person.dispatchWeight(validateEvResultNum(tiw, person.weight))
-      : inputNotFound(tiw, "tiw", extLine(new Error()));
-    tih instanceof HTMLInputElement
-      ? person.dispatchHeight(validateEvResultNum(tih, person.height))
-      : inputNotFound(tih, "tih", extLine(new Error()));
+    if (tiw instanceof HTMLInputElement) person.dispatchWeight(validateEvResultNum(tiw, person.weight));
+    if (tih instanceof HTMLInputElement) person.dispatchHeight(validateEvResultNum(tih, person.height));
   } catch (e) {
     limitedError(`Error executing matchPersonPropertiesWH:${(e as Error).message}`, "matchPersonPropertiesWH");
   }
 }
-export function matchPersonPropertiesDC(): void {
+export function updateIndexesContexts(): void {
   try {
-    const tidc = tabProps.tidc;
-    if (!("sumDCut" in person && typeof person.sumDCut !== "number" && Number.isFinite(person.sumDCut)))
-      person.sumDCut = 0;
-    tidc instanceof HTMLInputElement
-      ? person.dispatchDC(validateEvResultNum(tidc, person.sumDCut))
-      : inputNotFound(tidc, "tidc", extLine(new Error()));
-    console.log("Dispatched " + person.sumDCut);
-  } catch (e) {
-    limitedError(`Error execu:${(e as Error).message}`, "matchPersonPropertiesDC");
-  }
-}
-export function updateIndexesContexts({ gl, fct }: { gl: targEl; fct: targEl }): void {
-  //TODO REMOVER DEPOIS, FINS DE TESTE
-  if (!gl) console.warn(`gl passed as void to updateIndexesContexts`);
-  if (!fct) console.warn(`fct passed as void to updateIndeesContexts`);
-  evalFactorAtleta();
-  gl ??=
-    tabProps.gl ?? document.getElementById("gordCorpLvl") ?? document.querySelector('[data-title*="Gordura Corporal"]');
-  fct ??=
-    tabProps.fct ?? document.getElementById("formCalcTMBType") ?? document.querySelector('[data-title*="Fórmula"]');
-  try {
+    tabProps.gl ??=
+      document.getElementById("gordCorpLvl") ?? document.querySelector('[data-title*="Gordura Corporal"]');
+    tabProps.fct ??= document.getElementById("formCalcTMBType") ?? document.querySelector('[data-title*="Fórmula"]');
+    const gl = tabProps.gl,
+      fct = tabProps.fct;
     if (!(person instanceof Person)) throw new Error(`Failed to validate person instance`);
-    if (!(gl instanceof HTMLElement)) throw new Error(`Failed to validate instance of Element for Body Fat Level`);
+    if (!(gl instanceof HTMLSelectElement || gl instanceof HTMLInputElement))
+      throw new Error(`Failed to validate instance of Element for Body Fat Level`);
     if (!(fct instanceof HTMLElement)) throw new Error(`Failed to validate instance of Element for Body Type`);
-    const { l, v } = person.calcIMC(person);
-    tabProps.IMC = parseNotNaN(v.toFixed(4));
-    updateIMCContext({ els: { gl, fct }, imc: { l, v } });
+    evalFactorAtleta();
+    const { l: glv, v: imc } = person.calcIMC(person);
+    tabProps.IMC = parseNotNaN(imc.toFixed(4));
+    const tiimc = tabProps.tiimc;
+    if (tiimc instanceof HTMLInputElement || tiimc instanceof HTMLSelectElement)
+      assignFormatedValue(tiimc, tabProps.IMC);
+    gl.value = glv || "abaixo";
+    fluxFormIMC(gl, fct);
     const { pgc, mlg } = person.calcPGC(person);
-    tabProps.MLG = parseNotNaN(mlg.toFixed(4)) || 0;
-    const timlg = tabProps.timlg;
-    if (timlg instanceof HTMLInputElement || timlg instanceof HTMLSelectElement) formatValue(timlg, tabProps.MLG);
-    tabProps.PGC = parseNotNaN(pgc.toFixed(4)) || 0;
-    const tipgc = tabProps.tipgc;
-    if (tipgc instanceof HTMLInputElement || tipgc instanceof HTMLSelectElement) formatValue(tipgc, tabProps.PGC);
-    updateTMBContext(fct);
+    tabProps.MLG = parseNotNaN(mlg.toFixed(4));
+    tabProps.PGC = parseNotNaN(pgc.toFixed(4));
+    const timlg = tabProps.timlg,
+      tipgc = tabProps.tipgc;
+    if (timlg instanceof HTMLInputElement || timlg instanceof HTMLSelectElement)
+      assignFormatedValue(timlg, tabProps.MLG);
+    if (tipgc instanceof HTMLInputElement || tipgc instanceof HTMLSelectElement)
+      assignFormatedValue(tipgc, tabProps.PGC);
+    tabProps.fct ??= document.getElementById("formCalcTMBType") ?? document.querySelector('[data-title*="Fórmula"]');
+    if (!(fct instanceof HTMLSelectElement || fct instanceof HTMLInputElement))
+      throw new Error(`Failed to validate Formula Element`);
+    evalFactorAtleta();
+    const { l: formula, v: tmb } = person.calcTMB(person);
+    fct.value = formula;
+    tabProps.TMB = parseNotNaN(tmb.toFixed(4));
+    const titmb = tabProps.titmb;
+    if (titmb instanceof HTMLSelectElement || titmb instanceof HTMLInputElement)
+      assignFormatedValue(tabProps.titmb as entryEl, tabProps.TMB);
     evalFactorAtvLvl();
-    if (!(tabProps.TMB && tabProps.TMB >= 0 && (tabProps.factorAtvLvl as number) >= 0)) return; //invalid tmb
-    updateGETContext(person);
+    if (!(tabProps.TMB && tabProps.TMB >= 0 && (tabProps.factorAtvLvl as number) >= 0)) return;
+    tabProps.GET = parseNotNaN(person.calcGET().toFixed(4));
+    const tiget = tabProps.tiget;
+    if (tiget instanceof HTMLInputElement || tiget instanceof HTMLSelectElement)
+      assignFormatedValue(tiget, tabProps.GET);
   } catch (e) {
     limitedError(`Error executing updateIndexesContexts:\n${(e as Error).message}`, "updateIndexesContexts");
   }
 }
-export function updateIMCContext({
-  els: { gl, fct },
-  imc: { l, v },
-  ignored,
-}: {
-  els: { gl: targEl; fct: targEl };
-  imc: { l: GordLvl; v: number };
-  ignored?: "IMC" | "MLG" | "BOTH" | "NONE";
-}): void {
-  try {
-    gl ??=
-      tabProps.gl ??
-      document.getElementById("gordCorpLvl") ??
-      document.querySelector('[data-title*="Gordura Corporal"]');
-    if (!(gl instanceof HTMLSelectElement || gl instanceof HTMLInputElement))
-      throw inputNotFound(gl, `Element for body fat level`, extLine(new Error()));
-    fct ??=
-      tabProps.fct ?? document.getElementById("formCalcTMBType") ?? document.querySelector('[data-title*="Fórmula"]');
-    if (!(fct instanceof HTMLSelectElement || gl instanceof HTMLInputElement))
-      throw inputNotFound(fct, `Element for Protocol Formula`, extLine(new Error()));
-    if (!(tabProps.tiimc instanceof HTMLInputElement || tabProps.tiimc instanceof HTMLSelectElement))
-      throw inputNotFound(fct, `Target Input for IMC`, extLine(new Error()));
-    if (!ignored || (ignored && !["IMC", "MLG", "BOTH"].includes(ignored))) ignored = "NONE";
-    if (!(l === "abaixo" || l === "eutrofico" || l === "sobrepeso" || /obeso/g.test(l)))
-      throw typeError("l", l, "string", extLine(new Error()));
-    gl.value = l || "abaixo";
-    fluxFormIMC(gl, fct);
-    if (!(ignored === "IMC" || ignored === "BOTH")) formatValue(tabProps.tiimc, v);
-  } catch (e) {
-    limitedError(`Error executing updateIMCContext:\n${(e as Error).message}`, "updateIMCContext");
-  }
-}
 export function fluxFormIMC(gl: targEl, fct: targEl): { glChanged: boolean; fctChanged: boolean } {
   try {
-    gl ??=
-      tabProps.gl ??
-      document.getElementById("gordCorpLvl") ??
-      document.querySelector('[data-title=*"Gordura Corporal"]');
+    tabProps.gl ??=
+      document.getElementById("gordCorpLvl") ?? document.querySelector('[data-title=*"Gordura Corporal"]');
+    gl ??= tabProps.gl;
     if (!(gl instanceof HTMLSelectElement || gl instanceof HTMLInputElement))
       throw inputNotFound(gl, `Element for body fat level`, extLine(new Error()));
-    fct ??=
-      tabProps.fct ?? document.getElementById("formCalcTMBType") ?? document.querySelector('[data-title*="Fórmula"]');
+    tabProps.fct ??= document.getElementById("formCalcTMBType") ?? document.querySelector('[data-title*="Fórmula"]');
+    fct ??= tabProps.fct;
     if (!(fct instanceof HTMLSelectElement || fct instanceof HTMLInputElement))
       throw new Error(`Failed to validate instance of Element for Protocol Formula`);
-    const naf =
-      tabProps.naf ??
-      document.getElementById("nafType") ??
-      document.querySelector('[data-title*="Fator de Nível de Atividade Física"');
+    tabProps.naf ??=
+      document.getElementById("nafType") ?? document.querySelector('[data-title*="Fator de Nível de Atividade Física"');
+    const naf = tabProps.naf;
     if (!(naf instanceof HTMLSelectElement || naf instanceof HTMLInputElement))
       throw new Error(`Failed to validate instance of Level of Physical Activity element`);
     let prevGl = gl.value;
@@ -465,180 +434,11 @@ export function fluxFormIMC(gl: targEl, fct: targEl): { glChanged: boolean; fctC
     return { glChanged: false, fctChanged: false };
   }
 }
-export function updateTMBContext(fct: targEl): void {
-  try {
-    fct ??=
-      tabProps.fct ?? document.getElementById("formCalcTMBType") ?? document.querySelector('[data-title*="Fórmula"]');
-    if (!(fct instanceof HTMLSelectElement || fct instanceof HTMLInputElement))
-      throw new Error(`Failed to validate Formula Element`);
-    evalFactorAtleta();
-    const { l, v } = person.calcTMB(person);
-    fct.value = l;
-    tabProps.TMB = parseNotNaN(v.toFixed(4));
-    const titmb = tabProps.titmb;
-    if (titmb instanceof HTMLSelectElement || titmb instanceof HTMLInputElement)
-      formatValue(tabProps.titmb as entryEl, tabProps.TMB);
-  } catch (e) {
-    limitedError(`Error executing updateTMBContext:\n${(e as Error).message}`, "updateTMBContext");
-  }
-}
-export function updateGETContext(person: Person): void {
-  tabProps.GET = parseNotNaN(person.calcGET().toFixed(4)) || 0;
-  const tiget = tabProps.tiget;
-  tiget instanceof HTMLInputElement || tiget instanceof HTMLSelectElement
-    ? formatValue(tiget, tabProps.GET)
-    : inputNotFound(tiget, "tiget em updateGETContext", extLine(new Error()));
-}
-export function matchTMBElements({
-  idf,
-  naf,
-  gl,
-  fct,
-  sa,
-}: {
-  idf: string;
-  naf: targEl;
-  gl: targEl;
-  fct: targEl;
-  sa: targEl;
-  changes: { glChanged: boolean; fctChanged: boolean };
-}): void {
-  try {
-    if (typeof idf !== "string") throw new Error(`Failed to validate target string`);
-    gl ??=
-      tabProps.gl ??
-      document.getElementById("gordCorpLvl") ??
-      document.querySelector('[data-title*="Gordura Corporal"]');
-    if (!(gl instanceof HTMLSelectElement || gl instanceof HTMLInputElement))
-      throw inputNotFound(gl, `Selector for Body Fat Level`, extLine(new Error()));
-    fct ??=
-      tabProps.fct ?? document.getElementById("formCalcTMBType") ?? document.querySelector('[data-title*="Fórmula"]');
-    if (!(fct instanceof HTMLSelectElement || fct instanceof HTMLInputElement))
-      throw inputNotFound(fct, `Selector for TMB type formula`, extLine(new Error()));
-    naf ??=
-      tabProps.naf ??
-      document.getElementById("nafType") ??
-      document.querySelector('[data-title*="Fator de Nível de Atividade Física"');
-    if (!(naf instanceof HTMLSelectElement || naf instanceof HTMLInputElement))
-      throw inputNotFound(naf, `Selector for Intensity of Physical Activity`, extLine(new Error()));
-    const spanFactorAtleta = tabProps.spanFa;
-    if (!(spanFactorAtleta instanceof HTMLElement))
-      throw elementNotFound(spanFactorAtleta, `Span for Athlete Factor`, extLine(new Error()));
-    const lockGl = tabProps.lockGl;
-    if (!(lockGl instanceof Element))
-      throw elementNotFound(lockGl, `Element for Displaying Lock for Body Fat Level`, extLine(new Error()));
-    //update em selects secundários (nível de gordura e fórmula)
-    const switchSecSelects = (
-      fct: entryEl,
-    ):
-      | false
-      | {
-          glChanged: boolean;
-          fctChanged: boolean;
-        } => fct.value !== "tinsley" && fluxFormIMC(gl, fct);
-    //garante coesão de selects primários (nível e fator)
-    if (/LvlAtFis/gi.test(idf)) {
-      switchSecSelects(fct);
-      // mainSelect.value = nafType.value;
-    } else if (/nafType/gi.test(idf)) {
-      sa ??=
-        tabProps.sa ??
-        document.getElementById("selectLvlAtFis") ??
-        document.querySelector('[data-title*="Nível de Atividade Física"]');
-      if (!(sa instanceof HTMLInputElement || sa instanceof HTMLSelectElement))
-        throw inputNotFound(sa, "Selector for Level of Physical Activity factor", extLine(new Error()));
-      switchSecSelects(fct);
-    } else stringError("testing idf in matchTMBElements()", idf, extLine(new Error()));
-    if (naf.value === "2.2") {
-      fct.value = "tinsley";
-      spanFactorAtleta.hidden = false;
-      fadeElement(spanFactorAtleta, "0");
-      setTimeout(() => fadeElement(spanFactorAtleta, "1"), 500);
-      if (/bi-lock/gi.test(lockGl.innerHTML)) {
-        fadeElement(lockGl, "0");
-        setTimeout(() => {
-          lockGl.innerHTML = `<svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            class="bi bi-unlock"
-            viewBox="0 0 16 16"
-          >
-            <defs>
-              <linearGradient
-                id="gradiente-unlock"
-                x1="0%"
-                y1="0%"
-                x2="100%"
-                y2="0%"
-              >
-                <stop
-                  offset="0%"
-                  style="stop-color:rgb(233, 180, 7)"
-                />
-                <stop
-                  offset="100%"
-                  style="stop-color:rgb(243, 221, 93)"
-                />
-              </linearGradient>
-            </defs>
-            <path
-              d="M11 1 a2 2 0 0 1 2 2 v4 H9 V3 a2 2 0 0 1 2-2 m3 6 V3 a3 3 0 0 0-6 0 v4"
-              class="svg-unlock-hook"
-              fill="url(#gradiente-unlock)"
-            />
-            <path
-              d="M3 7 a2 2 0 0 0-2 2 v5 a2 2 0 0 0 2 2h 6 a2 2 0 0 0 2-2 V9 a2 2 0 0 0-2-2"
-              class="svg-unlock-body"
-              fill="url(#gradiente-unlock)"
-            />
-            <line
-              x1="2.2"
-              y1="7.05"
-              x2="9.3"
-              y2="7.05"
-              stroke="black"
-            />
-            </svg>`;
-          fadeElement(lockGl, "1");
-        }, 500);
-      }
-    } else if (naf.value === "1.2" || naf.value === "1.4" || naf.value === "1.6" || naf.value === "1.9") {
-      setTimeout(() => {
-        fadeElement(spanFactorAtleta, "0");
-        setTimeout(() => (spanFactorAtleta.hidden = true), 500);
-      }, 500);
-      if (
-        gl.value === "sobrepeso" ||
-        gl.value === "obeso1" ||
-        gl.value === "obeso2" ||
-        gl.value === "obeso3" ||
-        (tabProps.IMC && tabProps.IMC >= 25)
-      )
-        fct.value = "mifflinStJeor";
-      else if (gl.value === "abaixo" || gl.value === "eutrofico" || (tabProps.IMC && tabProps.IMC < 25))
-        fct.value = "harrisBenedict";
-      if (/bi-unlock/gi.test(lockGl.innerHTML)) {
-        fadeElement(lockGl, "0");
-        setTimeout(() => {
-          lockGl.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lock" viewBox="0 0 16 16"><defs><linearGradient id="gradiente-lock" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" style="stop-color:rgb(233, 180, 7)"></stop><stop offset="100%" style="stop-color:rgb(243, 221, 93)"></stop></linearGradient></defs><path d="M8 1 a2 2 0 0 1 2 2 v4 H6 V3 a2 2 0 0 1 2-2 m3 6 V3 a3 3 0 0 0-6 0 v4" class="svg-lock-hook"></path><path d="M5 7 a2 2 0 0 0-2 2 v5 a2 2 0 0 0 2 2h 6 a2 2 0 0 0 2-2 V9 a2 2 0 0 0-2-2" class="svg-lock-body"></path><line x1="5" y1="7" x2="11" y2="7" stroke="black"></line></svg>`;
-          fadeElement(lockGl, "1");
-        }, 500);
-      }
-    } else
-      console.error(`Error obtaining the value for Targeted Main Selector, line ${extLine(new Error())}.
-          Obtained value: ${naf?.value ?? "undefined"}`);
-  } catch (e) {
-    console.error(`Error executing matchTMBElements:\n${(e as Error).message}`);
-  }
-}
-export function updatePGC(parentEl: targEl | Document, ctx: string = "cons"): void {
+export function updatePGC(ctx: string = "cons"): void {
   try {
     if (!(person instanceof Person)) throw new Error(`Failed to validate instance of person`);
     if (typeof ctx !== "string" || (ctx !== "cons" && ctx !== "col"))
       throw new Error(`Failed to validate context argument`);
-    if (!(parentEl instanceof HTMLElement)) parentEl = document;
     const tidc = tabProps.tidc,
       tipgc = tabProps.tipgc;
     if (
@@ -653,9 +453,14 @@ export function updatePGC(parentEl: targEl | Document, ctx: string = "cons"): vo
       tipgc instanceof HTMLSelectElement
     ) {
       tabProps.PGC = parseNotNaN(person.calcPGC(person).pgc.toFixed(4)) ?? 0;
-      console.log("Evaluating...");
-      evalPGCDecay(tipgc) ? formatValue(tipgc, tabProps.PGC) : formatValue(tipgc, tabProps.PGC, 2);
-      console.log("Evaluation: " + person.sumDCut);
+      evalPGCDecay(tipgc) ? assignFormatedValue(tipgc, tabProps.PGC) : assignFormatedValue(tipgc, tabProps.PGC, 2);
+      tabProps.MLG ??= 0;
+      const max = 100 - tabProps.PGC;
+      if (tabProps.MLG > max) tabProps.MLG = max;
+      if (!(tabProps.timlg instanceof HTMLElement)) return;
+      tabProps.timlg.dataset.maxnum = max.toString();
+      if (!(tabProps.timlg instanceof HTMLInputElement && tabProps.timlg.type === "number")) return;
+      tabProps.timlg.max = max.toString();
     } else inputNotFound(tipgc, "tipgc", extLine(new Error()));
   } catch (e) {
     console.error(`Error executing updatePGC:\n${(e as Error).message}`);
@@ -703,8 +508,6 @@ export function defineTargInps({
     switch (ctx) {
       case "cons": {
         let num = evalPseudoNum(tabProps.numCons) || 1;
-        console.log("---CASE CONS---");
-        console.log("Appointment Number: " + (tabProps.numCons ?? "Indefinido") + " vs. " + num);
         if (refs) {
           console.log(
             Object.values(refs).map((col: { [k: string]: NlMRef<nlInp> }) =>
@@ -863,14 +666,12 @@ export function defineTargInps({
 }
 export function switchRequiredCols({
   snc,
-  fsp,
   td,
   tsv,
   tma,
   tip,
 }: {
   snc: targEl;
-  fsp: targEl;
   td: targEl;
   tsv: targEl;
   tma: targEl;
@@ -880,6 +681,8 @@ export function switchRequiredCols({
   try {
     if (!(snc instanceof HTMLSelectElement || snc instanceof HTMLInputElement))
       throw new Error(`Failed to validate instance of Number of Appointment Selector`);
+    tabProps.fsp ??= document.getElementById("fsProgConsId");
+    const fsp = tabProps.fsp;
     if (!(fsp instanceof HTMLElement)) throw new Error(`Failed to validate instance of Fieldset for Tabs`);
     if (!(td instanceof HTMLElement)) throw new Error(`Failed to validate instance of Table for Skin Folds`);
     if (!(tsv instanceof HTMLElement)) throw new Error(`Failed to validate instance of Table for Vital Signs`);
@@ -1108,8 +911,8 @@ export function switchNumConsTitles(
     console.error(`Error executing switchNumConsTitles:\n${(e as Error).message}`);
   }
 }
-export function handleSumClick(ev: React.MouseEvent, refs: { prt: targEl; td: targEl; fsp: targEl }): void {
-  const { prt, td, fsp } = refs;
+export function handleSumClick(ev: React.MouseEvent, refs: { prt: targEl; td: targEl }): void {
+  const { prt, td } = refs;
   try {
     if (!(prt instanceof HTMLSelectElement || prt instanceof HTMLInputElement))
       throw elementNotFound(prt, `prt Element`, extLine(new Error()));
@@ -1144,7 +947,7 @@ export function handleSumClick(ev: React.MouseEvent, refs: { prt: targEl; td: ta
     )
       return;
     getNumCol(ev.currentTarget);
-    updatePGC(fsp ?? document.getElementById("fsProgConsId"), "col");
+    updatePGC("col");
   } catch (e) {
     limitedError(
       `Error executing callback for Button for Sum of Skin Folds:\n${(e as Error).message}`,
@@ -1206,7 +1009,6 @@ export function createArraysRels({
     for (let iC = 0; iC < arrayRows.length; iC++) {
       if (!(arrayRows[iC] instanceof HTMLElement && !arrayRows[iC].hasAttribute("hidden"))) continue;
       const inp = targColInps[iC] as HTMLInputElement;
-      console.log(inp.id + " -> " + inp.value);
       if (inp && inp.value) colAcc += evalPseudoNum(inp.value);
     }
     const sumInp = document.getElementById(`tabInpRowDCut9_${btnCol}`) as nlEl;
@@ -1229,7 +1031,7 @@ export function handleIndEv(
   ctx: IndCases,
   ctxEls: { el: targEl; fsp: targEl; gl: targEl; fct: targEl; refs: TargInps | null },
 ): void {
-  let { el, fsp, gl, fct, refs } = ctxEls;
+  let { el, fsp, fct, refs } = ctxEls;
   try {
     if (
       !(
@@ -1243,9 +1045,6 @@ export function handleIndEv(
     getNumCol(el);
     if (!Number.isFinite(tabProps.numCol)) tabProps.numCol = 2;
     evalFactorAtleta();
-    const consTablesFs = fsp ?? document.getElementById("fsProgConsId");
-    if (!(consTablesFs instanceof HTMLElement))
-      throw elementNotFound(consTablesFs, `Cons Table Fieldset`, extLine(new Error()));
     if (tabProps.isAutoFillActive) {
       const { tiw, tih, tidc, tiimc, timlg, titmb, tiget, tipgc } = defineTargInps({
         el,
@@ -1269,7 +1068,7 @@ export function handleIndEv(
         ...(tiget && { tiget }),
         ...(tipgc && { tipgc }),
       });
-      updatePGC(consTablesFs, "col");
+      updatePGC("col");
       for (const t of [
         tabProps.tiw,
         tabProps.tih,
@@ -1298,12 +1097,7 @@ export function handleIndEv(
         else targInp.setAttribute("data-autofill", "false");
       });
     }
-    if (ctx !== "BTN" && ctx !== "IMC" && ctx !== "MLG" && ctx !== "TMB" && ctx !== "GET" && ctx !== "PGC")
-      throw stringError(
-        `validation of ctx argument in handleIndEv for ${el.id || el.tagName}`,
-        ctx,
-        extLine(new Error()),
-      );
+    if (ctx !== "BTN" && ctx !== "IMC" && ctx !== "MLG" && ctx !== "TMB" && ctx !== "GET" && ctx !== "PGC") return;
     ctx = ctx.toUpperCase() as IndCases;
     switch (ctx) {
       case "BTN":
@@ -1326,18 +1120,14 @@ export function handleIndEv(
       default:
         stringError("value for callbackTabBtnsInps() ctx", ctx, extLine(new Error()));
     }
-    fct ??=
-      tabProps.fct ?? document.getElementById("formCalcTMBType") ?? document.querySelector('[data-title*="Fórmula"]');
-    if (!(fct instanceof HTMLElement))
-      throw elementNotFound(fct, `Instance of Form TMB Type Element`, extLine(new Error()));
-    if (ctx === "BTN" || tabProps.isAutoFillActive) {
-      matchPersonPropertiesWH();
-      if (typeof tabProps.factorAtvLvl !== "number")
-        throw typeError(`typeof FactorAtvLvl`, tabProps.factorAtleta, `number`, extLine(new Error()));
-      evalFactorAtleta();
-      //UPDATE AUTOMÁTICO DE VALUES DOS INPUTS AQUI
-      updateIndexesContexts({ gl, fct });
-    }
+    tabProps.fct ??= document.getElementById("formCalcTMBType") ?? document.querySelector('[data-title*="Fórmula"]');
+    fct = tabProps.fct;
+    if (!(fct instanceof HTMLElement)) return;
+    if (!(ctx === "BTN" || tabProps.isAutoFillActive)) return;
+    matchPersonPropertiesWH();
+    evalFactorAtvLvl();
+    evalFactorAtleta();
+    updateIndexesContexts();
   } catch (e) {
     console.error(
       `Error executing handleIndEv with ${el?.id || el?.className || el?.tagName}:\n${(e as Error).message}`,
@@ -1371,9 +1161,6 @@ export function exeAutoFill(el: targEl, context: string = "cons"): autofillResul
     },
   };
   try {
-    const fsp = tabProps.fsp ?? document.getElementById("fsProgConsId"),
-      gl = tabProps.gl ?? document.getElementById("gordCorpLvl"),
-      fct = tabProps.fct ?? document.getElementById("formCalcTMBType");
     if (!(el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement || el instanceof HTMLSelectElement))
       throw new Error(`Failed to validate target instance`);
     if (!(person instanceof Person)) throw new Error(`Failed to validate person instance`);
@@ -1383,29 +1170,22 @@ export function exeAutoFill(el: targEl, context: string = "cons"): autofillResul
       getNumCol(el);
       numRef = Number.isFinite(tabProps.numCol) ? tabProps.numCol || 2 : 2;
     }
-    return runAutoFill({ el, fsp, gl, fct }, context);
+    return runAutoFill(el, context);
   } catch (e) {
     console.error(`Error executing exeAutoFill:\n${(e as Error).message}`);
     return iniResult;
   }
 }
-export function runAutoFill(
-  contextEls: { el: targEl; fsp: targEl; gl: targEl; fct: targEl },
-  ctx: string = "cons",
-  refs?: TargInps,
-): autofillResult {
-  let arrIndexes: number[] = [],
-    arrtargInps: targEl[] = [];
-  const { el, fsp, gl, fct } = contextEls,
-    numRef =
-      ctx === "cons"
-        ? evalPseudoNum(tabProps.numCons) || 1
-        : el instanceof HTMLElement && el.dataset.col && el.dataset.col !== ""
-        ? parseNotNaN(el.dataset.col || "2", 2, "int") ||
-          (/_/g.test(el.id)
-            ? parseNotNaN(el.id.slice(el.id.lastIndexOf("_") + 1) || "2", 2, "int")
-            : evalPseudoNum(tabProps.numCol) || 2)
-        : evalPseudoNum(tabProps.numCol) || 2;
+export function runAutoFill(el: targEl, ctx: string = "cons", refs?: TargInps): autofillResult {
+  const numRef =
+    ctx === "cons"
+      ? evalPseudoNum(tabProps.numCons) || 1
+      : el instanceof HTMLElement && el.dataset.col && el.dataset.col !== ""
+      ? parseNotNaN(el.dataset.col || "2", 2, "int") ||
+        (/_/g.test(el.id)
+          ? parseNotNaN(el.id.slice(el.id.lastIndexOf("_") + 1) || "2", 2, "int")
+          : evalPseudoNum(tabProps.numCol) || 2)
+      : evalPseudoNum(tabProps.numCol) || 2;
   if (!cen.indisDoc || cen.indisDoc.length === 0)
     cen.indis = Array.from(document.querySelectorAll(".tabInpProgIndPerc"));
   if (!cen.wis || cen.wis.length === 0) cen.wis = Array.from(document.querySelectorAll(".inpWeight"));
@@ -1419,7 +1199,8 @@ export function runAutoFill(
     if (t instanceof HTMLElement) t.dataset[`target`] = "false";
     else t?.setAttribute("data-target", "false");
   });
-  const { tiw, tih, tidc, tiimc, timlg, titmb, tiget, tipgc } = defineTargInps({ el, parent: fsp, refs, ctx });
+  tabProps.fsp ??= document.getElementById("fsProgConsId");
+  const { tiw, tih, tidc, tiimc, timlg, titmb, tiget, tipgc } = defineTargInps({ el, parent: tabProps.fsp, refs, ctx });
   Object.assign(tabProps, {
     ...(tiw && { tiw }),
     ...(tih && { tih }),
@@ -1450,11 +1231,11 @@ export function runAutoFill(
     else targ?.setAttribute("data-target", "true");
   });
   matchPersonPropertiesWH();
-  matchPersonPropertiesDC();
-  updateIndexesContexts({ gl, fct });
-  updatePGC(fsp, ctx);
-  arrIndexes.push(tabProps.PGC ?? 0);
-  arrtargInps.push(tabProps.tidc, tabProps.tiget);
+  if (!("sumDCut" in person && typeof person.sumDCut !== "number" && Number.isFinite(person.sumDCut)))
+    person.sumDCut = 0;
+  if (tidc instanceof HTMLInputElement) person.dispatchDC(validateEvResultNum(tidc, person.sumDCut));
+  updateIndexesContexts();
+  updatePGC(ctx);
   [
     { k: "tiimc", v: tabProps.IMC?.toString() ?? "0" },
     { k: "timlg", v: tabProps.MLG?.toString() ?? "0" },
@@ -1557,30 +1338,27 @@ export function callbackAtvLvlElementNaf(
 ): void {
   try {
     if (!(person instanceof Person)) throw new Error(`Failed to validate patient person instance`);
-    sa ??=
-      tabProps.sa ??
-      document.getElementById("selectLvlAtFis") ??
-      document.querySelector('[data-title*="Nível de Atividade Física"]');
+    tabProps.sa ??=
+      document.getElementById("selectLvlAtFis") ?? document.querySelector('[data-title*="Nível de Atividade Física"]');
+    sa = tabProps.sa;
     if (!(sa instanceof HTMLSelectElement || sa instanceof HTMLInputElement))
       throw inputNotFound(sa, `Validation of Selector for Level of Physical activity`, extLine(new Error()));
-    gl ??=
-      tabProps.gl ??
-      document.getElementById("gordCorpLvl") ??
-      document.querySelector('[data-title*="Gordura Corporal"]');
+    tabProps.gl ??=
+      document.getElementById("gordCorpLvl") ?? document.querySelector('[data-title*="Gordura Corporal"]');
+    gl = tabProps.gl;
     if (!(gl instanceof HTMLSelectElement || sa instanceof HTMLInputElement))
       throw inputNotFound(gl, `Validation of Selector for Level of Body Fat`, extLine(new Error()));
-    naf ??=
-      tabProps.naf ??
-      document.getElementById("nafType") ??
-      document.querySelector('[data-title*="Fator de Nível de Atividade Física"');
+    tabProps.naf ??=
+      document.getElementById("nafType") ?? document.querySelector('[data-title*="Fator de Nível de Atividade Física"');
+    naf = tabProps.naf;
     if (!(naf instanceof HTMLSelectElement || naf instanceof HTMLInputElement))
       throw inputNotFound(
         naf,
         `Validation of Selector for Factor for Level of Physical activity`,
         extLine(new Error()),
       );
-    fct ??=
-      tabProps.fct ?? document.getElementById("formCalcTMBType") ?? document.querySelector('[data-title*="Fórmula"]');
+    tabProps.fct ??= document.getElementById("formCalcTMBType") ?? document.querySelector('[data-title*="Fórmula"]');
+    fct = tabProps.fct;
     if (!(fct instanceof HTMLSelectElement || fct instanceof HTMLSelectElement))
       throw inputNotFound(fct, `Validation of Selector for Formula of Protocol`, extLine(new Error()));
     if (![sa.id, gl?.id ?? "gordCorpLvl", naf.id, fct.id].includes(idf))
@@ -1589,13 +1367,132 @@ export function callbackAtvLvlElementNaf(
     evalIMC();
     evalMatchTMBElements();
     evalActivityLvl();
-    const changes = fluxFormIMC(gl, fct);
-    matchTMBElements({ idf, sa, gl, fct, naf, changes });
-    if (/LvlAtFis/gi.test(idf) || /TMBType/gi.test(idf) || /gordCorpLvl/gi.test(idf)) updateAtvLvl("sa");
-    else if (/nafType/gi.test(idf)) updateAtvLvl("naf");
+    fluxFormIMC(gl, fct);
+    try {
+      if (typeof idf !== "string") throw new Error(`Failed to validate target string`);
+      gl ??=
+        tabProps.gl ??
+        document.getElementById("gordCorpLvl") ??
+        document.querySelector('[data-title*="Gordura Corporal"]');
+      if (!(gl instanceof HTMLSelectElement || gl instanceof HTMLInputElement))
+        throw inputNotFound(gl, `Selector for Body Fat Level`, extLine(new Error()));
+      fct ??=
+        tabProps.fct ?? document.getElementById("formCalcTMBType") ?? document.querySelector('[data-title*="Fórmula"]');
+      if (!(fct instanceof HTMLSelectElement || fct instanceof HTMLInputElement))
+        throw inputNotFound(fct, `Selector for TMB type formula`, extLine(new Error()));
+      naf ??=
+        tabProps.naf ??
+        document.getElementById("nafType") ??
+        document.querySelector('[data-title*="Fator de Nível de Atividade Física"');
+      if (!(naf instanceof HTMLSelectElement || naf instanceof HTMLInputElement))
+        throw inputNotFound(naf, `Selector for Intensity of Physical Activity`, extLine(new Error()));
+      const spanFactorAtleta = tabProps.spanFa;
+      if (!(spanFactorAtleta instanceof HTMLElement))
+        throw elementNotFound(spanFactorAtleta, `Span for Athlete Factor`, extLine(new Error()));
+      const lockGl = tabProps.lockGl;
+      if (!(lockGl instanceof Element))
+        throw elementNotFound(lockGl, `Element for Displaying Lock for Body Fat Level`, extLine(new Error()));
+      fct.value !== "tinsley" && fluxFormIMC(gl, fct);
+      if (naf.value === "2.2") {
+        if (fct.value !== "tinsley") {
+          setTimeout(() => fadeElement(spanFactorAtleta, "0"), 100);
+          setTimeout(() => fadeElement(spanFactorAtleta, "1"), 500);
+        }
+        fct.value = "tinsley";
+        spanFactorAtleta.hidden = false;
+        if (/bi-lock/gi.test(lockGl.innerHTML) && !tabProps.isAutoFillActive) {
+          fadeElement(lockGl, "0");
+          setTimeout(() => {
+            lockGl.innerHTML = `<svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="bi bi-unlock"
+              viewBox="0 0 16 16"
+            >
+              <defs>
+                <linearGradient
+                  id="gradiente-unlock"
+                  x1="0%"
+                  y1="0%"
+                  x2="100%"
+                  y2="0%"
+                >
+                  <stop
+                    offset="0%"
+                    style="stop-color:rgb(233, 180, 7)"
+                  />
+                  <stop
+                    offset="100%"
+                    style="stop-color:rgb(243, 221, 93)"
+                  />
+                </linearGradient>
+              </defs>
+              <path
+                d="M11 1 a2 2 0 0 1 2 2 v4 H9 V3 a2 2 0 0 1 2-2 m3 6 V3 a3 3 0 0 0-6 0 v4"
+                class="svg-unlock-hook"
+                fill="url(#gradiente-unlock)"
+              />
+              <path
+                d="M3 7 a2 2 0 0 0-2 2 v5 a2 2 0 0 0 2 2h 6 a2 2 0 0 0 2-2 V9 a2 2 0 0 0-2-2"
+                class="svg-unlock-body"
+                fill="url(#gradiente-unlock)"
+              />
+              <line
+                x1="2.2"
+                y1="7.05"
+                x2="9.3"
+                y2="7.05"
+                stroke="black"
+              />
+              </svg>`;
+            fadeElement(lockGl, "1");
+          }, 500);
+          if (!(tabProps.gl instanceof HTMLSelectElement || tabProps.gl instanceof HTMLInputElement)) return;
+          tabProps.gl.disabled = false;
+        }
+      } else if (naf.value === "1.2" || naf.value === "1.4" || naf.value === "1.6" || naf.value === "1.9") {
+        if (
+          gl.value === "sobrepeso" ||
+          gl.value === "obeso1" ||
+          gl.value === "obeso2" ||
+          gl.value === "obeso3" ||
+          (tabProps.IMC && tabProps.IMC >= 25)
+        ) {
+          if (fct.value !== "mifflinStJeor")
+            setTimeout(() => {
+              fadeElement(spanFactorAtleta, "0");
+              setTimeout(() => (spanFactorAtleta.hidden = true), 500);
+            }, 500);
+          fct.value = "mifflinStJeor";
+        } else if (gl.value === "abaixo" || gl.value === "eutrofico" || (tabProps.IMC && tabProps.IMC < 25)) {
+          if (fct.value !== "harrisBenedict")
+            setTimeout(() => {
+              fadeElement(spanFactorAtleta, "0");
+              setTimeout(() => (spanFactorAtleta.hidden = true), 500);
+            }, 500);
+          fct.value = "harrisBenedict";
+        }
+        if (/bi-unlock/gi.test(lockGl.innerHTML)) {
+          fadeElement(lockGl, "0");
+          setTimeout(() => {
+            lockGl.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lock" viewBox="0 0 16 16"><defs><linearGradient id="gradiente-lock" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" style="stop-color:rgb(233, 180, 7)"></stop><stop offset="100%" style="stop-color:rgb(243, 221, 93)"></stop></linearGradient></defs><path d="M8 1 a2 2 0 0 1 2 2 v4 H6 V3 a2 2 0 0 1 2-2 m3 6 V3 a3 3 0 0 0-6 0 v4" class="svg-lock-hook"></path><path d="M5 7 a2 2 0 0 0-2 2 v5 a2 2 0 0 0 2 2h 6 a2 2 0 0 0 2-2 V9 a2 2 0 0 0-2-2" class="svg-lock-body"></path><line x1="5" y1="7" x2="11" y2="7" stroke="black"></line></svg>`;
+            fadeElement(lockGl, "1");
+          }, 500);
+          if (!(tabProps.gl instanceof HTMLSelectElement || tabProps.gl instanceof HTMLInputElement)) return;
+          tabProps.gl.disabled = true;
+        }
+      } else
+        console.error(`Error obtaining the value for Targeted Main Selector, line ${extLine(new Error())}.
+            Obtained value: ${naf?.value ?? "undefined"}`);
+    } catch (e) {
+      console.error(`Error executing matchTMBElements:\n${(e as Error).message}`);
+    }
+    /nafType/gi.test(idf) ? updateAtvLvl("naf") : updateAtvLvl("sa");
     person.dispatchAtvLvl(sa.value);
     const returnedFactorAtvLvl = person.checkAtvLvl(person);
-    if (typeof returnedFactorAtvLvl === "number") tabProps.factorAtvLvl = (returnedFactorAtvLvl as NafTypeValue) || 1.4;
+    tabProps.factorAtvLvl = (returnedFactorAtvLvl as NafTypeValue) || 1.4;
   } catch (e) {
     console.error(`Error executing callbackAtvLvlElementNaf:\n${(e as Error).message}`);
   }
@@ -1638,7 +1535,7 @@ export function handleCallbackWHS(inpWHS: targEl): void {
       { p: "weight", m: maxProps.weight },
       { p: "height", m: maxProps.height },
       { p: "sumDCut", m: maxProps.dc },
-    ].forEach(({ p, m }) => {
+    ].forEach(({ p }) => {
       if (inpWHS.classList.contains(`inp${p.charAt(0).toUpperCase()}${p.slice(1).toLowerCase()}`)) {
         if (!(p in person)) {
           console.warn(`Failed to locate ${p} in person props`);

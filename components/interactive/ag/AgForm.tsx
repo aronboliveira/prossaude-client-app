@@ -44,6 +44,9 @@ import FamDislip from "./FamDislip";
 import { useRef, useEffect } from "react";
 import { nlFm, nlInp, nlSel } from "@/lib/global/declarations/types";
 import useDataProvider from "@/lib/hooks/useDataProvider";
+import { agProps } from "@/vars";
+import { toast } from "react-hot-toast";
+import sAg from "@/styles/locals/modules/agStyles.module.scss";
 export default function AgForm(): JSX.Element {
   const f = useRef<nlFm>(null),
     dnr = useRef<nlInp>(null),
@@ -51,7 +54,8 @@ export default function AgForm(): JSX.Element {
     sr = useRef<nlSel>(null),
     lnr = useRef<nlInp>(null),
     gr = useRef<nlSel>(null),
-    gbr = useRef<nlSel>(null);
+    gbr = useRef<nlSel>(null),
+    toasted = useRef<boolean>(false);
   useEffect(() => {
     registerPersistInputs({
       f: f.current,
@@ -98,6 +102,31 @@ export default function AgForm(): JSX.Element {
     }
     (): void => removeEventListener("resize", handleResize);
   }, [sr, ar, gr]);
+  useEffect(() => {
+    agProps.agIsAutoCorrectOn = true;
+    return (): void => {
+      agProps.agIsAutoCorrectOn = true;
+    };
+  }, []);
+  useEffect(() => {
+    if (!toasted.current)
+      toast(t => (
+        <div style={{ lineHeight: "1.6rem" }}>
+          <b>Dica!</b>
+          <hr />
+          <span>Você pode desativar ou ativar</span>
+          <br />a Autocorreção nos alternadores.
+          <hr />
+          <button
+            style={{ height: "2.1rem", fontSize: "0.8rem" }}
+            className='btn btn-secondary'
+            onClick={() => toast.dismiss(t.id)}>
+            Fechar
+          </button>
+        </div>
+      ));
+    toasted.current = true;
+  }, []);
   useDataProvider(f.current);
   return (
     <form
@@ -173,7 +202,7 @@ export default function AgForm(): JSX.Element {
                     type='date'
                     name='birth'
                     id='dateBdayId'
-                    className='form-control inpIdentif noInvert maxCurrDate'
+                    className={`form-control inpIdentif noInvert maxCurrDate ${sAg.birthInp}`}
                     autoComplete='bday'
                     data-title='Nascimento'
                     required
@@ -181,7 +210,7 @@ export default function AgForm(): JSX.Element {
                 </label>
               </span>
               <span role='group' className='fsAnamGSpan' id='fsAnamGSpan12'>
-                <label htmlFor='ageId' className='labelIdentif'>
+                <label htmlFor='ageId' className={`labelIdentif ${sAg.ageInp}`}>
                   <span>Idade:</span>
                   <AgeElement inpRef={ar} />
                 </label>

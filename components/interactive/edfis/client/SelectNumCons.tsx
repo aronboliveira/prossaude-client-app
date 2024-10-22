@@ -34,7 +34,6 @@ export default function SelectNumCons(): JSX.Element {
       tabProps.numCons = parseNotNaN(snc.current.value || "1", 1) || 1;
       switchRequiredCols({
         snc: snc.current ?? document.getElementById("selectNumCons"),
-        fsp: fspr?.current ?? document.getElementById("fsProgConsId"),
         td: td?.current ?? document.getElementById("tabDCut"),
         tsv: tsv?.current ?? document.getElementById("tabProgSVi"),
         tma: tma?.current ?? document.getElementById("tabMedAnt"),
@@ -68,7 +67,7 @@ export default function SelectNumCons(): JSX.Element {
             datasetAttributes.forEach(({ k, v }) => (inp.dataset[k] = v));
             textClasses.forEach(cls => !inp.classList.contains(cls) && inp.classList.add(cls));
             inp.addEventListener("input", handleEventReq);
-            if (inp.type === "number") assignNumAttr(inp, "0.05");
+            if (inp.type === "number") assignNumAttr(inp, "0");
           } else {
             Object.assign(inp, {
               minLength: 0,
