@@ -4,17 +4,19 @@ import { ErrorBoundary } from "react-error-boundary";
 import { isClickOutside } from "@/lib/global/gStyleScript";
 import { memo, useContext } from "react";
 import GenericErrorComponent from "../../../error/GenericErrorComponent";
-import st from "@/styles/locals/modules/declarationStyles.module.scss";
+import st from "@/styles//modules/declarationStyles.module.scss";
 import DefaultDeclaration from "../../def/DefaultDeclaration";
 import { createPortal } from "react-dom";
 import { RootCtx } from "@/pages/_app";
 import { checkContext } from "@/lib/global/gModel";
 import useDialog from "@/lib/hooks/useDialog";
+import { NlMRef, nlSpan } from "@/lib/global/declarations/types";
 const ENDeclaration = memo(({ state, dispatch }: DlgProps): JSX.Element => {
-  const divAdd = useContext<RootCtxType>(RootCtx).divModal,
+  let divModal: NlMRef<nlSpan | HTMLDivElement> = null;
+  const ctx = useContext<RootCtxType>(RootCtx),
     { mainRef } = useDialog({ state, dispatch, param: "conform" });
+  if (ctx) divModal = ctx.divModal;
   //TODO REMOVER APÓS TESTE
-  const ctx = useContext(RootCtx);
   checkContext(ctx, "RootCtx", ENDeclaration);
   return createPortal(
     !state ? (
@@ -45,7 +47,7 @@ const ENDeclaration = memo(({ state, dispatch }: DlgProps): JSX.Element => {
         </dialog>
       </ErrorBoundary>
     ),
-    divAdd?.current ?? document.getElementById("divAdd") ?? document.body,
+    divModal?.current ?? document.getElementById("divModal") ?? document.body,
   );
 });
 export default ENDeclaration;

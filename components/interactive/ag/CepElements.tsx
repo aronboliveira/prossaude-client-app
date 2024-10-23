@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { elementNotFound, extLine, inputNotFound } from "@/lib/global/handlers/errorHandler";
 import { enableCEPBtn, searchCEP, searchCEPXML } from "@/lib/locals/aGPage/aGHandlers";
 import { toast } from "react-hot-toast";
+import { navigatorVars } from "@/vars";
 export default function CepElements(): JSX.Element {
   const equalizeCepElements = (): void => {
     try {
@@ -59,11 +60,10 @@ export default function CepElements(): JSX.Element {
               return res;
             }),
             {
-              loading: navigator.language.startsWith("pt-") ? "Pesquisando CEP..." : "Searching CEP...",
-              success: () =>
-                navigator.language.startsWith("pt-") ? "Sucesso carregando os dados!" : "Success on loading data!",
+              loading: navigatorVars.pt ? "Pesquisando CEP..." : "Searching CEP...",
+              success: () => (navigatorVars.pt ? "Sucesso carregando os dados!" : "Success on loading data!"),
               error: err =>
-                navigator.language.startsWith("pt-")
+                navigatorVars.pt
                   ? `Erro obtendo dados para o CEP: Código ${err?.status || "indefinido"}`
                   : `Failed to retrieve CEP information: Code ${err?.status || "undefined"}`,
             },

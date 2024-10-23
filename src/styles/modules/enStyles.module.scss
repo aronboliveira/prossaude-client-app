@@ -1,5 +1,5 @@
-@use "../../abstracts/variables" as *;
-@use "../../abstracts/mixins" as *;
+@use "../abstracts/variables" as *;
+@use "../abstracts/mixins" as *;
 .atvSpan .labelIdentif,
 .labAlimRot {
   @media screen and (max-width: 900px) {
@@ -95,6 +95,11 @@
   width: 92vw;
   margin-left: 0.2rem;
 }
+.evacDMinLab {
+  @media (min-width: 901px) {
+    width: 27.5rem;
+  }
+}
 .fsSpan {
   .labIdentif_2 {
     @media screen and (min-width: 900px) {
@@ -188,6 +193,9 @@
   }
   @media screen and (max-width: 900px) {
     min-width: 79.2vw;
+  }
+  @media screen and (min-width: 901px) {
+    width: 20rem;
   }
 }
 .labGa {

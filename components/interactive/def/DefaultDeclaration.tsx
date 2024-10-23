@@ -1,4 +1,4 @@
-import st from "@/styles/locals/modules/declarationStyles.module.scss";
+import st from "@/styles//modules/declarationStyles.module.scss";
 export default function DefaultDeclaration(): JSX.Element {
   return (
     <>

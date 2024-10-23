@@ -3,14 +3,8 @@ import { Context, createContext } from "react";
 import { RootCtxType } from "@/lib/global/declarations/interfaces";
 import { Provider } from "react-redux";
 import "../styles/globals/gStyle.scss";
-import "../styles/locals/loginPageStyle.scss";
-import "../styles/locals/basePageStyle.scss";
-import "../styles/locals/aGPageStyle.scss";
-import "../styles/locals/edFisNutPageStyle.scss";
-import "../styles/locals/odPageStyle.scss";
-import "../styles/locals/panelPageStyle.scss";
-import "../styles/locals/recoverPageStyle.scss";
-import "../styles/locals/reactSpinner.scss";
+import "../styles/globals/reactSpinner.scss";
+import "../styles/globals/loginPageStyle.scss";
 import mainStore from "@/redux/mainStore";
 export const RootCtx: Context<RootCtxType> = createContext<RootCtxType>({
   divModal: {

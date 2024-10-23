@@ -1,7 +1,7 @@
 import { Suspense, lazy } from "react";
 import TabDCut from "./client/TabDCut";
 import ReactSpinner from "../../icons/ReactSpinner";
-import sEn from "@/styles/locals/modules/enStyles.module.scss";
+import sEn from "@/styles//modules/enStyles.module.scss";
 const Protocolo = lazy(() => import("./client/Protocolo"));
 export default function DivDCut(): JSX.Element {
   return (

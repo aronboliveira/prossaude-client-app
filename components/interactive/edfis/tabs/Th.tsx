@@ -1,5 +1,5 @@
 import { ThProps } from "@/lib/global/declarations/interfaces";
-import sEn from "@/styles/locals/modules/enStyles.module.scss";
+import sEn from "@/styles//modules/enStyles.module.scss";
 export default function Th({ nRow, nCol, ctx, lab }: ThProps): JSX.Element {
   return (
     <th

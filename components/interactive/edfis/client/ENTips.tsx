@@ -1,20 +1,20 @@
 import { RootCtxType, DlgProps } from "@/lib/global/declarations/interfaces";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { isClickOutside } from "@/lib/global/gStyleScript";
-import { nlDiv } from "@/lib/global/declarations/types";
+import { NlMRef, nlDiv, nlSpan } from "@/lib/global/declarations/types";
 import { useRef, useEffect, useContext, memo, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { RootCtx } from "@/pages/_app";
 import { checkContext } from "@/lib/global/gModel";
 import useDialog from "@/lib/hooks/useDialog";
 const ENTips = memo(({ state, dispatch }: DlgProps): JSX.Element => {
+  let divModal: NlMRef<nlSpan | HTMLDivElement> = null;
   const m1 = useRef<nlDiv>(null),
     m2 = useRef<HTMLDetailsElement | null>(null),
     m3 = useRef<nlDiv>(null),
     m4 = useRef<nlDiv>(null),
     m5 = useRef<nlDiv>(null),
     hb = useRef<nlDiv>(null),
-    DivAdd = useContext<RootCtxType>(RootCtx).divModal,
     { mainRef } = useDialog({ state, dispatch, param: "tips" }),
     render = useCallback(() => {
       try {
@@ -197,11 +197,12 @@ const ENTips = memo(({ state, dispatch }: DlgProps): JSX.Element => {
       } catch (e) {
         console.error(`Error executing hbFormula:\n${(e as Error).message}`);
       }
-    }, [m1, m2, m3, m4, m5, hb]);
+    }, [m1, m2, m3, m4, m5, hb]),
+    ctx = useContext<RootCtxType>(RootCtx);
+  if (ctx) divModal = ctx.divModal;
   //TODO REMOVER APÓS TESTE
-  const ctx = useContext(RootCtx);
   checkContext(ctx, "RootCtx", ENTips);
-  useEffect(() => render(), [render]);
+  useEffect(render, [render]);
   return createPortal(
     !state ? (
       <></>
@@ -511,7 +512,7 @@ const ENTips = memo(({ state, dispatch }: DlgProps): JSX.Element => {
         </article>
       </dialog>
     ),
-    DivAdd?.current ?? document.getElementById("DivAdd") ?? document.body,
+    divModal?.current ?? document.getElementById("divModal") ?? document.body,
   );
 });
 export default ENTips;

@@ -84,7 +84,7 @@ html {
 }
 
 body {
-  background-image: radial-gradient(rgba(156, 156, 156, 0.5), rgba(240, 231, 231, 0.911)), url(../../../public/img/PROS_Saude_Modelo1-Final.jpg);
+  background-image: radial-gradient(rgba(156, 156, 156, 0.5), rgba(240, 231, 231, 0.911)), url(../../../public/img/PROS_Saude_Modelo1-Final.webp);
   background-size: contain;
   box-sizing: border-box;
   &:not(#loginBody) {
@@ -444,7 +444,7 @@ label.boldLabel,
   font-weight: bold;
 }
 
-input[type="date"]:not(#dateHeader),
+:where(input[type="date"]:not(#dateHeader):not(#dateBdayId)),
 .datBtn {
   @include minMaxW(16, "ch", 36, "ch");
 }

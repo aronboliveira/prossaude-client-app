@@ -2,7 +2,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import { RotProps } from "@/lib/global/declarations/interfaces";
 import GenericErrorComponent from "../../error/GenericErrorComponent";
 import InpRot from "./client/InpRot";
-import sEn from "@/styles/locals/modules/enStyles.module.scss";
+import sEn from "@/styles//modules/enStyles.module.scss";
 export default function DivRot({ quest, ctx, ur, ev, grp = "Alim" }: RotProps): JSX.Element {
   const maxes = ((): { max: number; maxLength: number } => {
     switch (ctx) {
@@ -48,6 +48,11 @@ export default function DivRot({ quest, ctx, ur, ev, grp = "Alim" }: RotProps): 
           }
           className={`lab${grp}Rot fitSpaced labRef lab${ctx}${ur ? " labUr labUrDia" : ""}${
             ev ? " labEv labEvDia" : ""
+          }${
+            quest === "Evacua quantas vezes por dia" ||
+            quest === "Qual é o intervalo mínimo (em horas) entre evacuações?"
+              ? ` ${sEn.evacDMinLab}`
+              : ""
           }`}>
           <InpRot quest={quest} grp={grp} ctx={ctx} max={maxes.max} maxLength={maxes.maxLength} ur={ur} ev={ev} />
         </label>

@@ -10,7 +10,7 @@ import { ENCtxProps } from "@/lib/global/declarations/interfaces";
 import { ENCtx } from "./ENForm";
 import { PseudoNum } from "@/lib/global/declarations/testVars";
 import { tabProps } from "@/vars";
-import sEn from "@/styles/locals/modules/enStyles.module.scss";
+import sEn from "@/styles//modules/enStyles.module.scss";
 export default function TrioReadNumCons(): JSX.Element {
   const mainRef = useRef<nlLab>(null),
     r = useRef<nlInp | HTMLSelectElement>(null),

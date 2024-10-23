@@ -4,7 +4,7 @@ import { useContext } from "react";
 import { FspCtxProps } from "@/lib/global/declarations/interfaces";
 import { FspCtx } from "../FsProgCons";
 import { checkContext } from "@/lib/global/gModel";
-import sEn from "@/styles/locals/modules/enStyles.module.scss";
+import sEn from "@/styles//modules/enStyles.module.scss";
 export default function TabBtnDCut({ nCol }: { nCol: number }): JSX.Element {
   const { prt, td } = useContext<FspCtxProps>(FspCtx).refs;
   //TODO REMOVER APÓS TESTE

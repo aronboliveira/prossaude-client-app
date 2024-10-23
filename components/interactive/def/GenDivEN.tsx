@@ -10,7 +10,7 @@ import useGenDiv from "@/lib/hooks/useGenDiv";
 import { handleGenRender } from "@/lib/locals/edFisNutPage/edFisNutReactHandlers";
 import { GenDivProps } from "@/lib/global/declarations/interfacesCons";
 import { checkContext, fluxGen, limitedError } from "@/lib/global/gModel";
-import sEn from "@/styles/locals/modules/enStyles.module.scss";
+import sEn from "@/styles//modules/enStyles.module.scss";
 export default function GenDivEN({ genRef, genAlinRef }: GenDivProps): JSX.Element {
   let txbr: NlMRef<nlSel> = null,
     gbr: NlMRef<nlSel> = null,

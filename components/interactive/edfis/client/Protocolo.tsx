@@ -6,7 +6,7 @@ import { ENCtx } from "./ENForm";
 import { checkContext, limitedError } from "@/lib/global/gModel";
 import { Protocol } from "@/lib/global/declarations/testVars";
 import { FspCtx } from "./FsProgCons";
-import sEn from "@/styles/locals/modules/enStyles.module.scss";
+import sEn from "@/styles//modules/enStyles.module.scss";
 import { NlMRef, nlSel, nlTab } from "@/lib/global/declarations/types";
 export default function Protocolo(): JSX.Element {
   let txbr: NlMRef<nlSel> = null,

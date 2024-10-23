@@ -7,7 +7,7 @@ import { ENCtxProps, FspCtxProps } from "@/lib/global/declarations/interfaces";
 import { checkContext } from "@/lib/global/gModel";
 import { AlignTypeLab, BodyType } from "@/lib/global/declarations/testVars";
 import { FspCtx } from "./FsProgCons";
-import sEn from "@/styles/locals/modules/enStyles.module.scss";
+import sEn from "@/styles//modules/enStyles.module.scss";
 import { NlMRef, NlrDispatch, nlSel, nlTab } from "@/lib/global/declarations/types";
 import { person } from "@/vars";
 export default function TextBodyType(): JSX.Element {

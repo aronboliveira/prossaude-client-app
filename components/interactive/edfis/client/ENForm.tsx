@@ -30,7 +30,7 @@ import { watchLabels } from "@/lib/global/gController";
 import GenDivEN from "../../def/GenDivEN";
 import useMount from "@/lib/hooks/useMount";
 import { styled } from "styled-components";
-import sEn from "@/styles/locals/modules/enStyles.module.scss";
+import sEn from "@/styles//modules/enStyles.module.scss";
 import { BodyType } from "@/lib/global/declarations/testVars";
 import { applyConstraintsTitle } from "@/lib/global/gModel";
 import { toast } from "react-hot-toast";
@@ -196,6 +196,9 @@ export default function ENForm(): JSX.Element {
         </div>
       ));
     toasted.current = true;
+    const untoast = (): void => toast.dismiss();
+    addEventListener("popstate", untoast);
+    return (): void => removeEventListener("popstate", untoast);
   }, []);
   return mounted ? (
     <Suspense fallback={<ReactSpinner scale={0.8} key={crypto.randomUUID()} />}>

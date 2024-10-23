@@ -21,8 +21,8 @@ import { checkContext, limitedError, parseNotNaN } from "@/lib/global/gModel";
 import { addListenerInnerTabs } from "@/lib/locals/edFisNutPage/edFisNutController";
 import { NafTypeValue } from "@/lib/global/declarations/testVars";
 import { styled } from "styled-components";
-import s from "@/styles/locals/modules/sharedComponents.module.scss";
-import sEn from "@/styles/locals/modules/enStyles.module.scss";
+import s from "@/styles//modules/sharedComponents.module.scss";
+import sEn from "@/styles//modules/enStyles.module.scss";
 const FsTabs = lazy(() => import("./FsTabs")),
   DivProgSels = styled.div`
     ~ hr {

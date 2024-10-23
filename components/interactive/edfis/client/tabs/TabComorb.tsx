@@ -7,8 +7,8 @@ import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useEffect, useReducer, useRef } from "react";
 import useMount from "@/lib/hooks/useMount";
 import { styled } from "styled-components";
-import s from "@/styles/locals/modules/sharedComponents.module.scss";
-import sEn from "@/styles/locals/modules/enStyles.module.scss";
+import s from "@/styles//modules/sharedComponents.module.scss";
+import sEn from "@/styles//modules/enStyles.module.scss";
 const FsComorbLeg = styled.legend`
   margin-left: 0.3rem;
   + div {

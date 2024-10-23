@@ -6,7 +6,7 @@ import { GordLvl, GordLvlLab } from "@/lib/global/declarations/testVars";
 import { checkContext, limitedError } from "@/lib/global/gModel";
 import { tabProps, timers } from "@/vars";
 import { callbackAtvLvlElementNaf, exeAutoFill } from "@/lib/locals/edFisNutPage/edFisNutHandler";
-import sEn from "@/styles/locals/modules/enStyles.module.scss";
+import sEn from "@/styles//modules/enStyles.module.scss";
 import { NlMRef, nlSel } from "@/lib/global/declarations/types";
 import { fadeElement } from "@/lib/global/gStyleScript";
 export default function GordCorpLvl(): JSX.Element {

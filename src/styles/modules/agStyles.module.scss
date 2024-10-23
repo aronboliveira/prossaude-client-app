@@ -1,0 +1,43 @@
+.ageInp {
+  @media screen and (min-width: 901px) {
+    transform: translateX(-1.5vw);
+    max-width: 25vw !important;
+  }
+}
+.fsAnamGDiv4 {
+  width: 60%;
+  display: flex;
+  justify-content: left;
+  .fsAnamGSpan11 {
+    margin-right: 0;
+  }
+  .labelIdentif {
+    min-width: 25vw;
+  }
+  .birthInp {
+    max-width: 100%;
+    &[type="date"] {
+      max-width: 100%;
+    }
+  }
+}
+.fsAnamGSpan11 {
+  @media screen and (min-width: 901px) {
+    width: 29vw !important;
+  }
+}
+.birthInpLab {
+  @media screen and (min-width: 901px) {
+    width: 31.85vw !important;
+  }
+}
+.birthInp {
+  @media screen and (min-width: 901px) {
+    width: 100% !important;
+  }
+}
+.inpEvac {
+  @media screen and (min-width: 901px) {
+    width: 25.75rem;
+  }
+}

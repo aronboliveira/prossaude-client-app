@@ -1,3 +1,4 @@
+import { navigatorVars } from "@/vars";
 import { toast } from "react-hot-toast";
 export default function promptToast(message: string, ph: string): Promise<string> {
   return new Promise(resolve => {
@@ -23,7 +24,7 @@ export default function promptToast(message: string, ph: string): Promise<string
                 resolve("");
                 toast.dismiss(t.id);
               }}>
-              {navigator.language.startsWith("pt-") ? "Cancelar" : "Cancel"}
+              {navigatorVars.pt ? "Cancelar" : "Cancel"}
             </button>
             <button
               className='btn btn-info'
@@ -33,7 +34,7 @@ export default function promptToast(message: string, ph: string): Promise<string
                 toast.dismiss(t.id);
               }}
               style={{ marginLeft: "10px" }}>
-              {navigator.language.startsWith("pt-") ? "Confirmar" : "Submit"}
+              {navigatorVars.pt ? "Confirmar" : "Submit"}
             </button>
           </div>
         </div>
