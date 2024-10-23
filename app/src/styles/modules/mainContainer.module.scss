@@ -1,11 +1,13 @@
-@use "../../base/animations" as *;
+@use "../base/animations" as *;
 .mainContainer {
-  padding: 5%;
-  max-width: 100%;
   display: flex;
-  flex-direction: column;
+  flex-flow: column wrap;
   align-items: center;
-  overflow: hidden;
+  justify-content: space-between;
+  height: calc(100% - 5rem);
+  max-width: 100%;
+  padding: 2%;
+  overflow: auto;
   @media (min-width: 521px) {
     .cardsSect {
       display: grid;
@@ -24,26 +26,26 @@
   }
 }
 .cardsSect {
-  width: 80%;
-  padding: 5%;
+  flex: 1;
   display: grid;
-  gap: 1.5rem;
+  gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  padding: 1rem;
+  width: 100%;
 }
 .card {
   perspective: 62.5rem;
   width: 100%;
   max-width: 18.75rem;
   height: 25rem;
-  &Inner {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    transform-style: preserve-3d;
-    transition: transform 0.8s;
-    cursor: pointer;
-    &:hover {
-      transform: rotateY(180deg);
-    }
+  &Back {
+    background: linear-gradient(90deg, rgba(214, 233, 221, 0.776), rgba(181, 220, 197, 0.859));
+    transform: rotateY(180deg);
+    padding: 10%;
+    text-align: center;
+  }
+  &Description {
+    margin-bottom: 1rem;
   }
   &Front,
   &Back {
@@ -57,13 +59,25 @@
     border-radius: 1rem;
   }
   &Front {
-    background: #fff;
+    background: linear-gradient(90deg, rgba(232, 238, 234, 0.725), rgba(198, 230, 209, 0.851));
   }
-  &Back {
-    background: #f0f0f0;
-    transform: rotateY(180deg);
-    padding: 10%;
+  &FrontContent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
     text-align: center;
+  }
+  &Inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.8s;
+    cursor: pointer;
+    &:hover {
+      transform: rotateY(180deg);
+    }
   }
 }
 .cardImg {
@@ -76,8 +90,8 @@
   justify-content: center;
 }
 .panelSect {
-  margin-top: 2rem;
-  width: 80%;
+  width: 100%;
+  padding: 2rem;
   display: flex;
   justify-content: center;
   .panelBtn {
@@ -87,8 +101,10 @@
     border: none;
     border-radius: 0.5rem;
     cursor: pointer;
+    transition: all 0.3s;
     &:hover {
       background-color: #0056b3;
+      transform: translateY(-0.1rem);
     }
   }
 }

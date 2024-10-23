@@ -3,7 +3,7 @@ import { TdProps } from "@/lib/global/declarations/interfaces";
 import { nlInp } from "@/lib/global/declarations/types";
 import { handleCondtReq, handleEventReq } from "@/lib/global/handlers/gHandlers";
 import { useEffect, useRef, useState } from "react";
-import sEn from "@/styles/locals/modules/enStyles.module.scss";
+import sEn from "@/styles//modules/enStyles.module.scss";
 export default function TabInpSvi({ nRow, nCol, ctx, lab }: TdProps): JSX.Element {
   const fullName = ((): string => {
       switch (lab) {

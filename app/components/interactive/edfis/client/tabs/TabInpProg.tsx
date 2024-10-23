@@ -9,7 +9,7 @@ import { NlMRef, nlFs, nlSel } from "@/lib/global/declarations/types";
 import { MAX_SMALLINT, maxProps, tabProps } from "@/vars";
 import { ENCtx } from "../ENForm";
 import { ENTabsCtx } from "../FsTabs";
-import sEn from "@/styles/locals/modules/enStyles.module.scss";
+import sEn from "@/styles//modules/enStyles.module.scss";
 export default function TabInpProg({ nRow, nCol, ctx, lab }: TdProps): JSX.Element {
   let gl: NlMRef<nlSel> = null,
     fspr: NlMRef<nlFs> = null,

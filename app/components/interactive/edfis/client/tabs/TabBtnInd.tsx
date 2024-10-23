@@ -5,7 +5,7 @@ import { checkContext, textTransformPascal } from "@/lib/global/gModel";
 import { useContext } from "react";
 import { ENCtx } from "../ENForm";
 import { ENTabsCtx } from "../FsTabs";
-import sEn from "@/styles/locals/modules/enStyles.module.scss";
+import sEn from "@/styles//modules/enStyles.module.scss";
 import { NlMRef, nlFs, nlSel } from "@/lib/global/declarations/types";
 export default function TabBtnInd({ nRow, nCol, lab }: TabBtnProps): JSX.Element {
   let gl: NlMRef<nlSel> = null,

@@ -5,7 +5,7 @@ import TabBtnDCut from "../client/tabs/TabBtnDCut";
 import TabBtnInd from "../client/tabs/TabBtnInd";
 import TabInpProg from "../client/tabs/TabInpProg";
 import TabInpSvi from "../client/tabs/TabInpSvi";
-import sEn from "@/styles/locals/modules/enStyles.module.scss";
+import sEn from "@/styles//modules/enStyles.module.scss";
 export default function Td({ nRow, nCol, ctx, lab }: TdProps): JSX.Element {
   const pascalLab = textTransformPascal(lab);
   return (

@@ -8,7 +8,6 @@ import { useEffect, useRef, useState } from "react";
 import GenericErrorComponent from "../../../error/GenericErrorComponent";
 import { applyFieldConstraints, limitedError } from "@/lib/global/gModel";
 import { tabProps } from "@/vars";
-import sAn from "@/styles/locals/modules/agStyles.module.scss";
 export default function InpRot(props: InpRotProps): JSX.Element {
   const inpRef = useRef<nlInp>(null),
     trusted = useRef<boolean>(false),
@@ -98,9 +97,7 @@ export default function InpRot(props: InpRotProps): JSX.Element {
           props.ctx
         } minText maxText minNum maxNum patternText${/interv/gi.test(props.ctx) && " float sevenCharLongNum"}${
           props.ur ? " inpUr inpUrDia" : ""
-        }${props.ev ? " inpEv inpEvDia" : ""}${
-          props.quest === "Evacua quantas vezes por dia" && !props.isMax ? `${sAn.inpEvac}` : ""
-        }`}
+        }${props.ev ? " inpEv inpEvDia" : ""}`}
         id={
           !props.ur && !props.ev
             ? `${props.isMax ? `inp${props.ctx}Max` : `inp${props.ctx}Min`}`

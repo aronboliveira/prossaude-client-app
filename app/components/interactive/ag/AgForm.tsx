@@ -46,7 +46,7 @@ import { nlFm, nlInp, nlSel } from "@/lib/global/declarations/types";
 import useDataProvider from "@/lib/hooks/useDataProvider";
 import { agProps } from "@/vars";
 import { toast } from "react-hot-toast";
-import sAg from "@/styles/locals/modules/agStyles.module.scss";
+import sAg from "@/styles//modules/agStyles.module.scss";
 export default function AgForm(): JSX.Element {
   const f = useRef<nlFm>(null),
     dnr = useRef<nlInp>(null),
@@ -126,6 +126,9 @@ export default function AgForm(): JSX.Element {
         </div>
       ));
     toasted.current = true;
+    const untoast = (): void => toast.dismiss();
+    addEventListener("popstate", untoast);
+    return (): void => removeEventListener("popstate", untoast);
   }, []);
   useDataProvider(f.current);
   return (
@@ -193,9 +196,16 @@ export default function AgForm(): JSX.Element {
               </span>
             </div>
             <hr />
-            <div className='flexDiv fsAnamGDiv alItSt900Q flexQ900NoWC gridTwoCol' id='fsAnamGDiv4' role='group'>
-              <span role='group' className='fsAnamGSpan mgr-3v' id='fsAnamGSpan11'>
-                <label htmlFor='dateBdayId' className='labelIdentif'>
+            <div
+              className={`flexDiv fsAnamGDiv alItSt900Q flexQ900NoWC gridTwoCol ${sAg.fsAnamGDiv4}`}
+              id='fsAnamGDiv4'
+              role='group'>
+              <span
+                role='group'
+                className={`fsAnamGSpan mgr-3v ${sAg.fsAnamGSpan11}`}
+                id='fsAnamGSpan11'
+                style={{ width: "45.8%" }}>
+                <label htmlFor='dateBdayId' className={`labelIdentif ${sAg.birthInpLab} ${sAg.labelIdentif}`}>
                   Data de Nascimento:
                   <input
                     ref={dnr}
@@ -210,7 +220,7 @@ export default function AgForm(): JSX.Element {
                 </label>
               </span>
               <span role='group' className='fsAnamGSpan' id='fsAnamGSpan12'>
-                <label htmlFor='ageId' className={`labelIdentif ${sAg.ageInp}`}>
+                <label htmlFor='ageId' className={`labelIdentif ${sAg.ageInp} ${sAg.labelIdentif}`}>
                   <span>Idade:</span>
                   <AgeElement inpRef={ar} />
                 </label>

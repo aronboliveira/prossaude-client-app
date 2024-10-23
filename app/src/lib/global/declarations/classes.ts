@@ -3,7 +3,7 @@ import { WorkBook, utils, writeFile } from "xlsx";
 import { limitedError, parseNotNaN, textTransformPascal } from "../gModel";
 import { exportSignaler } from "../gController";
 import JSZip from "jszip";
-import { maxProps, person, tabProps } from "@/vars";
+import { maxProps, navigatorVars, person, tabProps } from "@/vars";
 import { BodyType, GordLvl, Intensity, NafTypeValue, TMBFormula } from "@/lib/global/declarations/testVars";
 import {
   evalFactorAtleta,
@@ -429,7 +429,7 @@ export class ClickEvaluator {
         )
       ) {
         return [
-          navigator.language.startsWith("pt-")
+          navigatorVars.pt
             ? "Evento de mouse não confiável. Por favor aguarde para tentar novamente."
             : "Mouse event not trusted. Please wait and try again.",
           suspicious,
@@ -437,7 +437,7 @@ export class ClickEvaluator {
       }
       if (!this.#isMouseMovementZero(ev)) {
         return [
-          navigator.language.startsWith("pt-")
+          navigatorVars.pt
             ? "Movimento de mouse não confiável. Por favor aguarde para tentar novamente."
             : "Mouse movement not trusted. Please wait and try again.",
           suspicious,
@@ -445,7 +445,7 @@ export class ClickEvaluator {
       }
       if (this.#shouldEvaluateTime && this.#isSuspiciousTimeInterval()) {
         return [
-          navigator.language.startsWith("pt-")
+          navigatorVars.pt
             ? "Intervalo de movimento do mouse não confiável. Por favor aguarde para tentar novamente."
             : "Mouse interval tracked as suspicious. Please retry later.",
           suspicious,
@@ -455,7 +455,7 @@ export class ClickEvaluator {
       this.#setLastClickTime(new Date().getTime());
       if (this.#shouldEvaluateClient && this.#isSuspiciousClientMovement(ev)) {
         return [
-          navigator.language.startsWith("pt-")
+          navigatorVars.pt
             ? "Deslocamento de mouse não confiável. Por favor aguarde para tentar novamente."
             : "Mouse pattern tracked as suspicious. Please wait and try again.",
           suspicious,
@@ -470,7 +470,7 @@ export class ClickEvaluator {
     } catch (e) {
       console.error(`Error executing evaluateClickMovements: ${(e as Error).message}`);
       return [
-        navigator.language.startsWith("pt-")
+        navigatorVars.pt
           ? "Não foi possível validar a solicitação. Por favor aguarde para tentar novamente."
           : "It wasn't possible to validate the request. Please wait for trying again.",
         suspicious,
@@ -538,12 +538,12 @@ export class ExportHandler {
       return;
     }
     promptToast(
-      navigator.language.startsWith("pt-") ? "Por favor insira a senha:" : "Please input the password:",
+      navigatorVars.pt ? "Por favor insira a senha:" : "Please input the password:",
       "Digite aqui a senha",
     ).then(res => {
       const pw = res;
       if (!pw || btoa(pw) !== "cGFzc3dvcmQ=") {
-        if (navigator.language.startsWith("pt-")) {
+        if (navigatorVars.pt) {
           toast.error("Senha incorreta");
           toast("Esta versão de teste de UX usa a seguinte senha: password", { icon: "🗝" });
         } else {
@@ -552,7 +552,7 @@ export class ExportHandler {
         }
         return;
       }
-      navigator.language.startsWith("pt-") ? toast.success("Senha validada!") : toast.success("Password validated!");
+      navigatorVars.pt ? toast.success("Senha validada!") : toast.success("Password validated!");
       this.#processExportData(context, scope, namer);
     });
   }
@@ -571,7 +571,7 @@ export class ExportHandler {
       this.#setCurrTime(360000);
       clearInterval(interv);
     }, this.timer);
-    navigator.language.startsWith("pt-")
+    navigatorVars.pt
       ? toast.error(`Você está em timeout para exportações. Por favor aguarde ${this.currTime} ou recarregue a página.`)
       : toast.error(`You are in a timeout for exporting. Please wait for ${this.currTime} or reload the page.`);
   }

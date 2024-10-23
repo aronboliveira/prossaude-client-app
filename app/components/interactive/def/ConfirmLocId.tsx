@@ -2,7 +2,7 @@
 import { handleEventReq } from "@/lib/global/handlers/gHandlers";
 import { nlInp } from "@/lib/global/declarations/types";
 import { useEffect, useRef, useState } from "react";
-import s from "@/styles/locals/modules/sharedComponents.module.scss";
+import s from "@/styles//modules/sharedComponents.module.scss";
 import { useRouter } from "next/router";
 export default function ConfirmLocId(): JSX.Element {
   const mainRef = useRef<nlInp>(null),

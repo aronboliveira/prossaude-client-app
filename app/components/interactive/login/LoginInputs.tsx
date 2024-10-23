@@ -1,5 +1,5 @@
 "use client";
-import { basePath } from "@/vars";
+import { basePath, navigatorVars } from "@/vars";
 import { clearDefInvalidMsg, resetPhs } from "@/lib/global/gStyleScript";
 import { handleLogin } from "@/lib/global/auth";
 import { nullishAnchor, nlFm, nlHtEl, nlSpan } from "@/lib/global/declarations/types";
@@ -13,6 +13,7 @@ import { useRouter } from "next/router";
 import { ClickEvaluator } from "@/lib/global/declarations/classes";
 import { defUser, setFullUser } from "@/redux/slices/userSlice";
 import toast from "react-hot-toast";
+import sLp from "@/styles/modules/loginStyles.module.scss";
 export default function LoginInputs(): JSX.Element {
   let isSpinning = false;
   const anchorRef = useRef<nullishAnchor>(null),
@@ -20,6 +21,8 @@ export default function LoginInputs(): JSX.Element {
     spanRef = useRef<nlSpan>(null),
     router = useRouter(),
     [msg, setMsg] = useState<string | JSX.Element>(""),
+    formToasted = useRef<boolean>(false),
+    serverToasted = useRef<boolean>(false),
     exeLogin = useCallback(
       (resSpan: nlHtEl): void => {
         try {
@@ -38,7 +41,7 @@ export default function LoginInputs(): JSX.Element {
           };
           if (typeof router === "object" && "beforePopState" in router && "push" in router && !isSpinning) {
             spin();
-            navigator.language.startsWith("pt-")
+            navigatorVars.pt
               ? toast.promise(new Promise(resolve => setTimeout(() => resolve("Loading..."), 1000)), {
                   loading: "Avaliando dados...",
                   success: (
@@ -94,7 +97,7 @@ export default function LoginInputs(): JSX.Element {
           } else {
             if (!isSpinning) {
               spin();
-              navigator.language.startsWith("pt-")
+              navigatorVars.pt
                 ? toast.promise(new Promise(resolve => setTimeout(() => resolve("Loading..."), 1000)), {
                     loading: "Entrando...",
                     success: (
@@ -163,7 +166,7 @@ export default function LoginInputs(): JSX.Element {
   useEffect(() => {
     const handleEnter = (ev: KeyboardEvent): void => {
       try {
-        if (!anchorRef.current) throw new Error(`Failed to validate Submit Reference`);
+        if (!anchorRef.current) return;
         if (ev.code === "Enter") {
           anchorRef.current.focus();
           setTimeout(() => {
@@ -183,197 +186,182 @@ export default function LoginInputs(): JSX.Element {
     localStorage.setItem("authorized", "false");
     localStorage.setItem("activeUser", "");
   }, []);
+  useEffect(() => {
+    const untoast = (): void => toast.dismiss();
+    addEventListener("popstate", untoast);
+    if (typeof msg === "string" && /[a-z]/g.test(msg) && !serverToasted.current) {
+      const id = toast.error(msg);
+      setTimeout(() => toast.dismiss(id), 1500);
+      serverToasted.current = true;
+      setTimeout(() => (serverToasted.current = false), 2000);
+    }
+    return (): void => removeEventListener("popstate", untoast);
+  }, [msg]);
   return (
     <form
       ref={formRef}
-      id='outerLoginCont'
+      id='inputCont'
       name='login_form'
       action='check_user_validity'
       encType='application/x-www-form-urlencoded'
       method='post'
       target='_self'
-      autoComplete='on'>
-      <div role='group' id='loginCont'>
-        <section id='logoCont'>
-          <img
-            decoding='async'
-            loading='lazy'
-            className='fade-in-element'
-            id='logo'
-            src='/img/PROS_Saude_Modelo1-Final.webp'
-            alt='logo'
-          />
-        </section>
-        <section id='headerCont'>
-          <div role='group' id='titleCont1'>
-            <h1 id='titleText'>
-              <span role='group' className='fade-in-element' id='spanTitle'>
-                Faça o Login
-              </span>
-            </h1>
-          </div>
-          <div role='group' id='titleCont2'>
-            <h2 id='subtitleText'>
-              <span role='group' className='fade-in-late-element' id='spanSubtitle'>
-                Informe seus dados de usuário
-              </span>
-            </h2>
-          </div>
-        </section>
-        <section id='inputCont'>
-          <div role='group' className='loginInputCont1'>
-            <div role='group' id='loginInputCont2'>
-              <input
-                className='form-control fade-in-element userInput'
-                id='user'
-                name='user_name'
-                type='text'
-                aria-label='email ou usuário'
-                aria-describedby='userWarn'
-                placeholder='Nome de Usuário'
-                title='Por favor, preencha este
+      autoComplete='on'
+      className={`${sLp.inputCont}`}>
+      <div role='group' className={`${sLp.loginInputCont1}`}>
+        <div role='group'>
+          <input
+            className={`form-control fade-in-element ${sLp.userInput}`}
+            id='user'
+            name='user_name'
+            type='text'
+            aria-label='email ou usuário'
+            aria-describedby='userWarn'
+            placeholder='Nome de Usuário'
+            title='Por favor, preencha este
 			          campo.'
-                minLength={5}
-                maxLength={30}
-                data-title='Usuário'
-                autoComplete='username'
-                required
-                autoFocus
-                onInput={ev => localStorage.setItem("user", btoa(ev.currentTarget.value))}
-              />
-            </div>
-          </div>
-          <small className='customValidityWarn' id='userWarn'></small>
-          <div role='group' className='loginInputCont1'>
-            <div role='group' className='loginInputCont2'>
-              <fieldset className='form-control flexDiv fade-in-element' id='loginInputCont3'>
-                <input
-                  className='fade-in-element form-control userInput'
-                  id='pw'
-                  name='pw'
-                  type='password'
-                  autoComplete='password'
-                  aria-label='senha'
-                  aria-describedby='pwWarn'
-                  placeholder='Senha'
-                  pattern='^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[^a-zA-Z0-9])(?=.{8,})(?:(?!.*\s).)*(?!.*(.).*\1{4,}).*$'
-                  minLength={8}
-                  maxLength={30}
-                  required
-                  onInput={ev => localStorage.setItem("pw", btoa(ev.currentTarget.value))}
-                />
-                <button
-                  type='button'
-                  id='spanShowPw'
-                  aria-label='Alterar visualização de senha'
-                  className='halfL fade-in-late-element'
-                  onClick={ev => callbackShowPw(ev.currentTarget)}>
-                  <svg
-                    xmlns='http://www.w3.org/2000/svg'
-                    width='16'
-                    height='16'
-                    fill='currentColor'
-                    className='bi bi-eye-fill'
-                    viewBox='0 0 16 16'>
-                    <path d='M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0' />
-                    <path d='M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7' />
-                  </svg>
-                </button>
-              </fieldset>
-            </div>
-          </div>
-          <small className='customValidityWarn' id='pwWarn' ref={spanRef}>
-            {msg}
-          </small>
-          <nav id='loginBtnCont'>
-            <Link
-              id='recover'
-              className='fade-in-late-element'
-              href='/recover'
-              rel='nofollow noreferrer'
-              target='_self'>
-              Esqueci minha senha
-            </Link>
-            <button
-              type='submit'
-              className='btn btn-primary fade-in-element'
-              id='submitBtn'
-              onClick={ev => {
-                ev.preventDefault();
-                if (
-                  ev.currentTarget instanceof Element &&
-                  ev.currentTarget.firstElementChild instanceof HTMLAnchorElement
-                ) {
-                  localStorage.setItem("shouldTrustNavigate", "true");
-                  ev.currentTarget.firstElementChild.focus();
-                  ev.currentTarget.firstElementChild.click();
-                }
-              }}>
-              <Link
-                href={`${basePath.path}/base`}
-                ref={anchorRef}
-                id='submitLogin'
-                rel='nofollow noreferrer'
-                target='_self'
-                style={{ color: "#ffff" }}
-                onClick={ev => {
-                  ev.preventDefault();
-                  const loginForm = new FormData();
-                  let userName = "";
-                  try {
-                    const usernameEl = document.getElementById("user");
-                    if (!(usernameEl instanceof HTMLInputElement))
-                      throw inputNotFound(usernameEl, `Validation of User name element`, extLine(new Error()));
-                    userName = usernameEl.value;
-                  } catch (e) {
-                    console.error(`Error executing fetch of user name from element:\n${(e as Error).message}`);
-                  }
-                  loginForm.append("username", userName);
-                  let pw = "";
-                  try {
-                    const pwEl = document.getElementById("pw");
-                    if (!(pwEl instanceof HTMLInputElement))
-                      throw inputNotFound(pwEl, `Validation of password element instance`, extLine(new Error()));
-                    pw = pwEl.value;
-                  } catch (e) {
-                    console.error(`Error reading password value:${(e as Error).message}`);
-                  }
-                  loginForm.append("password", pw);
-                  const [message, suspicious] = new ClickEvaluator().evaluateClickMovements(ev);
-                  if (suspicious || !callbackSubmitBtn) {
-                    toast.error(message);
-                    const parent = ev.currentTarget.parentElement;
-                    let parentIdf = "";
-                    if (parent instanceof HTMLButtonElement || parent instanceof HTMLInputElement) {
-                      parent.disabled = true;
-                      parentIdf = parent.id;
-                    }
-                    setTimeout(() => {
-                      const parent = ev.currentTarget?.parentElement || document.getElementById(parentIdf);
-                      if (parent instanceof HTMLButtonElement || parent instanceof HTMLInputElement)
-                        parent.disabled = false;
-                    }, 3000);
-                    return;
-                  }
-                  callbackSubmitBtn();
-                  setTimeout(() => {
-                    handleLogin(ev, loginForm, true).then(res => {
-                      if (res.valid) {
-                        exeLogin(spanRef.current);
-                        setFullUser({ v: defUser });
-                      } else setMsg(res.message);
-                      setTimeout(() => {
-                        setMsg("");
-                      }, 10000);
-                    });
-                  }, 300);
-                }}>
-                Avançar
-              </Link>
-            </button>
-          </nav>
-        </section>
+            minLength={5}
+            maxLength={30}
+            data-title='Usuário'
+            autoComplete='username'
+            required
+            autoFocus
+            onInput={ev => localStorage.setItem("user", btoa(ev.currentTarget.value))}
+          />
+        </div>
       </div>
+      <small className={`customValidityWarn ${sLp.customValidityWarn}`} id='userWarn'></small>
+      <div role='group' className={`${sLp.loginInputCont1}`}>
+        <div role='group' className={`${sLp.loginInputCont2}`}>
+          <fieldset className={`form-control flexDiv fade-in-element ${sLp.loginInputCont3}`} id='loginInputCont3'>
+            <input
+              className={`fade-in-element form-control userInput ${sLp.pw} ${sLp.userInput}`}
+              id='pw'
+              name='pw'
+              type='password'
+              autoComplete='password'
+              aria-label='senha'
+              aria-describedby='pwWarn'
+              placeholder='Senha'
+              pattern='^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[^a-zA-Z0-9])(?=.{8,})(?:(?!.*\s).)*(?!.*(.).*\1{4,}).*$'
+              minLength={8}
+              maxLength={30}
+              required
+              onInput={ev => localStorage.setItem("pw", btoa(ev.currentTarget.value))}
+            />
+            <button
+              type='button'
+              id='spanShowPw'
+              aria-label='Alterar visualização de senha'
+              className={`halfL fade-in-late-element ${sLp.spanShowPw}`}
+              onClick={ev => callbackShowPw(ev.currentTarget)}>
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                width='16'
+                height='16'
+                fill='currentColor'
+                className='bi bi-eye-fill'
+                viewBox='0 0 16 16'>
+                <path d='M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0' />
+                <path d='M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7' />
+              </svg>
+            </button>
+          </fieldset>
+        </div>
+      </div>
+      <small className={`customValidityWarn ${sLp.customValidityWarn}`} id='pwWarn' ref={spanRef}>
+        {msg}
+      </small>
+      <nav className={`${sLp.loginBtnCont}`} id='loginBtnCont'>
+        <Link
+          id='recover'
+          className={`fade-in-late-element ${sLp.recover}`}
+          href='/recover'
+          rel='nofollow noreferrer'
+          target='_self'>
+          Esqueci minha senha
+        </Link>
+        <button
+          type='button'
+          className={`btn btn-primary fade-in-element ${sLp.submitBtn}`}
+          id='submitBtn'
+          onClick={ev => {
+            ev.preventDefault();
+            if (
+              ev.currentTarget instanceof Element &&
+              ev.currentTarget.firstElementChild instanceof HTMLAnchorElement
+            ) {
+              localStorage.setItem("shouldTrustNavigate", "true");
+              ev.currentTarget.firstElementChild.click();
+            }
+          }}>
+          <Link
+            href={`${basePath.path}/base`}
+            ref={anchorRef}
+            id='submitLogin'
+            rel='nofollow noreferrer'
+            target='_self'
+            style={{ color: "#ffff" }}
+            onClick={ev => {
+              ev.preventDefault();
+              const loginForm = new FormData();
+              let userName = "";
+              try {
+                const usernameEl = document.getElementById("user");
+                if (!(usernameEl instanceof HTMLInputElement))
+                  throw inputNotFound(usernameEl, `Validation of User name element`, extLine(new Error()));
+                userName = usernameEl.value;
+              } catch (e) {
+                console.error(`Error executing fetch of user name from element:\n${(e as Error).message}`);
+              }
+              loginForm.append("username", userName);
+              let pw = "";
+              try {
+                const pwEl = document.getElementById("pw");
+                if (!(pwEl instanceof HTMLInputElement))
+                  throw inputNotFound(pwEl, `Validation of password element instance`, extLine(new Error()));
+                pw = pwEl.value;
+              } catch (e) {
+                console.error(`Error reading password value:${(e as Error).message}`);
+              }
+              loginForm.append("password", pw);
+              const [message, suspicious] = new ClickEvaluator().evaluateClickMovements(ev);
+              if (suspicious || !callbackSubmitBtn) {
+                toast.error(message);
+                const parent = ev.currentTarget.parentElement;
+                let parentIdf = "";
+                if (parent instanceof HTMLButtonElement || parent instanceof HTMLInputElement) {
+                  parent.disabled = true;
+                  parentIdf = parent.id;
+                }
+                setTimeout(() => {
+                  const parent = ev.currentTarget?.parentElement || document.getElementById(parentIdf);
+                  if (parent instanceof HTMLButtonElement || parent instanceof HTMLInputElement)
+                    parent.disabled = false;
+                }, 3000);
+                return;
+              }
+              const { ok, msg } = callbackSubmitBtn();
+              if (!ok) {
+                if (formToasted.current) return;
+                const toastId = toast.error(msg);
+                setTimeout(() => toast.dismiss(toastId), 1500);
+                formToasted.current = true;
+                setTimeout(() => (formToasted.current = false), 2000);
+              }
+              setTimeout(() => {
+                handleLogin(ev, loginForm, true).then(res => {
+                  if (res.valid) {
+                    exeLogin(spanRef.current);
+                    setFullUser({ v: defUser });
+                  } else setMsg(res.message);
+                });
+              }, 300);
+            }}>
+            Avançar
+          </Link>
+        </button>
+      </nav>
     </form>
   );
 }

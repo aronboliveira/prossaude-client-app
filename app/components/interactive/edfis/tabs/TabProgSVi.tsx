@@ -5,7 +5,7 @@ import GenericErrorComponent from "../../../error/GenericErrorComponent";
 import Td from "./Td";
 import Th from "./Th";
 import WatcherTab from "../client/tabs/WatcherTab";
-import s from "@/styles/locals/modules/sharedComponents.module.scss";
+import s from "@/styles//modules/sharedComponents.module.scss";
 import { useContext } from "react";
 import { FspCtxProps } from "@/lib/global/declarations/interfaces";
 import { FspCtx } from "../client/FsProgCons";

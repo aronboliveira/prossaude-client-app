@@ -24,6 +24,18 @@ export interface DocumentNodeProps {
   head?: (JSX.Element | null)[];
   styles?: JSX.Element | ReactElement<any, string | JSXElementConstructor<any>>[] | ReactFragment;
 }
+export type MetaTag = {
+  content?: string;
+  id?: string;
+  name?: string;
+  property?: string;
+};
+export interface LinkTag {
+  rel?: string;
+  href?: string;
+  id?: string;
+  sizes?: string;
+}
 export interface ProSaudeAppProps extends AppProps {
   pageProps: Record<string, any>;
 }

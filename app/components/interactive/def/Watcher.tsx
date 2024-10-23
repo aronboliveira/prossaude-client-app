@@ -1,8 +1,8 @@
 "use client";
 import { handleDivAddShow } from "@/lib/locals/aGPage/aGHandlers";
-import { odProps, agProps } from "@/vars";
+import { odProps, agProps, navigatorVars } from "@/vars";
 import { extLine, inputNotFound } from "@/lib/global/handlers/errorHandler";
-import { handleLinkChanges } from "@/lib/global/handlers/gRoutingHandlers";
+import { handleLinkChanges, headCleanup } from "@/lib/global/handlers/gRoutingHandlers";
 import { pageCases, targEl } from "@/lib/global/declarations/types";
 import { useContext, useEffect, useState } from "react";
 import { addExportFlags, getGlobalEls, watchLabels } from "@/lib/global/gController";
@@ -12,6 +12,7 @@ import { assignFormAttrs, checkContext, modelScripts } from "@/lib/global/gModel
 import useMount from "@/lib/hooks/useMount";
 import { RootCtxType } from "@/lib/global/declarations/interfaces";
 import { RootCtx } from "@/pages/_app";
+import useBsLink from "@/lib/hooks/useBsLink";
 export default function Watcher({ routeCase }: { routeCase?: pageCases }): JSX.Element {
   const [handled, setHandle] = useState<boolean>(false),
     [isMounted] = useMount(),
@@ -62,12 +63,13 @@ export default function Watcher({ routeCase }: { routeCase?: pageCases }): JSX.E
       handleLinkChanges("od", "Od Page Style");
       getGlobalEls(odProps.odIsAutoCorrectOn, "notNum");
     } else if (routeCase === "recover") handleLinkChanges("recover", "Recover Page Style");
+    headCleanup();
     setHandle(true);
     return (): void => {
       if (routeCase === "ag") removeEventListener("resize", handleResize);
     };
   }, [isMounted, routeCase]);
-  useEffect(() => modelScripts(), [handled]);
+  useEffect(modelScripts, [handled]);
   useEffect(() => {
     if (!isMounted) return;
     setTimeout(() => syncAriaStates(document.querySelectorAll("*")), 1000);
@@ -90,5 +92,10 @@ export default function Watcher({ routeCase }: { routeCase?: pageCases }): JSX.E
     if (divModalSec) divModalSec.current = document.getElementById("divAddSec") as HTMLDivElement;
     if (divModalTerc) divModalTerc.current = document.getElementById("divAddTerc") as HTMLDivElement;
   }, [divModal, divModalSec, divModalTerc]);
+  useEffect(() => {
+    if (navigator.language.startsWith("pt-")) navigatorVars.pt = true;
+    else navigatorVars.pt = false;
+  }, []);
+  useBsLink();
   return <div className='watcher' id={`watcher-${routeCase}`} style={{ display: "none" }}></div>;
 }

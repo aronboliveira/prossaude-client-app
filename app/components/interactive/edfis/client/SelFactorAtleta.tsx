@@ -7,7 +7,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 import useMount from "@/lib/hooks/useMount";
 import { FactorAtletaRegular, FactorAtletaValue } from "@/lib/global/declarations/testVars";
 import { checkContext, limitedError } from "@/lib/global/gModel";
-import sEn from "@/styles/locals/modules/enStyles.module.scss";
+import sEn from "@/styles//modules/enStyles.module.scss";
 import { ENCtxProps } from "@/lib/global/declarations/interfaces";
 import { ENCtx } from "./ENForm";
 export default function SelFactorAtleta(): JSX.Element {

@@ -9,7 +9,7 @@ import { ENCtx } from "./ENForm";
 import { ENCtxProps, FspCtxProps } from "@/lib/global/declarations/interfaces";
 import { FspCtx } from "./FsProgCons";
 import { evalPseudoNum } from "@/lib/locals/edFisNutPage/edFisNutModel";
-import sEn from "@/styles/locals/modules/enStyles.module.scss";
+import sEn from "@/styles//modules/enStyles.module.scss";
 import { NlMRef, NlrDispatch, nlFs, nlSel, nlTab } from "@/lib/global/declarations/types";
 export default function SelectNumCons(): JSX.Element {
   let fspr: NlMRef<nlFs> = null,

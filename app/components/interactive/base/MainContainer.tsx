@@ -4,14 +4,15 @@ import { createRoot } from "react-dom/client";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { equalizeParagraphs } from "@/lib/locals/basePage/baseStylescript";
 import { expandContent } from "@/lib/global/gStyleScript";
-import { checkContext, parseNotNaN } from "@/lib/global/gModel";
+import { checkContext } from "@/lib/global/gModel";
 import { targEl } from "@/lib/global/declarations/types";
 import { useEffect, useContext, useRef } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import EnhancedUserProfilePanel from "../../user/EnhancedUserProfilePanel";
 import { toast } from "react-hot-toast";
-import sMc from "@/styles/locals/modules/mainContainer.module.scss";
+import sMc from "@/styles//modules/mainContainer.module.scss";
+import { navigatorVars } from "@/vars";
 let baseRootUser: targEl;
 export default function MainContainer(): JSX.Element {
   const ctx = useContext(RootCtx),
@@ -36,147 +37,154 @@ export default function MainContainer(): JSX.Element {
         );
     equalizeParagraphs(Array.from(document.querySelectorAll("small")));
     expandContent(document.getElementById("rootUserInfo"));
-    const handleBgResize = (): void => {
-      try {
-        const bgDiv = document.getElementById("bgDiv");
-        if (!(bgDiv instanceof HTMLElement)) return;
-        const mainArticle = document.querySelector(".main-article") || document.querySelector("nav");
-        if (!(mainArticle instanceof HTMLElement)) return;
-        const mainContainer = document.querySelector(".main-container") || document.querySelector("main");
-        if (!(mainContainer instanceof HTMLElement)) return;
-        const cardsSect = document.getElementById("cardsSect");
-        if (!(cardsSect instanceof HTMLElement)) return;
-        const panelBtn = document.getElementById("panelBtn"),
-          panelSect = document.getElementById("panelSect"),
-          rows = getComputedStyle(cardsSect).gridTemplateRows;
-        let factor = 1.1,
-          contFactor = 1,
-          numRows = 1,
-          factorRows = 0.5;
-        if (/repeat/g.test(rows))
-          numRows =
-            parseNotNaN(
-              rows
-                .slice(0, rows.indexOf(","))
-                .replace("repeat(", "")
-                .replace(/[^0-9]g/, ""),
-            ) || 2;
-        else numRows = Array.from(rows.matchAll(/\s/g)).length + 1 || 1;
-        if (panelBtn instanceof HTMLElement) panelBtn.style.width = "23.2rem";
-        if (cardsSect instanceof HTMLElement) cardsSect.style.paddingTop = "0";
-        if (panelSect instanceof HTMLElement) {
-          panelSect.style.paddingTop = "0";
-          panelSect.style.paddingBottom = "10rem";
-        }
-        if (innerWidth > 520 && innerWidth <= 1025) numRows = 2;
-        if (innerWidth <= 1025 && numRows > 1) {
-          /* eslint-disable */
-          factor = 1 * numRows * factorRows;
-          contFactor = 1 * numRows * factorRows;
-          /* estlint-enable */
-          if (panelSect instanceof HTMLElement) {
-            panelSect.style.paddingTop = "0";
-            panelSect.style.paddingBottom = "0";
-            if (panelBtn instanceof HTMLElement) {
-              panelBtn.style.width = "23.2rem";
-              if (panelBtn.parentElement) panelBtn.parentElement!.style.paddingTop = "2rem";
-            }
-          }
-        }
-        if (innerWidth < 930 && numRows > 1 && panelSect instanceof HTMLElement) {
-          panelSect.style.paddingTop = "3rem";
-          panelSect.style.paddingBottom = "0";
-        }
-        if (innerWidth <= 850 && numRows > 1) {
-          contFactor = 0.94 * numRows * factorRows;
-          if (cardsSect instanceof HTMLElement) cardsSect.style.paddingTop = "2rem";
-          if (panelSect instanceof HTMLElement) {
-            panelSect.style.paddingTop = "4rem";
-            panelSect.style.paddingBottom = "0";
-          }
-        }
-        if (innerWidth <= 750 && numRows > 1) {
-          /* estlint-disable */
-          contFactor = 1 * numRows * factorRows;
-          /* estlint-enable */
-          if (panelSect instanceof HTMLElement) {
-            panelSect.style.paddingTop = "1rem";
-            panelSect.style.paddingBottom = "3rem";
-          }
-        }
-        if (innerWidth <= 675 && numRows > 1) {
-          if (panelSect instanceof HTMLElement) {
-            panelSect.style.paddingTop = "1rem";
-          }
-        }
-        if (innerWidth <= 600 && numRows > 1) {
-          contFactor = 0.93 * numRows * factorRows;
-        }
-        if (innerWidth <= 592 && numRows > 1) {
-          factor = 1.08 * numRows * factorRows;
-          contFactor = 1.2 * numRows * factorRows;
-          if (panelSect instanceof HTMLElement) {
-            panelSect.style.paddingTop = "1.5rem";
-          }
-        }
-        if (numRows >= 4 && innerWidth <= 520) {
-          numRows = 4;
-          factorRows = 0.25;
-        }
-        if (innerWidth <= 520 && numRows > 1) {
-          /* eslint-disable */
-          factor = 1.06 * numRows * factorRows;
-          contFactor = 1 * numRows * factorRows;
-          /* estlint-enable */
-          if (panelSect instanceof HTMLElement) {
-            panelSect.style.paddingBottom = "2rem";
-            panelSect.style.marginTop = "0";
-            if (panelBtn instanceof HTMLElement) panelBtn.style.width = "75vw";
-          }
-        }
-        if (innerWidth <= 448 && numRows > 1) {
-          factor = 1.083 * numRows * factorRows;
-          contFactor = 1.045 * numRows * factorRows;
-          if (panelSect instanceof HTMLElement) {
-            panelSect.style.paddingTop = "2rem";
-            panelSect.style.paddingBottom = "2rem";
-          }
-        }
-        if (innerWidth <= 415 && numRows > 1) {
-          factor = 1.038 * numRows * factorRows;
-          contFactor = 1.01 * numRows * factorRows;
-          if (panelSect instanceof HTMLElement) {
-            panelSect.style.paddingTop = "2rem";
-            if (panelBtn instanceof HTMLElement) panelBtn.style.width = "75vw";
-          }
-        }
-        if (innerWidth <= 325 && numRows > 1) {
-          factor = 1.038 * numRows * factorRows;
-          contFactor = 1.01 * numRows * factorRows;
-          if (panelSect instanceof HTMLElement) {
-            panelSect.style.paddingTop = "3.5rem";
-            if (cardsSect instanceof HTMLElement) cardsSect.style.paddingTop = "5rem";
-            if (panelBtn instanceof HTMLElement) panelBtn.style.width = "75vw";
-          }
-        }
-        bgDiv.style.height = `${
-          parseNotNaN(getComputedStyle(mainArticle).height.replace("px", "").trim()) * factor || 1
-        }px`;
-        mainContainer.style.height = `${
-          parseNotNaN(getComputedStyle(mainArticle).height.replace("px", "").trim()) * contFactor || 1
-        }px`;
-      } catch (e) {
-        console.error(`Error executing handleBgResize:\n${(e as Error).message}`);
-      }
-    };
-    handleBgResize();
-    addEventListener("resize", handleBgResize);
-    return (): void => removeEventListener("resize", handleBgResize);
+    // const handleBgResize = (): void => {
+    //   try {
+    //     const bgDiv = document.getElementById("bgDiv");
+    //     if (!(bgDiv instanceof HTMLElement)) return;
+    //     const mainArticle = document.querySelector(".main-article") || document.querySelector("nav");
+    //     if (!(mainArticle instanceof HTMLElement)) return;
+    //     const mainContainer = document.querySelector(".main-container") || document.querySelector("main");
+    //     if (!(mainContainer instanceof HTMLElement)) return;
+    //     const cardsSect = document.getElementById("cardsSect");
+    //     if (!(cardsSect instanceof HTMLElement)) return;
+    //     const panelBtn = document.getElementById("panelBtn"),
+    //       panelSect = document.getElementById("panelSect"),
+    //       rows = getComputedStyle(cardsSect).gridTemplateRows;
+    //     let factor = 1.1,
+    //       contFactor = 1,
+    //       numRows = 1,
+    //       factorRows = 0.5;
+    //     if (/repeat/g.test(rows))
+    //       numRows =
+    //         parseNotNaN(
+    //           rows
+    //             .slice(0, rows.indexOf(","))
+    //             .replace("repeat(", "")
+    //             .replace(/[^0-9]g/, ""),
+    //         ) || 2;
+    //     else numRows = Array.from(rows.matchAll(/\s/g)).length + 1 || 1;
+    //     if (panelBtn instanceof HTMLElement) panelBtn.style.width = "23.2rem";
+    //     if (cardsSect instanceof HTMLElement) cardsSect.style.paddingTop = "0";
+    //     if (panelSect instanceof HTMLElement) {
+    //       panelSect.style.paddingTop = "0";
+    //       panelSect.style.paddingBottom = "10rem";
+    //     }
+    //     if (innerWidth > 520 && innerWidth <= 1025) numRows = 2;
+    //     if (innerWidth <= 1025 && numRows > 1) {
+    //       /* eslint-disable */
+    //       factor = 1 * numRows * factorRows;
+    //       contFactor = 1 * numRows * factorRows;
+    //       /* estlint-enable */
+    //       if (panelSect instanceof HTMLElement) {
+    //         panelSect.style.paddingTop = "0";
+    //         panelSect.style.paddingBottom = "0";
+    //         if (panelBtn instanceof HTMLElement) {
+    //           panelBtn.style.width = "23.2rem";
+    //           if (panelBtn.parentElement) panelBtn.parentElement!.style.paddingTop = "2rem";
+    //         }
+    //       }
+    //     }
+    //     if (innerWidth < 930 && numRows > 1 && panelSect instanceof HTMLElement) {
+    //       panelSect.style.paddingTop = "3rem";
+    //       panelSect.style.paddingBottom = "0";
+    //     }
+    //     if (innerWidth <= 850 && numRows > 1) {
+    //       contFactor = 0.94 * numRows * factorRows;
+    //       if (cardsSect instanceof HTMLElement) cardsSect.style.paddingTop = "2rem";
+    //       if (panelSect instanceof HTMLElement) {
+    //         panelSect.style.paddingTop = "4rem";
+    //         panelSect.style.paddingBottom = "0";
+    //       }
+    //     }
+    //     if (innerWidth <= 750 && numRows > 1) {
+    //       /* estlint-disable */
+    //       contFactor = 1 * numRows * factorRows;
+    //       /* estlint-enable */
+    //       if (panelSect instanceof HTMLElement) {
+    //         panelSect.style.paddingTop = "1rem";
+    //         panelSect.style.paddingBottom = "3rem";
+    //       }
+    //     }
+    //     if (innerWidth <= 675 && numRows > 1) {
+    //       if (panelSect instanceof HTMLElement) {
+    //         panelSect.style.paddingTop = "1rem";
+    //       }
+    //     }
+    //     if (innerWidth <= 600 && numRows > 1) {
+    //       contFactor = 0.93 * numRows * factorRows;
+    //     }
+    //     if (innerWidth <= 592 && numRows > 1) {
+    //       factor = 1.08 * numRows * factorRows;
+    //       contFactor = 1.2 * numRows * factorRows;
+    //       if (panelSect instanceof HTMLElement) {
+    //         panelSect.style.paddingTop = "1.5rem";
+    //       }
+    //     }
+    //     if (numRows >= 4 && innerWidth <= 520) {
+    //       numRows = 4;
+    //       factorRows = 0.25;
+    //     }
+    //     if (innerWidth <= 520 && numRows > 1) {
+    //       /* eslint-disable */
+    //       factor = 1.06 * numRows * factorRows;
+    //       contFactor = 1 * numRows * factorRows;
+    //       /* estlint-enable */
+    //       if (panelSect instanceof HTMLElement) {
+    //         panelSect.style.paddingBottom = "2rem";
+    //         panelSect.style.marginTop = "0";
+    //         if (panelBtn instanceof HTMLElement) panelBtn.style.width = "75vw";
+    //       }
+    //     }
+    //     if (innerWidth <= 448 && numRows > 1) {
+    //       factor = 1.083 * numRows * factorRows;
+    //       contFactor = 1.045 * numRows * factorRows;
+    //       if (panelSect instanceof HTMLElement) {
+    //         panelSect.style.paddingTop = "2rem";
+    //         panelSect.style.paddingBottom = "2rem";
+    //       }
+    //     }
+    //     if (innerWidth <= 415 && numRows > 1) {
+    //       factor = 1.038 * numRows * factorRows;
+    //       contFactor = 1.01 * numRows * factorRows;
+    //       if (panelSect instanceof HTMLElement) {
+    //         panelSect.style.paddingTop = "2rem";
+    //         if (panelBtn instanceof HTMLElement) panelBtn.style.width = "75vw";
+    //       }
+    //     }
+    //     if (innerWidth <= 325 && numRows > 1) {
+    //       factor = 1.038 * numRows * factorRows;
+    //       contFactor = 1.01 * numRows * factorRows;
+    //       if (panelSect instanceof HTMLElement) {
+    //         panelSect.style.paddingTop = "3.5rem";
+    //         if (cardsSect instanceof HTMLElement) cardsSect.style.paddingTop = "5rem";
+    //         if (panelBtn instanceof HTMLElement) panelBtn.style.width = "75vw";
+    //       }
+    //     }
+    //     bgDiv.style.height = `${
+    //       parseNotNaN(getComputedStyle(mainArticle).height.replace("px", "").trim()) * factor || 1
+    //     }px`;
+    //     mainContainer.style.height = `${
+    //       parseNotNaN(getComputedStyle(mainArticle).height.replace("px", "").trim()) * contFactor || 1
+    //     }px`;
+    //   } catch (e) {
+    //     console.error(`Error executing handleBgResize:\n${(e as Error).message}`);
+    //   }
+    // };
+    // handleBgResize();
+    // addEventListener("resize", handleBgResize);
+    // return (): void => removeEventListener("resize", handleBgResize);
   }, [ctx.roots, router]);
   useEffect(() => {
-    if (!toasted.current) toast("Navegue pelas áreas de trabalho através dos cards!", { icon: "🚢🧭" });
-    setTimeout(() => toast.dismiss(), 10000);
+    if (!toasted.current)
+      toast(
+        navigatorVars.pt ? "Navegue pelas páginas através dos cartões!" : "Navigate through the pages using the cards!",
+        { icon: "🧭" },
+      );
+    setTimeout(toast.dismiss, 5000);
     toasted.current = true;
+    const untoast = (): void => toast.dismiss();
+    addEventListener("popstate", untoast);
+    return (): void => removeEventListener("popstate", untoast);
   }, [toasted]);
   return (
     // <main className='main-container gridAlItCt widFull gridAlItBs750Q gridAuto750Q rGap4v750Q'>

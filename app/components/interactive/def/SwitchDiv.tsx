@@ -1,9 +1,9 @@
 "use client";
 import { switchAutoFill } from "@/lib/locals/edFisNutPage/edFisNutHandler";
-import { agProps, odProps, tabProps, timers } from "@/vars";
+import { agProps, navigatorVars, odProps, tabProps, timers } from "@/vars";
 import { useRouter } from "next/router";
 import { useRef, useEffect } from "react";
-import s from "@/styles/locals/modules/sharedComponents.module.scss";
+import s from "@/styles//modules/sharedComponents.module.scss";
 import { nlInp } from "@/lib/global/declarations/types";
 import { toast } from "react-hot-toast";
 export default function SwitchDiv({ autofill = false }: { autofill?: boolean }): JSX.Element {
@@ -50,13 +50,10 @@ export default function SwitchDiv({ autofill = false }: { autofill?: boolean }):
             onChange={ev => {
               ev.currentTarget.checked ? (tabProps.isAutoFillActive = true) : (tabProps.isAutoFillActive = false);
               tabProps.isAutoFillActive
-                ? toast(navigator.language.startsWith("pt-") ? "Autopreenchimento ativado" : "Autofill activated", {
+                ? toast(navigatorVars.pt ? "Autopreenchimento ativado" : "Autofill activated", {
                     icon: "🔢",
                   })
-                : toast(
-                    navigator.language.startsWith("pt-") ? "Autopreenchimento desativado" : "Autofill deactivated",
-                    { icon: "📝" },
-                  );
+                : toast(navigatorVars.pt ? "Autopreenchimento desativado" : "Autofill deactivated", { icon: "📝" });
               switchAutoFill(ev.currentTarget);
             }}
           />
@@ -75,15 +72,12 @@ export default function SwitchDiv({ autofill = false }: { autofill?: boolean }):
           onClick={ev => {
             const toastMsg = (autoCorrect: boolean): void => {
               autoCorrect
-                ? toast(navigator.language.startsWith("pt-") ? "Autocorreção ativada" : "Autocorrection activated", {
+                ? toast(navigatorVars.pt ? "Autocorreção ativada" : "Autocorrection activated", {
                     icon: "🔢",
                   })
-                : toast(
-                    navigator.language.startsWith("pt-") ? "Autocorreção desativada" : "Autocorrection deactivated",
-                    {
-                      icon: "📝",
-                    },
-                  );
+                : toast(navigatorVars.pt ? "Autocorreção desativada" : "Autocorrection deactivated", {
+                    icon: "📝",
+                  });
               setTimeout(() => toast.dismiss(), 2000);
             };
             if (location.pathname.toLowerCase().includes("edfis")) {

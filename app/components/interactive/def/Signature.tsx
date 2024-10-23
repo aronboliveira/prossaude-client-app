@@ -5,7 +5,7 @@ import { nullishCanvas, rMouseEvent } from "@/lib/global/declarations/types";
 import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import { addCanvasListeners, getCanvasCoords } from "@/lib/global/gController";
 import { useRouter } from "next/router";
-import s from "@/styles/locals/modules/sharedComponents.module.scss";
+import s from "@/styles//modules/sharedComponents.module.scss";
 export default function Signature(): JSX.Element {
   const canvasRef = useRef<nullishCanvas>(null),
     ctxRef = useRef<CanvasRenderingContext2D | null>(null),

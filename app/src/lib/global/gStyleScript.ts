@@ -297,34 +297,6 @@ export function clearDefInvalidMsg(
     } else elementNotFound(form, "form in clearDefInvalidMsg()", extLine(new Error()));
   }
 }
-export function fillCustomValidityWarn(inpId: string, customMsg: string = "Campo inválido"): void {
-  const warnEl = document.getElementById(`${inpId}Warn`);
-  if (warnEl instanceof HTMLElement) {
-    try {
-      let relatedInp: Element | null | undefined = warnEl.previousElementSibling;
-      if (!(relatedInp instanceof HTMLElement)) {
-        relatedInp = warnEl.parentElement?.previousElementSibling;
-        if (!relatedInp) throw new Error();
-      } else {
-        const rectLeft = relatedInp.getBoundingClientRect().left + scrollX;
-        warnEl.style.position = "relative";
-        if (innerWidth > 1250) warnEl.style.left = rectLeft / 3 + "px";
-        else warnEl.style.left = rectLeft / 2 + "px";
-      }
-    } catch (err) {
-      console.error(`Error finding related Input`);
-    }
-    warnEl.textContent = customMsg;
-    setTimeout(() => {
-      warnEl.textContent = "";
-    }, 3000);
-  } else
-    elementNotFound(
-      warnEl,
-      `warnEl id ${(warnEl as any)?.id || "UNDEFINED"} in fillCustomValidityWarn()`,
-      extLine(new Error()),
-    );
-}
 export function addListenerForValidities(inps: Array<targEl>, pattern?: RegExp): boolean {
   if (Array.isArray(inps) && inps.length > 0 && inps.every(inp => inp instanceof HTMLElement)) {
     inps.forEach(inp => {

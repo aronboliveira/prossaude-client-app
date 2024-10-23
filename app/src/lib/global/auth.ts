@@ -4,6 +4,7 @@ import { defCurrSemester } from "@/redux/slices/userSlice";
 import { rMouseEvent } from "./declarations/types";
 import { NextRouter } from "next/router";
 import Cookies from "js-cookie";
+import { navigatorVars } from "@/vars";
 export function decodeToken(
   token: string,
   UNDER_TEST: boolean = false,
@@ -110,20 +111,20 @@ export async function handleLogin(
       localStorage.setItem("activeUser", JSON.stringify(user));
       return {
         valid: true,
-        message: navigator.language.startsWith("pt-") ? "Carregando..." : "Loading...",
+        message: navigatorVars.pt ? "Carregando..." : "Loading...",
       };
     } else {
       localStorage.setItem("activeUser", JSON.stringify(decodeToken("", true).res));
       return {
         valid: true,
-        message: navigator.language.startsWith("pt-") ? "Carregando..." : "Loading...",
+        message: navigatorVars.pt ? "Carregando..." : "Loading...",
       };
     }
   } catch (e) {
     console.error(`Error executing handleFetchStuds:\n${(e as Error).message}`);
     return {
       valid: false,
-      message: navigator.language.startsWith("pt-")
+      message: navigatorVars.pt
         ? `Falha na validação de login: Código de erro ${status}`
         : `Failed to validate login: Error code ${status}`,
     };

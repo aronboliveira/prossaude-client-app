@@ -6,7 +6,7 @@ import { ENCtxProps } from "@/lib/global/declarations/interfaces";
 import { Intensity, NafTypeValue } from "@/lib/global/declarations/testVars";
 import { checkContext, limitedError, parseNotNaN } from "@/lib/global/gModel";
 import { callbackAtvLvlElementNaf, exeAutoFill } from "@/lib/locals/edFisNutPage/edFisNutHandler";
-import sEn from "@/styles/locals/modules/enStyles.module.scss";
+import sEn from "@/styles//modules/enStyles.module.scss";
 import { NlMRef, nlSel } from "@/lib/global/declarations/types";
 export default function NafType(): JSX.Element {
   let gl: NlMRef<nlSel> = null,

@@ -55,6 +55,9 @@ export default function OdForm(): JSX.Element {
         </div>
       ));
     toasted.current = true;
+    const untoast = (): void => toast.dismiss();
+    addEventListener("popstate", untoast);
+    return (): void => removeEventListener("popstate", untoast);
   }, []);
   useDataProvider(f.current);
   return (

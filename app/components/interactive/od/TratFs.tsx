@@ -5,7 +5,7 @@ import { useEffect, useReducer, useRef } from "react";
 import { nlBtn, nlFs, nlInp } from "@/lib/global/declarations/types";
 import { elementNotFound, extLine, inputNotFound } from "@/lib/global/handlers/errorHandler";
 import { changeToAstDigit, syncAriaStates } from "@/lib/global/handlers/gHandlers";
-import sEn from "@/styles/locals/modules/enStyles.module.scss";
+import sEn from "@/styles//modules/enStyles.module.scss";
 export default function TratFs(props: { phCb?: () => void }): JSX.Element {
   const mainRef = useRef<nlFs>(null);
   const btnRef = useRef<nlBtn>(null);

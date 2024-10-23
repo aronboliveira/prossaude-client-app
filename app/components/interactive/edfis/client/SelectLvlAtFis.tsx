@@ -6,7 +6,7 @@ import { Intensity } from "@/lib/global/declarations/testVars";
 import { camelToRegular, checkContext, limitedError } from "@/lib/global/gModel";
 import { person, tabProps, timers } from "@/vars";
 import { callbackAtvLvlElementNaf, exeAutoFill } from "@/lib/locals/edFisNutPage/edFisNutHandler";
-import sEn from "@/styles/locals/modules/enStyles.module.scss";
+import sEn from "@/styles//modules/enStyles.module.scss";
 import { NlMRef, nlSel } from "@/lib/global/declarations/types";
 export default function SelectLvlAtFis(): JSX.Element {
   let gl: NlMRef<nlSel> = null,

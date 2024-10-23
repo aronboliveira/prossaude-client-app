@@ -11,6 +11,7 @@ import { CacheENProps } from "@/lib/global/declarations/interfaces";
 import { nlFs, nlTab } from "@/lib/global/declarations/types";
 import { evalMatchTMBElements } from "@/lib/locals/edFisNutPage/edFisNutModel";
 import { exeAutoFill } from "@/lib/locals/edFisNutPage/edFisNutHandler";
+import useBsLink from "@/lib/hooks/useBsLink";
 export default function WatcherEN(): JSX.Element {
   const [mounted, setMounted] = useMount(),
     [isExportListening, setExport] = useState<boolean>(false),
@@ -63,6 +64,7 @@ export default function WatcherEN(): JSX.Element {
     }, 1000);
   }, []);
   useResetPerson();
+  useBsLink();
   useEffect(() => {
     const populateCache = (): void => {
         (

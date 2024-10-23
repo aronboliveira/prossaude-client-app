@@ -65,7 +65,9 @@ export default function MyDocument({ deps }: { deps: any }): JSX.Element {
           rel='stylesheet'
           integrity='sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN'
           crossOrigin='anonymous'
-          id='bootstrapLink'></link>
+          id='bootstrapLink'
+          media='print'
+        />
       </Head>
       <body>
         <div>

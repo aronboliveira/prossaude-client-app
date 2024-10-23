@@ -136,3 +136,6 @@ export const alignOpts: { v: AlignType; l: AlignTypeLab }[] = [
   { v: "feminilizado", l: "Feminino | Feminilizado" },
   { v: "neutro", l: "Neutro" },
 ];
+export const navigatorVars = {
+  pt: false,
+};

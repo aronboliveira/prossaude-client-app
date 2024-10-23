@@ -1,6 +1,6 @@
 "use client";
 import { DlgProps } from "@/lib/global/declarations/interfaces";
-import s from "@/styles/locals/modules/sharedComponents.module.scss";
+import s from "@/styles//modules/sharedComponents.module.scss";
 import { useRouter } from "next/router";
 export default function TipsBtn({ dispatch, state }: DlgProps): JSX.Element {
   const router = useRouter();

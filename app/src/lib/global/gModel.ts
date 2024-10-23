@@ -1077,8 +1077,7 @@ export function assignFormAttrs(fr: nlFm): void {
     );
   }
   try {
-    let els = "",
-      len = 0;
+    let len = 0;
     [
       ...fr.querySelectorAll("button"),
       ...fr.querySelectorAll("fieldset"),
@@ -1090,8 +1089,6 @@ export function assignFormAttrs(fr: nlFm): void {
     ].forEach((el, i) => {
       try {
         if (!(el instanceof HTMLElement) || el.id === "") return;
-        if (els === "") els = `#${el.id}`;
-        else els += `, #${el.id}`;
         len += 1;
         if (!el || !fr) return;
         el.dataset.form = `#${fr.id}`;
@@ -1197,7 +1194,6 @@ export function assignFormAttrs(fr: nlFm): void {
         console.error(`Error executing procedure to define Dataset Label:\n${(e as Error).message}`);
       }
     });
-    fr.dataset.elements = els;
     fr.dataset.len = len.toString();
   } catch (e) {
     console.error(`Failed to execute assignFormAttrs: ${(e as Error).name} : ${(e as Error).message}`);

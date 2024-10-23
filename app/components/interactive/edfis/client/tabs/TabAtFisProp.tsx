@@ -5,8 +5,8 @@ import { nlDiv } from "@/lib/global/declarations/types";
 import { useEffect, useReducer, useRef } from "react";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { addRowAtivFis, removeRowAtivFis } from "@/lib/locals/edFisNutPage/edFisNutHandler";
-import s from "@/styles/locals/modules/sharedComponents.module.scss";
-import sEn from "@/styles/locals/modules/enStyles.module.scss";
+import s from "@/styles//modules/sharedComponents.module.scss";
+import sEn from "@/styles//modules/enStyles.module.scss";
 export default function TabAtFirsProp({ children = <></> }: { children: JSX.Element }): JSX.Element {
   const mainRef = useRef<nlDiv>(null),
     flag = useRef<string>("+"),
