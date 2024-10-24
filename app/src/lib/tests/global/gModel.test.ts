@@ -8,12 +8,11 @@ import {
   CrossOrigin,
   Email,
   ErrorHandler,
-  Gender,
   LocalNumber,
   PseudoNum,
   ScriptType,
   brDate,
-} from "../testVars";
+} from "../../global/declarations/testVars";
 describe("numberLimit", (): void => {
   let elementNotFoundSpy: jest.SpyInstance;
   beforeEach((): void => {
@@ -221,95 +220,78 @@ describe("checkAllGenConts", (): void => {
     expect(multipleElementsNotFoundSpy).toHaveBeenCalled() as void;
   }) as void;
 }) as void;
-describe("fluxGen", (): void => {
-  let gen: HTMLSelectElement, gb: HTMLSelectElement, gt: HTMLSelectElement, ga: HTMLSelectElement;
+describe("fluxGen", () => {
+  let genConts: any, alignSetter: jest.Mock, transSetter: jest.Mock, birthSetter: jest.Mock;
   beforeEach(() => {
-    gen = document.createElement("select");
-    gb = document.createElement("select");
-    gt = document.createElement("select");
-    ga = document.createElement("select");
-    ["masculinizado", "feminilizado", "neutro"].forEach(value => {
-      const option = document.createElement("option");
-      option.value = value;
-      ga.appendChild(option);
-    });
-  });
-  afterEach(() => {
     jest.clearAllMocks();
+    jest.resetAllMocks();
+    alignSetter = jest.fn();
+    transSetter = jest.fn();
+    birthSetter = jest.fn();
+    jest.spyOn(gModel, "showStgTransHorm").mockImplementation(jest.fn());
+    jest.spyOn(gModel, "showGenFisAlin").mockImplementation(jest.fn());
+    jest.spyOn(gModel, "hideStgTransHorm").mockImplementation(jest.fn());
+    jest.spyOn(gModel, "hideGenFisAlin").mockImplementation(jest.fn());
+    jest.spyOn(errorHandler, "multipleElementsNotFound").mockImplementation(jest.fn());
+    genConts = {
+      g: document.createElement("select"),
+      gb: document.createElement("select"),
+      gt: document.createElement("select"),
+      ga: document.createElement("select"),
+    };
+    genConts.g.value = "masculino";
+    genConts.gb.value = "cis";
+    genConts.gt.value = "undefined";
+    genConts.ga.value = "masculinizado";
   });
-  test("should return 'masculino' when gen is 'masculino' and gb is 'cis'", () => {
-    gen.value = "masculino";
-    gb.value = "cis";
-    expect(gModel.fluxGen({ g: gen, gb: gb, gt: gt, ga: ga })).toBe("masculino");
-    expect(
-      ga.closest(".genSpan") instanceof HTMLElement && (ga.closest(".genSpan") as HTMLElement).hidden,
-    ).toBeTruthy();
-    expect(
-      gt.closest(".genSpan") instanceof HTMLElement && (ga.closest(".genSpan") as HTMLElement).hidden,
-    ).toBeTruthy();
+  test('should call switchAlign and disable elements when g is "masculino" and gb is "cis"', () => {
+    expect(gModel.fluxGen(genConts, transSetter, birthSetter, alignSetter)).toBe("masculino");
+    expect(genConts.gb.disabled).toBe(false);
+    expect(genConts.gt.disabled).toBe(true);
+    expect(genConts.ga.disabled).toBe(true);
+    expect(gModel.hideStgTransHorm).toHaveBeenCalledWith(genConts.gt);
+    expect(gModel.hideGenFisAlin).toHaveBeenCalledWith(genConts.ga);
   });
-  test("should return 'feminino' when gen is 'feminino' and gb is 'cis'", () => {
-    gen.value = "feminino";
-    gb.value = "cis";
-    expect(gModel.fluxGen({ g: gen, gb: gb, gt: gt, ga: ga })).toBe("feminino");
-    expect(
-      ga.closest(".genSpan") instanceof HTMLElement && (ga.closest(".genSpan") as HTMLElement).hidden,
-    ).toBeTruthy();
-    expect(
-      gt.closest(".genSpan") instanceof HTMLElement && (ga.closest(".genSpan") as HTMLElement).hidden,
-    ).toBeTruthy();
+  test('should call switchAlign and fluxAlign when gb is "trans" and gt is "avancado"', () => {
+    genConts.gb.value = "trans";
+    genConts.gt.value = "avancado";
+    expect(gModel.fluxGen(genConts, transSetter, birthSetter, alignSetter)).toBe("masculino");
+    expect(gModel.showStgTransHorm).toHaveBeenCalledWith(genConts.gt);
+    expect(gModel.showGenFisAlin).toHaveBeenCalledWith(genConts.ga, genConts.g);
   });
-  test("should show hormonal transition options when gb is 'trans' and return the correct gender", () => {
-    gen.value = "masculino";
-    gb.value = "trans";
-    gt.value = "intermediario";
-    expect(gModel.fluxGen({ g: gen, gb: gb, gt: gt, ga: ga })).toBe("masculino");
-    expect(gModel.showStgTransHorm).toHaveBeenCalledWith(gt);
-    expect(gModel.showGenFisAlin).toHaveBeenCalledWith(ga);
-    expect(ga.value).toBe("masculinizado");
+  test('should call alignSetter when g is "feminino" and gb is not "cis"', () => {
+    genConts.g.value = "feminino";
+    genConts.gb.value = "trans";
+    expect(gModel.fluxGen(genConts, transSetter, birthSetter, alignSetter)).toBe("feminino");
+    expect(alignSetter).toHaveBeenCalledWith("feminilizado");
   });
-  test("should handle non-binary gender and set the correct physical alignment", () => {
-    gen.value = "naoBinario";
-    gb.value = "trans";
-    ga.value = "neutro";
-    expect(gModel.fluxGen({ g: gen, gb: gb, gt: gt, ga: ga })).toBe("neutro");
-    expect(gModel.showGenFisAlin).toHaveBeenCalledWith(ga);
+  test('should set birthSetter and transSetter when g is "naoBinario"', () => {
+    genConts.g.value = "naoBinario";
+    expect(gModel.fluxGen(genConts, transSetter, birthSetter, alignSetter)).toBe("neutro");
+    expect(genConts.gb.disabled).toBe(true);
+    expect(birthSetter).toHaveBeenCalledWith("trans");
   });
-  test("should return 'masculino' when gen is undefined and fallback to default", () => {
-    expect(gModel.fluxGen({ g: gen, gb: gb, gt: gt, ga: ga })).toBe("masculino");
+  test('should disable elements when g is "undefined"', () => {
+    genConts.g.value = "undefined";
+    expect(gModel.fluxGen(genConts, transSetter, birthSetter, alignSetter)).toBe("masculino");
+    expect(genConts.gb.disabled).toBe(true);
+    expect(genConts.gt.disabled).toBe(true);
+    expect(genConts.ga.disabled).toBe(false);
+    expect(transSetter).toHaveBeenCalledWith("undefined");
   });
-  test("should handle alignSetter if provided", () => {
-    const mockAlignSetter = jest.fn();
-    gen.value = "masculino";
-    gb.value = "trans";
-    gt.value = "intermediario";
-    gModel.fluxGen({ g: gen, gb: gb, gt: gt, ga: ga }, "masculino", mockAlignSetter);
-    expect(mockAlignSetter).toHaveBeenCalledWith("masculinizado");
-  });
-  test("should switch alignment based on gender and transition state", () => {
-    gen.value = "feminino";
-    gb.value = "trans";
-    gt.value = "avancado";
-    ga.value = "feminilizado";
-    const result = gModel.fluxGen({ g: gen, gb: gb, gt: gt, ga: ga });
-    expect(result).toBe("feminino");
-    expect(gModel.showStgTransHorm).toHaveBeenCalledWith(gt);
-    expect(gModel.hideGenFisAlin).toHaveBeenCalledWith(ga);
-  });
-  test("should switch gender based on gb value being 'outros'", () => {
-    gen.value = "masculino";
-    gb.value = "outros";
-    ga.value = "neutro";
-    expect(gModel.fluxGen({ g: gen, gb: gb, gt: gt, ga: ga })).toBe("neutro");
-    expect(gModel.showGenFisAlin).toHaveBeenCalledWith(ga);
-  });
-  test("should return default 'masculino' if gen is not recognized", () => {
-    gen.value = "undefined";
-    gb.value = "undefined";
-    gt.value = "undefined";
-    ga.value = "undefined";
-    expect(gModel.fluxGen({ g: gen, gb: gb, gt: gt, ga: ga })).toBe("masculino");
+  test("should call multipleElementsNotFound when genConts elements are invalid", () => {
+    genConts.g = null;
+    genConts.gb = null;
+    genConts.gt = null;
+    genConts.ga = null;
+    gModel.fluxGen(genConts, transSetter, birthSetter, alignSetter);
     expect(errorHandler.multipleElementsNotFound).toHaveBeenCalled();
+  });
+  test("should handle alignSetter and switchAlign behavior correctly", () => {
+    genConts.gb.value = "undefined";
+    genConts.g.value = "masculino";
+    expect(gModel.fluxGen(genConts, transSetter, birthSetter, alignSetter)).toBe("masculino");
+    expect(alignSetter).toHaveBeenCalledWith("masculinizado");
   });
 }) as void;
 describe("showGenFisAlin", (): void => {
@@ -789,4 +771,73 @@ describe("assignFormAttrs", (): void => {
     gModel.assignFormAttrs(form) as void;
     (expect(label.id) as jest.JestMatchers<jest.SpyInstance>).toBe(`${input.id}_lab`) as void;
   }) as void;
+}) as void;
+describe("applyFieldConstraints", () => {
+  let inputEl: HTMLInputElement;
+  beforeEach(() => {
+    inputEl = document.createElement("input");
+  });
+  test("limits the value length for input element", () => {
+    inputEl.maxLength = 5;
+    inputEl.value = "123456";
+    gModel.applyFieldConstraints(inputEl);
+    expect(inputEl.value).toBe("12345");
+  });
+  test("does not throw error if invalid element is passed", () => {
+    const divEl = document.createElement("div");
+    expect(() => gModel.applyFieldConstraints(divEl)).not.toThrow();
+  });
+  test("validates min and max value for number input", () => {
+    inputEl.type = "number";
+    inputEl.min = "10";
+    inputEl.max = "100";
+    inputEl.value = "150";
+    gModel.applyFieldConstraints(inputEl);
+    expect(inputEl.value).toBe("100");
+  });
+}) as void;
+describe("applyConstraintsTitle", () => {
+  let formEl: HTMLFormElement;
+  let inputEl: HTMLInputElement;
+  beforeEach(() => {
+    formEl = document.createElement("form");
+    inputEl = document.createElement("input");
+    formEl.appendChild(inputEl);
+  });
+  test("adds title for required input field", () => {
+    inputEl.required = true;
+    gModel.applyConstraintsTitle(formEl);
+    expect(inputEl.title).toContain("Obrigatório!");
+  });
+  test("adds minLength and maxLength constraints to the title", () => {
+    inputEl.minLength = 3;
+    inputEl.maxLength = 10;
+    gModel.applyConstraintsTitle(formEl);
+    expect(inputEl.title).toContain("O campo deve conter no mínimo 3 dígitos");
+    expect(inputEl.title).toContain("O campo deve conter no máximo 10 dígitos");
+  });
+}) as void;
+describe("compProp", () => {
+  let element: HTMLElement;
+  beforeEach(() => {
+    element = document.createElement("div");
+    jest.spyOn(window, "getComputedStyle").mockImplementation(
+      () =>
+        ({
+          getPropertyValue: (prop: string) => {
+            if (prop === "width") return "100px";
+            return "";
+          },
+        } as any),
+    );
+  });
+  test("returns the computed property without measure unit", () => {
+    expect(gModel.compProp(element, "width")).toBe("100");
+  });
+  test("returns empty string if the element is not an instance of Element", () => {
+    expect(gModel.compProp(null as any, "width")).toBe("");
+  });
+  test("returns the property value directly if measure is not a string", () => {
+    expect(gModel.compProp(element, "width", null as any)).toBe("100px");
+  });
 }) as void;

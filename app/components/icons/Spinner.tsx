@@ -53,8 +53,9 @@ export default function Spinner({
                 zIndex: 1,
                 animationTimingFunction: "cubic-bezier(0.1, 0.05, 0, 1)",
                 animationDuration: "1.2s",
+                cursor: "wait",
               }
-            : {}
+            : { cursor: "wait", backfaceVisibility: "hidden" }
         }>
         <span className='visually-hidden'>{`${message}`}</span>
       </div>

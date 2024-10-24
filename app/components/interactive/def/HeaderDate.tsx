@@ -2,31 +2,30 @@
 import { clearPhDates } from "@/lib/global/gStyleScript";
 import { inputNotFound } from "@/lib/global/handlers/errorHandler";
 import { nlBtn, nlInp } from "@/lib/global/declarations/types";
-import { useEffect, useRef } from "react";
-import { parseNotNaN } from "@/lib/global/gModel";
+import { useCallback, useEffect, useRef } from "react";
+import { compProp, parseNotNaN } from "@/lib/global/gModel";
 export default function HeaderDate(): JSX.Element {
-  const dateRef = useRef<nlInp>(null);
-  const btnRef = useRef<nlBtn>(null);
+  const dateRef = useRef<nlInp>(null),
+    btnRef = useRef<nlBtn>(null),
+    equalizeBtn = useCallback((): void => {
+      btnRef.current ??= document.getElementById("headerDatBtn") as HTMLButtonElement;
+      dateRef.current ??= document.getElementById("dateHeader") as HTMLInputElement;
+      const btnWidth = parseNotNaN(compProp(btnRef.current, "width"));
+      dateRef.current.style.width = `${btnWidth}px`;
+      dateRef.current.style.maxWidth = `${btnWidth}px`;
+    }, [btnRef, dateRef]);
   useEffect(() => {
     try {
       if (!(dateRef.current instanceof HTMLInputElement && dateRef.current.type === "date"))
         throw inputNotFound(dateRef.current, `Validation of Date on Header instance`, '<input type="date">');
       clearPhDates([dateRef.current]);
-      const equalizeBtn = (): void => {
-        btnRef.current ??= document.getElementById("headerDatBtn") as HTMLButtonElement;
-        dateRef.current ??= document.getElementById("dateHeader") as HTMLInputElement;
-        const dateWidth = parseNotNaN(getComputedStyle(dateRef.current).width.replace("px", "").trim()),
-          btnWidth = parseNotNaN(getComputedStyle(btnRef.current).width.replace("px", "").trim());
-        if (dateWidth > btnWidth) btnRef.current.style.width = `${dateWidth}px`;
-        else if (dateWidth < btnWidth) dateRef.current.style.width = `${btnWidth}px`;
-      };
       equalizeBtn();
       addEventListener("resize", equalizeBtn);
       return (): void => removeEventListener("resize", equalizeBtn);
     } catch (e) {
       console.error(`Error executing useEffect for HeaderDate:\n${(e as Error).message}`);
     }
-  }, []);
+  }, [equalizeBtn, dateRef]);
   return (
     <span role='group' className='control flexJSt flexQ900NoW' id='spanHFlex'>
       <input

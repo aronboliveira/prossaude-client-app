@@ -49,6 +49,7 @@ export default function TabAtFirsProp({ children = <></> }: { children: JSX.Elem
           id='addAtFisPropId'
           className={`countAtFis countAtFisProp addAtFis addAtFisProp biBtn ${sEn.biBtn} ${sEn.countAtFis} ${sEn.addAtFis}`}
           defaultValue='addComorb'
+          style={{ cursor: "cell" }}
           onClick={ev => {
             if (ev.isTrusted) trusted.current = true;
             if (!trusted.current) return;
@@ -74,6 +75,7 @@ export default function TabAtFirsProp({ children = <></> }: { children: JSX.Elem
           id='removeAtFisPropId'
           className={`countAtFis countAtFisProp removeAtFis removeAtFisProp biBtn ${sEn.biBtn} ${sEn.countAtFis}`}
           defaultValue='removeComorb'
+          style={{ cursor: "vertical-text" }}
           onClick={ev => {
             if (ev.isTrusted) trusted.current = true;
             if (!trusted.current) return;

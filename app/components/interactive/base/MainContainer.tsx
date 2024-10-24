@@ -13,6 +13,7 @@ import EnhancedUserProfilePanel from "../../user/EnhancedUserProfilePanel";
 import { toast } from "react-hot-toast";
 import sMc from "@/styles//modules/mainContainer.module.scss";
 import { navigatorVars } from "@/vars";
+import NavCard from "./NavCard";
 let baseRootUser: targEl;
 export default function MainContainer(): JSX.Element {
   const ctx = useContext(RootCtx),
@@ -37,6 +38,34 @@ export default function MainContainer(): JSX.Element {
         );
     equalizeParagraphs(Array.from(document.querySelectorAll("small")));
     expandContent(document.getElementById("rootUserInfo"));
+  }, [ctx.roots, router]);
+  useEffect(() => {
+    if (!toasted.current)
+      toast(
+        navigatorVars.pt ? "Navegue pelas páginas através dos cartões!" : "Navigate through the pages using the cards!",
+        { icon: "🧭" },
+      );
+    setTimeout(toast.dismiss, 5000);
+    toasted.current = true;
+    const untoast = (): void => toast.dismiss();
+    addEventListener("popstate", untoast);
+    return (): void => removeEventListener("popstate", untoast);
+  }, [toasted]);
+  return (
+    <main className={sMc.mainContainer} id='main-container'>
+      <section id='cardsSect' className={sMc.cardsSect}>
+        {["/ag", "/edfis", "/nut", "/od"].map(href => (
+          <NavCard key={`card__${href}`} href={href} />
+        ))}
+      </section>
+      <section id='panelSect' className={sMc.panelSect} onMouseEnter={() => router.prefetch("/panel")}>
+        <button type='button' id='panelBtn' className={`btn btn-primary btn-rounded wid80p750Q ${sMc.panelBtn}`}>
+          <Link href='/panel' id='panelAnchor' rel='nofollow' style={{ color: "#ffff", fontWeight: "600" }}>
+            Painel de Trabalho
+          </Link>
+        </button>
+      </section>
+    </main>
     // const handleBgResize = (): void => {
     //   try {
     //     const bgDiv = document.getElementById("bgDiv");
@@ -173,20 +202,6 @@ export default function MainContainer(): JSX.Element {
     // handleBgResize();
     // addEventListener("resize", handleBgResize);
     // return (): void => removeEventListener("resize", handleBgResize);
-  }, [ctx.roots, router]);
-  useEffect(() => {
-    if (!toasted.current)
-      toast(
-        navigatorVars.pt ? "Navegue pelas páginas através dos cartões!" : "Navigate through the pages using the cards!",
-        { icon: "🧭" },
-      );
-    setTimeout(toast.dismiss, 5000);
-    toasted.current = true;
-    const untoast = (): void => toast.dismiss();
-    addEventListener("popstate", untoast);
-    return (): void => removeEventListener("popstate", untoast);
-  }, [toasted]);
-  return (
     // <main className='main-container gridAlItCt widFull gridAlItBs750Q gridAuto750Q rGap4v750Q'>
     //   <section id='cardsSect' className='grid4col grid4r750Q gridJICt rGap2v750Q pd-t4v750Q fade-in-early-element'>
     //     <div
@@ -342,54 +357,5 @@ export default function MainContainer(): JSX.Element {
     //     </button>
     //   </section>
     // </main>
-    <main className={sMc.mainContainer} id='main-container'>
-      <section id='cardsSect' className={sMc.cardsSect}>
-        {["/ag", "/edfis", "/nut", "/od"].map((href, index) => (
-          <div
-            key={href}
-            id={href === "/ag" ? "agCard" : href === "/edfis" ? "edfisCard" : href === "/nut" ? "nutCard" : "odCard"}
-            className={sMc.card}
-            onMouseEnter={() => router.prefetch(href)}>
-            <div className={sMc.cardInner}>
-              <div className={sMc.cardFront}>
-                <Link
-                  href={/nut/gi.test(href) ? "/edfis" : href}
-                  className={sMc.cardLink}
-                  id={
-                    href === "/ag" ? "ag_but" : href === "/edfis" ? "ef_but" : href === "/nut" ? "nut_but" : "od_but"
-                  }>
-                  <img
-                    decoding='async'
-                    loading='lazy'
-                    className={sMc.cardImg}
-                    src={`../img/${/ag/g.test(href) ? "icon-psy" : `PROS_${href.replace("/", "")}_icon`}.webp`}
-                    alt={`imagem-card-${index}`}
-                  />
-                </Link>
-              </div>
-              <div className={sMc.cardBack}>
-                <small className={sMc.cardDescription}>
-                  Acesse aqui o formulário para{" "}
-                  {href === "/ag"
-                    ? "Anamnese Geral e Saúde Mental"
-                    : href === "/edfis"
-                    ? "Educação Física"
-                    : href === "/nut"
-                    ? "Nutrição"
-                    : "Odontologia"}
-                </small>
-              </div>
-            </div>
-          </div>
-        ))}
-      </section>
-      <section id='panelSect' className={sMc.panelSect} onMouseEnter={() => router.prefetch("/panel")}>
-        <button type='button' id='panelBtn' className={sMc.panelBtn}>
-          <Link href='/panel' id='panelAnchor' rel='nofollow' style={{ color: "#ffff", fontWeight: "600" }}>
-            Painel de Trabalho
-          </Link>
-        </button>
-      </section>
-    </main>
   );
 }

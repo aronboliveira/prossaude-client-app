@@ -12,6 +12,7 @@ import { RootCtx } from "@/pages/_app";
 import { UserPanelCtx } from "./UserProfilePanel";
 import UserList from "./UserList";
 import { checkContext } from "@/lib/global/gModel";
+import sAg from "@/styles/modules/userContStyles.module.scss";
 export default function UserDlg({ setUserDlg, shouldDisplayUserDlg }: UserDlgProps): JSX.Element {
   //REPLICA DO USERDROPDOWN PARA CASOS DE ERRO EM STACKING CONTEXT
   const userDlgRef = useRef<nlDlg>(null),
@@ -28,7 +29,7 @@ export default function UserDlg({ setUserDlg, shouldDisplayUserDlg }: UserDlgPro
   }, [userDlgRef]);
   return createPortal(
     <ErrorBoundary FallbackComponent={() => <GenericErrorComponent message='Erro carregando janela modal' />}>
-      <dialog className='bdPo noInvert modal-content-fit forceInvert' ref={userDlgRef}>
+      <dialog className={`${sAg.bdPo} noInvert modal-content-fit forceInvert`} ref={userDlgRef}>
         <ErrorBoundary
           FallbackComponent={() => (
             <ErrorFallbackDlg

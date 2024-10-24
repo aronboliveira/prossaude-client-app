@@ -7,6 +7,7 @@ import { UserState, area, privilege } from "@/lib/locals/basePage/declarations/s
 import UserDlg from "./UserDlg";
 import { UserProfileCtxProps } from "@/lib/global/declarations/interfaces";
 import UserList from "./UserList";
+import sUc from "@/styles/modules/userContStyles.module.scss";
 export const UserProfileCtx = createContext<UserProfileCtxProps>({
   user: null,
   router: null,
@@ -74,8 +75,8 @@ export default function UserProfileDropdown({ user, router }: UserProfileDropdow
   return (
     <UserProfileCtx.Provider
       value={{ user, router, shouldDisplayContact, shouldDisplayPropDlg, setPropDlg, setContact }}>
-      <div className='po posAb lowPo userPo' ref={poRef}>
-        <div className='hPo noInvert'>
+      <div className={`po posAb ${sUc.po} ${sUc.lowPo} ${sUc.userPo}`} ref={poRef}>
+        <div className={`hPo noInvert ${sUc.hPo}`}>
           <div id='logoutDiv' className='flexJSt cGap1v mg-05b noInvert'>
             <button
               type='button'
@@ -95,9 +96,9 @@ export default function UserProfileDropdown({ user, router }: UserProfileDropdow
             </button>
             {shouldDisplayUserDlg && <UserDlg shouldDisplayUserDlg={shouldDisplayUserDlg} setUserDlg={setUserDlg} />}
           </div>
-          <h3 className='hPo noInvert d-ibl brd-nulled brd-b-no pd-no pd0'>Informações de Usuário</h3>
+          <h3 className={`noInvert d-ibl brd-nulled brd-b-no pd-no pd0 ${sUc.hPo}`}>Informações de Usuário</h3>
         </div>
-        <div className='bdPo noInvert'>
+        <div className={`bdPo noInvert ${sUc.bdPo}`}>
           <UserList />
         </div>
       </div>

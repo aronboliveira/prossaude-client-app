@@ -7,6 +7,7 @@ import { createPortal } from "react-dom";
 import { RootCtx } from "@/pages/_app";
 import { checkContext } from "@/lib/global/gModel";
 import useDialog from "@/lib/hooks/useDialog";
+import sT from "@/styles/modules/tipsStyles.module.scss";
 const ENTips = memo(({ state, dispatch }: DlgProps): JSX.Element => {
   let divModal: NlMRef<nlSpan | HTMLDivElement> = null;
   const m1 = useRef<nlDiv>(null),
@@ -215,7 +216,7 @@ const ENTips = memo(({ state, dispatch }: DlgProps): JSX.Element => {
             dispatch(!state);
           }
         }}
-        className='modal-content-fit defDp wid50v'
+        className={`modal-content-fit defDp wid50v ${sT.tipsDlg}`}
         id='tipsDlg'>
         <section className='flexNoW flexAlItCt flexJBt'>
           <h3 className='bolded'>Manual para controle de formulário</h3>

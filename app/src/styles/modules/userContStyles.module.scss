@@ -1,0 +1,57 @@
+@use "../base/animations" as *;
+.po {
+  display: block;
+  position: absolute;
+  transition: opacity 1s ease-in-out, display 1s ease-in-out, height 1s ease-in-out, top 1s ease-in-out;
+  animation: slidePo 1s ease-in-out;
+  box-sizing: border-box;
+  top: 0;
+  left: 0;
+  opacity: 1;
+  margin-right: 0.5rem;
+  z-index: 9999;
+  max-width: 17.25rem;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
+    "Helvetica Neue", sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.5;
+  text-align: start;
+  text-decoration: none;
+  text-shadow: none;
+  text-transform: none;
+  letter-spacing: normal;
+  word-break: normal;
+  word-spacing: normal;
+  white-space: normal;
+  line-break: auto;
+  font-size: 0.875rem;
+  word-wrap: break-word;
+  background-color: #fff;
+  border: 1px solid #00000033;
+  border-radius: 0.3rem;
+  &.lowPo {
+    top: 150%;
+    left: -17%;
+  }
+  &.userPo {
+    width: 11rem;
+  }
+  *:not(dialog) {
+    animation: fadeIn 1.5s ease-in;
+  }
+}
+.hPo {
+  padding: 0.5rem 0.75rem;
+  margin-bottom: 0;
+  font-size: 1rem;
+  color: inherit;
+  background-color: #f7f7f7;
+  border-bottom: 1px solid #ebebeb;
+  border-top-left-radius: calc(0.3rem - 1px);
+  border-top-right-radius: calc(0.3rem - 1px);
+}
+.bdPo {
+  padding: 0.5rem 0.75rem 0.5rem 0.75rem;
+  color: #212529;
+}

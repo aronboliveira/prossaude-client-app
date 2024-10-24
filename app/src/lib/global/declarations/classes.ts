@@ -663,6 +663,24 @@ export class ExportHandler {
             if (file) {
               const rd = new FileReader();
               rd.onload = (): string | ArrayBuffer | null => (v = rd.result);
+              rd.onerror = (): string => {
+                toast.error(
+                  navigatorVars.pt
+                    ? `Erro carregando arquivos para a planilha`
+                    : `Error loading files to the spreadsheet`,
+                );
+                return (v = `#ERRO: ${rd.error?.name ?? "Nome indefinido"} — ${
+                  rd.error?.message ?? "mensagem indefinida"
+                }`);
+              };
+              rd.onloadend = () => {
+                toast.success(
+                  navigatorVars.pt
+                    ? `Sucesso carregando arquivos: ${file.name}`
+                    : `Success loading files: ${file.name}`,
+                  { duration: 1000 },
+                );
+              };
               rd.readAsDataURL(file);
               imageEls.push(el);
             } else v = "Não preenchido";

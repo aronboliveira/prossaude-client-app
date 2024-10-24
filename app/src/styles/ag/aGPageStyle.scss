@@ -14,7 +14,6 @@
       padding: 2.5vh 0 0.75vh 0;
     }
   }
-
   label {
     &[for="qxPrinc"],
     &[for="histDc"] {
@@ -24,15 +23,15 @@
       width: 88%;
     }
   }
-
+  textarea {
+    max-width: 90vw;
+    &.form-control {
+      max-width: 90vw;
+    }
+  }
   [type="checkbox"] {
     accent-color: rgba(0, 128, 0, 0.836);
   }
-
-  $primary-alert: darkgoldenrod;
-  $secondary-alert: firebrick;
-  $tert-alert: orangered;
-  $max-alert: red;
   [type="checkbox"],
   [type="radio"] {
     &#HASPreId,
@@ -529,15 +528,14 @@
     #ageId {
       width: 24.8vw !important;
     }
+    #fsAnamGDiv3 {
+      width: 65.33%;
+    }
     #labHivCarg {
       margin-top: 0.5rem;
     }
   }
 }
-$base900InpWidth: 38.7rem;
-$baseVw900InpWidth: 85vw;
-$baseNullable900InpWidth: 28rem;
-$baseNullableVw900InpWidth: 70vw;
 @media screen and (max-width: 900px) {
   .agBody {
     .antMedBlock,
@@ -743,7 +741,6 @@ $baseNullableVw900InpWidth: 70vw;
       order: 6;
     }
 
-    #fsAnamGSpan12,
     #fsAnamGSpan22 {
       order: 7;
     }
@@ -751,10 +748,6 @@ $baseNullableVw900InpWidth: 70vw;
     #fsAnamGSpan13,
     #fsAnamGSpan23 {
       order: 8;
-    }
-
-    #fsAnamGSpan14 {
-      order: 9;
     }
 
     #fsAnamGSpan13,

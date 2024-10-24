@@ -46,6 +46,7 @@ export default function TabComorb({ children = <></> }: { children: JSX.Element 
         <button
           type='button'
           className={`${sEn.biBtn} ${sEn.countComorb} ${sEn.addComorb} biBtn noInvert`}
+          style={{ cursor: "cell" }}
           id='addComorb'
           onClick={ev => {
             setBlockCount({ type: "INCREMENT" });
@@ -65,6 +66,7 @@ export default function TabComorb({ children = <></> }: { children: JSX.Element 
           type='button'
           className={`${sEn.biBtn} ${sEn.countComorb} biBtn noInvert`}
           id='removeComorb'
+          style={{ cursor: "vertical-text" }}
           onClick={ev => {
             setBlockCount({ type: "DECREMENT" });
             switchRowComorb(ev.currentTarget, blockCount);

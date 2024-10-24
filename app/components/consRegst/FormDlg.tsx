@@ -1100,6 +1100,7 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
                   className='btn btn-primary widFull'
                   data-active='false'
                   ref={exportRef}
+                  style={{ cursor: "alias" }}
                   title='Gere um .xlsx com os dados preenchidos'
                   onClick={ev => {
                     if (!exporters.formDlgExporter) exporters.formDlgExporter = new ExportHandler();

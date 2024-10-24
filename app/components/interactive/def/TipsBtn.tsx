@@ -8,6 +8,7 @@ export default function TipsBtn({ dispatch, state }: DlgProps): JSX.Element {
     <button
       className={`transparent-el-bg ${/edfis/gi.test(router.pathname) ? `${s.tipsBtnEn}` : ""}`}
       id='tipsBtn'
+      style={{ cursor: "help" }}
       aria-label='Abrir Dicas'
       onClick={() => dispatch(!state)}>
       <svg

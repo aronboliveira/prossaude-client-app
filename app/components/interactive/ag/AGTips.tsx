@@ -7,6 +7,7 @@ import useDialog from "@/lib/hooks/useDialog";
 import { RootCtx } from "@/pages/_app";
 import { memo, useContext } from "react";
 import { createPortal } from "react-dom";
+import sT from "@/styles/modules/tipsStyles.module.scss";
 const AGTips = memo(({ state, dispatch }: DlgProps): JSX.Element => {
   let divModal: NlMRef<nlSpan | HTMLDivElement> = null;
   const { mainRef } = useDialog({ state, dispatch, param: "tips" }),
@@ -19,7 +20,7 @@ const AGTips = memo(({ state, dispatch }: DlgProps): JSX.Element => {
       <></>
     ) : (
       <dialog
-        className='modal-content-fit defDp wid50v'
+        className={`modal-content-fit defDp wid50v ${sT.tipsDlg}`}
         id='tipsDlg'
         ref={mainRef}
         onClick={ev => {

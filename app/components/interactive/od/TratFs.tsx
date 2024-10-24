@@ -6,6 +6,7 @@ import { nlBtn, nlFs, nlInp } from "@/lib/global/declarations/types";
 import { elementNotFound, extLine, inputNotFound } from "@/lib/global/handlers/errorHandler";
 import { changeToAstDigit, syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import sEn from "@/styles//modules/enStyles.module.scss";
+import { compProp } from "@/lib/global/gModel";
 export default function TratFs(props: { phCb?: () => void }): JSX.Element {
   const mainRef = useRef<nlFs>(null);
   const btnRef = useRef<nlBtn>(null);
@@ -30,7 +31,7 @@ export default function TratFs(props: { phCb?: () => void }): JSX.Element {
         throw elementNotFound(btnRef.current, `Validation of Button Reference for Signature`, extLine(new Error()));
       if (!(inpRef.current instanceof HTMLInputElement))
         throw inputNotFound(inpRef.current, `Validation of Input Reference for Signature`, extLine(new Error()));
-      inpRef.current.style.width = `${getComputedStyle(btnRef.current).width.replace("px", "").trim()}px`;
+      inpRef.current.style.width = `${compProp(btnRef.current, "width")}px`;
     } catch (e) {
       console.error(`Error executing useEffect for blockCount:\n${(e as Error).message}`);
     }
@@ -44,7 +45,7 @@ export default function TratFs(props: { phCb?: () => void }): JSX.Element {
             type='button'
             name='addTratName1'
             id='addTratId1'
-            style={{ transform: "scale(0.7)" }}
+            style={{ transform: "scale(0.7)", cursor: "cell" }}
             className='addTrat countTrat biBtn'
             defaultValue='addTrat'
             onClick={ev => {
@@ -67,7 +68,7 @@ export default function TratFs(props: { phCb?: () => void }): JSX.Element {
             id='removeTratId1'
             className='removeTrat countTrat biBtn'
             defaultValue='removeTrat'
-            style={{ transform: "translateY(-0.03rem) scale(0.8)", marginLeft: "0.5rem" }}
+            style={{ transform: "translateY(-0.03rem) scale(0.8)", marginLeft: "0.5rem", cursor: "vertical-text" }}
             onClick={ev => {
               addSubDivTrat(ev, ev.currentTarget, blockCount);
               setBlockCount({ type: "DECREMENT" });

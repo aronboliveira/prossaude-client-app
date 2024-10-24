@@ -31,11 +31,14 @@
 @mixin scb-webkit {
   scroll-behavior: smooth;
 }
-@mixin fCt {
+@mixin flexCenter {
   display: flex;
   align-items: center;
-  align-content: center;
   justify-content: center;
+}
+@mixin fCt {
+  @include flexCenter;
+  align-content: center;
   justify-items: center;
 }
 @mixin fCNoW {

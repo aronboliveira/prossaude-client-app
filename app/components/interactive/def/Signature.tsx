@@ -63,7 +63,7 @@ export default function Signature(): JSX.Element {
           ctx.beginPath();
           ctx.moveTo(x, y);
         } catch (e) {
-          console.error(`Error executing draw():\n${(e as Error).message}`);
+          console.error(`Error executing draw:\n${(e as Error).message}`);
         }
       },
       [isDrawing, canvasRef, memoizedCoords],

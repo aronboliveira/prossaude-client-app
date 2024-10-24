@@ -81,6 +81,7 @@ export default function SectConfirmBtns(): JSX.Element {
         style={{
           backgroundColor: "rgba(0, 0, 255, 0.904)",
           borderColor: "rgba(0, 0, 255, 0.904)",
+          cursor: "alias",
         }}
         onClick={ev => {
           if (!exporter) {

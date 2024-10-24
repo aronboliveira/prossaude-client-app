@@ -5,7 +5,9 @@ import { UserProfileCtxProps } from "@/lib/global/declarations/interfaces";
 import { UserProfileCtx } from "./UserProfileDropdown";
 import ContactDlg from "./ContactDlg";
 import { execLogout } from "@/lib/global/auth";
-import { checkContext } from "@/lib/global/gModel";
+import { capitalizeFirstLetter, checkContext } from "@/lib/global/gModel";
+import { ErrorBoundary } from "react-error-boundary";
+import GenericErrorComponent from "../error/GenericErrorComponent";
 export default function UserList({ end = "" }: { end?: string }): JSX.Element {
   const { user, router, shouldDisplayContact, shouldDisplayPropDlg, setContact, setPropDlg } =
     useContext<UserProfileCtxProps>(UserProfileCtx);
@@ -13,14 +15,14 @@ export default function UserList({ end = "" }: { end?: string }): JSX.Element {
   const ctx = useContext(UserProfileCtx);
   checkContext(ctx, "UserProfileCtx", UserList);
   return (
-    <>
+    <ErrorBoundary fallback={<GenericErrorComponent message='Erro carregando lista de dados de usuário' />}>
       <dl className='mg-0b'>
         <dt>Classe:</dt>
         <dd id={`classLogin${end}`} data-title='Classe de Usuário ativo'>
-          {user.userClass}
+          {capitalizeFirstLetter(user.userClass)}
         </dd>
         <dt>Área:</dt>
-        <dd>{user.userArea}</dd>
+        <dd>{capitalizeFirstLetter(user.userArea)}</dd>
         <dt>E-mail:</dt>
         <dd>{user.userEmail}</dd>
         <dt>Telefone:</dt>
@@ -98,6 +100,6 @@ export default function UserList({ end = "" }: { end?: string }): JSX.Element {
         </button>
       </div>
       {shouldDisplayContact && <ContactDlg setContact={setContact} shouldDisplayContact={shouldDisplayContact} />}
-    </>
+    </ErrorBoundary>
   );
 }

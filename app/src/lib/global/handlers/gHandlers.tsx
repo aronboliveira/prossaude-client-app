@@ -26,6 +26,7 @@ import { handleSubmit } from "@/lib/global/data-service";
 import { createRoot } from "react-dom/client";
 import { toast } from "react-hot-toast";
 import { navigatorVars } from "@/vars";
+import Spinner from "../../../../components/icons/Spinner";
 //function for facilitating conversion of types when passing properties to DOM elements
 export function updateSimpleProperty(el: targEl): primitiveType {
   if (el instanceof HTMLInputElement) {
@@ -329,57 +330,118 @@ export function changeToAstDigit(toFileInpBtn: targEl): void {
       fileInp.addEventListener("change", chose => {
         try {
           let imgFile;
-          if (fileInp?.files) imgFile = fileInp.files[0];
+          if (!fileInp?.files || !fileInp.files[0]) return;
+          imgFile = fileInp.files.item(0);
           if (
-            chose?.target instanceof HTMLInputElement &&
-            fileInp?.files &&
-            fileInp.parentElement &&
-            fileInp.files?.length > 0 &&
-            imgFile?.type?.startsWith("image")
-          ) {
-            const fileReader = new FileReader();
-            fileReader.onload = (load): void => {
-              const imgAstDigt = document.createElement("img");
-              fileInp.id = inpAst.id;
-              fileInp.className = inpAst.className;
-              Object.assign(imgAstDigt, {
-                src: load.target?.result ?? "Error",
-                innerHTML: "",
-                id: fileInp.id,
-                className: fileInp.className,
-                alt: "Assinatura Digital",
-                decoding: "async",
-                loading: "eager",
-                crossorigin: "anonymous",
-                style: {
-                  maxWidth: "300px",
-                  maxHeight: "200px",
-                  overflow: "auto",
-                },
-              });
-              if (fileInp.classList.contains("inpTrat")) {
-                imgAstDigt.style.height = "100%";
-                imgAstDigt.style.maxHeight = "100%";
-                imgAstDigt.style.width = "100%";
-                imgAstDigt.style.maxHeight = "100%";
-              } else {
-                imgAstDigt.style.maxWidth = "30rem";
-                imgAstDigt.style.maxHeight = "30rem";
-              }
-              imgAstDigt.style.overflow = "auto";
-              fileInp.parentElement?.replaceChild(imgAstDigt, fileInp);
-              !fileInp.classList.contains("inpTrat") &&
-                defineLabId(document.querySelector(".labAst"), toFileInpBtn, imgAstDigt);
-            };
-            fileReader.readAsDataURL(imgFile);
-          } else
+            !(
+              chose?.target instanceof HTMLInputElement &&
+              fileInp?.files &&
+              fileInp.parentElement &&
+              fileInp.files?.length > 0 &&
+              imgFile?.type?.startsWith("image")
+            )
+          )
             throw new Error(`Error on selecting the file and/or finding the parent Element for the file input.
             chose.target: ${chose?.target ?? "UNDEFINED CHOSE"};
             fileInp: ${fileInp ?? "UNDEFINED INP"};
             files: ${fileInp?.files ?? "UNDEFINED FILES"};
             parentElement: ${fileInp?.parentElement ?? "UNDEFINED PARENT"}; 
             imgFile: ${imgFile ?? "UNDEFINED IMAGE"}; 
-            imgFile.type: ${imgFile?.type ?? "UNDEFINED TYPE"};`);
+            imgFile.type: ${imgFile?.type ?? "UNDEFINED TYPE"}`);
+          const fileReader = new FileReader();
+          fileReader.onloadstart = (): void => {
+            toast(
+              () => (
+                <div
+                  style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
+                  <div style={{ marginBottom: "0.3rem" }}>
+                    <b>{navigatorVars.pt ? "Iniciando leitura de imagem..." : "Initiating loading of image..."}</b>
+                  </div>
+                  <div style={{ marginBottom: "0.3rem" }}>
+                    <Spinner />
+                  </div>
+                  <div
+                    className='toastDiv'
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      width: "100%",
+                      height: "100%",
+                      marginBottom: "0.3rem",
+                    }}>
+                    <progress
+                      id='fileLoadingBar'
+                      max={100}
+                      value={0}
+                      style={{ transition: "value 1s ease" }}></progress>
+                  </div>
+                </div>
+              ),
+              { duration: 1200 },
+            );
+          };
+          fileReader.onprogress = (ev: ProgressEvent<FileReader>): void => {
+            setTimeout(() => {
+              if (!ev.lengthComputable) return;
+              const bar = document.getElementById("fileLoadingBar");
+              if (!(bar instanceof HTMLProgressElement)) return;
+              if (ev.lengthComputable) {
+                const percentLoaded = Math.round((ev.loaded / ev.total) * 100);
+                bar.value = percentLoaded;
+              }
+            }, 500);
+          };
+          fileReader.onerror = (): void => {
+            toast.error(
+              navigatorVars.pt
+                ? `Houve algum erro carregando a imagem: ${fileReader.error?.name ?? "Anônimo"} - ${
+                    fileReader.error?.message ?? "sem descrição"
+                  }`
+                : `There was some error loading the image: ${fileReader.error?.name ?? "Anonymous"} - ${
+                    fileReader.error?.message ?? "no description"
+                  }`,
+            );
+          };
+          fileReader.onload = (load): void => {
+            const imgAstDigt = document.createElement("img");
+            fileInp.id = inpAst.id;
+            fileInp.className = inpAst.className;
+            Object.assign(imgAstDigt, {
+              src: load.target?.result ?? "Error",
+              innerHTML: "",
+              id: fileInp.id,
+              className: fileInp.className,
+              alt: "Assinatura Digital",
+              decoding: "async",
+              loading: "eager",
+              crossorigin: "anonymous",
+              style: {
+                maxWidth: "300px",
+                maxHeight: "200px",
+                overflow: "auto",
+              },
+            });
+            if (fileInp.classList.contains("inpTrat")) {
+              imgAstDigt.style.height = "100%";
+              imgAstDigt.style.maxHeight = "100%";
+              imgAstDigt.style.width = "100%";
+              imgAstDigt.style.maxHeight = "100%";
+            } else {
+              imgAstDigt.style.maxWidth = "30rem";
+              imgAstDigt.style.maxHeight = "30rem";
+            }
+            imgAstDigt.style.overflow = "auto";
+            fileInp.parentElement?.replaceChild(imgAstDigt, fileInp);
+            !fileInp.classList.contains("inpTrat") &&
+              defineLabId(document.querySelector(".labAst"), toFileInpBtn, imgAstDigt);
+          };
+          fileReader.onloadend = (): void => {
+            toast.success(navigatorVars.pt ? `Imagem carregada com sucesso!` : `Success loading image!`, {
+              duration: 1000,
+            });
+          };
+          fileReader.readAsDataURL(imgFile);
         } catch (error) {
           console.error((error as Error).message);
         }

@@ -40,6 +40,7 @@ export default function AntMedFs({ children = <></> }: { children: JSX.Element }
             className='addAntMed countAntMed btn btn-secondary biBtn mg-1br'
             aria-label='Adicionar Antecedente Médico'
             defaultValue='addAntMed'
+            style={{ cursor: "cell" }}
             onClick={ev => {
               addMedHistHandler(ev, blockCount);
               setBlockCount({ type: "INCREMENT" });
@@ -61,6 +62,7 @@ export default function AntMedFs({ children = <></> }: { children: JSX.Element }
             className='removeAntMed countAntMed btn btn-secondary biBtn mg-1br'
             aria-label='Remover Antecedente Médico'
             defaultValue='removeAntMed'
+            style={{ cursor: "vertical-text" }}
             onClick={ev => {
               addMedHistHandler(ev, blockCount);
               setBlockCount({ type: "DECREMENT" });

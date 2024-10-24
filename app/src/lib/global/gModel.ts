@@ -11,7 +11,7 @@ import {
   typeError,
 } from "./handlers/errorHandler";
 import { Dispatch, SetStateAction } from "react";
-import { AlignType, BirthRelation, BodyType, TransitionLevel } from "./declarations/testVars";
+import { AlignType, BirthRelation, BodyType, CSSMeasure, TransitionLevel } from "./declarations/testVars";
 import { ERROR_LIMIT, errorLabels, person } from "@/vars";
 export function numberLimit(inpEl: targEl): void {
   if (inpEl instanceof HTMLInputElement || inpEl instanceof HTMLTextAreaElement || inpEl instanceof HTMLSelectElement) {
@@ -1348,6 +1348,17 @@ export function applyConstraintsTitle(fm: nlFm): void {
     });
   } catch (e) {
     console.error(`Error executing applyConstrainstTitle:\n${(e as Error).message}`);
+  }
+}
+export function compProp(el: nlEl, prop: keyof CSSStyleDeclaration, measure: CSSMeasure = "px"): string {
+  try {
+    if (!(el instanceof Element)) return "";
+    if (typeof prop !== "string") return "";
+    if (typeof measure !== "string") return getComputedStyle(el).getPropertyValue(prop).trim();
+    return getComputedStyle(el).getPropertyValue(prop).replace(measure, "").trim();
+  } catch (e) {
+    console.error(`Error executing compProp:\n${(e as Error).message}`);
+    return el instanceof Element && typeof prop === "string" ? getComputedStyle(el).getPropertyValue(prop).trim() : "";
   }
 }
 export function checkContext(ctx: any, alias: string, caller: any): void {

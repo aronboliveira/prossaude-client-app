@@ -202,7 +202,7 @@ export default function AgForm(): JSX.Element {
               role='group'>
               <span
                 role='group'
-                className={`fsAnamGSpan mgr-3v ${sAg.fsAnamGSpan11}`}
+                className={`fsAnamGSpan mgr-3v ${sAg.fsAGSpanGrid2x2}`}
                 id='fsAnamGSpan11'
                 style={{ width: "45.8%" }}>
                 <label htmlFor='dateBdayId' className={`labelIdentif ${sAg.birthInpLab} ${sAg.labelIdentif}`}>
@@ -219,7 +219,7 @@ export default function AgForm(): JSX.Element {
                   />
                 </label>
               </span>
-              <span role='group' className='fsAnamGSpan' id='fsAnamGSpan12'>
+              <span role='group' className={`fsAnamGSpan`} id='fsAnamGSpan12'>
                 <label htmlFor='ageId' className={`labelIdentif ${sAg.ageInp} ${sAg.labelIdentif}`}>
                   <span>Idade:</span>
                   <AgeElement inpRef={ar} />
@@ -315,7 +315,7 @@ export default function AgForm(): JSX.Element {
               </label>
               <br role='presentation' />
             </span>
-            <span role='group' className='fsAnamGSpan' id='fsAnamGSpan12'>
+            <span role='group' className={`fsAnamGSpan ${sAg.fsAnamGSpan12}`} id='fsAnamGSpanLoc'>
               <label htmlFor='streetId' className='labelIdentif noInvert'>
                 <span>Endereço | Logradouro | Rua:</span>
                 <Street />
@@ -326,7 +326,7 @@ export default function AgForm(): JSX.Element {
               <CepElements />
               <br role='presentation' />
             </span>
-            <span role='group' className='fsAnamGSpan' id='fsAnamGSpan11'>
+            <span role='group' className={`fsAnamGSpan ${sAg.fsAGSpanGrid2x2} ${sAg.fsAGSpanNBh}`} id='fsAnamGSpanNbh'>
               <label htmlFor='streetId' className='labelIdentif noInvert'>
                 <span>Bairro:</span>
                 <Nbh />
@@ -348,7 +348,10 @@ export default function AgForm(): JSX.Element {
                 <StreetNum />
               </span>
             </span>
-            <span role='group' className='fsAnamGSpan locSpan form-switch flexColumn noInvert' id='fsAnamGSpan14'>
+            <span
+              role='group'
+              className={`fsAnamGSpan locSpan form-switch flexColumn noInvert ${sAg.fsAnamGSpan14}`}
+              id='fsAnamGSpan14'>
               <span role='textbox' style={{ marginLeft: "0.5rem" }}>
                 Complemento:
               </span>

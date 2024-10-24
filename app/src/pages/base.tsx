@@ -5,6 +5,7 @@ import Guard from "../../components/interactive/def/Guard";
 import { Toaster } from "react-hot-toast";
 import { pageProps } from "@/vars";
 import Head from "next/head";
+import sBn from "@/styles/modules/baseNavStyles.module.scss";
 const { base, name } = pageProps,
   title = `Base de Navegação — ${name}`,
   metaTags = [
@@ -62,14 +63,12 @@ export default function BasePage(): JSX.Element {
         ))}
       </Head>
       <div>
-        <Toaster position='top-left' reverseOrder={false} />
+        <Toaster position='bottom-left' reverseOrder={false} />
       </div>
-      <div id='bgDiv'>
-        <nav
-          className='main-article flexNoWC widFullView widAt750Q htFullView htAuto750Q noMargin'
-          style={{ width: "100%", height: "100%" }}>
-          <header className='header-main-container bolded ht10 flexAlItCt noMargin bolded flexJBt flexNoWC900Q pd1r900Q htAt900Q htpd-2vQ460 pdL2r rGap1v mg-0lm601Q bolded'>
-            <h1 className='header-main-text bolded txaCt noInvert'>Menu Inicial — PROS-Saúde: UFRJ</h1>
+      <div id='bgDiv' className={sBn.bgDiv}>
+        <nav className={`${sBn.mainArticle}`} style={{ width: "100%", height: "100%" }}>
+          <header className={`${sBn.header} ${sBn.headerMainContainer} pd1r900Q`}>
+            <h1 className={`${sBn.headerMainText} noInvert`}>Menu Inicial — PROS-Saúde: UFRJ</h1>
             <div
               role='group'
               className='flexNoW flexAlItCt cGap1v flexAlItE600Q cGap3v600Q contFitW flexNoWC460Q'
@@ -81,7 +80,7 @@ export default function BasePage(): JSX.Element {
           </header>
           <MainContainer />
         </nav>
-        <footer></footer>
+        <footer className={sBn.footer}></footer>
         <Watcher routeCase='base' />
         <Guard />
       </div>

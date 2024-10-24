@@ -8,45 +8,33 @@
   max-width: 100%;
   padding: 2%;
   overflow: auto;
-  @media (min-width: 521px) {
-    .cardsSect {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      grid-template-rows: repeat(2, 1fr);
-      gap: 2rem;
-    }
-  }
-  @media (max-width: 520px) {
-    .cardsSect {
-      display: grid;
-      grid-template-columns: 1fr;
-      grid-template-rows: auto;
-      gap: 1rem;
-    }
-  }
 }
 .cardsSect {
   flex: 1;
   display: grid;
+  justify-items: center;
   gap: 2rem;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(2, minmax(25vw, 1fr));
   padding: 1rem;
   width: 100%;
+  grid-auto-rows: minmax(200px, auto);
+  grid-auto-flow: row;
+  > *:nth-last-child(1) {
+    &:nth-child(odd) {
+      grid-column: span 2;
+      justify-self: center;
+    }
+  }
+  @media screen and (max-width: 550px) {
+    grid-template-columns: repeat(auto-fill, minmax(100vw, 1fr));
+    justify-items: left;
+  }
 }
 .card {
   perspective: 62.5rem;
-  width: 100%;
-  max-width: 18.75rem;
+  width: 88%;
+  max-width: 88vw;
   height: 25rem;
-  &Back {
-    background: linear-gradient(90deg, rgba(214, 233, 221, 0.776), rgba(181, 220, 197, 0.859));
-    transform: rotateY(180deg);
-    padding: 10%;
-    text-align: center;
-  }
-  &Description {
-    margin-bottom: 1rem;
-  }
   &Front,
   &Back {
     position: absolute;
@@ -60,6 +48,7 @@
   }
   &Front {
     background: linear-gradient(90deg, rgba(232, 238, 234, 0.725), rgba(198, 230, 209, 0.851));
+    cursor: alias;
   }
   &FrontContent {
     display: flex;
@@ -68,21 +57,38 @@
     padding: 1rem;
     text-align: center;
   }
+  &Back {
+    background: linear-gradient(90deg, rgba(214, 233, 221, 0.776), rgba(181, 220, 197, 0.859));
+    transition: transform ease-in-out 0.5s;
+    transition-delay: 250ms;
+    transform: rotateY(180deg);
+    padding: 10%;
+    text-align: center;
+  }
   &Inner {
     position: relative;
     width: 100%;
     height: 100%;
     transform-style: preserve-3d;
     transition: transform 0.8s;
-    cursor: pointer;
     &:hover {
+      transition: transform ease-in-out 1s;
+      transition-delay: 750ms;
       transform: rotateY(180deg);
     }
+  }
+  &Description {
+    margin-bottom: 1rem;
   }
 }
 .cardImg {
   max-width: 80%;
   border-radius: 1rem;
+  &:hover {
+    transition: transform ease-in-out 1s;
+    transition-delay: 250ms;
+    transform: rotateZ(1turn);
+  }
 }
 .cardLink {
   display: flex;
@@ -100,7 +106,6 @@
     color: #fff;
     border: none;
     border-radius: 0.5rem;
-    cursor: pointer;
     transition: all 0.3s;
     &:hover {
       background-color: #0056b3;

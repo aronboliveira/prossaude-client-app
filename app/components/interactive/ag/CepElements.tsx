@@ -1,42 +1,53 @@
 "use client";
-import { formatCEP } from "@/lib/global/gModel";
+import { compProp, formatCEP, parseNotNaN } from "@/lib/global/gModel";
 import { handleEventReq } from "@/lib/global/handlers/gHandlers";
-import { useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { elementNotFound, extLine, inputNotFound } from "@/lib/global/handlers/errorHandler";
 import { enableCEPBtn, searchCEP, searchCEPXML } from "@/lib/locals/aGPage/aGHandlers";
 import { toast } from "react-hot-toast";
 import { navigatorVars } from "@/vars";
+import { looseNum, nlBtn, nlInp } from "@/lib/global/declarations/types";
+import sAg from "@/styles/modules/agStyles.module.scss";
 export default function CepElements(): JSX.Element {
-  const equalizeCepElements = (): void => {
-    try {
-      const cepInp = document.getElementById("cepId");
-      if (!(cepInp instanceof HTMLInputElement))
-        throw inputNotFound(cepInp, `validation of Input for CEP`, extLine(new Error()));
-      const cepBtn =
-        document.getElementById("autoCompCepBtn") ||
-        cepInp.nextElementSibling ||
-        cepInp.parentElement?.querySelector("button");
-      if (!(cepBtn instanceof HTMLButtonElement || (cepBtn instanceof HTMLInputElement && cepBtn.type === "button")))
-        throw elementNotFound(cepBtn, `Validation of Button for CEP`, extLine(new Error()));
-      cepBtn.style.width = `${
-        getComputedStyle(cepInp).width + getComputedStyle(cepInp).paddingLeft + getComputedStyle(cepInp).paddingRight
-      }px`;
-      cepBtn.style.maxWidth = `${
-        getComputedStyle(cepInp).width + getComputedStyle(cepInp).paddingLeft + getComputedStyle(cepInp).paddingRight
-      }px`;
-    } catch (e) {
-      console.error(`Error executing equalizeCepElements:\n${(e as Error).message}`);
-    }
-  };
+  const inpRef = useRef<nlInp>(null),
+    btnRef = useRef<nlBtn | HTMLInputElement>(null),
+    equalizeCepElements = useCallback((): void => {
+      try {
+        inpRef.current ??= document.getElementById("cepId") as nlInp;
+        const cepInp = inpRef.current;
+        if (!(cepInp instanceof HTMLInputElement))
+          throw inputNotFound(cepInp, `validation of Input for CEP`, extLine(new Error()));
+        btnRef.current ??=
+          (document.getElementById("autoCompCepBtn") as nlBtn) ||
+          (cepInp.nextElementSibling as nlBtn) ||
+          (cepInp.parentElement?.querySelector("button") as nlBtn);
+        const cepBtn = btnRef.current;
+        if (!(cepBtn instanceof HTMLButtonElement || (cepBtn instanceof HTMLInputElement && cepBtn.type === "button")))
+          throw elementNotFound(cepBtn, `Validation of Button for CEP`, extLine(new Error()));
+        let width: looseNum = `${
+          parseNotNaN(compProp(cepInp, "width")) +
+          parseNotNaN(compProp(cepInp, "paddingLeft")) +
+          parseNotNaN(compProp(cepInp, "paddingRight"))
+        }`;
+        width = parseNotNaN(width);
+        if (!Number.isFinite(width) && width <= 0) return;
+        width = width.toFixed(4);
+        cepBtn.style.width = `${width}px`;
+        cepBtn.style.maxWidth = `${width}px`;
+      } catch (e) {
+        console.error(`Error executing equalizeCepElements:\n${(e as Error).message}`);
+      }
+    }, [inpRef, btnRef]);
   useEffect(() => {
     equalizeCepElements();
     addEventListener("resize", equalizeCepElements);
     return (): void => removeEventListener("resize", equalizeCepElements);
-  }, []);
+  }, [equalizeCepElements]);
   return (
-    <label htmlFor='cepId' className='labelIdentif noInvert flexWC'>
+    <label htmlFor='cepId' className={`labelIdentif noInvert flexWC ${sAg.cepIdLab}`}>
       CEP:
       <input
+        ref={inpRef}
         type='text'
         name='cep'
         id='cepId'
@@ -71,7 +82,7 @@ export default function CepElements(): JSX.Element {
           setTimeout(() => toast.dismiss(), 4000);
         }}
       />
-      <button type='button' id='autoCompCepBtn' className='btn btn-secondary' disabled>
+      <button ref={btnRef as any} type='button' id='autoCompCepBtn' className='btn btn-secondary' disabled>
         Preencher com CEP
       </button>
       <div className='min20H' id='divProgCEP' style={{ height: "1rem" }} role='separator'></div>

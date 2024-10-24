@@ -33,7 +33,7 @@ export default function LoginInputs(): JSX.Element {
           const spin = (): void => {
             isSpinning = true;
             setMsg(<Spinner fs={true} />);
-            const form = formRef.current ?? resSpan.closest("form");
+            const form = document.getElementById("loginCont") ?? formRef.current ?? resSpan.closest("form");
             if (form instanceof HTMLElement) {
               form.style.opacity = "0.3";
               form.style.filter = "grayscale(40%)";
