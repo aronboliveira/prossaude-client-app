@@ -237,7 +237,7 @@ export default function ENForm(): JSX.Element {
             )
           }>
           <FsG name='fsAnamGName' id='fsAnamGId' className='fsMain'>
-            <legend className={`legMain form-padded ${sEn.legMainEn} ${sEn.fsAnamGLeg}`} id='fsAnamGLeg'>
+            <legend className={`legMain formPadded ${sEn.legMainEn} ${sEn.fsAnamGLeg}`} id='fsAnamGLeg'>
               Identificação
             </legend>
             <section className='sectionMain' id='fsAnamGSect'>
@@ -324,7 +324,7 @@ export default function ENForm(): JSX.Element {
                     <p className={`noInvert ${sEn.msrProgCons}`}>ml/dia</p>
                   </label>
                 </span>
-                <div role='group' className={`form-padded noInvert ${sEn.protUrDiv} ${sEn.formPadded}`} id='protUrDiv'>
+                <div role='group' className={`formPadded noInvert ${sEn.protUrDiv} ${sEn.formPadded}`} id='protUrDiv'>
                   <span
                     role='group'
                     id='inpElimUrDiaMax'
@@ -404,7 +404,7 @@ export default function ENForm(): JSX.Element {
           <Suspense fallback={<ReactSpinner scale={0.5} key={crypto.randomUUID()} />}>
             <FsProgCons />
           </Suspense>
-          <fieldset name='fsConfirmName' id='fsConfirmId' className='fsMain form-padded'>
+          <fieldset name='fsConfirmName' id='fsConfirmId' className='fsMain formPadded'>
             <section className='sectionMain sectionConfirm' id='sectConfirmCheck'>
               <Declaration text='"DECLARO QUE CONCORDO COM AS AVALIAÇÕES DESCRITAS ACIMA"' />
               <div className={`divMain`} id='divConfirm' role='group'>

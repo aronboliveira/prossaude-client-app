@@ -125,7 +125,7 @@ export default function UserPropsDlg({ setPropDlg, shouldDisplayPropDlg = true }
       {shouldDisplayPropDlg && (
         <dialog
           ref={userPropsDlgRef}
-          className='modal-content-fit flexAlItCt flexNoWC'
+          className='modalContent__fit flexAlItCt flexNoWC'
           id='alterUsePropDlg'
           onClick={ev => {
             if (isClickOutside(ev, ev.currentTarget).some(coord => coord === true)) {
@@ -133,7 +133,7 @@ export default function UserPropsDlg({ setPropDlg, shouldDisplayPropDlg = true }
               ev.currentTarget.closest("dialog")?.close();
             }
           }}>
-          <section className='flexNoW cGap2v widFull mg-3b'>
+          <section className='flexNoW cGap2v widFull mg__3b'>
             <h3 className='bolded'>Formulário de Alteração</h3>
             <button
               className='btn btn-close'
@@ -142,7 +142,7 @@ export default function UserPropsDlg({ setPropDlg, shouldDisplayPropDlg = true }
                 userPropsDlgRef.current instanceof HTMLDialogElement && userPropsDlgRef.current?.close();
               }}></button>
           </section>
-          <fieldset className='flexNoWC widFull mg-2bv'>
+          <fieldset className='flexNoWC widFull mg__2bv'>
             <label className='bolded' htmlFor='userPropsOps'>
               Opções de Alteração:
             </label>
@@ -158,7 +158,7 @@ export default function UserPropsDlg({ setPropDlg, shouldDisplayPropDlg = true }
               <option value='userTel'>Telefone</option>
             </select>
           </fieldset>
-          <fieldset className='flexNoWC widFull mg-2bv'>
+          <fieldset className='flexNoWC widFull mg__2bv'>
             <label className='bolded' htmlFor='userPropsNewValue'>
               Novo valor:
             </label>
@@ -173,7 +173,7 @@ export default function UserPropsDlg({ setPropDlg, shouldDisplayPropDlg = true }
               // @ts-ignore
               ref={newUserValueRef}></input>
           </fieldset>
-          <fieldset className='flexNoWC widFull mg-2bv'>
+          <fieldset className='flexNoWC widFull mg__2bv'>
             <label className='bolded' htmlFor='userPropJust'>
               Razão:
             </label>
@@ -187,7 +187,7 @@ export default function UserPropsDlg({ setPropDlg, shouldDisplayPropDlg = true }
           <button
             type='button'
             id='submitNewPropBtn'
-            className='btn btn-info widHalf bolded mg-1t'
+            className='btn btn-info widHalf bolded mg__1t'
             ref={userPropsBtnRef}
             onClick={ev => {
               validateForm(ev, ev.currentTarget.closest("dialog")!).then(

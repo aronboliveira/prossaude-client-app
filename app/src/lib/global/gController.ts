@@ -217,7 +217,7 @@ export function addResetAstListener(): void {
               }),
             );
             replaceInp.dataset.title = "Assinatura do Paciente";
-            replaceInp.classList.add("inpAst", "mg-07t", "form-control");
+            replaceInp.classList.add("inpAst", "mg__07t", "form-control");
             astEl.parentElement?.replaceChild(replaceInp, astEl);
           }
         } catch (e2) {

@@ -253,7 +253,7 @@ export default function LoginInputs(): JSX.Element {
               type='button'
               id='spanShowPw'
               aria-label='Alterar visualização de senha'
-              className={`halfL fade-in-late-element ${sLp.spanShowPw}`}
+              className={`halfL fadeInLateElement ${sLp.spanShowPw}`}
               onClick={ev => callbackShowPw(ev.currentTarget)}>
               <svg
                 xmlns='http://www.w3.org/2000/svg'
@@ -275,7 +275,7 @@ export default function LoginInputs(): JSX.Element {
       <nav className={`${sLp.loginBtnCont}`} id='loginBtnCont'>
         <Link
           id='recover'
-          className={`fade-in-late-element ${sLp.recover}`}
+          className={`fadeInLateElement ${sLp.recover}`}
           href='/recover'
           rel='nofollow noreferrer'
           target='_self'>

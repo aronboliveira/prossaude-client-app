@@ -49,7 +49,7 @@ export default function ScheduleForm({ mainRoot }: ScheduleFormProps): JSX.Eleme
       if (innerWidth === 900 || innerWidth === 600 || innerWidth === 460) {
         normalizeSizeSb(
           [
-            ...document.querySelectorAll(".form-padded"),
+            ...document.querySelectorAll(".formPadded"),
             ...document.querySelectorAll(".ovFlAut"),
             ...document.querySelectorAll("[scrollbar-width=none]"),
             ...document.querySelectorAll("table"),
@@ -126,7 +126,7 @@ export default function ScheduleForm({ mainRoot }: ScheduleFormProps): JSX.Eleme
       } else elementNotFound(form, "formRef for callbackFormSchedule()", extLine(new Error()));
       normalizeSizeSb(
         [
-          ...document.querySelectorAll(".form-padded"),
+          ...document.querySelectorAll(".formPadded"),
           ...document.querySelectorAll(".ovFlAut"),
           ...document.querySelectorAll("[scrollbar-width=none]"),
           ...document.querySelectorAll("table"),
@@ -305,7 +305,7 @@ export default function ScheduleForm({ mainRoot }: ScheduleFormProps): JSX.Eleme
       const slotInterv = setInterval(() => {
         if (!slot.querySelector(".appointmentBtn") && !slot.querySelector(".slotableDay")) {
           const replaceInp = document.createElement("input") as HTMLInputElement;
-          replaceInp.classList.add("transparent-el", "slotableDay", "opaque-bluish", "wid100", "form-control");
+          replaceInp.classList.add("transparentEl", "slotableDay", "opaque_bluish", "wid100", "form-control");
           replaceInp.id = slot.id.replace("slot", "");
           replaceInp.placeholder = `Horário Livre`;
           replaceInp.ariaPlaceholder = "Horário Livre";
@@ -356,7 +356,7 @@ export default function ScheduleForm({ mainRoot }: ScheduleFormProps): JSX.Eleme
   return (
     <ErrorBoundary FallbackComponent={() => <GenericErrorComponent message='Erro carregando agenda!' />}>
       {showForm && (
-        <div role='group' className='form-padded--vis wid101'>
+        <div role='group' className='formPadded__vis wid101'>
           <form
             id='formSched'
             className='widFull'
@@ -368,7 +368,7 @@ export default function ScheduleForm({ mainRoot }: ScheduleFormProps): JSX.Eleme
             ref={formRef}>
             <section
               id='formHSchedSect'
-              className='mg-3b widMaxFullView ovFlAut-fix flexNoW flexQ900NoWC flexAlItCt cGap2v rGapQ9002v noInvert'>
+              className='mg__3b widMaxFullView ovFlAut-fix flexNoW flexQ900NoWC flexAlItCt cGap2v rGapQ9002v noInvert'>
               <h1 id='hSched' className='wsBs bolded'>
                 <strong>Atendimento Diário</strong>
               </h1>
@@ -397,7 +397,7 @@ export default function ScheduleForm({ mainRoot }: ScheduleFormProps): JSX.Eleme
                       role='group'
                       className='flexLineDiv flexQ900NoWC widQ460MinFull widHalf900Q rGapQ900null'
                       id='changeDayDiv'>
-                      <label className='boldLabel mg-09t' htmlFor='changeDaySel'>
+                      <label className='boldLabel mg__09t' htmlFor='changeDaySel'>
                         Dia de Inclusão:
                       </label>
                       <select
@@ -410,7 +410,7 @@ export default function ScheduleForm({ mainRoot }: ScheduleFormProps): JSX.Eleme
                       role='group'
                       className='flexLineDiv flexQ900NoWC widQ460MinFull alSfSt widHalf900Q rGapQ900null'
                       id='hourDayDiv'>
-                      <label className='boldLabel mg-09t' id='labHourDay' htmlFor='hourDayInp'>
+                      <label className='boldLabel mg__09t' id='labHourDay' htmlFor='hourDayInp'>
                         Horário do Dia:
                       </label>
                       <input
@@ -680,7 +680,7 @@ export default function ScheduleForm({ mainRoot }: ScheduleFormProps): JSX.Eleme
                       </label>
                       <select
                         id='secondWorkingDay'
-                        className='form-select widMin18CImp wid90-900Q widQ460FullW lcPersist'
+                        className='form-select widMin18CImp wid90_900Q widQ460FullW lcPersist'
                         title='Selecione aqui o segundo dia de trabalho na semana ou edite manualmente os rótulos na agenda'
                         data-title='Segundo dia de trabalho na semana'
                         onChange={
@@ -724,7 +724,7 @@ export default function ScheduleForm({ mainRoot }: ScheduleFormProps): JSX.Eleme
                     role='group'
                     className='flexJBt cGap2v flexAlItBs flexAlE900Q flexQ460NoWC flexAlItSt460Q widFull900Q'>
                     <div role='group' className='flexJBt cGap1v flexQ900NoWC widHalf900Q'>
-                      <label className='boldLabel mg-09t' htmlFor='monthSelector'>
+                      <label className='boldLabel mg__09t' htmlFor='monthSelector'>
                         Relação de Pacientes do Mês:
                       </label>
                       <select
@@ -875,7 +875,7 @@ export default function ScheduleForm({ mainRoot }: ScheduleFormProps): JSX.Eleme
             <hr className='rdc02rHr460Q' />
             <section id='formBodySchedSect' className='widMaxFullView ovFlAut'>
               <table
-                className='table table-responsive table-striped table-hover form-padded table-transparent'
+                className='table table-responsive table-striped table-hover formPadded table-transparent'
                 id='mainConsDaysCont'>
                 <colgroup>
                   {cols.map(nCol => (
@@ -885,7 +885,7 @@ export default function ScheduleForm({ mainRoot }: ScheduleFormProps): JSX.Eleme
                 <thead className='thead-light'>
                   <tr>
                     <th scope='col'>
-                      <div role='group' className='flexAlItCt mg-40b noInvert'>
+                      <div role='group' className='flexAlItCt mg__40b noInvert'>
                         <strong>Horário</strong>
                       </div>
                     </th>

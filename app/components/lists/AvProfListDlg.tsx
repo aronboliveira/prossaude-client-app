@@ -145,7 +145,7 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                         FallbackComponent={() => (
                           <GenericErrorComponent message='Error reloading replacement for table body' />
                         )}>
-                        <caption className='caption-t'>
+                        <caption className='caption_t'>
                           <hgroup className='noInvert'>
                             <h3 className='noInvert'>
                               <strong>Membros Internos</strong>
@@ -328,7 +328,7 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                         FallbackComponent={() => (
                           <GenericErrorComponent message='Error reloading replacement for table body' />
                         )}>
-                        <caption className='caption-t'>
+                        <caption className='caption_t'>
                           <hgroup className='noInvert'>
                             <h3 className='noInvert'>
                               <strong>Membros Externos</strong>
@@ -630,7 +630,7 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
     <>
       {props.state && props.btnProf instanceof HTMLButtonElement && (
         <dialog
-          className='modal-content-stk2'
+          className='modalContent__stk2'
           id='avProfListDlg'
           ref={dialogRef}
           onClick={ev => {
@@ -644,17 +644,17 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
               />
             )}>
             <section className='flexRNoWBetCt widFull' id='headProfList'>
-              <h2 className='mg-1b noInvert'>
+              <h2 className='mg__1b noInvert'>
                 <strong>Profissionais Cadastrados</strong>
               </h2>
               <button className='btn btn-close forceInvert' onClick={() => props.dispatch(!props.state)}></button>
             </section>
-            <section className='form-padded' id='sectProfsTabs' ref={secttabProfIntRef}>
+            <section className='formPadded' id='sectProfsTabs' ref={secttabProfIntRef}>
               <table
                 className='table table-striped table-responsive table-hover tabProfs'
                 id='avProfsIntTab'
                 ref={tabProfIntRef}>
-                <caption className='caption-t'>
+                <caption className='caption_t'>
                   <hgroup className='noInvert'>
                     <h3 className='noInvert'>
                       <strong>Membros Internos</strong>
@@ -729,7 +729,7 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                 className='table table-striped table-responsive table-hover tabProfs'
                 id='avProfsExtTab'
                 ref={tabProfExtRef}>
-                <caption className='caption-t'>
+                <caption className='caption_t'>
                   <hgroup className='noInvert'>
                     <h3 className='noInvert'>
                       <strong>Membros Externos</strong>

@@ -246,6 +246,13 @@
     }
   }
 
+  .inpTrat,
+  .inpTrat.inpDate,
+  .inpTrat.inpAst {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
   .inpTrat {
     &.inpDate {
       &.tratDate {
@@ -316,6 +323,10 @@
     width: 100%;
   }
 
+  .switchDiv {
+    margin-left: 0;
+  }
+
   .taTrat {
     height: 100%;
     padding-bottom: 1.3rem;
@@ -338,8 +349,9 @@
     overflow: auto;
   }
 
-  .switchDiv {
-    margin-left: 0;
+  .tratBtn {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
   }
 
   .tratNumSpan {
@@ -400,6 +412,10 @@
         margin-bottom: 0.5rem;
       }
     }
+  }
+
+  #fsRelTratLeg {
+    padding-bottom: 0rem;
   }
 
   #headerDatBtn {

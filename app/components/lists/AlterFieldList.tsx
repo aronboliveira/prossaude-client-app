@@ -156,7 +156,7 @@ export default function AlterFieldList({
   return (
     <ErrorBoundary FallbackComponent={() => <GenericErrorComponent message='Erro carregando modal de alteração' />}>
       <dialog
-        className='modal-content-stk2'
+        className='modalContent__stk2'
         ref={alterFieldRef}
         id='alterFieldDlg'
         onClick={ev => {
@@ -174,7 +174,7 @@ export default function AlterFieldList({
           )}>
           <fieldset id='fsAlterFieldStud' className='flexNoWC flexJSt flexAlItSt noInvert'>
             <section className='flexRNoWBetCt widFull' id='headFieldsHead'>
-              <h2 className='mg-1b'>
+              <h2 className='mg__1b'>
                 <strong>Campos Disponíveis</strong>
               </h2>
               <button className='btn btn-close forceInvert' onClick={() => toggleDisplayRowData(state)}></button>

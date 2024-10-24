@@ -25,7 +25,7 @@ const ENDeclaration = memo(({ state, dispatch }: DlgProps): JSX.Element => {
       <ErrorBoundary FallbackComponent={() => <GenericErrorComponent message='Erro carregando modal de declaração' />}>
         <dialog
           id='conformDlg'
-          className='modal-content-stk2 defDp'
+          className='modalContent__stk2 defDp'
           ref={mainRef}
           onClick={ev => {
             if (isClickOutside(ev, ev.currentTarget).some(coord => coord === true)) {

@@ -77,7 +77,7 @@ export default function OdForm(): JSX.Element {
         )
       }>
       <fieldset name='fsAnamGName' id='fsAnamGId' className='fsMain'>
-        <legend id='fsAnamGLeg' className='legMain form-padded'>
+        <legend id='fsAnamGLeg' className='legMain formPadded'>
           Identificação
         </legend>
         <section className='sectionMain' id='fsAnamGSect'>
@@ -110,7 +110,7 @@ export default function OdForm(): JSX.Element {
       <hr />
       <fieldset name='fsAvDentName' id='fsAvDentId' className='fsMain'>
         <legend className='legMain' id='fsAvDentLeg'>
-          <span className='mgr-1v bolded'>Avaliação Dentária</span>
+          <span className='mgr__1v bolded'>Avaliação Dentária</span>
         </legend>
         <section className='sectionMain' id='sectAvDentId' itemScope>
           {["SupDir", "InfEsq", "SupEsq", "InfDir"].map((qr, i) => (
@@ -132,7 +132,7 @@ export default function OdForm(): JSX.Element {
       <br role='presentation' />
       <hr />
       <TratFs />
-      <fieldset name='fsConfirmName' id='fsConfirmId' className='fsMain form-padded'>
+      <fieldset name='fsConfirmName' id='fsConfirmId' className='fsMain formPadded'>
         <section className='sectionMain sectionConfirm' id='sectConfirmCheck'>
           <Declaration text='&#34;DECLARO QUE CONCORDO COM OS TRATAMENTOS PROPOSTOS ACIMA&#34;' />
           <div className='divMain' id='divConfirm' role='group'>

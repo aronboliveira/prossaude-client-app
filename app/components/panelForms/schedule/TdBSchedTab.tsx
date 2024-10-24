@@ -50,7 +50,7 @@ export default function TdBSchedTab({ nHr, nRow, nCol, last = false }: HrCelProp
         data-row={nRow}
         data-col={nCol}>
         <input
-          className={`transparent-el lcPersist slotableDay opaque-bluish wid100 form-control inp${nHr}-00 inp-text-${nHr}-00`}
+          className={`transparentEl lcPersist slotableDay opaque_bluish wid100 form-control inp${nHr}-00 inp-text-${nHr}-00`}
           placeholder='Horário Livre'
           id={`_${nHr}-00_${nCol}`}
           name={`date_${nHr}-00_${nCol}`}

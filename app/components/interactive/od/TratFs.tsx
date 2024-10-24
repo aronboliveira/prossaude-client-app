@@ -135,7 +135,7 @@ export default function TratFs(props: { phCb?: () => void }): JSX.Element {
                   type='text'
                   name={`sig_${blockCount - 1}`}
                   id='inpAstTratId1'
-                  className='inpTrat inpAst mg-07t tratAst form-control'
+                  className='inpTrat inpAst mg__07t tratAst form-control'
                   data-title='Assinatura do Tratamento 1'
                   ref={inpRef}
                 />

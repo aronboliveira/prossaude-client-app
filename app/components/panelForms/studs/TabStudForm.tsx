@@ -29,7 +29,7 @@ export default function TabStudForm(): JSX.Element {
     callbackNormalizeSizeSb = useCallback(() => {
       normalizeSizeSb(
         [
-          ...document.querySelectorAll(".form-padded"),
+          ...document.querySelectorAll(".formPadded"),
           ...document.querySelectorAll(".ovFlAut"),
           ...document.querySelectorAll("[scrollbar-width=none]"),
         ],
@@ -92,7 +92,7 @@ export default function TabStudForm(): JSX.Element {
                         FallbackComponent={() => (
                           <GenericErrorComponent message='Error reloading replacement for table body' />
                         )}>
-                        <caption className='caption-t'>
+                        <caption className='caption_t'>
                           <strong>
                             <small role='textbox'>
                               <em>
@@ -274,9 +274,9 @@ export default function TabStudForm(): JSX.Element {
       method='get'
       target='_top'
       ref={formRef}
-      className='form-padded-nosb wid101'>
+      className='formPadded__nosb wid101'>
       <div role='group' className='wsBs flexNoWC cGap1v'>
-        <h1 className='mg-3b bolded'>
+        <h1 className='mg__3b bolded'>
           <strong id='titleTabStuds'>Tabela de Estudantes Registrados</strong>
         </h1>
         <em>
@@ -284,9 +284,9 @@ export default function TabStudForm(): JSX.Element {
         </em>
       </div>
       <hr />
-      <section className='form-padded pdL0 mg-0b' id='sectStudsTab'>
+      <section className='formPadded pdL0 mg__0b' id='sectStudsTab'>
         <table className='table table-striped table-responsive table-hover tabPacs' id='avPacsTab' ref={tabRef}>
-          <caption className='caption-t'>
+          <caption className='caption_t'>
             <strong>
               <small role='textbox'>
                 <em>

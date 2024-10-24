@@ -64,7 +64,7 @@ export default function PrevConsList({
   return (
     <ErrorBoundary FallbackComponent={() => <GenericErrorComponent message='Erro carregando modal' />}>
       <dialog
-        className='modal-content-stk2'
+        className='modalContent__stk2'
         ref={prevConsDlgRef}
         id={`prev-cons-${name.toLowerCase().replaceAll(" ", "-")}`}
         onClick={ev => {
@@ -81,17 +81,17 @@ export default function PrevConsList({
             />
           )}>
           <section className='flexRNoWBetCt widFull' id='headPrevConsList'>
-            <h2 className='mg-1b'>
+            <h2 className='mg__1b'>
               <strong>Consultas Anteriores</strong>
             </h2>
             <button className='btn btn-close forceInvert' onClick={() => togglePrevConsDisplay(state)}></button>
           </section>
-          <section className='form-padded' id='sectPacsTab'>
+          <section className='formPadded' id='sectPacsTab'>
             <table
               className='table table-striped table-responsive table-hover tabPacs'
               id='avPacsTab'
               ref={prevConsTabRef}>
-              <caption className='caption-t'>
+              <caption className='caption_t'>
                 <strong>
                   <small role='textbox'>
                     <em className='noInvert'>

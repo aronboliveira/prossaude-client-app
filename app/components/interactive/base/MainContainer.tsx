@@ -203,12 +203,12 @@ export default function MainContainer(): JSX.Element {
     // addEventListener("resize", handleBgResize);
     // return (): void => removeEventListener("resize", handleBgResize);
     // <main className='main-container gridAlItCt widFull gridAlItBs750Q gridAuto750Q rGap4v750Q'>
-    //   <section id='cardsSect' className='grid4col grid4r750Q gridJICt rGap2v750Q pd-t4v750Q fade-in-early-element'>
+    //   <section id='cardsSect' className='grid4col grid4r750Q gridJICt rGap2v750Q pd-t4v750Q fadeInEarlyElement'>
     //     <div
     //       onMouseEnter={() => router.prefetch("/ag")}
-    //       className='card card23v htMinMaxC751Qmin brd-rd2r wid90p750Q htMaxC460Q fd1el'
+    //       className='card card23v htMinMaxC751Qmin brd_rd2r wid90p750Q htMaxC460Q fd1el'
     //       style={{ maxWidth: "12rem" }}>
-    //       <button className='card-hborder transparent-el fade-in-early-element' id='agAnchoredBtn'>
+    //       <button className='card-hborder transparentEl fadeInEarlyElement' id='agAnchoredBtn'>
     //         <Link
     //           className='card-header anchoredBtn noInvert'
     //           id='ag_but'
@@ -225,7 +225,7 @@ export default function MainContainer(): JSX.Element {
     //           />
     //         </Link>
     //       </button>
-    //       <div className='card-body txAlCt pdT3v flexNoWC rGap2v750Q rGap0-5v fd2el'>
+    //       <div className='card-body txAlCt pdT3v flexNoWC rGap2v750Q rGap0_5v fd2el'>
     //         <Link
     //           className='card-title bolded btn btn-grey btn-rounded anchoredBtn noInvert'
     //           id='ag_but_sec'
@@ -235,15 +235,15 @@ export default function MainContainer(): JSX.Element {
     //           onClick={() => router.push("/ag")}>
     //           Geral & Saúde Mental
     //         </Link>
-    //         <small className='mg-1bv460Q fd3el formDesc'>
+    //         <small className='mg__1bv460Q fd3el formDesc'>
     //           Acesse aqui o formulário para Anamnese Geral e Saúde Mental
     //         </small>
     //       </div>
     //     </div>
     //     <div
-    //       className='card card23v htMinMaxC751Qmin brd-rd2r wid90p750Q htMaxC460Q fd2el'
+    //       className='card card23v htMinMaxC751Qmin brd_rd2r wid90p750Q htMaxC460Q fd2el'
     //       onMouseEnter={() => router.prefetch("/edfis")}>
-    //       <button className='card-hborder transparent-el' id='efAnchoredBtn'>
+    //       <button className='card-hborder transparentEl' id='efAnchoredBtn'>
     //         <Link
     //           className='card-header anchoredBtn noInvert'
     //           id='ef_but'
@@ -260,7 +260,7 @@ export default function MainContainer(): JSX.Element {
     //           />
     //         </Link>
     //       </button>
-    //       <div className='card-body txAlCt pdT3v flexNoWC rGap2v750Q rGap0-5v fd3el'>
+    //       <div className='card-body txAlCt pdT3v flexNoWC rGap2v750Q rGap0_5v fd3el'>
     //         <Link
     //           className='card-title bolded btn btn-orange btn-rounded anchoredBtn noInvert'
     //           id='ef_but_sec'
@@ -276,9 +276,9 @@ export default function MainContainer(): JSX.Element {
     //       </div>
     //     </div>
     //     <div
-    //       className='card card23v htMinMaxC751Qmin brd-rd2r wid90p750Q htMaxC460Q fd4el'
+    //       className='card card23v htMinMaxC751Qmin brd_rd2r wid90p750Q htMaxC460Q fd4el'
     //       onMouseEnter={() => router.prefetch("/edfis")}>
-    //       <button className='card-hborder transparent-el' id='nutAnchoredBtn'>
+    //       <button className='card-hborder transparentEl' id='nutAnchoredBtn'>
     //         <Link
     //           className='card-header anchoredBtn noInvert'
     //           id='nut_but'
@@ -295,7 +295,7 @@ export default function MainContainer(): JSX.Element {
     //           />
     //         </Link>
     //       </button>
-    //       <div className='card-body txAlCt pdT3v flexNoWC rGap2v750Q rGap0-5v fd5el'>
+    //       <div className='card-body txAlCt pdT3v flexNoWC rGap2v750Q rGap0_5v fd5el'>
     //         <Link
     //           className='card-title bolded btn btn-green btn-rounded anchoredBtn'
     //           target='_self'
@@ -311,9 +311,9 @@ export default function MainContainer(): JSX.Element {
     //       </div>
     //     </div>
     //     <div
-    //       className='card card23v htMinMaxC751Qmin brd-rd2r wid90p750Q htMaxC460Q fd5el'
+    //       className='card card23v htMinMaxC751Qmin brd_rd2r wid90p750Q htMaxC460Q fd5el'
     //       onMouseEnter={() => router.prefetch("/od")}>
-    //       <button className='card-hborder transparent-el' id='odAnchoredBtn'>
+    //       <button className='card-hborder transparentEl' id='odAnchoredBtn'>
     //         <Link
     //           className='card-header anchoredBtn noInvert'
     //           id='od_but'
@@ -330,7 +330,7 @@ export default function MainContainer(): JSX.Element {
     //           />
     //         </Link>
     //       </button>
-    //       <div className='card-body txAlCt pdT3v flexNoWC rGap2v750Q rGap0-5v fd6el'>
+    //       <div className='card-body txAlCt pdT3v flexNoWC rGap2v750Q rGap0_5v fd6el'>
     //         <Link
     //           className='card-title bolded btn btn-blue btn-rounded anchoredBtn'
     //           id='od_but_sec'
@@ -340,11 +340,11 @@ export default function MainContainer(): JSX.Element {
     //           onClick={() => router.push("/od")}>
     //           Odontologia
     //         </Link>
-    //         <small className='mg-1bv460Q fade-in-late-element'>Acesse aqui o formulário para Odontologia</small>
+    //         <small className='mg__1bv460Q fadeInLateElement'>Acesse aqui o formulário para Odontologia</small>
     //       </div>
     //     </div>
     //   </section>
-    //   <section id='panelSect' className='gridJICt pd-b4v750Q fd2el' onMouseEnter={() => router.prefetch("/panel")}>
+    //   <section id='panelSect' className='gridJICt pd__b4v750Q fd2el' onMouseEnter={() => router.prefetch("/panel")}>
     //     <button type='button' id='panelBtn' className='btn btn-primary btn-rounded wid80p750Q'>
     //       <Link
     //         href='/panel'

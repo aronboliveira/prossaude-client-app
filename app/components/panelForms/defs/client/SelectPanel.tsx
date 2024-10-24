@@ -181,7 +181,7 @@ export default function SelectPanel({ defOp = "agenda" }: MainPanelProps): JSX.E
   ) : (
     <ErrorBoundary
       FallbackComponent={() => <GenericErrorComponent message='Error loading Selector for Working Panel' />}>
-      <div role='group' className='flexWR mg-3b pdL1v900Q pdR1v900Q pdL2v460Q pdR2v460Q noInvert'>
+      <div role='group' className='flexWR mg__3b pdL1v900Q pdR1v900Q pdL2v460Q pdR2v460Q noInvert'>
         <strong id='titlePanelSelect' title='Selecione aqui o painel em tela'>
           Escolha o Painel de Trabalho
         </strong>

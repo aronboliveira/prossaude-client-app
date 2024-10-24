@@ -42,7 +42,7 @@ export default function ExcludeDlg({
           role='alertdialog'
           id='excludeAlertDlg'
           ref={excludeDlgRef}
-          className='modal-content modal-content-fit'
+          className='modal-content modalContent__fit'
           onClick={click => {
             if (isClickOutside(click, excludeDlgRef.current!).some(point => point === true)) {
               excludeDlgRef.current!.close();

@@ -29,7 +29,7 @@ export default function UserDlg({ setUserDlg, shouldDisplayUserDlg }: UserDlgPro
   }, [userDlgRef]);
   return createPortal(
     <ErrorBoundary FallbackComponent={() => <GenericErrorComponent message='Erro carregando janela modal' />}>
-      <dialog className={`${sAg.bdPo} noInvert modal-content-fit forceInvert`} ref={userDlgRef}>
+      <dialog className={`${sAg.bdPo} noInvert modalContent__fit forceInvert`} ref={userDlgRef}>
         <ErrorBoundary
           FallbackComponent={() => (
             <ErrorFallbackDlg
@@ -42,7 +42,7 @@ export default function UserDlg({ setUserDlg, shouldDisplayUserDlg }: UserDlgPro
             />
           )}>
           <button
-            className='btn btn-close htMax0-1r widFull'
+            className='btn btn-close htMax0_1r widFull'
             onClick={() => {
               userDlgRef.current?.close();
               setUserDlg(!shouldDisplayUserDlg);

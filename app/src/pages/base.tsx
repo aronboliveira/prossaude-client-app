@@ -73,7 +73,7 @@ export default function BasePage(): JSX.Element {
               role='group'
               className='flexNoW flexAlItCt cGap1v flexAlItE600Q cGap3v600Q contFitW flexNoWC460Q'
               id='divUserPanel'>
-              <section className='form-control mgr-1_5v widThird flexNoW rGap2v flexBasis25 mg-t1-2v mg-0bQ460 widMinFit mg-0b600Q noInvert mg-05b forceInvert'>
+              <section className='form-control mgr__1_5v widThird flexNoW rGap2v flexBasis25 mg__t1_2v mg__0bQ460 widMinFit mg__0b600Q noInvert mg__05b forceInvert'>
                 <div role='group' className='widFull flexNoW cGap2v rGap1v flexQ460NoWC wsNoW' id='rootUserInfo'></div>
               </section>
             </div>

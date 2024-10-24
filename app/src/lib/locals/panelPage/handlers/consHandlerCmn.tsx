@@ -893,7 +893,7 @@ export function replaceRegstSlot(
         ) {
           noMatchSlots[s].innerHTML = `
             <input
-              class="transparent-el slotableDay opaque-bluish wid100 form-control"
+              class="transparentEl slotableDay opaque_bluish wid100 form-control"
               placeholder="Horário Livre"
               id = ${trCels[0].innerText}_${
             (noMatchSlots[s].closest("td") || noMatchSlots[s].closest("th"))?.dataset.col || slotNum
@@ -1069,7 +1069,7 @@ export function replaceBtnSlot(aptBtn: targEl, parent: HTMLElement): void {
       cel => cel instanceof HTMLElement,
     );
     const replaceInp = document.createElement("input") as HTMLInputElement;
-    replaceInp.classList.add(...["slotableDay", "opaque-bluish", "wid100", "form-control", "transparent-el"]);
+    replaceInp.classList.add(...["slotableDay", "opaque_bluish", "wid100", "form-control", "transparentEl"]);
     replaceInp.placeholder = `Horário Livre`;
     replaceInp.id = `${trCels[0].innerText}_${slotNum || slotNumTry2}`;
     parent.replaceChild(replaceInp, aptBtn);

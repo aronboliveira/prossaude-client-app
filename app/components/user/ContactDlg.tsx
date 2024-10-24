@@ -22,7 +22,7 @@ export default function ContactDlg({ setContact, shouldDisplayContact = true }: 
       {shouldDisplayContact && (
         <dialog
           ref={contactDlgRef}
-          className='modal-content-fit flexAlItCt flexNoWC'
+          className='modalContent__fit flexAlItCt flexNoWC'
           id='contactDlg'
           onClick={ev => {
             if (isClickOutside(ev, ev.currentTarget).some(coord => coord === true)) {
@@ -30,7 +30,7 @@ export default function ContactDlg({ setContact, shouldDisplayContact = true }: 
               ev.currentTarget.closest("dialog")?.close();
             }
           }}>
-          <div className='flexNoW cGap2v widFull mg-3b'>
+          <div className='flexNoW cGap2v widFull mg__3b'>
             <h3 className='bolded'>Formulário de Contato</h3>
             <button
               className='btn btn-close'
@@ -39,7 +39,7 @@ export default function ContactDlg({ setContact, shouldDisplayContact = true }: 
                 contactDlgRef.current instanceof HTMLDialogElement && contactDlgRef.current?.close();
               }}></button>
           </div>
-          <div className='flexNoWC widFull mg-2bv'>
+          <div className='flexNoWC widFull mg__2bv'>
             <label className='bolded' htmlFor='contactOps'>
               Razão de contato
             </label>
@@ -49,7 +49,7 @@ export default function ContactDlg({ setContact, shouldDisplayContact = true }: 
               <option value='outro'>Outros</option>
             </select>
           </div>
-          <div className='flexNoWC widFull mg-2bv'>
+          <div className='flexNoWC widFull mg__2bv'>
             <label className='bolded' htmlFor='contactObs'>
               Detalhes
             </label>
@@ -58,7 +58,7 @@ export default function ContactDlg({ setContact, shouldDisplayContact = true }: 
           <button
             type='button'
             id='submitContactBtn'
-            className='btn btn-info widHalf bolded mg-1t'
+            className='btn btn-info widHalf bolded mg__1t'
             ref={contacBtnRef}
             onClick={ev => {
               validateForm(ev, ev.currentTarget.closest("dialog")!).then(

@@ -29,7 +29,7 @@ export default function TableProfForm(): JSX.Element {
     callbackNormalizeSizesSb = useCallback(() => {
       normalizeSizeSb(
         [
-          ...document.querySelectorAll(".form-padded"),
+          ...document.querySelectorAll(".formPadded"),
           ...document.querySelectorAll(".ovFlAut"),
           ...document.querySelectorAll("[scrollbar-width=none]"),
         ],
@@ -93,7 +93,7 @@ export default function TableProfForm(): JSX.Element {
                         FallbackComponent={() => (
                           <GenericErrorComponent message='Error reloading replacement for table body' />
                         )}>
-                        <caption className='caption-t'>
+                        <caption className='caption_t'>
                           <strong>
                             <small role='textbox'>
                               <em>
@@ -269,7 +269,7 @@ export default function TableProfForm(): JSX.Element {
     <form
       id='formRemoveProf'
       name='form_profs_table'
-      className='form-padded-nosb wid101'
+      className='formPadded__nosb wid101'
       action='profs_table'
       encType='multipart/form-data'
       method='get'
@@ -277,7 +277,7 @@ export default function TableProfForm(): JSX.Element {
       autoComplete='on'
       ref={formRef}>
       <div role='group' className='wsBs flexNoWC cGap1v'>
-        <h1 className='mg-3b bolded'>
+        <h1 className='mg__3b bolded'>
           <strong id='titleTabProfs'>Tabela de Profissionais Registrados</strong>
         </h1>
         <em>
@@ -287,9 +287,9 @@ export default function TableProfForm(): JSX.Element {
         </em>
         <hr />
       </div>
-      <section className='form-padded pdL0' id='sectProfsTab'>
+      <section className='formPadded pdL0' id='sectProfsTab'>
         <table className='table table-striped table-responsive table-hover tabPacs' id='avPacsTab' ref={tabRef}>
-          <caption className='caption-t'>
+          <caption className='caption_t'>
             <strong>
               <small role='textbox'>
                 <em>

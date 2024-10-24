@@ -311,7 +311,7 @@ export function changeToAstDigit(toFileInpBtn: targEl): void {
     if (inpAst instanceof HTMLCanvasElement || /Usar/gi.test(toFileInpBtn.innerText)) {
       toFileInpBtn.innerText = "Retornar à Assinatura Escrita";
       const fileInp = document.createElement("input");
-      fileInp.classList.add("inpAst", "mg-07t", "form-control");
+      fileInp.classList.add("inpAst", "mg__07t", "form-control");
       if (toFileInpBtn.classList.contains("tratBtn")) {
         fileInp.classList.add("inpTrat", "tratAst");
         fileInp.dataset.title =
@@ -327,14 +327,14 @@ export function changeToAstDigit(toFileInpBtn: targEl): void {
       fileInp.accept = "image/*";
       fileInp.required = true;
       inpAst.parentElement.replaceChild(fileInp, inpAst);
-      fileInp.addEventListener("change", chose => {
+      fileInp.addEventListener("change", change => {
         try {
           let imgFile;
           if (!fileInp?.files || !fileInp.files[0]) return;
           imgFile = fileInp.files.item(0);
           if (
             !(
-              chose?.target instanceof HTMLInputElement &&
+              change?.target instanceof HTMLInputElement &&
               fileInp?.files &&
               fileInp.parentElement &&
               fileInp.files?.length > 0 &&
@@ -342,14 +342,14 @@ export function changeToAstDigit(toFileInpBtn: targEl): void {
             )
           )
             throw new Error(`Error on selecting the file and/or finding the parent Element for the file input.
-            chose.target: ${chose?.target ?? "UNDEFINED CHOSE"};
+            chose.target: ${change?.target ?? "UNDEFINED CHANGE"};
             fileInp: ${fileInp ?? "UNDEFINED INP"};
             files: ${fileInp?.files ?? "UNDEFINED FILES"};
             parentElement: ${fileInp?.parentElement ?? "UNDEFINED PARENT"}; 
             imgFile: ${imgFile ?? "UNDEFINED IMAGE"}; 
             imgFile.type: ${imgFile?.type ?? "UNDEFINED TYPE"}`);
-          const fileReader = new FileReader();
-          fileReader.onloadstart = (): void => {
+          const reader = new FileReader();
+          reader.onloadstart = (): void => {
             toast(
               () => (
                 <div
@@ -381,7 +381,7 @@ export function changeToAstDigit(toFileInpBtn: targEl): void {
               { duration: 1200 },
             );
           };
-          fileReader.onprogress = (ev: ProgressEvent<FileReader>): void => {
+          reader.onprogress = (ev): void => {
             setTimeout(() => {
               if (!ev.lengthComputable) return;
               const bar = document.getElementById("fileLoadingBar");
@@ -392,23 +392,23 @@ export function changeToAstDigit(toFileInpBtn: targEl): void {
               }
             }, 500);
           };
-          fileReader.onerror = (): void => {
+          reader.onerror = (): void => {
             toast.error(
               navigatorVars.pt
-                ? `Houve algum erro carregando a imagem: ${fileReader.error?.name ?? "Anônimo"} - ${
-                    fileReader.error?.message ?? "sem descrição"
+                ? `Houve algum erro carregando a imagem: ${reader.error?.name ?? "Anônimo"} - ${
+                    reader.error?.message ?? "sem descrição"
                   }`
-                : `There was some error loading the image: ${fileReader.error?.name ?? "Anonymous"} - ${
-                    fileReader.error?.message ?? "no description"
+                : `There was some error loading the image: ${reader.error?.name ?? "Anonymous"} - ${
+                    reader.error?.message ?? "no description"
                   }`,
             );
           };
-          fileReader.onload = (load): void => {
+          reader.onload = (ev): void => {
             const imgAstDigt = document.createElement("img");
             fileInp.id = inpAst.id;
             fileInp.className = inpAst.className;
             Object.assign(imgAstDigt, {
-              src: load.target?.result ?? "Error",
+              src: ev.target?.result ?? "Error",
               innerHTML: "",
               id: fileInp.id,
               className: fileInp.className,
@@ -436,14 +436,14 @@ export function changeToAstDigit(toFileInpBtn: targEl): void {
             !fileInp.classList.contains("inpTrat") &&
               defineLabId(document.querySelector(".labAst"), toFileInpBtn, imgAstDigt);
           };
-          fileReader.onloadend = (): void => {
+          reader.onloadend = (): void => {
             toast.success(navigatorVars.pt ? `Imagem carregada com sucesso!` : `Success loading image!`, {
               duration: 1000,
             });
           };
-          fileReader.readAsDataURL(imgFile);
-        } catch (error) {
-          console.error((error as Error).message);
+          reader.readAsDataURL(imgFile);
+        } catch (e) {
+          console.error(`Error executing ${change.type} callback:\n${e as Error}.message`);
         }
       });
       [...document.querySelectorAll(".inpAst"), ...document.querySelectorAll(".tratBtn")].forEach((fileInp, i) => {
@@ -468,7 +468,7 @@ export function changeToAstDigit(toFileInpBtn: targEl): void {
       if (toFileInpBtn.classList.contains("tratBtn")) {
         const textInp = document.createElement("input") as HTMLInputElement;
         textInp.id = inpAst.id;
-        textInp.classList.add("inpTrat", "inpAst", "mg-07t", "tratAst", "form-control");
+        textInp.classList.add("inpTrat", "inpAst", "mg__07t", "tratAst", "form-control");
         textInp.dataset.title =
           inpAst.dataset.title || `Assinatura do Tratamento ${document.querySelectorAll(".tratAst").length + 1}`;
         textInp.required = true;

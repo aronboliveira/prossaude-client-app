@@ -82,7 +82,7 @@ export default function PacList({
                         FallbackComponent={() => (
                           <GenericErrorComponent message='Error reloading replacement for table body' />
                         )}>
-                        <caption className='caption-t'>
+                        <caption className='caption_t'>
                           <strong>
                             <small role='textbox' className='noInvert'>
                               <em className='noInvert'>
@@ -321,9 +321,9 @@ export default function PacList({
     } else elementNotFound(sectTabRef.current, "sectTabRef in useEffect()", extLine(new Error()));
   }, [sectTabRef, setDisplayRowData]);
   return (
-    <section className='form-padded' id='sectPacsTab' ref={sectTabRef}>
+    <section className='formPadded' id='sectPacsTab' ref={sectTabRef}>
       <table className='table table-striped table-responsive table-hover tabPacs' id='avPacsTab' ref={tabPacRef}>
-        <caption className='caption-t'>
+        <caption className='caption_t'>
           <strong>
             <small role='textbox' className='noInvert'>
               <em className='noInvert'>

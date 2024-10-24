@@ -482,7 +482,7 @@ export function normalizeSizeSb(
           const iniWid = parseFloat(getComputedStyle(element).width);
           const iniHt = parseFloat(getComputedStyle(element).height);
           const scrollDiv = document.createElement("div") as HTMLDivElement;
-          scrollDiv.className = "scrollbar-measure";
+          scrollDiv.className = "scrollbarMeasure";
           document.body.appendChild(scrollDiv);
           const scbWidAppend = scrollDiv.offsetWidth - scrollDiv.clientWidth;
           const scbHtAppend = scrollDiv.offsetWidth - scrollDiv.clientHeight;
@@ -517,11 +517,11 @@ export function normalizeSizeSb(
             if (
               safeAcc < includeChilds[1] &&
               Array.from(el.children).some(
-                child => getComputedStyle(child).overflow === "auto" && child.classList.contains("form-padded"),
+                child => getComputedStyle(child).overflow === "auto" && child.classList.contains("formPadded"),
               )
             ) {
               Array.from(el.children)
-                .filter(children => children.classList.contains("form-padded") && children instanceof HTMLElement)
+                .filter(children => children.classList.contains("formPadded") && children instanceof HTMLElement)
                 .forEach(formPadded => {
                   (formPadded as HTMLElement).style.overflow = "unset";
                 });

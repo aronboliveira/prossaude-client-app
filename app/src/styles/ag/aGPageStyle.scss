@@ -103,6 +103,11 @@
     vertical-align: middle;
   }
 
+  .cbDoencaSubt {
+    display: flex;
+    gap: 0.5rem;
+  }
+
   .countAntMed,
   #addAntMedId {
     font-weight: bold;
@@ -336,29 +341,13 @@
     width: 61.5vw;
   }
 
-  #divAddFamDiab {
-    .divAntFamCheck {
-      width: 99%;
-      margin-left: 0.1rem;
-    }
-  }
-
-  #divAddGrv {
-    width: 61.5vw;
-    input {
-      @include formCheckOpaque;
-      transform: translateY(0.04rem);
-      &:not(:first-of-type) {
-        margin-left: 0.6rem;
-      }
-    }
-  }
-
   .spanAntMedDate {
     width: 100%;
   }
 
   #autoCompCepBtn {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
     margin-left: 0.07rem;
   }
 
@@ -366,6 +355,12 @@
     padding-bottom: 1vh;
     padding-left: 0.5vw;
     column-gap: 0;
+  }
+
+  #cepId {
+    margin-top: 0.3rem;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
   }
 
   #compNumId {
@@ -378,6 +373,13 @@
 
   #dateBdayId {
     min-width: 23.4vw;
+  }
+
+  #divAddFamDiab {
+    .divAntFamCheck {
+      width: 99%;
+      margin-left: 0.1rem;
+    }
   }
 
   #divAddFamDislip {
@@ -395,6 +397,17 @@
     .spanSubFsAnamGRad,
     .labFum {
       padding-left: 0.2rem;
+    }
+  }
+
+  #divAddGrv {
+    width: 61.5vw;
+    input {
+      @include formCheckOpaque;
+      transform: translateY(0.04rem);
+      &:not(:first-of-type) {
+        margin-left: 0.6rem;
+      }
     }
   }
 
@@ -764,6 +777,13 @@
     #divFreqOdont {
       width: 90%;
       grid-template-columns: 1fr;
+    }
+  }
+}
+@media screen and (min-width: 900px) and (max-width: 980px) {
+  #divIdentif_2 {
+    #fsAnamGSpanCPF {
+      min-width: 19rem;
     }
   }
 }

@@ -17,7 +17,7 @@ const OdTips = memo(({ state, dispatch }: DlgProps): JSX.Element => {
       <></>
     ) : (
       <dialog
-        className={`modal-content-fit defDp wid50v ${sT.tipsDlg}`}
+        className={`modalContent__fit defDp wid50v ${sT.tipsDlg}`}
         id='tipsDlg'
         ref={mainRef}
         onClick={ev => {
@@ -39,16 +39,16 @@ const OdTips = memo(({ state, dispatch }: DlgProps): JSX.Element => {
         <hr />
         <article className='flexNoWC noInvert'>
           <section className='odTipsSect' id='fillTips'>
-            <h4 className='bolded mg-2bv'>1. Controle de Entradas</h4>
+            <h4 className='bolded mg__2bv'>1. Controle de Entradas</h4>
             <div className='flexNoWC pdL1v'>
-              <p className='dicas' id='dicaKb'>
+              <p className={`${sT.dicas}`} id='dicaKb'>
                 <strong>1.1.</strong>
                 <em>
                   Apertar Alt + Y para &quot;Sim&quot; ou Alt + N para &quot;Não&quot; no próximo campo após iniciar o
                   foco com Tab para preencher automaticamente
                 </em>
               </p>
-              <p className='dicas' id='dicaUppercase'>
+              <p className={`${sT.dicas}`} id='dicaUppercase'>
                 <strong>1.2.</strong>
                 <em>
                   As primeiras letras, exceto conjunções, são capitalizadas automaticamente por padrão. Outras correções
@@ -58,17 +58,17 @@ const OdTips = memo(({ state, dispatch }: DlgProps): JSX.Element => {
             </div>
           </section>
           <section className='odTipsSect' id='quadrTips'>
-            <h4 className='bolded mg-2bv'>2. Controle de Quadrantes</h4>
+            <h4 className='bolded mg__2bv'>2. Controle de Quadrantes</h4>
             <div className='flexNoWC pdL1v'>
-              <p className='dicas' id='dicaDrag'>
+              <p className={`${sT.dicas}`} id='dicaDrag'>
                 <strong>2.1.</strong>
                 <em>Arrastar as caixas dos quadrantes irá reorganizá-las</em>
               </p>
-              <p className='dicas' id='dicaDrag'>
+              <p className={`${sT.dicas}`} id='dicaDrag'>
                 <strong className='noInvert'>2.2.</strong>
                 <em className='noInvert'>Clicar nos valores pré-definidos dos quadrantes irá apagá-los</em>
               </p>
-              <p className='dicas' id='dicaDatalist'>
+              <p className={`${sT.dicas}`} id='dicaDatalist'>
                 <strong>2.3.</strong>
                 <em>Clicar em campos vazios nos quadrantes irá fornecer uma lista de valores padrão para seleção</em>
               </p>

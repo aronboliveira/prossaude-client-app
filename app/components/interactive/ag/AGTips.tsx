@@ -20,7 +20,7 @@ const AGTips = memo(({ state, dispatch }: DlgProps): JSX.Element => {
       <></>
     ) : (
       <dialog
-        className={`modal-content-fit defDp wid50v ${sT.tipsDlg}`}
+        className={`modalContent__fit defDp wid50v ${sT.tipsDlg}`}
         id='tipsDlg'
         ref={mainRef}
         onClick={ev => {
@@ -42,9 +42,9 @@ const AGTips = memo(({ state, dispatch }: DlgProps): JSX.Element => {
         <hr />
         <article className='flexNoWC noInvert'>
           <section className='tipsSect' id='fillTips'>
-            <h4 className='bolded mg-2bv'>1. Controle de Entradas</h4>
+            <h4 className='bolded mg__2bv'>1. Controle de Entradas</h4>
             <div className='flexNoWC'>
-              <p className='dicas' id='dicaKb' style={{ textAlign: "justify" }}>
+              <p className={`${sT.dicas}`} id='dicaKb' style={{ textAlign: "justify" }}>
                 <strong>1.1.</strong>
                 <em>
                   {" "}
@@ -52,7 +52,7 @@ const AGTips = memo(({ state, dispatch }: DlgProps): JSX.Element => {
                   foco com Tab para preencher automaticamente
                 </em>
               </p>
-              <p className='dicas' id='dicaUppercase' style={{ textAlign: "justify" }}>
+              <p className={`${sT.dicas}`} id='dicaUppercase' style={{ textAlign: "justify" }}>
                 <strong>1.2. </strong>
                 <em>
                   As primeiras letras, exceto conjunções, são capitalizadas automaticamente por padrão. Outras correções

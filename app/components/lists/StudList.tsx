@@ -79,7 +79,7 @@ export default function StudList({ mainDlgRef, dispatch, state = true }: StudLis
                         FallbackComponent={() => (
                           <GenericErrorComponent message='Error reloading replacement for table body' />
                         )}>
-                        <caption className='caption-t'>
+                        <caption className='caption_t'>
                           <strong>
                             <small role='textbox' className='noInvert'>
                               <em className='noInvert'>
@@ -289,7 +289,7 @@ export default function StudList({ mainDlgRef, dispatch, state = true }: StudLis
   }, [dispatch, state, mainDlgRef, userClass]);
   return (
     <table className='table table-striped table-responsive table-hover tabProfs' id='avStudsTab' ref={tabRef}>
-      <caption className='caption-t'>
+      <caption className='caption_t'>
         <strong>
           <small role='textbox' className='noInvert'>
             <em className='noInvert'>

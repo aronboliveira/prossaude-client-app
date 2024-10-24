@@ -13,7 +13,7 @@ export default function GenericErrorComponent({ message }: { message: string }):
         paddingInline: "10vw",
         backgroundColor: "#afa3a396",
       }}>
-      <h2 className='mg-2bv widHalf'>
+      <h2 className='mg__2bv widHalf'>
         <strong style={{ marginTop: "0.25rem" }}>Oops, algo deu errado! 😨</strong>
       </h2>
       <h4 style={{ fontSize: "0.8rem", marginBlock: "1rem" }}>{message}</h4>

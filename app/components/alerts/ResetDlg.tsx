@@ -45,7 +45,7 @@ export default function ResetDlg({
         <dialog
           role='alertdialog'
           ref={ResetDlgRef}
-          className='modal-content modal-content-fit'
+          className='modal-content modalContent__fit'
           id='reset-dlg'
           onClick={ev => {
             if (isClickOutside(ev, ev.currentTarget).some(coord => coord === true)) {

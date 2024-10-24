@@ -25,7 +25,7 @@ export default function ProfForm({ mainRoot }: GlobalFormProps): JSX.Element {
     btnExportProfForm = useRef<nlBtn>(null),
     callbackNormalizeSizeSb = useCallback(() => {
       normalizeSizeSb([
-        ...document.querySelectorAll(".form-padded"),
+        ...document.querySelectorAll(".formPadded"),
         ...document.querySelectorAll(".ovFlAut"),
         ...document.querySelectorAll("[scrollbar-width=none]"),
       ]);
@@ -145,7 +145,7 @@ export default function ProfForm({ mainRoot }: GlobalFormProps): JSX.Element {
               validation[0] ? handleSubmit("profs", validation[2], true) : ev.preventDefault(),
             )
           }>
-          <div role='group' id='formAddProfHDiv' className='mg-3b'>
+          <div role='group' id='formAddProfHDiv' className='mg__3b'>
             <h1 id='titleAddProfHBlock' className='bolded'>
               <strong id='titleAddProfH'>Cadastro de Profissional</strong>
             </h1>

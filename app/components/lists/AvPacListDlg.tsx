@@ -45,7 +45,7 @@ export default function AvPacListDlg({ dispatch, state, shouldShowAlocBtn }: AvP
     <>
       {state && (
         <dialog
-          className='modal-content-stk2'
+          className='modalContent__stk2'
           id='avPacListDlg'
           ref={dialogRef}
           onClick={ev => {
@@ -59,7 +59,7 @@ export default function AvPacListDlg({ dispatch, state, shouldShowAlocBtn }: AvP
               />
             )}>
             <section className='flexRNoWBetCt widFull' id='headPacList'>
-              <h2 className='mg-1b noInvert'>
+              <h2 className='mg__1b noInvert'>
                 <strong>Pacientes Cadastrados</strong>
               </h2>
               <button className='btn btn-close forceInvert' onClick={() => dispatch(!state)}></button>

@@ -77,10 +77,10 @@ export default function UserProfileDropdown({ user, router }: UserProfileDropdow
       value={{ user, router, shouldDisplayContact, shouldDisplayPropDlg, setPropDlg, setContact }}>
       <div className={`po posAb ${sUc.po} ${sUc.lowPo} ${sUc.userPo}`} ref={poRef}>
         <div className={`hPo noInvert ${sUc.hPo}`}>
-          <div id='logoutDiv' className='flexJSt cGap1v mg-05b noInvert'>
+          <div id='logoutDiv' className='flexJSt cGap1v mg__05b noInvert'>
             <button
               type='button'
-              className='transparent-el-bg noInvert'
+              className='transparentEl__bg noInvert'
               id='modalBtn'
               onClick={() => setUserDlg(!shouldDisplayUserDlg)}>
               <svg
@@ -88,7 +88,7 @@ export default function UserProfileDropdown({ user, router }: UserProfileDropdow
                 width='16'
                 height='16'
                 fill='currentColor'
-                className='bi bi-window-stack htMax0-1r'
+                className='bi bi-window-stack htMax0_1r'
                 viewBox='0 0 16 16'>
                 <path d='M4.5 6a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1M6 6a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1m2-.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0' />
                 <path d='M12 1a2 2 0 0 1 2 2 2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2 2 2 0 0 1-2-2V3a2 2 0 0 1 2-2zM2 12V5a2 2 0 0 1 2-2h9a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1m1-4v5a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V8zm12-1V5a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v2z' />
@@ -96,7 +96,7 @@ export default function UserProfileDropdown({ user, router }: UserProfileDropdow
             </button>
             {shouldDisplayUserDlg && <UserDlg shouldDisplayUserDlg={shouldDisplayUserDlg} setUserDlg={setUserDlg} />}
           </div>
-          <h3 className={`noInvert d-ibl brd-nulled brd-b-no pd-no pd0 ${sUc.hPo}`}>Informações de Usuário</h3>
+          <h3 className={`noInvert d_ibl brd_nulled brd_b_no pd__no pd0 ${sUc.hPo}`}>Informações de Usuário</h3>
         </div>
         <div className={`bdPo noInvert ${sUc.bdPo}`}>
           <UserList />

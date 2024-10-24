@@ -30,14 +30,14 @@ export default function HeaderDate(): JSX.Element {
     <span role='group' className='control flexJSt flexQ900NoW' id='spanHFlex'>
       <input
         type='date'
-        className='form-control d-ibl minCurrDate'
+        className='form-control d_ibl minCurrDate'
         id='dateHeader'
         placeholder='Date'
         data-xls='Data de preenchimento'
         data-title='data_cabecalho'
         ref={dateRef}
       />
-      <button type='button' className='datBtn d-ibl btn btn-secondary' id='headerDatBtn' ref={btnRef}>
+      <button type='button' className='datBtn d_ibl btn btn-secondary' id='headerDatBtn' ref={btnRef}>
         Usar data atual
       </button>
     </span>

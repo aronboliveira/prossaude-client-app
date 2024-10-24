@@ -148,7 +148,7 @@ export default function AgForm(): JSX.Element {
         )
       }>
       <fieldset name='fsAnamGName' id='fsAnamGIdId' className='fsMain'>
-        <legend id='fsAnamGLeg' className='legMain form-padded'>
+        <legend id='fsAnamGLeg' className='legMain formPadded'>
           Identificação
         </legend>
         <section className='sectionMain' id='fsAnamGSect'>
@@ -202,7 +202,7 @@ export default function AgForm(): JSX.Element {
               role='group'>
               <span
                 role='group'
-                className={`fsAnamGSpan mgr-3v ${sAg.fsAGSpanGrid2x2}`}
+                className={`fsAnamGSpan mgr__3v ${sAg.fsAGSpanGrid2x2}`}
                 id='fsAnamGSpan11'
                 style={{ width: "45.8%" }}>
                 <label htmlFor='dateBdayId' className={`labelIdentif ${sAg.birthInpLab} ${sAg.labelIdentif}`}>
@@ -344,7 +344,7 @@ export default function AgForm(): JSX.Element {
               <span role='textbox' style={{ marginLeft: "0.5rem" }}>
                 Número:
               </span>
-              <span role='group' className='flexDiv spanLoc fitSpaced mg-07t'>
+              <span role='group' className='flexDiv spanLoc fitSpaced mg__07t'>
                 <StreetNum />
               </span>
             </span>
@@ -355,7 +355,7 @@ export default function AgForm(): JSX.Element {
               <span role='textbox' style={{ marginLeft: "0.5rem" }}>
                 Complemento:
               </span>
-              <span role='group' className='flexDiv spanLoc fitSpaced mg-07t'>
+              <span role='group' className='flexDiv spanLoc fitSpaced mg__07t'>
                 <LocComp />
               </span>
             </span>
@@ -363,7 +363,7 @@ export default function AgForm(): JSX.Element {
         </section>
         <hr />
       </fieldset>
-      <fieldset name='fsSdGeralName' id='fsSdGeralId' className='fsMain form-padded'>
+      <fieldset name='fsSdGeralName' id='fsSdGeralId' className='fsMain formPadded'>
         <legend id='fsSdGeralLeg' className='legMain'>
           Dados de Saúde Geral
         </legend>
@@ -391,7 +391,7 @@ export default function AgForm(): JSX.Element {
           <hr />
         </section>
       </fieldset>
-      <fieldset name='fsAnamGRadName' id='fsAnamGRadId' className='fsMain form-padded'>
+      <fieldset name='fsAnamGRadName' id='fsAnamGRadId' className='fsMain formPadded'>
         <legend id='fsAnamGRadLegId' className='legMain'>
           Possíveis Doenças
         </legend>
@@ -1005,7 +1005,7 @@ export default function AgForm(): JSX.Element {
         </fieldset>
         <hr />
       </fieldset>
-      <fieldset name='fsConfirmName' id='fsConfirmId' className='fsMain form-padded'>
+      <fieldset name='fsConfirmName' id='fsConfirmId' className='fsMain formPadded'>
         <section className='sectionMain sectionConfirm' id='sectConfirmCheck'>
           <Declaration text='&#34;DECLARO SEREM VERDADEIRAS AS INFORMAÇÕES ACIMA&#34;' />
           <div className='divMain' id='divConfirm' role='group'>

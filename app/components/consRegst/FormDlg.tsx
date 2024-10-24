@@ -346,12 +346,12 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
             role='group'
             className='flexNoW flexQ750NoWC cGap1v rGapQ4601v'
             style={{ marginLeft: "0.5rem", marginTop: "1rem" }}>
-            <h2 className='mg-1b noInvert'>
+            <h2 className='mg__1b noInvert'>
               <strong className='noInvert'>Registro de Consulta</strong>
             </h2>
             <span
               role='group'
-              className='form-switch spanRight mg-0b mg-07t pdT05v pdL-3-2rQ750'
+              className='form-switch spanRight mg__0b mg__07t pdT05v pdL_3__2rQ750'
               id='autocorrectDivCons'>
               <input
                 type='checkbox'
@@ -365,7 +365,7 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
               />
               <strong>Autocorreção</strong>
             </span>
-            <span role='group' className='form-switch spanRight mg-0b mg-07t padR5v pdT05v' id='autofillDivCons'>
+            <span role='group' className='form-switch spanRight mg__0b mg__07t padR5v pdT05v' id='autofillDivCons'>
               <input
                 type='checkbox'
                 className='deActBtn form-check-input'
@@ -379,7 +379,7 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
               <strong>Autopreenchimento</strong>
             </span>
           </div>
-          <button className='btn btn-close forceInvert mg-30b600Q' onClick={onClose}></button>
+          <button className='btn btn-close forceInvert mg__30b600Q' onClick={onClose}></button>
         </div>
         <fieldset className='flexNoWC'>
           <hr />
@@ -406,7 +406,7 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
                       list='listCPFPacCons'
                       maxLength={16}
                       pattern='^(\d{3}\.?\d{3}\.?\d{3}-?\d{2})$'
-                      className='form-control d-ibl noInvert ssPersist'
+                      className='form-control d_ibl noInvert ssPersist'
                       placeholder='Preencha com o CPF'
                       autoComplete='username'
                       data-title='CPF Paciente'
@@ -619,9 +619,9 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
                       id='nacPac'
                       maxLength={4}
                       pattern='^+?\d{2}$'
-                      className='form-control d-ibl tel-national noInvert ssPersist'
+                      className='form-control d_ibl telNational noInvert ssPersist'
                       placeholder='+55?'
-                      autoComplete='tel-national'
+                      autoComplete='telNational'
                       data-title='Código Nacional Paciente'
                       data-aloc='nac-pac'
                       onInput={ev => {
@@ -638,7 +638,7 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
                       list='ddds'
                       maxLength={5}
                       pattern='^\(?\d{2}\)?$'
-                      className='form-control d-ibl noInvert ssPersist'
+                      className='form-control d_ibl noInvert ssPersist'
                       placeholder='DDD'
                       autoComplete='tel-area-code'
                       data-title='DDD Paciente'
@@ -733,7 +733,7 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
                       list='listTelPacCons'
                       maxLength={10}
                       pattern='^\d{4,5}-?\d{4}$'
-                      className='form-control d-ibl noInvert ssPersist'
+                      className='form-control d_ibl noInvert ssPersist'
                       placeholder='Preencha com o Telefone (sem código nacional e DDD) de Contato'
                       autoComplete='tel-local'
                       data-title='Tel Paciente'
@@ -927,7 +927,7 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
                   />
                 )}
               </div>
-              <div role='group' className='flexWR gapped1v flexAlItCt noInvert' id='confirmPacDiv'>
+              <div role='group' className='flexWR gap1v flexAlItCt noInvert' id='confirmPacDiv'>
                 <label className='stLab checkGreen mdGreen' id='hConfirmPac' htmlFor='confirmPac'>
                   Paciente Confirmado:
                 </label>
@@ -935,14 +935,14 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
                   type='checkbox'
                   id='confirmPac'
                   name='check-in'
-                  className='form-check-input mg-09t mg-1-3b'
+                  className='form-check-input mg__09t mg__1_3b'
                   data-title='Confirmação do Paciente'
                 />
               </div>
               <div role='group' id='consTimeDiv'>
                 <div id='consDayDiv' ref={dayRef}></div>
                 <div role='group' className='widQ460MinFull alSfSt widHalf900Q rGapQ900null' id='hourDayDiv'>
-                  <label className='boldLabel mg-09t' id='labHourDay' htmlFor='consHourDayInp'>
+                  <label className='boldLabel mg__09t' id='labHourDay' htmlFor='consHourDayInp'>
                     Horário:
                   </label>
                   <input
@@ -1037,7 +1037,7 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
                   />
                 </div>
               </div>
-              <div role='group' className='flexWR gapped1v flexAlItCt noInvert'>
+              <div role='group' className='flexWR gap1v flexAlItCt noInvert'>
                 <label htmlFor='notesCons' className='bolded'>
                   Notas:
                 </label>

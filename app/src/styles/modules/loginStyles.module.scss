@@ -110,10 +110,6 @@
 }
 .main {
   width: 100vw;
-  height: 120vh;
-  @media screen and (max-width: 460px) {
-    height: 150vh;
-  }
 }
 .outerLoginCont {
   display: flex;
@@ -123,6 +119,7 @@
   justify-content: center;
   justify-items: center;
   min-height: 100vh;
+  padding: 1rem;
   &::after,
   &::before {
     display: block;

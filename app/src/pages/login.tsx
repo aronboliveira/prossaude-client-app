@@ -100,7 +100,7 @@ export default function LoginPage(): JSX.Element {
                 </div>
                 <div className={`${sLp.titleCont2}`} role='group' id='titleCont2'>
                   <h2 className={`${sLp.subtitleText}`} id='subtitleText'>
-                    <span role='group' className='fade-in-late-element' id='spanSubtitle'>
+                    <span role='group' className='fadeInLateElement' id='spanSubtitle'>
                       Informe seus dados de usuário
                     </span>
                   </h2>

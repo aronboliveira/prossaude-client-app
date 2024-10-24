@@ -116,7 +116,7 @@ export default function AptDataList({
     <div role='group' className='aptDiv'>
       {shouldDisplayAptList && (
         <dialog
-          className='modal-content-stk2'
+          className='modalContent__stk2'
           id={`dlg-${btnId}`}
           ref={aptDlgRef}
           onClick={ev => {
@@ -133,7 +133,7 @@ export default function AptDataList({
               />
             )}>
             <div role='group' className='flexRNoWBetCt cGap2v widQ460_120v' id='headRegstPac'>
-              <h2 className='mg-1b'>
+              <h2 className='mg__1b'>
                 <strong>Registro de Consulta</strong>
               </h2>
               <button
@@ -143,7 +143,7 @@ export default function AptDataList({
                 }}></button>
             </div>
             <table className='table table-striped table-responsive table-hover tabApt'>
-              <caption className='caption-t'>
+              <caption className='caption_t'>
                 <strong>
                   <small role='textbox'>
                     <em className='noInvert'>

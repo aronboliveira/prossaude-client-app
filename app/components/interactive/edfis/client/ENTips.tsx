@@ -216,7 +216,7 @@ const ENTips = memo(({ state, dispatch }: DlgProps): JSX.Element => {
             dispatch(!state);
           }
         }}
-        className={`modal-content-fit defDp wid50v ${sT.tipsDlg}`}
+        className={`modalContent__fit defDp wid50v ${sT.tipsDlg}`}
         id='tipsDlg'>
         <section className='flexNoW flexAlItCt flexJBt'>
           <h3 className='bolded'>Manual para controle de formulário</h3>
@@ -231,9 +231,9 @@ const ENTips = memo(({ state, dispatch }: DlgProps): JSX.Element => {
         <hr className='noInvert' />
         <article className='flexNoWC noInvert'>
           <section className='odTipsSect' id='fillTips'>
-            <h4 className='bolded mg-2bv'>1. Controle de Entradas</h4>
+            <h4 className='bolded mg__2bv'>1. Controle de Entradas</h4>
             <div className='flexNoWC pdL1v'>
-              <p className='dicas' id='dicaUppercase'>
+              <p className={`${sT.dicas}`} id='dicaUppercase'>
                 <strong>1.1. </strong>
                 <em>
                   As primeiras letras, exceto conjunções, são capitalizadas automaticamente por padrão. Outras correções
@@ -245,10 +245,10 @@ const ENTips = memo(({ state, dispatch }: DlgProps): JSX.Element => {
           <hr className='noInvert' />
           <section className='odTipsSect' id='mathTips'>
             <div>
-              <h4 className='bolded mg-2bv noInvert'>2. Cálculos</h4>
+              <h4 className='bolded mg__2bv noInvert'>2. Cálculos</h4>
               <hr className='noInvert' />
               <details>
-                <summary className='mg-1b'>Siglas</summary>
+                <summary className='mg__1b'>Siglas</summary>
                 <small>
                   <ul>
                     <li>
@@ -286,7 +286,7 @@ const ENTips = memo(({ state, dispatch }: DlgProps): JSX.Element => {
             <hr />
             <div className='gridAt rGap5v'>
               <div className='flexNoWC pdL1v noInvert'>
-                <span className='dicas' id='dicaIMC'>
+                <span className={`${sT.dicas}`} id='dicaIMC'>
                   <strong>2.1. IMC:</strong>
                 </span>
                 <br />
@@ -297,7 +297,7 @@ const ENTips = memo(({ state, dispatch }: DlgProps): JSX.Element => {
                 </details>
               </div>
               <div className='flexNoWC pdL1v noInvert'>
-                <span className='dicas' id='dicaPGC'>
+                <span className={`${sT.dicas}`} id='dicaPGC'>
                   <strong>2.2. PGC:</strong>
                 </span>
                 <br />
@@ -308,7 +308,7 @@ const ENTips = memo(({ state, dispatch }: DlgProps): JSX.Element => {
                 <br />
                 <div>
                   <details className='noInvert'>
-                    <summary className='mg-1b'>Constantes</summary>
+                    <summary className='mg__1b'>Constantes</summary>
                     <small>
                       <ul>
                         <li>
@@ -335,7 +335,7 @@ const ENTips = memo(({ state, dispatch }: DlgProps): JSX.Element => {
                 </div>
               </div>
               <div className='flexNoWC pdL1v'>
-                <span className='dicas' id='dicaTMB'>
+                <span className={`${sT.dicas}`} id='dicaTMB'>
                   <strong>2.3. TMB:</strong>
                 </span>
                 <br />
@@ -351,7 +351,7 @@ const ENTips = memo(({ state, dispatch }: DlgProps): JSX.Element => {
                   </details>
                   <br />
                   <details>
-                    <summary className='mg-1b'>Constantes</summary>
+                    <summary className='mg__1b'>Constantes</summary>
                     <small>
                       <ul>
                         <li>
@@ -418,14 +418,14 @@ const ENTips = memo(({ state, dispatch }: DlgProps): JSX.Element => {
                   </p>
                   <details>
                     <br />
-                    <summary className='mg-1b'>Fórmula</summary>
+                    <summary className='mg__1b'>Fórmula</summary>
                     <div ref={m4} id='mathFourthBlock'></div>
                     <br />
                   </details>
                   <br />
                   <details>
                     <br />
-                    <summary className='mg-1b'>Constantes</summary>
+                    <summary className='mg__1b'>Constantes</summary>
                     <div className='noInvert'>
                       <small>
                         <ul>
@@ -455,7 +455,7 @@ const ENTips = memo(({ state, dispatch }: DlgProps): JSX.Element => {
                 </div>
               </div>
               <div className='flexNoWC pdL1v noInvert'>
-                <span className='dicas' id='dicaGET'>
+                <span className={`${sT.dicas}`} id='dicaGET'>
                   <strong>2.4. GET:</strong>
                 </span>
                 <br />
@@ -468,7 +468,7 @@ const ENTips = memo(({ state, dispatch }: DlgProps): JSX.Element => {
                 <br />
                 <details>
                   <br />
-                  <summary className='mg-1b'>Fatores</summary>
+                  <summary className='mg__1b'>Fatores</summary>
                   <div>
                     <small className='noInvert'>
                       <ul>

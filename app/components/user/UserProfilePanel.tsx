@@ -50,7 +50,7 @@ export default function UserProfilePanel({ router, user }: { router: NextRouter;
   }, [user]);
   return (
     <UserPanelCtx.Provider value={{ setDropdown, shouldShowDropdown }}>
-      <span className='posRl flexNoW flexNoW900Q cGap0-5v rGap1v900Q contFitW noInvert' ref={userPanelRef}>
+      <span className='posRl flexNoW flexNoW900Q cGap0_5v rGap1v900Q contFitW noInvert' ref={userPanelRef}>
         <output id='nameLogin' data-title='Usuário ativo'>
           {userName}
         </output>
@@ -59,7 +59,7 @@ export default function UserProfilePanel({ router, user }: { router: NextRouter;
             decoding='async'
             loading='lazy'
             src={imageSrc}
-            className='profileIcon mg-03rb'
+            className='profileIcon mg__03rb'
             id='profileIconImg'
             data-container='body'
             data-toggle='popover'

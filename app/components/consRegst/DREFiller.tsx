@@ -27,7 +27,7 @@ export default function DREFiller({ forwardedRef }: FillerProps): JSX.Element {
   }, [fillerDivRef, forwardedRef]);
   return (
     <>
-      <div role='group' className='flexNoWC flexBasis100 widFull mg-1b' id='CPFFillerDiv' ref={fillerDivRef}>
+      <div role='group' className='flexNoWC flexBasis100 widFull mg__1b' id='CPFFillerDiv' ref={fillerDivRef}>
         <label className='stLab' id='hRelStud'>
           CPF do Estudante Alocado:
         </label>
@@ -58,7 +58,7 @@ export default function DREFiller({ forwardedRef }: FillerProps): JSX.Element {
           </datalist>
         </div>
       </div>
-      <div role='group' className='flexNoWC flexBasis100 widFull mg-1b' id='DREFillerDiv'>
+      <div role='group' className='flexNoWC flexBasis100 widFull mg__1b' id='DREFillerDiv'>
         <label className='stLab' id='hRelStud'>
           DRE do Estudante Alocado:
         </label>

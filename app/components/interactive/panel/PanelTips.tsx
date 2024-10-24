@@ -44,7 +44,7 @@ export default function PanelTips({ state, dispatch }: DlgProps): JSX.Element {
     <></>
   ) : (
     <dialog
-      className='modal-content-fit defDp wid50v widQ460MinFull'
+      className='modalContent__fit defDp wid50v widQ460MinFull'
       id='tipsDlg'
       ref={dlgRef}
       onClick={ev => {
@@ -66,9 +66,9 @@ export default function PanelTips({ state, dispatch }: DlgProps): JSX.Element {
       <hr className='noInvert' />
       <article className='flexNoWC noInvert'>
         <section className='tipsSect' id='fillTips'>
-          <h4 className='bolded mg-2bv'>1. Controle de Entradas</h4>
+          <h4 className='bolded mg__2bv'>1. Controle de Entradas</h4>
           <details className='noInvert'>
-            <summary className='bolded mg-2bv'>1.1. Autocorreção</summary>
+            <summary className='bolded mg__2bv'>1.1. Autocorreção</summary>
             <div className='noInvert'>
               <ul>
                 <li>
@@ -82,7 +82,7 @@ export default function PanelTips({ state, dispatch }: DlgProps): JSX.Element {
             </div>
           </details>
           <details className='noInvert'>
-            <summary className='bolded mg-2bv'>1.2. Autopreenchimento</summary>
+            <summary className='bolded mg__2bv'>1.2. Autopreenchimento</summary>
             <div className='noInvert'>
               <ul>
                 <li>
@@ -98,16 +98,16 @@ export default function PanelTips({ state, dispatch }: DlgProps): JSX.Element {
         </section>
         <hr className='noInvert' />
         <section className='tipsSect noInvert' id='consTips'>
-          <h4 className='mg-2bv noInvert bolded'>2. Agenda e Consultas</h4>
+          <h4 className='mg__2bv noInvert bolded'>2. Agenda e Consultas</h4>
           <details>
-            <summary className='bolded mg-2bv'>2.1. Preenchimento</summary>
+            <summary className='bolded mg__2bv'>2.1. Preenchimento</summary>
             <div className='noInvert'>
               <ul>
                 <li>
                   <p>
                     O <strong className='noInvert'>Registro de Consulta Nova</strong> deve ser feito com o preenchimento
                     do formulário aberto ao clicar no botão rotulado
-                    <kbd className='kbd kbd-success'>Adicionar Consulta</kbd>
+                    <kbd className='kbd kbdSuccess'>Adicionar Consulta</kbd>
                     ;
                     <br />
                   </p>
@@ -115,9 +115,9 @@ export default function PanelTips({ state, dispatch }: DlgProps): JSX.Element {
                 <li>
                   <p>
                     A <strong className='noInvert'>Alocação</strong> pode ser agilizada com o uso de botões para
-                    <kbd className='kbd kbd-primary'>Consultar Listas</kbd>, os quais abrem as tabelas de dados dos
+                    <kbd className='kbd kbdPrimary'>Consultar Listas</kbd>, os quais abrem as tabelas de dados dos
                     pacientes, estudantes ou profissionais e permitem preenchimento automático de campos com
-                    <kbd className='kbd kbd-success'>Alocar</kbd>;
+                    <kbd className='kbd kbdSuccess'>Alocar</kbd>;
                   </p>
                 </li>
                 <li>
@@ -131,19 +131,19 @@ export default function PanelTips({ state, dispatch }: DlgProps): JSX.Element {
                   <p>
                     As <strong className='noInvert'>Alocações invalidadas</strong> são exibidas com cor diferente,
                     aparecendo como&nbsp;
-                    <kbd className='kbd kbd-warning'>Alocar&nbsp;!</kbd>;
+                    <kbd className='kbd kbdWarning'>Alocar&nbsp;!</kbd>;
                   </p>
                 </li>
               </ul>
             </div>
           </details>
           <details>
-            <summary className='bolded mg-2bv'>2.2. Registro</summary>
+            <summary className='bolded mg__2bv'>2.2. Registro</summary>
             <ul>
               <li>
                 <p>
                   O <strong className='noInvert'>Registro inicial</strong> da consulta pode ser feito na agenda e no
-                  sistema através do <kbd className='kbd kbd-success'>Finalizar</kbd>
+                  sistema através do <kbd className='kbd kbdSuccess'>Finalizar</kbd>
                   no final da <em className='noInvert'>Janela de Registro</em>;
                 </p>
               </li>
@@ -165,7 +165,7 @@ export default function PanelTips({ state, dispatch }: DlgProps): JSX.Element {
                 <p>
                   O <strong className='noInvert'>Download</strong> das informações do registro de consulta para
                   <em className='noInvert'>armazenamento</em> pode ser feito através de
-                  <kbd className='kbd kbd-primary'>Gerar planilha</kbd>, o qual exporta um <code>.xlsx</code>;
+                  <kbd className='kbd kbdPrimary'>Gerar planilha</kbd>, o qual exporta um <code>.xlsx</code>;
                 </p>
               </li>
               <li>
@@ -177,7 +177,7 @@ export default function PanelTips({ state, dispatch }: DlgProps): JSX.Element {
                       <p>
                         Através do <strong className='noInvert'>Preenchimento de informações</strong>
                         com o dia e horário desejados e clique em
-                        <kbd className='kbd kbd-primary'>Agendar Consulta</kbd>;
+                        <kbd className='kbd kbdPrimary'>Agendar Consulta</kbd>;
                       </p>
                     </li>
                     <li>
@@ -192,15 +192,15 @@ export default function PanelTips({ state, dispatch }: DlgProps): JSX.Element {
             </ul>
           </details>
           <details>
-            <summary className='bolded mg-2bv'>2.3. Confirmação</summary>
+            <summary className='bolded mg__2bv'>2.3. Confirmação</summary>
             <div className='noInvert'>
               <ul>
                 <li>
                   <p>
                     A <strong className='noInvert'>Confirmação</strong> de consultas na agenda só pode ser feita por
                     Coordenadores e Supervisores do projeto, sendo feita pelo clique na checkbox
-                    <kbd className='kbd-check-input'>
-                      <input className='kbd-check-input-img' id='kbd-check-ex_1' checked disabled />
+                    <kbd className='kbdCheckInput'>
+                      <input className='kbdCheckInput__img' id='kbd-check-ex_1' checked disabled />
                     </kbd>
                     ao lado de todo espaço para agendamento;
                   </p>
@@ -216,8 +216,8 @@ export default function PanelTips({ state, dispatch }: DlgProps): JSX.Element {
                   <p>
                     A confirmação pode ser feita inicialmente, <em className='noInvert'>antes mesmo do agendamento</em>
                     através da checkbox
-                    <kbd className='kbd-check-input'>
-                      <input className='kbd-check-input-img' id='kbd-check-ex_2' checked disabled />
+                    <kbd className='kbdCheckInput'>
+                      <input className='kbdCheckInput__img' id='kbd-check-ex_2' checked disabled />
                     </kbd>
                     ao lado, rotulada como <strong className='noInvert'>&quot;Consulta Confirmada&quot;</strong>;
                   </p>
@@ -226,14 +226,14 @@ export default function PanelTips({ state, dispatch }: DlgProps): JSX.Element {
             </div>
           </details>
           <details>
-            <summary className='bolded mg-2bv'>2.4. Cancelamento</summary>
+            <summary className='bolded mg__2bv'>2.4. Cancelamento</summary>
             <div className='noInvert'>
               <ul>
                 <li>
                   <p>
                     O <strong className='noInvert'>Cancelamento</strong> de consultas na agenda só pode ser feito por
                     Coordenadores e Supervisores do projeto, sendo feito através do
-                    <kbd className='kbd-rounded'>
+                    <kbd className='kbdRounded'>
                       <span>×</span>
                     </kbd>
                     ao lado de um botão agendado
@@ -243,7 +243,7 @@ export default function PanelTips({ state, dispatch }: DlgProps): JSX.Element {
             </div>
           </details>
           <details>
-            <summary className='bolded mg-2bv'>2.5. Montagem e ajuste de agenda</summary>
+            <summary className='bolded mg__2bv'>2.5. Montagem e ajuste de agenda</summary>
             <div className='noInvert'>
               <ul>
                 <li>
@@ -281,19 +281,19 @@ export default function PanelTips({ state, dispatch }: DlgProps): JSX.Element {
             </div>
           </details>
           <details>
-            <summary className='bolded mg-2bv'>2.6. Controle Geral</summary>
+            <summary className='bolded mg__2bv'>2.6. Controle Geral</summary>
             <div className='noInvert'>
               <ul>
                 <li>
                   <p>
                     <strong className='noInvert'>Planilhas</strong> com as entradas referentes aos formulários em tela
-                    são obtidos através de <kbd className='kbd kbd-success'>Gerar Planilha</kbd>
+                    são obtidos através de <kbd className='kbd kbdSuccess'>Gerar Planilha</kbd>
                   </p>
                 </li>
                 <li>
                   <p>
                     Formulários podem ser completamente reiniciados através de
-                    <kbd className='kbd kbd-warning'>Resetar Formulário</kbd>
+                    <kbd className='kbd kbdWarning'>Resetar Formulário</kbd>
                   </p>
                 </li>
               </ul>
@@ -302,9 +302,9 @@ export default function PanelTips({ state, dispatch }: DlgProps): JSX.Element {
         </section>
         <hr className='noInvert' />
         <section className='tipsSect' id='panelTips'>
-          <h4 className='bolded mg-2bv'>3. Painel de Usuário</h4>
+          <h4 className='bolded mg__2bv'>3. Painel de Usuário</h4>
           <details>
-            <summary className='bolded mg-2bv noInvert'>3.1. Dados Fixos em Leitura</summary>
+            <summary className='bolded mg__2bv noInvert'>3.1. Dados Fixos em Leitura</summary>
             <div>
               <ul>
                 <li>
@@ -331,7 +331,7 @@ export default function PanelTips({ state, dispatch }: DlgProps): JSX.Element {
             </div>
           </details>
           <details>
-            <summary className='bolded mg-2bv noInvert'>3.2. Dropdown de Usuário</summary>
+            <summary className='bolded mg__2bv noInvert'>3.2. Dropdown de Usuário</summary>
             <div className='noInvert'>
               <ul className='noInvert'>
                 <li>
@@ -363,7 +363,7 @@ export default function PanelTips({ state, dispatch }: DlgProps): JSX.Element {
             </div>
           </details>
           <details>
-            <summary className='bolded mg-2bv noInvert'>3.3. Modo Noturno</summary>
+            <summary className='bolded mg__2bv noInvert'>3.3. Modo Noturno</summary>
             <div className='noInvert'>
               <ul className='noInvert'>
                 <li>
@@ -387,9 +387,9 @@ export default function PanelTips({ state, dispatch }: DlgProps): JSX.Element {
         </section>
         <hr />
         <section className='tipsSect' id='modalTips'>
-          <h4 className='bolded mg-2bv'>4. Janelas</h4>
+          <h4 className='bolded mg__2bv'>4. Janelas</h4>
           <details className='noInvert'>
-            <summary className='bolded mg-2bv'>4.1. Entendendo Janelas Modais</summary>
+            <summary className='bolded mg__2bv'>4.1. Entendendo Janelas Modais</summary>
             <div className='noInvert'>
               <ul>
                 <li>
@@ -405,7 +405,7 @@ export default function PanelTips({ state, dispatch }: DlgProps): JSX.Element {
             </div>
           </details>
           <details className='noInvert'>
-            <summary className='bolded mg-2bv'>4.2. Fechando Janelas Modais</summary>
+            <summary className='bolded mg__2bv'>4.2. Fechando Janelas Modais</summary>
             <div className='noInvert'>
               <ul>
                 <li>
@@ -415,7 +415,7 @@ export default function PanelTips({ state, dispatch }: DlgProps): JSX.Element {
                       <li>
                         <p>
                           Clicar no
-                          <kbd className='kbd-rounded'>
+                          <kbd className='kbdRounded'>
                             <span>×</span>
                           </kbd>
                           no cabeçalho da janela;
@@ -450,10 +450,10 @@ export default function PanelTips({ state, dispatch }: DlgProps): JSX.Element {
         </section>
         <hr />
         <section className='tipsSect' id='errorTips'>
-          <h4 className='bolded mg-2bv'>5. Erros</h4>
+          <h4 className='bolded mg__2bv'>5. Erros</h4>
           <div>
             <details>
-              <summary className='bolded mg-2bv'>5.1. Erros de Preenchimento</summary>
+              <summary className='bolded mg__2bv'>5.1. Erros de Preenchimento</summary>
               <ul>
                 <li>
                   <p>
@@ -474,7 +474,7 @@ export default function PanelTips({ state, dispatch }: DlgProps): JSX.Element {
               </ul>
             </details>
             <details>
-              <summary className='bolded mg-2bv'>5.2. Erros na montagem da Agenda</summary>
+              <summary className='bolded mg__2bv'>5.2. Erros na montagem da Agenda</summary>
               <ul>
                 <li>
                   <p>
@@ -485,7 +485,7 @@ export default function PanelTips({ state, dispatch }: DlgProps): JSX.Element {
               </ul>
             </details>
             <details>
-              <summary className='bolded mg-2bv'>5.3. Erros no Modo Noturno</summary>
+              <summary className='bolded mg__2bv'>5.3. Erros no Modo Noturno</summary>
               <ul>
                 <li>
                   <p>
@@ -507,7 +507,7 @@ export default function PanelTips({ state, dispatch }: DlgProps): JSX.Element {
               </ul>
             </details>
             <details>
-              <summary className='bolded mg-2bv'>5.4. Erros no display do Dropdown de usuário</summary>
+              <summary className='bolded mg__2bv'>5.4. Erros no display do Dropdown de usuário</summary>
               <ul>
                 <li>
                   <p>
@@ -518,12 +518,12 @@ export default function PanelTips({ state, dispatch }: DlgProps): JSX.Element {
               </ul>
             </details>
             <details>
-              <summary className='bolded mg-2bv'>5.5. Erros no carregamento de telas</summary>
+              <summary className='bolded mg__2bv'>5.5. Erros no carregamento de telas</summary>
               <ul>
                 <li>
                   <p>
                     No caso de <strong className='noInvert'>erros de carregamento</strong>, clique em
-                    <kbd className='kbd kbd-primary'>Tentar novamente</kbd> para forçar nova tentativa e/ou
+                    <kbd className='kbd kbdPrimary'>Tentar novamente</kbd> para forçar nova tentativa e/ou
                     <em className='noInvert'>permitir escape para outras telas</em>, ou clique insistentemente pelo
                     menos 3 vezes para <em className='noInvert'>recarregar a tela</em>;
                   </p>

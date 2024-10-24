@@ -253,6 +253,9 @@
       }
     }
   }
+  .tbodyProgCons {
+    border: 0.063rem #8080804d;
+  }
   .lockTabInd {
     width: 100%;
     overflow: hidden;
@@ -357,6 +360,9 @@
     .inpRefDia,
     .inpUrDia {
       min-width: unset;
+    }
+    #divProgCons {
+      flex-flow: column nowrap;
     }
     #inpElimEvDiaMax {
       min-width: unset;

@@ -43,17 +43,13 @@
     transition: width 0.3s ease-in-out, height 0.3s ease-in-out;
   }
   #logo {
-    max-width: 45vw;
-    max-height: 16vh;
-    aspect-ratio: 16 / 9;
+    width: 14rem;
+    height: 7rem;
+    aspect-ratio: 2 / 1;
     transition: width 0.3s ease-in-out, height 0.3s ease-in-out;
-    @media (max-width: 714px) {
-      width: 16.688rem;
-      height: 8.063rem;
-    }
     @media (max-width: 499px) {
-      width: 11.625rem;
-      height: 5.563rem;
+      width: 12rem;
+      height: 6rem;
     }
   }
 }
