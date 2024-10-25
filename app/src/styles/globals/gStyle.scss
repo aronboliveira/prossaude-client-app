@@ -985,7 +985,7 @@ legend,
   white-space: normal;
 }
 .modalContent__fit {
-  @include modal(80, 10, 990);
+  @include modal(80, 2, 990);
   padding: 2%;
   white-space: normal;
   width: fit-content;

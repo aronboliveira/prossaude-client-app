@@ -11,7 +11,7 @@
   min-width: 14.3rem;
 }
 
-@keyframes highlightButton {
+@keyframes highlightContrast {
   0% {
     filter: contrast(75%);
   }
@@ -39,7 +39,7 @@
   button.card-hborder:hover {
     color: #000;
     background-color: #ffff;
-    animation: highlightButton 2s linear infinite;
+    animation: highlightContrast 2s linear infinite;
   }
   footer {
     display: none;
@@ -126,7 +126,7 @@
     }
     &:hover {
       img {
-        animation: highlightButton 2s linear infinite;
+        animation: highlightContrast 2s linear infinite;
       }
     }
   }

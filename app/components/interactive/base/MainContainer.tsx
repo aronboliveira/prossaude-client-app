@@ -59,7 +59,19 @@ export default function MainContainer(): JSX.Element {
         ))}
       </section>
       <section id='panelSect' className={sMc.panelSect} onMouseEnter={() => router.prefetch("/panel")}>
-        <button type='button' id='panelBtn' className={`btn btn-primary btn-rounded wid80p750Q ${sMc.panelBtn}`}>
+        <button
+          type='button'
+          id='panelBtn'
+          className={`btn btn-primary btn-rounded wid80p750Q ${sMc.panelBtn}`}
+          style={{ height: "3.5rem", borderRadius: "1rem" }}
+          onTouchStart={ev => {
+            try {
+              ev.currentTarget.style.backgroundColor = "#0056b3";
+              ev.currentTarget.style.transform = "translateY(-0.1rem)";
+            } catch (e) {
+              console.error(`Error executing ${ev.type}:\n${(e as Error).message}`);
+            }
+          }}>
           <Link href='/panel' id='panelAnchor' rel='nofollow' style={{ color: "#ffff", fontWeight: "600" }}>
             Painel de Trabalho
           </Link>

@@ -1,3 +1,41 @@
+@keyframes blurOut {
+  0% {
+    filter: blur(2px);
+  }
+  100% {
+    filter: blur(0);
+  }
+}
+@keyframes dropIn {
+  0% {
+    top: -45%;
+  }
+  50% {
+    top: 0%;
+  }
+  100% {
+    top: 5%;
+  }
+}
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes giveOpacity {
+  0% {
+    opacity: initial;
+  }
+  50% {
+    opacity: red;
+  }
+  100% {
+    opacity: initial;
+  }
+}
 @keyframes highlightBtn {
   0% {
     filter: contrast(100%);
@@ -15,20 +53,26 @@
     filter: hue-rotate(0deg);
   }
 }
-@keyframes fadeIn {
+@keyframes highlightContrast {
   0% {
-    opacity: 0;
+    filter: contrast(75%);
+  }
+  50% {
+    filter: contrast(100%);
   }
   100% {
-    opacity: 1;
+    filter: contrast(75%);
   }
 }
-@keyframes blurOut {
+@keyframes moveBgCircle {
   0% {
-    filter: blur(2px);
+    background: radial-gradient(circle at 120%, rgba(80, 157, 80, 0.516), rgb(33, 91, 135));
+  }
+  50% {
+    background: radial-gradient(circle at 0%, rgba(80, 157, 80, 0.516), rgb(33, 91, 135));
   }
   100% {
-    filter: blur(0);
+    background: radial-gradient(circle at 120%, rgba(80, 157, 80, 0.516), rgb(33, 91, 135));
   }
 }
 @keyframes slidePo {
@@ -47,53 +91,12 @@
     height: 9.857rem;
   }
 }
-@keyframes dropIn {
-  0% {
-    top: -45%;
-  }
-  50% {
-    top: 0%;
-  }
-  100% {
-    top: 5%;
-  }
-}
-@keyframes giveOpacity {
-  0% {
-    opacity: initial;
-  }
-  50% {
-    opacity: red;
-  }
-  100% {
-    opacity: initial;
-  }
-}
-@keyframes highlightButton {
-  0% {
-    filter: contrast(75%);
-  }
-  50% {
-    filter: contrast(100%);
-  }
-  100% {
-    filter: contrast(75%);
-  }
-}
 @keyframes slideUserInfo {
   0% {
     width: 0;
   }
   100% {
     width: 9.857rem;
-  }
-}
-@keyframes fadeIn {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
   }
 }
 @keyframes spin {

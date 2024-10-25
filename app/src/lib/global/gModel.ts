@@ -902,7 +902,7 @@ export function capitalizeFirstLetter(text: string): string {
     return text;
   } catch (e) {
     console.error(`Error executing capitalizeFirstLetter:\n${(e as Error).message}`);
-    return text.toString();
+    return text;
   }
 }
 export function textTransformPascal(text: string): string {

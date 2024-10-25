@@ -2,7 +2,7 @@
 import { basePath, navigatorVars } from "@/vars";
 import { clearDefInvalidMsg, resetPhs } from "@/lib/global/gStyleScript";
 import { handleLogin } from "@/lib/global/auth";
-import { nullishAnchor, nlFm, nlHtEl, nlSpan } from "@/lib/global/declarations/types";
+import { nlA, nlFm, nlHtEl, nlSpan } from "@/lib/global/declarations/types";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { elementNotFound, extLine, inputNotFound, multipleElementsNotFound } from "@/lib/global/handlers/errorHandler";
 import { callbackShowPw, callbackSubmitBtn } from "@/lib/locals/loginPage/loginController";
@@ -16,7 +16,7 @@ import toast from "react-hot-toast";
 import sLp from "@/styles/modules/loginStyles.module.scss";
 export default function LoginInputs(): JSX.Element {
   let isSpinning = false;
-  const anchorRef = useRef<nullishAnchor>(null),
+  const anchorRef = useRef<nlA>(null),
     formRef = useRef<nlFm>(null),
     spanRef = useRef<nlSpan>(null),
     router = useRouter(),
@@ -36,7 +36,19 @@ export default function LoginInputs(): JSX.Element {
             const form = document.getElementById("loginCont") ?? formRef.current ?? resSpan.closest("form");
             if (form instanceof HTMLElement) {
               form.style.opacity = "0.3";
-              form.style.filter = "grayscale(40%)";
+              [
+                document.getElementById("logoCont"),
+                document.getElementById("headerCont"),
+                document.getElementById("loginBtnCont"),
+                ...document.querySelectorAll("fieldset"),
+              ].forEach(el => {
+                try {
+                  if (!(el instanceof HTMLElement)) return;
+                  el.style.filter += "blur(2px)";
+                } catch (e) {
+                  console.error(`Error:\n${(e as Error).message}`);
+                }
+              });
             }
           };
           if (typeof router === "object" && "beforePopState" in router && "push" in router && !isSpinning) {
@@ -209,7 +221,7 @@ export default function LoginInputs(): JSX.Element {
       autoComplete='on'
       className={`${sLp.inputCont}`}>
       <div role='group' className={`${sLp.loginInputCont1}`}>
-        <div role='group'>
+        <fieldset role='group'>
           <input
             className={`form-control fade-in-element ${sLp.userInput}`}
             id='user'
@@ -228,7 +240,7 @@ export default function LoginInputs(): JSX.Element {
             autoFocus
             onInput={ev => localStorage.setItem("user", btoa(ev.currentTarget.value))}
           />
-        </div>
+        </fieldset>
       </div>
       <small className={`customValidityWarn ${sLp.customValidityWarn}`} id='userWarn'></small>
       <div role='group' className={`${sLp.loginInputCont1}`}>

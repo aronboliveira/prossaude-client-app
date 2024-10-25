@@ -106,7 +106,6 @@ export function headCleanup() {
     try {
       const head = document.querySelector("head");
       if (!head) throw new Error(`Failed to query for head element`);
-      origin = location.origin.endsWith("/") ? location.origin.slice(0, -1) : location.origin;
       const headElements = head.children;
       const elementsById = new Map();
       for (let i = 0; i < headElements.length; i++) {

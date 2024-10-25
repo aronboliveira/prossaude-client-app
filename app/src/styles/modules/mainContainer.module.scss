@@ -1,4 +1,24 @@
 @use "../base/animations" as *;
+.addTextBack {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  gap: 2rem;
+  color: #000;
+  font-weight: 800;
+}
+.btnBack {
+  transition: transform 0.5s ease-in-out;
+  height: 5rem;
+  width: 15rem;
+  background: linear-gradient(90deg, rgba(238, 158, 10, 0.593), rgb(238, 176, 60));
+  &:active {
+    transform: translateY(0.2rem);
+  }
+  &:hover {
+    transform: translateY(-0.2rem) scale(1.2);
+  }
+}
 .mainContainer {
   display: flex;
   flex-flow: column wrap;
@@ -25,7 +45,7 @@
       justify-self: center;
     }
   }
-  @media screen and (max-width: 550px) {
+  @media screen and (max-width: 650px) {
     grid-template-columns: repeat(auto-fill, minmax(100vw, 1fr));
     justify-items: left;
   }
@@ -35,7 +55,8 @@
   width: 88%;
   max-width: 88vw;
   height: 25rem;
-  border-radius: 0.5rem;
+  min-width: 19rem;
+  overflow: hidden;
   &Front,
   &Back {
     position: absolute;
@@ -45,11 +66,14 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 1rem;
+    border-radius: 0.5rem;
   }
   &Front {
     background: linear-gradient(90deg, rgba(232, 238, 234, 0.725), rgba(198, 230, 209, 0.851));
     cursor: alias;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: space-between;
   }
   &FrontContent {
     display: flex;
@@ -59,7 +83,7 @@
     text-align: center;
   }
   &Back {
-    background: linear-gradient(90deg, rgba(214, 233, 221, 0.776), rgba(181, 220, 197, 0.859));
+    background: radial-gradient(circle at 120% center, rgba(80, 157, 80, 0.516), rgb(33, 109, 135));
     transition: transform ease-in-out 0.5s;
     transition-delay: 250ms;
     transform: rotateY(180deg);
@@ -72,19 +96,67 @@
     height: 100%;
     transform-style: preserve-3d;
     transition: transform 0.8s;
+    box-shadow: 6px 3px 10px #78787857;
+    border-radius: 1rem;
+    //TODO ANIMAÇÃO DE TOUCH DRAG
     &:hover {
       transition: transform ease-in-out 1s;
       transition-delay: 750ms;
-      transform: rotateY(180deg);
+      transform: rotateY(-180deg);
     }
   }
   &Description {
     margin-bottom: 1rem;
+    font-weight: 700;
+    font-size: 0.75rem;
+    width: fit-content;
+    white-space: break-spaces;
+    text-overflow: ellipsis;
+    position: relative;
+    left: 120%;
+    background: linear-gradient(90deg, rgb(89, 175, 125), rgba(113, 182, 138, 0.776));
+    padding: 0.3rem 0.5rem;
+    border-radius: 0.5rem;
+    transition: opacity 1s ease-in-out;
+  }
+  &Name {
+    text-align: right;
+  }
+  &AddTextFront {
+    display: flex;
+    flex-flow: column nowrap;
+    position: relative;
+    width: 70%;
+    font-size: 0.8rem;
+    text-align: center;
+    color: #2b2b2bc7;
+    font-weight: 800;
+    box-decoration-break: clone;
+    hr {
+      filter: drop-shadow(1px 1px 1px #78787857);
+      border-color: #787878c8;
+      margin-block: 0.8rem;
+    }
+  }
+  &addTextBack {
+    display: flex;
+    flex-flow: column nowrap;
+    height: 100%;
+    width: 70%;
+    font-size: 1rem;
+    text-align: center;
+    color: #1d1b1bd8;
+    font-weight: 800;
+    hr {
+      filter: drop-shadow(1px 1px 1px #78787857);
+      border-color: #787878c8;
+      margin-block: 0.8rem;
+    }
   }
 }
 .cardImg {
-  max-width: 80%;
   border-radius: 1rem;
+  margin-bottom: 12%;
   &:hover {
     transition: transform ease-in-out 1s;
     transition-delay: 250ms;
@@ -95,6 +167,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
+  padding-inline: 7.5%;
+  height: 72.5%;
+  background: radial-gradient(circle at 120% center, rgba(80, 157, 80, 0.516), rgb(33, 109, 135));
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+  background-blend-mode: screen;
+  clip-path: ellipse(110% 77% at 15% 21%);
 }
 .panelSect {
   width: 100%;
