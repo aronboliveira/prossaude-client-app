@@ -69,16 +69,14 @@ body {
       font-weight: 200;
     }
     &:is([class*="exclamation"]) {
-      min-width: 0;
-      min-height: 0;
+      @include minSizeB(0, 0);
     }
   }
 
   .btn {
     &.btn-close {
       &:not(.reduced-btn-close) {
-        min-width: 1rem;
-        min-height: 1rem;
+        @include minSizeB(1rem, 1rem);
       }
     }
   }
@@ -100,8 +98,7 @@ body {
   }
 
   .reduced-btn-close {
-    max-width: 0.1em;
-    max-height: 0.1em;
+    @include maxSizeB(0.1em, 0.1em);
   }
 
   .table {
@@ -205,8 +202,7 @@ body {
   #sectPacsTab,
   #sectProfsTab,
   #sectStudsTab {
-    width: unset !important;
-    min-width: unset !important;
+    @include minWD(unset !important, unset !important);
     height: 100% !important;
   }
 
@@ -231,8 +227,7 @@ body {
   }
 
   #pacDiv {
-    min-width: 0 !important;
-    min-height: 0 !important;
+    @include minSizeB(0 !important, 0 !important);
   }
 
   #profileIconImg {
@@ -353,8 +348,7 @@ body {
     #formPanelDiv {
       > div {
         &:has(#coordPanelSelect) {
-          padding-right: 4vw;
-          padding-left: 4vw;
+          padding-inline: 4vw;
         }
       }
     }
@@ -370,8 +364,7 @@ body {
 
 @media screen and (min-width: 460px) {
   #consTimeDiv {
-    display: flex;
-    flex-flow: row nowrap;
+    @include fRNoW;
     gap: 2%;
   }
 }

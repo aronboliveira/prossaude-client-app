@@ -4,7 +4,7 @@ import { handleEventReq } from "@/lib/global/handlers/gHandlers";
 export default function TelPrim(): JSX.Element {
   return (
     <input
-      type='text'
+      type='tel'
       name='tel'
       id='telId'
       className='form-control inpIdentif noInvert inpTel minText maxText patternText'

@@ -1,5 +1,50 @@
 @use "./variables" as *;
 @use "../base/animations" as *;
+@mixin active-effect {
+  &:active {
+    &::after {
+      transform: scale(1.4, 1.6);
+      opacity: 0;
+      background-color: #ffffff77;
+    }
+  }
+  &::after {
+    content: "";
+    display: inline-block;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    top: 0;
+    z-index: -99;
+    background-color: #ffffff00;
+    border-radius: 1rem;
+    transition: all 0.5s;
+  }
+}
+@mixin bdb0 {
+  border-bottom-left-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+@mixin bdl0 {
+  border-top-left-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
+}
+@mixin bdr0 {
+  border-bottom-right-radius: 0 !important;
+  border-top-right-radius: 0 !important;
+}
+@mixin bdt0 {
+  border-top-left-radius: 0 !important;
+  border-top-right-radius: 0 !important;
+}
+@mixin bgFit {
+  background-repeat: no-repeat;
+  background-position: 100%;
+  background-origin: content-box;
+  background-attachment: local;
+}
 @mixin btn-secondary-styles {
   &.btn {
     &.btn-secondary {
@@ -28,22 +73,46 @@
   width: 100%;
   min-width: 14.3rem;
 }
+@mixin tf0_5 {
+  transition: transform 0.5s ease-in-out;
+}
+@mixin tf1 {
+  transition: transform 1s ease-in-out;
+}
+@mixin tf($duration, $timing) {
+  transition: transform $duration $timing;
+}
 @mixin scb-webkit {
   scroll-behavior: smooth;
 }
-@mixin flexCenter {
+@mixin flAlItCt {
   display: flex;
   align-items: center;
+}
+@mixin SbC {
+  justify-content: space-between;
+  align-items: center;
+}
+@mixin flexCenter {
+  @include flAlItCt;
   justify-content: center;
+}
+@mixin fCNoW {
+  display: flex;
+  flex-flow: column nowrap;
+}
+@mixin fCW {
+  display: flex;
+  flex-flow: column wrap;
+}
+@mixin flex-center-column {
+  @include fCNoW;
+  align-items: center;
 }
 @mixin fCt {
   @include flexCenter;
   align-content: center;
   justify-items: center;
-}
-@mixin fCNoW {
-  display: flex;
-  flex-flow: column nowrap;
 }
 @mixin fNoW {
   display: flex;
@@ -52,6 +121,10 @@
 @mixin fRNoW {
   display: flex;
   flex-flow: row nowrap;
+}
+@mixin fRW {
+  display: flex;
+  flex-flow: row wrap;
 }
 @mixin fStart {
   display: flex;
@@ -70,6 +143,10 @@
   padding: 0.7rem;
   line-height: 1.5;
 }
+@mixin gridJC {
+  display: grid;
+  justify-items: center;
+}
 @mixin maxCGapped($num, $unit) {
   width: max-content;
   column-gap: #{$num}#{$unit};
@@ -78,9 +155,49 @@
   max-width: #{$num1}#{$unit1};
   max-height: #{$num2}#{$unit2};
 }
+@mixin maxSizeB($num1, $num2) {
+  max-width: $num1;
+  max-height: $num2;
+}
+@mixin minSizeB($num1, $num2) {
+  min-width: $num1;
+  min-height: $num2;
+}
 @mixin minMaxW($num1, $unit1, $num2, $unit2) {
   min-width: #{$num1}#{$unit1};
   max-width: #{$num2}#{$unit2};
+}
+@mixin maxWD($num1, $num2) {
+  width: $num1;
+  max-width: $num2;
+}
+@mixin minWD($num1, $num2) {
+  width: $num1;
+  min-width: $num2;
+}
+@mixin minMaxWB($num1, $unit1, $num2, $unit2, $num3, $unit3) {
+  width: #{$num1}#{$unit1};
+  @include minMaxW($num2, $unit2, $num3, $unit3);
+}
+@mixin minMaxWD($num1, $num2) {
+  min-width: $num1;
+  max-width: $num2;
+}
+@mixin minMaxWDB($num1, $num2, $num3) {
+  width: $num1;
+  @include minMaxWD($num2, $num3);
+}
+@mixin limStkW($num) {
+  min-width: $num;
+  max-width: $num;
+}
+@mixin stkWB($num1, $num2) {
+  width: $num1;
+  @include limStkW($num2);
+}
+@mixin stkW($num) {
+  width: $num;
+  @include limStkW($num);
 }
 @mixin modal($size, $left, $z) {
   @include fCNoW;
@@ -138,6 +255,7 @@
   max-width: $inpGenWidFix;
 }
 @mixin goldenLock {
+  @include bdl0;
   height: 100%;
   justify-content: center;
   background-color: transparent;
@@ -153,8 +271,6 @@
   box-shadow: 0.2vh 0.2vh 0.2vh grey;
   background-clip: padding-box;
   border: var(--bs-border-width) solid var(--bs-border-color);
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
   &.sumMsr,
   &.indMsr {

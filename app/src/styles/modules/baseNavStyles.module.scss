@@ -1,3 +1,4 @@
+@use "../abstracts/mixins" as *;
 .bgDiv {
   display: flex;
   flex-direction: column;
@@ -31,11 +32,10 @@
   margin: 0;
   font-weight: bold;
   &.headerMainContainer {
+    @include SbC;
     background: linear-gradient(to right, rgba(193, 214, 207, 0.446), rgba(125, 220, 180, 0.429));
     border-block: 0.1rem ridge #87878773;
     border-bottom: 0.2rem ridge #87878754;
-    justify-content: space-between;
-    align-items: center;
     padding-block: 1rem;
     padding-left: 1rem;
     padding-right: 1rem;
@@ -76,7 +76,6 @@
   }
 }
 .mainArticle {
-  display: flex;
+  @include fCNoW;
   margin: auto;
-  flex-flow: column nowrap;
 }

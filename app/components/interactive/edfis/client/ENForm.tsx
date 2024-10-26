@@ -284,7 +284,7 @@ export default function ENForm(): JSX.Element {
                 }}
               />
               <DivRot quest='Qual é o intervalo mínimo (em horas) entre cada micção?' grp='Alim' ctx='UrInterv' />
-              <div role='group' className={`flexDiv divRot widMax900q80vw ${sEn.flexDivEn} ${sEn.divRot}`}>
+              <div role='group' className={`flexDiv divUrDet divRot widMax900q80vw ${sEn.flexDivEn} ${sEn.divRot}`}>
                 <label htmlFor='inpCorUrDef' className={`labAlimRot fitSpaced labUr widMax900q80vw ${sEn.labAlimRot}`}>
                   <span>Qual é a coloração da urina?</span>
                   <InpCorUr />
@@ -319,9 +319,9 @@ export default function ENForm(): JSX.Element {
                   <label
                     htmlFor='inpDiur'
                     id='labDiur'
-                    className={`form-control noInvert labAlimRot fitSpaced labUr labUrInterval widMax900q80vw noInvert ${sEn.labAlimRot}`}>
+                    className={`form-control noInvert labAlimRot fitSpaced labUr labUrInterval widMax900q80vw noInvert ${sEn.labAlimRot} ${sEn.labDiur}`}>
                     <InpDiur />
-                    <p className={`noInvert ${sEn.msrProgCons}`}>ml/dia</p>
+                    <p className={`noInvert msrProgCons ${sEn.msrProgCons}`}>ml/dia</p>
                   </label>
                 </span>
                 <div role='group' className={`formPadded noInvert ${sEn.protUrDiv} ${sEn.formPadded}`} id='protUrDiv'>

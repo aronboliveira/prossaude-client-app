@@ -21,6 +21,7 @@ export default function ConfirmLocId(): JSX.Element {
       data-xls='Local de Assinatura'
       data-title='assinatura_local'
       required
+      style={{ minWidth: "16rem" }}
       onInput={ev => {
         const newValue = ev.currentTarget.value;
         setValue(newValue);

@@ -35,7 +35,7 @@ export default function DivRot({ quest, ctx, ur, ev, grp = "Alim" }: RotProps): 
   })();
   return (
     <ErrorBoundary FallbackComponent={() => <GenericErrorComponent message='Error rendering Div for Routine' />}>
-      <div role='group' className={`flexDiv divRot widMax900q80vw ${sEn.flexDivEn} ${sEn.divRot}`}>
+      <div role='group' className={`flexDiv divRot widMax900q80vw div${ctx} ${sEn.flexDivEn} ${sEn.divRot}`}>
         <label
           htmlFor={
             !ur && !ev

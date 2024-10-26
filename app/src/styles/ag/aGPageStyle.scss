@@ -218,13 +218,11 @@
   }
 
   .inpDate.inpAntMed.antMedDate[id*="End"] {
-    border-bottom-right-radius: 0;
-    border-top-right-radius: 0;
+    @include bdr0;
   }
 
   .atualTratBtn {
-    border-bottom-left-radius: 0;
-    border-top-left-radius: 0;
+    @include bdl0;
     margin-left: 0;
     transform: translateX(-1.8rem) translateY(0.027rem) scale(1.07);
   }
@@ -304,7 +302,6 @@
   .inpLocNum {
     min-width: 8rem;
     width: calc(0.05rem + 17.25vw);
-    padding-right: 10%;
   }
 
   .labelIdentif {
@@ -346,8 +343,7 @@
   }
 
   #autoCompCepBtn {
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
+    @include bdt0;
     margin-left: 0.07rem;
   }
 
@@ -359,8 +355,7 @@
 
   #cepId {
     margin-top: 0.3rem;
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
+    @include bdb0;
   }
 
   #compNumId {
@@ -372,7 +367,7 @@
   }
 
   #dateBdayId {
-    min-width: 23.4vw;
+    min-width: 22.8vw;
   }
 
   #divAddFamDiab {
@@ -420,6 +415,13 @@
     grid-template-columns: 1fr 1fr;
     width: 60%;
     column-gap: 5%;
+    input {
+      &[type="text"],
+      &[type="number"] {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 24' fill='rgba(23, 23, 23, 0.7)'%3E%3Cpath transform='translate(1, 5)' d='M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0ZM9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1ZM6.5 5.5v.634l.549-.317a.5.5 0 1 1 .5.866L7 7l.549.317a.5.5 0 1 1-.5.866L6.5 7.866V8.5a.5.5 0 0 1-1 0v-.634l-.549.317a.5.5 0 1 1-.5-.866L5 7l-.549-.317a.5.5 0 0 1 .5-.866l.549.317V5.5a.5.5 0 1 1 1 0ZM4.5 10.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1 0-1Zm0 2h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1 0-1Z'/%3E%3C/svg%3E");
+        @include bgFit;
+      }
+    }
   }
 
   #divIdentif_2 span {
@@ -539,7 +541,7 @@
       margin-right: 0.5rem;
     }
     #ageId {
-      width: 24.8vw !important;
+      width: 23vw !important;
     }
     #fsAnamGDiv3 {
       width: 65.33%;
@@ -674,13 +676,11 @@
     }
 
     #dateAgeId {
-      width: $base900InpWidth;
-      min-width: 25vw !important;
-      max-width: 36ch;
+      @include minMaxWDB($base900InpWidth, 25vw !important, 36ch);
     }
 
     #dateBdayId {
-      min-width: $base900InpWidth;
+      min-width: 85vw;
     }
 
     #fsAnamGDiv1,
@@ -690,37 +690,29 @@
     #genDiv {
       input {
         &:not([id*="street"]):not([id*="compNum"]) {
-          width: $base900InpWidth;
-          min-width: $baseVw900InpWidth;
-          max-width: $baseVw900InpWidth;
+          @include stkWB($base900InpWidth, $baseVw900InpWidth);
         }
         &#streetId {
-          min-width: $baseVw900InpWidth;
-          max-width: $baseVw900InpWidth;
+          @include limStkW($baseVw900InpWidth);
         }
         &#streetNumId,
         &#compNumId {
-          min-width: 93%;
-          max-width: 93%;
+          @include limStkW(91%);
         }
       }
       select {
-        width: $base900InpWidth;
-        min-width: $baseVw900InpWidth;
-        max-width: $baseVw900InpWidth;
+        @include stkWB($base900InpWidth, $baseVw900InpWidth);
       }
       span {
         &.halfR {
           &:has(#streetNumNullId),
           &:has(#compNumNullId) {
-            min-width: 3rem;
-            max-width: 7.3%;
+            @include minMaxWD(3rem, 7.3%);
           }
         }
       }
       .spanLoc {
-        min-width: $baseVw900InpWidth + 2.2vw;
-        max-width: $baseVw900InpWidth + 2.2vw;
+        @include limStkW($baseVw900InpWidth + 2.2vw);
       }
     }
 
@@ -793,22 +785,19 @@
       input {
         &#streetNumId,
         &#compNumId {
-          min-width: 92.7%;
-          max-width: 90vw;
+          @include minMaxWD(92.7%, 90vw);
         }
       }
       span {
         &.halfR {
           &:has(#streetNumNullId),
           &:has(#compNumNullId) {
-            min-width: 3rem;
-            max-width: 7.3%;
+            @include minMaxWD(3rem, 7.3%);
           }
         }
       }
       .spanLoc {
-        min-width: $baseVw900InpWidth;
-        max-width: $baseVw900InpWidth;
+        @include limStkW(calc($baseVw900InpWidth - 1.8vw));
       }
     }
   }

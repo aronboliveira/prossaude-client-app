@@ -1006,7 +1006,7 @@ export function modelScripts(): void {
         console.error(`Error executing iteration ${i} for identifying meta tag:\n${(e as Error).message}`);
       }
     });
-    document.querySelectorAll("script").forEach((script, i) => {
+    Array.from(document.scripts).forEach((script, i) => {
       try {
         if (!(script instanceof HTMLScriptElement)) return;
         if (script.type === "" && script.src !== "") script.type = "text/javascript";
@@ -1354,11 +1354,24 @@ export function compProp(el: nlEl, prop: keyof CSSStyleDeclaration, measure: CSS
   try {
     if (!(el instanceof Element)) return "";
     if (typeof prop !== "string") return "";
-    if (typeof measure !== "string") return getComputedStyle(el).getPropertyValue(prop).trim();
-    return getComputedStyle(el).getPropertyValue(prop).replace(measure, "").trim();
+    if (typeof measure !== "string") return (getComputedStyle(el) as any)[prop]?.trim() ?? "";
+    return (getComputedStyle(el) as any)[prop]?.replace(measure, "").trim() ?? "";
   } catch (e) {
     console.error(`Error executing compProp:\n${(e as Error).message}`);
-    return el instanceof Element && typeof prop === "string" ? getComputedStyle(el).getPropertyValue(prop).trim() : "";
+    return el instanceof Element && typeof prop === "string" ? (getComputedStyle(el) as any)[prop]?.trim() ?? "" : "";
+  }
+}
+export function compPropGet(el: nlEl, prop: keyof CSSStyleDeclaration, measure: CSSMeasure = "px"): string {
+  try {
+    if (!(el instanceof Element)) return "";
+    if (typeof prop !== "string") return "";
+    if (typeof measure !== "string") return getComputedStyle(el).getPropertyValue(prop).trim() ?? "";
+    return getComputedStyle(el).getPropertyValue(prop).replace(measure, "").trim() ?? "";
+  } catch (e) {
+    console.error(`Error executing compProp:\n${(e as Error).message}`);
+    return el instanceof Element && typeof prop === "string"
+      ? getComputedStyle(el).getPropertyValue(prop).trim() ?? ""
+      : "";
   }
 }
 export function checkContext(ctx: any, alias: string, caller: any): void {

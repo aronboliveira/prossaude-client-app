@@ -13,6 +13,9 @@
   }
   .labelIdentif {
     min-width: 25vw;
+    @media (max-width: 900px) {
+      min-width: 85vw;
+    }
   }
   .birthInp {
     max-width: 100%;

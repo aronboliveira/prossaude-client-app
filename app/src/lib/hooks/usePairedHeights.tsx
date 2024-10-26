@@ -9,18 +9,7 @@ export default function usePairedHeights(): { left: NlMRef<any>; right: NlMRef<a
       try {
         if (!(left.current instanceof HTMLElement)) return;
         if (!(right.current instanceof HTMLElement)) return;
-        const width =
-          getComputedStyle(left.current).boxSizing === "border-box"
-            ? [
-                "marginTopWidth",
-                "borderTopWidth",
-                "paddingTop",
-                "height",
-                "paddingBottom",
-                "borderBottomWidth",
-                "marginBottomWidth",
-              ].reduce((acc, prop) => acc + parseNotNaN(compProp(left.current, prop as keyof CSSStyleDeclaration)), 0)
-            : parseNotNaN(compProp(left.current, "height"));
+        const width = parseNotNaN(compProp(left.current, "height"));
         if (!Number.isFinite(width) || width <= 0) return;
         right.current.style.height = `${width.toFixed(4)}px`;
       } catch (e) {

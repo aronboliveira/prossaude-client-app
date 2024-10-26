@@ -148,8 +148,7 @@
 .genDivEn {
   grid-template-columns: 0.5fr 1fr;
   .select {
-    min-width: calc($inpRotWidFix - 11rem);
-    max-width: calc($inpRotWidFix + 7.5rem);
+    @include minMaxWD(calc($inpRotWidFix - 11rem), calc($inpRotWidFix + 7.5rem));
   }
   @media screen and (max-width: 900px) {
     .select {
@@ -177,14 +176,12 @@
   max-width: 90vw;
 }
 .inpDiur {
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
+  @include bdr0;
   @media screen and (min-width: 901px) {
     width: 15rem;
   }
   @media screen and (max-width: 900px) {
     margin-left: 0;
-    min-width: 71vw !important;
   }
 }
 .labAlimRot {
@@ -219,6 +216,7 @@
   margin-inline: 1vw;
 }
 .msrProgCons {
+  @include bdl0;
   border-radius: var(--bs-border-radius);
   margin: 0;
   padding-left: 1vw;
@@ -229,8 +227,6 @@
   box-shadow: 0.2vh 0.2vh 0.2vh grey;
   background-clip: padding-box;
   border: var(--bs-border-width) solid var(--bs-border-color);
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
   &.sumMsr,
   &.indMsr {
@@ -255,9 +251,8 @@
 }
 .protUrDiv {
   &.formPadded {
+    @include minWD(33%, 25ch);
     padding-left: 1rem;
-    min-width: 25ch;
-    width: 33%;
     transform: translateX(5rem);
     @media screen and (max-width: 900px) {
       transform: translateX(0);
@@ -271,8 +266,7 @@
   max-width: 94.75vw;
 }
 .selectLvlAtFis {
-  max-width: 10rem;
-  min-width: 28vw;
+  @include minMaxWD(28vw, 10rem);
   margin-left: 0.5rem;
 }
 .selectNumCons {
@@ -313,8 +307,7 @@
 .tabBtn {
   z-index: 5;
   &.btnSecondary {
-    border-bottom-left-radius: 0;
-    border-top-left-radius: 0;
+    @include bdl0;
     &:not(.tabBtnSum) {
       border-radius: 0;
     }

@@ -16,16 +16,19 @@ export default function useDataProvider(
   }, [mounted, el, userClass]);
   useEffect(() => {
     if (!mounted || !ready) return;
-    setTimeout(() => {
-      try {
-        if (!(el instanceof HTMLElement))
-          throw new Error(`Failed to validate instance for Element to be read by Data Storage Provider`);
-        providers.globalDataProvider ??= new DataProvider(el);
-        providers.globalDataProvider.initPersist(el, providers.globalDataProvider, userClass);
-      } catch (e) {
-        console.error(`Error executing useDataProvider:\n${(e as Error).message}`);
-      }
-    }, 500);
+    setTimeout(
+      () => {
+        try {
+          if (!(el instanceof HTMLElement))
+            throw new Error(`Failed to validate instance for Element to be read by Data Storage Provider`);
+          providers.globalDataProvider ??= new DataProvider(el);
+          providers.globalDataProvider.initPersist(el, providers.globalDataProvider, userClass);
+        } catch (e) {
+          console.error(`Error executing useDataProvider:\n${(e as Error).message}`);
+        }
+      },
+      location.pathname.includes("edfis") ? 1000 : 500,
+    );
   }, [ready, mounted, userClass, el]);
   return [mounted, setMounted];
 }

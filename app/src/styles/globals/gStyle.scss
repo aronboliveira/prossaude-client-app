@@ -15,8 +15,16 @@ html {
 }
 * {
   &:focus {
-    outline: none;
+    border-color: #67b7a0;
     box-shadow: 0 0 0 0.3rem #bdbcbc49;
+  }
+  &:focus-visible {
+    outline-color: #67b7a0;
+    outline-offset: 1px;
+  }
+  &::selection {
+    background-color: #9cdde46a;
+    text-shadow: 1px 1px 1px #141313d1;
   }
 }
 @supports (scrollbar-color: red blue) {
@@ -94,18 +102,24 @@ button {
   }
 }
 input {
-  &[type="date"] {
-    &:required:invalid {
-      @extend %empPhDate;
-    }
-    &.form-control.dfPhDate {
-      @extend %empPhDate;
-    }
+  &[id*="addName"],
+  &[id*="additionalName"],
+  &[id*="familyName"],
+  &[id*="firstName"],
+  &[id*="midName"],
+  &[id*="middleName"],
+  &[id*="lastName"],
+  &[id*="socialName"] {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='rgba(23, 23, 23, 0.7)' class='bi bi-file-earmark-person-fill' viewBox='0 0 16 18' transform='translate(0, 1)'%3E%3Cpath d='M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1M11 8a3 3 0 1 1-6 0 3 3 0 0 1 6 0m2 5.755V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-.245S4 12 8 12s5 1.755 5 1.755'%3E%3C/path%3E%3C/svg%3E");
+    @include bgFit;
   }
-  &[type="file"] {
-    &#inpAstConfirmId {
-      margin-bottom: 0.6rem;
-    }
+  &[id*="age"] {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='rgba(23, 23, 23, 0.7)' class='bi bi-person-arms-up' viewBox='0 0 16 18' transform='translate(0, 1)'%3E%3Cpath d='M8 3a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3'%3E%3C/path%3E%3Cpath d='m5.93 6.704-.846 8.451a.768.768 0 0 0 1.523.203l.81-4.865a.59.59 0 0 1 1.165 0l.81 4.865a.768.768 0 0 0 1.523-.203l-.845-8.451A1.5 1.5 0 0 1 10.5 5.5L13 2.284a.796.796 0 0 0-1.239-.998L9.634 3.84a.7.7 0 0 1-.33.235c-.23.074-.665.176-1.304.176-.64 0-1.074-.102-1.305-.176a.7.7 0 0 1-.329-.235L4.239 1.286a.796.796 0 0 0-1.24.998l2.5 3.216c.317.316.475.758.43 1.204Z'%3E%3C/path%3E%3C/svg%3E");
+    @include bgFit;
+  }
+  &[id*="cep"] {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 24' fill='rgba(23, 23, 23, 0.7)'%3E%3Cg transform='translate(0, 5)'%3E%3Cpath fill-rule='evenodd' d='M3.1 11.2a.5.5 0 0 1 .4-.2H6a.5.5 0 0 1 0 1H3.75L1.5 15h13l-2.25-3H10a.5.5 0 0 1 0-1h2.5a.5.5 0 0 1 .4.2l3 4a.5.5 0 0 1-.4.8H.5a.5.5 0 0 1-.4-.8z'/%3E%3Cpath fill-rule='evenodd' d='M4 4a4 4 0 1 1 4.5 3.969V13.5a.5.5 0 0 1-1 0V7.97A4 4 0 0 1 4 3.999z'/%3E%3C/g%3E%3C/svg%3E");
+    @include bgFit;
   }
   &[type="checkbox"] {
     &.checkGreen {
@@ -122,8 +136,68 @@ input {
       box-shadow: var(--bslikesd);
     }
   }
+  &[id*="city"],
+  &[id*="compNum"],
+  &[id*="confirmLoc"],
+  &[id*="neighbourhood"],
+  &[id*="street"] {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 24' fill='rgba(23, 23, 23, 0.7)' transform='translate(0, 4)'%3E%3Cpath d='M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6'/%3E%3C/svg%3E");
+    @include bgFit;
+  }
+  &[id*="countryId"] {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 24' fill='rgba(23, 23, 23, 0.7)'%3E%3Cg transform='translate(0, 5)'%3E%3Cpath d='M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0M2.04 4.326c.325 1.329 2.532 2.54 3.717 3.19.48.263.793.434.743.484q-.121.12-.242.234c-.416.396-.787.749-.758 1.266.035.634.618.824 1.214 1.017.577.188 1.168.38 1.286.983.082.417-.075.988-.22 1.52-.215.782-.406 1.48.22 1.48 1.5-.5 3.798-3.186 4-5 .138-1.243-2-2-3.5-2.5-.478-.16-.755.081-.99.284-.172.15-.322.279-.51.216-.445-.148-2.5-2-1.5-2.5.78-.39.952-.171 1.227.182.078.099.163.208.273.318.609.304.662-.132.723-.633.039-.322.081-.671.277-.867.434-.434 1.265-.791 2.028-1.12.712-.306 1.365-.587 1.579-.88A7 7 0 1 1 2.04 4.327Z'/%3E%3C/g%3E%3C/svg%3E");
+    @include bgFit;
+  }
+  &[id*="cpf"],
+  &[id*="CPF"] {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='rgba(23, 23, 23, 0.7)' class='bi bi-person-vcard-fill' viewBox='0 0 20 20' transform='translate(0, 2)'%3E%3Cpath d='M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm9 1.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 0-1h-4a.5.5 0 0 0-.5.5M9 8a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 0-1h-4A.5.5 0 0 0 9 8m1 2.5a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 0-1h-3a.5.5 0 0 0-.5.5m-1 2C9 10.567 7.21 9 5 9c-2.086 0-3.8 1.398-3.984 3.181A1 1 0 0 0 2 13h6.96q.04-.245.04-.5M7 6a2 2 0 1 0-4 0 2 2 0 0 0 4 0'%3E%3C/path%3E%3C/svg%3E");
+    @include bgFit;
+  }
+  &[type="date"] {
+    &:required:invalid {
+      @extend %empPhDate;
+    }
+    &.form-control.dfPhDate {
+      @extend %empPhDate;
+    }
+  }
+  &[type="email"] {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='rgba(23, 23, 23, 0.7)' class='bi bi-envelope-at-fill' viewBox='0 0 16 24'%3E%3Cg transform='translate(0, 5)'%3E%3Cpath d='M2 2A2 2 0 0 0 .05 3.555L8 8.414l7.95-4.859A2 2 0 0 0 14 2zm-2 9.8V4.698l5.803 3.546zm6.761-2.97-6.57 4.026A2 2 0 0 0 2 14h6.256A4.5 4.5 0 0 1 8 12.5a4.49 4.49 0 0 1 1.606-3.446l-.367-.225L8 9.586zM16 9.671V4.697l-5.803 3.546.338.208A4.5 4.5 0 0 1 12.5 8c1.414 0 2.675.652 3.5 1.671'%3E%3C/path%3E%3Cpath d='M15.834 12.244c0 1.168-.577 2.025-1.587 2.025-.503 0-1.002-.228-1.12-.648h-.043c-.118.416-.543.643-1.015.643-.77 0-1.259-.542-1.259-1.434v-.529c0-.844.481-1.4 1.26-1.4.585 0 .87.333.953.63h.03v-.568h.905v2.19c0 .272.18.42.411.42.315 0 .639-.415.639-1.39v-.118c0-1.277-.95-2.326-2.484-2.326h-.04c-1.582 0-2.64 1.067-2.64 2.724v.157c0 1.867 1.237 2.654 2.57 2.654h.045c.507 0 .935-.07 1.18-.18v.731c-.219.1-.643.175-1.237.175h-.044C10.438 16 9 14.82 9 12.646v-.214C9 10.36 10.421 9 12.485 9h.035c2.12 0 3.314 1.43 3.314 3.034zm-4.04.21v.227c0 .586.227.8.581.8.31 0 .564-.17.564-.743v-.367c0-.516-.275-.708-.572-.708-.346 0-.573.245-.573.791'%3E%3C/path%3E%3C/g%3E%3C/svg%3E");
+    @include bgFit;
+  }
+  &[type="file"] {
+    &#inpAstConfirmId {
+      margin-bottom: 0.6rem;
+    }
+  }
+  &[id*="munId"] {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 24' fill='rgba(23, 23, 23, 0.7)'%3E%3Cg transform='translate(0, 5)'%3E%3Cpath d='M7.207 1a1 1 0 0 0-1.414 0L.146 6.646a.5.5 0 0 0 .708.708L1 7.207V12.5A1.5 1.5 0 0 0 2.5 14h.55a2.5 2.5 0 0 1-.05-.5V9.415a1.5 1.5 0 0 1-.56-2.475l5.353-5.354z'/%3E%3Cpath d='M8.793 2a1 1 0 0 1 1.414 0L12 3.793V2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v3.293l1.854 1.853a.5.5 0 0 1-.708.708L15 8.207V13.5a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 4 13.5V8.207l-.146.147a.5.5 0 1 1-.708-.708z'/%3E%3C/g%3E%3C/svg%3E");
+    @include bgFit;
+  }
+  &[type="search"] {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='rgba(23, 23, 23, 0.7)' class='bi bi-search' viewBox='0 0 16 24'%3E%3Cg transform='translate(0, 5)'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0'/%3E%3C/g%3E%3C/svg%3E");
+    @include bgFit;
+  }
+  &[type="tel"],
+  &[id*="DDD"],
+  &[id*="ddd"],
+  &[id*="AreaCode"],
+  &[id*="CountryCode"] {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='rgba(23, 23, 23, 0.7)' class='bi bi-telephone' viewBox='0 0 16 24'%3E%3Cg transform='translate(0, 5)'%3E%3Cpath d='M3.654 1.328a.678.678 0 0 0-1.015-.063L1.605 2.3c-.483.484-.661 1.169-.45 1.77a17.6 17.6 0 0 0 4.168 6.608 17.6 17.6 0 0 0 6.608 4.168c.601.211 1.286.033 1.77-.45l1.034-1.034a.678.678 0 0 0-.063-1.015l-2.307-1.794a.68.68 0 0 0-.58-.122l-2.19.547a1.75 1.75 0 0 1-1.657-.459L5.482 8.062a1.75 1.75 0 0 1-.46-1.657l.548-2.19a.68.68 0 0 0-.122-.58z'/%3E%3C/g%3E%3C/svg%3E");
+    @include bgFit;
+  }
   &:checked {
     color: #077007e7;
+  }
+  &:focus {
+    border: #67b7a0a8 ridge 2px !important;
+    box-shadow: 3px 2px 1px 1px #bdbcbc49 !important;
+  }
+  &::placeholder {
+    color:rgb(151, 145, 145) !important;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 80%;
   }
 }
 select {
@@ -134,6 +208,7 @@ textarea:not([id^="textAdd"]) {
 }
 blockquote {
   white-space: break-spaces;
+  hyphens: auto;
   span {
     &:first-of-type {
       font-weight: 700;
@@ -158,8 +233,7 @@ button {
 canvas {
   touch-action: none;
   &#inpAstConfirmId {
-    min-width: 55vw;
-    max-width: 90vw;
+    @include minMaxWD(55vw, 90vw);
     display: block;
     border: 0.2rem solid #eeee;
     box-shadow: var(--bslikesd);
@@ -364,7 +438,7 @@ section {
 }
 span {
   &.form-switch {
-    padding-left: 3.2rem;
+    padding-left: 3.5rem;
   }
 }
 span,
@@ -426,6 +500,12 @@ legend,
 .labConfirm:not(label[for="confirmId"]):not(.labAst),
 [id*="divConfirm"]:not(#divConfirm) {
   display: flex;
+}
+.activatedButton {
+  @include active-effect;
+  :active {
+    transform: translateX(0.5rem);
+  }
 }
 .divMain:not(#divConfirm):not(#divFreqOdont):not(#fsAnamGDiv3),
 .flexDiv:not(.fsAnamGDiv) {
@@ -490,11 +570,10 @@ legend,
 .bi {
   pointer-events: none;
   color: #000000;
+  @include minSizeB(1.75rem, 1.25rem);
   &:not([class$="lock"]):not([class*="exclamation"]) {
     height: 100%;
   }
-  min-width: 1.75rem;
-  min-height: 1.25rem;
   &.bi-question-circle-fill {
     fill: #1454cc;
   }
@@ -691,8 +770,7 @@ legend,
   align-items: baseline;
 }
 .flexAlItCt {
-  display: flex;
-  align-items: center;
+  @include flAlItCt;
 }
 .flexAlItE {
   display: flex;
@@ -767,22 +845,24 @@ legend,
   @include fCNoW;
 }
 .flexRNoWBetCt {
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: space-between;
-  align-items: center;
+  @include fRNoW;
+  @include SbC;
 }
 .flexSimple {
   display: flex;
   flex: 1;
 }
 .flexWR {
-  display: flex;
-  flex-flow: row wrap;
+@include fRW;
 }
 .flexWC {
-  display: flex;
-  flex-flow: column wrap;
+@include fCW;
+}
+.flipped {
+  transform: rotateY(-180deg) !important;
+}
+.noFlipped {
+  transform: rotateY(0) !important;
 }
 .flScape90 {
   flex-basis: 90%;
@@ -826,8 +906,7 @@ legend,
   align-items: end;
 }
 .gridJICt {
-  display: grid;
-  justify-items: center;
+@include gridJC;
 }
 .gridThreeCol {
   grid-template-columns: repeat(3, 1fr);
@@ -852,8 +931,7 @@ legend,
   background-clip: padding-box;
   border: var(--bs-border-width) solid var(--bs-border-color);
   border-radius: var(--bs-border-radius);
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
+  @include bdl0;
 }
 .halfSpanCheck {
   align-items: center;
@@ -1058,8 +1136,7 @@ legend,
   position: relative;
 }
 .profileIcon {
-  max-width: 1.5rem;
-  max-height: 1.5rem;
+  @include limStkW(1.5rem);
   cursor: pointer;
 }
 .arrow {
@@ -1247,8 +1324,7 @@ legend,
 }
 [class*="modal-content"] {
   &.wid50v {
-    width: 50vw;
-    min-width: 20rem;
+    @include minWD(50vw, 20rem);
   }
   &.defDp {
     display: revert;
@@ -1331,11 +1407,10 @@ legend,
   }
 }
 #bgDiv {
+  @include minSizeB(80vw, 98vh);
   margin: 0.5%;
   border: none;
   background-color: #ffffffe5;
-  min-width: 80vw;
-  min-height: 98vh;
   border-radius: 1vh;
 }
 #btnConform {
@@ -1387,22 +1462,18 @@ legend,
 }
 #confirmDatId {
   margin: 0;
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
+  @include bdr0;
 }
 #confirmDatBtn {
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
+  @include bdl0;
   transform: scale(1.002) translateY(0.5px);
 }
 #dateHeader,
 .resetBut {
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
+  @include bdt0;
 }
 #headerDatBtn {
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
+  @include bdb0;
 }
 #declrEnd {
   margin: 0;
@@ -1412,9 +1483,7 @@ legend,
   margin-bottom: 1rem;
 }
 #genBirthRelId {
-  width: 25vw;
-  min-width: 14.2rem;
-  max-width: 77vw;
+  @include minMaxWDB(25vw, 14.2rem, 77vw);
 }
 #genDiv {
   column-gap: 6%;
@@ -1430,8 +1499,7 @@ legend,
   }
 }
 #genId {
-  width: 103%;
-  max-width: 77vw;
+  @include maxWD(103%, 77vw);
   white-space: break-spaces;
 }
 #hForm {
@@ -1519,8 +1587,7 @@ legend,
     width: max-content;
   }
   #labConfirmLoc {
-    width: 25%;
-    min-width: 15.63rem;
+    @include minWD(25%, 15.63rem);
   }
 }
 @media screen and (max-width: 900px) {
@@ -1668,21 +1735,18 @@ legend,
     white-space: normal;
   }
   #confirmDatId {
-    border-bottom-right-radius: 0;
-    border-bottom-left-radius: 0;
+    @include bdb0;
     border-top-right-radius: var(--bs-border-radius);
   }
   #confirmDatBtn {
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
+    @include bdt0;
     border-bottom-left-radius: var(--bs-border-radius);
   }
   #dateHeader {
     max-width: calc(19.61rem + 2vw);
   }
   #genBirthRelId {
-    min-width: 19rem;
-    width: 100%
+    @include minWD(100%, 19rem);
   }
   #spanHFlex {
     flex-direction: column-reverse;
@@ -1706,8 +1770,7 @@ legend,
 @media screen and (max-width: 750px) {
   #fsAnamGDiv4 {
     input, select {
-      max-width: $baseMax750InpWidth !important;
-      min-width: $baseMax750InpWidth !important;
+      @include limStkW($baseMax750InpWidth !important);
     }
   }
   .btn {
@@ -1771,8 +1834,7 @@ legend,
     display: block;
   }
   .flexNoWC600Q {
-    display: flex;
-    flex-flow: column nowrap;
+    @include fCNoW;
   }
   .flexAlItCt600Q {
     display: flex;
@@ -1805,8 +1867,7 @@ legend,
 }
 @media screen and (max-width: 500px) {
   #sectConfirmBut {
-    display: flex;
-    flex-flow: column nowrap;
+    @include fCNoW;
     row-gap: 0.75rem;
     button {
       max-width: 100%;
@@ -1879,8 +1940,7 @@ legend,
     padding-top: 5rem;
   }
   .widQ460MinFull {
-    min-width: 100% !important;
-    max-width: 100% !important;
+    @include limStkW(100% !important);
   }
   .widQ460FullW {
     width: 86.5vw !important;
@@ -1892,14 +1952,13 @@ legend,
     min-width: 75vw;
   }
   #autocorrectDiv {
-    padding-left: 3.2rem;
+    padding-left: 3.5rem;
   }
   #bgDiv {
     padding-top: 0.5rem;
   }
   #dateHeader {
-    min-width: 17ch;
-    max-width: 70vw;
+    @include minMaxWD(17ch, 70vw);
   }
   #sectConfirmBut {
     min-width: 90vw;
@@ -1926,8 +1985,7 @@ legend,
     bottom: 0.8%;
     right: 5%;
     z-index: 1000;
-    max-width: 90vw;
-    max-height: 94vh;
+    @include maxSizeB(90vw, 94vh);
     ::backdrop {
       top: 0;
       left: 0;
@@ -1954,8 +2012,7 @@ legend,
     flex-direction: column;
   }
   .widQ460_120v {
-    width: 120vw;
-    max-width: 25rem;
+    @include maxWD(120vw, 25rem);
   }
 }
 @media screen and (max-width: 200px) {

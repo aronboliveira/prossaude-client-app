@@ -4,7 +4,7 @@ import { handleCondtReq } from "@/lib/global/handlers/gHandlers";
 export default function TelSec(): JSX.Element {
   return (
     <input
-      type='text'
+      type='tel'
       name='tel_sec'
       id='tel2Id'
       className='form-control inpIdentif noInvert inpTel'

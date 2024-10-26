@@ -12,11 +12,11 @@ export default function Email({
 }): JSX.Element {
   return (
     <input
-      type="text"
+      type='email'
       name={name}
       id={id}
-      className="form-control inpIdentif noInvert inpEmail"
-      autoComplete="email"
+      className='form-control inpIdentif noInvert inpEmail'
+      autoComplete='email'
       data-title={title}
       onInput={ev => {
         addEmailExtension(ev.currentTarget);

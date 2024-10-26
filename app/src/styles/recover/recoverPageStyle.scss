@@ -1,6 +1,7 @@
 /* Recover Page Style */
 @use "../abstracts/variables" as *;
 @use "../base/root" as *;
+@use "../abstracts/mixins" as *;
 .recoverBody {
   background-size: cover;
   padding-inline: 1rem;
@@ -40,12 +41,10 @@
       }
     }
     #recover-entries {
-      display: flex;
-      flex-flow: column nowrap;
+      @include fCNoW;
     }
     #recover-cta-sect {
-      display: flex;
-      flex-flow: row wrap;
+      @include fRW;
       gap: 1rem;
       button {
         width: 33%;
@@ -76,8 +75,7 @@
     z-index: -1;
     #recover-form {
       #recover-cta-sect {
-        display: flex;
-        flex-flow: column nowrap;
+        @include fCNoW;
         button {
           width: 97%;
         }

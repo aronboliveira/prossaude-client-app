@@ -2,7 +2,7 @@
 import { useRouter } from "next/router";
 import sMc from "@/styles/modules/mainContainer.module.scss";
 import Link from "next/link";
-import { useRef, useEffect, useCallback, useState } from "react";
+import { useRef, useEffect, useCallback } from "react";
 import { nlHtEl, nlA, nlDiv } from "@/lib/global/declarations/types";
 import { compProp, parseNotNaN } from "@/lib/global/gModel";
 export default function NavCard({ href }: { href: string }): JSX.Element {
@@ -170,7 +170,6 @@ export default function NavCard({ href }: { href: string }): JSX.Element {
     addRef = useRef<nlDiv>(null),
     backRef = useRef<nlDiv>(null),
     turned = useRef<boolean>(false),
-    [isFlipped, setIsFlipped] = useState<boolean>(false),
     handleResize = useCallback((): void => {
       if (!(r.current instanceof HTMLElement)) return;
       const cardHt = parseNotNaN(compProp(r.current, "height")),
@@ -193,7 +192,7 @@ export default function NavCard({ href }: { href: string }): JSX.Element {
         const cStyle = getComputedStyle(descRef.current);
         if (cStyle.position !== "relative" && cStyle.float === "none") return;
         descRef.current.style.left = `${cardWd * 0.3}px`;
-        descRef.current.style.top = `-${cardHt * 0.165}px`;
+        descRef.current.style.top = href === "/od" ? `-${cardHt * 0.12}px` : `-${cardHt * 0.165}px`;
       } catch (e) {
         console.error(`Error executing effect for navCard:\n${(e as Error).message}`);
       }
@@ -266,7 +265,7 @@ export default function NavCard({ href }: { href: string }): JSX.Element {
       }
     }, [r, descRef]);
   useEffect(() => {
-    const imgs = Array.from(document.querySelectorAll(".cardImg")),
+    const imgs = Array.from(document.images),
       measures: Array<{
         width: number;
         height: number;
@@ -301,28 +300,6 @@ export default function NavCard({ href }: { href: string }): JSX.Element {
     addEventListener("resize", handleResize);
     return (): void => removeEventListener("resize", handleResize);
   }, [handleResize]);
-  useEffect(() => {
-    try {
-      if (!innerRef.current || !backRef.current) return;
-      if (innerRef.current.dataset.touch !== "true") return;
-      if (isFlipped) innerRef.current.style.transform = `rotateY(-180deg)`;
-      setTimeout(() => {
-        if (innerRef.current) innerRef.current.style.transform = `rotateY(0)`;
-      }, 2000);
-    } catch (e) {
-      console.error(`Error executing effect for flipping:\n${(e as Error).message}`);
-    }
-  }, [isFlipped, innerRef]);
-  useEffect(() => {
-    setInterval(() => {
-      if (innerRef.current && innerRef.current.dataset.touch === "true")
-        innerRef.current.style.transform = `rotateY(-180deg)`;
-    }, 5000);
-    setInterval(() => {
-      if (innerRef.current && innerRef.current.dataset.touch === "true")
-        innerRef.current.style.transform = `rotateY(0)`;
-    }, 5000);
-  }, [innerRef]);
   return (
     <div
       id={`${href.replaceAll("/", "")}Card`}
@@ -334,13 +311,20 @@ export default function NavCard({ href }: { href: string }): JSX.Element {
         className={sMc.cardInner}
         ref={innerRef}
         onMouseEnter={ev => {
-          ev.currentTarget.dataset.touch = "false";
+          const t = ev.currentTarget;
+          if (t.classList.contains("flipped")) t.classList.remove("flipped");
+          if (t.classList.contains("noFlipped")) t.classList.remove("noFlipped");
+          t.dataset.touch = "false";
+          t.style.transform = "";
           hideDesc();
         }}
         onTouchStart={ev => {
           hideDesc();
           ev.currentTarget.dataset.touch = "true";
-          setIsFlipped(true);
+          ev.stopPropagation();
+          if (!innerRef.current) return;
+          innerRef.current.classList.add("flipped");
+          innerRef.current.classList.remove("noFlipped");
         }}>
         <figure
           className={sMc.cardFront}
@@ -385,7 +369,15 @@ export default function NavCard({ href }: { href: string }): JSX.Element {
             {add}
           </div>
         </figure>
-        <div ref={backRef} className={sMc.cardBack} onTouchStart={() => setIsFlipped(false)}>
+        <div
+          ref={backRef}
+          className={sMc.cardBack}
+          onTouchStart={ev => {
+            ev.stopPropagation();
+            if (!innerRef.current) return;
+            innerRef.current.classList.remove("flipped");
+            innerRef.current.classList.add("noFlipped");
+          }}>
           {back}
         </div>
       </div>

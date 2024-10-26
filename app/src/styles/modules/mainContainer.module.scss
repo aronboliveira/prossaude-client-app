@@ -1,26 +1,26 @@
 @use "../base/animations" as *;
+@use "../abstracts/mixins" as *;
 .addTextBack {
-  display: flex;
-  flex-flow: column nowrap;
-  align-items: center;
+  @include flex-center-column;
   gap: 2rem;
   color: #000;
   font-weight: 800;
 }
 .btnBack {
-  transition: transform 0.5s ease-in-out;
+  @include tf0_5;
   height: 5rem;
   width: 15rem;
   background: linear-gradient(90deg, rgba(238, 158, 10, 0.593), rgb(238, 176, 60));
   &:active {
     transform: translateY(0.2rem);
   }
+  @include active-effect;
   &:hover {
     transform: translateY(-0.2rem) scale(1.2);
   }
 }
 .mainContainer {
-  display: flex;
+  @include flex-center-column;
   flex-flow: column wrap;
   align-items: center;
   justify-content: space-between;
@@ -30,15 +30,13 @@
   overflow: auto;
 }
 .cardsSect {
+  @include gridJC;
   flex: 1;
-  display: grid;
-  justify-items: center;
   gap: 2rem;
-  grid-template-columns: repeat(2, minmax(25vw, 1fr));
-  padding: 1rem;
-  width: 100%;
+  grid: auto-flow row / repeat(2, minmax(25vw, 1fr));
   grid-auto-rows: minmax(200px, auto);
-  grid-auto-flow: row;
+  width: 100%;
+  padding: 1rem;
   > *:nth-last-child(1) {
     &:nth-child(odd) {
       grid-column: span 2;
@@ -51,40 +49,34 @@
   }
 }
 .card {
-  perspective: 62.5rem;
-  width: 88%;
-  max-width: 88vw;
+  @include minMaxWDB(88%, 19rem, 88vw);
+  perspective: 160rem;
   height: 25rem;
-  min-width: 19rem;
-  overflow: hidden;
   &Front,
   &Back {
+    @include flAlItCt;
     position: absolute;
     width: 100%;
     height: 100%;
     backface-visibility: hidden;
-    display: flex;
-    align-items: center;
     justify-content: center;
     border-radius: 0.5rem;
   }
   &Front {
     background: linear-gradient(90deg, rgba(232, 238, 234, 0.725), rgba(198, 230, 209, 0.851));
     cursor: alias;
-    display: flex;
-    flex-flow: column nowrap;
+    @include fCNoW;
     justify-content: space-between;
   }
   &FrontContent {
-    display: flex;
+    @include flAlItCt;
     flex-direction: column;
-    align-items: center;
     padding: 1rem;
     text-align: center;
   }
   &Back {
     background: radial-gradient(circle at 120% center, rgba(80, 157, 80, 0.516), rgb(33, 109, 135));
-    transition: transform ease-in-out 0.5s;
+    @include tf0_5;
     transition-delay: 250ms;
     transform: rotateY(180deg);
     padding: 10%;
@@ -95,12 +87,11 @@
     width: 100%;
     height: 100%;
     transform-style: preserve-3d;
-    transition: transform 0.8s;
+    @include tf(0.8s, ease-in-out);
     box-shadow: 6px 3px 10px #78787857;
     border-radius: 1rem;
-    //TODO ANIMAÇÃO DE TOUCH DRAG
     &:hover {
-      transition: transform ease-in-out 1s;
+      @include tf1;
       transition-delay: 750ms;
       transform: rotateY(-180deg);
     }
@@ -118,13 +109,17 @@
     padding: 0.3rem 0.5rem;
     border-radius: 0.5rem;
     transition: opacity 1s ease-in-out;
+    @media (max-width: 325px) {
+      overflow: hidden;
+      left: 0 !important;
+      top: -2.5rem !important;
+    }
   }
   &Name {
     text-align: right;
   }
   &AddTextFront {
-    display: flex;
-    flex-flow: column nowrap;
+    @include fCNoW;
     position: relative;
     width: 70%;
     font-size: 0.8rem;
@@ -139,8 +134,7 @@
     }
   }
   &addTextBack {
-    display: flex;
-    flex-flow: column nowrap;
+    @include fCNoW;
     height: 100%;
     width: 70%;
     font-size: 1rem;
@@ -153,20 +147,23 @@
       margin-block: 0.8rem;
     }
   }
+  @media (max-width: 325px) {
+    overflow: hidden;
+  }
 }
 .cardImg {
   border-radius: 1rem;
   margin-bottom: 12%;
+  position: relative;
   &:hover {
-    transition: transform ease-in-out 1s;
+    @include tf1;
     transition-delay: 250ms;
     transform: rotateZ(1turn);
   }
+  @include active-effect;
 }
 .cardLink {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  @include flexCenter;
   width: 100%;
   padding-inline: 7.5%;
   height: 72.5%;
@@ -192,5 +189,6 @@
       background-color: #0056b3;
       transform: translateY(-0.1rem);
     }
+    @include active-effect;
   }
 }

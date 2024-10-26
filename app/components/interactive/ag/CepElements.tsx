@@ -24,15 +24,10 @@ export default function CepElements(): JSX.Element {
         const cepBtn = btnRef.current;
         if (!(cepBtn instanceof HTMLButtonElement || (cepBtn instanceof HTMLInputElement && cepBtn.type === "button")))
           throw elementNotFound(cepBtn, `Validation of Button for CEP`, extLine(new Error()));
-        let width: looseNum = `${
-          parseNotNaN(compProp(cepInp, "width")) +
-          parseNotNaN(compProp(cepInp, "paddingLeft")) +
-          parseNotNaN(compProp(cepInp, "paddingRight"))
-        }`;
+        let width: looseNum = `${parseNotNaN(compProp(cepInp, "width"))}`;
         width = parseNotNaN(width);
         if (!Number.isFinite(width) && width <= 0) return;
         width = width.toFixed(4);
-        cepBtn.style.width = `${width}px`;
         cepBtn.style.maxWidth = `${width}px`;
       } catch (e) {
         console.error(`Error executing equalizeCepElements:\n${(e as Error).message}`);

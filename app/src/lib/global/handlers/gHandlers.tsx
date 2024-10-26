@@ -1,6 +1,6 @@
 import { FormEvent, MutableRefObject } from "react";
 import { addCanvasListeners } from "../gController";
-import { autoCapitalizeInputs, parseNotNaN, regularToSnake } from "../gModel";
+import { autoCapitalizeInputs, compProp, limitedError, parseNotNaN, regularToSnake } from "../gModel";
 import { fadeElement, isClickOutside } from "../gStyleScript";
 //nesse file estão presentes principalmente as funções de manipulação dinâmica de texto e layout
 import type {
@@ -13,6 +13,7 @@ import type {
   formCases,
   queryableNode,
   vRoot,
+  entryEl,
 } from "../declarations/types";
 import {
   extLine,
@@ -1297,6 +1298,139 @@ export async function submitForm(form: nlFm, ep: formCases): Promise<void> {
     console.error(`Error executing submitForm:\n${(e as Error).message}`);
   }
 }
+const validities: Map<string, { valid: boolean }> = new Map(),
+  timers: Map<string, NodeJS.Timeout> = new Map();
+export function indicateValidities(el: HTMLInputElement, valid: boolean): void {
+  try {
+    if (!(el instanceof HTMLInputElement)) throw new Error(`Invalid input instance`);
+    if (
+      (el.type !== "text" &&
+        el.type !== "url" &&
+        el.type !== "tel" &&
+        el.type !== "search" &&
+        el.type !== "password" &&
+        el.type !== "email" &&
+        el.type !== "number" &&
+        el.type !== "date" &&
+        el.type !== "month") ||
+      (el.id === "" && el.name === "") ||
+      !el.parentElement ||
+      el.parentElement.style.position === "absolute"
+    )
+      return;
+    const bgImg = getComputedStyle(el).backgroundImage;
+    const iconized =
+      el.type === "url" ||
+      el.type === "search" ||
+      el.type === "tel" ||
+      el.type === "email" ||
+      el.type === "number" ||
+      el.type === "date" ||
+      el.type === "month" ||
+      bgImg.includes("image/svg+xml")
+        ? true
+        : false;
+    if (document.body.dataset.indicating !== "true") {
+      const removeIcons = (): void => document.querySelectorAll(".validationIcon").forEach(icon => icon.remove());
+      for (const ev of ["resize", "scroll"]) addEventListener(ev, removeIcons);
+      document.body.dataset.indicating = "true";
+    }
+    const idf = el.id || el.name,
+      previous = validities.get(idf),
+      prevIcon = el.parentElement.querySelector(".validationIcon");
+    if (prevIcon) prevIcon.remove();
+    if (!previous)
+      validities.set(idf, {
+        valid,
+      });
+    const curr = validities.get(idf);
+    if (!curr) return;
+    const icon = document.createElement("span"),
+      rect = el.getBoundingClientRect(),
+      transform = `translateY(${parseNotNaN(compProp(el, "height")) * 0.125}px)`;
+    let iconW =
+      ((): number => {
+        try {
+          const m = bgImg.match(/viewBox='\.*'/g);
+          if (!m) return 0;
+          const measures = m[0].split(" ");
+          if (measures.length < 4) return 0;
+          return parseNotNaN(m[3].trim());
+        } catch (e) {
+          console.error(`Error defining Icon Width:\n${(e as Error).message}`);
+          return 0;
+        }
+      })() || 16;
+    if (iconized) {
+    }
+    Object.assign(icon.style, {
+      position: "absolute",
+      top: `${scrollY * 0.99 + rect.top * 0.985}px`,
+      left: `${
+        scrollX +
+        rect.right * 0.935 -
+        parseNotNaN(compProp(el, "borderLeftWidth")) -
+        parseNotNaN(compProp(el, "paddingLeft")) -
+        (iconized ? iconW : 0)
+      }px`,
+      transition: "opacity 0.3s ease-in-out, transform 0.5s ease-in-out",
+      transform,
+      margin: "0",
+      padding: "0",
+    });
+    icon.classList.add("validationIcon");
+    if (valid) {
+      icon.style.transform = `scale(1.2) rotateZ(0.03turn) translateY ${transform}`;
+      setTimeout(() => {
+        if (icon instanceof HTMLElement && icon.isConnected)
+          icon.style.transform = `scale(1.2) rotateZ(0) ${transform}`;
+      }, 200);
+      setTimeout(() => {
+        if (icon instanceof HTMLElement && icon.isConnected) icon.style.transform = `scale(1) rotateZ(0) ${transform}`;
+      }, 1000);
+    }
+    valid
+      ? (icon.innerHTML = `
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#54b457ad" class="bi bi-check" viewBox="0 0 16 16">
+        <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z"/>
+      </svg>`)
+      : (icon.innerHTML = `
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#e5b800" class="bi bi-exclamation" viewBox="0 0 16 16">
+        <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.553.553 0 0 1-1.1 0z"/>
+      </svg>`);
+    el.after(icon);
+    const inputRect = el.getBoundingClientRect();
+    icon.style.top = `${
+      inputRect.top +
+      inputRect.height * 0.5 -
+      icon.getBoundingClientRect().height * 0.5 +
+      scrollY -
+      parseNotNaN(compProp(el, "paddingBottom")) -
+      parseNotNaN(compProp(el, "borderBottomWidth"))
+    }px`;
+    icon.style.left = `${
+      inputRect.left -
+      inputRect.width * 0.9 +
+      icon.getBoundingClientRect().width * 0.9 -
+      scrollX +
+      parseNotNaN(compProp(el, "paddingLeft")) +
+      parseNotNaN(compProp(el, "borderLeftWidth"))
+    }`;
+    if (timers.get(idf)) clearTimeout(idf);
+    timers.set(
+      idf,
+      setTimeout(() => {
+        const icon = el?.parentElement?.querySelector(".validationIcon");
+        if (icon && icon.isConnected) icon.remove();
+      }, 10000),
+    );
+  } catch (e) {
+    limitedError(
+      `Error executing ${indicateValidities.prototype.constructor.name}:\n${(e as Error).message}`,
+      indicateValidities.prototype.constructor.name,
+    );
+  }
+}
 export function handleCondtReq(
   el: targEl,
   options: {
@@ -1321,7 +1455,7 @@ export function handleCondtReq(
       )
     )
       throw inputNotFound(el, `${el?.id || el?.className || el?.tagName}`, extLine(new Error()));
-    if (el.value.length < 2) return;
+    if (!el.willValidate || el.value.length < 2) return;
     if (!(options.pattern || options.min || options.max || options.maxNum || options.minNum))
       throw new Error(`No pattern was given to handleCondtReq`);
     if (
@@ -1388,7 +1522,7 @@ export function handleCondtReq(
   }
 }
 export const iniFontColors: { [k: string]: string } = {};
-export function handleEventReq(entry: textEl | Event, alertColor: string = "#e13010"): void {
+export function handleEventReq(entry: textEl | Event, alertColor: string = "#ed615abd"): void {
   let isValid = true;
   if (entry instanceof Event) {
     if (!(entry.currentTarget instanceof HTMLInputElement || entry.currentTarget instanceof HTMLTextAreaElement))
@@ -1409,6 +1543,7 @@ export function handleEventReq(entry: textEl | Event, alertColor: string = "#e13
     )
   )
     return;
+  if (!entry.willValidate) return;
   if (!iniFontColors[entry.id || entry.name]) iniFontColors[entry.id || entry.name] = getComputedStyle(entry).color;
   if ((iniFontColors[entry.id || entry.name] = alertColor)) iniFontColors[entry.id || entry.name] = "rgb(33, 37, 41)";
   [
@@ -1461,18 +1596,14 @@ export function handleEventReq(entry: textEl | Event, alertColor: string = "#e13
       if (entryNumDateValue > currNumDate) isValid = false;
     }
   } else {
-    if (entry.classList.contains("minText") && entry.value.length < parseNotNaN(entry.dataset.reqlength || "3"))
-      isValid = false;
-    if (entry.classList.contains("maxText") && entry.value.length > parseNotNaN(entry.dataset.maxlength || "3"))
-      isValid = false;
-    if (entry.classList.contains("minNum") && parseNotNaN(entry.value) < parseNotNaN(entry.dataset.minnum || "3"))
-      isValid = false;
-    if (entry.classList.contains("maxNum") && parseNotNaN(entry.value) > parseNotNaN(entry.dataset.maxnum || "3"))
-      isValid = false;
     if (
-      entry.classList.contains("patternText") &&
-      entry.dataset.pattern &&
-      !new RegExp(entry.dataset.pattern, entry.dataset.flags || "").test(entry.value)
+      (entry.classList.contains("minText") && entry.value.length < parseNotNaN(entry.dataset.reqlength || "3")) ||
+      (entry.classList.contains("maxText") && entry.value.length > parseNotNaN(entry.dataset.maxlength || "3")) ||
+      (entry.classList.contains("minNum") && parseNotNaN(entry.value) < parseNotNaN(entry.dataset.minnum || "3")) ||
+      (entry.classList.contains("maxNum") && parseNotNaN(entry.value) > parseNotNaN(entry.dataset.maxnum || "3")) ||
+      (entry.classList.contains("patternText") &&
+        entry.dataset.pattern &&
+        !new RegExp(entry.dataset.pattern, entry.dataset.flags || "").test(entry.value))
     )
       isValid = false;
   }
@@ -1487,6 +1618,7 @@ export function handleEventReq(entry: textEl | Event, alertColor: string = "#e13
       entry.style.color = "rgb(33, 37, 41)";
     }, 10000);
   } else entry.style.color = "rgb(33, 37, 41)";
+  entry instanceof HTMLInputElement && indicateValidities(entry, isValid);
 }
 export function cleanStorageName(): void {
   if (!window) return;

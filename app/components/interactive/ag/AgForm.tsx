@@ -42,7 +42,7 @@ import OtherD from "./OtherD";
 import FamDiab from "./FamDiab";
 import FamDislip from "./FamDislip";
 import { useRef, useEffect } from "react";
-import { nlFm, nlInp, nlSel } from "@/lib/global/declarations/types";
+import { nlFm, nlInp, nlSel, nlSpan } from "@/lib/global/declarations/types";
 import useDataProvider from "@/lib/hooks/useDataProvider";
 import { agProps } from "@/vars";
 import { toast } from "react-hot-toast";
@@ -55,6 +55,9 @@ export default function AgForm(): JSX.Element {
     lnr = useRef<nlInp>(null),
     gr = useRef<nlSel>(null),
     gbr = useRef<nlSel>(null),
+    locSpan = useRef<nlSpan>(null),
+    street = useRef<nlInp>(null),
+    streetSpan = useRef<nlSpan>(null),
     toasted = useRef<boolean>(false);
   useEffect(() => {
     registerPersistInputs({
@@ -67,16 +70,42 @@ export default function AgForm(): JSX.Element {
   }, [f]);
   useEffect(() => {
     const handleResize = (): void => {
-      if (!(dnr.current instanceof HTMLElement && ar.current instanceof HTMLElement)) return;
-      dnr.current.style.width = getComputedStyle(ar.current).width;
-      dnr.current.style.maxWidth = getComputedStyle(ar.current).width;
-      handleResize();
+      (() => {
+        try {
+          if (!(dnr.current instanceof HTMLElement && ar.current instanceof HTMLElement)) return;
+          dnr.current.style.width = getComputedStyle(ar.current).width;
+          dnr.current.style.maxWidth = getComputedStyle(ar.current).width;
+        } catch (e) {
+          console.error(`Error executing handleResize for dnr :\n${(e as Error).message}`);
+        }
+      })();
+      (() => {
+        try {
+          locSpan.current ??= document.getElementById("locSpan");
+          street.current ??= document.getElementById("streetId") as nlInp;
+          console.log("Equaliing locspan...");
+          if (!(locSpan.current instanceof HTMLElement && street.current instanceof HTMLInputElement)) return;
+          locSpan.current.style.maxWidth = getComputedStyle(street.current).width;
+        } catch (e) {
+          console.error(`Error executing handleResize for locSpan:${(e as Error).message}`);
+        }
+      })();
+      (() => {
+        try {
+          streetSpan.current ??= document.getElementById("streetSpan");
+          street.current ??= document.getElementById("streetId") as nlInp;
+          console.log("equalizing streetspan...");
+          if (!(streetSpan.current instanceof HTMLElement && street.current instanceof HTMLInputElement)) return;
+          streetSpan.current.style.maxWidth = getComputedStyle(street.current).width;
+        } catch (e) {
+          console.error(`Error executing handleResize for streetSpan:\n${(e as Error).message}`);
+        }
+      })();
     };
-    if (!document.body.dataset.equalizing || document.body.dataset.equalizing !== "true") {
-      addEventListener("resize", handleResize);
-      document.body.dataset.equalizing = "true";
-    }
-    (): void => removeEventListener("resize", handleResize);
+    handleResize();
+    addEventListener("resize", handleResize);
+    document.body.dataset.equalizing = "true";
+    return (): void => removeEventListener("resize", handleResize);
   }, [dnr, ar]);
   useEffect(() => {
     const handleResize = (): void => {
@@ -119,8 +148,12 @@ export default function AgForm(): JSX.Element {
           <hr />
           <button
             style={{ height: "2.1rem", fontSize: "0.8rem" }}
-            className='btn btn-secondary'
-            onClick={() => toast.dismiss(t.id)}>
+            className='btn btn-secondary activatedButton'
+            onClick={() =>
+              setTimeout(() => {
+                toast.dismiss(t.id);
+              }, 500)
+            }>
             Fechar
           </button>
         </div>
@@ -302,7 +335,7 @@ export default function AgForm(): JSX.Element {
               <br role='presentation' />
             </span>
             <span role='group' className='fsAnamGSpan' id='fsAnamGSpan10'>
-              <label htmlFor='streetId' className='labelIdentif noInvert'>
+              <label htmlFor='cityId' className='labelIdentif noInvert'>
                 <span>Cidade:</span>
                 <City />
               </label>
@@ -344,7 +377,7 @@ export default function AgForm(): JSX.Element {
               <span role='textbox' style={{ marginLeft: "0.5rem" }}>
                 Número:
               </span>
-              <span role='group' className='flexDiv spanLoc fitSpaced mg__07t'>
+              <span role='group' id='streetSpan' ref={streetSpan} className='flexDiv spanLoc fitSpaced mg__07t'>
                 <StreetNum />
               </span>
             </span>
@@ -355,7 +388,7 @@ export default function AgForm(): JSX.Element {
               <span role='textbox' style={{ marginLeft: "0.5rem" }}>
                 Complemento:
               </span>
-              <span role='group' className='flexDiv spanLoc fitSpaced mg__07t'>
+              <span role='group' id='locSpan' ref={locSpan} className='flexDiv spanLoc fitSpaced mg__07t'>
                 <LocComp />
               </span>
             </span>
