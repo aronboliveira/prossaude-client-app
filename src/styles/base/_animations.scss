@@ -1,0 +1,223 @@
+@keyframes blurOut {
+  0% {
+    filter: blur(2px);
+  }
+  100% {
+    filter: blur(0);
+  }
+}
+@keyframes dropIn {
+  0% {
+    top: -45%;
+  }
+  50% {
+    top: 0%;
+  }
+  100% {
+    top: 5%;
+  }
+}
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes giveOpacity {
+  0% {
+    opacity: initial;
+  }
+  50% {
+    opacity: red;
+  }
+  100% {
+    opacity: initial;
+  }
+}
+@keyframes highlightBtn {
+  0% {
+    filter: contrast(100%);
+    filter: grayscale(20%);
+    filter: hue-rotate(0deg);
+  }
+  50% {
+    filter: contrast(160%);
+    filter: grayscale(0%);
+    filter: hue-rotate(20deg);
+  }
+  100% {
+    filter: contrast(100%);
+    filter: grayscale(20%);
+    filter: hue-rotate(0deg);
+  }
+}
+@keyframes highlightContrast {
+  0% {
+    filter: contrast(75%);
+  }
+  50% {
+    filter: contrast(100%);
+  }
+  100% {
+    filter: contrast(75%);
+  }
+}
+@keyframes moveBgCircle {
+  0% {
+    background: radial-gradient(circle at 120%, rgba(80, 157, 80, 0.516), rgb(33, 91, 135));
+  }
+  50% {
+    background: radial-gradient(circle at 0%, rgba(80, 157, 80, 0.516), rgb(33, 91, 135));
+  }
+  100% {
+    background: radial-gradient(circle at 120%, rgba(80, 157, 80, 0.516), rgb(33, 91, 135));
+  }
+}
+@keyframes slidePo {
+  0% {
+    height: 0;
+  }
+  100% {
+    height: 26.45rem;
+  }
+}
+@keyframes slideUserInfo {
+  0% {
+    height: 0;
+  }
+  100% {
+    height: 9.857rem;
+  }
+}
+@keyframes slideUserInfo {
+  0% {
+    width: 0;
+  }
+  100% {
+    width: 9.857rem;
+  }
+}
+@keyframes spin {
+  0% {
+    transform: rotate(0);
+  }
+  50% {
+    transform: rotate(360deg);
+  }
+  100% {
+    transform: rotate(0);
+  }
+}
+@keyframes pulse-nucleus {
+  0% {
+    fill: #48656e;
+  }
+  50% {
+    fill: #4f2727;
+  }
+  100% {
+    fill: #48656e;
+  }
+}
+@keyframes pulse-center-ellipsis {
+  0% {
+    stroke: #48656e;
+  }
+  50% {
+    stroke: #4f2727;
+  }
+  100% {
+    stroke: #48656e;
+  }
+}
+@keyframes pulse-left-ellipsis {
+  0% {
+    stroke: #20b0dc;
+  }
+  50% {
+    stroke: #815816;
+  }
+  100% {
+    stroke: #20b0dc;
+  }
+}
+@keyframes pulse-right-ellipsis {
+  0% {
+    stroke: #815816;
+  }
+  50% {
+    stroke: #20b0dc;
+  }
+  100% {
+    stroke: #815816;
+  }
+}
+@keyframes nucleus-shadow-animation {
+  0% {
+    filter: drop-shadow(0.3px 0.3px 0.3px rgba(124, 117, 112, 0.7))
+      drop-shadow(0.3px 0.3px 0.3px rgba(130, 87, 98, 0.4));
+  }
+  50% {
+    filter: drop-shadow(0.3px 0.3px 0.3px rgba(49, 145, 151, 0.7))
+      drop-shadow(0.3px 0.3px 0.3px rgba(255, 122, 24, 0.4));
+  }
+  100% {
+    filter: drop-shadow(0.3px 0.3px 0.3px rgba(124, 117, 112, 0.7))
+      drop-shadow(0.3px 0.3px 0.3px rgba(130, 87, 98, 0.4));
+  }
+}
+@keyframes left-ellipse-shadow-animation {
+  0% {
+    filter: drop-shadow(0.2px 0.2px 0.2px rgba(124, 117, 112, 0.34))
+      drop-shadow(0.2px 0.2px 0.2px rgba(101, 133, 182, 0.4));
+  }
+  50% {
+    filter: drop-shadow(0.2px 0.2px 0.2px rgba(49, 144, 151, 0.27))
+      drop-shadow(0.2px 0.2px 0.2px rgba(255, 122, 24, 0.4));
+  }
+  100% {
+    filter: drop-shadow(0.2px 0.2px 0.2px rgba(124, 117, 112, 0.183))
+      drop-shadow(0.2px 0.2px 0.2px rgba(101, 133, 182, 0.4));
+  }
+}
+@keyframes right-ellipse-shadow-animation {
+  0% {
+    filter: drop-shadow(0.2px 0.2px 0.2px rgba(124, 117, 112, 0.34))
+      drop-shadow(0.2px 0.2px 0.2px rgba(101, 133, 182, 0.4));
+  }
+  50% {
+    filter: drop-shadow(0.2px 0.2px 0.2px rgba(49, 144, 151, 0.27))
+      drop-shadow(0.2px 0.2px 0.2px rgba(255, 122, 24, 0.4));
+  }
+  100% {
+    filter: drop-shadow(0.2px 0.2px 0.2px rgba(124, 117, 112, 0.183))
+      drop-shadow(0.2px 0.2px 0.2px rgba(101, 133, 182, 0.4));
+  }
+}
+@keyframes center-ellipse-shadow-animation {
+  0% {
+    filter: drop-shadow(0.2px 0.2px 0.2px rgba(124, 117, 112, 0.34))
+      drop-shadow(0.2px 0.2px 0.2px rgba(101, 133, 182, 0.4));
+  }
+  50% {
+    filter: drop-shadow(0.2px 0.2px 0.2px rgba(124, 117, 112, 0.183))
+      drop-shadow(0.2px 0.2px 0.2px rgba(130, 87, 98, 0.4));
+  }
+  100% {
+    filter: drop-shadow(0.2px 0.2px 0.2px rgba(124, 117, 112, 0.34))
+      drop-shadow(0.2px 0.2px 0.2px rgba(101, 133, 182, 0.4));
+  }
+}
+@keyframes gradient-animation {
+  0% {
+    background: linear-gradient(45deg, #ff7a18, #af002d 71%, #319197);
+  }
+  50% {
+    background: linear-gradient(45deg, #319197, #ff7a18 71%, #af002d);
+  }
+  100% {
+    background: linear-gradient(45deg, #ff7a18, #af002d 71%, #319197);
+  }
+}

@@ -1,0 +1,20 @@
+import { CacheENProps } from "@/lib/global/declarations/interfaces";
+export const CacheEN: CacheENProps = {
+  ncthc: [],
+  tip: [],
+  fsptb: [],
+  fsptrs: [],
+  fspcols: [],
+  tsvis: [],
+  tmais: [],
+  dcis: [],
+  indis: [],
+  locksinds: [],
+  indisDoc: [],
+  dcisDoc: [],
+  his: [],
+  wis: [],
+  dctrs: [],
+  lists: {},
+  targs: {},
+};

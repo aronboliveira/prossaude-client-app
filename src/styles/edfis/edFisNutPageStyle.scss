@@ -1,0 +1,410 @@
+/* EN Page Style */
+@use "../abstracts/variables" as *;
+@use "../base/root" as *;
+@use "../abstracts/mixins" as *;
+.edfisNutBody {
+  *:not(table) {
+    scrollbar-width: thin;
+  }
+  button {
+    @include btn-secondary-styles;
+  }
+  fieldset {
+    &:not(#fsProgConsId) {
+      + hr,
+      > hr {
+        @include stkW(93vw);
+      }
+    }
+  }
+  input {
+    &[type="button"] {
+      @include btn-secondary-styles;
+    }
+    &[type="date"] {
+      &.form-control {
+        &.tabInpComorb {
+          @include stkW(100%);
+        }
+      }
+    }
+    &[type="radio"] {
+      &:not(.form-check-input) {
+        margin-right: $radioSpacing;
+        + label {
+          &:first-of-type {
+            margin-right: $radioSpacing;
+          }
+        }
+        &:not(.opProtUr) {
+          transform: scale(1.3) translateY(0.05rem);
+        }
+        opacity: 0.4;
+        &:checked {
+          opacity: 1;
+        }
+      }
+    }
+  }
+  label {
+    font-weight: 500;
+    &.form-control {
+      text-align: end;
+    }
+    &[for="inpDiur"] {
+      &.form-control {
+        box-shadow: none;
+        max-width: 100%;
+        justify-content: flex-start;
+      }
+      .inpUr {
+        @include stkW(81%);
+        + * {
+          @include stkW(22%);
+          text-align: center;
+        }
+      }
+      .msrProgCons {
+        max-width: 35vw;
+        background-color: rgba(235, 231, 231, 0.672);
+        @include bdl0;
+      }
+    }
+  }
+  table {
+    width: 100%;
+    caption {
+      caption-side: top;
+      font-weight: bold;
+      align-content: center;
+      vertical-align: middle;
+      flex-wrap: wrap;
+      white-space: normal;
+      width: 100%;
+      padding: 0;
+      margin-bottom: 0.5rem;
+      font-size: calc(1.275rem + 0.3vw);
+      line-height: inherit;
+      padding-inline-start: 2px;
+      padding-inline-end: 2px;
+    }
+    td {
+      text-align: center;
+      &:has(.tabInpProgSomaDCut) {
+        min-width: 15rem;
+      }
+      @media screen and (min-width: 901px) {
+        .tabCelIndPerc {
+          &:has(label[id*="labImc"]) {
+            .indMsr {
+              padding-right: 1.4rem;
+            }
+          }
+        }
+      }
+    }
+    &.tabProgCons {
+      td,
+      th,
+      tr,
+      tbody,
+      thead,
+      tfoot {
+        border-style: solid;
+      }
+    }
+    @media screen and (max-width: 900px) {
+      max-width: 90vw;
+    }
+  }
+  label.form-control,
+  span.form-control,
+  .biBtn:is(.countAtFis),
+  .form-control.tabInpProgIndPerc,
+  .divLock,
+  .legAtFis,
+  .lockTabInd,
+  .spanLock,
+  #fsComorbLeg {
+    display: flex;
+    &:not(#fsComorbLeg) {
+      align-items: center;
+    }
+  }
+  label.form-control,
+  span.form-control,
+  .form-control.tabInpProgIndPerc,
+  .divLock,
+  .lockTabInd,
+  .spanLock {
+    justify-content: space-between;
+  }
+  .divLock {
+    background-color: transparent;
+    padding-right: 2%;
+    padding-left: 2%;
+    svg {
+      line {
+        stroke: grey;
+      }
+      path {
+        &.svg-lock-hook,
+        &.svg-unlock-hook {
+          fill: grey;
+        }
+        &.svg-lock-body,
+        &.svg-unlock-body {
+          stroke: grey;
+          fill: url(#gradiente-lock);
+        }
+      }
+    }
+  }
+  .divAguaDia {
+    input {
+      &[type="text"],
+      &[type="number"] {
+        @include bgFit;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 20' fill='rgba(23, 23, 23, 0.7)'%3E%3Cg transform='translate(0, 2)'%3E%3Cpath fill-rule='evenodd' d='M7.21.8C7.69.295 8 0 8 0q.164.544.371 1.038c.812 1.946 2.073 3.35 3.197 4.6C12.878 7.096 14 8.345 14 10a6 6 0 0 1-12 0C2 6.668 5.58 2.517 7.21.8m.413 1.021A31 31 0 0 0 5.794 3.99c-.726.95-1.436 2.008-1.96 3.07C3.304 8.133 3 9.138 3 10c0 0 2.5 1.5 5 .5s5-.5 5-.5c0-1.201-.796-2.157-2.181-3.7l-.03-.032C9.75 5.11 8.5 3.72 7.623 1.82z'/%3E%3Cpath fill-rule='evenodd' d='M4.553 7.776c.82-1.641 1.717-2.753 2.093-3.13l.708.708c-.29.29-1.128 1.311-1.907 2.87z'/%3E%3C/g%3E%3C/svg%3E");
+      }
+    }
+  }
+  .divEvDia,
+  .divEvInterv {
+    input {
+      &[type="text"],
+      &[type="number"] {
+        @include bgFit;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 20' fill='rgba(23, 23, 23, 0.7)' transform='translate(0, 2)'%3E%3Cpath d='M.036 3.314a.5.5 0 0 1 .65-.278l1.757.703a1.5 1.5 0 0 0 1.114 0l1.014-.406a2.5 2.5 0 0 1 1.857 0l1.015.406a1.5 1.5 0 0 0 1.114 0l1.014-.406a2.5 2.5 0 0 1 1.857 0l1.015.406a1.5 1.5 0 0 0 1.114 0l1.757-.703a.5.5 0 1 1 .372.928l-1.758.703a2.5 2.5 0 0 1-1.857 0l-1.014-.406a1.5 1.5 0 0 0-1.114 0l-1.015.406a2.5 2.5 0 0 1-1.857 0l-1.014-.406a1.5 1.5 0 0 0-1.114 0l-1.015.406a2.5 2.5 0 0 1-1.857 0L.314 3.964a.5.5 0 0 1-.278-.65m0 3a.5.5 0 0 1 .65-.278l1.757.703a1.5 1.5 0 0 0 1.114 0l1.014-.406a2.5 2.5 0 0 1 1.857 0l1.015.406a1.5 1.5 0 0 0 1.114 0l1.014-.406a2.5 2.5 0 0 1 1.857 0l1.015.406a1.5 1.5 0 0 0 1.114 0l1.757-.703a.5.5 0 1 1 .372.928l-1.758.703a2.5 2.5 0 0 1-1.857 0l-1.014-.406a1.5 1.5 0 0 0-1.114 0l-1.015.406a2.5 2.5 0 0 1-1.857 0l-1.014-.406a1.5 1.5 0 0 0-1.114 0l-1.015.406a2.5 2.5 0 0 1-1.857 0L.314 6.964a.5.5 0 0 1-.278-.65m0 3a.5.5 0 0 1 .65-.278l1.757.703a1.5 1.5 0 0 0 1.114 0l1.014-.406a2.5 2.5 0 0 1 1.857 0l1.015.406a1.5 1.5 0 0 0 1.114 0l1.014-.406a2.5 2.5 0 0 1 1.857 0l1.015.406a1.5 1.5 0 0 0 1.114 0l1.757-.703a.5.5 0 1 1 .372.928l-1.758.703a2.5 2.5 0 0 1-1.857 0l-1.014-.406a1.5 1.5 0 0 0-1.114 0l-1.015.406a2.5 2.5 0 0 1-1.857 0l-1.014-.406a1.5 1.5 0 0 0-1.114 0l-1.015.406a2.5 2.5 0 0 1-1.857 0l-1.757-.703a.5.5 0 0 1-.278-.65m0 3a.5.5 0 0 1 .65-.278l1.757.703a1.5 1.5 0 0 0 1.114 0l1.014-.406a2.5 2.5 0 0 1 1.857 0l1.015.406a1.5 1.5 0 0 0 1.114 0l1.014-.406a2.5 2.5 0 0 1 1.857 0l1.015.406a1.5 1.5 0 0 0 1.114 0l1.757-.703a.5.5 0 1 1 .372.928l-1.758.703a2.5 2.5 0 0 1-1.857 0l-1.014-.406a1.5 1.5 0 0 0-1.114 0l-1.015.406a2.5 2.5 0 0 1-1.857 0l-1.014-.406a1.5 1.5 0 0 0-1.114 0l-1.015.406a2.5 2.5 0 0 1-1.857 0l-1.757-.703a.5.5 0 0 1-.278-.65'/%3E%3C/svg%3E");
+      }
+    }
+  }
+  .divRefDia,
+  .divRefCompDia {
+    input {
+      &[type="text"],
+      &[type="number"] {
+        @include bgFit;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 20' fill='rgba(23, 23, 23, 0.7)'%3E%3Cg transform='translate(0, 2)'%3E%3Cpath d='M8 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6'/%3E%3Cpath d='M13.997 5.17a5 5 0 0 0-8.101-4.09A5 5 0 0 0 1.28 9.342a5 5 0 0 0 8.336 5.109 3.5 3.5 0 0 0 5.201-4.065 3.001 3.001 0 0 0-.822-5.216zm-1-.034a1 1 0 0 0 .668.977 2.001 2.001 0 0 1 .547 3.478 1 1 0 0 0-.341 1.113 2.5 2.5 0 0 1-3.715 2.905 1 1 0 0 0-1.262.152 4 4 0 0 1-6.67-4.087 1 1 0 0 0-.2-1 4 4 0 0 1 3.693-6.61 1 1 0 0 0 .8-.2 4 4 0 0 1 6.48 3.273z'/%3E%3C/g%3E%3C/svg%3E");
+      }
+    }
+  }
+  .divUrDia,
+  .divUrDet,
+  .divUrInterv {
+    input {
+      &[type="text"],
+      &[type="number"] {
+        @include bgFit;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 20' fill='rgba(23, 23, 23, 0.7)'%3E%3Cg transform='translate(0, 3)'%3E%3Cpath d='M13.5 0a.5.5 0 0 0 0 1H15v2.75h-.5a.5.5 0 0 0 0 1h.5V7.5h-1.5a.5.5 0 0 0 0 1H15v2.75h-.5a.5.5 0 0 0 0 1h.5V15h-1.5a.5.5 0 0 0 0 1h2a.5.5 0 0 0 .5-.5V.5a.5.5 0 0 0-.5-.5zM7 1.5l.364-.343a.5.5 0 0 0-.728 0l-.002.002-.006.007-.022.023-.08.088a29 29 0 0 0-1.274 1.517c-.769.983-1.714 2.325-2.385 3.727C2.368 7.564 2 8.682 2 9.733 2 12.614 4.212 15 7 15s5-2.386 5-5.267c0-1.05-.368-2.169-.867-3.212-.671-1.402-1.616-2.744-2.385-3.727a29 29 0 0 0-1.354-1.605l-.022-.023-.006-.007-.002-.001zm0 0-.364-.343zm-.016.766L7 2.247l.016.019c.24.274.572.667.944 1.144.611.781 1.32 1.776 1.901 2.827H4.14c.58-1.051 1.29-2.046 1.9-2.827.373-.477.706-.87.945-1.144zM3 9.733c0-.755.244-1.612.638-2.496h6.724c.395.884.638 1.741.638 2.496C11 12.117 9.182 14 7 14s-4-1.883-4-4.267'/%3E%3C/g%3E%3C/svg%3E");
+      }
+    }
+  }
+  .form-control.tabInpProg,
+  .form-select.lockSelect,
+  #protUrLvl {
+    @include bdr0;
+  }
+  .inpRefDia,
+  .inpAgua,
+  .inpUrDia,
+  #inpElimUrCor,
+  #inpElimEvDiaMax {
+    min-width: $inpRotWidFix;
+  }
+  .consInp,
+  :where(.form-select.labelIdentif),
+  .inpAlimRot,
+  .inpIdentif {
+    margin-top: 1vh;
+  }
+  .fsAnamGSpan {
+    .labelIdentif {
+      max-width: 100%;
+    }
+  }
+  .flexDiv {
+    &.divRot {
+      + hr {
+        margin-block: 1.5rem;
+        margin-left: 0.5rem;
+        width: 93vw;
+      }
+    }
+  }
+  .form-control {
+    &.tabInpProg:not(.tabInpProgSumDCut) {
+      min-width: 10vw;
+    }
+    &.tabInpProgSumDCut {
+      min-width: 8ch;
+    }
+    &.tabInpProgIndPerc {
+      width: 88%;
+    }
+    &.tabLabProgCons {
+      min-width: 10rem;
+    }
+    &.tabLabProg,
+    &.tabLabProgCons,
+    &.labUr {
+      border: none;
+      border-color: transparent;
+      padding: 0;
+      &#labDiur {
+        box-shadow: 0 0 0 0 transparent;
+        width: 1rem;
+        background-color: transparent;
+      }
+    }
+  }
+  .legAtFis,
+  .tabAtFis,
+  .tabLegProgCons,
+  label[for="inpElimUrCor"] {
+    white-space: nowrap;
+  }
+  .tabLabRowDCut9 {
+    border-top-right-radius: 5vw;
+  }
+  .tabRowComorb {
+    width: 90vw;
+    .tabCelComorb {
+      &[id$="_1"] {
+        max-width: 1.5ch;
+        padding-right: 0;
+        + td {
+          padding-left: 1rem;
+          min-width: 60vw;
+        }
+      }
+      input {
+        &[type="date"] {
+          max-width: 21vw;
+        }
+      }
+    }
+    .tdNum {
+      vertical-align: middle;
+    }
+  }
+  .tabRowProgCons {
+    .tabCelProgCons {
+      &[id$="_1"] {
+        max-width: 15ch;
+      }
+    }
+  }
+  .tbodyProgCons {
+    border: 0.063rem #8080804d;
+  }
+  .lockTabInd {
+    @include flAlItCt;
+    @include goldenLock;
+    width: 100%;
+    overflow: hidden;
+  }
+  .spanLock {
+    @include goldenLock;
+  }
+  .switchDiv {
+    ~ hr {
+      width: 93vw;
+      margin-left: 0.5rem;
+    }
+  }
+  #divTabDobrCut,
+  #divTabMedAnt,
+  #divTabSVi,
+  #fsHabRotId,
+  div:has(#tabAtFisRot) {
+    ~ hr {
+      width: 93vw;
+      margin-left: 0.5rem;
+      opacity: 0.25;
+    }
+  }
+}
+@media screen and (min-width: 901px) {
+  #inpElimUrDiaMin,
+  #inpElimUrIntervaloMin,
+  #inpElimEvDiaMin,
+  #inpElimEvIntervaloMin {
+    @include maxWD(100%, 50vw);
+  }
+}
+@media screen and (max-width: 900px) {
+  .edfisNutBody {
+    label {
+      &[for="inpElimUrIntervaloMax"] {
+        padding-left: 1rem;
+        margin-left: 0.05rem;
+        transform: translateX(-5px);
+      }
+    }
+    tr {
+      max-width: 90vw;
+    }
+    .btn {
+      &.btn-secondary {
+        &:not(:has(svg)):not(.datBtn) {
+          margin-bottom: 0.05rem;
+          &.tabBtnSum {
+            height: 2.4rem;
+          }
+          &.tabBtnInd {
+            height: 2.43rem;
+          }
+        }
+      }
+    }
+    .form-control {
+      &#labDiur {
+        @include stkW(100%);
+      }
+    }
+    .form-control.tabInpProg,
+    .form-control.tabLabProgCons,
+    #bgDiv {
+      width: 100%;
+    }
+    .inpUrInterval {
+      max-width: unset;
+    }
+    .lockTabInd {
+      width: 115%;
+    }
+    .tabCelIndPerc {
+      &:has(.bi) {
+        > div {
+          padding-right: 0.45rem;
+        }
+      }
+      .tabBtnInd {
+        transform: scale(1.04) translateY(0.7px);
+      }
+    }
+    .tdInpComorb {
+      grid-row: span 1;
+      grid-column: span 2;
+    }
+    [id^="sumDCBtn"] {
+      transform: translateY(1.3px);
+    }
+  }
+}
+@media screen and (max-width: 460px) {
+  .edfisNutBody {
+    .inpAlimRot,
+    .inpRefDia,
+    .inpUrDia {
+      min-width: unset;
+    }
+    #divProgCons {
+      flex-flow: column nowrap;
+    }
+    #inpElimEvDiaMax {
+      min-width: unset;
+    }
+  }
+}

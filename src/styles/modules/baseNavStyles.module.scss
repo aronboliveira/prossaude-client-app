@@ -1,0 +1,81 @@
+@use "../abstracts/mixins" as *;
+.bgDiv {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: stretch;
+  min-height: 100vh;
+  background: linear-gradient(to right, rgb(78 95 84 / 64%), rgb(78 99 86 / 100%));
+  border-block: 1px ridge #87878773;
+  width: 100vw;
+  background-color: rgba(255, 255, 255, 0) !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+  padding-top: 0 !important;
+}
+.footer {
+  display: none;
+  height: 1vh;
+  width: 100vw;
+  border-block: 6px ridge #87878773;
+  background: linear-gradient(to right, rgba(104, 146, 131, 0.1), rgba(61, 134, 104, 0.15));
+  @media screen and (max-width: 1025px) {
+    display: none;
+  }
+}
+.header {
+  display: flex;
+  row-gap: 1vh;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  margin: 0;
+  font-weight: bold;
+  &.headerMainContainer {
+    @include SbC;
+    background: linear-gradient(to right, rgba(193, 214, 207, 0.446), rgba(125, 220, 180, 0.429));
+    border-block: 0.1rem ridge #87878773;
+    border-bottom: 0.2rem ridge #87878754;
+    padding-block: 1rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    @media screen and (min-width: 1025px) {
+      padding-left: 0.75rem;
+    }
+    @media screen and (max-width: 1025px) {
+      width: 100vw;
+      height: unset;
+      @if (flex-flow: column wrap) {
+        flex-flow: row wrap;
+      }
+    }
+    @media (max-width: 721px) {
+      height: 20%;
+    }
+    @media (max-width: 620px) {
+      align-items: center;
+    }
+    @media (max-width: 600px) {
+      justify-content: center;
+    }
+  }
+}
+.headerMainText {
+  color: #ece8e8e4;
+  font-size: 1.5rem;
+  font-weight: bolder;
+  margin-left: 0.2vw;
+  text-align: center;
+  + * {
+    max-width: 12rem;
+    margin-right: 0.2rem;
+  }
+  @media (max-width: 460px) {
+    margin-left: 0;
+    margin-right: 1rem;
+  }
+}
+.mainArticle {
+  @include fCNoW;
+  margin: auto;
+}

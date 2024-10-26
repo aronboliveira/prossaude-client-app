@@ -1,0 +1,13 @@
+.dicas {
+  text-align: start;
+  font-size: 1rem;
+}
+.tipsDlg {
+  hyphens: auto;
+  min-width: 34rem;
+  @media screen and (max-width: 650px) {
+    min-width: 80vw;
+    overflow: auto;
+    padding-inline: 1rem;
+  }
+}

@@ -1,0 +1,41 @@
+@use "../abstracts/variables" as *;
+@use "../base/root" as *;
+@use "../base/animations" as *;
+.react-nucleus,
+.react-center-ellipse,
+.react-left-ellipse,
+.react-right-ellipse {
+  position: relative;
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, #ff7a18, #af002d 71%, #319197);
+    z-index: -1;
+    opacity: 0.5;
+    border-radius: 50%;
+    animation: gradient-animation 3s ease-in-out infinite;
+  }
+}
+.react-spinner {
+  animation: cubic-bezier(0.075, 0.82, 0.165, 1) 3s infinite spin;
+}
+.react-nucleus {
+  animation: cubic-bezier(0.075, 0.82, 0.165, 1) 4s infinite pulse-nucleus,
+    nucleus-shadow-animation 4s cubic-bezier(0.075, 0.82, 0.165, 1) infinite;
+}
+.react-center-ellipse {
+  animation: cubic-bezier(0.075, 0.82, 0.165, 1) 3s infinite pulse-center-ellipsis,
+    center-ellipse-shadow-animation 3s cubic-bezier(0.075, 0.82, 0.165, 1) infinite;
+}
+.react-left-ellipse {
+  animation: cubic-bezier(0.075, 0.82, 0.165, 1) 3s infinite pulse-left-ellipsis,
+    left-ellipse-shadow-animation 3s cubic-bezier(0.075, 0.82, 0.165, 1) infinite;
+}
+.react-right-ellipse {
+  animation: cubic-bezier(0.075, 0.82, 0.165, 1) 3s infinite pulse-left-ellipsis,
+    right-ellipse-shadow-animation 3s cubic-bezier(0.075, 0.82, 0.165, 1) infinite;
+}

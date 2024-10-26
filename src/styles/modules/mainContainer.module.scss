@@ -1,0 +1,194 @@
+@use "../base/animations" as *;
+@use "../abstracts/mixins" as *;
+.addTextBack {
+  @include flex-center-column;
+  gap: 2rem;
+  color: #000;
+  font-weight: 800;
+}
+.btnBack {
+  @include tf0_5;
+  height: 5rem;
+  width: 15rem;
+  background: linear-gradient(90deg, rgba(238, 158, 10, 0.593), rgb(238, 176, 60));
+  &:active {
+    transform: translateY(0.2rem);
+  }
+  @include active-effect;
+  &:hover {
+    transform: translateY(-0.2rem) scale(1.2);
+  }
+}
+.mainContainer {
+  @include flex-center-column;
+  flex-flow: column wrap;
+  align-items: center;
+  justify-content: space-between;
+  height: calc(100% - 5rem);
+  max-width: 100%;
+  padding: 2%;
+  overflow: auto;
+}
+.cardsSect {
+  @include gridJC;
+  flex: 1;
+  gap: 2rem;
+  grid: auto-flow row / repeat(2, minmax(25vw, 1fr));
+  grid-auto-rows: minmax(200px, auto);
+  width: 100%;
+  padding: 1rem;
+  > *:nth-last-child(1) {
+    &:nth-child(odd) {
+      grid-column: span 2;
+      justify-self: center;
+    }
+  }
+  @media screen and (max-width: 650px) {
+    grid-template-columns: repeat(auto-fill, minmax(100vw, 1fr));
+    justify-items: left;
+  }
+}
+.card {
+  @include minMaxWDB(88%, 19rem, 88vw);
+  perspective: 160rem;
+  height: 25rem;
+  &Front,
+  &Back {
+    @include flAlItCt;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    justify-content: center;
+    border-radius: 0.5rem;
+  }
+  &Front {
+    background: linear-gradient(90deg, rgba(232, 238, 234, 0.725), rgba(198, 230, 209, 0.851));
+    cursor: alias;
+    @include fCNoW;
+    justify-content: space-between;
+  }
+  &FrontContent {
+    @include flAlItCt;
+    flex-direction: column;
+    padding: 1rem;
+    text-align: center;
+  }
+  &Back {
+    background: radial-gradient(circle at 120% center, rgba(80, 157, 80, 0.516), rgb(33, 109, 135));
+    @include tf0_5;
+    transition-delay: 250ms;
+    transform: rotateY(180deg);
+    padding: 10%;
+    text-align: center;
+  }
+  &Inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    @include tf(0.8s, ease-in-out);
+    box-shadow: 6px 3px 10px #78787857;
+    border-radius: 1rem;
+    &:hover {
+      @include tf1;
+      transition-delay: 750ms;
+      transform: rotateY(-180deg);
+    }
+  }
+  &Description {
+    margin-bottom: 1rem;
+    font-weight: 700;
+    font-size: 0.75rem;
+    width: fit-content;
+    white-space: break-spaces;
+    text-overflow: ellipsis;
+    position: relative;
+    left: 120%;
+    background: linear-gradient(90deg, rgb(89, 175, 125), rgba(113, 182, 138, 0.776));
+    padding: 0.3rem 0.5rem;
+    border-radius: 0.5rem;
+    transition: opacity 1s ease-in-out;
+    @media (max-width: 325px) {
+      overflow: hidden;
+      left: 0 !important;
+      top: -2.5rem !important;
+    }
+  }
+  &Name {
+    text-align: right;
+  }
+  &AddTextFront {
+    @include fCNoW;
+    position: relative;
+    width: 70%;
+    font-size: 0.8rem;
+    text-align: center;
+    color: #2b2b2bc7;
+    font-weight: 800;
+    box-decoration-break: clone;
+    hr {
+      filter: drop-shadow(1px 1px 1px #78787857);
+      border-color: #787878c8;
+      margin-block: 0.8rem;
+    }
+  }
+  &addTextBack {
+    @include fCNoW;
+    height: 100%;
+    width: 70%;
+    font-size: 1rem;
+    text-align: center;
+    color: #1d1b1bd8;
+    font-weight: 800;
+    hr {
+      filter: drop-shadow(1px 1px 1px #78787857);
+      border-color: #787878c8;
+      margin-block: 0.8rem;
+    }
+  }
+  @media (max-width: 325px) {
+    overflow: hidden;
+  }
+}
+.cardImg {
+  border-radius: 1rem;
+  margin-bottom: 12%;
+  position: relative;
+  &:hover {
+    @include tf1;
+    transition-delay: 250ms;
+    transform: rotateZ(1turn);
+  }
+  @include active-effect;
+}
+.cardLink {
+  @include flexCenter;
+  width: 100%;
+  padding-inline: 7.5%;
+  height: 72.5%;
+  background: radial-gradient(circle at 120% center, rgba(80, 157, 80, 0.516), rgb(33, 109, 135));
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+  background-blend-mode: screen;
+  clip-path: ellipse(110% 77% at 15% 21%);
+}
+.panelSect {
+  width: 100%;
+  padding: 2rem;
+  display: flex;
+  justify-content: center;
+  .panelBtn {
+    padding: 1rem 2rem;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 0.5rem;
+    transition: all 0.3s;
+    &:hover {
+      background-color: #0056b3;
+      transform: translateY(-0.1rem);
+    }
+    @include active-effect;
+  }
+}

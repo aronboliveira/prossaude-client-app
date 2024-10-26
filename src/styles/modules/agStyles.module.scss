@@ -1,0 +1,73 @@
+.ageInp {
+  @media screen and (min-width: 901px) {
+    transform: translateX(-1.5vw);
+    max-width: 25vw !important;
+  }
+}
+.fsAnamGDiv4 {
+  width: 57%;
+  display: flex;
+  justify-content: left;
+  .fsAnamGSpan11 {
+    margin-right: 0;
+  }
+  .labelIdentif {
+    min-width: 25vw;
+    @media (max-width: 900px) {
+      min-width: 85vw;
+    }
+  }
+  .birthInp {
+    max-width: 100%;
+    &[type="date"] {
+      max-width: 100%;
+    }
+  }
+}
+.fsAGSpanGrid2x2 {
+  grid-column: 2;
+  grid-row: 2;
+  @media screen and (min-width: 901px) {
+    width: 27.9vw !important;
+  }
+  @media screen and (max-width: 900px) {
+    order: 6;
+  }
+  &.fsAGSpanNBh {
+    @media screen and (min-width: 901px) {
+      width: 31vw !important;
+    }
+  }
+}
+.fsAnamGSpan12 {
+  @media screen and (max-width: 900px) {
+    order: 7;
+    margin-bottom: 0.3rem;
+  }
+}
+.fsAnamGSpan14 {
+  @media screen and (max-width: 900px) {
+    order: 9;
+    margin-top: 0.3rem;
+  }
+}
+.birthInpLab {
+  @media screen and (min-width: 901px) {
+    width: 31.85vw !important;
+  }
+}
+.birthInp {
+  @media screen and (min-width: 901px) {
+    width: 100% !important;
+  }
+}
+.inpEvac {
+  @media screen and (min-width: 901px) {
+    width: 25.75rem;
+  }
+}
+.cepIdLab {
+  &:has(button[disabled]) {
+    cursor: not-allowed;
+  }
+}
