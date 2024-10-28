@@ -49,7 +49,7 @@
     .inspSpanMain {
       display: grid;
       align-items: start;
-      grid-template-columns: 1.2rem 1.8rem 1.5rem 6ch;
+      grid-template: [checks] 1fr [obs] 3.5fr / [checkY] 1.2rem [labY] 1.8rem [checkN] 1.5rem [labN] 6ch;
       margin-left: 0.5rem;
       gap: 0.3rem;
       position: relative;
@@ -59,16 +59,20 @@
     }
     .inspSpanSub {
       display: grid;
+      grid-area: obs / checkY;
+      grid-template-rows: [btn] 0.5fr [ta] 0.5fr;
       transform: translateX(-6.5rem) translateY(0.4rem);
       textarea {
-        width: 26remrem;
-        height: 1rem;
-        grid-area: 2 / 2;
+        @include sz(26rem, 1rem);
+        grid-area: ta / 2;
         margin-bottom: 0.5rem;
         resize: vertical;
+        @media (max-width: 460px) {
+          width: 20rem;
+        }
       }
       button {
-        grid-area: 1 / 2;
+        grid-area: btn / 2;
       }
     }
     br {
@@ -203,21 +207,19 @@
     }
     &[open] {
       @include form-border;
+      @include sz(50vw !important, 110%);
       position: absolute;
       overflow: auto;
       resize: both;
       top: -20%;
       left: 1500%;
-      height: 110%;
-      width: 50vw !important;
       padding: 0.7rem 0.3rem;
     }
     .inspLITitle {
       @include fRW;
       @include SbC;
       .btn-close {
-        width: 0.75rem;
-        height: 0.75rem;
+        @include szEq(0.75rem);
       }
     }
   }
@@ -491,9 +493,6 @@
 @media screen and (max-width: 460px) {
   .odBody {
     .inspSpanSub {
-      textarea {
-        width: 20rem;
-      }
       button {
         width: 20rem !important;
       }

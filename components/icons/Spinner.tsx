@@ -23,7 +23,7 @@ export default function Spinner({
       addEventListener("resize", handleResize);
       (): void => removeEventListener("resize", handleResize);
     } catch (e) {
-      console.error(`Error executing useEffect for spinner:\n${(e as Error).message}`);
+      return;
     }
   }, []);
   return (

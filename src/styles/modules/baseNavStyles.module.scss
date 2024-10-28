@@ -5,7 +5,16 @@
   justify-content: center;
   align-items: stretch;
   min-height: 100vh;
-  background: linear-gradient(to right, rgb(78 95 84 / 64%), rgb(78 99 86 / 100%));
+  background: radial-gradient(
+    ellipse at center,
+    rgba(198, 230, 172, 0.6),
+    25%,
+    rgba(172, 211, 167, 0.8),
+    45%,
+    rgb(155, 209, 205),
+    65%,
+    rgb(90, 135, 125) 100%
+  );
   border-block: 1px ridge #87878773;
   width: 100vw;
   background-color: rgba(255, 255, 255, 0) !important;
@@ -14,9 +23,8 @@
   padding-top: 0 !important;
 }
 .footer {
+  @include sz(100vw, 1vh);
   display: none;
-  height: 1vh;
-  width: 100vw;
   border-block: 6px ridge #87878773;
   background: linear-gradient(to right, rgba(104, 146, 131, 0.1), rgba(61, 134, 104, 0.15));
   @media screen and (max-width: 1025px) {
@@ -33,18 +41,25 @@
   font-weight: bold;
   &.headerMainContainer {
     @include SbC;
-    background: linear-gradient(to right, rgba(193, 214, 207, 0.446), rgba(125, 220, 180, 0.429));
-    border-block: 0.1rem ridge #87878773;
-    border-bottom: 0.2rem ridge #87878754;
+    background: radial-gradient(
+      ellipse at left,
+      rgba(115, 159, 206, 0.6),
+      0%,
+      rgba(112, 152, 197, 0.6),
+      45%,
+      rgba(100, 140, 180, 0.7),
+      70%,
+      rgba(85, 125, 170, 0.7) 100%
+    );
+    border-block: 0.1rem ridge #536879d6;
+    border-top-width: 0.125rem;
     padding-block: 1rem;
-    padding-left: 1rem;
-    padding-right: 1rem;
+    padding-inline: 1rem;
     @media screen and (min-width: 1025px) {
       padding-left: 0.75rem;
     }
     @media screen and (max-width: 1025px) {
-      width: 100vw;
-      height: unset;
+      @include sz(100vw, unset);
       @if (flex-flow: column wrap) {
         flex-flow: row wrap;
       }

@@ -72,7 +72,7 @@ export default function OdPage(): JSX.Element {
       </div>
       <div role='group' className='pad1pc' id='bgDiv'>
         <header>
-          <div role='group' className='flexNoW flexDiv flexAlItT flexSimple flexQ900NoWC' id='hDiv'>
+          <fieldset role='group' className='flexNoW flexDiv flexAlItT flexSimple flexQ900NoWC' id='hDiv'>
             <div role='group' id='hTextDiv'>
               <div>
                 <h1 className='bolded flexJBt' id='hForm'>
@@ -85,7 +85,7 @@ export default function OdPage(): JSX.Element {
               <OdTipsBtnWrapper />
             </div>
             <HeaderDate />
-          </div>
+          </fieldset>
         </header>
         <main>
           <SwitchDiv />

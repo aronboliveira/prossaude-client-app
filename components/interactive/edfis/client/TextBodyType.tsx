@@ -1,6 +1,5 @@
 "use client";
 import { callbackTextBodyEl } from "@/lib/locals/edFisNutPage/edFisNutHandler";
-import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { useContext, useEffect, useRef } from "react";
 import { ENCtx } from "./ENForm";
 import { ENCtxProps, FspCtxProps } from "@/lib/global/declarations/interfaces";
@@ -42,14 +41,12 @@ export default function TextBodyType(): JSX.Element {
     try {
       if (!trusted.current) return;
       const genElement = gr?.current ?? document.getElementById("genId");
-      if (!(genElement instanceof HTMLInputElement || genElement instanceof HTMLSelectElement))
-        throw elementNotFound(genElement, `Gen Element`, extLine(new Error()));
+      if (!(genElement instanceof HTMLInputElement || genElement instanceof HTMLSelectElement)) return;
       const genFisAlin = gar?.current ?? document.getElementById("genFisAlinId");
-      if (!(genFisAlin instanceof HTMLInputElement || genFisAlin instanceof HTMLSelectElement))
-        throw elementNotFound(genFisAlin, `Gen Fis Alin Element`, extLine(new Error()));
+      if (!(genFisAlin instanceof HTMLInputElement || genFisAlin instanceof HTMLSelectElement)) return;
       callbackTextBodyEl({ gr, gar, gbr, prt, td, txbr });
     } catch (e) {
-      console.error(`Error executing effect for ${TextBodyType.prototype.constructor.name}:\n${(e as Error).message}`);
+      return;
     }
   }, [bodyType, onSetBodyType, trusted, gar, gbr, prt, td, txbr]);
   return (

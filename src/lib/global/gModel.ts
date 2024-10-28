@@ -1,15 +1,7 @@
+//nesse file estão presentes principalmente as funções relacionadas à exigência de modelo textual e de visualização
 import { cursorCheckTimer } from "./handlers/gHandlers";
 import { fadeElement } from "./gStyleScript";
 import type { entryEl, textEl, targStr, targEl, nlFm, nlEl } from "./declarations/types";
-//nesse file estão presentes principalmente as funções relacionadas à exigência de modelo textual e de visualização
-import {
-  extLine,
-  elementNotFound,
-  inputNotFound,
-  multipleElementsNotFound,
-  stringError,
-  typeError,
-} from "./handlers/errorHandler";
 import { Dispatch, SetStateAction } from "react";
 import { AlignType, BirthRelation, BodyType, CSSMeasure, TransitionLevel } from "./declarations/testVars";
 import { ERROR_LIMIT, errorLabels, person } from "@/vars";
@@ -38,7 +30,7 @@ export function numberLimit(inpEl: targEl): void {
       }
       if ((isAtivFis || isAlimRot || isDDD || isFreq) && inpEl.value?.length > 2) inpEl.value = inpEl.value.slice(0, 2);
     }
-  } else elementNotFound(inpEl, `inpEl id ${inpEl?.id || "UNDEFINED ID"} in numberLimit`, extLine(new Error()));
+  }
 }
 export function normalizeNegatives(tabInp: Element): string {
   let parsedInpValue = 0;
@@ -47,8 +39,7 @@ export function normalizeNegatives(tabInp: Element): string {
     if (Number.isNaN(parsedInpValue) || parsedInpValue < 0) {
       tabInp.value = "0";
     }
-  } else inputNotFound(tabInp, "tabInp", extLine(new Error()));
-
+  }
   return parsedInpValue.toString() ?? "";
 }
 export function parseNotNaN(iniVal: string, def: number = 0, context: string = "float", fixed: number = 4): number {
@@ -72,7 +63,6 @@ export function parseNotNaN(iniVal: string, def: number = 0, context: string = "
     }
     return returnVal || 0;
   } catch (e) {
-    console.error(`Error executing parseNotNaN:\n${(e as Error).message}`);
     return returnVal || 0;
   }
 }
@@ -81,7 +71,7 @@ export function formatCEP(CEPInp: targEl): string {
     CEPInp.value.replaceAll(/[^0-9]/g, "");
     if (CEPInp.value.length >= 5 && CEPInp.value.match(/[0-9]{5,}[^-][0-9]{1,3}/))
       CEPInp.value = `${CEPInp.value.slice(0, 5)}-${CEPInp.value.slice(5, 9)}`;
-  } else inputNotFound(CEPInp, "CEPInp in formatCEP()", extLine(new Error()));
+  }
   return (CEPInp as entryEl)?.value ?? "";
 }
 export function formatCPF(CPFInp: targEl): string {
@@ -109,7 +99,7 @@ export function formatCPF(CPFInp: targEl): string {
     }
     CPFInp.value.length > 14 &&
       (CPFInp.value = CPFInp.value.substring(0, 14)).replaceAll(/[-]{2,}/g, "-").replaceAll(/\.{2,}/g, ".");
-  } else inputNotFound(CPFInp, "CPFInp in formatCPF()", extLine(new Error()));
+  }
   return (CPFInp as entryEl)?.value ?? "";
 }
 export function formatTel(telInp: targEl, full: boolean = false): string {
@@ -151,7 +141,7 @@ export function formatTel(telInp: targEl, full: boolean = false): string {
         telInp.value = `${telInp.value.slice(0, 4)}-${telInp.value.slice(4)}`;
       return telInp.value;
     }
-  } else inputNotFound(telInp, "telInp", extLine(new Error()));
+  }
   return numOnly;
 }
 export function addEmailExtension(emailInp: targEl): string {
@@ -165,7 +155,7 @@ export function addEmailExtension(emailInp: targEl): string {
       emailInp.type !== "email" && emailInp.setSelectionRange(0, 0);
     }
     emailValue = emailInp.value;
-  } else inputNotFound(emailInp, `${emailInp?.id || "UNDEFINED ID EMAIL CONTAINER"}`, extLine(new Error()));
+  }
   return emailValue;
 }
 export function removeFirstClick(el: targEl): number {
@@ -175,7 +165,7 @@ export function removeFirstClick(el: targEl): number {
     setInterval(() => {
       cursorPosition = cursorCheckTimer() ?? 0;
     }, 3000);
-  } else elementNotFound(el, "argument for removeFirstClick()", extLine(new Error()));
+  }
   return cursorPosition ?? 0;
 }
 export function checkAutoCorrect(deactAutocorrectBtn: targEl): boolean {
@@ -202,7 +192,6 @@ export function switchAutocorrect(click: Event, deactAutocorrectBtn: targEl, isA
       (deactAutocorrectBtn.type === "checkbox" || deactAutocorrectBtn.type === "radio")
     )
       isAutocorrectOn = !isAutocorrectOn;
-    else elementNotFound(deactAutocorrectBtn, "arguments for switchAutocorrect()", extLine(new Error()));
   return isAutocorrectOn;
 }
 export function checkAllGenConts(...els: targEl[]): boolean {
@@ -213,7 +202,6 @@ export function checkAllGenConts(...els: targEl[]): boolean {
     )
   )
     return true;
-  else multipleElementsNotFound(extLine(new Error()), "arguments for checkAllGenConts()", `${JSON.stringify(els)}`);
   return false;
 }
 export function fluxGen(
@@ -317,8 +305,7 @@ export function fluxGen(
       hideStgTransHorm(gt);
     }
     return fluxAlign();
-  } else
-    multipleElementsNotFound(extLine(new Error()), "arguments for fluxGen()", `${JSON.stringify(genConts)}` || null);
+  }
   return "masculino";
 }
 export function showGenFisAlin(ga: targEl, g: targEl): boolean {
@@ -340,7 +327,7 @@ export function showGenFisAlin(ga: targEl, g: targEl): boolean {
       }, 250);
     }
     return true;
-  } else elementNotFound(ga, "argument for showGenFisAlin()", extLine(new Error()));
+  }
   return false;
 }
 export function hideGenFisAlin(ga: targEl): boolean {
@@ -356,7 +343,7 @@ export function hideGenFisAlin(ga: targEl): boolean {
       }, 250);
     }
     return false;
-  } else elementNotFound(ga, "argument for hideGenFisAlin()", extLine(new Error()));
+  }
   return true;
 }
 export function showStgTransHorm(gt: targEl): boolean {
@@ -375,7 +362,7 @@ export function showStgTransHorm(gt: targEl): boolean {
       }, 250);
     }
     return true;
-  } else elementNotFound(gt, "argument for showStgTransHorm()", extLine(new Error()));
+  }
   return false;
 }
 export function hideStgTransHorm(gt: targEl): boolean {
@@ -393,7 +380,7 @@ export function hideStgTransHorm(gt: targEl): boolean {
       }, 250);
     }
     return false;
-  } else elementNotFound(gt, "argument for hideStgTransHorm()", extLine(new Error()));
+  }
   return true;
 }
 export function filterIdsByGender(
@@ -409,10 +396,8 @@ export function filterIdsByGender(
       case "neutro":
         return arrayIds.filter(id => /peit|abd|tricp|suprail|coxa/g.test(id));
       default:
-        stringError(`obtaining valid bodyType`, bodyType, extLine(new Error()));
+        return ["peit", "abd", "coxa"];
     }
-  } else {
-    typeError(`validating array in filterIdsByGender()`, bodyType, "string", extLine(new Error()));
   }
   return ["peit", "abd", "coxa"];
 }
@@ -422,7 +407,7 @@ export function checkPasswordPattern(pwInp: HTMLInputElement | null): void {
     !/(?=.*[A-Z])/g.test(pwInp.value) && pwInp.setCustomValidity("Sua senha deve ter pelo menos uma letra maiúscula");
     !/(?=.*[!@#$%^&*])/g.test(pwInp.value) && pwInp.setCustomValidity("Sua senha deve ter pelo menos um símbolo");
     !/[*]{8,}/g.test(pwInp.value) && pwInp.setCustomValidity("Sua senha deve ter pelo menos oito caracteres");
-  } else inputNotFound(pwInp, "pwInp in checkPasswordPattern()", extLine(new Error()));
+  }
 }
 export function correctCursorNextWords(
   isCursorAutoMoved: boolean = false,
@@ -555,7 +540,6 @@ export function fixUnproperUppercases(text: string = "", match: string = "", con
       }
       addAcumulator += spaceMatches.length;
     } else if (context === "YesDVal" || context === 1) addAcumulator = 1;
-    else console.error(`Context value not suitable`);
   }
   const textAfterRepetitions = text.slice(
     upperCasesRepetitionsIndex + 1 + loweredRepetitions.length - addAcumulator,
@@ -573,7 +557,7 @@ export function fixUnproperUppercases(text: string = "", match: string = "", con
     text = text.match(/D[aeiouáàâäãéèêëíìîïóòôöõúùûü][s]\s[A-ZÁÀÂÄÃÉÈÊËÍÌÎÏÓÒÔÖÕÚÙÛÜ]{3,}/)
       ? textBeforeRepetitions + loweredRepetitions + "S" + textAfterRepetitions
       : textBeforeRepetitions + loweredRepetitions + textAfterRepetitions;
-  } else console.error(`Context value not suitable`);
+  }
   return text;
 }
 export function fixForcedUpperCase(
@@ -891,28 +875,24 @@ export function autoCapitalizeInputs(textEl: targEl, isAutocorrectOn: boolean = 
       }
     }
     return textEl.value;
-  } else elementNotFound(textEl, "argument for autoCapitalizeInputs()", extLine(new Error()));
+  }
   return "";
 }
 export function capitalizeFirstLetter(text: string): string {
   try {
-    if (!(typeof text === "string"))
-      throw typeError(`type of argument for capitalizeFirstLetter`, text, "string", extLine(new Error()));
+    if (!(typeof text === "string")) return text;
     text = `${text.slice(0, 1).toUpperCase()}${text.slice(1)}`;
     return text;
   } catch (e) {
-    console.error(`Error executing capitalizeFirstLetter:\n${(e as Error).message}`);
     return text;
   }
 }
 export function textTransformPascal(text: string): string {
   try {
-    if (!(typeof text === "string"))
-      throw typeError(`type of argument for capitalizeFirstLetter`, text, "string", extLine(new Error()));
+    if (!(typeof text === "string")) return text;
     text = `${text.slice(0, 1).toUpperCase()}${text.slice(1).toLowerCase()}`;
     return text;
   } catch (e) {
-    console.error(`Error executing capitalizeFirstLetter:\n${(e as Error).message}`);
     return text.toString();
   }
 }
@@ -933,7 +913,6 @@ export function dateISOtoBRL(isoDate: string): string {
     } else [y, m, d] = dateFragments;
     return `${d}/${m}/${y}`;
   } catch (e) {
-    console.error(`Error executing dateISOtoBRL:\n${(e as Error).message}`);
     return "00/00/0000";
   }
 }
@@ -945,7 +924,6 @@ export function camelToKebab(str: string): string {
       .join("-")
       .toLowerCase();
   } catch (e) {
-    console.error(`Error executing camelToKebab:\n${(e as Error).message}`);
     return iniStr;
   }
 }
@@ -957,7 +935,6 @@ export function camelToRegular(str: string, capitalize = true): string {
       ? `${str.charAt(0).toUpperCase()}${str.slice(1).replace(/([a-z])([A-Z])/g, "$1 $2")}`
       : `${str.charAt(0)}${str.slice(1).replace(/([a-z])([A-Z])/g, "$1 $2")}`;
   } catch (e) {
-    console.error(`Error executing camelToRegular:\n${(e as Error).message}`);
     return iniStr;
   }
 }
@@ -969,7 +946,6 @@ export function kebabToCamel(str: string): string {
       .map((fragment, i) => (i === 0 ? fragment : textTransformPascal(fragment)))
       .join("");
   } catch (e) {
-    console.error(`Error executing camelToKebab:\n${(e as Error).message}`);
     return iniStr;
   }
 }
@@ -982,7 +958,7 @@ export function regularToSnake(str: string): string {
 }
 export function modelScripts(): void {
   try {
-    document.querySelectorAll("meta").forEach((meta, i) => {
+    document.querySelectorAll("meta").forEach((meta) => {
       try {
         if (!(meta instanceof HTMLMetaElement)) return;
         if (meta.id === "") {
@@ -1003,10 +979,10 @@ export function modelScripts(): void {
           }
         }
       } catch (e) {
-        console.error(`Error executing iteration ${i} for identifying meta tag:\n${(e as Error).message}`);
+        return;
       }
     });
-    Array.from(document.scripts).forEach((script, i) => {
+    Array.from(document.scripts).forEach(script => {
       try {
         if (!(script instanceof HTMLScriptElement)) return;
         if (script.type === "" && script.src !== "") script.type = "text/javascript";
@@ -1016,7 +992,7 @@ export function modelScripts(): void {
         }
         if (script.crossOrigin === "") script.crossOrigin = "anonymous";
       } catch (e) {
-        console.error(`Error executing iteration ${i} for <script> tags in modelScripts:\n${(e as Error).message}`);
+        return;
       }
     });
     document.querySelectorAll("style").forEach((style, i) => {
@@ -1031,10 +1007,10 @@ export function modelScripts(): void {
           style.dataset.group = "automatic_name";
         }
       } catch (e) {
-        console.error(`Error executing iteration ${i} for <style> tags in modelScripts:\n${(e as Error).message}`);
+        return;
       }
     });
-    document.querySelectorAll("link").forEach((link, i) => {
+    document.querySelectorAll("link").forEach(link => {
       try {
         if (!(link instanceof HTMLLinkElement)) return;
         if (link.id === "" && link.href !== "") {
@@ -1044,10 +1020,10 @@ export function modelScripts(): void {
         if (link.rel === "") link.rel = "alternate";
         if (link.crossOrigin === "") link.crossOrigin = "anonymous";
       } catch (e) {
-        console.error(`Error executing iteration ${i} for <link> tags in modelScripts:\n${(e as Error).message}`);
+        return;
       }
     });
-    document.querySelectorAll("a").forEach((a, i) => {
+    document.querySelectorAll("a").forEach((a) => {
       try {
         if (!(a instanceof HTMLAnchorElement)) return;
         if (a.href !== "" && !(new RegExp(location.hostname, "g").test(a.href) || /https/.test(a.href))) {
@@ -1055,27 +1031,25 @@ export function modelScripts(): void {
           if (!/noreferrer/g.test(a.rel)) a.rel += " noreferrer";
         }
       } catch (e) {
-        console.error(`Error executing iteration ${i} for <a> tags in modelScripts:\n${(e as Error).message}`);
+        return;
       }
     });
   } catch (e) {
-    console.error(`Error executing modelScripts:\n${(e as Error).message}`);
+    return;
   }
 }
 export function assignFormAttrs(fr: nlFm): void {
   if (!(fr instanceof HTMLFormElement)) throw new Error(`Failed to validate Form Reference`);
-  try {
-    const metaCs = document.querySelector('meta[charset*="utf-"]') ?? document.querySelector('meta[charset*="UTF-"]');
-    if (!(metaCs instanceof HTMLMetaElement)) throw new Error(`Failed to fetch HTMLMetaElement for Charset`);
-    const cs = /utf\-16/gi.test(metaCs.outerHTML) ? "utf-16" : "utf-8";
-    fr.acceptCharset = cs;
-  } catch (e) {
-    console.error(
-      `Error executing procedure for defining Accept Charset for ${fr.id || fr.className || fr.tagName}:${
-        (e as Error).message
-      }`,
-    );
-  }
+  (() => {
+    try {
+      const metaCs = document.querySelector('meta[charset*="utf-"]') ?? document.querySelector('meta[charset*="UTF-"]');
+      if (!(metaCs instanceof HTMLMetaElement)) throw new Error(`Failed to fetch HTMLMetaElement for Charset`);
+      const cs = /utf\-16/gi.test(metaCs.outerHTML) ? "utf-16" : "utf-8";
+      fr.acceptCharset = cs;
+    } catch (e) {
+      return;
+    }
+  })();
   try {
     let len = 0;
     [
@@ -1086,117 +1060,119 @@ export function assignFormAttrs(fr: nlFm): void {
       ...fr.querySelectorAll("output"),
       ...fr.querySelectorAll("select"),
       ...fr.querySelectorAll("textarea"),
-    ].forEach((el, i) => {
-      try {
-        if (!(el instanceof HTMLElement) || el.id === "") return;
-        len += 1;
-        if (!el || !fr) return;
-        el.dataset.form = `#${fr.id}`;
-        if (el instanceof HTMLInputElement) {
-          if (el.formAction === "") el.formAction = fr.action;
-          if (el.formMethod === "") el.formMethod = fr.method;
-          if (el.formEnctype === "") el.formEnctype = fr.enctype;
-          if (!el.formNoValidate) el.formNoValidate = fr.noValidate;
-        } else if (el instanceof HTMLSelectElement || el instanceof HTMLTextAreaElement) {
-          el.dataset.formAction = fr.action;
-          el.dataset.formMethod = fr.method;
-          el.dataset.formEnctype = fr.enctype;
-          el.dataset.formNoValidate = fr.noValidate.toString();
-        }
-        if (fr.id !== "") el.dataset.form = fr.id;
-        if (
-          (el instanceof HTMLFieldSetElement || el instanceof HTMLObjectElement || el instanceof HTMLButtonElement) &&
-          el.id !== "" &&
-          el.name === ""
-        )
-          el.name = el.id.replace(/([A-Z])/g, m => (m === el.id.charAt(0) ? m.toLowerCase() : `_${m.toLowerCase()}`));
-      } catch (e) {
-        console.error(`Error executing iteration ${i} for adding ids do elements list:\n${(e as Error).message}`);
-      }
-      try {
-        if (!(el instanceof HTMLInputElement || el instanceof HTMLSelectElement || el instanceof HTMLTextAreaElement))
-          return;
+    ].forEach(el => {
+      (() => {
         try {
-          if (el.labels) {
-            el.labels.forEach((lab, i) => {
-              try {
-                if (lab instanceof HTMLLabelElement && lab.htmlFor !== el.id) lab.htmlFor = el.id;
-                const idf = el.id || el.name;
-                if (lab.id === "" && idf !== "" && el.labels)
-                  lab.id = el.labels.length === 1 ? `${idf}_lab` : `${idf}_lab_${i + 1}`;
-                if (!el) throw new Error(`Lost reference to the input`);
-                if (i === 0) el.dataset.labels = `${lab.id}`;
-                else el.dataset.labels += `, ${lab.id}`;
-              } catch (e) {
-                console.error(
-                  `Error executing iteration ${i} for ${el.id || el.className || el.tagName}:\n${(e as Error).message}`,
-                );
-              }
-            });
-            if (!(el instanceof HTMLSelectElement) && el.placeholder === "") {
-              const clearArticles = (txt: string): string => {
-                  if (/cidade/gi.test(txt)) txt = txt.replace(/o\scidade/g, "a cidade");
-                  if (/nacionalidade/gi.test(txt)) txt = txt.replace(/o\snacionalidade/g, "a nacionalidade");
-                  if (/naturalidade/gi.test(txt)) txt = txt.replace(/o\snaturalidade/g, "a naturalidade");
-                  if (/[oa]\s\w*ções/gi.test(txt)) txt = txt.replace(/([oa])\s(\w*)ções/g, "$1s $2ções");
-                  if (/os\sescovações/g.test(txt)) txt = txt.replace(/os\sescovações/g, "as escovações");
-                  if (/\so\singere|\so\sfaz|\so\squant[ao]s?/g.test(txt))
-                    txt = txt.replace(/\so\singere|\so\sfaz|\so\squant[ao]s?/g, "");
-                  if (/o qual é/g.test(txt)) txt = txt.replace(/o qual é/g, "qual é");
-                  if (/o evacua quantas/g.test(txt)) txt = txt.replace(/o evacua quantas/g, "quantas evacuações por");
-                  if (/evacuações por vezes por dia/g.test(txt))
-                    txt = txt.replace(/evacuações por vezes por dia/g, "evacuações por dia");
-                  if (/micções por dia(?<!quantas)/g.test(txt))
-                    txt = txt.replace(/micções por dia(?<!quantas)/g, "quantas micções por dia");
-                  if (txt.endsWith(",")) txt = txt.slice(0, -1);
-                  return txt.trim();
-                },
-                modelLabelHeader = (txt: string): string => {
-                  if (txt.endsWith(":")) txt = txt.slice(0, -1);
-                  if (/, se/g.test(txt.slice(1))) txt = txt.slice(0, txt.indexOf(", se"));
-                  txt = txt.toLowerCase();
-                  const acrs = /cep|cpf|ddd|dre/gi;
-                  if (acrs.test(txt)) txt = txt.replace(acrs, m => m.toUpperCase());
-                  if (/\:.*/g.test(txt)) txt = txt.slice(0, txt.lastIndexOf(":"));
-                  if (/\?.*/g.test(txt)) txt = txt.slice(0, txt.lastIndexOf("?"));
-                  if (txt.includes("se estrangeiro, ")) txt = txt.replace(/se estrangeiro,\s/g, "");
-                  if (txt.includes("informe o ")) txt = txt.replace(/informe\so\s/g, "");
-                  if (/cidade/gi.test(txt)) txt = txt.replace(/o\scidade/g, "a cidade");
-                  if (/nacionalidade/gi.test(txt)) txt = txt.replace(/o\snacionalidade/g, "a nacionalidade");
-                  if (/naturalidade/gi.test(txt)) txt = txt.replace(/o\snaturalidade/g, "a naturalidade");
-                  if (/[oa]\s\w*ções/gi.test(txt)) txt = txt.replace(/([oa])\s(\w*)ções/g, "$1s $2ções");
-                  if (/os\sescovações/g.test(txt)) txt = txt.replace(/os\sescovações/g, "as escovações");
-                  if (/no mínimo|no máximo/g.test(txt)) txt = txt.replace(/no mínimo|no máximo/g, "");
-                  if (txt.endsWith(",")) txt = txt.slice(0, -1);
-                  return txt.trim();
-                };
-              if (el.labels[0] && el.labels[0].htmlFor === el.id) {
-                el.placeholder = `Preencha aqui o ${modelLabelHeader(el.labels[0].innerText)}`;
-                el.placeholder = clearArticles(el.placeholder);
-                if (
-                  !(
-                    el.labels[0].innerText.toLowerCase().includes("evacua") &&
-                    el.labels[0].innerText.includes("por dia")
-                  ) &&
-                  !el.labels[0].innerText
-                    .toLowerCase()
-                    .includes(el.placeholder.toLowerCase().replace(/preencha aqui\s?[oa]?s?\s?/g, ""))
-                )
-                  el.placeholder = "";
-                if (el.id === "streetId") el.placeholder = "";
+          if (!(el instanceof HTMLElement) || el.id === "") return;
+          len += 1;
+          if (!el || !fr) return;
+          el.dataset.form = `#${fr.id}`;
+          if (el instanceof HTMLInputElement) {
+            if (el.formAction === "") el.formAction = fr.action;
+            if (el.formMethod === "") el.formMethod = fr.method;
+            if (el.formEnctype === "") el.formEnctype = fr.enctype;
+            if (!el.formNoValidate) el.formNoValidate = fr.noValidate;
+          } else if (el instanceof HTMLSelectElement || el instanceof HTMLTextAreaElement) {
+            el.dataset.formAction = fr.action;
+            el.dataset.formMethod = fr.method;
+            el.dataset.formEnctype = fr.enctype;
+            el.dataset.formNoValidate = fr.noValidate.toString();
+          }
+          if (fr.id !== "") el.dataset.form = fr.id;
+          if (
+            (el instanceof HTMLFieldSetElement || el instanceof HTMLObjectElement || el instanceof HTMLButtonElement) &&
+            el.id !== "" &&
+            el.name === ""
+          )
+            el.name = el.id.replace(/([A-Z])/g, m => (m === el.id.charAt(0) ? m.toLowerCase() : `_${m.toLowerCase()}`));
+        } catch (e) {
+          return;
+        }
+      })();
+      (() => {
+        try {
+          if (!(el instanceof HTMLInputElement || el instanceof HTMLSelectElement || el instanceof HTMLTextAreaElement))
+            return;
+          try {
+            if (el.labels) {
+              el.labels.forEach((lab, i) => {
+                try {
+                  if (lab instanceof HTMLLabelElement && lab.htmlFor !== el.id) lab.htmlFor = el.id;
+                  const idf = el.id || el.name;
+                  if (lab.id === "" && idf !== "" && el.labels)
+                    lab.id = el.labels.length === 1 ? `${idf}_lab` : `${idf}_lab_${i + 1}`;
+                  if (!el) throw new Error(`Lost reference to the input`);
+                  if (i === 0) el.dataset.labels = `${lab.id}`;
+                  else el.dataset.labels += `, ${lab.id}`;
+                } catch (e) {
+                  return;
+                }
+              });
+              if (!(el instanceof HTMLSelectElement) && el.placeholder === "") {
+                const clearArticles = (txt: string): string => {
+                    if (/cidade/gi.test(txt)) txt = txt.replace(/o\scidade/g, "a cidade");
+                    if (/nacionalidade/gi.test(txt)) txt = txt.replace(/o\snacionalidade/g, "a nacionalidade");
+                    if (/naturalidade/gi.test(txt)) txt = txt.replace(/o\snaturalidade/g, "a naturalidade");
+                    if (/[oa]\s\w*ções/gi.test(txt)) txt = txt.replace(/([oa])\s(\w*)ções/g, "$1s $2ções");
+                    if (/os\sescovações/g.test(txt)) txt = txt.replace(/os\sescovações/g, "as escovações");
+                    if (/\so\singere|\so\sfaz|\so\squant[ao]s?/g.test(txt))
+                      txt = txt.replace(/\so\singere|\so\sfaz|\so\squant[ao]s?/g, "");
+                    if (/o qual é/g.test(txt)) txt = txt.replace(/o qual é/g, "qual é");
+                    if (/o evacua quantas/g.test(txt)) txt = txt.replace(/o evacua quantas/g, "quantas evacuações por");
+                    if (/evacuações por vezes por dia/g.test(txt))
+                      txt = txt.replace(/evacuações por vezes por dia/g, "evacuações por dia");
+                    if (/micções por dia(?<!quantas)/g.test(txt))
+                      txt = txt.replace(/micções por dia(?<!quantas)/g, "quantas micções por dia");
+                    if (txt.endsWith(",")) txt = txt.slice(0, -1);
+                    return txt.trim();
+                  },
+                  modelLabelHeader = (txt: string): string => {
+                    if (txt.endsWith(":")) txt = txt.slice(0, -1);
+                    if (/, se/g.test(txt.slice(1))) txt = txt.slice(0, txt.indexOf(", se"));
+                    txt = txt.toLowerCase();
+                    const acrs = /cep|cpf|ddd|dre/gi;
+                    if (acrs.test(txt)) txt = txt.replace(acrs, m => m.toUpperCase());
+                    if (/\:.*/g.test(txt)) txt = txt.slice(0, txt.lastIndexOf(":"));
+                    if (/\?.*/g.test(txt)) txt = txt.slice(0, txt.lastIndexOf("?"));
+                    if (txt.includes("se estrangeiro, ")) txt = txt.replace(/se estrangeiro,\s/g, "");
+                    if (txt.includes("informe o ")) txt = txt.replace(/informe\so\s/g, "");
+                    if (/cidade/gi.test(txt)) txt = txt.replace(/o\scidade/g, "a cidade");
+                    if (/nacionalidade/gi.test(txt)) txt = txt.replace(/o\snacionalidade/g, "a nacionalidade");
+                    if (/naturalidade/gi.test(txt)) txt = txt.replace(/o\snaturalidade/g, "a naturalidade");
+                    if (/[oa]\s\w*ções/gi.test(txt)) txt = txt.replace(/([oa])\s(\w*)ções/g, "$1s $2ções");
+                    if (/os\sescovações/g.test(txt)) txt = txt.replace(/os\sescovações/g, "as escovações");
+                    if (/no mínimo|no máximo/g.test(txt)) txt = txt.replace(/no mínimo|no máximo/g, "");
+                    if (txt.endsWith(",")) txt = txt.slice(0, -1);
+                    return txt.trim();
+                  };
+                if (el.labels[0] && el.labels[0].htmlFor === el.id) {
+                  el.placeholder = `Preencha aqui o ${modelLabelHeader(el.labels[0].innerText)}`;
+                  el.placeholder = clearArticles(el.placeholder);
+                  if (
+                    !(
+                      el.labels[0].innerText.toLowerCase().includes("evacua") &&
+                      el.labels[0].innerText.includes("por dia")
+                    ) &&
+                    !el.labels[0].innerText
+                      .toLowerCase()
+                      .includes(el.placeholder.toLowerCase().replace(/preencha aqui\s?[oa]?s?\s?/g, ""))
+                  )
+                    el.placeholder = "";
+                  if (el.id === "streetId") el.placeholder = "";
+                }
               }
             }
+          } catch (e) {
+            return;
           }
         } catch (e) {
-          console.error(`Error executing procedure for fixing Label htmlFor:\n${(e as Error).message}`);
+          return;
         }
-      } catch (e) {
-        console.error(`Error executing procedure to define Dataset Label:\n${(e as Error).message}`);
-      }
+      })();
     });
     fr.dataset.len = len.toString();
   } catch (e) {
-    console.error(`Failed to execute assignFormAttrs: ${(e as Error).name} : ${(e as Error).message}`);
+    return;
   }
 }
 export function limitedError(msg: string, idf: string) {
@@ -1210,7 +1186,7 @@ export function limitedError(msg: string, idf: string) {
         if (errorLabels?.[idf]) errorLabels[idf] = 0;
       }, 5000);
   } catch (e) {
-    console.error(`Error executing limitedError:\n${(e as Error).message}`);
+    return;
   }
 }
 export function applyFieldConstraints(el: nlEl): void {
@@ -1222,7 +1198,7 @@ export function applyFieldConstraints(el: nlEl): void {
         (el instanceof HTMLElement && el.contentEditable)
       )
     )
-      throw inputNotFound(el, `Changed element at ${new Date().getTime()}`, extLine(new Error()));
+      return;
     if (el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement) {
       if (el.maxLength !== -1 && el.value.length > el.maxLength) el.value = el.value.slice(0, el.maxLength);
       if (el instanceof HTMLInputElement) {
@@ -1279,10 +1255,7 @@ export function applyFieldConstraints(el: nlEl): void {
       }
     }
   } catch (e) {
-    limitedError(
-      el?.id || el?.className.replace(/\s/g, "__") || el?.tagName || "default",
-      `Error executing applyFieldConstraints:\n${(e as Error).message}`,
-    );
+    return;
   }
 }
 export function applyConstraintsTitle(fm: nlFm): void {
@@ -1300,7 +1273,7 @@ export function applyConstraintsTitle(fm: nlFm): void {
           i.type !== "submit",
       ),
       ...fm.querySelectorAll("textarea"),
-    ].forEach((inp, i) => {
+    ].forEach((inp) => {
       try {
         if (!(inp instanceof HTMLInputElement || inp instanceof HTMLTextAreaElement)) return;
         let title = "";
@@ -1339,15 +1312,11 @@ export function applyConstraintsTitle(fm: nlFm): void {
         } else checkTextConstraints();
         if (title !== "") inp.title += `\n${title}`;
       } catch (e) {
-        console.error(
-          `Error executing iteration ${i} for inputs in the form ${fm.id || fm.name || fm.className || fm.tagName}:${
-            (e as Error).message
-          }`,
-        );
+        return;
       }
     });
   } catch (e) {
-    console.error(`Error executing applyConstrainstTitle:\n${(e as Error).message}`);
+    return;
   }
 }
 export function compProp(el: nlEl, prop: keyof CSSStyleDeclaration, measure: CSSMeasure = "px"): string {
@@ -1357,7 +1326,6 @@ export function compProp(el: nlEl, prop: keyof CSSStyleDeclaration, measure: CSS
     if (typeof measure !== "string") return (getComputedStyle(el) as any)[prop]?.trim() ?? "";
     return (getComputedStyle(el) as any)[prop]?.replace(measure, "").trim() ?? "";
   } catch (e) {
-    console.error(`Error executing compProp:\n${(e as Error).message}`);
     return el instanceof Element && typeof prop === "string" ? (getComputedStyle(el) as any)[prop]?.trim() ?? "" : "";
   }
 }
@@ -1368,7 +1336,6 @@ export function compPropGet(el: nlEl, prop: keyof CSSStyleDeclaration, measure: 
     if (typeof measure !== "string") return getComputedStyle(el).getPropertyValue(prop).trim() ?? "";
     return getComputedStyle(el).getPropertyValue(prop).replace(measure, "").trim() ?? "";
   } catch (e) {
-    console.error(`Error executing compProp:\n${(e as Error).message}`);
     return el instanceof Element && typeof prop === "string"
       ? getComputedStyle(el).getPropertyValue(prop).trim() ?? ""
       : "";

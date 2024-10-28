@@ -1,5 +1,4 @@
 import { ContactDlgProps } from "@/lib/global/declarations/interfacesCons";
-import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { isClickOutside } from "@/lib/global/gStyleScript";
 import { nlBtn, nlDlg } from "@/lib/global/declarations/types";
 import { useContext, useEffect, useRef } from "react";
@@ -15,7 +14,7 @@ export default function ContactDlg({ setContact, shouldDisplayContact = true }: 
     if (contactDlgRef.current instanceof HTMLDialogElement) {
       contactDlgRef.current.showModal();
       syncAriaStates([...contactDlgRef.current.querySelectorAll("*"), contactDlgRef.current]);
-    } else elementNotFound(contactDlgRef.current, "Dialog for contact request", extLine(new Error()));
+    }
   }, [contactDlgRef]);
   return createPortal(
     <>

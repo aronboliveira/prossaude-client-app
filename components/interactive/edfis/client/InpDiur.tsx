@@ -1,7 +1,7 @@
 "use client";
 import { PseudoNum } from "@/lib/global/declarations/testVars";
 import { nlInp } from "@/lib/global/declarations/types";
-import { applyFieldConstraints, limitedError } from "@/lib/global/gModel";
+import { applyFieldConstraints } from "@/lib/global/gModel";
 import { handleCondtReq } from "@/lib/global/handlers/gHandlers";
 import { tabProps } from "@/vars";
 import { useRef, useEffect, useState } from "react";
@@ -11,7 +11,7 @@ export default function InpDiur(): JSX.Element {
     [v, setValue] = useState<PseudoNum>("" as any);
   useEffect(() => {
     try {
-      if (!(r.current instanceof HTMLElement)) throw new Error(`Failed to validate input instance`);
+      if (!(r.current instanceof HTMLElement)) return;
       handleCondtReq(r.current, {
         minNum: 0,
         maxNum: 9999,
@@ -20,10 +20,7 @@ export default function InpDiur(): JSX.Element {
         pattern: ["^d+$", ""],
       });
     } catch (e) {
-      limitedError(
-        `Error executing effect for ${InpDiur.prototype.constructor.name}:${(e as Error).message}`,
-        InpDiur.prototype.constructor.name,
-      );
+      return;
     }
   }, [v, r]);
   return (

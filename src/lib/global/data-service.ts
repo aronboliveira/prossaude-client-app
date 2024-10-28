@@ -42,7 +42,7 @@ export async function handleSubmit(
       if (!res.ok) throw new Error(`Error posting Table to API`);
     }
   } catch (e) {
-    console.error(`Error executing handleSubmit:\n${(e as Error).message}`);
+    return;
   }
 }
 export async function handleFetch(
@@ -321,7 +321,6 @@ export async function handleFetch(
       return JSON.parse(data);
     } else return arrJSONResTest;
   } catch (e) {
-    console.error(`Error executing handleFetch:\n${(e as Error).message}`);
     return arrJSONResTest;
   }
 }
@@ -352,6 +351,6 @@ export async function handleDelete(apiRoute: formCases, UNDER_TEST: boolean = tr
       if (!res.ok) throw new Error(`Error deleting Students Table from API`);
     }
   } catch (e) {
-    console.error(`Error executing handleDelete:\n${(e as Error).message}`);
+    return;
   }
 }

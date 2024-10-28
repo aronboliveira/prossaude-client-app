@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { nlDiv, nlSel } from "../global/declarations/types";
 import { AlignType, BirthRelation, Gender, TransitionLevel } from "../global/declarations/testVars";
-import { elementNotFound, extLine } from "../global/handlers/errorHandler";
 import { GenDivProps, UseGenDivReturn } from "../global/declarations/interfacesCons";
 import { handleGenRender } from "../locals/edFisNutPage/edFisNutReactHandlers";
 import { person } from "@/vars";
@@ -33,9 +32,9 @@ export default function useGenDiv({ onSetGen, genValueRef }: GenDivProps): UseGe
           ga = gar.current ?? (document.getElementById("genFisAlinId") as HTMLSelectElement);
         handleGenRender({ g, gb, gt, ga, setGenTrans, setGenBirthRel, setGenFisAlin });
         if (genValueRef) genValueRef.current = person.gen as Gender;
-      } else elementNotFound(agGenElement, "instance of agGenElement for DOM initialization", extLine(new Error()));
+      }
     } catch (e) {
-      console.error(`Error executing procedure for agBody:\n${(e as Error).message}`);
+      return;
     }
   }, [gr, gbr, gtr, gar, onSetGen, setGen, setGenFisAlin, genValueRef]);
   useEffect(() => {
@@ -55,15 +54,14 @@ export default function useGenDiv({ onSetGen, genValueRef }: GenDivProps): UseGe
       gar.current.style.maxWidth = getComputedStyle(gr.current).width;
     };
     try {
-      if (!(r.current instanceof HTMLElement))
-        throw elementNotFound(r.current, `Validation of Gen Div Reference`, extLine(new Error()));
+      if (!(r.current instanceof HTMLElement)) return;
       if (!r.current?.dataset.equalizing || r.current?.dataset.equalizing !== "true") {
         addEventListener("resize", handleResize);
         document.body.dataset.equalizing = "true";
         handleResize();
       }
     } catch (e) {
-      console.error(`Error executing addition of resizing listener to GenDiv:\n${(e as Error).message}`);
+      return;
     }
     (): void => removeEventListener("resize", handleResize);
   }, [r]);

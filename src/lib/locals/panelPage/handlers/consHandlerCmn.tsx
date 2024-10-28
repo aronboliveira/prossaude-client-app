@@ -47,13 +47,12 @@ export async function asyncJSXCall(
       );
     throw new Error(`Validating arguments for ${arguments.callee.name}`);
   } catch (err) {
-    console.error(`Error: ${(err as Error).message}`);
+    return (
+      <>
+        <p>ERROR LOADING PAGE COMPONENT</p>
+      </>
+    );
   }
-  return (
-    <>
-      <p>ERROR LOADING PAGE COMPONENT</p>
-    </>
-  );
 }
 export function correlateAptMonthDays(
   daySel: targEl,

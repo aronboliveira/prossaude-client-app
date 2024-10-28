@@ -1,7 +1,6 @@
 "use client";
 import { handleDivAddShow } from "@/lib/locals/aGPage/aGHandlers";
 import { odProps, agProps, navigatorVars } from "@/vars";
-import { extLine, inputNotFound } from "@/lib/global/handlers/errorHandler";
 import { handleLinkChanges, headCleanup } from "@/lib/global/handlers/gRoutingHandlers";
 import { pageCases, targEl } from "@/lib/global/declarations/types";
 import { useContext, useEffect, useState } from "react";
@@ -39,18 +38,15 @@ export default function Watcher({ routeCase }: { routeCase?: pageCases }): JSX.E
         clearPhDates(Array.from(document.querySelectorAll('input[type="date"]')));
         document.querySelectorAll(".cbFam").forEach(handleDivAddShow);
       } else if (routeCase === "od") {
-        const handleInpAvDentValue = (inpAvDent: targEl, i: number): void => {
+        const handleInpAvDentValue = (inpAvDent: targEl): void => {
           try {
-            if (!(inpAvDent instanceof HTMLInputElement))
-              throw inputNotFound(inpAvDent, `Validation of Input instance`, extLine(new Error()));
+            if (!(inpAvDent instanceof HTMLInputElement)) return;
             inpAvDent.value = "Hígido";
           } catch (e) {
-            console.error(
-              `Error executing iteration ${i} for defaulting values to inpAvDents:\n${(e as Error).message}`,
-            );
+            return;
           }
         };
-        document.querySelectorAll(".inpAvDent").forEach((inp, i) => handleInpAvDentValue(inp, i));
+        document.querySelectorAll(".inpAvDent").forEach(inp => handleInpAvDentValue(inp));
         dinamicGridAdjust(Array.from(document.querySelectorAll(".fsAnamGDiv")));
       }
     }, 500);

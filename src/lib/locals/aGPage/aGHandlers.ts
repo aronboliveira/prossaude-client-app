@@ -1,9 +1,7 @@
+//nesse file estão presentes principalmente as funções de manipulação dinâmica de texto e layout
 import { autoCapitalizeInputs, checkAutoCorrect } from "../../global/gModel";
 import { targEl, targEv } from "../../global/declarations/types";
 import { useCurrentDate } from "../../global/handlers/gHandlers";
-//nesse file estão presentes principalmente as funções de manipulação dinâmica de texto e layout
-
-import { extLine, elementNotFound, inputNotFound, multipleElementsNotFound } from "../../global/handlers/errorHandler";
 export function searchCEPXML(cepElement: targEl): number {
   let initTime = Date.now(),
     reqAcc = 2,
@@ -20,7 +18,6 @@ export function searchCEPXML(cepElement: targEl): number {
       if (statusNum === 200) {
         progBar && progMax && uploadCEPLoadBar(cepElement, progBar, initTime, progMax, progValue);
       } else {
-        console.warn(`Error on the first XML/HTTP request. Initializing second request.`);
         reqAcc--;
         initTime = Date.now();
         const xmlReq2 = new XMLHttpRequest();
@@ -28,16 +25,13 @@ export function searchCEPXML(cepElement: targEl): number {
         xmlReq2.send();
         xmlReq2.onload = (): void => {
           statusNum = loadCEPXML(xmlReq2, reqAcc);
-          if (statusNum === 200) {
+          if (statusNum === 200)
             progBar && progMax && uploadCEPLoadBar(cepElement, progBar, initTime, progMax, progValue);
-          } else {
-            console.error(`Error on the second XML/HTTP request. Aborting process.`);
-            progBar && progMax && uploadCEPLoadBar(cepElement, progBar, initTime, progMax, progValue);
-          }
+          else progBar && progMax && uploadCEPLoadBar(cepElement, progBar, initTime, progMax, progValue);
         };
       }
     };
-  } else elementNotFound(cepElement, "argument for searchCEPXML", extLine(new Error()));
+  }
   return statusNum;
 }
 export function loadCEPXML(xmlReq: XMLHttpRequest = new XMLHttpRequest(), reqAcc: number = 1): number {
@@ -59,7 +53,7 @@ export function loadCEPXML(xmlReq: XMLHttpRequest = new XMLHttpRequest(), reqAcc
       throw new Error(`Error on the values entry.
       Obtained values: ${JSON.stringify(xmlReq) || null}, ${reqAcc}`);
   } catch (loadError) {
-    console.warn(`Error status for CEPV${reqAcc}: `, (loadError as Error).message);
+    return xmlReq?.status || 404;
   }
   return xmlReq.status;
 }
@@ -67,10 +61,7 @@ export async function searchCEP(cepElement: targEl): Promise<string> {
   let status = 404;
   try {
     const initTime = Date.now();
-    if (!(cepElement instanceof HTMLInputElement)) {
-      elementNotFound(cepElement, "argument for searchCEP", extLine(new Error()));
-      return "fail";
-    }
+    if (!(cepElement instanceof HTMLInputElement)) return "fail";
     const progInts = displayCEPLoadBar(cepElement) ?? [0, 100, null];
     const [progMax, progValue, progBar] = progInts;
     const cepHifenOutValue = cepElement.value?.replaceAll("-", "") ?? "";
@@ -86,12 +77,10 @@ export async function searchCEP(cepElement: targEl): Promise<string> {
         progBar && progMax && uploadCEPLoadBar(cepElement, progBar, initTime, progMax, progValue);
         return "success";
       } else {
-        console.error(`Both requests failed. Aborting process.`);
         progBar && progMax && uploadCEPLoadBar(cepElement, progBar, initTime, progMax, progValue);
         status = res.status;
       }
     } catch (error) {
-      console.error(`Error in both requests: ${(error as Error).message}`);
       if (document.getElementById("divCEPWarn")) {
         document.getElementById("divCEPWarn")!.textContent =
           "*Erro carregando informações a partir de CEP. \n Inclua manualmente";
@@ -100,7 +89,7 @@ export async function searchCEP(cepElement: targEl): Promise<string> {
       progBar && progMax && uploadCEPLoadBar(cepElement, progBar, initTime, progMax, progValue);
     }
   } catch (err) {
-    console.error(`Error initializing searchCEP`);
+    return `${status}`;
   }
   return `${status}`;
 }
@@ -109,7 +98,7 @@ export async function makeCEPRequest(url: string): Promise<Response> {
   try {
     if (!response.ok) throw new Error(`Error in CEP request. Status: ${response.status}`);
   } catch (error) {
-    console.error(`Error in CEP request: ${(error as Error).message}`);
+    return response;
   }
   return response;
 }
@@ -133,9 +122,8 @@ export async function loadCEP(res: Response): Promise<any> {
       throw new Error(`Error on the values entry.
       Obtained values: ${JSON.stringify(res) || null}`);
   } catch (loadError) {
-    console.warn(`Error status: `, (loadError as Error).message);
+    return res.status || 404;
   }
-  return -1;
 }
 export function displayCEPLoadBar(cepElement: targEl): [number, number, HTMLProgressElement] {
   const progressBar = document.createElement("progress");
@@ -148,7 +136,7 @@ export function displayCEPLoadBar(cepElement: targEl): [number, number, HTMLProg
       style: { backgroundColor: "blue", color: "white" },
       width: cepElement.width,
     });
-  } else inputNotFound(cepElement, "cepElement", extLine(new Error()));
+  }
   return [progressBar.max, progressBar.value, progressBar];
 }
 export function uploadCEPLoadBar(
@@ -182,16 +170,7 @@ export function uploadCEPLoadBar(
       document.getElementById("divProgCEP")!.style.minHeight = "1rem";
       document.getElementById("divProgCEP")!.style.height = "1rem";
     }, roundedElapsed);
-  } else
-    multipleElementsNotFound(
-      extLine(new Error()),
-      "argumentos para uploadCEPLoadBar",
-      cepElement,
-      progressBar,
-      initTime,
-      progMaxInt,
-      progValueInt,
-    );
+  }
 }
 export function enableCEPBtn(cepBtn: targEl, cepLength: number = 0): boolean {
   let isCepElemenBtnOn = false;
@@ -200,7 +179,7 @@ export function enableCEPBtn(cepBtn: targEl, cepLength: number = 0): boolean {
       cepBtn.removeAttribute("disabled");
       isCepElemenBtnOn = true;
     } else cepBtn.setAttribute("disabled", "");
-  } else multipleElementsNotFound(extLine(new Error()), "argumentos para enableCEPBtn", cepBtn, cepLength);
+  }
   return isCepElemenBtnOn;
 }
 export function addMedHistHandler(click: targEv | React.MouseEvent, blockCount: number = 1): number {
@@ -218,7 +197,7 @@ export function addMedHistHandler(click: targEv | React.MouseEvent, blockCount: 
               </span>
               <span role="group" class="divAntMedSpan spanMain spanAntMedDate" id="antMedSpanMainDate${blockCount}">
                 <span role="group" class="divAntMedSubSpan spanSub spanSubAntMedDate" id="antMedSpanSubDate${blockCount}">
-                  <div role="group" class="antMedDiv">
+                  <fieldset role="group" class="antMedDiv">
                     <label for="antMedDateIniId${blockCount}" class="antMedLabel"></label>
                     <div role="group" class="antMedDateDiv flexDiv">
                       <input type="date" name="antMedDateIniName${blockCount}" id="antMedDateIniId${blockCount}" class="form-control inpDate antMedDate inpAntMed" data-title="data_ini_tratamento${blockCount}" data-xls="Início de Tratamento ${blockCount}" required /> 
@@ -229,7 +208,7 @@ export function addMedHistHandler(click: targEv | React.MouseEvent, blockCount: 
                         Usar data atual
                       </button>
                     </div>
-                  </div>
+                  </fieldset>
                 </span>
               </span>
           `,
@@ -254,21 +233,16 @@ export function addMedHistHandler(click: targEv | React.MouseEvent, blockCount: 
     } else if (click.currentTarget instanceof HTMLElement && click.currentTarget.classList.contains("removeAntMed")) {
       const divToRemove = Array.from(document.querySelectorAll(".antMedBlock")).at(-1);
       if (divToRemove && blockCount > 0 && divToRemove?.id !== "antMedBlock1") divToRemove.remove();
-    } else
-      console.error(`Error validating .classList of click.target in addAntMedHandler.
-        Catched value: ${(click?.target as HTMLElement)?.classList ?? "UNDEFINED CLASS LIST"}.`);
-  } else
-    elementNotFound(click?.target, `${(click?.target as Element)?.id ?? "UNDEFINED BUTTON ID"}`, extLine(new Error()));
+    }
+  }
   return blockCount;
 }
 export function handleDivAddShow(targ: targEl): void {
   try {
-    if (!(targ instanceof HTMLInputElement && (targ.type === "radio" || targ.type === "checkbox")))
-      throw elementNotFound(targ, `Validation of Event Current Target`, extLine(new Error()));
+    if (!(targ instanceof HTMLInputElement && (targ.type === "radio" || targ.type === "checkbox"))) return;
     const parentSpan =
       targ.closest(".spanSectAnt") || targ.closest(".input-group") || targ.closest('span[role="group"]');
-    if (!(parentSpan instanceof HTMLElement))
-      throw elementNotFound(parentSpan, `Validation of Parent Section Span`, extLine(new Error()));
+    if (!(parentSpan instanceof HTMLElement)) return;
     let divAdd: targEl = parentSpan.nextElementSibling;
     if (!divAdd?.classList.contains(".divAdd")) divAdd = parentSpan.nextElementSibling?.nextElementSibling;
     if (!divAdd?.classList.contains(".divAdd"))
@@ -277,8 +251,7 @@ export function handleDivAddShow(targ: targEl): void {
       divAdd = parentSpan.nextElementSibling?.nextElementSibling?.nextElementSibling?.nextElementSibling;
     if (!(divAdd instanceof HTMLElement && (divAdd.classList.contains("divAdd") as boolean)))
       divAdd = document.getElementById(`divAdd${targ.id.replace("ant", "").replace("Id", "")}`) as HTMLDivElement;
-    if (!(divAdd instanceof HTMLElement && (divAdd.classList.contains("divAdd") as boolean)))
-      throw elementNotFound(divAdd, `Validation of Div Add`, extLine(new Error()));
+    if (!(divAdd instanceof HTMLElement && (divAdd.classList.contains("divAdd") as boolean))) return;
     if (targ.checked) {
       divAdd.style.display = "grid";
       divAdd.style.opacity = "0.8";
@@ -315,19 +288,6 @@ export function handleDivAddShow(targ: targEl): void {
         if (radio instanceof HTMLInputElement) delete radio.dataset.required;
     }
   } catch (e) {
-    console.error(
-      `Error executing callback for ${
-        targ instanceof HTMLElement ? targ.id || targ.className || targ.tagName : "undefined target"
-      }:\n${(e as Error).message}
-      Attempts for divAdd:
-      1. ${(targ instanceof HTMLElement && targ.closest(".spanSectAnt")?.id) || "null"}
-      2. ${(targ instanceof HTMLElement && targ.closest(".input-group")?.id) || "null"}
-      3. ${(targ instanceof HTMLElement && targ.closest('span[role="group"]')?.id) || "null"}
-      4. ${
-        (targ instanceof HTMLElement &&
-          document.getElementById(`divAdd${targ.id.replace("ant", "").replace("Id", "")}`)) ||
-        "null"
-      }`,
-    );
+    return;
   }
 }

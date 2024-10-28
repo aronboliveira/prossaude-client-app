@@ -25,7 +25,9 @@ export default function TabDCut(): JSX.Element {
       [8, "Abdominal", "Abd"],
       [9, "Soma", "Sum"],
     ];
-  if (ctx1?.refs) ({ td } = ctx1.refs);
+  if (ctx1) {
+    if (ctx1.refs) ({ td } = ctx1.refs);
+  }
   //TODO REMOVER APÓS TESTE
   checkContext(ctx1, "FpsCtx", TabDCut);
   return (

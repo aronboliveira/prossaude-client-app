@@ -3,7 +3,7 @@ import { ENCtxProps } from "@/lib/global/declarations/interfaces";
 import { useContext, useEffect, useRef } from "react";
 import { ENCtx } from "./ENForm";
 import { GordLvl, GordLvlLab } from "@/lib/global/declarations/testVars";
-import { checkContext, limitedError } from "@/lib/global/gModel";
+import { checkContext } from "@/lib/global/gModel";
 import { tabProps, timers } from "@/vars";
 import { callbackAtvLvlElementNaf, exeAutoFill } from "@/lib/locals/edFisNutPage/edFisNutHandler";
 import sEn from "@/styles//modules/enStyles.module.scss";
@@ -111,7 +111,7 @@ export default function GordCorpLvl(): JSX.Element {
           });
           tabProps.edIsAutoCorrectOn && exeAutoFill(tabProps.gl);
         } catch (e) {
-          limitedError(`Error executing ${ev.type} for ${idf}:\n${(e as Error).message}`, idf);
+          return;
         }
       }}>
       {levels.map((o, i) => (

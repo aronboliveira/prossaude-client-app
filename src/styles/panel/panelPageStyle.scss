@@ -59,8 +59,7 @@ body {
 
   .bi {
     &:not(.btn-close) {
-      width: unset;
-      height: unset;
+      @include szEq(unset);
     }
     &.btn-success {
       font-weight: bold;
@@ -90,10 +89,9 @@ body {
       }
     }
     &.btn {
+      @include sz(100%, fit-content);
       display: block;
-      height: fit-content;
       font-size: 0.875em;
-      width: 100%;
     }
   }
 

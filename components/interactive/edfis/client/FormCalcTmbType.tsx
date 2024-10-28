@@ -3,7 +3,7 @@ import { ENCtxProps } from "@/lib/global/declarations/interfaces";
 import { useContext, useEffect, useRef } from "react";
 import { ENCtx } from "./ENForm";
 import { TMBFormula } from "@/lib/global/declarations/testVars";
-import { checkContext, limitedError } from "@/lib/global/gModel";
+import { checkContext } from "@/lib/global/gModel";
 import { tabProps } from "@/vars";
 import { callbackAtvLvlElementNaf, exeAutoFill } from "@/lib/locals/edFisNutPage/edFisNutHandler";
 import sEn from "@/styles//modules/enStyles.module.scss";
@@ -43,7 +43,7 @@ export default function FormCalcTmbType(): JSX.Element {
           });
           tabProps.edIsAutoCorrectOn && exeAutoFill(ev.currentTarget);
         } catch (e) {
-          limitedError(`Error executing ${ev.type} callback for ${idf}:\n${(e as Error).message}`, idf);
+          return;
         }
       }}>
       {formulas.map((f, i) => (

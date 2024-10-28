@@ -1,4 +1,3 @@
-import { extLine, inputNotFound } from "../../global/handlers/errorHandler";
 import { targEl } from "../../global/declarations/types";
 //nesse file estão presentes principalmente as funções relacionadas à exigência de modelo textual e de visualização
 export function addDblQuotes(qtedInp: targEl): string {
@@ -12,6 +11,6 @@ export function addDblQuotes(qtedInp: targEl): string {
       qtedInp.setSelectionRange(1, 1);
     }
     qtedValue = qtedInp.value;
-  } else inputNotFound(qtedInp, `${qtedInp?.id ?? "UNDEFINED ID QUOTED CONTAINER"}`, extLine(new Error()));
+  }
   return qtedValue;
 }

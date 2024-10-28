@@ -26,7 +26,7 @@ const OdTips = memo(({ state, dispatch }: DlgProps): JSX.Element => {
             dispatch(!state);
           }
         }}>
-        <div className='flexNoW flexAlItCt flexJBt'>
+        <fieldset className='flexNoW flexAlItCt flexJBt'>
           <h3 className='bolded'>Manual para controle de formulário</h3>
           <button
             className='btn btn-close forceInvert'
@@ -35,7 +35,7 @@ const OdTips = memo(({ state, dispatch }: DlgProps): JSX.Element => {
               dispatch(!state);
               !state && ev.currentTarget.closest("dialog")?.close();
             }}></button>
-        </div>
+        </fieldset>
         <hr />
         <article className='flexNoWC noInvert'>
           <section className='odTipsSect' id='fillTips'>

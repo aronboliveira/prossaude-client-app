@@ -1,5 +1,4 @@
 "use client";
-import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { nlDiv } from "@/lib/global/declarations/types";
 import { orderLabels } from "@/lib/locals/odPage/odModel";
 import { qrProps } from "@/lib/global/declarations/interfaces";
@@ -24,15 +23,14 @@ export default function QuadrMainDiv({ qr }: qrProps): JSX.Element {
   })();
   useEffect(() => {
     try {
-      if (!(subDivRef.current instanceof HTMLElement))
-        throw elementNotFound(subDivRef.current, `Validation of Sub Div Instance`, extLine(new Error()));
+      if (!(subDivRef.current instanceof HTMLElement)) return;
       orderLabels(subDivRef.current);
     } catch (e) {
-      console.error(`Error executing useEffect for QuadrMainDiv ${qr}:\n${(e as Error).message}`);
+      return;
     }
   }, [qr]);
   return (
-    <div
+    <fieldset
       role='group'
       className='quadrAvDent quadrMainDiv form-control'
       id={`divMain${qr}`}
@@ -69,6 +67,6 @@ export default function QuadrMainDiv({ qr }: qrProps): JSX.Element {
           <InpAvDent qr={qr} num={teethNum} key={`${qr}_${teethNum}`} />
         ))}
       </div>
-    </div>
+    </fieldset>
   );
 }

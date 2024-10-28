@@ -48,7 +48,7 @@ export default function InspDlgElements({ count, ctx, fullName }: InspProps): JS
               Não
             </label>
             <br role='presentation' />
-            <span role='group' className='spanSub inspSpanSub' id={`inspSpanSub${count}`}>
+            <fieldset role='group' className='spanSub inspSpanSub' id={`inspSpanSub${count}`}>
               <textarea
                 className='form-control inspTa noInvert'
                 id={`inspTa${count}`}
@@ -63,7 +63,7 @@ export default function InspDlgElements({ count, ctx, fullName }: InspProps): JS
                 Mostrar Sugestões
               </button>
               {shouldShowDlg && <InspDlg state={shouldShowDlg} dispatch={setDlg} ctx={ctx} count={count} />}
-            </span>
+            </fieldset>
           </span>
         </div>
       </fieldset>

@@ -24,7 +24,7 @@ export default function useDataProvider(
           providers.globalDataProvider ??= new DataProvider(el);
           providers.globalDataProvider.initPersist(el, providers.globalDataProvider, userClass);
         } catch (e) {
-          console.error(`Error executing useDataProvider:\n${(e as Error).message}`);
+          return;
         }
       },
       location.pathname.includes("edfis") ? 1000 : 500,

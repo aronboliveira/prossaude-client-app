@@ -36,7 +36,7 @@ export default function LockTabInd({
           if (sbb instanceof HTMLInputElement || sbb instanceof HTMLButtonElement) sbb.disabled = false;
         }
       } catch (e) {
-        console.error(`Error executing effect for ${`lock${ctx}`}:\n${(e as Error).message}`);
+        return;
       }
     }, timers.personENTimer);
   }, [siblingInput, r]);
@@ -44,7 +44,7 @@ export default function LockTabInd({
     <span
       ref={r}
       role='img'
-      className={`noInvert lock_inpGet${addGroup ? addGroup.map(group => ` ${group}`).join("") : ""}`}
+      className={`noInvert lockEl lock_inpGet${addGroup ? addGroup.map(group => ` ${group}`).join("") : ""}`}
       id={`lock${ctx}`}>
       <svg
         xmlns='http://www.w3.org/2000/svg'
@@ -75,7 +75,7 @@ export default function LockTabInd({
       </svg>
     </span>
   ) : (
-    <div style={{ border: "none", boxShadow: "none" }} role='group' className={`noInvert`} id={`div${ctx}`}>
+    <div style={{ border: "none", boxShadow: "none" }} role='group' className={`noInvert lockEl`} id={`div${ctx}`}>
       <span
         ref={r}
         role='img'

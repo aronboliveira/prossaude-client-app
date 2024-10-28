@@ -38,7 +38,7 @@ export default function OdForm(): JSX.Element {
   useEffect(() => {
     if (!toasted.current)
       toast(t => (
-        <div style={{ lineHeight: "1.6rem" }}>
+        <fieldset style={{ lineHeight: "1.6rem" }}>
           <b>Dica!</b>
           <hr />
           <span>Você pode desativar ou ativar</span>
@@ -52,7 +52,7 @@ export default function OdForm(): JSX.Element {
             onClick={() => toast.dismiss(t.id)}>
             Fechar
           </button>
-        </div>
+        </fieldset>
       ));
     toasted.current = true;
     const untoast = (): void => toast.dismiss();

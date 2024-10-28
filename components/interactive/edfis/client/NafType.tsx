@@ -4,10 +4,11 @@ import { useContext, useEffect, useRef } from "react";
 import { ENCtx } from "./ENForm";
 import { ENCtxProps } from "@/lib/global/declarations/interfaces";
 import { Intensity, NafTypeValue } from "@/lib/global/declarations/testVars";
-import { checkContext, limitedError, parseNotNaN } from "@/lib/global/gModel";
+import { checkContext } from "@/lib/global/gModel";
 import { callbackAtvLvlElementNaf, exeAutoFill } from "@/lib/locals/edFisNutPage/edFisNutHandler";
 import sEn from "@/styles//modules/enStyles.module.scss";
 import { NlMRef, nlSel } from "@/lib/global/declarations/types";
+import { dispatchFactorAtvLvl } from "@/lib/locals/edFisNutPage/edFisNutModel";
 export default function NafType(): JSX.Element {
   let gl: NlMRef<nlSel> = null,
     nafr: NlMRef<nlSel> = null,
@@ -31,14 +32,11 @@ export default function NafType(): JSX.Element {
     setTimeout(() => {
       try {
         const query = document.getElementById(idf);
-        tabProps.factorAtvLvl =
-          (parseNotNaN(nafr?.current?.value || "1.4", 1.4) as NafTypeValue) ||
-          (parseNotNaN(
+        dispatchFactorAtvLvl(
+          (nafr?.current?.value as NafTypeValue) ||
             ((query instanceof HTMLSelectElement || query instanceof HTMLInputElement) &&
-              (query as HTMLSelectElement).value) ||
-              "1.4",
-          ) as NafTypeValue) ||
-          "1.4";
+              (query as HTMLSelectElement).value),
+        );
         if (!(nafr?.current instanceof HTMLSelectElement)) return;
         const selected = nafr.current.selectedOptions[0];
         if (selected.dataset.intensity) nafr.current.dataset.intensity = selected.dataset.intensity;
@@ -68,11 +66,10 @@ export default function NafType(): JSX.Element {
             naf: nafr?.current ?? document.getElementById("nafType"),
             fct: fct?.current ?? document.getElementById("formCalcTMBType"),
           });
-          tabProps.factorAtvLvl = ev.currentTarget.value as NafTypeValue;
-          console.log("Activity factor is: " + tabProps.factorAtvLvl);
+          dispatchFactorAtvLvl(ev.currentTarget.value as NafTypeValue);
           tabProps.edIsAutoCorrectOn && exeAutoFill(tabProps.naf);
         } catch (e) {
-          limitedError(`Error executing ${ev.type} callback for ${idf}:\n${(e as Error).message}`, idf);
+          return;
         }
       }}>
       {levels.map(o => (

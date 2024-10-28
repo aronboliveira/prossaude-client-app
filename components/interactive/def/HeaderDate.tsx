@@ -1,6 +1,5 @@
 "use client";
 import { clearPhDates } from "@/lib/global/gStyleScript";
-import { inputNotFound } from "@/lib/global/handlers/errorHandler";
 import { nlBtn, nlInp } from "@/lib/global/declarations/types";
 import { useCallback, useEffect, useRef } from "react";
 import { compProp, parseNotNaN } from "@/lib/global/gModel";
@@ -16,18 +15,17 @@ export default function HeaderDate(): JSX.Element {
     }, [btnRef, dateRef]);
   useEffect(() => {
     try {
-      if (!(dateRef.current instanceof HTMLInputElement && dateRef.current.type === "date"))
-        throw inputNotFound(dateRef.current, `Validation of Date on Header instance`, '<input type="date">');
+      if (!(dateRef.current instanceof HTMLInputElement && dateRef.current.type === "date")) return;
       clearPhDates([dateRef.current]);
       equalizeBtn();
       addEventListener("resize", equalizeBtn);
       return (): void => removeEventListener("resize", equalizeBtn);
     } catch (e) {
-      console.error(`Error executing useEffect for HeaderDate:\n${(e as Error).message}`);
+      return;
     }
   }, [equalizeBtn, dateRef]);
   return (
-    <span role='group' className='control flexJSt flexQ900NoW' id='spanHFlex'>
+    <fieldset style={{ display: "flex-inline" }} role='group' className='control flexJSt flexQ900NoW' id='spanHFlex'>
       <input
         type='date'
         className='form-control d_ibl minCurrDate'
@@ -40,6 +38,6 @@ export default function HeaderDate(): JSX.Element {
       <button type='button' className='datBtn d_ibl btn btn-secondary' id='headerDatBtn' ref={btnRef}>
         Usar data atual
       </button>
-    </span>
+    </fieldset>
   );
 }

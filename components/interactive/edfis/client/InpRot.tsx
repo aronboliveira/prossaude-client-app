@@ -1,12 +1,11 @@
 "use client";
 import { ErrorBoundary } from "react-error-boundary";
 import { InpRotProps } from "@/lib/global/declarations/interfaces";
-import { extLine, inputNotFound } from "@/lib/global/handlers/errorHandler";
 import { handleEventReq } from "@/lib/global/handlers/gHandlers";
 import { mainContextRot, nlInp } from "@/lib/global/declarations/types";
 import { useEffect, useRef, useState } from "react";
 import GenericErrorComponent from "../../../error/GenericErrorComponent";
-import { applyFieldConstraints, limitedError } from "@/lib/global/gModel";
+import { applyFieldConstraints } from "@/lib/global/gModel";
 import { tabProps } from "@/vars";
 export default function InpRot(props: InpRotProps): JSX.Element {
   const inpRef = useRef<nlInp>(null),
@@ -44,15 +43,10 @@ export default function InpRot(props: InpRotProps): JSX.Element {
     })();
   useEffect(() => {
     try {
-      if (!(inpRef.current instanceof HTMLInputElement))
-        throw inputNotFound(
-          inpRef.current,
-          `Validation of Input Reference for ${props.grp || "Undefined Group"} ${props.ctx || "Undefined Context"}`,
-          extLine(new Error()),
-        );
+      if (!(inpRef.current instanceof HTMLInputElement)) return;
       if (props.flags && props.flags !== "") inpRef.current.dataset.flags = props.flags;
     } catch (e) {
-      console.error(`Error executing useEffect:\n${(e as Error).message}`);
+      return;
     }
   }, [props.ctx, props.flags, props.grp]);
   useEffect(() => {
@@ -61,10 +55,7 @@ export default function InpRot(props: InpRotProps): JSX.Element {
       if (!(inpRef.current instanceof HTMLElement)) throw new Error(`Failed to validate current reference for input`);
       handleEventReq(inpRef.current);
     } catch (e) {
-      limitedError(
-        `Error executing effect for ${InpRot.prototype.constructor.name}:${(e as Error).message}`,
-        InpRot.prototype.constructor.name,
-      );
+      return;
     }
   }, [inpRef, v, trusted]);
   return (

@@ -8,8 +8,7 @@
 }
 .btnBack {
   @include tf0_5;
-  height: 5rem;
-  width: 15rem;
+  @include sz(15rem, 5rem);
   background: linear-gradient(90deg, rgba(238, 158, 10, 0.593), rgb(238, 176, 60));
   &:active {
     transform: translateY(0.2rem);
@@ -33,7 +32,7 @@
   @include gridJC;
   flex: 1;
   gap: 2rem;
-  grid: auto-flow row / repeat(2, minmax(25vw, 1fr));
+  grid-template-columns: repeat(2, minmax(25vw, 1fr));
   grid-auto-rows: minmax(200px, auto);
   width: 100%;
   padding: 1rem;
@@ -55,17 +54,16 @@
   &Front,
   &Back {
     @include flAlItCt;
+    @include szFull;
     position: absolute;
-    width: 100%;
-    height: 100%;
     backface-visibility: hidden;
     justify-content: center;
     border-radius: 0.5rem;
   }
   &Front {
+    @include fCNoW;
     background: linear-gradient(90deg, rgba(232, 238, 234, 0.725), rgba(198, 230, 209, 0.851));
     cursor: alias;
-    @include fCNoW;
     justify-content: space-between;
   }
   &FrontContent {
@@ -75,19 +73,19 @@
     text-align: center;
   }
   &Back {
-    background: radial-gradient(circle at 120% center, rgba(80, 157, 80, 0.516), rgb(33, 109, 135));
     @include tf0_5;
+    background: radial-gradient(circle at 120% center, rgba(80, 157, 80, 0.516), rgb(33, 109, 135));
     transition-delay: 250ms;
     transform: rotateY(180deg);
     padding: 10%;
     text-align: center;
+    border: 0.15rem rgba(76, 145, 180, 0.426) outset;
   }
   &Inner {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    transform-style: preserve-3d;
     @include tf(0.8s, ease-in-out);
+    @include szFull;
+    transform-style: preserve-3d;
+    position: relative;
     box-shadow: 6px 3px 10px #78787857;
     border-radius: 1rem;
     &:hover {
@@ -135,8 +133,7 @@
   }
   &addTextBack {
     @include fCNoW;
-    height: 100%;
-    width: 70%;
+    @include sz(70%, 100%);
     font-size: 1rem;
     text-align: center;
     color: #1d1b1bd8;
@@ -164,9 +161,8 @@
 }
 .cardLink {
   @include flexCenter;
-  width: 100%;
+  @include sz(100%, 72.5%);
   padding-inline: 7.5%;
-  height: 72.5%;
   background: radial-gradient(circle at 120% center, rgba(80, 157, 80, 0.516), rgb(33, 109, 135));
   border-top-left-radius: 0.5rem;
   border-top-right-radius: 0.5rem;

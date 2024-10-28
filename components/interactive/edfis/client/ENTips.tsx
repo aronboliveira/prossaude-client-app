@@ -1,5 +1,4 @@
 import { RootCtxType, DlgProps } from "@/lib/global/declarations/interfaces";
-import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { isClickOutside } from "@/lib/global/gStyleScript";
 import { NlMRef, nlDiv, nlSpan } from "@/lib/global/declarations/types";
 import { useRef, useEffect, useContext, memo, useCallback } from "react";
@@ -20,9 +19,8 @@ const ENTips = memo(({ state, dispatch }: DlgProps): JSX.Element => {
     render = useCallback(() => {
       try {
         const mathFirstBlock = m1.current ?? document.getElementById("mathFirstBlock");
-        if (!(mathFirstBlock instanceof HTMLElement))
-          throw elementNotFound(mathFirstBlock, "mathFirstBlock", extLine(new Error()));
-        mathFirstBlock.innerHTML = `
+        if (mathFirstBlock)
+          mathFirstBlock.innerHTML = `
         <math className="italic math-lg">
         <mfrac>
           <mrow>
@@ -35,14 +33,9 @@ const ENTips = memo(({ state, dispatch }: DlgProps): JSX.Element => {
         </mfrac>
       </math>
         `;
-      } catch (e) {
-        console.error(`Error executing procedure for adding first math block:\n${(e as Error).message}`);
-      }
-      try {
         const mathSecondBlock = m2.current ?? document.getElementById("mathSecondBlock");
-        if (!(mathSecondBlock instanceof HTMLElement))
-          throw elementNotFound(mathSecondBlock, "mathSecondBlock", extLine(new Error()));
-        mathSecondBlock.innerHTML = `
+        if (mathSecondBlock)
+          mathSecondBlock.innerHTML = `
         <summary className="noInvert">Fórmula</summary>
         <br />
         <math className="italic math">
@@ -85,14 +78,9 @@ const ENTips = memo(({ state, dispatch }: DlgProps): JSX.Element => {
           <mn>450</mn>
         </math>
         `;
-      } catch (e) {
-        console.error(`Error executing procedure for adding second math block:\n${(e as Error).message}`);
-      }
-      try {
         const mathThirdBlock = m3.current ?? document.getElementById("mathThirdBlock");
-        if (!(mathThirdBlock instanceof HTMLElement))
-          throw elementNotFound(mathThirdBlock, "mathThirdBlock", extLine(new Error()));
-        mathThirdBlock.innerHTML = `
+        if (mathThirdBlock)
+          mathThirdBlock.innerHTML = `
         <math className="italic math-sm">
         <munder>
           <mn>C1</mn>
@@ -118,14 +106,9 @@ const ENTips = memo(({ state, dispatch }: DlgProps): JSX.Element => {
         <mi>)</mi>
       </math>
         `;
-      } catch (e) {
-        console.error(`Error executing procedure for adding third math block:\n${(e as Error).message}`);
-      }
-      try {
         const mathFourthBlock = m4.current ?? document.getElementById("mathFourthBlock");
-        if (!(mathFourthBlock instanceof HTMLElement))
-          throw elementNotFound(mathFourthBlock, "mathFourthBlock", extLine(new Error()));
-        mathFourthBlock.innerHTML = `
+        if (mathFourthBlock)
+          mathFourthBlock.innerHTML = `
         <math className="italic math-sm">
         <mn>10</mn>
         <mo>x</mo>
@@ -145,14 +128,9 @@ const ENTips = memo(({ state, dispatch }: DlgProps): JSX.Element => {
         </munder>
       </math>
         `;
-      } catch (e) {
-        console.error(`Error executing procedure for adding fourth math block:\n${(e as Error).message}`);
-      }
-      try {
         const mathLastBlock = m5.current ?? document.getElementById("mathLastBlock");
-        if (!(mathLastBlock instanceof HTMLElement))
-          throw elementNotFound(mathLastBlock, "mathLastBlock", extLine(new Error()));
-        mathLastBlock.innerHTML = `
+        if (mathLastBlock)
+          mathLastBlock.innerHTML = `
         <math className="italic math-sm">
         <mi>TMB</mi>
         <mo>x</mo>
@@ -162,14 +140,9 @@ const ENTips = memo(({ state, dispatch }: DlgProps): JSX.Element => {
         </munder>
       </math>
         `;
-      } catch (e) {
-        console.error(`Error executing procedure for adding last math block:\n${(e as Error).message}`);
-      }
-      try {
         const hbFormula = hb.current ?? document.getElementById("hbFormula");
-        if (!(hbFormula instanceof HTMLElement))
-          throw elementNotFound(hbFormula, `Harris-Benedict formula div`, extLine(new Error()));
-        hbFormula.innerHTML = `
+        if (hbFormula)
+          hbFormula.innerHTML = `
         <math>
           <munder>
             <mn>C1</mn>
@@ -196,7 +169,7 @@ const ENTips = memo(({ state, dispatch }: DlgProps): JSX.Element => {
         </math>
         `;
       } catch (e) {
-        console.error(`Error executing hbFormula:\n${(e as Error).message}`);
+        return;
       }
     }, [m1, m2, m3, m4, m5, hb]),
     ctx = useContext<RootCtxType>(RootCtx);

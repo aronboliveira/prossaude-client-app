@@ -1,7 +1,7 @@
 "use client";
 import { PseudoNum } from "@/lib/global/declarations/testVars";
 import { nlInp } from "@/lib/global/declarations/types";
-import { applyFieldConstraints, limitedError } from "@/lib/global/gModel";
+import { applyFieldConstraints } from "@/lib/global/gModel";
 import { handleCondtReq } from "@/lib/global/handlers/gHandlers";
 import { tabProps } from "@/vars";
 import { useRef, useEffect, useState } from "react";
@@ -22,10 +22,7 @@ export default function ProtUrLvl(): JSX.Element {
         pattern: ["^d+$", ""],
       });
     } catch (e) {
-      limitedError(
-        `Error executing effect for ${ProtUrLvl.prototype.constructor.name}:${(e as Error).message}`,
-        ProtUrLvl.prototype.constructor.name,
-      );
+      return;
     }
   }, [v, r, trusted]);
   return (

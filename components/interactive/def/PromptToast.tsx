@@ -4,7 +4,7 @@ export default function promptToast(message: string, ph: string): Promise<string
   return new Promise(resolve => {
     toast(
       t => (
-        <div>
+        <fieldset>
           <p>{message}</p>
           <input
             type='text'
@@ -37,7 +37,7 @@ export default function promptToast(message: string, ph: string): Promise<string
               {navigatorVars.pt ? "Confirmar" : "Submit"}
             </button>
           </div>
-        </div>
+        </fieldset>
       ),
       {
         duration: Infinity,

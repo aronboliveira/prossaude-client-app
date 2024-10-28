@@ -16,7 +16,6 @@ export function handleGenRender({
   setGenFisAlin?: Dispatch<SetStateAction<AlignType>>;
 } & Parameters<typeof fluxGen>[0]): void {
   person.dispatchGen(fluxGen({ g, gb, gt, ga }, setGenTrans, setGenBirthRel, setGenFisAlin));
-  console.log("Person's Gender: " + person.gen);
 }
 export function handleQueryForRefs(
   ...refs: { id: string; r: MutableRefObject<any>; fallback?: { p?: string; selector: string } }[]

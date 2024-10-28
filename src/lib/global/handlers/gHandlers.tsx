@@ -1,6 +1,6 @@
 import { FormEvent, MutableRefObject } from "react";
 import { addCanvasListeners } from "../gController";
-import { autoCapitalizeInputs, compProp, limitedError, parseNotNaN, regularToSnake } from "../gModel";
+import { autoCapitalizeInputs, compProp, parseNotNaN, regularToSnake } from "../gModel";
 import { fadeElement, isClickOutside } from "../gStyleScript";
 //nesse file estão presentes principalmente as funções de manipulação dinâmica de texto e layout
 import type {
@@ -13,16 +13,7 @@ import type {
   formCases,
   queryableNode,
   vRoot,
-  entryEl,
 } from "../declarations/types";
-import {
-  extLine,
-  elementNotFound,
-  inputNotFound,
-  multipleElementsNotFound,
-  stringError,
-  elementNotPopulated,
-} from "./errorHandler";
 import { handleSubmit } from "@/lib/global/data-service";
 import { createRoot } from "react-dom/client";
 import { toast } from "react-hot-toast";
@@ -43,7 +34,6 @@ export function updateSimpleProperty(el: targEl): primitiveType {
       return Number.isFinite(normalizedValue) ? normalizedValue : 0;
     } else return el.value || "0";
   } else if (el instanceof HTMLSelectElement || el instanceof HTMLTextAreaElement) return el.value;
-  else inputNotFound(el, "el in updateSimpleProperty", extLine(new Error()));
   return "-1";
 }
 export function cursorCheckTimer(): number {
@@ -89,15 +79,9 @@ export function opRadioHandler(keydown: KeyboardEvent | React.KeyboardEvent, rad
           }, 5000);
           return;
         }
-      } else
-        multipleElementsNotFound(
-          extLine(new Error()),
-          `validando radioYes id ${radioYes?.id || "UNDEFINED ID"} or radiosNo id ${radioNo?.id || "UNDEFINED ID"}`,
-          radioYes,
-          radioNo,
-        );
+      }
     }
-  } else console.error(`Error validating KeyboardEvent in opRadioHandler.`);
+  }
 }
 //handler for contextualized problems, with divAdd
 export function cpbInpHandler(ev: Event, radio: targEl): void {
@@ -147,15 +131,12 @@ export function cpbInpHandler(ev: Event, radio: targEl): void {
               [
                 ...divAdd.querySelectorAll('input[type="radio"]'),
                 ...divAdd.querySelectorAll('input[type="checkbox"]'),
-              ].forEach((rad, i) => {
+              ].forEach((rad) => {
                 try {
-                  if (!(rad instanceof HTMLInputElement && (rad.type === "radio" || rad.type === "checkbox")))
-                    throw inputNotFound(rad, `Validation of input instance`, extLine(new Error()));
+                  if (!(rad instanceof HTMLInputElement && (rad.type === "radio" || rad.type === "checkbox"))) return;
                   rad.dataset.required = "true";
                 } catch (e) {
-                  console.error(
-                    `Error executing iteration ${i} for updating checkboxes requirements:\n${(e as Error).message}`,
-                  );
+                  return;
                 }
               });
               [
@@ -164,15 +145,12 @@ export function cpbInpHandler(ev: Event, radio: targEl): void {
                 ...(divAdd?.querySelectorAll('input[type="email"]') ?? []),
                 ...divAdd.querySelectorAll('input[type="tel"]'),
                 ...(divAdd?.querySelectorAll('input[type="date"]') ?? []),
-              ].forEach((inp, i) => {
+              ].forEach(inp => {
                 try {
-                  if (!(inp instanceof HTMLInputElement))
-                    throw inputNotFound(inp, `Validation of input instance`, extLine(new Error()));
+                  if (!(inp instanceof HTMLInputElement)) return;
                   inp.required = true;
                 } catch (e) {
-                  console.error(
-                    `Error executing iteration ${i} for updating text inputs requirements:\n${(e as Error).message}`,
-                  );
+                  return;
                 }
               });
             }
@@ -188,15 +166,12 @@ export function cpbInpHandler(ev: Event, radio: targEl): void {
             [
               ...divAdd.querySelectorAll('input[type="radio"]'),
               ...divAdd.querySelectorAll('input[type="checkbox"]'),
-            ].forEach((rad, i) => {
+            ].forEach(rad => {
               try {
-                if (!(rad instanceof HTMLInputElement && (rad.type === "radio" || rad.type === "checkbox")))
-                  throw inputNotFound(rad, `Validation of input instance`, extLine(new Error()));
+                if (!(rad instanceof HTMLInputElement && (rad.type === "radio" || rad.type === "checkbox"))) return;
                 delete rad.dataset.required;
               } catch (e) {
-                console.error(
-                  `Error executing iteration ${i} for updating checkboxes requirements:\n${(e as Error).message}`,
-                );
+                return;
               }
             });
             [
@@ -205,49 +180,38 @@ export function cpbInpHandler(ev: Event, radio: targEl): void {
               ...(divAdd?.querySelectorAll('input[type="email"]') ?? []),
               ...divAdd.querySelectorAll('input[type="tel"]'),
               ...(divAdd?.querySelectorAll('input[type="date"]') ?? []),
-            ].forEach((inp, i) => {
+            ].forEach(inp => {
               try {
-                if (!(inp instanceof HTMLInputElement))
-                  throw inputNotFound(inp, `Validation of input instance`, extLine(new Error()));
+                if (!(inp instanceof HTMLInputElement)) return;
                 inp.required = false;
               } catch (e) {
-                console.error(
-                  `Error executing iteration ${i} for updating text inputs requirements:\n${(e as Error).message}`,
-                );
+                return;
               }
             });
           }
         }, 600);
       }
     }
-  } else
-    multipleElementsNotFound(
-      extLine(new Error()),
-      "localizando parent elements de Radio",
-      radio,
-      radio?.parentElement,
-      radio?.parentElement?.parentElement,
-    );
+  }
 }
 export function doubleClickHandler(inpEl: targEl): void {
   if (inpEl instanceof HTMLInputElement && (inpEl.type === "checkbox" || inpEl.type === "radio")) {
     inpEl.checked = inpEl.checked ? false : true;
     cpbInpHandler(new Event("change"), inpEl);
-  } else inputNotFound(inpEl, `inpEl id ${inpEl?.id || "UNDEFINED ID"}`, extLine(new Error()));
+  }
 }
 export function useCurrentDate(activation: Event, dateBtn: targEl): void {
   if (activation?.target === dateBtn && dateBtn instanceof HTMLButtonElement) {
     const currentDate = new Date();
     const targInputDate = searchPreviousSiblings(dateBtn, "inpDate");
-    targInputDate instanceof HTMLInputElement && targInputDate.type === "date"
-      ? (targInputDate.value =
-          currentDate.getFullYear() +
-          "-" +
-          (currentDate.getMonth() + 1).toString().padStart(2, "0").replaceAll("'", "") +
-          "-" +
-          currentDate.getDate().toString().padStart(2, "0").replaceAll("'", ""))
-      : inputNotFound(targInputDate, `targInputDate id ${targInputDate?.id || "UNDEFINED ID"}`, extLine(new Error()));
-  } else elementNotFound(dateBtn, "arguments for useCurrentDate()", extLine(new Error()));
+    if (targInputDate instanceof HTMLInputElement && targInputDate.type === "date")
+      targInputDate.value =
+        currentDate.getFullYear() +
+        "-" +
+        (currentDate.getMonth() + 1).toString().padStart(2, "0").replaceAll("'", "") +
+        "-" +
+        currentDate.getDate().toString().padStart(2, "0").replaceAll("'", "");
+  }
 }
 export function searchNextSiblings(currentElement: Element, searchedSiblingClass: string): Element {
   let loopAcc = 0;
@@ -287,10 +251,8 @@ export function searchParents(currentElement: Element, searchedParentClass: stri
 }
 export function changeToAstDigit(toFileInpBtn: targEl): void {
   try {
-    if (!(toFileInpBtn instanceof HTMLButtonElement))
-      throw elementNotFound(toFileInpBtn, `Validation of Button for changin Signature input`, extLine(new Error()));
-    if (!(toFileInpBtn.textContent || toFileInpBtn.textContent === ""))
-      throw new Error(`No valid textContent for Button for changing Signature input`);
+    if (!(toFileInpBtn instanceof HTMLButtonElement)) return;
+    if (!(toFileInpBtn.textContent || toFileInpBtn.textContent === "")) return;
     const inpAst = toFileInpBtn.classList.contains("tratBtn")
       ? toFileInpBtn.previousElementSibling ??
         searchPreviousSiblings(toFileInpBtn, "inpAst") ??
@@ -302,13 +264,8 @@ export function changeToAstDigit(toFileInpBtn: targEl): void {
     if (
       !(inpAst instanceof HTMLCanvasElement || inpAst instanceof HTMLInputElement || inpAst instanceof HTMLImageElement)
     )
-      throw elementNotFound(inpAst, `Validation of field for Signature instance`, extLine(new Error()));
-    if (!(inpAst.parentElement instanceof HTMLElement))
-      throw elementNotFound(
-        inpAst.parentElement,
-        `Validation of Parent Element for field for Signature`,
-        extLine(new Error()),
-      );
+      return;
+    if (!(inpAst.parentElement instanceof HTMLElement)) return;
     if (inpAst instanceof HTMLCanvasElement || /Usar/gi.test(toFileInpBtn.innerText)) {
       toFileInpBtn.innerText = "Retornar à Assinatura Escrita";
       const fileInp = document.createElement("input");
@@ -444,13 +401,12 @@ export function changeToAstDigit(toFileInpBtn: targEl): void {
           };
           reader.readAsDataURL(imgFile);
         } catch (e) {
-          console.error(`Error executing ${change.type} callback:\n${e as Error}.message`);
+          return;
         }
       });
-      [...document.querySelectorAll(".inpAst"), ...document.querySelectorAll(".tratBtn")].forEach((fileInp, i) => {
+      [...document.querySelectorAll(".inpAst"), ...document.querySelectorAll(".tratBtn")].forEach((fileInp) => {
         try {
-          if (!(fileInp instanceof HTMLElement))
-            throw elementNotFound(fileInp, `Validation of field for Signature`, extLine(new Error()));
+          if (!(fileInp instanceof HTMLElement)) return;
           fileInp.style.width = `${Math.max(
             ...Array.from(document.querySelectorAll(".tratBtn")).map(tratBtn => {
               return tratBtn instanceof HTMLElement
@@ -459,9 +415,7 @@ export function changeToAstDigit(toFileInpBtn: targEl): void {
             }),
           )}px`;
         } catch (e) {
-          console.error(
-            `Error executing iteration ${i} for applying width to Fields for Signatures:\n${(e as Error).message}`,
-          );
+          return;
         }
       });
     } else if (!(inpAst instanceof HTMLCanvasElement) || /Retornar/gi.test(toFileInpBtn.innerText)) {
@@ -474,10 +428,9 @@ export function changeToAstDigit(toFileInpBtn: targEl): void {
           inpAst.dataset.title || `Assinatura do Tratamento ${document.querySelectorAll(".tratAst").length + 1}`;
         textInp.required = true;
         inpAst.parentElement.replaceChild(textInp, inpAst);
-        document.querySelectorAll(".inpAst").forEach((fileInp, i) => {
+        document.querySelectorAll(".inpAst").forEach(fileInp => {
           try {
-            if (!(fileInp instanceof HTMLElement))
-              throw elementNotFound(fileInp, `Validation of field for Signature`, extLine(new Error()));
+            if (!(fileInp instanceof HTMLElement)) return;
             fileInp.style.width = `${Math.max(
               ...Array.from(document.querySelectorAll(".tratBtn")).map(tratBtn => {
                 return tratBtn instanceof HTMLElement
@@ -486,9 +439,7 @@ export function changeToAstDigit(toFileInpBtn: targEl): void {
               }),
             )}px`;
           } catch (e) {
-            console.error(
-              `Error executing iteration ${i} for applying width to Fields for Signatures:\n${(e as Error).message}`,
-            );
+            return;
           }
         });
         textInp.addEventListener("input", ev => autoCapitalizeInputs(ev.currentTarget as HTMLInputElement));
@@ -503,9 +454,9 @@ export function changeToAstDigit(toFileInpBtn: targEl): void {
         inpAst.parentElement.replaceChild(fileInp, inpAst);
         addCanvasListeners();
       }
-    } else stringError("textContent for toFileInpBtn", toFileInpBtn?.textContent, extLine(new Error()));
+    }
   } catch (e) {
-    console.error(`Error executing changeToAstDigt:\n${(e as Error).message}`);
+    return;
   }
 }
 export function defineLabId(
@@ -520,7 +471,7 @@ export function defineLabId(
     if (!labAst && (toFileInpBtn.parentElement?.tagName === "LABEL" || toFileInpBtn.parentElement?.tagName === "SPAN"))
       labAst = toFileInpBtn.parentElement;
     labAst!.id = "spanAstPct";
-  } else multipleElementsNotFound(extLine(new Error()), "argumentos para defineLabId", toFileInpBtn, fileEl);
+  }
 }
 export function enableCPFBtn(cpfBtn: targEl, cpfLength: string = ""): boolean {
   if (cpfBtn instanceof HTMLButtonElement && typeof cpfLength === "string") {
@@ -534,7 +485,7 @@ export function enableCPFBtn(cpfBtn: targEl, cpfLength: string = ""): boolean {
       cpfBtn.style.borderColor = "#0a58ca";
     }
     return cpfBtn.disabled;
-  } else multipleElementsNotFound(extLine(new Error()), "argumentos para enableCEPBtn", cpfBtn, cpfLength);
+  }
   return true;
 }
 export function syncAriaStates(els: Array<Element> | NodeListOf<Element>): void {
@@ -657,10 +608,10 @@ export function syncAriaStates(els: Array<Element> | NodeListOf<Element>): void 
         if (el instanceof HTMLDialogElement) el.ariaModal = "true";
       }
     });
-  } else elementNotPopulated(els, "List of elements for synchronizing aria states", extLine(new Error()));
+  }
 }
 let showTipsDlg = false;
-export function toggleTips(awaitMount: boolean = false): void {
+export function toggleTips(): void {
   const odTipsDlg = document.getElementById("tipsDlg");
   if (odTipsDlg instanceof HTMLDialogElement) {
     odTipsDlg.addEventListener("click", ev => {
@@ -670,25 +621,17 @@ export function toggleTips(awaitMount: boolean = false): void {
       }
     });
     const odTipsBtn = document.getElementById("tipsBtn");
-    odTipsBtn instanceof HTMLButtonElement
-      ? odTipsBtn.addEventListener("click", () => {
-          showTipsDlg = !showTipsDlg;
-          showTipsDlg ? odTipsDlg.showModal() : odTipsDlg.close();
-        })
-      : elementNotFound(odTipsBtn, "Button for toggling tips", extLine(new Error()));
+    if (odTipsBtn instanceof HTMLButtonElement)
+      odTipsBtn.addEventListener("click", () => {
+        showTipsDlg = !showTipsDlg;
+        showTipsDlg ? odTipsDlg.showModal() : odTipsDlg.close();
+      });
     const odTipsClose = document.getElementById("tipsClose");
-    odTipsClose instanceof HTMLButtonElement
-      ? odTipsClose.addEventListener("click", () => {
-          showTipsDlg = !showTipsDlg;
-          showTipsDlg ? odTipsDlg.showModal() : odTipsDlg.close();
-        })
-      : elementNotFound(odTipsClose, "Close Button for toggling tips", extLine(new Error()));
-  } else {
-    !awaitMount
-      ? elementNotFound(odTipsDlg, "Dialog for tips", extLine(new Error()))
-      : setTimeout(() => {
-          !document.getElementById("tipsDlg") && elementNotFound(odTipsDlg, "Dialog for tips", extLine(new Error()));
-        }, 2000);
+    if (odTipsClose instanceof HTMLButtonElement)
+      odTipsClose.addEventListener("click", () => {
+        showTipsDlg = !showTipsDlg;
+        showTipsDlg ? odTipsDlg.showModal() : odTipsDlg.close();
+      });
   }
 }
 let showConformDlg = false;
@@ -716,8 +659,7 @@ export function toggleConformDlg(): void {
         conformDlg.close();
       }
     });
-  } else
-    multipleElementsNotFound("Elements for Dialog for agreement terms", extLine(new Error()), conformDlg, btnConform);
+  }
 }
 export function checkForReset(ev: rMouseEvent): void {
   try {
@@ -734,13 +676,13 @@ export function checkForReset(ev: rMouseEvent): void {
       resetForm(form);
     }
   } catch (e) {
-    console.error(`Error executing checkForReset:\n${(e as Error).message}`);
+    return;
   }
 }
 export function resetForm(form: nlFm): void {
   try {
-    if (!(form instanceof HTMLFormElement)) throw elementNotFound(form, "Form for resetting", extLine(new Error()));
-    [...form.querySelectorAll("input"), ...form.querySelectorAll("textarea")].forEach((inp, i) => {
+    if (!(form instanceof HTMLFormElement)) return;
+    [...form.querySelectorAll("input"), ...form.querySelectorAll("textarea")].forEach((inp) => {
       try {
         if (
           inp instanceof HTMLTextAreaElement ||
@@ -775,30 +717,29 @@ export function resetForm(form: nlFm): void {
           else inp.value = "0";
         }
       } catch (e) {
-        console.error(`Error executing iteration ${i} for reseting the form inputs:\n${(e as Error).message}`);
+        return;
       }
     });
-    form.querySelectorAll("select").forEach((s, i) => {
+    form.querySelectorAll("select").forEach((s) => {
       try {
         if (s.options.length === 0)
           throw new Error(`No option in the select ${s.id || s.name || s.className || s.tagName}`);
         if (s.dataset.default) s.value = s.dataset.default;
         else s.value = s.options[0].value;
       } catch (e) {
-        console.error(`Error executing iteration ${i} for reseting selects:\n${(e as Error).message}`);
+        return;
       }
     });
-    [document.getElementById("astDigtBtn"), document.querySelectorAll("[id$=AstDigtBtn]")].forEach((b, i) => {
+    [document.getElementById("astDigtBtn"), document.querySelectorAll("[id$=AstDigtBtn]")].forEach((b) => {
       try {
-        if (!(b instanceof HTMLButtonElement || (b instanceof HTMLInputElement && b.type === "button")))
-          throw new Error(`Invalidate instance for button used to reset canvas`);
+        if (!(b instanceof HTMLButtonElement || (b instanceof HTMLInputElement && b.type === "button"))) return;
         if (b.innerText.toLowerCase() === "retornar") b.click();
       } catch (e) {
-        console.error(`Error executing iteration ${i} for resetting for canvas elements:\n${(e as Error).message}`);
+        return;
       }
     });
   } catch (e) {
-    console.error(`Error executing resetForm:\n${(e as Error).message}`);
+    return;
   }
 }
 const borderColors: { [k: string]: string } = {};
@@ -822,305 +763,314 @@ export async function validateForm(
   const invalidEntries: string[] = [];
   const validEntries: Array<[string, string | File]> = [];
   let form;
-  try {
-    if (
-      !(
-        targ instanceof HTMLFormElement ||
-        targ instanceof HTMLButtonElement ||
-        (targ instanceof HTMLInputElement && targ.type === "submit")
+  (() => {
+    try {
+      if (
+        !(
+          targ instanceof HTMLFormElement ||
+          targ instanceof HTMLButtonElement ||
+          (targ instanceof HTMLInputElement && targ.type === "submit")
+        )
       )
-    )
-      throw elementNotFound(targ, `Validation of Submit Button instance`, extLine(new Error()));
-    if (targ instanceof HTMLFormElement) form = targ;
-    else form = targ.closest("form");
-    if (!(form instanceof HTMLFormElement)) scope?.querySelector("form");
-    if (!(form instanceof HTMLFormElement))
-      throw elementNotFound(form, `Validation of Form instance`, extLine(new Error()));
-    [
-      ...form.querySelectorAll("input"),
-      ...form.querySelectorAll("textarea"),
-      ...form.querySelectorAll("select"),
-      ...form.querySelectorAll("canvas"),
-    ].forEach(entry => {
-      const displayInvalidity = (valid: boolean = true): void => {
-        if (!valid && !(entry instanceof HTMLCanvasElement)) {
-          entry.scrollIntoView({ behavior: "smooth" });
-          if (!/border-color/g.test(getComputedStyle(entry).transition))
-            entry.style.transition = (getComputedStyle(entry).transition || "") + "border-color ease-in-out 1s";
-          if (!borderColors[entry.id || entry.name || entry.classList.toString().replaceAll(" ", "_")])
-            borderColors[entry.id || entry.name || entry.classList.toString().replaceAll(" ", "_")] =
-              getComputedStyle(entry).borderColor || getComputedStyle(entry).borderBottomColor;
-          entry.style.borderColor = "red";
-          setTimeout(
-            () =>
-              (entry.style.borderColor =
-                borderColors[entry.id || entry.name || entry.classList.toString().replaceAll(" ", "_")] ||
-                "rgb(222, 226, 230)"),
-            1000,
-          );
-          if (
-            (entry instanceof HTMLInputElement &&
-              !(
-                entry.type === "checkbox" ||
-                entry.type === "radio" ||
-                entry.type === "file" ||
-                entry.type === "submit" ||
-                entry.type === "button" ||
-                entry.type === "reset"
-              )) ||
-            entry instanceof HTMLTextAreaElement
-          ) {
-            const prevPlaceholder = entry.placeholder;
-            entry.placeholder = `Entrada inválida`;
-            setTimeout(() => {
-              entry.placeholder = prevPlaceholder;
-            }, 2000);
-          }
-        }
-      };
-      let isValid = true;
-      if (entry instanceof HTMLSelectElement) {
-        if (entry.value === "") {
-          isValid = false;
-          invalidEntries.push(entry.name || entry.id || entry.dataset.title || entry.tagName);
-          displayInvalidity(isValid);
-        }
-      } else if (entry instanceof HTMLInputElement || entry instanceof HTMLTextAreaElement) {
-        if (!entry.checkValidity()) {
-          isValid = false;
-          invalidEntries.push(entry.id || entry.name || entry.dataset.title || entry.tagName);
-          displayInvalidity(isValid);
-        }
-        if (entry instanceof HTMLInputElement && entry.type === "date") {
-          if (entry.classList.contains("minCurrDate")) {
-            const currDate = new Date().toISOString().split("T")[0].replaceAll("-", "").trim();
-            if (currDate.length < 8) return;
-            const currNumDate = Math.abs(parseNotNaN(currDate));
+        return;
+      if (targ instanceof HTMLFormElement) form = targ;
+      else form = targ.closest("form");
+      if (!(form instanceof HTMLFormElement)) scope?.querySelector("form");
+      if (!(form instanceof HTMLFormElement)) return;
+      [
+        ...form.querySelectorAll("input"),
+        ...form.querySelectorAll("textarea"),
+        ...form.querySelectorAll("select"),
+        ...form.querySelectorAll("canvas"),
+      ].forEach(entry => {
+        const displayInvalidity = (valid: boolean = true): void => {
+          if (!valid && !(entry instanceof HTMLCanvasElement)) {
+            entry.scrollIntoView({ behavior: "smooth" });
+            if (!/border-color/g.test(getComputedStyle(entry).transition))
+              entry.style.transition = (getComputedStyle(entry).transition || "") + "border-color ease-in-out 1s";
+            if (!borderColors[entry.id || entry.name || entry.classList.toString().replaceAll(" ", "_")])
+              borderColors[entry.id || entry.name || entry.classList.toString().replaceAll(" ", "_")] =
+                getComputedStyle(entry).borderColor || getComputedStyle(entry).borderBottomColor;
+            entry.style.borderColor = "red";
+            setTimeout(
+              () =>
+                (entry.style.borderColor =
+                  borderColors[entry.id || entry.name || entry.classList.toString().replaceAll(" ", "_")] ||
+                  "rgb(222, 226, 230)"),
+              1000,
+            );
             if (
-              !Number.isFinite(currNumDate) ||
-              currNumDate.toString().slice(0, currNumDate.toString().indexOf(".")).length < 8
-            )
-              return;
-            const entryNumDateValue = parseNotNaN(entry.value.replaceAll("-", ""));
-            if (
-              !Number.isFinite(entryNumDateValue) ||
-              entryNumDateValue.toString().slice(0, entryNumDateValue.toString().indexOf(".")).length < 8
-            )
-              return;
-            if (entryNumDateValue < currNumDate) {
-              isValid = false;
-              invalidEntries.push(entry.id || entry.name || entry.dataset.title || entry.tagName);
-              displayInvalidity(isValid);
-            }
-          }
-          if (entry.classList.contains("maxCurrDate")) {
-            const currDate = new Date().toISOString().split("T")[0].replaceAll("-", "").trim();
-            if (currDate.length < 8) return;
-            const currNumDate = Math.abs(parseNotNaN(currDate));
-            if (
-              !Number.isFinite(currNumDate) ||
-              currNumDate.toString().slice(0, currNumDate.toString().indexOf(".")).length < 8
-            )
-              return;
-            const entryNumDateValue = parseNotNaN(entry.value.replaceAll("-", ""));
-            if (
-              !Number.isFinite(entryNumDateValue) ||
-              entryNumDateValue.toString().slice(0, entryNumDateValue.toString().indexOf(".")).length < 8
-            )
-              return;
-            if (entryNumDateValue > currNumDate) {
-              isValid = false;
-              invalidEntries.push(entry.id || entry.name || entry.dataset.title || entry.tagName);
-              displayInvalidity(isValid);
-            }
-          }
-        } else if (entry instanceof HTMLInputElement && entry.type === "radio") {
-          try {
-            let parent = entry.parentElement;
-            if (!(parent instanceof Element)) throw elementNotFound(parent, `Validation of parent instance`, "Element");
-            if (parent.querySelectorAll('input[type="radio"]').length < 2)
-              parent = parent.closest(".divAdd") ?? parent.parentElement;
-            if (!(parent instanceof Element))
-              throw elementNotFound(parent, `Validation of parent parent instance`, "Element");
-            const radioGroupList = parent.querySelectorAll('input[type="radio"]');
-            if (radioGroupList.length === 0) throw new Error(`Error populating list of radios from parent`);
-            if (
-              Array.from(radioGroupList)
-                .filter(radio => radio instanceof HTMLInputElement && radio.type === "radio")
-                .some(
-                  radio =>
-                    radio instanceof HTMLInputElement &&
-                    radio.type === "radio" &&
-                    (radio.dataset.required === "true" || radio.required),
-                ) &&
-              !Array.from(radioGroupList)
-                .filter(radio => radio instanceof HTMLInputElement && radio.type === "radio")
-                .some(radio => radio instanceof HTMLInputElement && radio.type === "radio" && radio.checked)
+              (entry instanceof HTMLInputElement &&
+                !(
+                  entry.type === "checkbox" ||
+                  entry.type === "radio" ||
+                  entry.type === "file" ||
+                  entry.type === "submit" ||
+                  entry.type === "button" ||
+                  entry.type === "reset"
+                )) ||
+              entry instanceof HTMLTextAreaElement
             ) {
-              isValid = false;
-              displayInvalidity(isValid);
+              const prevPlaceholder = entry.placeholder;
+              entry.placeholder = `Entrada inválida`;
+              setTimeout(() => {
+                entry.placeholder = prevPlaceholder;
+              }, 2000);
             }
-            const cbGrpL = parent.querySelectorAll('input[type="checkbox"]');
-            if (cbGrpL.length === 0) throw new Error(`Error populating list of checkboxes from parent`);
-            if (
-              Array.from(cbGrpL)
-                .filter(checkbox => checkbox instanceof HTMLInputElement && checkbox.type === "checkbox")
-                .some(
-                  checkbox =>
-                    checkbox instanceof HTMLInputElement &&
-                    checkbox.type === "checkbox" &&
-                    (checkbox.dataset.required === "true" || checkbox.required),
-                ) &&
-              !Array.from(cbGrpL)
-                .filter(checkbox => checkbox instanceof HTMLInputElement && checkbox.type === "checkbox")
-                .some(
-                  checkbox => checkbox instanceof HTMLInputElement && checkbox.type === "checkbox" && checkbox.checked,
-                )
-            ) {
-              isValid = false;
-              displayInvalidity(isValid);
-            }
-          } catch (e) {
-            console.error(`Error executing procedure for validating radio:\n${(e as Error).message}`);
           }
-        } else if (entry instanceof HTMLInputElement && entry.type === "file") {
-          if (!(entry.files && entry.files[0])) {
+        };
+        let isValid = true;
+        if (entry instanceof HTMLSelectElement) {
+          if (entry.value === "") {
             isValid = false;
             invalidEntries.push(entry.name || entry.id || entry.dataset.title || entry.tagName);
             displayInvalidity(isValid);
           }
-        } else {
-          if (entry.classList.contains("minText") && entry.value.length < parseNotNaN(entry.dataset.reqlength || "3")) {
+        } else if (entry instanceof HTMLInputElement || entry instanceof HTMLTextAreaElement) {
+          if (!entry.checkValidity()) {
             isValid = false;
             invalidEntries.push(entry.id || entry.name || entry.dataset.title || entry.tagName);
             displayInvalidity(isValid);
           }
-          if (entry.classList.contains("maxText") && entry.value.length > parseNotNaN(entry.dataset.maxlength || "3")) {
-            isValid = false;
-            invalidEntries.push(entry.id || entry.name || entry.dataset.title || entry.tagName);
-            displayInvalidity(isValid);
-          }
-          if (
-            entry.classList.contains("minNum") &&
-            parseNotNaN(entry.value) < parseNotNaN(entry.dataset.minnum || "3")
-          ) {
-            isValid = false;
-            invalidEntries.push(entry.id || entry.name || entry.dataset.title || entry.tagName);
-            displayInvalidity(isValid);
-          }
-          if (
-            entry.classList.contains("maxNum") &&
-            parseNotNaN(entry.value) > parseNotNaN(entry.dataset.maxnum || "3")
-          ) {
-            isValid = false;
-            invalidEntries.push(entry.id || entry.name || entry.dataset.title || entry.tagName);
-            displayInvalidity(isValid);
-          }
-          if (
-            entry.classList.contains("patternText") &&
-            entry.dataset.pattern &&
-            !new RegExp(entry.dataset.pattern, entry.dataset.flags || "").test(entry.value)
-          ) {
-            isValid = false;
-            invalidEntries.push(entry.id || entry.name || entry.dataset.title || entry.tagName);
-            displayInvalidity(isValid);
-          }
-        }
-        arrValidity.push(isValid);
-        if (isValid) {
-          if (entry instanceof HTMLInputElement && entry.type === "checkbox" && entry.role !== "switch")
-            validEntries.push([entry.name || entry.id || entry.dataset.title || entry.tagName, `${entry.checked}`]);
-          else if (entry instanceof HTMLInputElement && entry.type === "radio") {
-            try {
-              let parent = entry.parentElement;
-              if (!(parent instanceof Element))
-                throw elementNotFound(parent, `Validation of parent instance`, "Element");
-              if (parent.querySelectorAll('input[type="radio"]').length < 2)
-                parent = parent.closest(".divAdd") ?? parent.parentElement;
-              if (!(parent instanceof Element))
-                throw elementNotFound(parent, `Validation of parent parent instance`, "Element");
-              const radioGroupList = parent.querySelectorAll('input[type="radio"]');
-              if (radioGroupList.length === 0) throw new Error(`Error populating list of radios from parent`);
+          if (entry instanceof HTMLInputElement && entry.type === "date") {
+            if (entry.classList.contains("minCurrDate")) {
+              const currDate = new Date().toISOString().split("T")[0].replaceAll("-", "").trim();
+              if (currDate.length < 8) return;
+              const currNumDate = Math.abs(parseNotNaN(currDate));
               if (
-                radioGroupList.length === 1 &&
-                radioGroupList[0] instanceof HTMLInputElement &&
-                radioGroupList[0].type === "radio"
-              ) {
-                radioGroupList[0].checked
-                  ? validEntries.push([
-                      radioGroupList[0].name ||
-                        radioGroupList[0].id ||
-                        radioGroupList[0].dataset.title ||
-                        radioGroupList[0].tagName,
-                      `true`,
-                    ])
-                  : validEntries.push([
-                      radioGroupList[0].name ||
-                        radioGroupList[0].id ||
-                        radioGroupList[0].dataset.title ||
-                        radioGroupList[0].tagName,
-                      `false`,
-                    ]);
-              } else {
-                const opChecked = Array.from(radioGroupList).filter(
-                  radio => radio instanceof HTMLInputElement && radio.type === "radio" && radio.checked,
-                )[0];
-                if (!(opChecked instanceof HTMLInputElement && opChecked.type === "radio")) {
-                  validEntries.push([opChecked.id || opChecked.tagName, `undefined`]);
-                  throw new Error(`Failed to find checked radio in group`);
-                } else {
-                  if (radioGroupList.length === 2) {
-                    if (
-                      opChecked.id.endsWith("No") ||
-                      opChecked.id.endsWith("-no") ||
-                      opChecked.id.endsWith("-No") ||
-                      opChecked.classList.contains("radNo")
-                    )
-                      validEntries.push([
-                        opChecked.name || opChecked.id || opChecked.dataset.title || opChecked.tagName,
-                        `false`,
-                      ]);
-                    else
-                      validEntries.push([
-                        opChecked.name || opChecked.id || opChecked.dataset.title || opChecked.tagName,
-                        `true`,
-                      ]);
-                  } else if (radioGroupList.length > 2) {
-                    validEntries.push([
-                      opChecked.name || opChecked.id || opChecked.dataset.title || opChecked.tagName,
-                      opChecked.dataset.value || `true`,
-                    ]);
-                  }
-                }
+                !Number.isFinite(currNumDate) ||
+                currNumDate.toString().slice(0, currNumDate.toString().indexOf(".")).length < 8
+              )
+                return;
+              const entryNumDateValue = parseNotNaN(entry.value.replaceAll("-", ""));
+              if (
+                !Number.isFinite(entryNumDateValue) ||
+                entryNumDateValue.toString().slice(0, entryNumDateValue.toString().indexOf(".")).length < 8
+              )
+                return;
+              if (entryNumDateValue < currNumDate) {
+                isValid = false;
+                invalidEntries.push(entry.id || entry.name || entry.dataset.title || entry.tagName);
+                displayInvalidity(isValid);
               }
-            } catch (e) {
-              console.error(`Error executing procedure for pushing radio check:\n${(e as Error).message}`);
             }
-          } else if (entry instanceof HTMLInputElement && entry.type === "file" && entry.files) {
-            validEntries.push([entry.name || entry.id || entry.dataset.title || entry.tagName, entry.files[0]]);
-          } else if (entry instanceof HTMLCanvasElement) {
-            (async (): Promise<File> => {
-              return new Promise((res, rej) => {
-                entry.toBlob(blob => {
-                  if (blob) {
-                    res(
-                      new File([blob], entry.name || entry.id || entry.dataset.title || entry.tagName, {
-                        type: blob.type,
-                      }),
-                    );
-                  } else rej(new Error(`Failed to extract file.`));
+            if (entry.classList.contains("maxCurrDate")) {
+              const currDate = new Date().toISOString().split("T")[0].replaceAll("-", "").trim();
+              if (currDate.length < 8) return;
+              const currNumDate = Math.abs(parseNotNaN(currDate));
+              if (
+                !Number.isFinite(currNumDate) ||
+                currNumDate.toString().slice(0, currNumDate.toString().indexOf(".")).length < 8
+              )
+                return;
+              const entryNumDateValue = parseNotNaN(entry.value.replaceAll("-", ""));
+              if (
+                !Number.isFinite(entryNumDateValue) ||
+                entryNumDateValue.toString().slice(0, entryNumDateValue.toString().indexOf(".")).length < 8
+              )
+                return;
+              if (entryNumDateValue > currNumDate) {
+                isValid = false;
+                invalidEntries.push(entry.id || entry.name || entry.dataset.title || entry.tagName);
+                displayInvalidity(isValid);
+              }
+            }
+          } else if (entry instanceof HTMLInputElement && entry.type === "radio") {
+            (() => {
+              try {
+                let parent = entry.parentElement;
+                if (!(parent instanceof Element)) return;
+                if (parent.querySelectorAll('input[type="radio"]').length < 2)
+                  parent = parent.closest(".divAdd") ?? parent.parentElement;
+                if (!(parent instanceof Element)) return;
+                const radioGroupList = parent.querySelectorAll('input[type="radio"]');
+                if (radioGroupList.length === 0) return;
+                if (
+                  Array.from(radioGroupList)
+                    .filter(radio => radio instanceof HTMLInputElement && radio.type === "radio")
+                    .some(
+                      radio =>
+                        radio instanceof HTMLInputElement &&
+                        radio.type === "radio" &&
+                        (radio.dataset.required === "true" || radio.required),
+                    ) &&
+                  !Array.from(radioGroupList)
+                    .filter(radio => radio instanceof HTMLInputElement && radio.type === "radio")
+                    .some(radio => radio instanceof HTMLInputElement && radio.type === "radio" && radio.checked)
+                ) {
+                  isValid = false;
+                  displayInvalidity(isValid);
+                }
+                const cbGrpL = parent.querySelectorAll('input[type="checkbox"]');
+                if (cbGrpL.length === 0) throw new Error(`Error populating list of checkboxes from parent`);
+                if (
+                  Array.from(cbGrpL)
+                    .filter(checkbox => checkbox instanceof HTMLInputElement && checkbox.type === "checkbox")
+                    .some(
+                      checkbox =>
+                        checkbox instanceof HTMLInputElement &&
+                        checkbox.type === "checkbox" &&
+                        (checkbox.dataset.required === "true" || checkbox.required),
+                    ) &&
+                  !Array.from(cbGrpL)
+                    .filter(checkbox => checkbox instanceof HTMLInputElement && checkbox.type === "checkbox")
+                    .some(
+                      checkbox =>
+                        checkbox instanceof HTMLInputElement && checkbox.type === "checkbox" && checkbox.checked,
+                    )
+                ) {
+                  isValid = false;
+                  displayInvalidity(isValid);
+                }
+              } catch (e) {
+                return;
+              }
+            })();
+          } else if (entry instanceof HTMLInputElement && entry.type === "file") {
+            if (!(entry.files && entry.files[0])) {
+              isValid = false;
+              invalidEntries.push(entry.name || entry.id || entry.dataset.title || entry.tagName);
+              displayInvalidity(isValid);
+            }
+          } else {
+            if (
+              entry.classList.contains("minText") &&
+              entry.value.length < parseNotNaN(entry.dataset.reqlength || "3")
+            ) {
+              isValid = false;
+              invalidEntries.push(entry.id || entry.name || entry.dataset.title || entry.tagName);
+              displayInvalidity(isValid);
+            }
+            if (
+              entry.classList.contains("maxText") &&
+              entry.value.length > parseNotNaN(entry.dataset.maxlength || "3")
+            ) {
+              isValid = false;
+              invalidEntries.push(entry.id || entry.name || entry.dataset.title || entry.tagName);
+              displayInvalidity(isValid);
+            }
+            if (
+              entry.classList.contains("minNum") &&
+              parseNotNaN(entry.value) < parseNotNaN(entry.dataset.minnum || "3")
+            ) {
+              isValid = false;
+              invalidEntries.push(entry.id || entry.name || entry.dataset.title || entry.tagName);
+              displayInvalidity(isValid);
+            }
+            if (
+              entry.classList.contains("maxNum") &&
+              parseNotNaN(entry.value) > parseNotNaN(entry.dataset.maxnum || "3")
+            ) {
+              isValid = false;
+              invalidEntries.push(entry.id || entry.name || entry.dataset.title || entry.tagName);
+              displayInvalidity(isValid);
+            }
+            if (
+              entry.classList.contains("patternText") &&
+              entry.dataset.pattern &&
+              !new RegExp(entry.dataset.pattern, entry.dataset.flags || "").test(entry.value)
+            ) {
+              isValid = false;
+              invalidEntries.push(entry.id || entry.name || entry.dataset.title || entry.tagName);
+              displayInvalidity(isValid);
+            }
+          }
+          arrValidity.push(isValid);
+          if (isValid) {
+            if (entry instanceof HTMLInputElement && entry.type === "checkbox" && entry.role !== "switch")
+              validEntries.push([entry.name || entry.id || entry.dataset.title || entry.tagName, `${entry.checked}`]);
+            else if (entry instanceof HTMLInputElement && entry.type === "radio") {
+              (() => {
+                try {
+                  let parent = entry.parentElement;
+                  if (!(parent instanceof Element)) return;
+                  if (parent.querySelectorAll('input[type="radio"]').length < 2)
+                    parent = parent.closest(".divAdd") ?? parent.parentElement;
+                  if (!(parent instanceof Element)) return;
+                  const radioGroupList = parent.querySelectorAll('input[type="radio"]');
+                  if (radioGroupList.length === 0) return;
+                  if (
+                    radioGroupList.length === 1 &&
+                    radioGroupList[0] instanceof HTMLInputElement &&
+                    radioGroupList[0].type === "radio"
+                  ) {
+                    radioGroupList[0].checked
+                      ? validEntries.push([
+                          radioGroupList[0].name ||
+                            radioGroupList[0].id ||
+                            radioGroupList[0].dataset.title ||
+                            radioGroupList[0].tagName,
+                          `true`,
+                        ])
+                      : validEntries.push([
+                          radioGroupList[0].name ||
+                            radioGroupList[0].id ||
+                            radioGroupList[0].dataset.title ||
+                            radioGroupList[0].tagName,
+                          `false`,
+                        ]);
+                  } else {
+                    const opChecked = Array.from(radioGroupList).filter(
+                      radio => radio instanceof HTMLInputElement && radio.type === "radio" && radio.checked,
+                    )[0];
+                    if (!(opChecked instanceof HTMLInputElement && opChecked.type === "radio")) {
+                      validEntries.push([opChecked.id || opChecked.tagName, `undefined`]);
+                      return;
+                    } else {
+                      if (radioGroupList.length === 2) {
+                        if (
+                          opChecked.id.endsWith("No") ||
+                          opChecked.id.endsWith("-no") ||
+                          opChecked.id.endsWith("-No") ||
+                          opChecked.classList.contains("radNo")
+                        )
+                          validEntries.push([
+                            opChecked.name || opChecked.id || opChecked.dataset.title || opChecked.tagName,
+                            `false`,
+                          ]);
+                        else
+                          validEntries.push([
+                            opChecked.name || opChecked.id || opChecked.dataset.title || opChecked.tagName,
+                            `true`,
+                          ]);
+                      } else if (radioGroupList.length > 2) {
+                        validEntries.push([
+                          opChecked.name || opChecked.id || opChecked.dataset.title || opChecked.tagName,
+                          opChecked.dataset.value || `true`,
+                        ]);
+                      }
+                    }
+                  }
+                } catch (e) {
+                  return;
+                }
+              })();
+            } else if (entry instanceof HTMLInputElement && entry.type === "file" && entry.files) {
+              validEntries.push([entry.name || entry.id || entry.dataset.title || entry.tagName, entry.files[0]]);
+            } else if (entry instanceof HTMLCanvasElement) {
+              (async (): Promise<File> => {
+                return new Promise((res, rej) => {
+                  entry.toBlob(blob => {
+                    if (blob) {
+                      res(
+                        new File([blob], entry.name || entry.id || entry.dataset.title || entry.tagName, {
+                          type: blob.type,
+                        }),
+                      );
+                    } else rej(new Error(`Failed to extract file.`));
+                  });
                 });
-              });
-            })().then(file =>
-              validEntries.push([entry.name || entry.id || entry.dataset.title || entry.tagName, file]),
-            );
-          } else validEntries.push([entry.name || entry.id || entry.dataset.title || entry.tagName, entry.value]);
+              })().then(file =>
+                validEntries.push([entry.name || entry.id || entry.dataset.title || entry.tagName, file]),
+              );
+            } else validEntries.push([entry.name || entry.id || entry.dataset.title || entry.tagName, entry.value]);
+          }
         }
-      }
-    });
-  } catch (e) {
-    console.error(`Error executing validateForm:\n${(e as Error).message}`);
-  }
+      });
+    } catch (e) {
+      return;
+    }
+  })();
   const formValidated = arrValidity.some(validity => validity === false) ? false : true;
   if (form instanceof HTMLFormElement) {
     if (formValidated && form.checkValidity()) {
@@ -1133,8 +1083,7 @@ export async function validateForm(
 }
 export async function submitForm(form: nlFm, ep: formCases): Promise<void> {
   try {
-    if (!(form instanceof HTMLFormElement))
-      throw elementNotFound(form, `Validation of form instance`, extLine(new Error()));
+    if (!(form instanceof HTMLFormElement)) return;
     if (typeof ep !== "string") throw new Error(`Incorret type for ep argument in submitForm`);
     const fd = new FormData();
     [
@@ -1152,7 +1101,7 @@ export async function submitForm(form: nlFm, ep: formCases): Promise<void> {
             el.type === "submit" ||
             el.type === "image"),
       )
-      .forEach((el, i) => {
+      .forEach((el) => {
         try {
           if (el instanceof HTMLCanvasElement) {
             const idf = el.dataset.name || el.id || el.dataset.title || el.tagName;
@@ -1286,16 +1235,12 @@ export async function submitForm(form: nlFm, ep: formCases): Promise<void> {
             }
           }
         } catch (e) {
-          console.error(
-            `Error executin iteration ${i} for mapping ${form.id || form.className || form.tagName}:\n${
-              (e as Error).message
-            }`,
-          );
+          return;
         }
       });
     handleSubmit(ep, fd, true);
   } catch (e) {
-    console.error(`Error executing submitForm:\n${(e as Error).message}`);
+    return;
   }
 }
 const validities: Map<string, { valid: boolean }> = new Map(),
@@ -1357,7 +1302,6 @@ export function indicateValidities(el: HTMLInputElement, valid: boolean): void {
           if (measures.length < 4) return 0;
           return parseNotNaN(m[3].trim());
         } catch (e) {
-          console.error(`Error defining Icon Width:\n${(e as Error).message}`);
           return 0;
         }
       })() || 16;
@@ -1425,10 +1369,7 @@ export function indicateValidities(el: HTMLInputElement, valid: boolean): void {
       }, 10000),
     );
   } catch (e) {
-    limitedError(
-      `Error executing ${indicateValidities.prototype.constructor.name}:\n${(e as Error).message}`,
-      indicateValidities.prototype.constructor.name,
-    );
+    return;
   }
 }
 export function handleCondtReq(
@@ -1454,10 +1395,9 @@ export function handleCondtReq(
         el instanceof HTMLTextAreaElement
       )
     )
-      throw inputNotFound(el, `${el?.id || el?.className || el?.tagName}`, extLine(new Error()));
+      return;
     if (!el.willValidate || el.value.length < 2) return;
-    if (!(options.pattern || options.min || options.max || options.maxNum || options.minNum))
-      throw new Error(`No pattern was given to handleCondtReq`);
+    if (!(options.pattern || options.min || options.max || options.maxNum || options.minNum)) return;
     if (
       options.pattern &&
       !(
@@ -1518,7 +1458,7 @@ export function handleCondtReq(
       el.minLength = 0;
     }
   } catch (e) {
-    console.error(`Error executing handleCondtReq:\n${(e as Error).message}`);
+    return;
   }
 }
 export const iniFontColors: { [k: string]: string } = {};
@@ -1529,8 +1469,7 @@ export function handleEventReq(entry: textEl | Event, alertColor: string = "#ed6
       return;
     entry = entry.currentTarget;
   }
-  if (!(entry instanceof HTMLInputElement || entry instanceof HTMLTextAreaElement))
-    throw inputNotFound(entry, `validation of entry argument for handleEventReq`, extLine(new Error()));
+  if (!(entry instanceof HTMLInputElement || entry instanceof HTMLTextAreaElement)) return;
   if (
     entry instanceof HTMLInputElement &&
     !(
@@ -1622,11 +1561,11 @@ export function handleEventReq(entry: textEl | Event, alertColor: string = "#ed6
 }
 export function cleanStorageName(): void {
   if (!window) return;
-  ["name", "secondName", "lastName"].forEach((n, i) => {
+  ["name", "secondName", "lastName"].forEach((n) => {
     try {
       localStorage.setItem(n, "");
     } catch (e) {
-      console.error(`Error executing iteration ${i} of names in Local Storage:\n${(e as Error).message}`);
+      return;
     }
   });
 }
@@ -1669,7 +1608,7 @@ export function registerPersistInputs({
       });
     }
   } catch (e) {
-    console.error(`Error executing persistInputs:\n${(e as Error).message}`);
+    return;
   }
 }
 export function registerRoot(root: vRoot, selector: string, selectorRef?: MutableRefObject<nlHtEl>): vRoot {
@@ -1678,28 +1617,22 @@ export function registerRoot(root: vRoot, selector: string, selectorRef?: Mutabl
       typeof selectorRef === "object" && "current" in selectorRef
         ? selectorRef.current ?? document.querySelector(selector) ?? document.getElementById(selector)
         : document.querySelector(selector) ?? document.getElementById(selector);
-    if (!(rootEl instanceof HTMLElement))
-      throw elementNotFound(rootEl, `Finding element with ${selector} for rooting`, extLine(new Error()));
+    if (!(rootEl instanceof HTMLElement)) return;
     if (!root && rootEl) {
       if (rootEl.dataset.rooted === "true") {
         if (!rootEl.hasChildNodes()) {
-          console.log(`Root ${selector} has no children `);
           rootEl.dataset.rooted = "false";
           root = createRoot(rootEl);
-        } else {
-          console.log(`Root ${selector} has children`);
-          root = createRoot(rootEl);
-        }
+        } else root = createRoot(rootEl);
       } else root = createRoot(rootEl);
     } else if (root && !(root as any)["_internalRoot"]) {
-      console.log(`Root ${selector} invalid`);
       root = undefined;
       rootEl.dataset.rooted = "false";
       root = createRoot(rootEl);
     }
     rootEl.dataset.rooted = "true";
   } catch (e) {
-    console.error(`Error executing registerRoot:\n${(e as Error).message}`);
+    return root;
   }
   return root;
 }

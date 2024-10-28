@@ -42,7 +42,7 @@ export default function OpProtUr({ ctx }: { ctx: "Persist" | "Ort" | "Tr" }): JS
           if (r instanceof HTMLInputElement) r.dataset.required = "false";
       }, timers.personENTimer);
     } catch (e) {
-      console.error(`Error executing effect for ${OpProtUr.prototype.constructor.name}:\n${(e as Error).message}`);
+      return;
     }
   }, [mainCheck]);
   return (

@@ -26,7 +26,7 @@ export default function SocialName(): JSX.Element {
       addEventListener("resize", handleResize);
       return (): void => removeEventListener("resize", handleResize);
     } catch (e) {
-      console.error(`Error executing effect for SocialName:\n${(e as Error).message}`);
+      return;
     }
   }, [r, fr]);
   return (

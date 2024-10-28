@@ -3,7 +3,7 @@ import { ENCtxProps, FspCtxProps } from "@/lib/global/declarations/interfaces";
 import { changeTabDCutLayout } from "@/lib/locals/edFisNutPage/edFisNutModel";
 import { useContext, useEffect, useRef, useState } from "react";
 import { ENCtx } from "./ENForm";
-import { checkContext, limitedError } from "@/lib/global/gModel";
+import { checkContext, compProp, parseNotNaN } from "@/lib/global/gModel";
 import { Protocol } from "@/lib/global/declarations/testVars";
 import { FspCtx } from "./FsProgCons";
 import sEn from "@/styles//modules/enStyles.module.scss";
@@ -28,11 +28,25 @@ export default function Protocolo(): JSX.Element {
         td?.current ?? document.getElementById("tabDCut"),
         txbr?.current ?? document.getElementById("textBodytype"),
       );
+      if (!(td?.current instanceof HTMLElement)) return;
+      const inps = Array.from(td.current.querySelectorAll(".tabInpProg"))
+        .map(c => c.parentElement)
+        .filter(c => c instanceof HTMLElement) as HTMLElement[];
+      if (inps.length === 0) return;
+      const grp = [...inps];
+      const tallest = Math.max(...grp.map(c => (c instanceof HTMLElement ? parseNotNaN(compProp(c, "height")) : 0)));
+      console.log(tallest);
+      if (!Number.isFinite(tallest) || tallest < 0) return;
+      grp.forEach(c => {
+        if (c instanceof HTMLElement) {
+          c.style.height = `${tallest}px`;
+          for (const ch of c.children) {
+            if (ch instanceof HTMLElement) ch.style.height = `${tallest}px`;
+          }
+        }
+      });
     } catch (e) {
-      limitedError(
-        `Error executing effect for ${Protocolo.prototype.constructor.name}:${(e as Error).message}`,
-        Protocolo.prototype.constructor.name,
-      );
+      return;
     }
   }, [prt, td, txbr, v, trusted]);
   //TODO REMOVER APÓS TESTE

@@ -1,22 +1,22 @@
 "use client";
-import { ENCtxProps, ENTabsCtxProps, TargInps, TdProps } from "@/lib/global/declarations/interfaces";
+import { ENCtxProps, FspCtxProps, TargInps, TdProps } from "@/lib/global/declarations/interfaces";
 import { handleCallbackWHS } from "@/lib/locals/edFisNutPage/edFisNutHandler";
 import { handleIndEv } from "@/lib/locals/edFisNutPage/edFisNutHandler";
-import { applyFieldConstraints, checkContext, limitedError, textTransformPascal } from "@/lib/global/gModel";
+import { applyFieldConstraints, checkContext, textTransformPascal } from "@/lib/global/gModel";
 import { handleCondtReq, handleEventReq } from "@/lib/global/handlers/gHandlers";
 import { useRef, useContext } from "react";
 import { NlMRef, nlFs, nlSel } from "@/lib/global/declarations/types";
 import { MAX_SMALLINT, maxProps, tabProps } from "@/vars";
 import { ENCtx } from "../ENForm";
-import { ENTabsCtx } from "../FsTabs";
 import sEn from "@/styles//modules/enStyles.module.scss";
+import { FspCtx } from "../FsProgCons";
 export default function TabInpProg({ nRow, nCol, ctx, lab }: TdProps): JSX.Element {
   let gl: NlMRef<nlSel> = null,
     fspr: NlMRef<nlFs> = null,
     fct: NlMRef<nlSel> = null,
     targs: TargInps | null = null;
   const ctx1 = useContext<ENCtxProps>(ENCtx),
-    ctx2 = useContext<ENTabsCtxProps>(ENTabsCtx),
+    ctx2 = useContext<FspCtxProps>(FspCtx),
     trusted = useRef<boolean>(false),
     pascalLab = textTransformPascal(lab),
     fullName = ((): string => {
@@ -84,7 +84,7 @@ export default function TabInpProg({ nRow, nCol, ctx, lab }: TdProps): JSX.Eleme
   let medAntCase = "";
   //TODO REMOVER APÓS TESTE
   checkContext(ctx1, "ENCtx", TabInpProg);
-  checkContext(ctx2, "ENTabsCtx", TabInpProg);
+  checkContext(ctx2, "FspCtx", TabInpProg);
   if (ctx === "MedAnt") {
     medAntCase = ((): string => {
       switch (lab) {
@@ -153,9 +153,7 @@ export default function TabInpProg({ nRow, nCol, ctx, lab }: TdProps): JSX.Eleme
             refs: targs,
           });
         } catch (e) {
-          const identifier =
-            ev.currentTarget.id || ev.currentTarget.name || ev.currentTarget.className || ev.currentTarget.tagName;
-          limitedError(`Error executing ${ev.type} callback for ${identifier}:$\n{(e as Error).message}`, identifier);
+          return;
         }
       }}
     />
@@ -197,15 +195,7 @@ export default function TabInpProg({ nRow, nCol, ctx, lab }: TdProps): JSX.Eleme
                   });
                 handleCallbackWHS(ev.currentTarget);
               } catch (e) {
-                const identifier =
-                  ev.currentTarget.id ||
-                  ev.currentTarget.name ||
-                  ev.currentTarget.className ||
-                  ev.currentTarget.tagName;
-                limitedError(
-                  `Error executing ${ev.type} callback for ${identifier}:$\n{(e as Error).message}`,
-                  identifier,
-                );
+                return;
               }
             }}
           />
@@ -228,6 +218,7 @@ export default function TabInpProg({ nRow, nCol, ctx, lab }: TdProps): JSX.Eleme
             data-row={nRow}
             data-col={nCol}
             required={nCol - 1 === tabProps.numCons ? true : false}
+            style={{ transition: "height .5s ease-in-out" }}
             onInput={ev => {
               try {
                 if (ev.isTrusted) trusted.current = true;
@@ -244,15 +235,7 @@ export default function TabInpProg({ nRow, nCol, ctx, lab }: TdProps): JSX.Eleme
                   });
                 if (ev.currentTarget.classList.contains("tabInpProgDCut")) handleCallbackWHS(ev.currentTarget);
               } catch (e) {
-                const identifier =
-                  ev.currentTarget.id ||
-                  ev.currentTarget.name ||
-                  ev.currentTarget.className ||
-                  ev.currentTarget.tagName;
-                limitedError(
-                  `Error executing ${ev.type} callback for ${identifier}:$\n{(e as Error).message}`,
-                  identifier,
-                );
+                return;
               }
             }}
           />

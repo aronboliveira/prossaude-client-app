@@ -17,7 +17,7 @@ export default function AntMedContainer(): JSX.Element {
         </span>
         <span role='group' className='divAntMedSpan spanMain spanAntMedDate' id='antMedSpanMainDate1'>
           <span role='group' className='divAntMedSubSpan spanSub spanSubAntMedDate' id='antMedSpanSubDate1'>
-            <div className='antMedDiv' role='group'>
+            <fieldset className='antMedDiv' role='group'>
               <label htmlFor='antMedDateIniId1' className='antMedLabel'></label>
               <div className='antMedDateDiv flexDiv' role='group'>
                 <input
@@ -44,7 +44,7 @@ export default function AntMedContainer(): JSX.Element {
                   Usar data atual
                 </button>
               </div>
-            </div>
+            </fieldset>
           </span>
         </span>
       </div>

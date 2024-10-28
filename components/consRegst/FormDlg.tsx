@@ -313,7 +313,7 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
         throw inputNotFound(hourRef.current, `Validation of Appointment Hour Ref`, extLine(new Error()));
       hourRef.current.value = "18:00";
     } catch (e) {
-      console.error(`Error executing useEffect for hourRef:\n${(e as Error).message}`);
+      return;
     }
   }, [hourRef]);
   useEffect(() => {
@@ -328,7 +328,6 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
         .parentElement!.innerHTML.replaceAll("Dia de Inclusão", "Dia")
         .replaceAll("changeDaySel", "consChangeDaySel");
     } catch (e) {
-      console.error(`Error executing useEffect for dayRef:\n${(e as Error).message}`);
       const timeDiv = document.getElementById("consTimeDiv");
       if (timeDiv instanceof HTMLElement) timeDiv.style.display = "none";
     }
@@ -465,50 +464,34 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
                         });
                         isAutocorrectConsOn && autoCapitalizeInputs(ev.currentTarget, isAutocorrectConsOn);
                         if (ev.currentTarget.value.length > 2) {
-                          try {
-                            const familyNamePac = document.getElementById("familyNamePac");
-                            if (!(familyNamePac instanceof HTMLInputElement))
-                              throw inputNotFound(familyNamePac, `Validation of familyNamePac`, extLine(new Error()));
-                            if (!familyNamePac.required) {
-                              familyNamePac.minLength = 3;
-                              familyNamePac.dataset.min = "3";
-                              familyNamePac.dataset.max = "99";
-                              familyNamePac.dataset.pattern = "[^0-9]";
-                              familyNamePac.dataset.flags = "gi";
-                              familyNamePac.required = true;
-                            }
-                          } catch (e) {
-                            console.error(`Error executing procedure for familyNamePac:\n${(e as Error).message}`);
+                          const familyNamePac = document.getElementById("familyNamePac");
+                          if (familyNamePac instanceof HTMLInputElement && !familyNamePac.required) {
+                            familyNamePac.minLength = 3;
+                            familyNamePac.dataset.min = "3";
+                            familyNamePac.dataset.max = "99";
+                            familyNamePac.dataset.pattern = "[^0-9]";
+                            familyNamePac.dataset.flags = "gi";
+                            familyNamePac.required = true;
                           }
-                          try {
-                            const inpTelPac = document.getElementById("inpTelPac");
-                            if (!(inpTelPac instanceof HTMLInputElement))
-                              throw inputNotFound(inpTelPac, `Validation of inpTelPac`, extLine(new Error()));
-                            if (!inpTelPac.required) {
-                              inpTelPac.minLength = 8;
-                              inpTelPac.dataset.min = "8";
-                              inpTelPac.dataset.max = "10";
-                              inpTelPac.dataset.pattern = "9?d{4}-d{4}";
-                              inpTelPac.dataset.flags = "g";
-                              inpTelPac.required = true;
-                            }
-                          } catch (e) {
-                            console.error(`Error executing procedure for inpTelPac:\n${(e as Error).message}`);
+                          const inpTelPac = document.getElementById("inpTelPac");
+                          if (inpTelPac instanceof HTMLInputElement && !inpTelPac.required) {
+                            inpTelPac.minLength = 8;
+                            inpTelPac.dataset.min = "8";
+                            inpTelPac.dataset.max = "10";
+                            inpTelPac.dataset.pattern = "9?d{4}-d{4}";
+                            inpTelPac.dataset.flags = "g";
+                            inpTelPac.required = true;
                           }
-                          try {
-                            const relProfName = document.getElementById("relProfName");
-                            if (!(relProfName instanceof HTMLInputElement))
-                              throw inputNotFound(relProfName, `Validation of relProfName`, extLine(new Error()));
-                            if (!relProfName.required) {
-                              relProfName.minLength = 3;
-                              relProfName.dataset.min = "3";
-                              relProfName.dataset.max = "99";
-                              relProfName.dataset.pattern = "[^0-9]";
-                              relProfName.dataset.flags = "gi";
-                              relProfName.required = true;
-                            }
-                          } catch (e) {
-                            console.error(`Error executing procedure for relProfName:\n${(e as Error).message}`);
+                          const relProfName = document.getElementById("relProfName");
+                          if (!(relProfName instanceof HTMLInputElement))
+                            throw inputNotFound(relProfName, `Validation of relProfName`, extLine(new Error()));
+                          if (!relProfName.required) {
+                            relProfName.minLength = 3;
+                            relProfName.dataset.min = "3";
+                            relProfName.dataset.max = "99";
+                            relProfName.dataset.pattern = "[^0-9]";
+                            relProfName.dataset.flags = "gi";
+                            relProfName.required = true;
                           }
                         } else {
                           try {
