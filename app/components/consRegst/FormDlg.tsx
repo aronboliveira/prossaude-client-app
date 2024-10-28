@@ -272,7 +272,7 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
     const handleClickOutside = (ev: MouseEvent): void => {
       dlgRef.current && isClickOutside(ev, dlgRef.current).some(clickArea => clickArea === true) && onClose();
     };
-    addEventListener("click", handleClickOutside);
+    setTimeout(() => addEventListener("click", handleClickOutside), 1000);
     return (): void => removeEventListener("click", handleClickOutside);
   }, [dlgRef, onClose]);
   useEffect(() => {
