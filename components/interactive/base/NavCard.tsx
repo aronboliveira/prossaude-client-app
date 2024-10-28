@@ -264,7 +264,7 @@ export default function NavCard({ href }: { href: string }): JSX.Element {
     }, [r, descRef]);
   useEffect(() => {
     setTimeout(() => {
-      const imgs = Array.from(document.images),
+      const imgs = Array.from(document.querySelectorAll(".cardImg")),
         measures: Array<{
           width: number;
           height: number;
