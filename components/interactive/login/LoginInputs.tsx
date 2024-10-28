@@ -206,28 +206,31 @@ export default function LoginInputs(): JSX.Element {
   }, [msg]);
   useEffect(() => {
     try {
-      if (!reloader.canReloadLogin) return;
-      const loginCont = document.getElementById("loginCont"),
-        pwBtn = document.getElementById("spanShowPw") ?? document.querySelector(".bi-eye-fill")?.parentElement;
-      if (
-        loginCont instanceof HTMLElement &&
-        parseNotNaN(compProp(loginCont, "marginLeft")) === 0 &&
-        parseNotNaN(compProp(loginCont, "marginRight")) === 0 &&
-        parseNotNaN(compProp(loginCont, "marginTop")) === 0 &&
-        parseNotNaN(compProp(loginCont, "marginBottom")) === 0 &&
-        parseNotNaN(compProp(loginCont, "paddingLeft")) === 0 &&
-        parseNotNaN(compProp(loginCont, "paddingRight")) === 0 &&
-        parseNotNaN(compProp(loginCont, "paddingTop")) === 0 &&
-        parseNotNaN(compProp(loginCont, "paddingBottom")) === 0
-      ) {
-        reloader.canReloadLogin = false;
-        router.reload();
-        return;
-      }
-      if (pwBtn instanceof HTMLElement && getComputedStyle(pwBtn).backgroundColor === "rgb(240, 240, 240)") {
-        reloader.canReloadLogin = false;
-        router.replace("/login");
-      }
+      if (!mounted) return;
+      setTimeout(() => {
+        if (!reloader.canReloadLogin) return;
+        const loginCont = document.getElementById("loginCont"),
+          pwBtn = document.getElementById("spanShowPw") ?? document.querySelector(".bi-eye-fill")?.parentElement;
+        if (
+          loginCont instanceof HTMLElement &&
+          parseNotNaN(compProp(loginCont, "marginLeft")) === 0 &&
+          parseNotNaN(compProp(loginCont, "marginRight")) === 0 &&
+          parseNotNaN(compProp(loginCont, "marginTop")) === 0 &&
+          parseNotNaN(compProp(loginCont, "marginBottom")) === 0 &&
+          parseNotNaN(compProp(loginCont, "paddingLeft")) === 0 &&
+          parseNotNaN(compProp(loginCont, "paddingRight")) === 0 &&
+          parseNotNaN(compProp(loginCont, "paddingTop")) === 0 &&
+          parseNotNaN(compProp(loginCont, "paddingBottom")) === 0
+        ) {
+          reloader.canReloadLogin = false;
+          router.reload();
+          return;
+        }
+        if (pwBtn instanceof HTMLElement && getComputedStyle(pwBtn).backgroundColor === "rgb(240, 240, 240)") {
+          reloader.canReloadLogin = false;
+          router.replace("/login");
+        }
+      }, 1000);
     } catch (e) {
       return;
     }
