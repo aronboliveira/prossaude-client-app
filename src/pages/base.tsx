@@ -84,6 +84,10 @@ export default function BasePage(): JSX.Element {
         <Watcher routeCase='base' />
         <Guard />
       </div>
+      <cite style={{ display: "none" }}>
+        Direitos Autorais para Design de Imagens e Ícones — Luana Monteiro Serpa:
+        https://www.linkedin.com/in/luanamserpa/
+      </cite>
     </ErrorBoundary>
   );
 }
