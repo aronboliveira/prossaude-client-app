@@ -139,3 +139,10 @@ export const alignOpts: { v: AlignType; l: AlignTypeLab }[] = [
 export const navigatorVars = {
   pt: false,
 };
+export const reloader: {
+  canReloadLogin: boolean;
+  canReloadBase: boolean;
+} = {
+  canReloadLogin: true,
+  canReloadBase: true,
+};

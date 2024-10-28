@@ -1,6 +1,6 @@
 "use client";
 import { handleDivAddShow } from "@/lib/locals/aGPage/aGHandlers";
-import { odProps, agProps, navigatorVars } from "@/vars";
+import { odProps, agProps, navigatorVars, reloader } from "@/vars";
 import { handleLinkChanges, headCleanup } from "@/lib/global/handlers/gRoutingHandlers";
 import { pageCases, targEl } from "@/lib/global/declarations/types";
 import { useContext, useEffect, useState } from "react";
@@ -46,6 +46,8 @@ export default function Watcher({ routeCase }: { routeCase?: pageCases }): JSX.E
         document.querySelectorAll(".inpAvDent").forEach(inp => handleInpAvDentValue(inp));
         dinamicGridAdjust(Array.from(document.querySelectorAll(".fsAnamGDiv")));
       }
+      if (routeCase !== "login") reloader.canReloadLogin = true;
+      if (routeCase !== "base") reloader.canReloadBase = true;
     }, 500);
     if (routeCase === "login") handleLinkChanges("login", "Login Page Style");
     else if (routeCase === "base") handleLinkChanges("base", "Base Page Style");

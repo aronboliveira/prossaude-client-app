@@ -1,5 +1,5 @@
 "use client";
-import { basePath, navigatorVars } from "@/vars";
+import { basePath, navigatorVars, reloader } from "@/vars";
 import { clearDefInvalidMsg, resetPhs } from "@/lib/global/gStyleScript";
 import { handleLogin } from "@/lib/global/auth";
 import { nlA, nlFm, nlHtEl, nlSpan } from "@/lib/global/declarations/types";
@@ -146,7 +146,8 @@ export default function LoginInputs(): JSX.Element {
         }
       },
       [router, formRef],
-    );
+    ),
+    testToasted = useRef<boolean>(false);
   useEffect(() => {
     try {
       if (!(anchorRef.current instanceof HTMLAnchorElement)) return;
@@ -205,18 +206,44 @@ export default function LoginInputs(): JSX.Element {
   }, [msg]);
   useEffect(() => {
     try {
+      if (!reloader.canReloadLogin) return;
       const loginCont = document.getElementById("loginCont"),
         pwBtn = document.getElementById("spanShowPw") ?? document.querySelector(".bi-eye-fill")?.parentElement;
-      if (loginCont instanceof HTMLElement && parseNotNaN(compProp(loginCont, "marginLeft")) === 0) {
-        location.reload();
+      if (
+        loginCont instanceof HTMLElement &&
+        parseNotNaN(compProp(loginCont, "marginLeft")) === 0 &&
+        parseNotNaN(compProp(loginCont, "marginRight")) === 0 &&
+        parseNotNaN(compProp(loginCont, "marginTop")) === 0 &&
+        parseNotNaN(compProp(loginCont, "marginBottom")) === 0 &&
+        parseNotNaN(compProp(loginCont, "paddingLeft")) === 0 &&
+        parseNotNaN(compProp(loginCont, "paddingRight")) === 0 &&
+        parseNotNaN(compProp(loginCont, "paddingTop")) === 0 &&
+        parseNotNaN(compProp(loginCont, "paddingBottom")) === 0
+      ) {
+        reloader.canReloadLogin = false;
+        router.reload();
         return;
       }
-      if (pwBtn instanceof HTMLElement && getComputedStyle(pwBtn).backgroundColor === "rgb(240, 240, 240)")
-        location.reload();
+      if (pwBtn instanceof HTMLElement && getComputedStyle(pwBtn).backgroundColor === "rgb(240, 240, 240)") {
+        reloader.canReloadLogin = false;
+        router.replace("/login");
+      }
     } catch (e) {
       return;
     }
   }, [mounted]);
+  useEffect(() => {
+    if (!testToasted.current) {
+      toast(
+        navigatorVars.pt
+          ? "Para esta versão de teste, digite qualquer login que não seja vazio!"
+          : "For this test version, type any entry that is not empty!",
+        { icon: "🛠" },
+      );
+      testToasted.current = true;
+      setTimeout(() => (testToasted.current = false), 1000);
+    }
+  }, []);
   return (
     <form
       ref={formRef}
