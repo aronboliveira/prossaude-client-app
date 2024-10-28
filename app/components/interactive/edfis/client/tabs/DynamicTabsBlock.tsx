@@ -3,18 +3,17 @@ import { ErrorBoundary } from "react-error-boundary";
 import GenericErrorComponent from "../../../../error/GenericErrorComponent";
 import TabMedAnt from "../../tabs/TabMedAnt";
 import ReactSpinner from "../../../../icons/ReactSpinner";
-import { Suspense, createContext, lazy, useCallback, useContext, useEffect } from "react";
+import { Suspense, createContext, lazy, useCallback, useContext } from "react";
 import TabIndPerc from "../../tabs/TabIndPerc";
 import { NlMRef, autofillResult, nlFs, nlSel, targEl, validTabLabs } from "@/lib/global/declarations/types";
 import { person, tabProps } from "@/vars";
 import { Person } from "@/lib/global/declarations/classes";
 import { getNumCol, runAutoFill } from "@/lib/locals/edFisNutPage/edFisNutHandler";
-import { DTsCtxProps, ENCtxProps, ENTabsCtxProps, FspCtxProps, TargInps } from "@/lib/global/declarations/interfaces";
+import { DTsCtxProps, ENCtxProps, FspCtxProps, TargInps } from "@/lib/global/declarations/interfaces";
 import { ENCtx } from "../ENForm";
 import { FspCtx } from "../FsProgCons";
 import Td from "../../tabs/Td";
 import Th from "../../tabs/Th";
-import { ENTabsCtx } from "../FsTabs";
 import { checkContext } from "@/lib/global/gModel";
 const DTsCtx = createContext<DTsCtxProps>({ exeAutoFillCtx: null }),
   DivDCut = lazy(() => import("../../DivDCut"));
@@ -26,7 +25,6 @@ export default function DynamicTabsBlock(): JSX.Element {
     targs: TargInps | null = null;
   const ctx1 = useContext<ENCtxProps>(ENCtx),
     ctx2 = useContext<FspCtxProps>(FspCtx),
-    ctx3 = useContext<ENTabsCtxProps>(ENTabsCtx),
     exeAutoFillCtx = useCallback(
       (el: targEl, ctx: string = "cons"): autofillResult => {
         let numRef = 1;
@@ -66,7 +64,6 @@ export default function DynamicTabsBlock(): JSX.Element {
           }
           return runAutoFill(el, ctx, targs ?? undefined);
         } catch (e) {
-          console.error(`Error executing exeAutoFillCtx:\n${(e as Error).message}`);
           return iniResult;
         }
       },
@@ -93,24 +90,13 @@ export default function DynamicTabsBlock(): JSX.Element {
     ],
     columnsi = [1, 2, 3, 4];
   if (ctx1?.refs) ({ fct, fspr, gl } = ctx1.refs);
-  if (ctx2?.refs) ({ snc } = ctx2.refs);
-  if (ctx3?.targs) ({ targs } = ctx3);
+  if (ctx2) {
+    if (ctx2.refs) ({ snc } = ctx2.refs);
+    if (ctx2.targs) targs = ctx2.targs;
+  }
   //TODO REMOVER APÓS TESTE
   checkContext(ctx1, "ENCtx", DynamicTabsBlock);
   checkContext(ctx2, "FspCtx", DynamicTabsBlock);
-  checkContext(ctx3, "ENTabsCtx", DynamicTabsBlock);
-  useEffect(() => {
-    setTimeout(() => {
-      // console.log("Form Context:");
-      // console.log(ctx1);
-      // console.log("Fieldset Context:");
-      // console.log(ctx2);
-      // console.log("Cache");
-      // console.log(CacheEN);
-      // console.log("Tables Context:");
-      // console.log(ctx3?.targs);
-    }, 6000);
-  }, []);
   return (
     <ErrorBoundary fallback={<GenericErrorComponent message='Error mounting dynamic tables!' />}>
       <DTsCtx.Provider value={{ exeAutoFillCtx }}>

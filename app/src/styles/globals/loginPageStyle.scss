@@ -1,6 +1,7 @@
 /* Login Page Styles */
 @use "../abstracts/variables" as *;
 @use "../base/root" as *;
+@use "../abstracts/mixins" as *;
 @supports (scrollbar-width: thin) {
   * {
     &:not(:has(header)) {
@@ -9,14 +10,13 @@
   }
 }
 .loginBody {
+  @include sz(100vw, 120vh);
   background-size: cover;
   background-position: center 50%;
   box-sizing: inherit;
   line-height: 1.4286;
   font-family: roboto, "Noto Sans Myanmar UI", arial, sans-serif;
   font-size: 0.875rem;
-  width: 100vw;
-  height: 120vh;
   button {
     &:hover {
       transform: translate(0, 0.1rem);
@@ -26,30 +26,26 @@
     }
   }
   #bgDiv {
+    @include noSpace;
     border: none;
     background-color: rgba(255, 255, 255, 0.97);
-    padding: 0;
-    margin: 0;
   }
   #logoCont {
+    @include minSizeB(100%, 16vh);
+    width: 100%;
     display: flex;
     flex: 1;
     justify-content: center;
     margin: 0 auto;
-    min-width: 100%;
-    min-height: 16vh;
-    width: 100%;
     padding-bottom: 3vh;
     transition: width 0.3s ease-in-out, height 0.3s ease-in-out;
   }
   #logo {
-    width: 14rem;
-    height: 7rem;
+    @include sz(14rem, 7rem);
     aspect-ratio: 2 / 1;
     transition: width 0.3s ease-in-out, height 0.3s ease-in-out, transform 1s ease-in-out;
     @media (max-width: 499px) {
-      width: 12rem;
-      height: 6rem;
+      @include sz(12rem, 6rem);
     }
     &:hover {
       transform: scale(1.1) translateY(-0.3rem);

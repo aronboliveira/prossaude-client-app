@@ -1,15 +1,15 @@
 "use client";
 import { NlMRef, nlSel } from "@/lib/global/declarations/types";
-import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { handleCallbackWHS } from "@/lib/locals/edFisNutPage/edFisNutHandler";
 import { tabProps, timers } from "@/vars";
 import { useContext, useEffect, useRef, useState } from "react";
 import useMount from "@/lib/hooks/useMount";
 import { FactorAtletaRegular, FactorAtletaValue } from "@/lib/global/declarations/testVars";
-import { checkContext, limitedError } from "@/lib/global/gModel";
+import { checkContext } from "@/lib/global/gModel";
 import sEn from "@/styles//modules/enStyles.module.scss";
 import { ENCtxProps } from "@/lib/global/declarations/interfaces";
 import { ENCtx } from "./ENForm";
+import { dispatchFactorAtleta } from "@/lib/locals/edFisNutPage/edFisNutModel";
 export default function SelFactorAtleta(): JSX.Element {
   let nafr: NlMRef<nlSel> = null;
   const r = useRef<nlSel>(null),
@@ -25,22 +25,16 @@ export default function SelFactorAtleta(): JSX.Element {
   checkContext(ctx, "ENCtx", SelFactorAtleta);
   useEffect(() => {
     const sel = r.current ?? document.getElementById("selFactorAtleta");
-    sel instanceof HTMLSelectElement
-      ? (tabProps.factorAtleta = sel.value as FactorAtletaValue)
-      : elementNotFound(sel, "selFactorAtleta", extLine(new Error()));
+    if (sel instanceof HTMLSelectElement) dispatchFactorAtleta(sel.value as FactorAtletaValue);
   }, [mounted]);
   useEffect(() => {
     try {
       if (!(r.current instanceof HTMLSelectElement || (r.current as any) instanceof HTMLInputElement))
         throw new Error(`Failed to validate Selector for Athlete Factor type`);
-      tabProps.factorAtleta = (r.current?.value ?? "peso") as FactorAtletaValue;
-      console.log("Factor atleta is: " + tabProps.factorAtleta);
+      dispatchFactorAtleta(r.current?.value as FactorAtletaValue);
       handleCallbackWHS(r.current);
     } catch (e) {
-      limitedError(
-        `Error executing effect for ${SelFactorAtleta.prototype.constructor.name}:${(e as Error).message}`,
-        SelFactorAtleta.prototype.constructor.name,
-      );
+      return;
     }
   }, [v, r]);
   useEffect(() => {

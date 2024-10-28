@@ -9,20 +9,13 @@ import {
   evalMatchTMBElements,
   evalPseudoNum,
   evalPGCDecay,
+  dispatchFactorAtvLvl,
 } from "./edFisNutModel";
 import { checkReturnIndex, assignFormatedValue } from "./edFisNutController";
 import { highlightChange, fadeElement } from "../../global/gStyleScript";
-import { parseNotNaN, numberLimit, autoCapitalizeInputs, checkAutoCorrect, limitedError } from "../../global/gModel";
+import { parseNotNaN, numberLimit, autoCapitalizeInputs, checkAutoCorrect } from "../../global/gModel";
 import { handleEventReq, syncAriaStates, updateSimpleProperty } from "../../global/handlers/gHandlers";
-import {
-  extLine,
-  inputNotFound,
-  elementNotFound,
-  multipleElementsNotFound,
-  matchError,
-  stringError,
-  typeError,
-} from "../../global/handlers/errorHandler";
+import { extLine } from "../../global/handlers/errorHandler";
 import {
   elCollection,
   entryEl,
@@ -42,7 +35,6 @@ import {
 import { maxProps, person, tabProps } from "@/vars";
 import { ActiveTargInps, TargInps } from "@/lib/global/declarations/interfaces";
 import { NafTypeValue, Protocol } from "@/lib/global/declarations/testVars";
-import { CacheEN as cen } from "./cache";
 export function addRowAtivFis(count: number = 3, context: string = "Rot"): void {
   const tBodyContainer = document.getElementById(`tbodyAtFis${context}`);
   let title = "Rotineira";
@@ -120,7 +112,7 @@ export function addRowAtivFis(count: number = 3, context: string = "Rot"): void 
         document.querySelector(`tabRowAtFis${context}Id${count}`)!,
       ]);
     }
-  } else multipleElementsNotFound(extLine(new Error()), "arguments for addRowAtivFis", context, tBodyContainer);
+  }
 }
 export function removeRowAtivFis(count: number = 3, context: string = "Rot"): number {
   if (context === "rot") context = "Rot";
@@ -162,12 +154,12 @@ export function switchRowComorb(comorbContainer: targEl, rowCountComorb: number 
     if (comorbRowToRemove && rowCountComorb !== 3 && comorbRowToRemove?.id !== "tabRowComorb2")
       comorbRowToRemove.remove() as void;
     return;
-  } else elementNotFound(comorbContainer, "comorbContainer in switchRowComorb", extLine(new Error()));
+  }
 }
+const locks: { current: HTMLCollectionOf<Element> | null } = {
+  current: null,
+};
 export function switchAutoFill(autoFillBtn: targEl): void {
-  if (!cen.locksinds || cen.locksinds.length === 0)
-    cen.locksinds = Array.from(document.querySelectorAll(".lockTabInd"));
-  const locksTabInd = cen.locksinds;
   try {
     if (
       !(
@@ -177,13 +169,15 @@ export function switchAutoFill(autoFillBtn: targEl): void {
       )
     )
       throw new Error(`Error validating typeof Autofill Button`);
+    if (!(locks.current && Object.values(locks.current).every(r => r?.isConnected)))
+      locks.current = document.getElementsByClassName("lockTabInd");
     if (autoFillBtn.innerText.match(/Desativar C[aá]lculo Autom[aá]tico/gi))
       autoFillBtn.textContent = "Ativar Cálculo Automático";
     else if (autoFillBtn.innerText.match(/Ativar C[aá]lculo Autom[aá]tico/gi))
       autoFillBtn.textContent = "Desativar Cálculo Automático";
-    const filteredLocks = locksTabInd.filter(lockTabInd => lockTabInd instanceof HTMLElement);
+    const filteredLocks = Array.from(locks.current).filter(lockTabInd => lockTabInd instanceof HTMLElement);
     if (filteredLocks.length === 0) return;
-    filteredLocks.forEach((lock, i) => {
+    filteredLocks.forEach((lock) => {
       try {
         if (!(lock instanceof Element)) return;
         const td = lock.closest("td") || lock.closest("th");
@@ -266,26 +260,25 @@ export function switchAutoFill(autoFillBtn: targEl): void {
             siblingButton.disabled = false;
         }
       } catch (e) {
-        console.error(`Error executing iteration ${i} for Locks change:\n${(e as Error).message}`);
+        return;
       }
     });
   } catch (e) {
-    limitedError(`Error executing switchAutoFill:\n${(e as Error).message}`, "switchAutoFill");
+    return;
   }
 }
 export function getNumCol(evEl: targEl): void {
   try {
     if (!(evEl instanceof HTMLElement)) throw new Error(`Failed to validate instance of Targeted Element`);
     if (evEl.dataset.col && evEl.dataset.col !== "") tabProps.numCol = parseNotNaN(evEl.dataset.col, 2, "int");
-    else {
+    else if (
       (evEl && evEl.id?.match(/[0-9]+_[0-9]+$/g)) ||
       (evEl instanceof HTMLInputElement && evEl.name?.match(/[0-9]+_[0-9]+$/g)) ||
       (evEl instanceof HTMLLabelElement && evEl.htmlFor?.match(/[0-9]+_[0-9]+$/g))
-        ? (tabProps.numCol = parseNotNaN(evEl.id.slice(-1)) || 2)
-        : matchError(".id do Elemento de Evento", evEl, evEl?.id ?? "null", extLine(new Error()));
-    }
+    )
+      tabProps.numCol = parseNotNaN(evEl.id.slice(-1)) || 2;
   } catch (e) {
-    limitedError(`Error executing getNumCol:${(e as Error).message}`, "getNumCol");
+    return;
   }
 }
 export function validateEvResultNum(evEl: targEl, prop: primitiveType = 0): number {
@@ -308,7 +301,6 @@ export function validateEvResultNum(evEl: targEl, prop: primitiveType = 0): numb
     if (!Number.isFinite(prop)) prop = 0;
     return prop;
   } catch (e) {
-    console.error(`Error executing Validation of Event Result as a Number:\n${(e as Error).message}`);
     return 0;
   }
 }
@@ -321,14 +313,16 @@ export function matchPersonPropertiesWH(): void {
     if (tiw instanceof HTMLInputElement) person.dispatchWeight(validateEvResultNum(tiw, person.weight));
     if (tih instanceof HTMLInputElement) person.dispatchHeight(validateEvResultNum(tih, person.height));
   } catch (e) {
-    limitedError(`Error executing matchPersonPropertiesWH:${(e as Error).message}`, "matchPersonPropertiesWH");
+    return;
   }
 }
 export function updateIndexesContexts(): void {
   try {
-    tabProps.gl ??=
-      document.getElementById("gordCorpLvl") ?? document.querySelector('[data-title*="Gordura Corporal"]');
-    tabProps.fct ??= document.getElementById("formCalcTMBType") ?? document.querySelector('[data-title*="Fórmula"]');
+    if (!tabProps.gl || !tabProps.gl.isConnected)
+      tabProps.gl =
+        document.getElementById("gordCorpLvl") ?? document.querySelector('[data-title*="Gordura Corporal"]');
+    if (!tabProps.fct || !tabProps.fct.isConnected)
+      tabProps.fct = document.getElementById("formCalcTMBType") ?? document.querySelector('[data-title*="Fórmula"]');
     const gl = tabProps.gl,
       fct = tabProps.fct;
     if (!(person instanceof Person)) throw new Error(`Failed to validate person instance`);
@@ -342,7 +336,7 @@ export function updateIndexesContexts(): void {
     if (tiimc instanceof HTMLInputElement || tiimc instanceof HTMLSelectElement)
       assignFormatedValue(tiimc, tabProps.IMC);
     gl.value = glv || "abaixo";
-    fluxFormIMC(gl, fct);
+    fluxFormIMC();
     const { pgc, mlg } = person.calcPGC(person);
     tabProps.MLG = parseNotNaN(mlg.toFixed(4));
     tabProps.PGC = parseNotNaN(pgc.toFixed(4));
@@ -352,7 +346,8 @@ export function updateIndexesContexts(): void {
       assignFormatedValue(timlg, tabProps.MLG);
     if (tipgc instanceof HTMLInputElement || tipgc instanceof HTMLSelectElement)
       assignFormatedValue(tipgc, tabProps.PGC);
-    tabProps.fct ??= document.getElementById("formCalcTMBType") ?? document.querySelector('[data-title*="Fórmula"]');
+    if (!tabProps.fct || !tabProps.fct.isConnected)
+      tabProps.fct = document.getElementById("formCalcTMBType") ?? document.querySelector('[data-title*="Fórmula"]');
     if (!(fct instanceof HTMLSelectElement || fct instanceof HTMLInputElement))
       throw new Error(`Failed to validate Formula Element`);
     evalFactorAtleta();
@@ -369,25 +364,29 @@ export function updateIndexesContexts(): void {
     if (tiget instanceof HTMLInputElement || tiget instanceof HTMLSelectElement)
       assignFormatedValue(tiget, tabProps.GET);
   } catch (e) {
-    limitedError(`Error executing updateIndexesContexts:\n${(e as Error).message}`, "updateIndexesContexts");
+    return;
   }
 }
-export function fluxFormIMC(gl: targEl, fct: targEl): { glChanged: boolean; fctChanged: boolean } {
+export function fluxFormIMC(): { glChanged: boolean; fctChanged: boolean } {
   try {
-    tabProps.gl ??=
-      document.getElementById("gordCorpLvl") ?? document.querySelector('[data-title=*"Gordura Corporal"]');
-    gl ??= tabProps.gl;
+    if (!tabProps.gl || !tabProps.gl.isConnected)
+      tabProps.gl =
+        document.getElementById("gordCorpLvl") ?? document.querySelector('[data-title=*"Gordura Corporal"]');
+    const gl = tabProps.gl;
     if (!(gl instanceof HTMLSelectElement || gl instanceof HTMLInputElement))
-      throw inputNotFound(gl, `Element for body fat level`, extLine(new Error()));
-    tabProps.fct ??= document.getElementById("formCalcTMBType") ?? document.querySelector('[data-title*="Fórmula"]');
-    fct ??= tabProps.fct;
+      return { glChanged: false, fctChanged: false };
+    if (!tabProps.fct || !tabProps.fct.isConnected)
+      tabProps.fct = document.getElementById("formCalcTMBType") ?? document.querySelector('[data-title*="Fórmula"]');
+    const fct = tabProps.fct;
     if (!(fct instanceof HTMLSelectElement || fct instanceof HTMLInputElement))
-      throw new Error(`Failed to validate instance of Element for Protocol Formula`);
-    tabProps.naf ??=
-      document.getElementById("nafType") ?? document.querySelector('[data-title*="Fator de Nível de Atividade Física"');
+      return { glChanged: false, fctChanged: false };
+    if (!tabProps.naf || !tabProps.naf.isConnected)
+      tabProps.naf =
+        document.getElementById("nafType") ??
+        document.querySelector('[data-title*="Fator de Nível de Atividade Física"');
     const naf = tabProps.naf;
     if (!(naf instanceof HTMLSelectElement || naf instanceof HTMLInputElement))
-      throw new Error(`Failed to validate instance of Level of Physical Activity element`);
+      return { glChanged: false, fctChanged: false };
     let prevGl = gl.value;
     let prevFct = fct.value;
     if (naf.value === "2.2") {
@@ -430,7 +429,6 @@ export function fluxFormIMC(gl: targEl, fct: targEl): { glChanged: boolean; fctC
       fctChanged: prevFct !== fct.value,
     };
   } catch (e) {
-    limitedError(`Error executing fluxFormIMC:\n${(e as Error).message}`, "fluxFormIMC");
     return { glChanged: false, fctChanged: false };
   }
 }
@@ -445,9 +443,9 @@ export function updatePGC(ctx: string = "cons"): void {
       (tidc instanceof HTMLInputElement && (tidc.type === "number" || tidc.type === "text")) ||
       tidc instanceof HTMLSelectElement
     ) {
-      person.dispatchDC(parseNotNaN(tidc?.value ?? "0"));
+      person.dispatchDC(tidc?.value ?? "0");
       tidc.value = person.sumDCut.toString();
-    } else inputNotFound(tidc, "tidc", extLine(new Error()));
+    }
     if (
       (tipgc instanceof HTMLInputElement && (tipgc.type === "number" || tipgc.type === "text")) ||
       tipgc instanceof HTMLSelectElement
@@ -461,17 +459,15 @@ export function updatePGC(ctx: string = "cons"): void {
       tabProps.timlg.dataset.maxnum = max.toString();
       if (!(tabProps.timlg instanceof HTMLInputElement && tabProps.timlg.type === "number")) return;
       tabProps.timlg.max = max.toString();
-    } else inputNotFound(tipgc, "tipgc", extLine(new Error()));
+    }
   } catch (e) {
-    console.error(`Error executing updatePGC:\n${(e as Error).message}`);
+    return;
   }
 }
 export function updateAtvLvl(caller: "naf" | "sa"): void {
   try {
-    if (!(tabProps.naf instanceof HTMLSelectElement || tabProps.naf instanceof HTMLInputElement))
-      throw inputNotFound(tabProps.naf, `Validation of Selector for Physical Activity Factor`, extLine(new Error()));
-    if (!(tabProps.sa instanceof HTMLSelectElement || tabProps.sa instanceof HTMLInputElement))
-      throw inputNotFound(tabProps.sa, `Validation of Selector for Physical Activity Intensity`, extLine(new Error()));
+    if (!(tabProps.naf instanceof HTMLSelectElement || tabProps.naf instanceof HTMLInputElement)) return;
+    if (!(tabProps.sa instanceof HTMLSelectElement || tabProps.sa instanceof HTMLInputElement)) return;
     const nafIntensity =
       tabProps.naf instanceof HTMLSelectElement
         ? tabProps.naf.dataset.intensity ||
@@ -483,10 +479,9 @@ export function updateAtvLvl(caller: "naf" | "sa"): void {
         : tabProps.naf.innerText.toLowerCase().replace("á", "").replace("intenso", "Intenso") || tabProps.naf.value;
     evalFactorAtvLvl();
     evalActivityLvl();
-    console.log("Intensidade de NAF: " + nafIntensity);
     caller === "naf" ? (tabProps.sa.value = nafIntensity) : (tabProps.naf.dataset.intensity = tabProps.sa.value);
   } catch (e) {
-    limitedError(`Error executing updateAtvLvl:${(e as Error).message}`, "updateAtvLvl");
+    return;
   }
 }
 export function defineTargInps({
@@ -651,7 +646,6 @@ export function defineTargInps({
       }
     }
   } catch (e) {
-    console.error(`Error executing defineTargInps:\n${(e as Error).message}`);
     return Object.fromEntries([
       ["tiw", undefined],
       ["tih", undefined],
@@ -664,6 +658,15 @@ export function defineTargInps({
     ]) as any;
   }
 }
+const fspElements: {
+  tabs: HTMLCollectionOf<Element> | null;
+  trs: HTMLCollectionOf<Element> | null;
+  cols: HTMLCollectionOf<Element> | null;
+} = {
+  tabs: null,
+  trs: null,
+  cols: null,
+};
 export function switchRequiredCols({
   snc,
   td,
@@ -681,7 +684,7 @@ export function switchRequiredCols({
   try {
     if (!(snc instanceof HTMLSelectElement || snc instanceof HTMLInputElement))
       throw new Error(`Failed to validate instance of Number of Appointment Selector`);
-    tabProps.fsp ??= document.getElementById("fsProgConsId");
+    if (!tabProps.fsp || !tabProps.fsp.isConnected) tabProps.fsp = document.getElementById("fsProgConsId");
     const fsp = tabProps.fsp;
     if (!(fsp instanceof HTMLElement)) throw new Error(`Failed to validate instance of Fieldset for Tabs`);
     if (!(td instanceof HTMLElement)) throw new Error(`Failed to validate instance of Table for Skin Folds`);
@@ -690,19 +693,20 @@ export function switchRequiredCols({
     if (!(tip instanceof HTMLElement)) throw new Error(`Failed to validate instance of Table for Indexes`);
     if (!areNumConsOpsValid) throw new Error(`Invalidated Number of Appointments Options`);
     const numCons = tabProps.numCons;
-    //TODO REMOVER APÓS TESTE
-    console.log("Número de consulta: " + tabProps.numCons);
     if (typeof numCons !== "number" || numCons <= 0 || numCons > 3)
       throw new Error(`Invalidated Number for Appointment: Obtained value as ${numCons ?? "undefined"}`);
     //inicia construção de matriz para reset de required na tabela
-    if (!cen.fsptb || cen.fsptb.length === 0) cen.fsptb = Array.from(fsp.querySelectorAll("table"));
-    const tabs = cen.fsptb;
+    if (!(fspElements.tabs && Object.values(fspElements.tabs).every(r => r?.isConnected)))
+      fspElements.tabs = fsp.getElementsByTagName("table");
+    const tabs = fspElements.tabs;
     if (tabs.length === 0) throw new Error(`No table was found in the fieldset`);
-    if (!cen.fsptrs || cen.fsptrs.length === 0) cen.fsptrs = Array.from(fsp.querySelectorAll("tr"));
-    const trs = cen.fsptrs;
+    if (!(fspElements.trs && Object.values(fspElements.trs).every(r => r?.isConnected)))
+      fspElements.trs = fsp.getElementsByTagName("tr");
+    const trs = fspElements.trs;
     if (trs.length === 0) throw new Error(`No table row was found in the fieldset.`);
-    if (!cen.fspcols || cen.fspcols.length === 0) cen.fspcols = Array.from(fsp.querySelectorAll("col"));
-    const cols = cen.fspcols;
+    if (!(fspElements.cols && Object.values(fspElements.cols).every(r => r?.isConnected)))
+      fspElements.cols = fsp.getElementsByTagName("col");
+    const cols = fspElements.cols;
     if (cols.length === 0) throw new Error(`No table col was found in the fieldset`);
     const nTotalRows = trs.length - tabs.length,
       nTotalCols = cols.length - tabs.length;
@@ -710,15 +714,11 @@ export function switchRequiredCols({
       throw new Error(`Failed to calculate Number of Total Rows and/or Total Columns.
       Number of Rows: ${nTotalRows}
       Number of Columns: ${nTotalCols}`);
-    if (!cen.tsvis || cen.tsvis.length === 0) cen.tsvis = Array.from(tsv.querySelectorAll(".tabInpProgSVi"));
-    if (!cen.tmais || cen.tmais.length === 0) cen.tmais = Array.from(tma.querySelectorAll(".tabInpProgMedAnt"));
-    if (!cen.dcis || cen.dcis.length === 0) cen.dcis = Array.from(td.querySelectorAll(".tabInpProg"));
-    if (!cen.indis || cen.dcis.length === 0) cen.indis = Array.from(tip.querySelectorAll(".inpInd"));
     const matrix = nTotalRows * nTotalCols,
-      inpsSvi = cen.tsvis,
-      inpsMedAnt = cen.tmais,
-      inpsDC = cen.dcis,
-      inpsInd = cen.indis,
+      inpsSvi = tsv.getElementsByClassName("tabInpProgSVi"),
+      inpsMedAnt = tma.getElementsByClassName("tabInpProgMedAnt"),
+      inpsDC = td.getElementsByClassName("tabInpProg"),
+      inpsInd = tip.getElementsByClassName("inpInd"),
       inpsCells = [...inpsSvi, ...inpsMedAnt, ...inpsDC, ...inpsInd];
     //reseta o atributo required das cells para novas atribuições de required
     if (!(inpsCells.length > 0 && inpsCells.length === matrix / tabs.length))
@@ -768,24 +768,20 @@ export function switchRequiredCols({
         i.required = true;
     }
   } catch (e) {
-    console.error(`Error executing switchRequiredCols:\n${(e as Error).message}`);
+    return;
   }
 }
+const cols: { [k: string]: HTMLCollectionOf<Element> } = {};
 export function defineAxes(tab: targEl): number {
   try {
     if (!(tab instanceof HTMLTableElement)) throw new Error(`Failed to validate Table instance`);
     if (tab.rows.length === 0) throw new Error(`No row was found for table`);
     let nCols: elCollection;
-    if (tab.id !== "" && (!cen.lists[tab.id] || cen.lists[tab.id].length === 0))
-      cen.lists[tab.id] = tab.querySelectorAll("col");
-    nCols = cen.lists[tab.id];
+    if (!cols[tab.id]) cols[tab.id] = tab.getElementsByTagName("col");
+    nCols = cols[tab.id];
     if (nCols.length === 0) throw new Error(`No col was found for table`);
     return (tab.rows.length - 1) * (nCols.length - 1) ?? 0;
   } catch (e) {
-    limitedError(
-      `Error executing defineAxes:${(e as Error).message}`,
-      `${tab?.id || tab?.className || tab?.tagName || "defineAxes"}`,
-    );
     return 0;
   }
 }
@@ -799,7 +795,6 @@ export function validateTabInpList(list: elCollection, nAxes: number = 4): boole
     if (typeof nAxes !== "number") throw new Error(`Invalid type of nAxes`);
     return list.length === nAxes ? true : false;
   } catch (e) {
-    limitedError(`Error executing validateTabInpList:\n${(e as Error).message}`, "validateTabInpList");
     return false;
   }
 }
@@ -829,18 +824,17 @@ export function filterCellsPattern({
         filterInpCell = Array.from(inps).filter(inp => pattern.test((inp as HTMLInputElement).name));
         break;
       default:
-        stringError("argument for attr in filterCellsPatern()", attr, extLine(new Error()));
+        break;
     }
     if (filterInpCell.length === 0) throw new Error(`Failed to populate list of filtered elements`);
     return filterInpCell;
   } catch (e) {
-    limitedError(
-      `Error executing filterCellsPattern:\n${(e as Error).message}`,
-      pattern?.toString() || "filterCellsPattern",
-    );
     return [];
   }
 }
+const ncth: { current: HTMLCollectionOf<Element> | null } = {
+  current: null,
+};
 export function switchNumConsTitles(
   titles: elCollection,
   el: targEl,
@@ -858,8 +852,9 @@ export function switchNumConsTitles(
     titles = Array.from(titles).filter(t => t instanceof HTMLElement);
     if (titles.length === 0) throw new Error(`No HTMLElement was found for the titles list`);
     let iniValue = parseNotNaN(el.value, 1, "int") || 1;
-    if (!cen.ncthc || cen.ncthc.length === 0) cen.ncthc = Array.from(document.querySelectorAll(".numConsTextHeadCel"));
-    cen.ncthc.forEach(h => {
+    if (!(ncth.current && Object.values(ncth.current).every(r => r?.isConnected)))
+      ncth.current = document.getElementsByClassName("numConsTextHeadCel");
+    for (const h of ncth.current) {
       if (!(h instanceof HTMLElement)) return;
       let col = parseNotNaN(
         h.dataset.col &&
@@ -870,14 +865,12 @@ export function switchNumConsTitles(
         2,
         "int",
       );
-      if (col <= 1) {
-        console.warn(`Failed to assing col for switch. Defaulting.`);
-        col = 2;
-      }
+      if (col <= 1) col = 2;
       h.innerText = `${col - 2 + iniValue}ª Consulta`;
-    });
-    if (!cen.tip || cen.tip.length === 0) cen.tip = Array.from(document.querySelectorAll(".tabInpProg"));
-    cen.tip.forEach((inp, i) => {
+    }
+    const inps = document.getElementsByClassName("tabInpProg");
+    for (let i = 0; i < inps.length; i++) {
+      const inp = inps[i];
       if (!(inp instanceof HTMLElement)) return;
       if (!inp.dataset.title) return;
       try {
@@ -902,35 +895,37 @@ export function switchNumConsTitles(
           ? inp.dataset.xls.replace(/(Consulta\s)\d+/gi, `$1${consNum[0]}`)
           : `Consulta ${consNum[0]}`;
       } catch (e) {
-        console.error(
-          `Error validating iteration ${i} for renaming titles for Table Progress Inputs:\n${(e as Error).message}`,
-        );
+        continue;
       }
-    });
+    }
   } catch (e) {
-    console.error(`Error executing switchNumConsTitles:\n${(e as Error).message}`);
+    return;
   }
 }
-export function handleSumClick(ev: React.MouseEvent, refs: { prt: targEl; td: targEl }): void {
+const rowsDcut: { current: HTMLCollectionOf<Element> | null } = {
+  current: null,
+};
+export function handleSumClick(
+  ev: React.MouseEvent,
+  refs: {
+    prt: targEl;
+    td: targEl;
+  },
+): void {
   const { prt, td } = refs;
   try {
-    if (!(prt instanceof HTMLSelectElement || prt instanceof HTMLInputElement))
-      throw elementNotFound(prt, `prt Element`, extLine(new Error()));
+    if (!(prt instanceof HTMLSelectElement || prt instanceof HTMLInputElement)) return;
     if (!(td instanceof HTMLElement)) throw new Error(`Failed to validate Table of Skin Folds reference`);
-    if (typeof person !== "object" || !("sumDCut" in person))
-      throw typeError(`validating typeof person object`, "person", "object", extLine(new Error()));
-    if (!cen.dctrs || cen.dctrs.length === 0) cen.dctrs = Array.from(td.querySelectorAll(".tabRowDCutMed"));
-    const rowsDCArray: Array<any> = Array.isArray(cen.dctrs)
-      ? cen.dctrs.filter(rowDC => rowDC instanceof HTMLTableRowElement)
-      : (cen.dctrs as any) instanceof NodeList || (cen.dctrs as any) instanceof HTMLCollection
-      ? Array.from(cen.dctrs).filter(rowDC => rowDC instanceof HTMLTableRowElement)
-      : [];
+    if (typeof person !== "object" || !("sumDCut" in person)) return;
+    if (!(rowsDcut.current && Object.values(rowsDcut.current).every(r => r?.isConnected)))
+      rowsDcut.current = td.getElementsByClassName("tabRowDCutMed");
+    const rowsDCArray = Array.from(rowsDcut.current).filter(rowDC => rowDC instanceof HTMLTableRowElement);
     if (rowsDCArray.length === 0) throw new Error(`Failed to populate rowsDCArray`);
     if (!(ev.currentTarget instanceof HTMLElement)) throw new Error(`Failed to validate event target instance`);
     person.dispatchDC(
       createArraysRels({
         btn: ev.currentTarget,
-        arrayRows: rowsDCArray,
+        arrayRows: rowsDCArray as Element[],
         protocolValue: prt.value as Protocol,
       }),
     );
@@ -949,10 +944,7 @@ export function handleSumClick(ev: React.MouseEvent, refs: { prt: targEl; td: ta
     getNumCol(ev.currentTarget);
     updatePGC("col");
   } catch (e) {
-    limitedError(
-      `Error executing callback for Button for Sum of Skin Folds:\n${(e as Error).message}`,
-      "handleSumClick",
-    );
+    return;
   }
 }
 export function createArraysRels({
@@ -985,9 +977,7 @@ export function createArraysRels({
               "int",
             ),
       targColInps = arrayRows.map(row => {
-        if (row.id !== "" && (!cen.targs[`${row.id}__inputs`] || cen.targs[`${row.id}__inputs`].length === 0))
-          cen.targs[`${row.id}__inputs`] = Array.from(row.querySelectorAll("input"));
-        const list = cen.targs[`${row.id}__inputs`];
+        const list = row.getElementsByTagName("input");
         return list && list.length > 0
           ? Array.from(list).find(inp => {
               return (
@@ -1002,7 +992,12 @@ export function createArraysRels({
     if (inpsIds.filter(id => id !== null).length !== arrayRows.length)
       throw new Error(`Error validating length of columnValues.`);
     //define qual coluna será utilizada de acordo com a posição do botão e validando se há algum preenchimento na coluna
-    const protocoloNum = parseNotNaN(protocolValue.slice(-1));
+    const protocoloNum = parseNotNaN(
+      protocolValue
+        .trim()
+        .slice(-1)
+        .replace(/[^0-9]/g, ""),
+    );
     if (!(protocoloNum === 3 || protocoloNum === 7))
       throw new Error(`Error obtaining the protocol number.
       Obtained number: ${protocoloNum ?? 0}`);
@@ -1020,12 +1015,12 @@ export function createArraysRels({
       )
     )
       throw new Error(`Error finding input for sum of skin folds.`);
+    //TODO REMOVER APÓS TESTE
     sumInp.value = colAcc.toString();
     return colAcc;
   } catch (e) {
-    console.error(`Error executing createArraysRels:\n${(e as Error).message}`);
+    return colAcc;
   }
-  return colAcc;
 }
 export function handleIndEv(
   ctx: IndCases,
@@ -1041,7 +1036,7 @@ export function handleIndEv(
           (el.type === "text" || el.type === "number" || el.type === "button" || el.type === "submit"))
       )
     )
-      throw elementNotFound(el, `Validation of Activated Element`, extLine(new Error()));
+      return;
     getNumCol(el);
     if (!Number.isFinite(tabProps.numCol)) tabProps.numCol = 2;
     evalFactorAtleta();
@@ -1057,6 +1052,9 @@ export function handleIndEv(
         console.log("Failed to fetch some ref...");
         const invalids = [tiw, tih, tidc, tiimc, timlg, titmb, tiget, tipgc].filter(v => !v);
         console.log(invalids.map((_, i) => `Ref ${i} is invalid`));
+      } else {
+        console.log("Targs validated");
+        console.log([tiw, tih, tidc, tiimc, timlg, titmb, tiget, tipgc]);
       }
       Object.assign(tabProps, {
         ...(tiw && { tiw }),
@@ -1081,16 +1079,10 @@ export function handleIndEv(
       ])
         if (t instanceof HTMLElement) t.dataset.target = "true";
     } else {
-      if (!cen.indisDoc || cen.indisDoc.length === 0)
-        cen.indis = Array.from(document.querySelectorAll(".tabInpProgIndPerc"));
-      if (!cen.wis || cen.wis.length === 0) cen.wis = Array.from(document.querySelectorAll(".inpWeight"));
-      if (!cen.his || cen.his.length === 0) cen.his = Array.from(document.querySelectorAll(".inpHeight"));
-      if (!cen.dcisDoc || cen.dcisDoc.length === 0)
-        cen.dcisDoc = Array.from(document.querySelectorAll(".tabInpProgDCut"));
-      const dcis = cen.dcisDoc,
-        his = cen.his,
-        wis = cen.wis,
-        indis = cen.indis;
+      const dcis = document.getElementsByClassName("tabInpProgIndPerc"),
+        his = document.getElementsByClassName("inpWeight"),
+        wis = document.getElementsByClassName("inpHeight"),
+        indis = document.getElementsByClassName("tabInpProgDCut");
       [...dcis, ...his, ...wis, ...indis].forEach(targInp => {
         if (!(targInp instanceof HTMLElement)) return;
         if (targInp.dataset[`autofill`]) targInp.dataset[`autofill`] = "false";
@@ -1118,9 +1110,10 @@ export function handleIndEv(
         tabProps.PGC = checkReturnIndex(tabProps.tiget, tabProps.PGC);
         break;
       default:
-        stringError("value for callbackTabBtnsInps() ctx", ctx, extLine(new Error()));
+        break;
     }
-    tabProps.fct ??= document.getElementById("formCalcTMBType") ?? document.querySelector('[data-title*="Fórmula"]');
+    if (!tabProps.fct || !tabProps.fct.isConnected)
+      tabProps.fct = document.getElementById("formCalcTMBType") ?? document.querySelector('[data-title*="Fórmula"]');
     fct = tabProps.fct;
     if (!(fct instanceof HTMLElement)) return;
     if (!(ctx === "BTN" || tabProps.isAutoFillActive)) return;
@@ -1129,9 +1122,7 @@ export function handleIndEv(
     evalFactorAtleta();
     updateIndexesContexts();
   } catch (e) {
-    console.error(
-      `Error executing handleIndEv with ${el?.id || el?.className || el?.tagName}:\n${(e as Error).message}`,
-    );
+    return;
   }
 }
 export function exeAutoFill(el: targEl, context: string = "cons"): autofillResult {
@@ -1172,7 +1163,6 @@ export function exeAutoFill(el: targEl, context: string = "cons"): autofillResul
     }
     return runAutoFill(el, context);
   } catch (e) {
-    console.error(`Error executing exeAutoFill:\n${(e as Error).message}`);
     return iniResult;
   }
 }
@@ -1186,20 +1176,15 @@ export function runAutoFill(el: targEl, ctx: string = "cons", refs?: TargInps): 
           ? parseNotNaN(el.id.slice(el.id.lastIndexOf("_") + 1) || "2", 2, "int")
           : evalPseudoNum(tabProps.numCol) || 2)
       : evalPseudoNum(tabProps.numCol) || 2;
-  if (!cen.indisDoc || cen.indisDoc.length === 0)
-    cen.indis = Array.from(document.querySelectorAll(".tabInpProgIndPerc"));
-  if (!cen.wis || cen.wis.length === 0) cen.wis = Array.from(document.querySelectorAll(".inpWeight"));
-  if (!cen.his || cen.his.length === 0) cen.his = Array.from(document.querySelectorAll(".inpHeight"));
-  if (!cen.dcisDoc || cen.dcisDoc.length === 0) cen.dcisDoc = Array.from(document.querySelectorAll(".tabInpProgDCut"));
-  const indis = cen.indis,
-    wis = cen.wis,
-    his = cen.his,
-    dcis = cen.dcisDoc;
+  const indis = document.getElementsByClassName("tabInpProgIndPerc"),
+    wis = document.getElementsByClassName("inpWeight"),
+    his = document.getElementsByClassName("inpHeight"),
+    dcis = document.getElementsByClassName("tabInpProgDCut");
   [...indis, ...his, ...wis, ...dcis].forEach(t => {
     if (t instanceof HTMLElement) t.dataset[`target`] = "false";
     else t?.setAttribute("data-target", "false");
   });
-  tabProps.fsp ??= document.getElementById("fsProgConsId");
+  if (!tabProps.fsp || !tabProps.fsp.isConnected) tabProps.fsp = document.getElementById("fsProgConsId");
   const { tiw, tih, tidc, tiimc, timlg, titmb, tiget, tipgc } = defineTargInps({ el, parent: tabProps.fsp, refs, ctx });
   Object.assign(tabProps, {
     ...(tiw && { tiw }),
@@ -1242,7 +1227,7 @@ export function runAutoFill(el: targEl, ctx: string = "cons", refs?: TargInps): 
     { k: "titmb", v: tabProps.TMB?.toString() ?? "0" },
     { k: "tiget", v: tabProps.GET?.toString() ?? "0" },
     { k: "tipgc", v: tabProps.PGC?.toString() ?? "0" },
-  ].forEach(({ k, v }, i) => {
+  ].forEach(({ k, v }) => {
     try {
       const inputElement = tabProps[k as keyof typeof tabProps] as Element;
       if (
@@ -1252,12 +1237,10 @@ export function runAutoFill(el: targEl, ctx: string = "cons", refs?: TargInps): 
           inputElement instanceof HTMLTextAreaElement
         )
       )
-        throw elementNotFound(inputElement, `Targeted input element ${k}`, extLine(new Error()));
+        return;
       inputElement.value = v;
     } catch (e) {
-      console.error(
-        `Error executing iteration ${i} for assigning the values for the target inputs:\n${(e as Error).message}`,
-      );
+      return;
     }
   });
   return {
@@ -1307,24 +1290,28 @@ export function callbackTextBodyEl({
     genBirthRel = gbr?.current ?? document.getElementById("genBirthRelId"),
     genFisAlin = gar?.current ?? document.getElementById("genFisAlinId");
   try {
-    if (typeof person !== "object")
-      throw typeError(`typeof person in callback for Text Body Element`, person, `object`, extLine(new Error()));
-    if (!(textBodytype instanceof HTMLSelectElement || textBodytype instanceof HTMLInputElement))
-      throw elementNotFound(textBodytype, `Text Body Type Element`, extLine(new Error()));
-    if (!(protocolo instanceof HTMLSelectElement || protocolo instanceof HTMLInputElement))
-      throw elementNotFound(protocolo, `Protocolo Element`, extLine(new Error()));
-    if (!(tde instanceof HTMLTableElement)) throw elementNotFound(tde, `Table of Skin Folds`, extLine(new Error()));
-    if (!(genElement instanceof HTMLSelectElement || genElement instanceof HTMLInputElement))
-      throw elementNotFound(genElement, `Gender Element`, extLine(new Error()));
-    if (!(genBirthRel instanceof HTMLSelectElement || genBirthRel instanceof HTMLInputElement))
-      throw elementNotFound(genBirthRel, `Gender Birth Relation Element`, extLine(new Error()));
-    if (!(genFisAlin instanceof HTMLSelectElement || genFisAlin instanceof HTMLInputElement))
-      throw elementNotFound(genFisAlin, `Gen Physical Alignment Element`, extLine(new Error()));
+    if (
+      typeof person !== "object" ||
+      !(textBodytype instanceof HTMLSelectElement || textBodytype instanceof HTMLInputElement) ||
+      !(protocolo instanceof HTMLSelectElement || protocolo instanceof HTMLInputElement) ||
+      !(tde instanceof HTMLTableElement) ||
+      !(genElement instanceof HTMLSelectElement || genElement instanceof HTMLInputElement) ||
+      !(genBirthRel instanceof HTMLSelectElement || genBirthRel instanceof HTMLInputElement) ||
+      !(genFisAlin instanceof HTMLSelectElement || genFisAlin instanceof HTMLInputElement)
+    )
+      return [
+        person?.gen || "masculino",
+        (genElement as entryEl)?.value || "masculino",
+        (genFisAlin as entryEl)?.value || "masculinizado",
+      ];
     changeTabDCutLayout(protocolo, tde, textBodytype);
     person.dispatchGen(textBodytype.value);
-    console.log("Persons gender is: " + person.gen);
   } catch (e) {
-    console.error(`Error executing callbackTextBodyEl:\n${(e as Error).message}`);
+    return [
+      person?.gen || "masculino",
+      (genElement as entryEl)?.value || "masculino",
+      (genFisAlin as entryEl)?.value || "masculinizado",
+    ];
   }
   return [
     person?.gen || "masculino",
@@ -1338,163 +1325,157 @@ export function callbackAtvLvlElementNaf(
 ): void {
   try {
     if (!(person instanceof Person)) throw new Error(`Failed to validate patient person instance`);
-    tabProps.sa ??=
-      document.getElementById("selectLvlAtFis") ?? document.querySelector('[data-title*="Nível de Atividade Física"]');
+    if (!tabProps.sa || !tabProps.sa.isConnected)
+      tabProps.sa =
+        document.getElementById("selectLvlAtFis") ??
+        document.querySelector('[data-title*="Nível de Atividade Física"]');
     sa = tabProps.sa;
-    if (!(sa instanceof HTMLSelectElement || sa instanceof HTMLInputElement))
-      throw inputNotFound(sa, `Validation of Selector for Level of Physical activity`, extLine(new Error()));
-    tabProps.gl ??=
-      document.getElementById("gordCorpLvl") ?? document.querySelector('[data-title*="Gordura Corporal"]');
+    if (!(sa instanceof HTMLSelectElement || sa instanceof HTMLInputElement)) return;
+    if (!tabProps.gl || !tabProps.gl.isConnected)
+      tabProps.gl =
+        document.getElementById("gordCorpLvl") ?? document.querySelector('[data-title*="Gordura Corporal"]');
     gl = tabProps.gl;
-    if (!(gl instanceof HTMLSelectElement || sa instanceof HTMLInputElement))
-      throw inputNotFound(gl, `Validation of Selector for Level of Body Fat`, extLine(new Error()));
-    tabProps.naf ??=
-      document.getElementById("nafType") ?? document.querySelector('[data-title*="Fator de Nível de Atividade Física"');
+    if (!(gl instanceof HTMLSelectElement || sa instanceof HTMLInputElement)) return;
+    if (!tabProps.naf || !tabProps.naf.isConnected)
+      tabProps.naf =
+        document.getElementById("nafType") ??
+        document.querySelector('[data-title*="Fator de Nível de Atividade Física"');
     naf = tabProps.naf;
-    if (!(naf instanceof HTMLSelectElement || naf instanceof HTMLInputElement))
-      throw inputNotFound(
-        naf,
-        `Validation of Selector for Factor for Level of Physical activity`,
-        extLine(new Error()),
-      );
-    tabProps.fct ??= document.getElementById("formCalcTMBType") ?? document.querySelector('[data-title*="Fórmula"]');
+    if (!(naf instanceof HTMLSelectElement || naf instanceof HTMLInputElement)) return;
+    if (!tabProps.fct || !tabProps.fct.isConnected)
+      tabProps.fct = document.getElementById("formCalcTMBType") ?? document.querySelector('[data-title*="Fórmula"]');
     fct = tabProps.fct;
-    if (!(fct instanceof HTMLSelectElement || fct instanceof HTMLSelectElement))
-      throw inputNotFound(fct, `Validation of Selector for Formula of Protocol`, extLine(new Error()));
-    if (![sa.id, gl?.id ?? "gordCorpLvl", naf.id, fct.id].includes(idf))
-      throw new Error(`Identifier for callback invalid`);
+    if (!(fct instanceof HTMLSelectElement || fct instanceof HTMLSelectElement)) return;
+    if (![sa.id, gl?.id ?? "gordCorpLvl", naf.id, fct.id].includes(idf)) return;
     evalFactorAtvLvl();
     evalIMC();
     evalMatchTMBElements();
     evalActivityLvl();
-    fluxFormIMC(gl, fct);
-    try {
-      if (typeof idf !== "string") throw new Error(`Failed to validate target string`);
-      gl ??=
-        tabProps.gl ??
-        document.getElementById("gordCorpLvl") ??
-        document.querySelector('[data-title*="Gordura Corporal"]');
-      if (!(gl instanceof HTMLSelectElement || gl instanceof HTMLInputElement))
-        throw inputNotFound(gl, `Selector for Body Fat Level`, extLine(new Error()));
-      fct ??=
-        tabProps.fct ?? document.getElementById("formCalcTMBType") ?? document.querySelector('[data-title*="Fórmula"]');
-      if (!(fct instanceof HTMLSelectElement || fct instanceof HTMLInputElement))
-        throw inputNotFound(fct, `Selector for TMB type formula`, extLine(new Error()));
-      naf ??=
-        tabProps.naf ??
-        document.getElementById("nafType") ??
-        document.querySelector('[data-title*="Fator de Nível de Atividade Física"');
-      if (!(naf instanceof HTMLSelectElement || naf instanceof HTMLInputElement))
-        throw inputNotFound(naf, `Selector for Intensity of Physical Activity`, extLine(new Error()));
-      const spanFactorAtleta = tabProps.spanFa;
-      if (!(spanFactorAtleta instanceof HTMLElement))
-        throw elementNotFound(spanFactorAtleta, `Span for Athlete Factor`, extLine(new Error()));
-      const lockGl = tabProps.lockGl;
-      if (!(lockGl instanceof Element))
-        throw elementNotFound(lockGl, `Element for Displaying Lock for Body Fat Level`, extLine(new Error()));
-      fct.value !== "tinsley" && fluxFormIMC(gl, fct);
-      if (naf.value === "2.2") {
-        if (fct.value !== "tinsley") {
-          setTimeout(() => fadeElement(spanFactorAtleta, "0"), 100);
-          setTimeout(() => fadeElement(spanFactorAtleta, "1"), 500);
-        }
-        fct.value = "tinsley";
-        spanFactorAtleta.hidden = false;
-        if (/bi-lock/gi.test(lockGl.innerHTML) && !tabProps.isAutoFillActive) {
-          fadeElement(lockGl, "0");
-          setTimeout(() => {
-            lockGl.innerHTML = `<svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              fill="currentColor"
-              class="bi bi-unlock"
-              viewBox="0 0 16 16"
-            >
-              <defs>
-                <linearGradient
-                  id="gradiente-unlock"
-                  x1="0%"
-                  y1="0%"
-                  x2="100%"
-                  y2="0%"
-                >
-                  <stop
-                    offset="0%"
-                    style="stop-color:rgb(233, 180, 7)"
-                  />
-                  <stop
-                    offset="100%"
-                    style="stop-color:rgb(243, 221, 93)"
-                  />
-                </linearGradient>
-              </defs>
-              <path
-                d="M11 1 a2 2 0 0 1 2 2 v4 H9 V3 a2 2 0 0 1 2-2 m3 6 V3 a3 3 0 0 0-6 0 v4"
-                class="svg-unlock-hook"
-                fill="url(#gradiente-unlock)"
-              />
-              <path
-                d="M3 7 a2 2 0 0 0-2 2 v5 a2 2 0 0 0 2 2h 6 a2 2 0 0 0 2-2 V9 a2 2 0 0 0-2-2"
-                class="svg-unlock-body"
-                fill="url(#gradiente-unlock)"
-              />
-              <line
-                x1="2.2"
-                y1="7.05"
-                x2="9.3"
-                y2="7.05"
-                stroke="black"
-              />
-              </svg>`;
-            fadeElement(lockGl, "1");
-          }, 500);
-          if (!(tabProps.gl instanceof HTMLSelectElement || tabProps.gl instanceof HTMLInputElement)) return;
-          tabProps.gl.disabled = false;
-        }
-      } else if (naf.value === "1.2" || naf.value === "1.4" || naf.value === "1.6" || naf.value === "1.9") {
-        if (
-          gl.value === "sobrepeso" ||
-          gl.value === "obeso1" ||
-          gl.value === "obeso2" ||
-          gl.value === "obeso3" ||
-          (tabProps.IMC && tabProps.IMC >= 25)
-        ) {
-          if (fct.value !== "mifflinStJeor")
+    fluxFormIMC();
+    (() => {
+      try {
+        if (typeof idf !== "string") throw new Error(`Failed to validate target string`);
+        gl ??=
+          tabProps.gl ??
+          document.getElementById("gordCorpLvl") ??
+          document.querySelector('[data-title*="Gordura Corporal"]');
+        if (!(gl instanceof HTMLSelectElement || gl instanceof HTMLInputElement)) return;
+        fct ??=
+          tabProps.fct ??
+          document.getElementById("formCalcTMBType") ??
+          document.querySelector('[data-title*="Fórmula"]');
+        if (!(fct instanceof HTMLSelectElement || fct instanceof HTMLInputElement)) return;
+        naf ??=
+          tabProps.naf ??
+          document.getElementById("nafType") ??
+          document.querySelector('[data-title*="Fator de Nível de Atividade Física"');
+        if (!(naf instanceof HTMLSelectElement || naf instanceof HTMLInputElement)) return;
+        const spanFactorAtleta = tabProps.spanFa;
+        if (!(spanFactorAtleta instanceof HTMLElement)) return;
+        const lockGl = tabProps.lockGl;
+        if (!(lockGl instanceof Element)) return;
+        fct.value !== "tinsley" && fluxFormIMC();
+        if (naf.value === "2.2") {
+          if (fct.value !== "tinsley") {
+            setTimeout(() => fadeElement(spanFactorAtleta, "0"), 100);
+            setTimeout(() => fadeElement(spanFactorAtleta, "1"), 500);
+          }
+          fct.value = "tinsley";
+          spanFactorAtleta.hidden = false;
+          if (/bi-lock/gi.test(lockGl.innerHTML) && !tabProps.isAutoFillActive) {
+            fadeElement(lockGl, "0");
             setTimeout(() => {
-              fadeElement(spanFactorAtleta, "0");
-              setTimeout(() => (spanFactorAtleta.hidden = true), 500);
+              lockGl.innerHTML = `<svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                class="bi bi-unlock"
+                viewBox="0 0 16 16"
+              >
+                <defs>
+                  <linearGradient
+                    id="gradiente-unlock"
+                    x1="0%"
+                    y1="0%"
+                    x2="100%"
+                    y2="0%"
+                  >
+                    <stop
+                      offset="0%"
+                      style="stop-color:rgb(233, 180, 7)"
+                    />
+                    <stop
+                      offset="100%"
+                      style="stop-color:rgb(243, 221, 93)"
+                    />
+                  </linearGradient>
+                </defs>
+                <path
+                  d="M11 1 a2 2 0 0 1 2 2 v4 H9 V3 a2 2 0 0 1 2-2 m3 6 V3 a3 3 0 0 0-6 0 v4"
+                  class="svg-unlock-hook"
+                  fill="url(#gradiente-unlock)"
+                />
+                <path
+                  d="M3 7 a2 2 0 0 0-2 2 v5 a2 2 0 0 0 2 2h 6 a2 2 0 0 0 2-2 V9 a2 2 0 0 0-2-2"
+                  class="svg-unlock-body"
+                  fill="url(#gradiente-unlock)"
+                />
+                <line
+                  x1="2.2"
+                  y1="7.05"
+                  x2="9.3"
+                  y2="7.05"
+                  stroke="black"
+                />
+                </svg>`;
+              fadeElement(lockGl, "1");
             }, 500);
-          fct.value = "mifflinStJeor";
-        } else if (gl.value === "abaixo" || gl.value === "eutrofico" || (tabProps.IMC && tabProps.IMC < 25)) {
-          if (fct.value !== "harrisBenedict")
+            if (!(tabProps.gl instanceof HTMLSelectElement || tabProps.gl instanceof HTMLInputElement)) return;
+            tabProps.gl.disabled = false;
+          }
+        } else if (naf.value === "1.2" || naf.value === "1.4" || naf.value === "1.6" || naf.value === "1.9") {
+          if (
+            gl.value === "sobrepeso" ||
+            gl.value === "obeso1" ||
+            gl.value === "obeso2" ||
+            gl.value === "obeso3" ||
+            (tabProps.IMC && tabProps.IMC >= 25)
+          ) {
+            if (fct.value !== "mifflinStJeor")
+              setTimeout(() => {
+                fadeElement(spanFactorAtleta, "0");
+                setTimeout(() => (spanFactorAtleta.hidden = true), 500);
+              }, 500);
+            fct.value = "mifflinStJeor";
+          } else if (gl.value === "abaixo" || gl.value === "eutrofico" || (tabProps.IMC && tabProps.IMC < 25)) {
+            if (fct.value !== "harrisBenedict")
+              setTimeout(() => {
+                fadeElement(spanFactorAtleta, "0");
+                setTimeout(() => (spanFactorAtleta.hidden = true), 500);
+              }, 500);
+            fct.value = "harrisBenedict";
+          }
+          if (/bi-unlock/gi.test(lockGl.innerHTML)) {
+            fadeElement(lockGl, "0");
             setTimeout(() => {
-              fadeElement(spanFactorAtleta, "0");
-              setTimeout(() => (spanFactorAtleta.hidden = true), 500);
+              lockGl.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lock" viewBox="0 0 16 16"><defs><linearGradient id="gradiente-lock" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" style="stop-color:rgb(233, 180, 7)"></stop><stop offset="100%" style="stop-color:rgb(243, 221, 93)"></stop></linearGradient></defs><path d="M8 1 a2 2 0 0 1 2 2 v4 H6 V3 a2 2 0 0 1 2-2 m3 6 V3 a3 3 0 0 0-6 0 v4" class="svg-lock-hook"></path><path d="M5 7 a2 2 0 0 0-2 2 v5 a2 2 0 0 0 2 2h 6 a2 2 0 0 0 2-2 V9 a2 2 0 0 0-2-2" class="svg-lock-body"></path><line x1="5" y1="7" x2="11" y2="7" stroke="black"></line></svg>`;
+              fadeElement(lockGl, "1");
             }, 500);
-          fct.value = "harrisBenedict";
+            if (!(tabProps.gl instanceof HTMLSelectElement || tabProps.gl instanceof HTMLInputElement)) return;
+            tabProps.gl.disabled = true;
+          }
         }
-        if (/bi-unlock/gi.test(lockGl.innerHTML)) {
-          fadeElement(lockGl, "0");
-          setTimeout(() => {
-            lockGl.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lock" viewBox="0 0 16 16"><defs><linearGradient id="gradiente-lock" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" style="stop-color:rgb(233, 180, 7)"></stop><stop offset="100%" style="stop-color:rgb(243, 221, 93)"></stop></linearGradient></defs><path d="M8 1 a2 2 0 0 1 2 2 v4 H6 V3 a2 2 0 0 1 2-2 m3 6 V3 a3 3 0 0 0-6 0 v4" class="svg-lock-hook"></path><path d="M5 7 a2 2 0 0 0-2 2 v5 a2 2 0 0 0 2 2h 6 a2 2 0 0 0 2-2 V9 a2 2 0 0 0-2-2" class="svg-lock-body"></path><line x1="5" y1="7" x2="11" y2="7" stroke="black"></line></svg>`;
-            fadeElement(lockGl, "1");
-          }, 500);
-          if (!(tabProps.gl instanceof HTMLSelectElement || tabProps.gl instanceof HTMLInputElement)) return;
-          tabProps.gl.disabled = true;
-        }
-      } else
-        console.error(`Error obtaining the value for Targeted Main Selector, line ${extLine(new Error())}.
-            Obtained value: ${naf?.value ?? "undefined"}`);
-    } catch (e) {
-      console.error(`Error executing matchTMBElements:\n${(e as Error).message}`);
-    }
+      } catch (e) {
+        return;
+      }
+    })();
     /nafType/gi.test(idf) ? updateAtvLvl("naf") : updateAtvLvl("sa");
     person.dispatchAtvLvl(sa.value);
     const returnedFactorAtvLvl = person.checkAtvLvl(person);
-    tabProps.factorAtvLvl = (returnedFactorAtvLvl as NafTypeValue) || 1.4;
+    dispatchFactorAtvLvl(returnedFactorAtvLvl as NafTypeValue);
   } catch (e) {
-    console.error(`Error executing callbackAtvLvlElementNaf:\n${(e as Error).message}`);
+    return;
   }
 }
 export function handleCallbackWHS(inpWHS: targEl): void {
@@ -1506,23 +1487,17 @@ export function handleCallbackWHS(inpWHS: targEl): void {
         inpWHS instanceof HTMLTextAreaElement
       )
     )
-      throw elementNotFound(inpWHS, `${inpWHS?.id || inpWHS?.tagName || "unidentified"}`, extLine(new Error()));
+      return;
     if (
       inpWHS.value.length > 0 &&
       inpWHS.value !== "" &&
       (/NaN/gi.test(inpWHS.value) || /Infinity/gi.test(inpWHS.value))
     )
       inpWHS.value = "0";
-    if (cen.wis.length > 0 && cen.his.length > 0 && cen.dcisDoc.length > 0) {
-      for (const t of [...cen.wis, ...cen.his, ...cen.dcisDoc])
+    for (const i of ["inpWeight", "inpHeight", "tabInpProgSumDCut"])
+      for (const t of document.getElementsByClassName(i))
         if (t instanceof HTMLElement)
           t.dataset.target ? (t.dataset["target"] = "false") : t.setAttribute("data-target", "false");
-    } else {
-      for (const i of [".inpWeight", ".inpHeight", ".tabInpProgSumDCut"])
-        for (const t of document.querySelectorAll(i))
-          if (t instanceof HTMLElement)
-            t.dataset.target ? (t.dataset["target"] = "false") : t.setAttribute("data-target", "false");
-    }
     const fillResult = (autofillResult: autofillResult): void => {
       const {
         ts: { tiw, tih, tidc },
@@ -1537,16 +1512,12 @@ export function handleCallbackWHS(inpWHS: targEl): void {
       { p: "sumDCut", m: maxProps.dc },
     ].forEach(({ p }) => {
       if (inpWHS.classList.contains(`inp${p.charAt(0).toUpperCase()}${p.slice(1).toLowerCase()}`)) {
-        if (!(p in person)) {
-          console.warn(`Failed to locate ${p} in person props`);
-          return;
-        }
+        if (!(p in person)) return;
         (person as any)[p] = validateEvResultNum(inpWHS, parseFloat(inpWHS.value || "0"));
         tabProps.isAutoFillActive && fillResult(exeAutoFill(inpWHS, "col"));
       }
     });
   } catch (e) {
-    console.error(`Error executing callbackWHS for ${inpWHS?.id || "unidentified"}:${(e as Error).message}`);
     if (inpWHS instanceof HTMLElement && "value" in inpWHS) inpWHS.value = "0";
   }
 }

@@ -81,7 +81,7 @@ export default function NavCard({ href }: { href: string }): JSX.Element {
       switch (href) {
         case "/ag":
           return (
-            <div className={`${sMc.addTextBack}`}>
+            <fieldset className={`${sMc.addTextBack}`}>
               <button className={`btn btn-info card-hborder transparentEl ${sMc.btnBack}`} id='agAnchoredBtn'>
                 <Link
                   className='card-header anchoredBtn noInvert'
@@ -96,11 +96,11 @@ export default function NavCard({ href }: { href: string }): JSX.Element {
               <div className={sMc.cardAddTextBack} style={{ fontWeight: 700 }}>
                 {add}
               </div>
-            </div>
+            </fieldset>
           );
         case "/edfis":
           return (
-            <div className={`${sMc.addTextBack}`}>
+            <fieldset className={`${sMc.addTextBack}`}>
               <button
                 className={`btn btn-info card-hborder transparentEl ${sMc.btnBack}`}
                 id='agAnchoredBtn'
@@ -118,11 +118,11 @@ export default function NavCard({ href }: { href: string }): JSX.Element {
               <div className={sMc.cardAddTextBack} style={{ fontWeight: 700 }}>
                 {add}
               </div>
-            </div>
+            </fieldset>
           );
         case "/nut":
           return (
-            <div className={`${sMc.addTextBack}`}>
+            <fieldset className={`${sMc.addTextBack}`}>
               <button className={`btn btn-success card-hborder transparentEl ${sMc.btnBack}`} id='agAnchoredBtn'>
                 <Link
                   className='card-header anchoredBtn noInvert'
@@ -137,11 +137,11 @@ export default function NavCard({ href }: { href: string }): JSX.Element {
               <div className={sMc.cardAddTextBack} style={{ fontWeight: 700 }}>
                 {add}
               </div>
-            </div>
+            </fieldset>
           );
         case "/od":
           return (
-            <div className={`${sMc.addTextBack}`}>
+            <fieldset className={`${sMc.addTextBack}`}>
               <button className={`btn btn-primary card-hborder transparentEl ${sMc.btnBack}`} id='agAnchoredBtn'>
                 <Link
                   className='card-header anchoredBtn noInvert'
@@ -156,7 +156,7 @@ export default function NavCard({ href }: { href: string }): JSX.Element {
               <div className={sMc.cardAddTextBack} style={{ fontWeight: 700 }}>
                 {add}
               </div>
-            </div>
+            </fieldset>
           );
         default:
           return <></>;
@@ -178,14 +178,14 @@ export default function NavCard({ href }: { href: string }): JSX.Element {
         if (!(imgRef.current instanceof HTMLElement)) return;
         imgRef.current.style.marginBottom = `${cardHt * 0.1}px`;
       } catch (e) {
-        console.error(`Error executing procedure for adjusting image margin:\n${(e as Error).message}`);
+        return;
       }
       try {
         if (!(a.current instanceof HTMLElement)) return;
         const newBot = parseNotNaN(compProp(a.current, "height"));
-        if (!Number.isFinite(newBot) || newBot < 0) throw new Error(`Invalid new value for bottom property`);
+        if (!Number.isFinite(newBot) || newBot < 0) return;
       } catch (e) {
-        console.error(`Error executing effect for adjusting placement of caption:\n${(e as Error).message}`);
+        return;
       }
       try {
         if (!(descRef.current instanceof HTMLElement)) return;
@@ -194,7 +194,7 @@ export default function NavCard({ href }: { href: string }): JSX.Element {
         descRef.current.style.left = `${cardWd * 0.3}px`;
         descRef.current.style.top = href === "/od" ? `-${cardHt * 0.12}px` : `-${cardHt * 0.165}px`;
       } catch (e) {
-        console.error(`Error executing effect for navCard:\n${(e as Error).message}`);
+        return;
       }
       try {
         if (!(addRef.current instanceof HTMLElement)) return;
@@ -202,7 +202,7 @@ export default function NavCard({ href }: { href: string }): JSX.Element {
         if (cSt.position !== "relative" && cSt.float === "none") return;
         addRef.current.style.top = `-${cardHt * 0.08}px`;
       } catch (e) {
-        console.error(`Error executing procedure for moving addText:${(e as Error).message}`);
+        return;
       }
     }, [a, descRef, r, addRef, imgRef]),
     step = 1,
@@ -219,12 +219,10 @@ export default function NavCard({ href }: { href: string }): JSX.Element {
           secondHalf = background.slice(background.indexOf("%")),
           iniPercentage = parseNotNaN(firstHalf.replace(/[^0-9]/g, "").trim());
         if (!Number.isFinite(iniPercentage)) return;
-        console.log(`${noPercentageFirstHalf}${iniPercentage}${secondHalf}`);
         let percentage = parseNotNaN(firstHalf.replace(/[^0-9]/g, "").trim()),
           isDecreasing = true;
         el.dataset.animating = "true";
         const intervalId = setInterval(() => {
-          console.log("running...");
           if (!el) {
             clearInterval(intervalId);
             return;
@@ -247,7 +245,7 @@ export default function NavCard({ href }: { href: string }): JSX.Element {
           el.style.backgroundImage = `radial-gradient(circle at 120% center, rgba(80, 157, 80, 0.516), rgb(33, 109, 135))`;
         }, totalDuration * 2 + 100);
       } catch (e) {
-        console.error(`Error executing bgCircleMove:\n${(e as Error).message}`);
+        return;
       }
     }, []),
     hideDesc = useCallback((): void => {
@@ -261,7 +259,7 @@ export default function NavCard({ href }: { href: string }): JSX.Element {
           if (descRef.current) descRef.current.style.opacity = "1";
         }, 500);
       } catch (e) {
-        console.error(`Error executing hideDesc:\n${(e as Error).message}`);
+        return;
       }
     }, [r, descRef]);
   useEffect(() => {
@@ -269,7 +267,7 @@ export default function NavCard({ href }: { href: string }): JSX.Element {
       measures: Array<{
         width: number;
         height: number;
-      }> = imgs.map((img, i) => {
+      }> = imgs.map(img => {
         try {
           if (!(img instanceof HTMLImageElement)) throw new Error(`Failed to validate instance`);
           return {
@@ -277,21 +275,18 @@ export default function NavCard({ href }: { href: string }): JSX.Element {
             height: Math.max(parseNotNaN(compProp(img, "height")), img.height),
           };
         } catch (e) {
-          console.error(`Error executing iteration ${i} for card figures:\n${(e as Error).message}`);
           return { width: 0, height: 0 };
         }
       }),
       largest = Math.max(...Array.from(measures.values()).map(m => m.width)),
       tallest = Math.max(...Array.from(measures.values()).map(m => m.height));
-    imgs.forEach((img, i) => {
+    imgs.forEach(img => {
       try {
         if (!(img instanceof HTMLImageElement)) throw new Error(`Failed to validate instance`);
         img.width = largest;
         img.height = tallest;
       } catch (e) {
-        console.error(
-          `Error executing iteration ${i} for applying largest measures to images:\n${(e as Error).message}`,
-        );
+        return;
       }
     });
   }, []);
@@ -339,7 +334,7 @@ export default function NavCard({ href }: { href: string }): JSX.Element {
               setTimeout(() => (img.style.transform = "rotateZ(0)"), 1250);
               bgCircleMove(t);
             } catch (e) {
-              console.error(`Error executing ${ev.type} callback:\n${(e as Error).message}`);
+              return;
             }
           }}>
           <Link

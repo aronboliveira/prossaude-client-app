@@ -1,6 +1,5 @@
 "use client";
 import { CounterAction } from "@/lib/global/declarations/interfaces";
-import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { nlFs } from "@/lib/global/declarations/types";
 import { switchRowComorb } from "@/lib/locals/edFisNutPage/edFisNutHandler";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
@@ -31,12 +30,11 @@ export default function TabComorb({ children = <></> }: { children: JSX.Element 
   useEffect(() => {
     try {
       if (mounted) {
-        if (!(mainRef.current instanceof HTMLElement))
-          throw elementNotFound(mainRef.current, `Main reference for AntMedFs`, extLine(new Error()));
+        if (!(mainRef.current instanceof HTMLElement)) return;
         syncAriaStates([mainRef.current, ...mainRef.current.querySelectorAll("*")]);
       }
     } catch (e) {
-      console.error(`Error executing useEffect for blockCount:\n${(e as Error).message}`);
+      return;
     }
   }, [blockCount, mounted]);
   return (

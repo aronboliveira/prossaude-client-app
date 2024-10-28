@@ -59,7 +59,7 @@ const FsProgCons = lazy(() => import("./FsProgCons")),
       #genDiv {
         input,
         select {
-          min-width: 86.5vw !important;
+          min-width: 88vw !important;
         }
       }
     }
@@ -175,7 +175,7 @@ export default function ENForm(): JSX.Element {
         applyConstraintsTitle(f.current);
       }, 1000);
     } catch (e) {
-      console.error(`Error executing effect for filling input titles:\n${(e as Error).message}`);
+      return;
     }
   }, [f, mounted]);
   useEffect(() => {
@@ -314,7 +314,8 @@ export default function ENForm(): JSX.Element {
                 <span
                   role='group'
                   id='spanDiur'
-                  className={`labAlimRot fitSpaced labUr labUrInterval widMax900q80vw ${sEn.labAlimRot} ${sEn.spanDiur}`}>
+                  className={`labAlimRot fitSpaced labUr labUrInterval widMax900q80vw ${sEn.labAlimRot} ${sEn.spanDiur}`}
+                  style={{ scrollbarWidth: "none", paddingRight: "0.33rem" }}>
                   <span>Diurese:</span>
                   <label
                     htmlFor='inpDiur'

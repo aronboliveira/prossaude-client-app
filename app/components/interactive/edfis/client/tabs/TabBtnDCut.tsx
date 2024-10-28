@@ -5,11 +5,16 @@ import { FspCtxProps } from "@/lib/global/declarations/interfaces";
 import { FspCtx } from "../FsProgCons";
 import { checkContext } from "@/lib/global/gModel";
 import sEn from "@/styles//modules/enStyles.module.scss";
+import { NlMRef, nlSel, nlTab } from "@/lib/global/declarations/types";
 export default function TabBtnDCut({ nCol }: { nCol: number }): JSX.Element {
-  const { prt, td } = useContext<FspCtxProps>(FspCtx).refs;
+  let prt: NlMRef<nlSel> = null,
+    td: NlMRef<nlTab> = null;
+  const ctx1 = useContext<FspCtxProps>(FspCtx);
+  if (ctx1) {
+    if (ctx1.refs) ({ prt, td } = ctx1.refs);
+  }
   //TODO REMOVER APÓS TESTE
-  const ctx = useContext(FspCtx);
-  checkContext(ctx, "FspCtx", TabBtnDCut);
+  checkContext(ctx1, "FspCtx", TabBtnDCut);
   return (
     <button
       type='button'

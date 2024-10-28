@@ -12,17 +12,17 @@ import { Suspense } from "react";
 import ReactSpinner from "../../../icons/ReactSpinner";
 import { ENCtx } from "./ENForm";
 import { ENCtxProps, FspCtxProps } from "@/lib/global/declarations/interfaces";
-import { NlMRef, entryEl, nlInp, nlSel, nlTab, nlFs, nlSpan } from "@/lib/global/declarations/types";
+import { NlMRef, entryEl, nlInp, nlSel, nlTab, nlFs, nlSpan, nlHtEl } from "@/lib/global/declarations/types";
 import useMount from "@/lib/hooks/useMount";
-import { elementNotFound, extLine, inputNotFound, maxNumberError } from "@/lib/global/handlers/errorHandler";
 import { handleCondtReq } from "@/lib/global/handlers/gHandlers";
 import { person, tabProps } from "@/vars";
-import { checkContext, limitedError, parseNotNaN } from "@/lib/global/gModel";
+import { checkContext, parseNotNaN } from "@/lib/global/gModel";
 import { addListenerInnerTabs } from "@/lib/locals/edFisNutPage/edFisNutController";
 import { NafTypeValue } from "@/lib/global/declarations/testVars";
 import { styled } from "styled-components";
 import s from "@/styles//modules/sharedComponents.module.scss";
 import sEn from "@/styles//modules/enStyles.module.scss";
+import { dispatchFactorAtvLvl } from "@/lib/locals/edFisNutPage/edFisNutModel";
 const FsTabs = lazy(() => import("./FsTabs")),
   DivProgSels = styled.div`
     ~ hr {
@@ -54,6 +54,72 @@ export const FspCtx = createContext<FspCtxProps>({
     tma: null,
     tsv: null,
   },
+  targs: {
+    firstCol: {
+      tiw1: null,
+      tih1: null,
+      tiimc1: null,
+      timlg1: null,
+      titmb1: null,
+      tiget1: null,
+      tipgc1: null,
+      tidc1: null,
+    },
+    secondCol: {
+      tiw2: null,
+      tih2: null,
+      tiimc2: null,
+      timlg2: null,
+      titmb2: null,
+      tiget2: null,
+      tipgc2: null,
+      tidc2: null,
+    },
+    thirdCol: {
+      tiw3: null,
+      tih3: null,
+      tiimc3: null,
+      timlg3: null,
+      titmb3: null,
+      tiget3: null,
+      tipgc3: null,
+      tidc3: null,
+    },
+  },
+  dc: {
+    rows: {
+      d_2_: null,
+      d_3_: null,
+      d_4_: null,
+      d_5_: null,
+      d_6_: null,
+      d_7_: null,
+      d_8_: null,
+    },
+    inputs: {
+      d_2_2: null,
+      d_2_3: null,
+      d_2_4: null,
+      d_3_2: null,
+      d_3_3: null,
+      d_3_4: null,
+      d_4_2: null,
+      d_4_3: null,
+      d_4_4: null,
+      d_5_2: null,
+      d_5_3: null,
+      d_5_4: null,
+      d_6_2: null,
+      d_6_3: null,
+      d_6_4: null,
+      d_7_2: null,
+      d_7_3: null,
+      d_7_4: null,
+      d_8_2: null,
+      d_8_3: null,
+      d_8_4: null,
+    },
+  },
 });
 export default function FsProgCons(): JSX.Element {
   let af: NlMRef<nlInp> = null,
@@ -73,6 +139,58 @@ export default function FsProgCons(): JSX.Element {
     id = "fsProgConsId",
     [mounted] = useMount(),
     [numCons, setNumCons] = useState<number>(1),
+    tiw1 = useRef<nlInp>(null),
+    tih1 = useRef<nlInp>(null),
+    tiimc1 = useRef<nlInp>(null),
+    timlg1 = useRef<nlInp>(null),
+    titmb1 = useRef<nlInp>(null),
+    tiget1 = useRef<nlInp>(null),
+    tipgc1 = useRef<nlInp>(null),
+    tidc1 = useRef<nlInp>(null),
+    tiw2 = useRef<nlInp>(null),
+    tih2 = useRef<nlInp>(null),
+    tiimc2 = useRef<nlInp>(null),
+    timlg2 = useRef<nlInp>(null),
+    titmb2 = useRef<nlInp>(null),
+    tiget2 = useRef<nlInp>(null),
+    tipgc2 = useRef<nlInp>(null),
+    tidc2 = useRef<nlInp>(null),
+    tiw3 = useRef<nlInp>(null),
+    tih3 = useRef<nlInp>(null),
+    tiimc3 = useRef<nlInp>(null),
+    timlg3 = useRef<nlInp>(null),
+    titmb3 = useRef<nlInp>(null),
+    tiget3 = useRef<nlInp>(null),
+    tipgc3 = useRef<nlInp>(null),
+    tidc3 = useRef<nlInp>(null),
+    d_2_ = useRef<nlHtEl>(null),
+    d_3_ = useRef<nlHtEl>(null),
+    d_4_ = useRef<nlHtEl>(null),
+    d_5_ = useRef<nlHtEl>(null),
+    d_6_ = useRef<nlHtEl>(null),
+    d_7_ = useRef<nlHtEl>(null),
+    d_8_ = useRef<nlHtEl>(null),
+    d_2_2 = useRef<nlHtEl>(null),
+    d_2_3 = useRef<nlHtEl>(null),
+    d_2_4 = useRef<nlHtEl>(null),
+    d_3_2 = useRef<nlHtEl>(null),
+    d_3_3 = useRef<nlHtEl>(null),
+    d_3_4 = useRef<nlHtEl>(null),
+    d_4_2 = useRef<nlHtEl>(null),
+    d_4_3 = useRef<nlHtEl>(null),
+    d_4_4 = useRef<nlHtEl>(null),
+    d_5_2 = useRef<nlHtEl>(null),
+    d_5_3 = useRef<nlHtEl>(null),
+    d_5_4 = useRef<nlHtEl>(null),
+    d_6_2 = useRef<nlHtEl>(null),
+    d_6_3 = useRef<nlHtEl>(null),
+    d_6_4 = useRef<nlHtEl>(null),
+    d_7_2 = useRef<nlHtEl>(null),
+    d_7_3 = useRef<nlHtEl>(null),
+    d_7_4 = useRef<nlHtEl>(null),
+    d_8_2 = useRef<nlHtEl>(null),
+    d_8_3 = useRef<nlHtEl>(null),
+    d_8_4 = useRef<nlHtEl>(null),
     ctx = useContext<ENCtxProps>(ENCtx);
   if (ctx?.refs) ({ af, fspr, gr, nafr, sar } = ctx.refs);
   //TODO REMOVER APÓS TESTE
@@ -83,10 +201,9 @@ export default function FsProgCons(): JSX.Element {
     const selectNumCons = snc?.current ?? document.getElementById("selectNumCons"),
       consTablesFs = fspr?.current ?? document.getElementById(id);
     //TODO TAB ONLY
-    document.querySelectorAll(".tabInpProg").forEach((inp, i) => {
+    document.querySelectorAll(".tabInpProg").forEach(inp => {
       try {
-        if (!(inp instanceof HTMLInputElement && (inp.type === "number" || inp.type === "text")))
-          throw inputNotFound(inp, `Validation of Input instance and type`, extLine(new Error()));
+        if (!(inp instanceof HTMLInputElement && (inp.type === "number" || inp.type === "text"))) return;
         if (inp.dataset.conditioned && inp.dataset.conditioned === "true") return;
         if (inp.required) {
           if (inp.minLength === -1) inp.minLength = 1;
@@ -119,9 +236,7 @@ export default function FsProgCons(): JSX.Element {
           inp.dataset.conditioned = "true";
         }
       } catch (e) {
-        console.error(
-          `Error executing iteration ${i} for Tab Inp Prog application of requirements:\n${(e as Error).message}`,
-        );
+        return;
       }
     });
     for (const { p, t } of [
@@ -133,39 +248,21 @@ export default function FsProgCons(): JSX.Element {
     ])
       (tabProps as any)[p] = parseNotNaN(parseNotNaN((t as entryEl)?.value ?? "0").toFixed(4)) ?? 0;
     //TODO END TAB ONLY
-    tabProps.factorAtvLvl =
-      (parseNotNaN((nafr?.current ?? (document.getElementById("nafType") as entryEl))?.value) as NafTypeValue) || 1.4;
+    dispatchFactorAtvLvl((nafr?.current ?? (document.getElementById("nafType") as entryEl))?.value as NafTypeValue);
     try {
-      if (!(selectNumCons instanceof HTMLSelectElement || selectNumCons instanceof HTMLDataListElement))
-        throw elementNotFound(selectNumCons, `Select Num Cons instance`, extLine(new Error()));
+      if (!(selectNumCons instanceof HTMLSelectElement || selectNumCons instanceof HTMLDataListElement)) return;
       tabProps.numCons = parseNotNaN((selectNumCons as entryEl)?.value || "1") || 1;
-      if (!(selectNumCons.lastElementChild instanceof HTMLOptionElement))
-        throw elementNotFound(
-          selectNumCons.lastElementChild,
-          `Last Element of Select for Número de Consulta`,
-          extLine(new Error()),
-        );
+      if (!(selectNumCons.lastElementChild instanceof HTMLOptionElement)) return;
       tabProps.numConsLastOp = parseNotNaN(selectNumCons?.lastElementChild?.value ?? "1", 1);
       tabProps.numColsCons = Math.min(
         ...Array.from(document.querySelectorAll("table")).map(tab => {
           return tab instanceof HTMLTableElement ? tab.querySelectorAll("col").length : 0;
         }),
       );
-      if (!(tabProps.numConsLastOp === tabProps.numColsCons && tabProps.numConsLastOp >= 3)) {
-        console.error(`
-            numConsLastOp: ${tabProps.numConsLastOp};
-            numColsCons: ${tabProps.numColsCons};
-            numConsLastOp: ${tabProps.numConsLastOp};
-            `);
-        throw maxNumberError(
-          (selectNumCons?.lastElementChild as HTMLOptionElement)?.value ?? "1",
-          "Options para Consultas",
-          extLine(new Error()),
-        );
-      }
+      if (!(tabProps.numConsLastOp === tabProps.numColsCons && tabProps.numConsLastOp >= 3)) return;
       tabProps.areNumConsOpsValid = true;
     } catch (e) {
-      console.error(`Error executing procedure for determining Número de Consulta:\n${(e as Error).message}`);
+      return;
     }
     tabProps.numCons ||= 1;
     //TODOS TABS ONLY
@@ -196,7 +293,7 @@ export default function FsProgCons(): JSX.Element {
         nc.current.style.width = fctWid;
         nc.current.style.maxWidth = fctWid;
       } catch (e) {
-        limitedError(`Error executing resize of Fieldset for Progres Varaibles`, "ResizeFsProgCons");
+        return;
       }
     };
     handleResize();
@@ -204,7 +301,50 @@ export default function FsProgCons(): JSX.Element {
     return (): void => removeEventListener("resize", handleResize);
   }, []);
   return (
-    <FspCtx.Provider value={{ cons: { numCons, setNumCons }, refs: { prt, snc, td, tip, tma, tsv } }}>
+    <FspCtx.Provider
+      value={{
+        cons: { numCons, setNumCons },
+        refs: { prt, snc, td, tip, tma, tsv },
+        targs: {
+          firstCol: { tiw1, tih1, tiimc1, timlg1, titmb1, tiget1, tipgc1, tidc1 },
+          secondCol: { tiw2, tih2, tiimc2, timlg2, titmb2, tiget2, tipgc2, tidc2 },
+          thirdCol: { tiw3, tih3, tiimc3, timlg3, titmb3, tiget3, tipgc3, tidc3 },
+        },
+        dc: {
+          rows: {
+            d_2_,
+            d_3_,
+            d_4_,
+            d_5_,
+            d_6_,
+            d_7_,
+            d_8_,
+          },
+          inputs: {
+            d_2_2,
+            d_2_3,
+            d_2_4,
+            d_3_2,
+            d_3_3,
+            d_3_4,
+            d_4_2,
+            d_4_3,
+            d_4_4,
+            d_5_2,
+            d_5_3,
+            d_5_4,
+            d_6_2,
+            d_6_3,
+            d_6_4,
+            d_7_2,
+            d_7_3,
+            d_7_4,
+            d_8_2,
+            d_8_3,
+            d_8_4,
+          },
+        },
+      }}>
       <fieldset ref={fspr} name='fsProgConsName' id={id} className={`fsMain divTab ${s.divTabEn} ${s.fsProgCons}`}>
         <h4 className='bolded' id='hProgCons'>
           Progresso em Consultas

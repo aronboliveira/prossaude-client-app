@@ -41,7 +41,6 @@ export function decodeToken(
       },
     };
   } catch (e) {
-    console.error(`Error executing decodeToken:\n${(e as Error).message}`);
     return {
       ok: false,
       res: {},
@@ -74,7 +73,6 @@ export async function handleLogin(
       }
       const data = await res.json();
       if (res.status !== 200) {
-        console.warn(`Error on processing HTTP Response:\n`);
         status = res.status;
         return {
           valid: false,
@@ -82,7 +80,6 @@ export async function handleLogin(
         };
       }
       if (!("access" in data)) {
-        console.warn(`Error on processing JSONified HTTP Response:\n`);
         status = res.status;
         return {
           valid: false,
@@ -101,7 +98,6 @@ export async function handleLogin(
       });
       const { ok, res: user } = decodeToken(data);
       if (!ok) {
-        console.warn(`Error processing tokens :\n`);
         status = res.status;
         return {
           valid: false,
@@ -121,7 +117,6 @@ export async function handleLogin(
       };
     }
   } catch (e) {
-    console.error(`Error executing handleFetchStuds:\n${(e as Error).message}`);
     return {
       valid: false,
       message: navigatorVars.pt

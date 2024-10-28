@@ -79,6 +79,11 @@ export interface FspCtxProps {
     tma: NlMRef<nlTab>;
     tip: NlMRef<nlTab>;
   };
+  targs: TargInps;
+  dc: {
+    rows: { [k: string]: NlMRef<nlHtEl> };
+    inputs: { [k: string]: NlMRef<nlHtEl> };
+  };
 }
 export interface UserPanelCtxProps {
   setDropdown: NlrDispatch<boolean>;
@@ -93,23 +98,21 @@ export interface UserProfileCtxProps {
   setContact: NlrDispatch<boolean>;
 }
 export interface CacheENProps {
-  ncthc: Element[];
-  tip: Element[];
-  fsptb: Element[];
-  fsptrs: Element[];
-  fspcols: Element[];
-  tsvis: Element[];
-  tmais: Element[];
-  dcis: Element[];
-  indis: Element[];
-  locksinds: Element[];
-  indisDoc: Element[];
-  dcisDoc: Element[];
-  his: Element[];
-  wis: Element[];
-  dctrs: Element[];
-  lists: { [k: string]: elCollection };
-  targs: { [k: string]: HTMLElement[] };
+  ncthc?: HTMLCollectionOf<Element>;
+  tip?: HTMLCollectionOf<Element>;
+  fsptb?: HTMLCollectionOf<Element>;
+  fsptrs?: HTMLCollectionOf<Element>;
+  fspcols?: HTMLCollectionOf<Element>;
+  tsvis?: HTMLCollectionOf<Element>;
+  tmais?: HTMLCollectionOf<Element>;
+  dcis?: HTMLCollectionOf<Element>;
+  indis?: HTMLCollectionOf<Element>;
+  locksinds?: HTMLCollectionOf<Element>;
+  his?: HTMLCollectionOf<Element>;
+  wis?: HTMLCollectionOf<Element>;
+  dctrs?: HTMLCollectionOf<Element>;
+  lists: { [k: string]: HTMLCollectionOf<Element> };
+  targs: { [k: string]: HTMLCollectionOf<Element> };
 }
 export interface ActiveTargInps {
   tiw: targEl;
@@ -152,9 +155,6 @@ export interface TargInps {
     tipgc3: NlMRef<nlInp>;
     tidc3: NlMRef<nlInp>;
   };
-}
-export interface ENTabsCtxProps {
-  targs: TargInps;
 }
 export interface DTsCtxProps {
   exeAutoFillCtx: ((targ: targEl, context: "cons" | "col") => autofillResult) | null;

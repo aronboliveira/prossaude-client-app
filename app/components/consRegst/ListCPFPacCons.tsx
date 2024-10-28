@@ -14,8 +14,7 @@ export default function ListCPFPacCons(): JSX.Element {
   const pacs: PacInfo[] = useMemo(() => [], []);
   useEffect(() => {
     try {
-      if (!(dlRef.current instanceof HTMLDataListElement))
-        throw elementNotFound(dlRef.current, `Validation of Datalist instance`, extLine(new Error()));
+      if (!(dlRef.current instanceof HTMLDataListElement)) return;
       handleFetch("patients", "_table", true)
         .then(res => {
           res.forEach(pac => {

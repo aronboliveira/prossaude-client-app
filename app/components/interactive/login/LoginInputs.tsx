@@ -4,7 +4,6 @@ import { clearDefInvalidMsg, resetPhs } from "@/lib/global/gStyleScript";
 import { handleLogin } from "@/lib/global/auth";
 import { nlA, nlFm, nlHtEl, nlSpan } from "@/lib/global/declarations/types";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { elementNotFound, extLine, inputNotFound, multipleElementsNotFound } from "@/lib/global/handlers/errorHandler";
 import { callbackShowPw, callbackSubmitBtn } from "@/lib/locals/loginPage/loginController";
 import Link from "next/link";
 import { assignFormAttrs } from "@/lib/global/gModel";
@@ -22,6 +21,7 @@ export default function LoginInputs(): JSX.Element {
     router = useRouter(),
     [msg, setMsg] = useState<string | JSX.Element>(""),
     formToasted = useRef<boolean>(false),
+    handlerToasted = useRef<boolean>(false),
     serverToasted = useRef<boolean>(false),
     exeLogin = useCallback(
       (resSpan: nlHtEl): void => {
@@ -46,7 +46,7 @@ export default function LoginInputs(): JSX.Element {
                   if (!(el instanceof HTMLElement)) return;
                   el.style.filter += "blur(2px)";
                 } catch (e) {
-                  console.error(`Error:\n${(e as Error).message}`);
+                  return;
                 }
               });
             }
@@ -140,33 +140,25 @@ export default function LoginInputs(): JSX.Element {
             }
           }
         } catch (e) {
-          console.error(`Error executing exeLogin:\n${(e as Error).message}`);
+          return;
         }
       },
       [router, formRef],
     );
   useEffect(() => {
     try {
-      if (!(anchorRef.current instanceof HTMLAnchorElement))
-        throw elementNotFound(anchorRef.current, "Anchor Reference in Login Page", extLine(new Error()));
+      if (!(anchorRef.current instanceof HTMLAnchorElement)) return;
       if (/undefined/gi.test(anchorRef.current.href) && !/http:/gi.test(anchorRef.current.href))
         anchorRef.current.href = anchorRef.current.href.replace(
           "undefined",
           `${location.href.replace(location.pathname, "")}`,
         );
     } catch (e) {
-      console.error(`Error executing procedure for adjusting anchor href:\n${(e as Error).message}`);
+      return;
     }
     const form = formRef.current ?? document.querySelector("form"),
       inps = Array.from(document.querySelectorAll("input"));
-    form instanceof HTMLFormElement && inps.length > 0
-      ? clearDefInvalidMsg(form, inps)
-      : multipleElementsNotFound(
-          extLine(new Error()),
-          "argument for clearDefInvalidMsg in DOM initialization",
-          form,
-          ...inps,
-        );
+    if (form instanceof HTMLFormElement && inps.length > 0) clearDefInvalidMsg(form, inps);
     resetPhs(inps, {
       user: "Nome de Usuário",
       pw: "Senha",
@@ -187,7 +179,7 @@ export default function LoginInputs(): JSX.Element {
           }, 200);
         }
       } catch (e) {
-        console.error(`Error executing handleEnter:\n${(e as Error).message}`);
+        return;
       }
     };
     if (!anchorRef.current) return;
@@ -318,24 +310,18 @@ export default function LoginInputs(): JSX.Element {
               ev.preventDefault();
               const loginForm = new FormData();
               let userName = "";
-              try {
+              (() => {
                 const usernameEl = document.getElementById("user");
-                if (!(usernameEl instanceof HTMLInputElement))
-                  throw inputNotFound(usernameEl, `Validation of User name element`, extLine(new Error()));
+                if (!(usernameEl instanceof HTMLInputElement)) return;
                 userName = usernameEl.value;
-              } catch (e) {
-                console.error(`Error executing fetch of user name from element:\n${(e as Error).message}`);
-              }
+              })();
               loginForm.append("username", userName);
               let pw = "";
-              try {
+              (() => {
                 const pwEl = document.getElementById("pw");
-                if (!(pwEl instanceof HTMLInputElement))
-                  throw inputNotFound(pwEl, `Validation of password element instance`, extLine(new Error()));
+                if (!(pwEl instanceof HTMLInputElement)) return;
                 pw = pwEl.value;
-              } catch (e) {
-                console.error(`Error reading password value:${(e as Error).message}`);
-              }
+              })();
               loginForm.append("password", pw);
               const [message, suspicious] = new ClickEvaluator().evaluateClickMovements(ev);
               if (suspicious || !callbackSubmitBtn) {
@@ -366,7 +352,14 @@ export default function LoginInputs(): JSX.Element {
                   if (res.valid) {
                     exeLogin(spanRef.current);
                     setFullUser({ v: defUser });
-                  } else setMsg(res.message);
+                  } else {
+                    setMsg(res.message);
+                    if (handlerToasted.current) return;
+                    const toastId = toast.error(res.message);
+                    setTimeout(() => toast.dismiss(toastId), 1500);
+                    handlerToasted.current = true;
+                    setTimeout(() => (handlerToasted.current = false), 2000);
+                  }
                 });
               }, 300);
             }}>

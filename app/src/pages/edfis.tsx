@@ -75,7 +75,7 @@ export default function EdFisNutPage(): JSX.Element {
       <div id='bgDiv'>
         <header>
           <div role='group' className='pad1pc'>
-            <div role='group' className='flexNoW flexDiv flexAlItT flexSimple flexQ900NoWC' id='hDiv'>
+            <fieldset role='group' className='flexNoW flexDiv flexAlItT flexSimple flexQ900NoWC' id='hDiv'>
               <div role='group' id='hTextDiv' className='noInvert'>
                 <h1 className='bolded flexJBt' id='hForm'>
                   <strong>Ficha de Avaliação:</strong>
@@ -89,7 +89,7 @@ export default function EdFisNutPage(): JSX.Element {
                 <ENTipsBtnWrapper />
               </div>
               <HeaderDate />
-            </div>
+            </fieldset>
           </div>
         </header>
         <main className={sEn.main}>

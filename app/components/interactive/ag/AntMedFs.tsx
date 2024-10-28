@@ -2,7 +2,6 @@
 import { CounterAction } from "@/lib/global/declarations/interfaces";
 import { addMedHistHandler } from "@/lib/locals/aGPage/aGHandlers";
 import { clearPhDates } from "@/lib/global/gStyleScript";
-import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { nlFs } from "@/lib/global/declarations/types";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useEffect, useReducer, useRef } from "react";
@@ -20,19 +19,18 @@ export default function AntMedFs({ children = <></> }: { children: JSX.Element }
   }, 2);
   useEffect(() => {
     try {
-      if (!(mainRef.current instanceof HTMLElement))
-        throw elementNotFound(mainRef.current, `Main reference for AntMedFs`, extLine(new Error()));
+      if (!(mainRef.current instanceof HTMLElement)) return;
       syncAriaStates([mainRef.current, ...mainRef.current.querySelectorAll("*")]);
       clearPhDates(Array.from(document.querySelectorAll('input[type="date"]')));
     } catch (e) {
-      console.error(`Error executing useEffect for blockCount:\n${(e as Error).message}`);
+      return;
     }
   }, [blockCount]);
   return (
     <fieldset name='fsAntMedName' id='fsAntMedId' className='fsSub' ref={mainRef}>
       <legend id='fsAntMedLeg'>
         Tratamentos Médicos Atuais e Anteriores e/ou Internações
-        <span role='group' id='antMedBtnsDiv' className='btnsDiv'>
+        <fieldset style={{ display: "inline" }} role='group' id='antMedBtnsDiv' className='btnsDiv'>
           <button
             type='button'
             name='addAntMedName1'
@@ -77,7 +75,7 @@ export default function AntMedFs({ children = <></> }: { children: JSX.Element }
               <path d='M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8' />
             </svg>
           </button>
-        </span>
+        </fieldset>
       </legend>
       {children}
     </fieldset>

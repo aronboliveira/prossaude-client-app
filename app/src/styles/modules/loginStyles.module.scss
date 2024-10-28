@@ -1,9 +1,8 @@
 @use "../abstracts/mixins" as *;
 .bgDiv {
+  @include noSpace;
   border: none;
   background-color: rgba(255, 255, 255, 0.97);
-  padding: 0;
-  margin: 0;
 }
 .button {
   &:hover {
@@ -47,12 +46,10 @@
   }
 }
 .loginCont {
+  @include minSizeB(33.6rem, 70vh);
+  @include sz(33.6rem, auto);
   overflow: hidden;
   overflow-y: auto;
-  min-height: 70vh;
-  min-width: 33.6rem;
-  height: auto;
-  width: 33.6rem;
   padding: 3rem 2.5rem 2.25rem;
   margin: 0 auto;
   border: 0.0625rem solid #dadce0;
@@ -71,8 +68,7 @@
 .loginInputCont1 {
   margin: auto 0;
   margin-top: 0;
-  padding-left: 2.5rem;
-  padding-right: 2.5rem;
+  padding-inline: 2.5rem;
   &:has(svg) {
     padding-left: 2.6rem;
     padding-right: 0.7rem;
@@ -89,12 +85,11 @@
 }
 .loginInputCont2 {
   @include flAlItCt;
+  @include sz(100%, 3.5rem);
   flex: 1;
   position: relative;
   vertical-align: top;
-  width: 100%;
   box-sizing: content-box;
-  height: 3.5rem;
   padding: 0.5rem 0 0;
   margin-top: 0;
 }
@@ -135,8 +130,7 @@
   font-size: 0.9rem;
 }
 .spanShowPw {
-  padding-right: 2vw;
-  padding-left: 2vw;
+  padding-inline: 2vw;
   border-bottom-right-radius: var(--bs-border-radius);
   border-top-right-radius: var(--bs-border-radius);
   background-color: transparent;
@@ -149,8 +143,7 @@
 .subtitleText {
   padding-bottom: 0.625rem;
   padding-top: 0.4375rem;
-  margin-bottom: 0;
-  margin-top: 0;
+  margin-block: 0;
   letter-spacing: 0.0625rem;
   line-height: 1.5;
   font-size: 1rem;
@@ -169,8 +162,7 @@
   font-family: "Google Sans", "Noto Sans Myanmar UI", arial, sans-serif;
   font-weight: 400;
   line-height: 1.3333;
-  margin-bottom: 0;
-  margin-top: 0;
+  margin-block: 0;
   word-break: break-word;
 }
 .userInput {

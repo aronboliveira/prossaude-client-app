@@ -69,7 +69,7 @@ export default function AGPage(): JSX.Element {
       <div className='pad1pc' id='bgDiv' role='document'>
         <header>
           <div className='flexNoW flexDiv flexAlItT flexSimple flexQ900NoWC' id='hDiv' role='group'>
-            <div role='group'>
+            <fieldset role='group'>
               <div className='noInvert'>
                 <h1 className='bolded flexJBt' id='hForm'>
                   Anamnese Geral
@@ -78,7 +78,7 @@ export default function AGPage(): JSX.Element {
                 <AgTipsBtnWrapper />
               </div>
               <SwitchDiv />
-            </div>
+            </fieldset>
             <HeaderDate />
           </div>
         </header>

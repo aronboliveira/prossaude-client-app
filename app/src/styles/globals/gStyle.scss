@@ -129,8 +129,7 @@ input {
       }
     }
     &.mdGreen {
-      width: 1.6rem;
-      height: 1.1rem;
+      @include sz(1.6rem, 1.1rem);
       margin-bottom: 0;
       border-radius: 0.3em;
       box-shadow: var(--bslikesd);
@@ -362,8 +361,7 @@ kbd {
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
-  width: 0.7rem;
-  height: 0.7rem;
+  @include szEq(0.7rem);
   background-color: transparent;
 }
 header,
@@ -438,7 +436,7 @@ section {
 }
 span {
   &.form-switch {
-    padding-left: 3.5rem;
+    padding-left: 3.2rem;
   }
 }
 span,
@@ -561,9 +559,8 @@ legend,
   align-self: start;
 }
 .backdrop {
+  @include sz(50vw, 100vh);
   position: relative;
-  width: 50vw;
-  height: 100vh;
   background-color: #00000080;
   z-index: 900;
 }
@@ -1140,10 +1137,9 @@ legend,
   cursor: pointer;
 }
 .arrow {
+  @include sz(0.5rem, 1rem);
   top: 2rem;
   right: calc((0.5rem + 1px) * -1);
-  width: 0.5rem;
-  height: 1rem;
   margin: 0.3rem 0;
   position: absolute;
   display: block;
@@ -1164,8 +1160,7 @@ legend,
   row-gap: 5vh;
 }
 .scrollbarMeasure {
-  width: 100px;
-  height: 100px;
+  @include szEq(100px);
   overflow: scroll;
   position: absolute;
   top: -9999px;
@@ -1530,30 +1525,24 @@ legend,
     display: none;
   }
 }
-#spanFsAnamG15 {
-  grid-area: 2 / 2;
-}
 #scroll {
+  @include sz(300px, 200px);
   overflow: hidden;
-  height: 200px;
-  width: 300px;
   &:hover {
     overflow: auto;
   }
 }
 #spanAstPct {
-  width: fit-content;
-  height: fit-content;
+  @include szEq(fit-content);
   &:has(img) {
     display: grid;
-    grid-template: 0.5fr 7fr 0.5fr / repeat(2, 1fr);
+    grid-template: [label] 0.5fr [image] 7fr [buttons] 0.5fr / [main] 1fr [side] 1fr;
     img {
-      grid-row: 2;
-      grid-column: 1;
+      grid-area: image / main;
       margin-bottom: 5%;
     }
     button {
-      grid-row: 3;
+      grid-row: buttons;
     }
   }
 }
@@ -1753,7 +1742,7 @@ legend,
   }
   #sectConfirmBut {
     display: grid;
-    grid-template: 1fr / repeat(3, 1fr);
+    grid-template: [main] 1fr / [submit] 1fr [reset] 1fr [spreadsheet] 1fr;
     max-width: 94.33%;
     button {
       width: 90%;
@@ -1951,9 +1940,6 @@ legend,
   .widMin75Q460v {
     min-width: 75vw;
   }
-  #autocorrectDiv {
-    padding-left: 3.5rem;
-  }
   #bgDiv {
     padding-top: 0.5rem;
   }
@@ -1987,10 +1973,9 @@ legend,
     z-index: 1000;
     @include maxSizeB(90vw, 94vh);
     ::backdrop {
+      @include szFull;
       top: 0;
       left: 0;
-      width: 100%;
-      height: 100%;
       background-color: (0, 0, 0, 0.5);
       z-index: 999;
     }

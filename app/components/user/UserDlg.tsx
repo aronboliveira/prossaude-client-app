@@ -1,6 +1,5 @@
 import { ErrorBoundary } from "react-error-boundary";
 import { UserDlgProps } from "@/lib/global/declarations/interfacesCons";
-import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { nlDlg } from "@/lib/global/declarations/types";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useContext, useEffect, useRef } from "react";
@@ -25,7 +24,7 @@ export default function UserDlg({ setUserDlg, shouldDisplayUserDlg }: UserDlgPro
     if (userDlgRef.current instanceof HTMLDialogElement) {
       userDlgRef.current.showModal();
       syncAriaStates([...userDlgRef.current.querySelectorAll("*"), userDlgRef.current]);
-    } else elementNotFound(userDlgRef.current, "Dialog for user panel", extLine(new Error()));
+    }
   }, [userDlgRef]);
   return createPortal(
     <ErrorBoundary FallbackComponent={() => <GenericErrorComponent message='Erro carregando janela modal' />}>

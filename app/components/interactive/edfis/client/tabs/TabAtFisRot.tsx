@@ -1,14 +1,13 @@
 "use client";
 import { PayloadCounterAction } from "@/lib/global/declarations/interfaces";
-import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
-import { nlDiv } from "@/lib/global/declarations/types";
+import { nlFs } from "@/lib/global/declarations/types";
 import { useEffect, useReducer, useRef } from "react";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { addRowAtivFis, removeRowAtivFis } from "@/lib/locals/edFisNutPage/edFisNutHandler";
 import s from "@/styles//modules/sharedComponents.module.scss";
 import sEn from "@/styles//modules/enStyles.module.scss";
 export default function TabAtFisRot({ children = <></> }: { children: JSX.Element }): JSX.Element {
-  const mainRef = useRef<nlDiv>(null),
+  const mainRef = useRef<nlFs>(null),
     flag = useRef<string>("+"),
     trusted = useRef<boolean>(false),
     [blockCount, setBlockCount] = useReducer((s: number, a: PayloadCounterAction) => {
@@ -27,8 +26,7 @@ export default function TabAtFisRot({ children = <></> }: { children: JSX.Elemen
   useEffect(() => {
     try {
       if (!trusted.current) return;
-      if (!(mainRef.current instanceof HTMLElement))
-        throw elementNotFound(mainRef.current, `Main reference for AntMedFs`, extLine(new Error()));
+      if (!(mainRef.current instanceof HTMLElement)) return;
       if (flag.current === "+") addRowAtivFis(blockCount, "Rot");
       else if (flag.current === "-") removeRowAtivFis(blockCount, "Rot");
       setTimeout(() => {
@@ -36,11 +34,11 @@ export default function TabAtFisRot({ children = <></> }: { children: JSX.Elemen
         syncAriaStates([mainRef.current, ...mainRef.current.querySelectorAll("*")]);
       }, 500);
     } catch (e) {
-      console.error(`Error executing useEffect for blockCount:\n${(e as Error).message}`);
+      return;
     }
   }, [blockCount, trusted]);
   return (
-    <div role='group' className={`divTab ${s.divTabEn} ${sEn.divDynamicTabs}`} ref={mainRef}>
+    <fieldset role='group' className={`divTab ${s.divTabEn} ${sEn.divDynamicTabs}`} ref={mainRef}>
       <legend className='legAtFis' id='tabLegAtFisRot'>
         Atividades Físicas Rotineiras
         <button
@@ -108,6 +106,6 @@ export default function TabAtFisRot({ children = <></> }: { children: JSX.Elemen
         </colgroup>
         {children}
       </table>
-    </div>
+    </fieldset>
   );
 }

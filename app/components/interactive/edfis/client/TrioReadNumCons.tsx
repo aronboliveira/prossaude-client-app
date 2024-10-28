@@ -5,12 +5,12 @@ import { applyFieldConstraints, checkContext, parseNotNaN } from "@/lib/global/g
 import { switchNumConsTitles } from "@/lib/locals/edFisNutPage/edFisNutHandler";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
-import { elementNotFound, elementNotPopulated, extLine } from "@/lib/global/handlers/errorHandler";
 import { ENCtxProps } from "@/lib/global/declarations/interfaces";
 import { ENCtx } from "./ENForm";
 import { PseudoNum } from "@/lib/global/declarations/testVars";
-import { tabProps } from "@/vars";
+import { tabProps, timers } from "@/vars";
 import sEn from "@/styles//modules/enStyles.module.scss";
+import useMount from "@/lib/hooks/useMount";
 export default function TrioReadNumCons(): JSX.Element {
   const mainRef = useRef<nlLab>(null),
     r = useRef<nlInp | HTMLSelectElement>(null),
@@ -36,36 +36,36 @@ export default function TrioReadNumCons(): JSX.Element {
         const numConsTextHeadCels = Array.from(document.querySelectorAll(".numConsTextHeadCel"));
         const tabsNum = fsProgCons?.querySelectorAll("table")?.length || 0;
         numTotalTitledColsCons = numTotalTitledColsCons - tabsNum;
-        if (numConsTextHeadCels.length !== numTotalTitledColsCons)
-          throw elementNotPopulated(
-            numConsTextHeadCels,
-            "numConsTextHeadCels in callbackTrioReadNumCons()",
-            extLine(new Error()),
-          );
+        if (numConsTextHeadCels.length !== numTotalTitledColsCons) return;
         switchNumConsTitles(numConsTextHeadCels, r.current, numTotalTitledColsCons, numTotalTabsCons);
         numConsTextHeadCels.forEach(numConsCel => highlightChange(numConsCel, "rgba(250, 30, 0, 0.3)"));
       } catch (e) {
-        console.error(
-          `Error executing callback for ${r.current?.id || r.current?.tagName || "undefined"}:\n${
-            (e as Error).message
-          }`,
-        );
+        return;
       }
-    }, [v, r, fspr, trusted]);
+    }, [v, r, fspr, trusted]),
+    mounted = useMount();
   //TODO REMOVER APÓS TESTE
   const ctx = useContext(ENCtx);
   checkContext(ctx, "ENCtx", TrioReadNumCons);
   useEffect(() => {
     try {
-      if (!trusted.current) return;
-      if (!(mainRef.current instanceof HTMLElement))
-        throw elementNotFound(mainRef.current, `Main Reference for TrioReadNumCons`, extLine(new Error()));
+      if (!trusted.current || !(mainRef.current instanceof HTMLElement)) return;
       syncAriaStates([mainRef.current, ...mainRef.current.querySelectorAll("*")]);
     } catch (e) {
-      console.error(`Error executing useEffect for TrioReadNumCons:\n${(e as Error).message}`);
+      return;
     }
   }, [mainRef, trusted]);
   useEffect(switchCons, [switchCons, v]);
+  useEffect(() => {
+    try {
+      setTimeout(() => {
+        if (!mounted || !(r.current instanceof HTMLInputElement || r.current instanceof HTMLSelectElement)) return;
+        setValue((r.current.value as PseudoNum) || 1);
+      }, timers.personENTimer * 0.75);
+    } catch (e) {
+      return;
+    }
+  }, [mounted, setValue]);
   return (
     <label htmlFor='trioReadNumCons' id='labTrioReadNumCons' className={`min52_900 ${sEn.consLab}`} ref={mainRef}>
       Número inicial da Consulta em Leitura:

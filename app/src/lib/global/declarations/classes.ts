@@ -1,6 +1,6 @@
 import { looseNum, nlDsb, queryableNode, rMouseEvent, voidVal } from "./types";
 import { WorkBook, utils, writeFile } from "xlsx";
-import { limitedError, parseNotNaN, textTransformPascal } from "../gModel";
+import { textTransformPascal } from "../gModel";
 import { exportSignaler } from "../gController";
 import JSZip from "jszip";
 import { maxProps, navigatorVars, person, tabProps } from "@/vars";
@@ -10,6 +10,7 @@ import {
   evalBodyType,
   evalPseudoNum,
   evalActivityLvl,
+  dispatchFactorAtvLvl,
 } from "@/lib/locals/edFisNutPage/edFisNutModel";
 import { toast } from "react-hot-toast";
 import promptToast from "../../../../components/interactive/def/PromptToast";
@@ -69,21 +70,9 @@ export class Person {
         case "muitoIntenso":
           return 2.2;
         default:
-          console.error(
-            `Error validating case. Obtained person.atvLvl: ${
-              person.atvLvl ?? "null"
-            }; Accepted values: sedentário || leve || moderado || intenso || muitoIntenso`,
-          );
+          return 1.4;
       }
-    } else {
-      console.error(
-        `Error validating instance of person. Obtained value: ${personInfo ?? "null"}; instance ${
-          Object.prototype.toString.call(personInfo).slice(8, -1) ?? "null"
-        }; Value of Nível of Atividade Física obtained: ${person.atvLvl ?? "null"}`,
-      );
-      return 0;
-    }
-    return 0;
+    } else return 1.4;
   }
   public calcIMC(personInfo: Person | { weight: number; height: number }): {
     l: GordLvl;
@@ -112,7 +101,6 @@ export class Person {
           `Error calculating IMC. Used values: Weight ${this.weight ?? 0} and Height ${this.height ?? 0}`,
         );
     } catch (e) {
-      limitedError(`Error executing calcIMC:\n${(e as Error).message}`, crypto.randomUUID());
       return { l: "abaixo", v: tabProps.IMC ?? 0 };
     }
   }
@@ -154,7 +142,6 @@ export class Person {
       if (!Number.isFinite(MLG)) MLG = 0;
       return { pgc: PGC, mlg: MLG };
     } catch (e) {
-      limitedError(`Error executing calcPGC:\n${(e as Error).message}`, "calcPGC");
       return { pgc: tabProps.PGC ?? 0, mlg: tabProps.MLG ?? 0 };
     }
   }
@@ -166,12 +153,6 @@ export class Person {
         atv = person.atvLvl,
         w = person.weight;
       if (atv === "muitoIntenso" && (fa === "mlg" || fa === "peso")) {
-        console.groupCollapsed("Valores em calcTMB");
-        console.log("Factor for Atleta " + fa);
-        console.log("Activity Level " + atv);
-        console.log("Weight " + w);
-        console.log("MLG " + tabProps.MLG);
-        console.groupEnd();
         if (fa === "mlg") {
           const MLG = tabProps.MLG;
           if (MLG && MLG >= 0) return { l: "tinsley", v: 25.9 * MLG + 284 };
@@ -189,13 +170,6 @@ export class Person {
           a = person.age,
           g = person.gen,
           h = person.height;
-        console.groupCollapsed("Valores em calcTMB");
-        console.log("Age " + a);
-        console.log("Gender " + g);
-        console.log("Height " + h);
-        console.log("Activity Level " + atv);
-        console.log("Weight " + w);
-        console.groupEnd();
         if (
           !(
             "weight" in person &&
@@ -251,7 +225,6 @@ export class Person {
         }
       } else throw new Error(`Failed to validate Physical Activity level of person:\nObtained value: ${fa}`);
     } catch (e) {
-      limitedError(`Error executing calcTMB:\n${(e as Error).message}`, "calcTMB");
       return {
         l: (() =>
           tabProps.fct instanceof HTMLSelectElement || tabProps.fct instanceof HTMLInputElement
@@ -262,12 +235,7 @@ export class Person {
     }
   }
   public calcGET(): number {
-    if (typeof tabProps.factorAtvLvl === "string")
-      tabProps.factorAtvLvl = parseNotNaN(tabProps.factorAtvLvl) as NafTypeValue;
-    console.groupCollapsed("Valores em calcGET");
-    console.log("TMB " + tabProps.TMB ?? 0);
-    console.log("Factor " + tabProps.factorAtvLvl ?? 0);
-    console.groupEnd();
+    dispatchFactorAtvLvl(tabProps.factorAtvLvl as NafTypeValue);
     return (tabProps.TMB ?? 0) * ((tabProps.factorAtvLvl ?? 0) as number);
   }
   public dispatchGen(g: string): void {
@@ -307,7 +275,7 @@ export class UniqueMap extends Map {
         } else throw new Error(`NaN values are not qualified.`);
       } else throw new Error(`Map already has specified key.`);
     } catch (err) {
-      console.error(`Error adding entry to UniqueMap: ${(err as Error).message}`);
+      return this;
     }
     return this;
   }
@@ -468,7 +436,6 @@ export class ClickEvaluator {
       localStorage.getItem("shouldTrustNavigate") && localStorage.removeItem("shouldTrustNavigate");
       return ["Attempt validated.", suspicious];
     } catch (e) {
-      console.error(`Error executing evaluateClickMovements: ${(e as Error).message}`);
       return [
         navigatorVars.pt
           ? "Não foi possível validar a solicitação. Por favor aguarde para tentar novamente."
@@ -771,18 +738,9 @@ export class ExportHandler {
               exportSignaler.abort();
               this.#abortControl.abort();
             }
-            if (!res.ok) {
-              console.warn(`This is a UX testing only version:
-              Reaching: ${res.url}
-              Redirected: ${res.redirected}
-              Type: ${res.type}
-              Status: ${res.status} => ${res.ok ? "OK" : "NOT OK"}
-              Text: ${res.statusText}
-              `);
-              return;
-            }
+            if (!res.ok) return;
           } catch (e) {
-            console.error(`Error executing fetchProcess:\n${(e as Error).message}`);
+            return;
           }
         };
       if (namer) {
@@ -874,7 +832,7 @@ export class ExportHandler {
       }
       this.#processImages(imageEls, context);
     } catch (error) {
-      console.error("Error generating spreadsheet:", error);
+      return;
     }
   }
   async #processImages(els: (HTMLCanvasElement | HTMLInputElement)[], context: string = "") {
@@ -889,7 +847,7 @@ export class ExportHandler {
           if (file) canvasBlobs[el.id || el.name || el.className.replace(/\s/g, "__") || el.tagName] = file;
         }
       } catch (e) {
-        console.error(`Failed fetching Canvas: ${e}`);
+        return;
       }
     }
     const zip = new JSZip();
@@ -899,7 +857,7 @@ export class ExportHandler {
         const fileName = `image_${context || idf}.png`;
         zip.file(fileName, blob);
       } catch (e) {
-        console.error(`Error executing iteration for ${idf}:\n${e}`);
+        continue;
       }
     }
     try {
@@ -911,7 +869,7 @@ export class ExportHandler {
       zipLink.click();
       document.body.removeChild(zipLink);
     } catch (e) {
-      console.error(`Error placing link for .zip of images: ${e}`);
+      return;
     }
   }
 }

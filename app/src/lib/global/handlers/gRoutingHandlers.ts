@@ -1,4 +1,3 @@
-import { elementNotFound, extLine } from "./errorHandler";
 import { pageCases, pageStyleCases } from "../declarations/types";
 import { decodeToken } from "../auth";
 import { LinkTag, MetaTag } from "../declarations/testVars";
@@ -16,47 +15,49 @@ export function handleLinkChanges(
       if (!decodeToken("", true).ok) location.replace(location.origin);
       if (typeof componentCase !== "string")
         throw new Error(`invalid componentCase argument given to handleLinkChanges`);
-      if (typeof styleFlag !== "string") throw new Error(`invalid StyleFlag given to handleLinkChanges`);
+      if (typeof styleFlag !== "string") return { metas: metaTags, links: linkTags };
       const head = document.querySelector("head");
-      if (!(head instanceof HTMLHeadElement)) throw elementNotFound(head, `<head>`, extLine(new Error()));
+      if (!(head instanceof HTMLHeadElement)) return { metas: metaTags, links: linkTags };
       const heads = document.querySelectorAll("head");
       if (heads.length > 1) for (let i = 0; i < heads.length; i++) i > 0 && (heads[i].remove() as void);
       const noscript = document.querySelector("noscript");
       if (noscript instanceof HTMLElement && noscript.tagName === "NOSCRIPT" && noscript.innerText === "")
         noscript.innerText = "You need JavaScript to run this application.";
-      try {
-        if (!head.querySelector('meta[charset="utf-8"]') && !head.querySelector('meta[charset="UTF-8"]'))
-          head.prepend(
-            Object.assign(document.createElement("meta"), {
-              charSet: "UTF-8",
-              id: "charsetMeta",
-            }),
-          );
-        if (!head.querySelector('meta[name="viewport"]'))
-          head.prepend(
-            Object.assign(document.createElement("meta"), {
-              name: "viewport",
-              content: "width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=3.0, user-scalable=yes",
-              id: "viewportMeta",
-            }),
-          );
-        if (!head.querySelector('meta[content="IE=edge"]') && !head.querySelector('meta[content="IE=Edge"]')) {
-          head.prepend(
-            Object.assign(document.createElement("meta"), {
-              httEquip: "X-UA-Compatible",
-              content: "IE=edge",
-              id: "edgeMeta",
-            }),
-          );
+      (() => {
+        try {
+          if (!head.querySelector('meta[charset="utf-8"]') && !head.querySelector('meta[charset="UTF-8"]'))
+            head.prepend(
+              Object.assign(document.createElement("meta"), {
+                charSet: "UTF-8",
+                id: "charsetMeta",
+              }),
+            );
+          if (!head.querySelector('meta[name="viewport"]'))
+            head.prepend(
+              Object.assign(document.createElement("meta"), {
+                name: "viewport",
+                content:
+                  "width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=3.0, user-scalable=yes",
+                id: "viewportMeta",
+              }),
+            );
+          if (!head.querySelector('meta[content="IE=edge"]') && !head.querySelector('meta[content="IE=Edge"]')) {
+            head.prepend(
+              Object.assign(document.createElement("meta"), {
+                httEquip: "X-UA-Compatible",
+                content: "IE=edge",
+                id: "edgeMeta",
+              }),
+            );
+          }
+        } catch (e) {
+          return;
         }
-      } catch (e) {
-        console.error(`Error executing cleanup on head:\n${(e as Error).message}`);
-      }
+      })();
     }
     ({ metaTags, linkTags } = switchRouteHeads(componentCase));
     return { metas: metaTags, links: linkTags };
   } catch (e) {
-    console.error(`Error executing handleLinkChanges:\n${(e as Error).message}`);
     return { metas: metaTags, links: linkTags };
   }
 }
@@ -96,7 +97,6 @@ export function switchRouteHeads(componentCase: pageCases): {
       break;
     }
     default:
-      console.error(`Invalid componentCase. No body class applied.`);
       break;
   }
   return { metaTags, linkTags };
@@ -135,7 +135,7 @@ export function headCleanup() {
         } else elementsById.set(elementId, element);
       }
     } catch (e) {
-      console.error(`Error executing procedure for checking local links and metas:\n${(e as Error).message}`);
+      return;
     }
   }
 }

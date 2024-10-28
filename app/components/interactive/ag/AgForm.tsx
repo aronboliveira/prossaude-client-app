@@ -76,29 +76,27 @@ export default function AgForm(): JSX.Element {
           dnr.current.style.width = getComputedStyle(ar.current).width;
           dnr.current.style.maxWidth = getComputedStyle(ar.current).width;
         } catch (e) {
-          console.error(`Error executing handleResize for dnr :\n${(e as Error).message}`);
+          return;
         }
       })();
-      (() => {
+      ((): void => {
         try {
           locSpan.current ??= document.getElementById("locSpan");
           street.current ??= document.getElementById("streetId") as nlInp;
-          console.log("Equaliing locspan...");
           if (!(locSpan.current instanceof HTMLElement && street.current instanceof HTMLInputElement)) return;
           locSpan.current.style.maxWidth = getComputedStyle(street.current).width;
         } catch (e) {
-          console.error(`Error executing handleResize for locSpan:${(e as Error).message}`);
+          return;
         }
       })();
-      (() => {
+      ((): void => {
         try {
           streetSpan.current ??= document.getElementById("streetSpan");
           street.current ??= document.getElementById("streetId") as nlInp;
-          console.log("equalizing streetspan...");
           if (!(streetSpan.current instanceof HTMLElement && street.current instanceof HTMLInputElement)) return;
           streetSpan.current.style.maxWidth = getComputedStyle(street.current).width;
         } catch (e) {
-          console.error(`Error executing handleResize for streetSpan:\n${(e as Error).message}`);
+          return;
         }
       })();
     };
@@ -140,7 +138,7 @@ export default function AgForm(): JSX.Element {
   useEffect(() => {
     if (!toasted.current)
       toast(t => (
-        <div style={{ lineHeight: "1.6rem" }}>
+        <fieldset style={{ lineHeight: "1.6rem" }}>
           <b>Dica!</b>
           <hr />
           <span>Você pode desativar ou ativar</span>
@@ -156,7 +154,7 @@ export default function AgForm(): JSX.Element {
             }>
             Fechar
           </button>
-        </div>
+        </fieldset>
       ));
     toasted.current = true;
     const untoast = (): void => toast.dismiss();
@@ -327,61 +325,74 @@ export default function AgForm(): JSX.Element {
             className='divMain fsAnamGDiv alItSt900Q flexQ900NoWC gridAlItE gridTwoCol widFull900Q noEqualize'
             id='fsAnamGDiv3'
             role='group'>
-            <span role='group' className='fsAnamGSpan' id='fsAnamGSpan6'>
+            <fieldset style={{ display: "flex-inline" }} role='group' className='fsAnamGSpan' id='fsAnamGSpan6'>
               <label htmlFor='countryId' className='labelIdentif noInvert'>
                 <span>Nacionalidade:</span>
                 <Nac />
               </label>
               <br role='presentation' />
-            </span>
-            <span role='group' className='fsAnamGSpan' id='fsAnamGSpan10'>
+            </fieldset>
+            <fieldset style={{ display: "flex-inline" }} role='group' className='fsAnamGSpan' id='fsAnamGSpan10'>
               <label htmlFor='cityId' className='labelIdentif noInvert'>
                 <span>Cidade:</span>
                 <City />
               </label>
               <br role='presentation' />
-            </span>
-            <span role='group' className='fsAnamGSpan' id='fsAnamGSpan7'>
+            </fieldset>
+            <fieldset style={{ display: "flex-inline" }} role='group' className='fsAnamGSpan' id='fsAnamGSpan7'>
               <label htmlFor='munId' className='labelIdentif noInvert' id='labMunId'>
                 <span>Naturalidade:</span>
                 <Nat />
               </label>
               <br role='presentation' />
-            </span>
-            <span role='group' className={`fsAnamGSpan ${sAg.fsAnamGSpan12}`} id='fsAnamGSpanLoc'>
+            </fieldset>
+            <fieldset
+              style={{ display: "flex-inline" }}
+              role='group'
+              className={`fsAnamGSpan ${sAg.fsAnamGSpan12}`}
+              id='fsAnamGSpanLoc'>
               <label htmlFor='streetId' className='labelIdentif noInvert'>
                 <span>Endereço | Logradouro | Rua:</span>
                 <Street />
               </label>
               <br role='presentation' />
-            </span>
-            <span role='group' className='fsAnamGSpan' id='fsAnamGSpan8'>
+            </fieldset>
+            <fieldset style={{ display: "flex-inline" }} role='group' className='fsAnamGSpan' id='fsAnamGSpan8'>
               <CepElements />
               <br role='presentation' />
-            </span>
-            <span role='group' className={`fsAnamGSpan ${sAg.fsAGSpanGrid2x2} ${sAg.fsAGSpanNBh}`} id='fsAnamGSpanNbh'>
+            </fieldset>
+            <fieldset
+              style={{ display: "flex-inline" }}
+              role='group'
+              className={`fsAnamGSpan ${sAg.fsAGSpanGrid2x2} ${sAg.fsAGSpanNBh}`}
+              id='fsAnamGSpanNbh'>
               <label htmlFor='streetId' className='labelIdentif noInvert'>
                 <span>Bairro:</span>
                 <Nbh />
               </label>
               <br role='presentation' />
-            </span>
-            <span role='group' className='fsAnamGSpan' id='fsAnamGSpan9'>
+            </fieldset>
+            <fieldset style={{ display: "flex-inline" }} role='group' className='fsAnamGSpan' id='fsAnamGSpan9'>
               <label htmlFor='UFId' className='labelIdentif forceInvert'>
                 Unidade Federativa (Residência Atual):
                 <Uf />
               </label>
               <br role='presentation' />
-            </span>
-            <span role='group' className='fsAnamGSpan locSpan form-switch flexColumn noInvert' id='fsAnamGSpan13'>
+            </fieldset>
+            <fieldset
+              style={{ display: "flex-inline" }}
+              role='group'
+              className='fsAnamGSpan locSpan form-switch flexColumn noInvert'
+              id='fsAnamGSpan13'>
               <span role='textbox' style={{ marginLeft: "0.5rem" }}>
                 Número:
               </span>
               <span role='group' id='streetSpan' ref={streetSpan} className='flexDiv spanLoc fitSpaced mg__07t'>
                 <StreetNum />
               </span>
-            </span>
-            <span
+            </fieldset>
+            <fieldset
+              style={{ display: "flex-inline" }}
               role='group'
               className={`fsAnamGSpan locSpan form-switch flexColumn noInvert ${sAg.fsAnamGSpan14}`}
               id='fsAnamGSpan14'>
@@ -391,7 +402,7 @@ export default function AgForm(): JSX.Element {
               <span role='group' id='locSpan' ref={locSpan} className='flexDiv spanLoc fitSpaced mg__07t'>
                 <LocComp />
               </span>
-            </span>
+            </fieldset>
           </div>
         </section>
         <hr />
@@ -956,7 +967,7 @@ export default function AgForm(): JSX.Element {
           <legend className='bolded' id='hFreq'>
             Frequências de Rotina
           </legend>
-          <div className='divMain divFreq gridTwoCol' id='divFreqOdont' role='group'>
+          <div className='divMain divFreq' id='divFreqOdont' role='group'>
             <span role='group' className='sectFreqSpan' id='spanFreqEscov'>
               <label htmlFor='escovNId' className='labDlist' id='labEscovN'>
                 Escovações por dia:

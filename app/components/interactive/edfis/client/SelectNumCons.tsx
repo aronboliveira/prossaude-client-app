@@ -1,9 +1,8 @@
 "use client";
 import { handleEventReq } from "@/lib/global/handlers/gHandlers";
-import { checkContext, limitedError, parseNotNaN } from "@/lib/global/gModel";
+import { checkContext, parseNotNaN } from "@/lib/global/gModel";
 import { switchRequiredCols } from "@/lib/locals/edFisNutPage/edFisNutHandler";
 import { tabProps, timers } from "@/vars";
-import { extLine, inputNotFound } from "@/lib/global/handlers/errorHandler";
 import { useContext, useEffect, useCallback, useRef } from "react";
 import { ENCtx } from "./ENForm";
 import { ENCtxProps, FspCtxProps } from "@/lib/global/declarations/interfaces";
@@ -54,10 +53,9 @@ export default function SelectNumCons(): JSX.Element {
             numClasses.forEach(cls => !inp.classList.contains(cls) && inp.classList.add(cls));
           }
         };
-      document.querySelectorAll(".tabInpProg").forEach((inp, i) => {
+      document.querySelectorAll(".tabInpProg").forEach(inp => {
         try {
-          if (!(inp instanceof HTMLInputElement && (inp.type === "number" || inp.type === "text")))
-            throw inputNotFound(inp, `Validation of Input instance and type`, extLine(new Error()));
+          if (!(inp instanceof HTMLInputElement && (inp.type === "number" || inp.type === "text"))) return;
           if (inp.required) {
             Object.assign(inp, {
               minLength: 1,
@@ -80,41 +78,31 @@ export default function SelectNumCons(): JSX.Element {
             if (inp.type === "number") assignNumAttr(inp, "0");
           }
         } catch (e) {
-          console.error(
-            `Error executing iteration ${i} for Tab Inp Prog application of requirements:\n${(e as Error).message}`,
-          );
+          return;
         }
       });
     } catch (e) {
-      limitedError(
-        `Error executing effect for ${SelectNumCons.prototype.constructor.name}:${(e as Error).message}`,
-        SelectNumCons.prototype.constructor.name,
-      );
+      return;
     }
   }, [snc, fspr, td, tsv, tma, tip, numCons]);
   useEffect(() => {
     try {
       if (!trusted.current) return;
       switchNumCons();
-      console.log("Índice da Consulta: " + (tabProps.numCons || "INDEFINIDO"));
     } catch (e) {
-      console.error(`Error executing effect for ${SelectNumCons.prototype.constructor.name}:\n${(e as Error).message}`);
+      return;
     }
   }, [numCons, switchNumCons]);
   useEffect(() => {
     setTimeout(() => {
-      const query = document.getElementById("selectNumCons");
-      tabProps.numCons =
-        parseNotNaN(snc?.current?.value || "1", 1, "int") ||
-        parseNotNaN(
-          ((query instanceof HTMLSelectElement || query instanceof HTMLInputElement) &&
-            (query as HTMLSelectElement).value) ||
-            "1",
-          1,
-          "int",
-        );
+      if (snc) snc.current ??= document.getElementById("selectNumCons") as nlSel;
+      const query = snc
+        ? snc.current ?? document.getElementById("selectNumCons")
+        : document.getElementById("selectNumCons");
+      if (!(query instanceof HTMLSelectElement || query instanceof HTMLInputElement)) return;
+      setNumCons(evalPseudoNum(query.value || 1).toString());
     }, timers.personENTimer * 0.75);
-  }, [snc]);
+  }, [snc, setNumCons]);
   //TODO REMOVER APÓS TESTE
   checkContext(ctx1, "ENCtx", SelectNumCons);
   checkContext(ctx2, "FspCtx", SelectNumCons);
@@ -130,11 +118,9 @@ export default function SelectNumCons(): JSX.Element {
         try {
           if (ev.isTrusted) trusted.current = true;
           if (!trusted.current) return;
-          setNumCons && setNumCons(() => evalPseudoNum(snc?.current?.value ?? 1).toString());
+          setNumCons && setNumCons(() => evalPseudoNum(snc?.current?.value || 1).toString());
         } catch (e) {
-          const idf =
-            ev.currentTarget.id || ev.currentTarget.name || ev.currentTarget.className || ev.currentTarget.tagName;
-          limitedError(`Error executing ${ev.type} callback for ${idf}:\n${(e as Error).message}`, idf);
+          return;
         }
       }}>
       {Array.from({ length: 3 }, (_, i) => (

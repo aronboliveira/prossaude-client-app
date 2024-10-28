@@ -1,7 +1,6 @@
 "use client";
 import { alignOpts, birthRelations, gens, person, timers, transOpts } from "@/vars";
 import { useContext, useEffect, useCallback, useRef } from "react";
-import { extLine, inputNotFound } from "@/lib/global/handlers/errorHandler";
 import { NlMRef, NlrDispatch, nlSel } from "@/lib/global/declarations/types";
 import { AlignType, BirthRelation, BodyType, Gender, TransitionLevel } from "@/lib/global/declarations/testVars";
 import { ENCtx } from "../edfis/client/ENForm";
@@ -9,7 +8,7 @@ import { ENCtxProps } from "@/lib/global/declarations/interfaces";
 import useGenDiv from "@/lib/hooks/useGenDiv";
 import { handleGenRender } from "@/lib/locals/edFisNutPage/edFisNutReactHandlers";
 import { GenDivProps } from "@/lib/global/declarations/interfacesCons";
-import { checkContext, fluxGen, limitedError } from "@/lib/global/gModel";
+import { checkContext, fluxGen } from "@/lib/global/gModel";
 import sEn from "@/styles//modules/enStyles.module.scss";
 export default function GenDivEN({ genRef, genAlinRef }: GenDivProps): JSX.Element {
   let txbr: NlMRef<nlSel> = null,
@@ -34,12 +33,10 @@ export default function GenDivEN({ genRef, genAlinRef }: GenDivProps): JSX.Eleme
       try {
         if (!txbr) throw new Error(`Reference object wasn't valid`);
         txbr.current ??= document.getElementById("textBodytype") as nlSel;
-        if (!(txbr?.current instanceof HTMLSelectElement || (txbr?.current as any) instanceof HTMLInputElement))
-          throw inputNotFound(txbr?.current, "textBodyType in callback for gender elements", extLine(new Error()));
-        console.log("Updating to text type to " + person.gen);
+        if (!(txbr?.current instanceof HTMLSelectElement || (txbr?.current as any) instanceof HTMLInputElement)) return;
         onSetBodyType(person.gen === "masculino" || person.gen === "feminino" ? person.gen : ("neutro" as BodyType));
       } catch (e) {
-        limitedError(`Error executiong handlePersonGenUpdate:\n${(e as Error).message}`, "handleGENCtx");
+        return;
       }
     }, [onSetBodyType, txbr]);
   if (ctx1) {

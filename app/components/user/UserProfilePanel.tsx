@@ -1,6 +1,5 @@
 "use client";
 import { NextRouter } from "next/router";
-import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { createContext, useEffect, useRef, useState } from "react";
 import UserProfileDropdown from "./UserProfileDropdown";
@@ -46,7 +45,7 @@ export default function UserProfilePanel({ router, user }: { router: NextRouter;
         default:
           setSrc("../img/PROS_icon.png");
       }
-    } else elementNotFound(userPanelRef.current, "JSX for user panel", extLine(new Error()));
+    }
   }, [user]);
   return (
     <UserPanelCtx.Provider value={{ setDropdown, shouldShowDropdown }}>

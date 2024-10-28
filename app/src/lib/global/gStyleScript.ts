@@ -1,12 +1,5 @@
 import { parseNotNaN } from "./gModel";
 import { targEl, entryEl } from "./declarations/types";
-import {
-  extLine,
-  elementNotFound,
-  elementNotPopulated,
-  multipleElementsNotFound,
-  inputNotFound,
-} from "./handlers/errorHandler";
 export function dinamicGridAdjust(gridDivs: Array<targEl>): void {
   if (gridDivs?.length > 0 && gridDivs.every(div => div instanceof HTMLElement)) {
     gridDivs.forEach(gridDiv => {
@@ -39,9 +32,9 @@ export function dinamicGridAdjust(gridDivs: Array<targEl>): void {
           default:
             gridDiv.style.width = "70%";
         }
-      } else elementNotFound(gridDiv, `gridDiv id ${gridDiv?.id || "UNIDENTIFIED"}`, extLine(new Error()));
+      }
     });
-  } else elementNotPopulated(gridDivs, "gridDivs in dinamicGridAjust()", extLine(new Error()));
+  }
 }
 export function equalizeFlexSibilings(
   flexEls: Array<targEl> | NodeListOf<Element>,
@@ -132,7 +125,7 @@ export function equalizeTabCells(tab: HTMLTableElement | null): void {
                   verticalAlign: "text-top",
                 });
               }
-            } else elementNotPopulated(tabCells, "tabCells in equalizeTabCells()", extLine(new Error()));
+            }
             if (Number.isNaN(widCell) || Math.abs(widCell) === Infinity || widCell < 0) widCell = 0;
             return widCell;
           }),
@@ -145,10 +138,9 @@ export function equalizeTabCells(tab: HTMLTableElement | null): void {
             verticalAlign: "text-top",
           });
         }
-      } else elementNotPopulated(tabCells, "tabCells in equalizeTabCells()", extLine(new Error()));
-    } else elementNotFound(parentEl, `parentEl for tab id ${tab?.id || "UNIDENTIFIED"}`, extLine(new Error()));
-  } else
-    elementNotFound(tab, `tab id ${(tab as any)?.id || "UNIDENTIFIED in equalizeTabCells()"}`, extLine(new Error()));
+      }
+    }
+  }
 }
 export function isClickOutside(event: MouseEvent | React.MouseEvent, dlgInBtn: Element): boolean[] {
   try {
@@ -158,7 +150,6 @@ export function isClickOutside(event: MouseEvent | React.MouseEvent, dlgInBtn: E
     const { clientX, clientY } = event;
     return [clientX < rect.left, clientX > rect.right, clientY < rect.top, clientY > rect.bottom];
   } catch (e) {
-    console.error(`Error executing isClickOutside:\n${(e as Error).message}`);
     return [false, false, false, false];
   }
 }
@@ -168,7 +159,7 @@ export function fadeElement(el: targEl, opacity: string = "1", timer: string = "
     setTimeout(() => {
       el.style.transition = `opacity ${timer}s ease-in`;
     }, timeout);
-  } else elementNotFound(el, `element ${el?.id || "UNDEFINED ELEMENT"}`, extLine(new Error()));
+  }
 }
 export function highlightChange(
   el: targEl,
@@ -215,7 +206,7 @@ export function highlightChange(
       pulseFColor(el);
       double && setTimeout(() => pulseFColor(el), 1600);
     }
-  } else multipleElementsNotFound(extLine(new Error()), "arguments for highlightChange()", el, color);
+  }
 }
 export function switchBtnBS(
   bsBtns: Array<targEl>,
@@ -256,9 +247,9 @@ export function switchBtnBS(
           bsBtn.classList.add(...bsClasses);
           bsBtn.classList.remove(...bsClassesToRemove);
         }
-      } else elementNotFound(bsBtn, `button id ${bsBtn?.id || "UNIDENTIFIED"}`, extLine(new Error()));
+      }
     });
-  } else elementNotPopulated(bsBtns, "argument for switchBtnBS()", extLine(new Error()));
+  }
 }
 export function clearDefInvalidMsg(
   form: HTMLFormElement | null,
@@ -275,14 +266,12 @@ export function clearDefInvalidMsg(
               inp instanceof HTMLInputElement ||
               inp instanceof HTMLSelectElement ||
               inp instanceof HTMLTextAreaElement
-            ) {
+            )
               inpsValidity.push(inp.checkValidity());
-            } else
-              inputNotFound(inp, `entry field id ${(inp as any)?.id || "UNDEFINED ID"} invalid`, extLine(new Error()));
           }
         });
       });
-    } else elementNotPopulated(submitBtns, "submitBtns in clearDefInvalidMsg()", extLine(new Error()));
+    }
     inps.forEach(inp => {
       if (inp instanceof HTMLInputElement || inp instanceof HTMLSelectElement || inp instanceof HTMLTextAreaElement) {
         inp.addEventListener("invalid", ev => {
@@ -294,7 +283,7 @@ export function clearDefInvalidMsg(
       form.addEventListener("submit", ev => {
         if (inpsValidity.some(validity => validity === false)) ev.preventDefault();
       });
-    } else elementNotFound(form, "form in clearDefInvalidMsg()", extLine(new Error()));
+    }
   }
 }
 export function addListenerForValidities(inps: Array<targEl>, pattern?: RegExp): boolean {
@@ -352,9 +341,9 @@ export function addListenerForValidities(inps: Array<targEl>, pattern?: RegExp):
           }
           return inpValidity;
         });
-      } else inputNotFound(inp, `input id ${inp?.id || "UNIDENFITIED"}`, extLine(new Error()));
+      }
     });
-  } else elementNotPopulated(inps, "argument for addListenerForValidites()", extLine(new Error()));
+  }
   return false;
 }
 export function clearPhDates(dateInps: Array<targEl>): void {
@@ -370,9 +359,9 @@ export function clearPhDates(dateInps: Array<targEl>): void {
         inp.addEventListener("input", () => {
           inp.value.length === 0 ? (inp.style.color = "transparent") : (inp.style.color = "black");
         });
-      } else inputNotFound(inp, `date input id ${inp?.id || "UNIDENTIFIED"}`, extLine(new Error()));
+      }
     });
-  } else elementNotPopulated(dateInps, "dateInps in clearPhDates()", extLine(new Error()));
+  }
 }
 export function resetPhs(inps: Array<entryEl>, phs: { [key: string]: string }): void {
   if (Array.isArray(inps) && inps.every(inp => inp instanceof HTMLElement)) {
@@ -389,9 +378,9 @@ export function resetPhs(inps: Array<entryEl>, phs: { [key: string]: string }): 
               }, 3000);
           });
         });
-      } else inputNotFound(inp, `inp id ${inp?.id || "UNIDENFITIED"}`, extLine(new Error()));
+      }
     }
-  } else elementNotPopulated(inps, "argument for cleanLoginPhs()", extLine(new Error()));
+  }
 }
 export function equalizeWidWithPhs(els: Array<targEl>): void {
   if (Array.isArray(els) && els.length > 0 && els.every(el => el instanceof HTMLElement)) {
@@ -443,13 +432,9 @@ export function equalizeWidWithPhs(els: Array<targEl>): void {
           el.style.minWidth = `${
             10 + parseFloat(getComputedStyle(el).paddingLeft) + parseFloat(getComputedStyle(el).paddingRight)
           }ch`;
-        } else if (
-          !(el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement || el instanceof HTMLSelectElement)
-        )
-          elementNotFound(el, `Element id ${el?.id || "UNIDENTIFIED"}`, extLine(new Error()));
+        }
       });
-    } else
-      console.error(`No ch measure reference. Results for equalizeWidWithPhs may be misleading. Aborting process.`);
+    }
   }
 }
 export function strikeNulls(els: Array<targEl>): void {
@@ -464,9 +449,9 @@ export function strikeNulls(els: Array<targEl>): void {
           (/nul[ol]/gi.test(el.textContent) || /[ui]ndefin[ei]d/gi.test(el.textContent) || /NaN/g.test(el.textContent))
         )
           el.style.textDecoration = "line-through";
-      } else elementNotFound(el, `el id ${(el as any)?.id || "UNIDENTIFIED"} in strikeNulls()`, extLine(new Error()));
+      }
     });
-  } else elementNotPopulated(els, "argument for strikeNulls()", extLine(new Error()));
+  }
 }
 export function normalizeSizeSb(
   els: Array<targEl>,
@@ -498,12 +483,7 @@ export function normalizeSizeSb(
               if (elsToCurrent[c] instanceof HTMLElement) {
                 (elsToCurrent[c] as HTMLElement).style.width = `${(iniWid + validScbWid) / rem}rem`;
                 includeHeight && ((elsToCurrent[c] as HTMLElement).style.height = `${(iniHt + validScbHt) / rem}rem`);
-              } else
-                elementNotFound(
-                  elsToCurrent[c],
-                  "Element for defining current width in scrollbar normalization",
-                  extLine(new Error()),
-                );
+              }
             }
           }
         };
@@ -537,8 +517,7 @@ export function normalizeSizeSb(
         }
       }
     });
-  } else
-    elementNotPopulated(els, "Elements for normalization of size based on scrollbar display", extLine(new Error()));
+  }
 }
 export function convertToHex(
   arrColors: Array<[string, Map<string, string>]>,
@@ -615,7 +594,6 @@ export function convertToHex(
             elValidations.push(true);
             hexValidations.push(true);
           } else {
-            console.error(`Value for color scheme not supported. Aborting process`);
             propsValidations.push(false);
             elValidations.push(false);
             hexValidations.push(false);
@@ -703,5 +681,5 @@ export function expandContent(el: targEl): void {
         }, 6000);
       }, 100);
     }, 100);
-  } else elementNotFound(el, `element for applying expandContent()`, extLine(new Error()));
+  }
 }

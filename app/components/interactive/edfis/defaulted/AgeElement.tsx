@@ -3,7 +3,7 @@ import { handleEventReq } from "@/lib/global/handlers/gHandlers";
 import { looseNum, nlInp } from "@/lib/global/declarations/types";
 import { person, tabProps, timers } from "@/vars";
 import { useState, useEffect, Dispatch, SetStateAction, MutableRefObject, useCallback, useRef } from "react";
-import { applyFieldConstraints, limitedError, parseNotNaN } from "@/lib/global/gModel";
+import { applyFieldConstraints, parseNotNaN } from "@/lib/global/gModel";
 import { PseudoNum } from "@/lib/global/declarations/testVars";
 export default function AgeElement({
   onSetAge,
@@ -32,7 +32,7 @@ export default function AgeElement({
       if (ageRef) ageRef.current = person.age;
       onSetAge && onSetAge(evaluateNum(person.age.toString()) as PseudoNum);
     } catch (e) {
-      limitedError(`Error executing effect for setting age:\n${(e as Error).message}`, "AgeEffect1");
+      return;
     }
   }, [setAge, onSetAge, inpRef, ageRef, evaluateNum, trusted]);
   useEffect(() => {
@@ -46,14 +46,9 @@ export default function AgeElement({
       person.age = Number.isFinite(evaluatedNum) ? evaluatedNum : 0;
       if (ageRef) ageRef.current = person.age;
       tabProps.isAutoFillActive && exeAutoFill(inpRef.current, "cons");
-      //TODO REMOVER APÓS TESTE
-      console.log(`Person's age: ` + person.age);
       if (ageRef) ageRef.current = person.age;
     } catch (e) {
-      limitedError(
-        `Error executing effect for ${AgeElement.prototype.constructor.name}:${(e as Error).message}`,
-        AgeElement.prototype.constructor.name,
-      );
+      return;
     }
   }, [age, ageRef, inpRef, evaluateNum, trusted]);
   useEffect(() => {
@@ -105,11 +100,7 @@ export default function AgeElement({
           setAge(() => evaluateNum(newValue) as PseudoNum);
           onSetAge && onSetAge(() => evaluateNum(newValue) as PseudoNum);
         } catch (e) {
-          console.error(
-            `Error executing ${ev.type} for ${
-              ev.currentTarget.id || ev.currentTarget.className || ev.currentTarget.tagName
-            }:${(e as Error).message}`,
-          );
+          return;
         }
       }}
     />

@@ -1,6 +1,6 @@
 "use client";
 import { nlInp } from "@/lib/global/declarations/types";
-import { applyFieldConstraints, limitedError } from "@/lib/global/gModel";
+import { applyFieldConstraints } from "@/lib/global/gModel";
 import { handleEventReq } from "@/lib/global/handlers/gHandlers";
 import { tabProps } from "@/vars";
 import { useRef, useEffect, useState } from "react";
@@ -23,13 +23,10 @@ export default function InpCorUr(): JSX.Element {
     [v, setValue] = useState<urCor>("" as any);
   useEffect(() => {
     try {
-      if (!(r.current instanceof HTMLElement)) throw new Error(`Failed to validate reference instance`);
+      if (!(r.current instanceof HTMLElement)) return;
       handleEventReq(r.current);
     } catch (e) {
-      limitedError(
-        `Error executing effect for ${InpCorUr.prototype.constructor.name}:\n${(e as Error).message}`,
-        InpCorUr.prototype.constructor.name,
-      );
+      return;
     }
   }, [v, r]);
   return (

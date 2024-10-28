@@ -1,22 +1,15 @@
+//nesse file estão presentes principalmente as funções relacionadas à exigência de modelo textual e de visualização
 import { Person } from "../../global/declarations/classes";
 import { entryEl, primitiveType, targEl } from "../../global/declarations/types";
 import { filterIdsByGender, parseNotNaN } from "../../global/gModel";
 import { handleEventReq } from "@/lib/global/handlers/gHandlers";
-//nesse file estão presentes principalmente as funções relacionadas à exigência de modelo textual e de visualização
-import { extLine, elementNotFound, multipleElementsNotFound, stringError } from "../../global/handlers/errorHandler";
 import { BodyType, FactorAtletaValue, NafTypeValue } from "@/lib/global/declarations/testVars";
 import { person, tabProps } from "@/vars";
 export function checkInnerColGroups(parentEl: targEl): number {
   const validColGroupsChildCount: number[] = [],
     colGroups = Array.from(parentEl?.querySelectorAll("colgroup") ?? []);
   try {
-    if (!(parentEl instanceof HTMLElement && colGroups?.flat(1)?.length > 0))
-      throw multipleElementsNotFound(
-        extLine(new Error()),
-        `arguments for checkInnerColGroups(), areColGroupValids: ${tabProps.areColGroupsSimilar ?? false}`,
-        parentEl,
-        `${JSON.stringify(colGroups) || null}`,
-      );
+    if (!(parentEl instanceof HTMLElement && colGroups?.flat(1)?.length > 0)) return validColGroupsChildCount.length;
     for (let i = 0; i < colGroups.length; i++) {
       const arrColGrpChilds = Array.from(colGroups[i].children);
       arrColGrpChilds.every(col => col instanceof HTMLTableColElement)
@@ -28,21 +21,17 @@ export function checkInnerColGroups(parentEl: targEl): number {
       (validColGroupsChildCount[m] = validColGroupsChildCount[m - 1]) && pairedColGroupsValid.push(true);
     tabProps.areColGroupsSimilar = pairedColGroupsValid.every(pairedColGroup => pairedColGroup === true) ? true : false;
   } catch (e) {
-    console.error(`Error executing checkInnerColGroups:\n${(e as Error).message}`);
     return validColGroupsChildCount.length;
   }
   return validColGroupsChildCount.length;
 }
 export function checkTabRowsIds(tab: targEl): string[] {
   const arrTabRowsIds: string[] = [];
-  tab instanceof HTMLTableElement && tab.id === "tabDCut"
-    ? Array.from(tab.querySelectorAll("tr.tabRowDCutMed")).forEach(tabRow => {
-        const rowId = tabRow?.id;
-        rowId?.match(/^row/)?.toString()
-          ? arrTabRowsIds?.push(rowId.slice(3).toLowerCase())
-          : stringError(`Obtained id from row ${tabRow}`, rowId, extLine(new Error()));
-      })
-    : elementNotFound(tab, "tabDC in checkTabRowsIds", extLine(new Error()));
+  if (tab instanceof HTMLTableElement && tab.id === "tabDCut")
+    Array.from(tab.querySelectorAll("tr.tabRowDCutMed")).forEach(tabRow => {
+      const rowId = tabRow?.id;
+      if (rowId?.match(/^row/)?.toString()) arrTabRowsIds?.push(rowId.slice(3).toLowerCase());
+    });
   return arrTabRowsIds || [""];
 }
 export function changeTabDCutLayout(protocolo: targEl, tabDC: targEl, bodyType: targEl): string {
@@ -76,7 +65,6 @@ export function changeTabDCutLayout(protocolo: targEl, tabDC: targEl, bodyType: 
               defineHiddenRows(tabDC, arrayTabIds, genderedIds);
             else if (bodyType.value === "neutro" && genderedIds.length === 5)
               defineHiddenRows(tabDC, arrayTabIds, genderedIds, "nb");
-            else stringError("validating .value of bodyType", bodyType?.value, extLine(new Error()));
           } else if ((protocolo as entryEl)?.value.match(/^pollock7$/i)?.toString()) {
             Array.from(tabDC.querySelectorAll("tr.tabRowDCutMed"))?.forEach(medTr => {
               if ((medTr as HTMLElement)?.hidden) {
@@ -86,19 +74,11 @@ export function changeTabDCutLayout(protocolo: targEl, tabDC: targEl, bodyType: 
               }
             });
             return "pollock7";
-          } else stringError("obtaining pollock value", (protocolo as entryEl)?.value, extLine(new Error()));
+          }
         }
       }
     }
-  } else
-    multipleElementsNotFound(
-      extLine(new Error()),
-      "validating elements for initial execution of changeTabDCutLayout()",
-      protocolo,
-      tabDC,
-      bodyType,
-    );
-
+  }
   return "pollock3";
 }
 export function defineHiddenRows(
@@ -153,20 +133,12 @@ export function defineHiddenRows(
                 : innerInp.removeAttribute("required");
               break;
             default:
-              stringError("context", context, extLine(new Error()));
+              break;
           }
         }
       }
     });
-  } else
-    multipleElementsNotFound(
-      extLine(new Error()),
-      "argumentos para defineHiddenRows",
-      tabDC,
-      `${JSON.stringify(arrayTabIds) || null}`,
-      `${JSON.stringify(genderedIds) || null}`,
-      context,
-    );
+  }
 }
 //correção para limitação da fórmula de PGC
 export function evalPGCDecay(tipgc: targEl): boolean {
@@ -218,7 +190,6 @@ export function evalPGCDecay(tipgc: targEl): boolean {
     else tipgc.style.color = "rgb(33, 37, 41)";
     return foundDecayPoint;
   } catch (e) {
-    console.error(`Error executing evalPGCDecay:\n${(e as Error).message}`);
     tabProps.PGC = 0;
     person.sumDCut = 0;
     return foundDecayPoint;
@@ -226,15 +197,17 @@ export function evalPGCDecay(tipgc: targEl): boolean {
 }
 export const evalBodyType = (g: string): g is BodyType => ["masculino", "feminino", "neutro"].includes(g);
 export function evalFactorAtleta(): boolean {
-  if (typeof tabProps.factorAtleta !== "string" || tabProps.factorAtleta === ("" as any)) {
-    console.warn(`Factor for Athlete not a string. Defaulting value...`);
+  if (typeof tabProps.factorAtleta !== "string" || tabProps.factorAtleta === ("" as any))
     tabProps.factorAtleta = "peso";
-  }
   if (tabProps.factorAtleta !== ("peso" as any)) tabProps.factorAtleta = tabProps.factorAtleta.toLowerCase() as any;
   if (tabProps.factorAtleta !== ("mlg" as any))
     tabProps.factorAtleta = (tabProps.factorAtleta?.toLowerCase() as any) ?? "peso";
   if (tabProps.factorAtleta !== "peso" && tabProps.factorAtleta !== "mlg") tabProps.factorAtleta = "peso";
   return (["peso", "mlg"] as FactorAtletaValue[]).includes(tabProps.factorAtleta);
+}
+export function dispatchFactorAtleta(newValue: FactorAtletaValue): void {
+  if (["peso", "mlg"].includes(newValue)) tabProps.factorAtleta = newValue;
+  else tabProps.factorAtleta = "peso";
 }
 export function evalFactorAtvLvl(): boolean {
   if (
@@ -248,6 +221,11 @@ export function evalFactorAtvLvl(): boolean {
   return ([1.2, 1.4, 1.6, 1.9, 2.2] as Omit<NafTypeValue, "1.2" | "1.4" | "1.6" | "1.9" | "2.2">[]).includes(
     tabProps.factorAtvLvl as number,
   );
+}
+export function dispatchFactorAtvLvl(newValue: NafTypeValue): void {
+  if (typeof newValue === "string") newValue = parseNotNaN(newValue) as NafTypeValue;
+  if ([1.2, 1.4, 1.6, 1.9, 2.2].includes(newValue as number)) tabProps.factorAtvLvl = newValue;
+  else tabProps.factorAtvLvl = 1.4;
 }
 export function evalActivityLvl(): boolean {
   if (

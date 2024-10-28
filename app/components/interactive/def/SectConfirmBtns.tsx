@@ -51,7 +51,7 @@ export default function SectConfirmBtns(): JSX.Element {
     };
   }, []);
   return (
-    <section className='sectionMain sectionConfirm' id='sectConfirmBut' style={{ overflow: "visible" }}>
+    <fieldset className='sectionMain sectionConfirm' id='sectConfirmBut' style={{ overflow: "visible" }}>
       <button
         type='submit'
         name='submitFormButName'
@@ -115,6 +115,6 @@ export default function SectConfirmBtns(): JSX.Element {
         }}>
         Gerar Planilha
       </button>
-    </section>
+    </fieldset>
   );
 }

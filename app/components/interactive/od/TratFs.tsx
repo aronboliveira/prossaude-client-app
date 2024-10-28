@@ -3,7 +3,6 @@ import { CounterAction } from "@/lib/global/declarations/interfaces";
 import { addSubDivTrat } from "@/lib/locals/odPage/odHandler";
 import { useEffect, useReducer, useRef } from "react";
 import { nlBtn, nlFs, nlInp } from "@/lib/global/declarations/types";
-import { elementNotFound, extLine, inputNotFound } from "@/lib/global/handlers/errorHandler";
 import { changeToAstDigit, syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import sEn from "@/styles//modules/enStyles.module.scss";
 import { compProp } from "@/lib/global/gModel";
@@ -23,17 +22,13 @@ export default function TratFs(props: { phCb?: () => void }): JSX.Element {
   }, 2);
   useEffect(() => {
     try {
-      if (!(mainRef.current instanceof HTMLElement))
-        throw elementNotFound(mainRef.current, `Main reference for TratFs`, extLine(new Error()));
+      if (!(mainRef.current instanceof HTMLElement)) return;
       syncAriaStates([mainRef.current, ...mainRef.current.querySelectorAll("*")]);
       props.phCb && props.phCb();
-      if (!(btnRef.current instanceof HTMLButtonElement))
-        throw elementNotFound(btnRef.current, `Validation of Button Reference for Signature`, extLine(new Error()));
-      if (!(inpRef.current instanceof HTMLInputElement))
-        throw inputNotFound(inpRef.current, `Validation of Input Reference for Signature`, extLine(new Error()));
+      if (!(btnRef.current instanceof HTMLButtonElement) || !(inpRef.current instanceof HTMLInputElement)) return;
       inpRef.current.style.width = `${compProp(btnRef.current, "width")}px`;
     } catch (e) {
-      console.error(`Error executing useEffect for blockCount:\n${(e as Error).message}`);
+      return;
     }
   }, [blockCount]);
   return (

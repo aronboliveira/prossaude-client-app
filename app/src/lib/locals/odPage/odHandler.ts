@@ -10,7 +10,6 @@ import {
   syncAriaStates,
 } from "../../global/handlers/gHandlers";
 import { rDragEvent, rMouseEvent, targEl, textEl } from "../../global/declarations/types";
-import { extLine, elementNotFound, multipleElementsNotFound, inputNotFound } from "../../global/handlers/errorHandler";
 export function showInspSpanSub(ev: rMouseEvent): void {
   try {
     if (
@@ -19,32 +18,21 @@ export function showInspSpanSub(ev: rMouseEvent): void {
         (ev.currentTarget.type === "radio" || ev.currentTarget.type === "checkbox")
       )
     )
-      throw inputNotFound(ev.currentTarget, `Validation of Inspection Radio`, extLine(new Error()));
+      return;
     const validSibling = searchNextSiblings(ev.currentTarget, "inspSpanSub");
     if (ev.currentTarget?.parentElement?.classList.contains("inspSpanMain") && validSibling) {
       if (ev.currentTarget.classList.contains("radYes"))
         ev.currentTarget.checked && validSibling.removeAttribute("hidden");
       else if (ev.currentTarget.classList.contains("radNo") && ev.currentTarget.checked)
         validSibling.setAttribute("hidden", "");
-      else
-        console.error(`Erro validando parentElement class.
-        Classes obtidas: ${ev.currentTarget?.parentElement?.classList ?? "NULL"};
-        Classe procurada: "inspSpanMain"`);
-    } else
-      multipleElementsNotFound(
-        extLine(new Error()),
-        "parentElement and/or validSibiling in showInspSpanSub",
-        ev.currentTarget?.parentElement,
-        validSibling,
-      );
+    }
   } catch (e) {
-    console.error(`Error executing showInspSpanSub:\n${(e as Error).message}`);
+    return;
   }
 }
 export function showInspDialogs(click: rMouseEvent, isDialogCalled: boolean = false): boolean {
   try {
-    if (!(click.currentTarget instanceof HTMLButtonElement))
-      throw elementNotFound(click.currentTarget, "inspDialogBtn in showInspDialogs", extLine(new Error()));
+    if (!(click.currentTarget instanceof HTMLButtonElement)) return isDialogCalled;
     const calledDialog =
       click.currentTarget.nextElementSibling || click.currentTarget.parentElement?.querySelector("dialog");
     if (calledDialog instanceof HTMLDialogElement) {
@@ -57,25 +45,23 @@ export function showInspDialogs(click: rMouseEvent, isDialogCalled: boolean = fa
       }
     }
   } catch (e) {
-    console.error(`Error executing showInspDialogs:\n${(e as Error).message}`);
+    return isDialogCalled;
   }
   return isDialogCalled;
 }
 export function addTextToObs(click: rMouseEvent): void {
   try {
-    if (!(click.currentTarget instanceof HTMLButtonElement))
-      throw elementNotFound(click.currentTarget, "Btn for addTextToObs", extLine(new Error()));
+    if (!(click.currentTarget instanceof HTMLButtonElement)) return;
     const fixedTextParent = click.currentTarget.parentElement?.innerText?.slice(0, -9) ?? "";
     const validParent = searchParents(click.currentTarget, "inspDialog");
     const validParentSibling = searchPreviousSiblings(validParent, "inspTa");
-    if (!(validParentSibling instanceof HTMLTextAreaElement || validParentSibling instanceof HTMLInputElement))
-      throw inputNotFound(validParentSibling, "validParentSibling", extLine(new Error()));
+    if (!(validParentSibling instanceof HTMLTextAreaElement || validParentSibling instanceof HTMLInputElement)) return;
     //textContent é cumulativo persistente, mesmo após remoção de conteúdo em input/ta, logo usar .value
     validParentSibling.value?.length === 0
       ? (validParentSibling.value += fixedTextParent)
       : (validParentSibling.value += fixedTextParent?.toLowerCase());
   } catch (e) {
-    console.error(`Error executing addTextToObs:\n${(e as Error).message}`);
+    return;
   }
 }
 export function dragHover(quadrTo: targEl): void {
@@ -86,9 +72,8 @@ export function dragHover(quadrTo: targEl): void {
         if (quadrTo?.style.cursor === "grabbing") quadrTo.style.cursor = "grab";
       }, 2000);
     }, 2000);
-  } else elementNotFound(quadrTo, "quadrTo in dragHover", extLine(new Error()));
+  }
 }
-
 let odIsDragging = false,
   odFbTouch: Touch,
   odInitialX = 0,
@@ -166,15 +151,10 @@ export function dragStart(
                   (validSrcEl as HTMLElement).style.position = "static";
                   (validSrcEl as HTMLElement).style.zIndex = "10";
                   (validSrcEl as HTMLElement).style.transform = `translate(0, 0)`;
-                } else
-                  multipleElementsNotFound(
-                    extLine(new Error()),
-                    "arguments for dragDrop",
-                    end.touches[0].identifier,
-                    (validSrcEl as any)?.tagName,
-                  );
+                }
               } catch (e) {
-                console.error(`Error executing handleTouchEnd:\n${(e as Error).message}`);
+                odIsDragging = false;
+                return;
               }
               odIsDragging = false;
             }
@@ -187,25 +167,19 @@ export function dragStart(
           passive: false,
         });
       }
-    } else elementNotFound(validSrcEl as any, "validSrcEl in dragStart()", extLine(new Error()));
+    }
   } catch (e) {
-    console.error(`Error executing dragStart:\n${(e as Error).message}`);
+    return;
   }
 }
 export function dragEnter(move: rDragEvent): void {
-  "dataTransfer" in move && move.target instanceof HTMLElement
-    ? move.preventDefault()
-    : elementNotFound(move?.target, "move.target in dragEnter", extLine(new Error()));
+  if ("dataTransfer" in move && move.target instanceof HTMLElement) move.preventDefault();
 }
 export function dragOver(move: rDragEvent): void {
-  "dataTransfer" in move && move.target instanceof HTMLElement
-    ? move.preventDefault()
-    : elementNotFound(move?.target, "move.target in dragOver", extLine(new Error()));
+  if ("dataTransfer" in move && move.target instanceof HTMLElement) move.preventDefault();
 }
 export function dragLeave(move: rDragEvent): void {
-  "dataTransfer" in move && move.target instanceof HTMLElement
-    ? move.preventDefault()
-    : elementNotFound(move?.target, "move.target in dragLeave", extLine(new Error()));
+  if ("dataTransfer" in move && move.target instanceof HTMLElement) move.preventDefault();
 }
 export function dragDrop(
   drop: Event,
@@ -235,7 +209,7 @@ export function dragDrop(
     validSrcEl.style.setProperty("grid-row", targCStRow);
     validTargEl.style.setProperty("grid-column", srcCStCol);
     validTargEl.style.setProperty("grid-row", srcCStRow);
-  } else multipleElementsNotFound(extLine(new Error()), "arguments for dragDrop", drop?.target, validSrcEl);
+  }
   quadrsTe.forEach(
     quadrTo =>
       drop instanceof DragEvent &&
@@ -246,9 +220,7 @@ export function dragDrop(
 }
 export function dragEnd(movingSrcEl: targEl): void {
   const contInQuadrs = document.querySelectorAll(".contInQuadrs");
-  movingSrcEl instanceof HTMLElement
-    ? dragEndChilds(contInQuadrs)
-    : elementNotFound(movingSrcEl, "movingSrcEl in dragEnd", extLine(new Error()));
+  if (movingSrcEl instanceof HTMLElement) dragEndChilds(contInQuadrs);
 }
 export function dragStartChilds(contInQuadrs: Element[] | NodeListOf<Element>): void {
   contInQuadrs.forEach(contInQuadr => contInQuadr.setAttribute("draggable", "true"));
@@ -274,8 +246,8 @@ export function clearQuadrInps(quadrInp: targEl): void {
         if (quadrInp instanceof HTMLInputElement || quadrInp instanceof HTMLTextAreaElement)
           quadrInp.placeholder = "Apagado";
       }
-    } else elementNotFound(quadrInp.nextElementSibling, "quadrInp.nextElementSibling", extLine(new Error()));
-  } else inputNotFound(quadrInp, "quadrInp in clearQuadrInps", extLine(new Error()));
+    }
+  }
 }
 export function resetLabels(quadrBtn: targEl): void {
   const parentDiv = quadrBtn?.closest(".quadrMainDiv");
@@ -285,14 +257,6 @@ export function resetLabels(quadrBtn: targEl): void {
       innerDivInps.forEach(innerDivInp => {
         if (innerDivInp instanceof HTMLInputElement) innerDivInp.value = "Hígido";
       });
-  } else {
-    multipleElementsNotFound(
-      extLine(new Error()),
-      "arguments for resetLabels",
-      quadrBtn,
-      parentDiv,
-      `${JSON.stringify(innerDivInps) || null}`,
-    );
   }
 }
 export function addSubDivTrat(click: Event | React.MouseEvent, addSubDivBtn: targEl, blockCount: number = 1): number {
@@ -330,10 +294,9 @@ export function addSubDivTrat(click: Event | React.MouseEvent, addSubDivBtn: tar
         dateBtn.addEventListener("click", activation => useCurrentDate(activation, dateBtn as HTMLButtonElement));
       });
       newBlock.querySelectorAll(".countTrat")?.forEach(tratBtn => {
-        tratBtn.addEventListener("click", click =>
-          tratBtn instanceof HTMLButtonElement
-            ? addSubDivTrat(click, tratBtn, blockCount)
-            : elementNotFound(tratBtn, "tratContainer", extLine(new Error())),
+        tratBtn.addEventListener(
+          "click",
+          click => tratBtn instanceof HTMLButtonElement && addSubDivTrat(click, tratBtn, blockCount),
         );
       });
       [...newBlock.querySelectorAll('input[type="text"]'), ...newBlock.querySelectorAll("textarea")].forEach(
@@ -358,9 +321,7 @@ export function addSubDivTrat(click: Event | React.MouseEvent, addSubDivBtn: tar
     } else if (addSubDivBtn.classList.contains("removeTrat")) {
       const divToRemove = Array.from(document.querySelectorAll(".divSubTrat")).at(-1);
       if (divToRemove && blockCount > 1 && divToRemove?.id !== "divSubTrat1") divToRemove.remove() as void;
-    } else
-      console.error(`Erro validando .classList de addSubDivBtn.
-      Valores possíveis: addTrat || removeTrat`);
-  } else elementNotFound(click.currentTarget as HTMLElement, "target <button>", extLine(new Error()));
+    }
+  }
   return blockCount;
 }

@@ -3,7 +3,7 @@ import { useContext, useEffect, useRef } from "react";
 import { ENCtx } from "./ENForm";
 import { ENCtxProps } from "@/lib/global/declarations/interfaces";
 import { Intensity } from "@/lib/global/declarations/testVars";
-import { camelToRegular, checkContext, limitedError } from "@/lib/global/gModel";
+import { camelToRegular, checkContext } from "@/lib/global/gModel";
 import { person, tabProps, timers } from "@/vars";
 import { callbackAtvLvlElementNaf, exeAutoFill } from "@/lib/locals/edFisNutPage/edFisNutHandler";
 import sEn from "@/styles//modules/enStyles.module.scss";
@@ -57,10 +57,9 @@ export default function SelectLvlAtFis(): JSX.Element {
             fct: fct?.current ?? document.getElementById("formCalcTMBType"),
           });
           person.dispatchAtvLvl(ev.currentTarget.value);
-          console.log("Person's Activity Level is: " + person.atvLvl);
           tabProps.edIsAutoCorrectOn && exeAutoFill(tabProps.sa);
         } catch (e) {
-          limitedError(`Error executing ${ev.type} callback for ${idf}:\n${(e as Error).message}`, idf);
+          return;
         }
       }}>
       {levels.map((o, i) => (

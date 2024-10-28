@@ -23,8 +23,7 @@
 .biBtn {
   &.countComorb,
   &.countAtFis {
-    padding-right: 0.125rem;
-    padding-left: 0.125rem;
+    padding-inline: 0.125rem;
     height: 2.3vh;
     &.addComorb,
     &.addAtFis {
@@ -112,7 +111,6 @@
   max-width: 98vw;
   &.divRot,
   &.flexDivProg {
-    justify-content: start;
     column-gap: 1.5vw;
     justify-content: flex-start;
     align-items: flex-start;
@@ -146,7 +144,7 @@
   }
 }
 .genDivEn {
-  grid-template-columns: 0.5fr 1fr;
+  grid-template-columns: [main] 0.5fr [ident] 1fr;
   .select {
     @include minMaxWD(calc($inpRotWidFix - 11rem), calc($inpRotWidFix + 7.5rem));
   }
@@ -232,9 +230,6 @@
   &.indMsr {
     border-radius: 0;
   }
-  &.sumMsr {
-    transform: scale(1.008);
-  }
   &.indMsr {
     min-width: 6ch;
     text-align: center;
@@ -282,7 +277,7 @@
 }
 .selFactorAtleta {
   @media (max-width: 900px) {
-    width: 54vw;
+    width: 52vw;
   }
 }
 .spanDiur {
@@ -314,17 +309,6 @@
   }
   &.tabBtnSum {
     border-radius: 0 0.3rem 0.3rem 0;
-    transform: translateY(1px) scale(1.02);
-  }
-}
-.tabBtnProgCons {
-  @media screen and (min-width: 901px) {
-    &.tabBtnInd {
-      transform: scale(1.05) translateY(0.03rem);
-    }
-    &.tabBtnSum {
-      transform: scale(1.002) translateY(0.053rem);
-    }
   }
 }
 .tabInpProg {

@@ -1,7 +1,6 @@
 "use client";
 import { RootCtx } from "@/pages/_app";
 import { createRoot } from "react-dom/client";
-import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { equalizeParagraphs } from "@/lib/locals/basePage/baseStylescript";
 import { expandContent } from "@/lib/global/gStyleScript";
 import { checkContext } from "@/lib/global/gModel";
@@ -27,15 +26,9 @@ export default function MainContainer(): JSX.Element {
       ? (ctx.roots.baseRootedUser = createRoot(baseRootUser))
       : setTimeout(() => {
           baseRootUser = document.getElementById("rootUserInfo");
-          !baseRootUser && elementNotFound(baseRootUser, "Root for user painel", extLine(new Error()));
         }, 2000);
-    typeof ctx.roots.baseRootedUser === "object"
-      ? ctx.roots.baseRootedUser?.render(<EnhancedUserProfilePanel router={router} />)
-      : elementNotFound(
-          `${JSON.stringify(ctx.roots.baseRootedUser)}`,
-          "Root instance for User panel",
-          extLine(new Error()),
-        );
+    if (typeof ctx.roots.baseRootedUser === "object")
+      ctx.roots.baseRootedUser?.render(<EnhancedUserProfilePanel router={router} />);
     equalizeParagraphs(Array.from(document.querySelectorAll("small")));
     expandContent(document.getElementById("rootUserInfo"));
   }, [ctx.roots, router]);
@@ -69,7 +62,7 @@ export default function MainContainer(): JSX.Element {
               ev.currentTarget.style.backgroundColor = "#0056b3";
               ev.currentTarget.style.transform = "translateY(-0.1rem)";
             } catch (e) {
-              console.error(`Error executing ${ev.type}:\n${(e as Error).message}`);
+              return;
             }
           }}>
           <Link href='/panel' id='panelAnchor' rel='nofollow' style={{ color: "#ffff", fontWeight: "600" }}>

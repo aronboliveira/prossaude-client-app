@@ -1,6 +1,5 @@
 "use client";
 import { DlgProps } from "@/lib/global/declarations/interfaces";
-import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { isClickOutside } from "@/lib/global/gStyleScript";
 import { nlDlg } from "@/lib/global/declarations/types";
 import { useRef, useEffect } from "react";
@@ -24,20 +23,15 @@ export default function PanelTips({ state, dispatch }: DlgProps): JSX.Element {
     };
   }, []);
   useEffect(() => {
+    if (!(dlgRef.current instanceof HTMLDialogElement)) return;
     const handleEscape = (ev: KeyboardEvent): void => {
       if (ev.key === "ESCAPE") {
         dispatch(!state);
         !state && dlgRef.current?.close();
       }
     };
-    try {
-      if (!(dlgRef.current instanceof HTMLDialogElement))
-        throw elementNotFound(dlgRef.current, `${PanelTips.prototype.constructor.name}`, extLine(new Error()));
-      dlgRef.current.showModal();
-      addEventListener("keypress", handleEscape);
-    } catch (e) {
-      console.error(`Error executing useEffect for PanelTips:\n${(e as Error).message}`);
-    }
+    dlgRef.current.showModal();
+    addEventListener("keypress", handleEscape);
     return (): void => removeEventListener("keypress", handleEscape);
   }, [dlgRef]);
   return !state ? (

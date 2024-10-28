@@ -2,7 +2,6 @@
 import { compProp, formatCEP, parseNotNaN } from "@/lib/global/gModel";
 import { handleEventReq } from "@/lib/global/handlers/gHandlers";
 import { useCallback, useEffect, useRef } from "react";
-import { elementNotFound, extLine, inputNotFound } from "@/lib/global/handlers/errorHandler";
 import { enableCEPBtn, searchCEP, searchCEPXML } from "@/lib/locals/aGPage/aGHandlers";
 import { toast } from "react-hot-toast";
 import { navigatorVars } from "@/vars";
@@ -15,22 +14,21 @@ export default function CepElements(): JSX.Element {
       try {
         inpRef.current ??= document.getElementById("cepId") as nlInp;
         const cepInp = inpRef.current;
-        if (!(cepInp instanceof HTMLInputElement))
-          throw inputNotFound(cepInp, `validation of Input for CEP`, extLine(new Error()));
+        if (!(cepInp instanceof HTMLInputElement)) return;
         btnRef.current ??=
           (document.getElementById("autoCompCepBtn") as nlBtn) ||
           (cepInp.nextElementSibling as nlBtn) ||
           (cepInp.parentElement?.querySelector("button") as nlBtn);
         const cepBtn = btnRef.current;
         if (!(cepBtn instanceof HTMLButtonElement || (cepBtn instanceof HTMLInputElement && cepBtn.type === "button")))
-          throw elementNotFound(cepBtn, `Validation of Button for CEP`, extLine(new Error()));
+          return;
         let width: looseNum = `${parseNotNaN(compProp(cepInp, "width"))}`;
         width = parseNotNaN(width);
         if (!Number.isFinite(width) && width <= 0) return;
         width = width.toFixed(4);
         cepBtn.style.maxWidth = `${width}px`;
       } catch (e) {
-        console.error(`Error executing equalizeCepElements:\n${(e as Error).message}`);
+        return;
       }
     }, [inpRef, btnRef]);
   useEffect(() => {

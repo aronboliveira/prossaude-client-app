@@ -1,16 +1,14 @@
 import { targEl } from "../../global/declarations/types";
 import { highlightChange } from "../../global/gStyleScript";
-import { extLine, elementNotFound, inputNotFound } from "../../global/handlers/errorHandler";
 import { toast } from "react-hot-toast";
 import { navigatorVars } from "@/vars";
 export function addListenerShowPw(): targEl {
   const spanShowPw = document.getElementById("spanShowPw");
-
   if (spanShowPw instanceof HTMLElement) {
     spanShowPw.addEventListener("click", () => {
       callbackShowPw(spanShowPw);
     });
-  } else elementNotFound(spanShowPw, "spanShowPw in addListenerShowPw()", extLine(new Error()));
+  }
   return spanShowPw;
 }
 export function callbackShowPw(spanShowPw: targEl): void {
@@ -34,9 +32,9 @@ export function callbackShowPw(spanShowPw: targEl): void {
           <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7"/>
         </svg>
         `;
-      } else console.error(`innerIcon class not validated`);
-    } else inputNotFound(pwInp, "pwInp in callbackShowPw()", extLine(new Error()));
-  } else elementNotFound(spanShowPw, "spanShowPw in callbackShowPw()", extLine(new Error()));
+      }
+    }
+  }
 }
 export const clickAttempt: {
   shouldEvaluateTime: boolean;
@@ -86,10 +84,8 @@ export function callbackSubmitBtn(): { ok: boolean; msg: string } {
     }
     const pwInp = document.getElementById("pw");
     const userInp = document.getElementById("user");
-    if (!(userInp instanceof HTMLInputElement))
-      throw inputNotFound(userInp, "userInp in callbackSubmitBtn()", extLine(new Error()));
-    if (!(pwInp instanceof HTMLInputElement))
-      throw inputNotFound(pwInp, "pwInp in callbackSubmitBtn()", extLine(new Error()));
+    if (!(userInp instanceof HTMLInputElement)) throw new Error(``);
+    if (!(pwInp instanceof HTMLInputElement)) throw new Error(``);
     pwInp.setCustomValidity("");
     pwInp.reportValidity();
     userInp.setCustomValidity("");
@@ -182,7 +178,6 @@ export function callbackSubmitBtn(): { ok: boolean; msg: string } {
     }
     return { ok: true, msg: "" };
   } catch (e) {
-    console.error(`Error executing callbackSubmitBtn:\n${(e as Error).message}`);
     return {
       ok: false,
       msg: navigatorVars.pt ? "Error interno do Servidor" : "Internal Server Error",

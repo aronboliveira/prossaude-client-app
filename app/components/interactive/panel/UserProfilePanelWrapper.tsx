@@ -5,7 +5,6 @@ import { useEffect, useContext, useRef } from "react";
 import { useRouter } from "next/router";
 import GenericErrorComponent from "../../error/GenericErrorComponent";
 import { RootCtxType } from "@/lib/global/declarations/interfaces";
-import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { registerRoot } from "@/lib/global/handlers/gHandlers";
 import EnhancedUserProfilePanel from "../../user/EnhancedUserProfilePanel";
 import { checkContext } from "@/lib/global/gModel";
@@ -27,13 +26,6 @@ export default function UserProfilePanelWrapper(): JSX.Element {
       const timeoutId = setTimeout(() => {
         if (!profileSpan.querySelector("img"))
           context.roots.userRoot?.render(<GenericErrorComponent message='Erro renderizando painel de usuário' />);
-      }, 2000);
-      return (): void => clearTimeout(timeoutId);
-    } else {
-      const timeoutId = setTimeout(() => {
-        const foundProfileSpan = document.getElementById("rootUserInfo");
-        if (!foundProfileSpan?.querySelector("img"))
-          elementNotFound(profileSpan, "profileSpan during DOM initialization", extLine(new Error()));
       }, 2000);
       return (): void => clearTimeout(timeoutId);
     }

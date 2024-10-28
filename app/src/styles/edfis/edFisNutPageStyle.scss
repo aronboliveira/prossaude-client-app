@@ -60,7 +60,7 @@
       .inpUr {
         @include stkW(81%);
         + * {
-          @include stkW(22%);
+          @include minWD(22%, fit-content);
           text-align: center;
         }
       }
@@ -252,8 +252,8 @@
       border-color: transparent;
       padding: 0;
       &#labDiur {
+        min-width: max-content;
         box-shadow: 0 0 0 0 transparent;
-        width: 1rem;
         background-color: transparent;
       }
     }
@@ -383,13 +383,6 @@
       .tabBtnInd {
         transform: scale(1.04) translateY(0.7px);
       }
-    }
-    .tdInpComorb {
-      grid-row: span 1;
-      grid-column: span 2;
-    }
-    [id^="sumDCBtn"] {
-      transform: translateY(1.3px);
     }
   }
 }

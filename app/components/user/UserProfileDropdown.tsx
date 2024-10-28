@@ -1,5 +1,4 @@
 import { UserProfileDropdownProps } from "@/lib/global/declarations/interfacesCons";
-import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { createContext, useEffect, useRef, useState } from "react";
 import { User } from "@/lib/global/declarations/classes";
@@ -43,7 +42,7 @@ export default function UserProfileDropdown({ user, router }: UserProfileDropdow
       setArea(`${loadedUser.userArea.slice(0, 1).toUpperCase()}${loadedUser.userArea.slice(1)}` as area);
       setEmail(loadedUser.userEmail);
       setTel(loadedUser.userTel);
-    } else elementNotFound(poRef.current, "Popover for user panel", extLine(new Error()));
+    }
   }, [
     poRef,
     user.loadedData.area,
@@ -77,7 +76,7 @@ export default function UserProfileDropdown({ user, router }: UserProfileDropdow
       value={{ user, router, shouldDisplayContact, shouldDisplayPropDlg, setPropDlg, setContact }}>
       <div className={`po posAb ${sUc.po} ${sUc.lowPo} ${sUc.userPo}`} ref={poRef}>
         <div className={`hPo noInvert ${sUc.hPo}`}>
-          <div id='logoutDiv' className='flexJSt cGap1v mg__05b noInvert'>
+          <fieldset id='logoutDiv' className='flexJSt cGap1v mg__05b noInvert'>
             <button
               type='button'
               className='transparentEl__bg noInvert'
@@ -95,7 +94,7 @@ export default function UserProfileDropdown({ user, router }: UserProfileDropdow
               </svg>
             </button>
             {shouldDisplayUserDlg && <UserDlg shouldDisplayUserDlg={shouldDisplayUserDlg} setUserDlg={setUserDlg} />}
-          </div>
+          </fieldset>
           <h3 className={`noInvert d_ibl brd_nulled brd_b_no pd__no pd0 ${sUc.hPo}`}>Informações de Usuário</h3>
         </div>
         <div className={`bdPo noInvert ${sUc.bdPo}`}>

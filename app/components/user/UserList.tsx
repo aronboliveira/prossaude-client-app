@@ -28,7 +28,7 @@ export default function UserList({ end = "" }: { end?: string }): JSX.Element {
         <dt>Telefone:</dt>
         <dd>{user.userTel}</dd>
       </dl>
-      <div id={`alterUserPropDiv${end}`} className='flexJSt cGap1v mg__1_3b'>
+      <fieldset id={`alterUserPropDiv${end}`} className='flexJSt cGap1v mg__1_3b'>
         <span className='bolded mg__04t'>Alteração</span>
         <button
           type='button'
@@ -47,8 +47,8 @@ export default function UserList({ end = "" }: { end?: string }): JSX.Element {
           </svg>
         </button>
         {shouldDisplayPropDlg && <UserPropsDlg setPropDlg={setPropDlg} shouldDisplayPropDlg={shouldDisplayPropDlg} />}
-      </div>
-      <div id={`logoutDiv${end}`} className='flexJSt cGap1v noInvert'>
+      </fieldset>
+      <fieldset id={`logoutDiv${end}`} className='flexJSt cGap1v noInvert'>
         <span className='bolded mg__04t noInvert'>Logout</span>
         <button
           type='button'
@@ -79,8 +79,8 @@ export default function UserList({ end = "" }: { end?: string }): JSX.Element {
             <path d='M10.828.122A.5.5 0 0 1 11 .5V1h.5A1.5 1.5 0 0 1 13 2.5V15h1.5a.5.5 0 0 1 0 1h-13a.5.5 0 0 1 0-1H3V1.5a.5.5 0 0 1 .43-.495l7-1a.5.5 0 0 1 .398.117M11.5 2H11v13h1V2.5a.5.5 0 0 0-.5-.5M4 1.934V15h6V1.077z' />
           </svg>
         </button>
-      </div>
-      <div id={`logoutDiv${end}`} className='flexJSt cGap1v mg__1t noInvert'>
+      </fieldset>
+      <fieldset id={`logoutDiv${end}`} className='flexJSt cGap1v mg__1t noInvert'>
         <span className='bolded noInvert'>Contato</span>
         <button
           type='button'
@@ -98,7 +98,7 @@ export default function UserList({ end = "" }: { end?: string }): JSX.Element {
             <path d='m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0' />
           </svg>
         </button>
-      </div>
+      </fieldset>
       {shouldDisplayContact && <ContactDlg setContact={setContact} shouldDisplayContact={shouldDisplayContact} />}
     </ErrorBoundary>
   );
