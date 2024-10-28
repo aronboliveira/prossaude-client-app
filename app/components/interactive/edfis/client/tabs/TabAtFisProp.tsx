@@ -45,8 +45,8 @@ export default function TabAtFirsProp({ children = <></> }: { children: JSX.Elem
           name='addAtFisPropName'
           id='addAtFisPropId'
           className={`countAtFis countAtFisProp addAtFis addAtFisProp biBtn ${sEn.biBtn} ${sEn.countAtFis} ${sEn.addAtFis}`}
-          defaultValue='addComorb'
           style={{ cursor: "cell" }}
+          aria-label='Adicionar Atividade Física Proposta'
           onClick={ev => {
             if (ev.isTrusted) trusted.current = true;
             if (!trusted.current) return;
@@ -73,6 +73,7 @@ export default function TabAtFirsProp({ children = <></> }: { children: JSX.Elem
           className={`countAtFis countAtFisProp removeAtFis removeAtFisProp biBtn ${sEn.biBtn} ${sEn.countAtFis}`}
           defaultValue='removeComorb'
           style={{ cursor: "vertical-text" }}
+          aria-label='Remover Atividade Física Proposta'
           onClick={ev => {
             if (ev.isTrusted) trusted.current = true;
             if (!trusted.current) return;

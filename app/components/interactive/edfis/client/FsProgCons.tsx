@@ -369,7 +369,9 @@ export default function FsProgCons(): JSX.Element {
               <TextBodyType />
             </div>
             <div role='group' className={`spanForm ${sEn.divLab}`}>
-              <span>Nível de Gordura Corporal aplicado:</span>
+              <label htmlFor='gordCorpLvl' style={{ display: "inline", fontWeight: "600", marginBottom: "0.5rem" }}>
+                Nível de Gordura Corporal aplicado:
+              </label>
               <span
                 ref={glSpan}
                 role='group'
@@ -385,11 +387,15 @@ export default function FsProgCons(): JSX.Element {
             className={`flexDiv flexDivProg ${sEn.flexDivEn} ${sEn.flexDivProg} ${sEn.divProgFactor}`}
             id='divProgFactor'>
             <div role='group' className={`${sEn.divLab}`}>
-              <span>Fator de Nível de Atividade Física:</span>
+              <label htmlFor='nafType' style={{ display: "inline", fontWeight: "600", marginBottom: "0.5rem" }}>
+                Fator de Nível de Atividade Física:
+              </label>
               <NafType />
             </div>
             <div role='group' className={`${sEn.divLab} spanForm max52_900`}>
-              <span>Fórmula para Cálculo de TMB:</span>
+              <label htmlFor='formCalcTMBType' style={{ display: "inline", fontWeight: "600", marginBottom: "0.5rem" }}>
+                Fórmula para Cálculo de TMB:
+              </label>
               <span
                 ref={fctSpan}
                 id='fctSpan'

@@ -46,8 +46,8 @@ export default function TabAtFisRot({ children = <></> }: { children: JSX.Elemen
           name='addAtFisRotName'
           id='addAtFisRotId'
           className={`countAtFis countAtFisRot addAtFis addAtFisRot biBtn ${sEn.biBtn} ${sEn.countAtFis} ${sEn.addAtFis}`}
-          defaultValue='addComorb'
           style={{ cursor: "cell" }}
+          aria-label='Adicionar Atividade Física Rotineira'
           onClick={ev => {
             if (ev.isTrusted) trusted.current = true;
             if (!trusted.current) return;
@@ -72,7 +72,7 @@ export default function TabAtFisRot({ children = <></> }: { children: JSX.Elemen
           name='removeAtFisRotName'
           id='removeAtFisRotId'
           className={`countAtFis countAtFisRot removeAtFis removeAtFisRot biBtn ${sEn.biBtn} ${sEn.countAtFis}`}
-          defaultValue='removeComorb'
+          aria-label='Remover Atividade Física Rotineira'
           style={{ cursor: "vertical-text" }}
           onClick={ev => {
             if (ev.isTrusted) trusted.current = true;
