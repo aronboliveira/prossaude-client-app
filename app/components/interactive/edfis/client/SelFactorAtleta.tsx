@@ -5,7 +5,6 @@ import { tabProps, timers } from "@/vars";
 import { useContext, useEffect, useRef, useState } from "react";
 import useMount from "@/lib/hooks/useMount";
 import { FactorAtletaRegular, FactorAtletaValue } from "@/lib/global/declarations/testVars";
-import { checkContext } from "@/lib/global/gModel";
 import sEn from "@/styles//modules/enStyles.module.scss";
 import { ENCtxProps } from "@/lib/global/declarations/interfaces";
 import { ENCtx } from "./ENForm";
@@ -21,8 +20,6 @@ export default function SelFactorAtleta(): JSX.Element {
       { v: "mlg", l: "MLG" },
     ];
   if (ctx?.refs) ({ nafr } = ctx.refs);
-  //TODO REMOVER APÓS TESTE
-  checkContext(ctx, "ENCtx", SelFactorAtleta);
   useEffect(() => {
     const sel = r.current ?? document.getElementById("selFactorAtleta");
     if (sel instanceof HTMLSelectElement) dispatchFactorAtleta(sel.value as FactorAtletaValue);

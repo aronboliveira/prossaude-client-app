@@ -57,7 +57,6 @@ export default function WatcherEN(): JSX.Element {
   }, []);
   useResetPerson();
   useBsLink();
-  //TODO REMOVER APÓS TESTE
   useEffect(() => {
     setTimeout(() => {
       evalMatchTMBElements();

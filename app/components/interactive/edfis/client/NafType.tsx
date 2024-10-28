@@ -4,7 +4,6 @@ import { useContext, useEffect, useRef } from "react";
 import { ENCtx } from "./ENForm";
 import { ENCtxProps } from "@/lib/global/declarations/interfaces";
 import { Intensity, NafTypeValue } from "@/lib/global/declarations/testVars";
-import { checkContext } from "@/lib/global/gModel";
 import { callbackAtvLvlElementNaf, exeAutoFill } from "@/lib/locals/edFisNutPage/edFisNutHandler";
 import sEn from "@/styles//modules/enStyles.module.scss";
 import { NlMRef, nlSel } from "@/lib/global/declarations/types";
@@ -45,8 +44,6 @@ export default function NafType(): JSX.Element {
       }
     }, timers.personENTimer * 0.75);
   }, [nafr]);
-  //TODO REMOVER APÓS TESTE
-  checkContext(ctx1, "ENCtx", NafType);
   return (
     <select
       ref={nafr}

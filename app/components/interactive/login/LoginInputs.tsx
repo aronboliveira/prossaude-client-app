@@ -13,6 +13,7 @@ import { ClickEvaluator } from "@/lib/global/declarations/classes";
 import { defUser, setFullUser } from "@/redux/slices/userSlice";
 import toast from "react-hot-toast";
 import sLp from "@/styles/modules/loginStyles.module.scss";
+import useMount from "@/lib/hooks/useMount";
 export default function LoginInputs(): JSX.Element {
   let isSpinning = false;
   const anchorRef = useRef<nlA>(null),
@@ -23,6 +24,7 @@ export default function LoginInputs(): JSX.Element {
     formToasted = useRef<boolean>(false),
     handlerToasted = useRef<boolean>(false),
     serverToasted = useRef<boolean>(false),
+    mounted = useMount(),
     exeLogin = useCallback(
       (resSpan: nlHtEl): void => {
         try {
@@ -201,6 +203,15 @@ export default function LoginInputs(): JSX.Element {
     }
     return (): void => removeEventListener("popstate", untoast);
   }, [msg]);
+  useEffect(() => {
+    try {
+      const pwBtn = document.getElementById("spanShowPw") ?? document.querySelector(".bi-eye-fill")?.parentElement;
+      if (!(pwBtn instanceof HTMLElement)) return;
+      if (getComputedStyle(pwBtn).backgroundColor === "rgb(240, 240, 240)") location.reload();
+    } catch (e) {
+      return;
+    }
+  }, [mounted]);
   return (
     <form
       ref={formRef}

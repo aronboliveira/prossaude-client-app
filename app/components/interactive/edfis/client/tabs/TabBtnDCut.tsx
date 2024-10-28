@@ -3,7 +3,6 @@ import { handleSumClick } from "@/lib/locals/edFisNutPage/edFisNutHandler";
 import { useContext } from "react";
 import { FspCtxProps } from "@/lib/global/declarations/interfaces";
 import { FspCtx } from "../FsProgCons";
-import { checkContext } from "@/lib/global/gModel";
 import sEn from "@/styles//modules/enStyles.module.scss";
 import { NlMRef, nlSel, nlTab } from "@/lib/global/declarations/types";
 export default function TabBtnDCut({ nCol }: { nCol: number }): JSX.Element {
@@ -13,8 +12,6 @@ export default function TabBtnDCut({ nCol }: { nCol: number }): JSX.Element {
   if (ctx1) {
     if (ctx1.refs) ({ prt, td } = ctx1.refs);
   }
-  //TODO REMOVER APÓS TESTE
-  checkContext(ctx1, "FspCtx", TabBtnDCut);
   return (
     <button
       type='button'

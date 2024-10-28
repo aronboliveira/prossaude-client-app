@@ -14,7 +14,6 @@ import { ENCtx } from "../ENForm";
 import { FspCtx } from "../FsProgCons";
 import Td from "../../tabs/Td";
 import Th from "../../tabs/Th";
-import { checkContext } from "@/lib/global/gModel";
 const DTsCtx = createContext<DTsCtxProps>({ exeAutoFillCtx: null }),
   DivDCut = lazy(() => import("../../DivDCut"));
 export default function DynamicTabsBlock(): JSX.Element {
@@ -92,11 +91,7 @@ export default function DynamicTabsBlock(): JSX.Element {
   if (ctx1?.refs) ({ fct, fspr, gl } = ctx1.refs);
   if (ctx2) {
     if (ctx2.refs) ({ snc } = ctx2.refs);
-    if (ctx2.targs) targs = ctx2.targs;
   }
-  //TODO REMOVER APÓS TESTE
-  checkContext(ctx1, "ENCtx", DynamicTabsBlock);
-  checkContext(ctx2, "FspCtx", DynamicTabsBlock);
   return (
     <ErrorBoundary fallback={<GenericErrorComponent message='Error mounting dynamic tables!' />}>
       <DTsCtx.Provider value={{ exeAutoFillCtx }}>

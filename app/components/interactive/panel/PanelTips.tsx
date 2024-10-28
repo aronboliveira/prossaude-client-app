@@ -33,7 +33,7 @@ export default function PanelTips({ state, dispatch }: DlgProps): JSX.Element {
     dlgRef.current.showModal();
     addEventListener("keypress", handleEscape);
     return (): void => removeEventListener("keypress", handleEscape);
-  }, [dlgRef]);
+  }, [dlgRef, dispatch]);
   return !state ? (
     <></>
   ) : (

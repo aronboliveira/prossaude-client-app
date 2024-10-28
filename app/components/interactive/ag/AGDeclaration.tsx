@@ -10,14 +10,11 @@ import useDialog from "@/lib/hooks/useDialog";
 import { createPortal } from "react-dom";
 import { RootCtx } from "@/pages/_app";
 import { NlMRef, nlSpan } from "@/lib/global/declarations/types";
-import { checkContext } from "@/lib/global/gModel";
 const AGDeclaration = memo(({ state, dispatch }: DlgProps): JSX.Element => {
   let divModal: NlMRef<nlSpan | HTMLDivElement> = null;
   const { mainRef } = useDialog({ state, dispatch, param: "conform" }),
     ctx = useContext<RootCtxType>(RootCtx);
   if (ctx) divModal = ctx.divModal;
-  //TODO REMOVER APÓS TESTE
-  checkContext(ctx, "RootCtx", AGDeclaration);
   return createPortal(
     !state ? (
       <></>

@@ -131,7 +131,7 @@ export function cpbInpHandler(ev: Event, radio: targEl): void {
               [
                 ...divAdd.querySelectorAll('input[type="radio"]'),
                 ...divAdd.querySelectorAll('input[type="checkbox"]'),
-              ].forEach((rad) => {
+              ].forEach(rad => {
                 try {
                   if (!(rad instanceof HTMLInputElement && (rad.type === "radio" || rad.type === "checkbox"))) return;
                   rad.dataset.required = "true";
@@ -308,36 +308,42 @@ export function changeToAstDigit(toFileInpBtn: targEl): void {
             imgFile.type: ${imgFile?.type ?? "UNDEFINED TYPE"}`);
           const reader = new FileReader();
           reader.onloadstart = (): void => {
-            toast(
-              () => (
-                <div
-                  style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
-                  <div style={{ marginBottom: "0.3rem" }}>
-                    <b>{navigatorVars.pt ? "Iniciando leitura de imagem..." : "Initiating loading of image..."}</b>
-                  </div>
-                  <div style={{ marginBottom: "0.3rem" }}>
-                    <Spinner />
-                  </div>
+            toast &&
+              toast(
+                () => (
                   <div
-                    className='toastDiv'
                     style={{
                       display: "flex",
+                      flexDirection: "column",
                       justifyContent: "center",
                       alignItems: "center",
-                      width: "100%",
-                      height: "100%",
-                      marginBottom: "0.3rem",
                     }}>
-                    <progress
-                      id='fileLoadingBar'
-                      max={100}
-                      value={0}
-                      style={{ transition: "value 1s ease" }}></progress>
+                    <div style={{ marginBottom: "0.3rem" }}>
+                      <b>{navigatorVars.pt ? "Iniciando leitura de imagem..." : "Initiating loading of image..."}</b>
+                    </div>
+                    <div style={{ marginBottom: "0.3rem" }}>
+                      <Spinner />
+                    </div>
+                    <div
+                      className='toastDiv'
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        width: "100%",
+                        height: "100%",
+                        marginBottom: "0.3rem",
+                      }}>
+                      <progress
+                        id='fileLoadingBar'
+                        max={100}
+                        value={0}
+                        style={{ transition: "value 1s ease" }}></progress>
+                    </div>
                   </div>
-                </div>
-              ),
-              { duration: 1200 },
-            );
+                ),
+                { duration: 1200 },
+              );
           };
           reader.onprogress = (ev): void => {
             setTimeout(() => {
@@ -351,7 +357,7 @@ export function changeToAstDigit(toFileInpBtn: targEl): void {
             }, 500);
           };
           reader.onerror = (): void => {
-            toast.error(
+            toast?.error(
               navigatorVars.pt
                 ? `Houve algum erro carregando a imagem: ${reader.error?.name ?? "Anônimo"} - ${
                     reader.error?.message ?? "sem descrição"
@@ -395,7 +401,7 @@ export function changeToAstDigit(toFileInpBtn: targEl): void {
               defineLabId(document.querySelector(".labAst"), toFileInpBtn, imgAstDigt);
           };
           reader.onloadend = (): void => {
-            toast.success(navigatorVars.pt ? `Imagem carregada com sucesso!` : `Success loading image!`, {
+            toast?.success(navigatorVars.pt ? `Imagem carregada com sucesso!` : `Success loading image!`, {
               duration: 1000,
             });
           };
@@ -404,7 +410,7 @@ export function changeToAstDigit(toFileInpBtn: targEl): void {
           return;
         }
       });
-      [...document.querySelectorAll(".inpAst"), ...document.querySelectorAll(".tratBtn")].forEach((fileInp) => {
+      [...document.querySelectorAll(".inpAst"), ...document.querySelectorAll(".tratBtn")].forEach(fileInp => {
         try {
           if (!(fileInp instanceof HTMLElement)) return;
           fileInp.style.width = `${Math.max(
@@ -682,7 +688,7 @@ export function checkForReset(ev: rMouseEvent): void {
 export function resetForm(form: nlFm): void {
   try {
     if (!(form instanceof HTMLFormElement)) return;
-    [...form.querySelectorAll("input"), ...form.querySelectorAll("textarea")].forEach((inp) => {
+    [...form.querySelectorAll("input"), ...form.querySelectorAll("textarea")].forEach(inp => {
       try {
         if (
           inp instanceof HTMLTextAreaElement ||
@@ -720,7 +726,7 @@ export function resetForm(form: nlFm): void {
         return;
       }
     });
-    form.querySelectorAll("select").forEach((s) => {
+    form.querySelectorAll("select").forEach(s => {
       try {
         if (s.options.length === 0)
           throw new Error(`No option in the select ${s.id || s.name || s.className || s.tagName}`);
@@ -730,7 +736,7 @@ export function resetForm(form: nlFm): void {
         return;
       }
     });
-    [document.getElementById("astDigtBtn"), document.querySelectorAll("[id$=AstDigtBtn]")].forEach((b) => {
+    [document.getElementById("astDigtBtn"), document.querySelectorAll("[id$=AstDigtBtn]")].forEach(b => {
       try {
         if (!(b instanceof HTMLButtonElement || (b instanceof HTMLInputElement && b.type === "button"))) return;
         if (b.innerText.toLowerCase() === "retornar") b.click();
@@ -1101,7 +1107,7 @@ export async function submitForm(form: nlFm, ep: formCases): Promise<void> {
             el.type === "submit" ||
             el.type === "image"),
       )
-      .forEach((el) => {
+      .forEach(el => {
         try {
           if (el instanceof HTMLCanvasElement) {
             const idf = el.dataset.name || el.id || el.dataset.title || el.tagName;
@@ -1305,8 +1311,6 @@ export function indicateValidities(el: HTMLInputElement, valid: boolean): void {
           return 0;
         }
       })() || 16;
-    if (iconized) {
-    }
     Object.assign(icon.style, {
       position: "absolute",
       top: `${scrollY * 0.99 + rect.top * 0.985}px`,
@@ -1561,7 +1565,7 @@ export function handleEventReq(entry: textEl | Event, alertColor: string = "#ed6
 }
 export function cleanStorageName(): void {
   if (!window) return;
-  ["name", "secondName", "lastName"].forEach((n) => {
+  ["name", "secondName", "lastName"].forEach(n => {
     try {
       localStorage.setItem(n, "");
     } catch (e) {

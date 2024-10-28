@@ -10,7 +10,6 @@ import s from "@/styles//modules/sharedComponents.module.scss";
 import { useContext } from "react";
 import { FspCtxProps } from "@/lib/global/declarations/interfaces";
 import { FspCtx } from "./FsProgCons";
-import { checkContext } from "@/lib/global/gModel";
 export default function TabDCut(): JSX.Element {
   let td: NlMRef<nlTab> = null;
   const ctx1 = useContext<FspCtxProps>(FspCtx),
@@ -28,8 +27,6 @@ export default function TabDCut(): JSX.Element {
   if (ctx1) {
     if (ctx1.refs) ({ td } = ctx1.refs);
   }
-  //TODO REMOVER APÓS TESTE
-  checkContext(ctx1, "FpsCtx", TabDCut);
   return (
     <ErrorBoundary FallbackComponent={() => <GenericErrorComponent message='Error rendering Table for Skin Folds' />}>
       <div role='group' className={`divTab ${s.divTabEn}`} id='divTabDobrCut'>

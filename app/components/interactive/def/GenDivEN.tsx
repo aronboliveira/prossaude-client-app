@@ -8,7 +8,7 @@ import { ENCtxProps } from "@/lib/global/declarations/interfaces";
 import useGenDiv from "@/lib/hooks/useGenDiv";
 import { handleGenRender } from "@/lib/locals/edFisNutPage/edFisNutReactHandlers";
 import { GenDivProps } from "@/lib/global/declarations/interfacesCons";
-import { checkContext, fluxGen } from "@/lib/global/gModel";
+import { fluxGen } from "@/lib/global/gModel";
 import sEn from "@/styles//modules/enStyles.module.scss";
 export default function GenDivEN({ genRef, genAlinRef }: GenDivProps): JSX.Element {
   let txbr: NlMRef<nlSel> = null,
@@ -43,8 +43,6 @@ export default function GenDivEN({ genRef, genAlinRef }: GenDivProps): JSX.Eleme
     if (ctx1.refs) ({ txbr, gbr } = ctx1.refs);
     if (ctx1.bt) onSetBodyType = ctx1.bt.d;
   }
-  //TODO REMOVER APÓS TESTE
-  checkContext(ctx1, "ENCtx", GenDivEN);
   useEffect(() => {
     if (!trusted.current) return;
     if (/edfis/gi.test(location.pathname) || document.body.id.toLowerCase() === "edfisnutbody") {

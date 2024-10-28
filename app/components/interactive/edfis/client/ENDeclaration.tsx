@@ -8,7 +8,6 @@ import st from "@/styles//modules/declarationStyles.module.scss";
 import DefaultDeclaration from "../../def/DefaultDeclaration";
 import { createPortal } from "react-dom";
 import { RootCtx } from "@/pages/_app";
-import { checkContext } from "@/lib/global/gModel";
 import useDialog from "@/lib/hooks/useDialog";
 import { NlMRef, nlSpan } from "@/lib/global/declarations/types";
 const ENDeclaration = memo(({ state, dispatch }: DlgProps): JSX.Element => {
@@ -16,8 +15,6 @@ const ENDeclaration = memo(({ state, dispatch }: DlgProps): JSX.Element => {
   const ctx = useContext<RootCtxType>(RootCtx),
     { mainRef } = useDialog({ state, dispatch, param: "conform" });
   if (ctx) divModal = ctx.divModal;
-  //TODO REMOVER APÓS TESTE
-  checkContext(ctx, "RootCtx", ENDeclaration);
   return createPortal(
     !state ? (
       <></>

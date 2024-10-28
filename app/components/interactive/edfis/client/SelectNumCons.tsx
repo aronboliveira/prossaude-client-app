@@ -1,6 +1,6 @@
 "use client";
 import { handleEventReq } from "@/lib/global/handlers/gHandlers";
-import { checkContext, parseNotNaN } from "@/lib/global/gModel";
+import { parseNotNaN } from "@/lib/global/gModel";
 import { switchRequiredCols } from "@/lib/locals/edFisNutPage/edFisNutHandler";
 import { tabProps, timers } from "@/vars";
 import { useContext, useEffect, useCallback, useRef } from "react";
@@ -103,9 +103,6 @@ export default function SelectNumCons(): JSX.Element {
       setNumCons(evalPseudoNum(query.value || 1).toString());
     }, timers.personENTimer * 0.75);
   }, [snc, setNumCons]);
-  //TODO REMOVER APÓS TESTE
-  checkContext(ctx1, "ENCtx", SelectNumCons);
-  checkContext(ctx2, "FspCtx", SelectNumCons);
   return (
     <select
       ref={snc}

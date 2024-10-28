@@ -3,7 +3,7 @@ import { ENCtxProps, FspCtxProps } from "@/lib/global/declarations/interfaces";
 import { changeTabDCutLayout } from "@/lib/locals/edFisNutPage/edFisNutModel";
 import { useContext, useEffect, useRef, useState } from "react";
 import { ENCtx } from "./ENForm";
-import { checkContext, compProp, parseNotNaN } from "@/lib/global/gModel";
+import { compProp, parseNotNaN } from "@/lib/global/gModel";
 import { Protocol } from "@/lib/global/declarations/testVars";
 import { FspCtx } from "./FsProgCons";
 import sEn from "@/styles//modules/enStyles.module.scss";
@@ -35,7 +35,6 @@ export default function Protocolo(): JSX.Element {
       if (inps.length === 0) return;
       const grp = [...inps];
       const tallest = Math.max(...grp.map(c => (c instanceof HTMLElement ? parseNotNaN(compProp(c, "height")) : 0)));
-      console.log(tallest);
       if (!Number.isFinite(tallest) || tallest < 0) return;
       grp.forEach(c => {
         if (c instanceof HTMLElement) {
@@ -49,9 +48,6 @@ export default function Protocolo(): JSX.Element {
       return;
     }
   }, [prt, td, txbr, v, trusted]);
-  //TODO REMOVER APÓS TESTE
-  checkContext(ctx1, "ENCtx", Protocolo);
-  checkContext(ctx2, "FspCtx", Protocolo);
   return (
     <select
       ref={prt}

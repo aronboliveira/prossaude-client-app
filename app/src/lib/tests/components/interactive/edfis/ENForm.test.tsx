@@ -2,6 +2,7 @@ import React from "react";
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import { toast } from "react-hot-toast";
+import ENForm, { ENCtx } from "../../../../../../components/interactive/edfis/client/ENForm";
 jest.mock("@/lib/global/handlers/gHandlers", () => ({
   registerPersistInputs: jest.fn(),
   syncAriaStates: jest.fn(),

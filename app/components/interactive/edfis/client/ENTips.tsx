@@ -4,7 +4,6 @@ import { NlMRef, nlDiv, nlSpan } from "@/lib/global/declarations/types";
 import { useRef, useEffect, useContext, memo, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { RootCtx } from "@/pages/_app";
-import { checkContext } from "@/lib/global/gModel";
 import useDialog from "@/lib/hooks/useDialog";
 import sT from "@/styles/modules/tipsStyles.module.scss";
 const ENTips = memo(({ state, dispatch }: DlgProps): JSX.Element => {
@@ -174,8 +173,6 @@ const ENTips = memo(({ state, dispatch }: DlgProps): JSX.Element => {
     }, [m1, m2, m3, m4, m5, hb]),
     ctx = useContext<RootCtxType>(RootCtx);
   if (ctx) divModal = ctx.divModal;
-  //TODO REMOVER APÓS TESTE
-  checkContext(ctx, "RootCtx", ENTips);
   useEffect(render, [render]);
   return createPortal(
     !state ? (

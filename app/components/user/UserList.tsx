@@ -5,15 +5,12 @@ import { UserProfileCtxProps } from "@/lib/global/declarations/interfaces";
 import { UserProfileCtx } from "./UserProfileDropdown";
 import ContactDlg from "./ContactDlg";
 import { execLogout } from "@/lib/global/auth";
-import { capitalizeFirstLetter, checkContext } from "@/lib/global/gModel";
+import { capitalizeFirstLetter } from "@/lib/global/gModel";
 import { ErrorBoundary } from "react-error-boundary";
 import GenericErrorComponent from "../error/GenericErrorComponent";
 export default function UserList({ end = "" }: { end?: string }): JSX.Element {
   const { user, router, shouldDisplayContact, shouldDisplayPropDlg, setContact, setPropDlg } =
     useContext<UserProfileCtxProps>(UserProfileCtx);
-  //TODO REMOVER APÓS TESTE
-  const ctx = useContext(UserProfileCtx);
-  checkContext(ctx, "UserProfileCtx", UserList);
   return (
     <ErrorBoundary fallback={<GenericErrorComponent message='Erro carregando lista de dados de usuário' />}>
       <dl className='mg__0b'>

@@ -3,7 +3,6 @@ import { RootCtx } from "@/pages/_app";
 import { createRoot } from "react-dom/client";
 import { equalizeParagraphs } from "@/lib/locals/basePage/baseStylescript";
 import { expandContent } from "@/lib/global/gStyleScript";
-import { checkContext } from "@/lib/global/gModel";
 import { targEl } from "@/lib/global/declarations/types";
 import { useEffect, useContext, useRef } from "react";
 import { useRouter } from "next/router";
@@ -13,13 +12,25 @@ import { toast } from "react-hot-toast";
 import sMc from "@/styles//modules/mainContainer.module.scss";
 import { navigatorVars } from "@/vars";
 import NavCard from "./NavCard";
+import useMount from "@/lib/hooks/useMount";
 let baseRootUser: targEl;
 export default function MainContainer(): JSX.Element {
   const ctx = useContext(RootCtx),
     router = useRouter(),
-    toasted = useRef<boolean>(false);
-  //TODO REMOVER APÓS TESTE
-  checkContext(ctx, "RootCtx", MainContainer);
+    toasted = useRef<boolean>(false),
+    mounted = useMount();
+  useEffect(() => {
+    if (!mounted) return;
+    try {
+      setTimeout(() => {
+        const bg = document.getElementById("bgDiv");
+        if (!(bg instanceof HTMLElement)) return;
+        if (!/gradient/gi.test(getComputedStyle(bg).background)) location.reload();
+      }, 200);
+    } catch (e) {
+      return;
+    }
+  }, [mounted]);
   useEffect(() => {
     baseRootUser = document.getElementById("rootUserInfo");
     baseRootUser instanceof HTMLElement && !ctx.roots.baseRootedUser

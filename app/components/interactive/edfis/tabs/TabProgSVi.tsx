@@ -9,7 +9,6 @@ import s from "@/styles//modules/sharedComponents.module.scss";
 import { useContext } from "react";
 import { FspCtxProps } from "@/lib/global/declarations/interfaces";
 import { FspCtx } from "../client/FsProgCons";
-import { checkContext } from "@/lib/global/gModel";
 export default function TabProgSVi(): JSX.Element {
   let tsv: NlMRef<nlTab> = null;
   const columns = [1, 2, 3, 4],
@@ -19,8 +18,6 @@ export default function TabProgSVi(): JSX.Element {
     ],
     ctx1 = useContext<FspCtxProps>(FspCtx);
   if (ctx1?.refs) ({ tsv } = ctx1.refs);
-  //TODO REMOVER APÓS TESTE
-  checkContext(ctx1, "FspCtx", TabProgSVi);
   return (
     <ErrorBoundary FallbackComponent={() => <GenericErrorComponent message='Error rendering Table for Vital Signs' />}>
       <div role='group' className={`divTab ${s.divTabEn}`} id='divTabSVi'>
