@@ -10,7 +10,7 @@ import Link from "next/link";
 import EnhancedUserProfilePanel from "../../user/EnhancedUserProfilePanel";
 import { toast } from "react-hot-toast";
 import sMc from "@/styles//modules/mainContainer.module.scss";
-import { navigatorVars } from "@/vars";
+import { navigatorVars, reloader } from "@/vars";
 import NavCard from "./NavCard";
 import useMount from "@/lib/hooks/useMount";
 let baseRootUser: targEl;
@@ -25,7 +25,10 @@ export default function MainContainer(): JSX.Element {
       setTimeout(() => {
         const bg = document.getElementById("bgDiv");
         if (!(bg instanceof HTMLElement)) return;
-        if (!/gradient/gi.test(getComputedStyle(bg).background)) location.reload();
+        if (!/gradient/gi.test(getComputedStyle(bg).background) && reloader.canReloadBase) {
+          reloader.canReloadBase = false;
+          router.reload();
+        }
       }, 200);
     } catch (e) {
       return;

@@ -1,7 +1,7 @@
 "use client";
 import { handleLinkChanges } from "@/lib/global/handlers/gRoutingHandlers";
 import { assignFormAttrs } from "@/lib/global/gModel";
-import { tabProps, timers } from "@/vars";
+import { reloader, tabProps, timers } from "@/vars";
 import { useEffect, useState } from "react";
 import { addExportFlags, getGlobalEls } from "@/lib/global/gController";
 import useResetPerson from "@/lib/hooks/useResetPerson";
@@ -16,6 +16,8 @@ export default function WatcherEN(): JSX.Element {
     setTimeout(() => {
       tabProps.edIsAutoCorrectOn = getGlobalEls(tabProps.edIsAutoCorrectOn, "num");
     }, 500);
+    reloader.canReloadLogin = true;
+    reloader.canReloadBase = true;
     handleLinkChanges("ed", "EN Page Style");
     setTimeout(() => {
       setMounted(true);
