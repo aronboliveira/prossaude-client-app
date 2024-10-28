@@ -6,7 +6,7 @@ import { nlA, nlFm, nlHtEl, nlSpan } from "@/lib/global/declarations/types";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { callbackShowPw, callbackSubmitBtn } from "@/lib/locals/loginPage/loginController";
 import Link from "next/link";
-import { assignFormAttrs } from "@/lib/global/gModel";
+import { assignFormAttrs, compProp, parseNotNaN } from "@/lib/global/gModel";
 import Spinner from "../../icons/Spinner";
 import { useRouter } from "next/router";
 import { ClickEvaluator } from "@/lib/global/declarations/classes";
@@ -205,9 +205,14 @@ export default function LoginInputs(): JSX.Element {
   }, [msg]);
   useEffect(() => {
     try {
-      const pwBtn = document.getElementById("spanShowPw") ?? document.querySelector(".bi-eye-fill")?.parentElement;
-      if (!(pwBtn instanceof HTMLElement)) return;
-      if (getComputedStyle(pwBtn).backgroundColor === "rgb(240, 240, 240)") location.reload();
+      const loginCont = document.getElementById("loginCont"),
+        pwBtn = document.getElementById("spanShowPw") ?? document.querySelector(".bi-eye-fill")?.parentElement;
+      if (loginCont instanceof HTMLElement && parseNotNaN(compProp(loginCont, "marginLeft")) === 0) {
+        location.reload();
+        return;
+      }
+      if (pwBtn instanceof HTMLElement && getComputedStyle(pwBtn).backgroundColor === "rgb(240, 240, 240)")
+        location.reload();
     } catch (e) {
       return;
     }
