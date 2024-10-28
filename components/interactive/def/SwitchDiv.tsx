@@ -38,7 +38,7 @@ export default function SwitchDiv({ autofill = false }: { autofill?: boolean }):
   return (
     <div role='group' className={`switchDiv flexQ900NoWC divTab ${isEdFis ? `${s.switchDivEn} ${s.divTabEn}` : ""}`}>
       {autofill && (
-        <span role='group' className='form-switch spanLeft' id='autofillDiv' style={spanStyle}>
+        <label role='group' htmlFor='autoFillBtn' className='form-switch spanLeft' id='autofillDiv' style={spanStyle}>
           <input
             ref={fillRef}
             type='checkbox'
@@ -58,7 +58,7 @@ export default function SwitchDiv({ autofill = false }: { autofill?: boolean }):
             }}
           />
           <strong className={s.calcText}>Cálculo Automático</strong>
-        </span>
+        </label>
       )}
       <span role='group' className='form-switch spanRight' id='autocorrectDiv' style={spanStyle}>
         <input

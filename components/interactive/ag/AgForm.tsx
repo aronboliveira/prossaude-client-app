@@ -384,9 +384,7 @@ export default function AgForm(): JSX.Element {
               role='group'
               className='fsAnamGSpan locSpan form-switch flexColumn noInvert'
               id='fsAnamGSpan13'>
-              <span role='textbox' style={{ marginLeft: "0.5rem" }}>
-                Número:
-              </span>
+              <span style={{ marginLeft: "0.5rem" }}>Número:</span>
               <span role='group' id='streetSpan' ref={streetSpan} className='flexDiv spanLoc fitSpaced mg__07t'>
                 <StreetNum />
               </span>
@@ -396,9 +394,7 @@ export default function AgForm(): JSX.Element {
               role='group'
               className={`fsAnamGSpan locSpan form-switch flexColumn noInvert ${sAg.fsAnamGSpan14}`}
               id='fsAnamGSpan14'>
-              <span role='textbox' style={{ marginLeft: "0.5rem" }}>
-                Complemento:
-              </span>
+              <span style={{ marginLeft: "0.5rem" }}>Complemento:</span>
               <span role='group' id='locSpan' ref={locSpan} className='flexDiv spanLoc fitSpaced mg__07t'>
                 <LocComp />
               </span>

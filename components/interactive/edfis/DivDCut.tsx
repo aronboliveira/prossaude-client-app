@@ -7,7 +7,12 @@ export default function DivDCut(): JSX.Element {
   return (
     <>
       <div role='group' className={`spanMain spanMainTabProgCons ${sEn.divLab}`} id='tabSpanDCut'>
-        <span className='forceInvert'>Protocolo:</span>
+        <label
+          htmlFor='tabSelectDCutId'
+          style={{ display: "inline", fontWeight: "600", marginBottom: "0.5rem" }}
+          className='forceInvert'>
+          Protocolo:
+        </label>
         <Suspense fallback={<ReactSpinner scale={0.3} />}>
           <Protocolo />
         </Suspense>

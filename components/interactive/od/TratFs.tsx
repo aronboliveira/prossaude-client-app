@@ -42,6 +42,7 @@ export default function TratFs(props: { phCb?: () => void }): JSX.Element {
             id='addTratId1'
             style={{ transform: "scale(0.7)", cursor: "cell" }}
             className='addTrat countTrat biBtn'
+            aria-label='Adicionar Tratamento'
             defaultValue='addTrat'
             onClick={ev => {
               addSubDivTrat(ev, ev.currentTarget, blockCount);
@@ -61,6 +62,7 @@ export default function TratFs(props: { phCb?: () => void }): JSX.Element {
             type='button'
             name='removeTratName1'
             id='removeTratId1'
+            aria-label='Remover Tratamento'
             className='removeTrat countTrat biBtn'
             defaultValue='removeTrat'
             style={{ transform: "translateY(-0.03rem) scale(0.8)", marginLeft: "0.5rem", cursor: "vertical-text" }}

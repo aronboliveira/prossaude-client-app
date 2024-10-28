@@ -46,6 +46,7 @@ export default function TabComorb({ children = <></> }: { children: JSX.Element 
           className={`${sEn.biBtn} ${sEn.countComorb} ${sEn.addComorb} biBtn noInvert`}
           style={{ cursor: "cell" }}
           id='addComorb'
+          aria-label='Adicionar Comorbidade'
           onClick={ev => {
             setBlockCount({ type: "INCREMENT" });
             switchRowComorb(ev.currentTarget, blockCount);
@@ -65,6 +66,7 @@ export default function TabComorb({ children = <></> }: { children: JSX.Element 
           className={`${sEn.biBtn} ${sEn.countComorb} biBtn noInvert`}
           id='removeComorb'
           style={{ cursor: "vertical-text" }}
+          aria-label='Remover Comorbidade'
           onClick={ev => {
             setBlockCount({ type: "DECREMENT" });
             switchRowComorb(ev.currentTarget, blockCount);

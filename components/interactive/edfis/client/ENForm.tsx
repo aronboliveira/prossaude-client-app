@@ -387,7 +387,11 @@ export default function ENForm(): JSX.Element {
                 role='group'
                 className={`spanMain atvSpan fitSpaced flexQ900NoWC ${sEn.atvSpan} ${sEn.divLvlAtFis}`}
                 id='divLvlAtFis'>
-                <strong>Nível de Atividade Física:</strong>
+                <label
+                  htmlFor='selectLvlAtFis'
+                  style={{ display: "inline", fontWeight: "600", marginBottom: "0.5rem" }}>
+                  Nível de Atividade Física:
+                </label>
                 <SelectLvlAtFis />
               </span>
               <TabAtFisRot>

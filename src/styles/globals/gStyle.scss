@@ -434,7 +434,8 @@ section {
     padding-bottom: 1vh;
   }
 }
-span {
+span,
+label {
   &.form-switch {
     padding-left: 3.2rem;
   }
