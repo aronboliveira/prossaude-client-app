@@ -28,7 +28,6 @@ export default function Guard(): JSX.Element {
           testToasted.current = true;
           setTimeout(() => (testToasted.current = false), 1000);
         }
-        router.replace("/login");
         return;
       }
       if (!localStorage.getItem("timer")) {
@@ -54,6 +53,18 @@ export default function Guard(): JSX.Element {
             ? "Usuário não autorizado. Retornando à tela de login."
             : "User unauthorized. Returning to login page.",
         );
+        if (!testToasted.current) {
+          setTimeout(() => {
+            toast(
+              navigatorVars.pt
+                ? "Para esta versão de teste, digite qualquer login que não seja vazio!"
+                : "For this test version, type any entry that is not empty!",
+              { icon: "🛠" },
+            );
+          }, 300);
+          testToasted.current = true;
+          setTimeout(() => (testToasted.current = false), 1000);
+        }
         router.replace("/login");
       }
     }

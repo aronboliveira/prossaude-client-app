@@ -88,8 +88,7 @@ export default function LoginPage(): JSX.Element {
                   height='155'
                   sizes='(max-width: 499px) 11.5625rem, (max-width: 714px) 16.6875rem, 20.125rem'
                   loading='eager'
-                  title={`Direitos Autorais para Design de Imagens e Ícones —
-                  Luana Monteiro Serpa: https://www.linkedin.com/in/luanamserpa/`}
+                  title={`Direitos Autorais para Design de Imagens e Ícones —\nLuana Monteiro Serpa: https://www.linkedin.com/in/luanamserpa/`}
                 />
               </section>
               <section className={`${sLp.headerCont}`} id='headerCont'>
