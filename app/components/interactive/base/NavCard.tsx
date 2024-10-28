@@ -263,32 +263,41 @@ export default function NavCard({ href }: { href: string }): JSX.Element {
       }
     }, [r, descRef]);
   useEffect(() => {
-    const imgs = Array.from(document.images),
-      measures: Array<{
-        width: number;
-        height: number;
-      }> = imgs.map(img => {
+    setTimeout(() => {
+      const imgs = Array.from(document.images),
+        measures: Array<{
+          width: number;
+          height: number;
+        }> = imgs.map(img => {
+          try {
+            if (!(img instanceof HTMLImageElement)) throw new Error(`Failed to validate instance`);
+            return {
+              width: Math.max(parseNotNaN(compProp(img, "width")), img.width),
+              height: Math.max(parseNotNaN(compProp(img, "height")), img.height),
+            };
+          } catch (e) {
+            return { width: 0, height: 0 };
+          }
+        }),
+        largest = Math.max(...Array.from(measures.values()).map(m => m.width)),
+        tallest = Math.max(...Array.from(measures.values()).map(m => m.height));
+      imgs.forEach(img => {
         try {
-          if (!(img instanceof HTMLImageElement)) throw new Error(`Failed to validate instance`);
-          return {
-            width: Math.max(parseNotNaN(compProp(img, "width")), img.width),
-            height: Math.max(parseNotNaN(compProp(img, "height")), img.height),
-          };
+          if (!(img instanceof HTMLImageElement)) return;
+          if (
+            largest <= 0 ||
+            tallest <= 0 ||
+            largest < parseNotNaN(compProp(img, "width")) ||
+            tallest < parseNotNaN(compProp(img, "height"))
+          )
+            return;
+          img.width = largest;
+          img.height = tallest;
         } catch (e) {
-          return { width: 0, height: 0 };
+          return;
         }
-      }),
-      largest = Math.max(...Array.from(measures.values()).map(m => m.width)),
-      tallest = Math.max(...Array.from(measures.values()).map(m => m.height));
-    imgs.forEach(img => {
-      try {
-        if (!(img instanceof HTMLImageElement)) throw new Error(`Failed to validate instance`);
-        img.width = largest;
-        img.height = tallest;
-      } catch (e) {
-        return;
-      }
-    });
+      });
+    }, 300);
   }, []);
   useEffect(() => {
     handleResize();
