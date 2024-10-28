@@ -3,7 +3,6 @@ import { ConsDlgProps } from "@/lib/global/declarations/interfacesCons";
 import { ErrorBoundary } from "react-error-boundary";
 import { addListenerAvMembers } from "@/lib/locals/panelPage/handlers/consHandlerList";
 import { consVariablesData } from "./consVariables";
-import { createRoot } from "react-dom/client";
 import { providers, formData } from "@/vars";
 import { handleClientPermissions } from "@/lib/locals/panelPage/handlers/consHandlerUsers";
 import { handleSubmit } from "@/lib/global/data-service";
@@ -27,15 +26,15 @@ import {
   inputNotFound,
   multipleElementsNotFound,
 } from "@/lib/global/handlers/errorHandler";
-import { nlBtn, nlDiv, nlDlg, nlFm, nlInp } from "@/lib/global/declarations/types";
+import { nlBtn, nlDiv, nlDlg, nlFm, nlInp, validAreas } from "@/lib/global/declarations/types";
+import { addEmailExtension, assignFormAttrs, autoCapitalizeInputs, formatCPF, formatTel } from "@/lib/global/gModel";
 import {
-  addEmailExtension,
-  assignFormAttrs,
-  autoCapitalizeInputs,
-  formatCPF,
-  formatTel,
-} from "@/lib/global/gModel";
-import { enableCPFBtn, handleCondtReq, validateForm, syncAriaStates } from "@/lib/global/handlers/gHandlers";
+  enableCPFBtn,
+  handleCondtReq,
+  validateForm,
+  syncAriaStates,
+  registerRoot,
+} from "@/lib/global/handlers/gHandlers";
 import ListFirstNameCons from "./ListFirstNameCons";
 import ListCPFPacCons from "./ListCPFPacCons";
 import OptGrpUsers from "./OptGrpUsers";
@@ -45,15 +44,15 @@ import FailRegstAlert from "../alerts/FailRegsAlert";
 import { PanelCtx } from "../panelForms/defs/client/SelectLoader";
 import { ExportHandler } from "@/lib/global/declarations/classes";
 import { exporters } from "@/vars";
+import { Fragment } from "react";
 import useExportHandler from "@/lib/hooks/useExportHandler";
 let accFormData = 0;
 export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
   //display de campos para identificadores de estudante
   const userClass = useContext(PanelCtx).userClass,
     dlgRef = useRef<nlDlg>(null),
-    pacBtnRef = useRef<nlBtn>(null);
-  //autocompleção
-  const CPFPacInpRef = useRef<nlInp>(null),
+    avsr = useRef<nlBtn>(null),
+    CPFPacInpRef = useRef<nlInp>(null),
     CPFPacBtnRef = useRef<nlBtn>(null),
     switchACConsRef = useRef<nlInp>(null),
     switchAFConsRef = useRef<nlInp>(null),
@@ -64,16 +63,32 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
     exportRef = useRef<nlBtn>(null),
     submitRef = useRef<nlBtn>(null),
     formRef = useRef<nlFm>(null),
+    afd = useRef<nlBtn>(null),
+    ct = useRef<nlDiv>(null),
+    fmn = useRef<nlInp>(null),
+    rlp = useRef<nlInp>(null),
     [isDREFillerActive, setDREFiller] = useState<boolean>(false),
-    toggleDREFiller = (): void => setDREFiller(!isDREFillerActive);
-  //display de tabela para pacientes
-  const [shouldDisplayPacList, setPacFiller] = useState<boolean>(false),
-    togglePacFiller = (s: boolean = false): void => setPacFiller(!s);
-  //autocorreções de input
-  const [isAutocorrectConsOn, setAutocorrectCons] = useState<boolean>(true),
-    toggleACCons = (s: boolean = false): void => setAutocorrectCons(!s),
+    [isCPFFillerActive, setCPFFiller] = useState<boolean>(false),
+    [isAutocorrectConsOn, setAutocorrectCons] = useState<boolean>(true),
+    [shouldDisplayPacList, setPacFiller] = useState<boolean>(false),
     [isAutofillConsOn, setAutofillCons] = useState<boolean>(true),
-    toggleAFCons = (s: boolean = false): void => setAutofillCons(!s);
+    [shouldDisplayFailRegstDlg, setDisplayFailRegstDlg] = useState<boolean>(false),
+    toggleDREFiller = (): void => setDREFiller(!isDREFillerActive),
+    togglePacFiller = (s: boolean = false): void => setPacFiller(!s),
+    toggleACCons = (s: boolean = false): void => setAutocorrectCons(!s),
+    toggleAFCons = (s: boolean = false): void => setAutofillCons(!s),
+    toggleDisplayRegstDlg = (s: boolean = true): void => {
+      if (
+        dlgRef.current instanceof HTMLElement &&
+        !checkRegstBtn(
+          submitRef.current,
+          dlgRef.current,
+          [undefined, shouldDisplayFailRegstDlg, setDisplayFailRegstDlg, "Arraste"],
+          userClass,
+        )
+      )
+        setDisplayFailRegstDlg(!s);
+    };
   //fechamento de modal com clique fora da área do mesmo
   const callbackCPFPacBtnClick = useCallback((retrvDataPh: { [key: string]: object }) => {
     const matchDataPh = ((): Map<any, any> => {
@@ -141,8 +156,7 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
       : elementNotFound(CPFPacBtnRef.current, "argument for handleCPFBtnClick", extLine(new Error()));
   }, [CPFPacBtnRef, callbackCPFPacBtnClick]);
   //ativação de preenchimento de Profisional com tabela
-  const [isCPFFillerActive, setCPFFiller] = useState<boolean>(false),
-    toggleCPFFiller = useCallback((CPFProfBtnRef: MutableRefObject<nlBtn>, isCPFFillerActive: boolean) => {
+  const toggleCPFFiller = useCallback((CPFProfBtnRef: MutableRefObject<nlBtn>, isCPFFillerActive: boolean) => {
       CPFProfBtnRef?.current instanceof HTMLButtonElement
         ? setCPFFiller(!isCPFFillerActive)
         : elementNotFound(CPFProfBtnRef.current, "CPFProfBtnRef for useCallback", extLine(new Error()));
@@ -168,10 +182,8 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
             ] = entry.value || "Anônimo";
           });
         } else elementNotPopulated(allEntryEls, "allEntryEls in generateSchedBtn()", extLine(new Error()));
-        if (!consVariablesData.rootDlg)
-          consVariablesData.rootDlg = createRoot(
-            document.getElementById("rootDlgList") ?? document.getElementById("transfArea")!,
-          );
+        const selected = document.getElementById("rootDlgList") ?? document.getElementById("transfArea");
+        consVariablesData.rootDlg = registerRoot(consVariablesData.rootDlg, `#${selected?.id ?? "DEFAULT"}`, undefined, false);
         const newBtn = createAptBtn(
           formData,
           providerFormData[accFormData] as any,
@@ -181,20 +193,7 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
         handleDragAptBtn(newBtn, userClass);
       },
       [userClass],
-    ),
-    [shouldDisplayFailRegstDlg, setDisplayFailRegstDlg] = useState<boolean>(false),
-    toggleDisplayRegstDlg = (shouldDisplayFailRegstDlg: boolean = true): void => {
-      if (
-        dlgRef.current instanceof HTMLElement &&
-        !checkRegstBtn(
-          submitRef.current,
-          dlgRef.current,
-          [undefined, shouldDisplayFailRegstDlg, setDisplayFailRegstDlg, "Arraste"],
-          userClass,
-        )
-      )
-        setDisplayFailRegstDlg(!shouldDisplayFailRegstDlg);
-    };
+    );
   //push em history
   useEffect(() => {
     !/new-cons=open/g.test(location.search) &&
@@ -229,10 +228,10 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
     handleClientPermissions(
       userClass,
       ["coordenador"],
-      document.getElementById("btnShowAvStuds"),
-      document.getElementById("listCPFPacCons"),
-      document.getElementById("autoFillDREBtn"),
-      document.getElementById("autoFillCPFRespBtn"),
+      avsr.current ?? document.getElementById("btnShowAvStuds"),
+      CPFPacInpRef.current ?? document.getElementById("listCPFPacCons"),
+      afd.current ?? document.getElementById("autoFillDREBtn"),
+      CPFProfBtnRef.current ?? document.getElementById("autoFillCPFRespBtn"),
     );
   }, [dlgRef, userClass]);
   useEffect(() => {
@@ -309,7 +308,7 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
         throw inputNotFound(hourRef.current, `Validation of Appointment Hour Ref`, extLine(new Error()));
       hourRef.current.value = "18:00";
     } catch (e) {
-      return;
+      console.error(`Error executing useEffect for hourRef:\n${(e as Error).message}`);
     }
   }, [hourRef]);
   useEffect(() => {
@@ -324,7 +323,8 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
         .parentElement!.innerHTML.replaceAll("Dia de Inclusão", "Dia")
         .replaceAll("changeDaySel", "consChangeDaySel");
     } catch (e) {
-      const timeDiv = document.getElementById("consTimeDiv");
+      console.error(`Error executing useEffect for dayRef:\n${(e as Error).message}`);
+      const timeDiv = ct.current ?? document.getElementById("consTimeDiv");
       if (timeDiv instanceof HTMLElement) timeDiv.style.display = "none";
     }
   }, [dayRef]);
@@ -341,12 +341,12 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
             role='group'
             className='flexNoW flexQ750NoWC cGap1v rGapQ4601v'
             style={{ marginLeft: "0.5rem", marginTop: "1rem" }}>
-            <h2 className='mg__1b noInvert'>
+            <h2 className='mg-1b noInvert'>
               <strong className='noInvert'>Registro de Consulta</strong>
             </h2>
             <span
               role='group'
-              className='form-switch spanRight mg__0b mg__07t pdT05v pdL_3__2rQ750'
+              className='form-switch spanRight mg-0b mg-07t pdT05v pdL-3-2rQ750'
               id='autocorrectDivCons'>
               <input
                 type='checkbox'
@@ -360,7 +360,7 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
               />
               <strong>Autocorreção</strong>
             </span>
-            <span role='group' className='form-switch spanRight mg__0b mg__07t padR5v pdT05v' id='autofillDivCons'>
+            <span role='group' className='form-switch spanRight mg-0b mg-07t padR5v pdT05v' id='autofillDivCons'>
               <input
                 type='checkbox'
                 className='deActBtn form-check-input'
@@ -374,7 +374,7 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
               <strong>Autopreenchimento</strong>
             </span>
           </div>
-          <button className='btn btn-close forceInvert mg__30b600Q' onClick={onClose}></button>
+          <button className='btn btn-close forceInvert mg-30b600Q' onClick={onClose}></button>
         </div>
         <fieldset className='flexNoWC'>
           <hr />
@@ -401,7 +401,7 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
                       list='listCPFPacCons'
                       maxLength={16}
                       pattern='^(\d{3}\.?\d{3}\.?\d{3}-?\d{2})$'
-                      className='form-control d_ibl noInvert ssPersist'
+                      className='form-control d-ibl noInvert ssPersist'
                       placeholder='Preencha com o CPF'
                       autoComplete='username'
                       data-title='CPF Paciente'
@@ -460,38 +460,54 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
                         });
                         isAutocorrectConsOn && autoCapitalizeInputs(ev.currentTarget, isAutocorrectConsOn);
                         if (ev.currentTarget.value.length > 2) {
-                          const familyNamePac = document.getElementById("familyNamePac");
-                          if (familyNamePac instanceof HTMLInputElement && !familyNamePac.required) {
-                            familyNamePac.minLength = 3;
-                            familyNamePac.dataset.min = "3";
-                            familyNamePac.dataset.max = "99";
-                            familyNamePac.dataset.pattern = "[^0-9]";
-                            familyNamePac.dataset.flags = "gi";
-                            familyNamePac.required = true;
+                          try {
+                            const familyNamePac = fmn.current ?? document.getElementById("familyNamePac");
+                            if (!(familyNamePac instanceof HTMLInputElement))
+                              throw inputNotFound(familyNamePac, `Validation of familyNamePac`, extLine(new Error()));
+                            if (!familyNamePac.required) {
+                              familyNamePac.minLength = 3;
+                              familyNamePac.dataset.min = "3";
+                              familyNamePac.dataset.max = "99";
+                              familyNamePac.dataset.pattern = "[^0-9]";
+                              familyNamePac.dataset.flags = "gi";
+                              familyNamePac.required = true;
+                            }
+                          } catch (e) {
+                            console.error(`Error executing procedure for familyNamePac:\n${(e as Error).message}`);
                           }
-                          const inpTelPac = document.getElementById("inpTelPac");
-                          if (inpTelPac instanceof HTMLInputElement && !inpTelPac.required) {
-                            inpTelPac.minLength = 8;
-                            inpTelPac.dataset.min = "8";
-                            inpTelPac.dataset.max = "10";
-                            inpTelPac.dataset.pattern = "9?d{4}-d{4}";
-                            inpTelPac.dataset.flags = "g";
-                            inpTelPac.required = true;
+                          try {
+                            const inpTelPac = telPacInpRef.current ?? document.getElementById("inpTelPac");
+                            if (!(inpTelPac instanceof HTMLInputElement))
+                              throw inputNotFound(inpTelPac, `Validation of inpTelPac`, extLine(new Error()));
+                            if (!inpTelPac.required) {
+                              inpTelPac.minLength = 8;
+                              inpTelPac.dataset.min = "8";
+                              inpTelPac.dataset.max = "10";
+                              inpTelPac.dataset.pattern = "9?d{4}-d{4}";
+                              inpTelPac.dataset.flags = "g";
+                              inpTelPac.required = true;
+                            }
+                          } catch (e) {
+                            console.error(`Error executing procedure for inpTelPac:\n${(e as Error).message}`);
                           }
-                          const relProfName = document.getElementById("relProfName");
-                          if (!(relProfName instanceof HTMLInputElement))
-                            throw inputNotFound(relProfName, `Validation of relProfName`, extLine(new Error()));
-                          if (!relProfName.required) {
-                            relProfName.minLength = 3;
-                            relProfName.dataset.min = "3";
-                            relProfName.dataset.max = "99";
-                            relProfName.dataset.pattern = "[^0-9]";
-                            relProfName.dataset.flags = "gi";
-                            relProfName.required = true;
+                          try {
+                            const relProfName = rlp.current ?? document.getElementById("relProfName");
+                            if (!(relProfName instanceof HTMLInputElement))
+                              throw inputNotFound(relProfName, `Validation of relProfName`, extLine(new Error()));
+                            if (!relProfName.required) {
+                              relProfName.minLength = 3;
+                              relProfName.dataset.min = "3";
+                              relProfName.dataset.max = "99";
+                              relProfName.dataset.pattern = "[^0-9]";
+                              relProfName.dataset.flags = "gi";
+                              relProfName.required = true;
+                            }
+                          } catch (e) {
+                            console.error(`Error executing procedure for relProfName:\n${(e as Error).message}`);
                           }
                         } else {
                           try {
-                            const familyNamePac = document.getElementById("familyNamePac");
+                            const familyNamePac = fmn.current ?? document.getElementById("familyNamePac");
                             if (!(familyNamePac instanceof HTMLInputElement))
                               throw inputNotFound(familyNamePac, `Validation of familyNamePac`, extLine(new Error()));
                             if (familyNamePac.required) {
@@ -506,7 +522,7 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
                             console.error(`Error executing procedure for familyNamePac:\n${(e as Error).message}`);
                           }
                           try {
-                            const inpTelPac = document.getElementById("inpTelPac");
+                            const inpTelPac = telPacInpRef.current ?? document.getElementById("inpTelPac");
                             if (!(inpTelPac instanceof HTMLInputElement))
                               throw inputNotFound(inpTelPac, `Validation of inpTelPac`, extLine(new Error()));
                             if (inpTelPac.required) {
@@ -521,7 +537,7 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
                             console.error(`Error executing procedure for inpTelPac:\n${(e as Error).message}`);
                           }
                           try {
-                            const relProfName = document.getElementById("relProfName");
+                            const relProfName = rlp.current ?? document.getElementById("relProfName");
                             if (!(relProfName instanceof HTMLInputElement))
                               throw inputNotFound(relProfName, `Validation of relProfName`, extLine(new Error()));
                             if (relProfName.required) {
@@ -545,7 +561,7 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
                       className='btn btn-primary hBsFormLike forceInvert'
                       formMethod='get'
                       formAction='#'
-                      ref={pacBtnRef}
+                      ref={avsr}
                       onClick={() => togglePacFiller(shouldDisplayPacList)}>
                       <small role='textbox'>Consultar Lista de Pacientes</small>
                     </button>
@@ -565,6 +581,7 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
                   Sobrenome(s):
                 </label>
                 <input
+                  ref={fmn}
                   type='text'
                   maxLength={99}
                   placeholder='Preencha com Sobrenome(s) do Paciente'
@@ -598,9 +615,9 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
                       id='nacPac'
                       maxLength={4}
                       pattern='^+?\d{2}$'
-                      className='form-control d_ibl telNational noInvert ssPersist'
+                      className='form-control d-ibl tel-national noInvert ssPersist'
                       placeholder='+55?'
-                      autoComplete='telNational'
+                      autoComplete='tel-national'
                       data-title='Código Nacional Paciente'
                       data-aloc='nac-pac'
                       onInput={ev => {
@@ -617,7 +634,7 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
                       list='ddds'
                       maxLength={5}
                       pattern='^\(?\d{2}\)?$'
-                      className='form-control d_ibl noInvert ssPersist'
+                      className='form-control d-ibl noInvert ssPersist'
                       placeholder='DDD'
                       autoComplete='tel-area-code'
                       data-title='DDD Paciente'
@@ -631,80 +648,71 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
                       }}
                     />
                     <datalist id='ddds'>
-                      <optgroup label='Sudeste'>
-                        <option value='21'>RJ</option>
-                        <option value='11'>SP</option>
-                        <option value='12'>SP</option>
-                        <option value='13'>SP</option>
-                        <option value='14'>SP</option>
-                        <option value='15'>SP</option>
-                        <option value='16'>SP</option>
-                        <option value='17'>SP</option>
-                        <option value='18'>SP</option>
-                        <option value='31'>MG</option>
-                        <option value='32'>MG</option>
-                        <option value='33'>MG</option>
-                        <option value='34'>MG</option>
-                        <option value='35'>MG</option>
-                        <option value='37'>MG</option>
-                        <option value='38'>MG</option>
-                        <option value='27'>ES</option>
-                        <option value='28'>ES</option>
-                      </optgroup>
-                      <optgroup label='Sul'>
-                        <option value='41'>PR</option>
-                        <option value='42'>PR</option>
-                        <option value='43'>PR</option>
-                        <option value='44'>PR</option>
-                        <option value='45'>PR</option>
-                        <option value='46'>PR</option>
-                        <option value='47'>SC</option>
-                        <option value='48'>SC</option>
-                        <option value='49'>SC</option>
-                        <option value='51'>RS</option>
-                        <option value='53'>RS</option>
-                        <option value='54'>RS</option>
-                        <option value='55'>RS</option>
-                      </optgroup>
-                      <optgroup label='Centro-Oeste'>
-                        <option value='61'>DF</option>
-                        <option value='62'>GO</option>
-                        <option value='64'>GO</option>
-                        <option value='65'>MT</option>
-                        <option value='66'>MT</option>
-                        <option value='67'>MS</option>
-                      </optgroup>
-                      <optgroup label='Nordeste'>
-                        <option value='71'>BA</option>
-                        <option value='73'>BA</option>
-                        <option value='74'>BA</option>
-                        <option value='75'>BA</option>
-                        <option value='77'>BA</option>
-                        <option value='79'>SE</option>
-                        <option value='81'>PE</option>
-                        <option value='87'>PE</option>
-                        <option value='82'>AL</option>
-                        <option value='83'>PB</option>
-                        <option value='84'>RN</option>
-                        <option value='85'>CE</option>
-                        <option value='88'>CE</option>
-                        <option value='86'>PI</option>
-                        <option value='89'>PI</option>
-                        <option value='98'>MA</option>
-                        <option value='99'>MA</option>
-                      </optgroup>
-                      <optgroup label='Norte'>
-                        <option value='91'>PA</option>
-                        <option value='93'>PA</option>
-                        <option value='94'>PA</option>
-                        <option value='92'>AM</option>
-                        <option value='97'>AM</option>
-                        <option value='95'>RR</option>
-                        <option value='96'>AP</option>
-                        <option value='63'>TO</option>
-                        <option value='69'>RO</option>
-                        <option value='68'>AC</option>
-                      </optgroup>
+                      {[
+                        {
+                          l: "Sudeste",
+                          st: [
+                            { n: "RJ", v: [21, 22, 24] },
+                            { n: "SP", v: Array.from({ length: 8 }, (_, i) => i + 11) },
+                            { n: "MG", v: [...Array.from({ length: 5 }, (_, i) => i + 31), 37, 38] },
+                          ],
+                        },
+                        {
+                          l: "Sul",
+                          st: [
+                            { n: "PR", v: Array.from({ length: 6 }, (_, i) => i + 41) },
+                            { n: "SC", v: Array.from({ length: 3 }, (_, i) => i + 47) },
+                            { n: "RS", v: [51, 53, 54, 55] },
+                          ],
+                        },
+                        {
+                          l: "Centro-Oeste",
+                          st: [
+                            { n: "DF", v: [61] },
+                            { n: "GO", v: [62, 64] },
+                            { n: "MT", v: [65, 66] },
+                            { n: "MS", v: [67] },
+                          ],
+                        },
+                        {
+                          l: "Nordeste",
+                          st: [
+                            { n: "BA", v: [71, 73, 74, 75, 77] },
+                            { n: "SE", v: [79] },
+                            { n: "PE", v: [81, 87] },
+                            { n: "AL", v: [82] },
+                            { n: "PB", v: [83] },
+                            { n: "RN", v: [84] },
+                            { n: "CE", v: [85, 88] },
+                            { n: "PI", v: [86, 89] },
+                            { n: "MA", v: [98, 99] },
+                          ],
+                        },
+                        {
+                          l: "Norte",
+                          st: [
+                            { n: "PA", v: [91, 93, 94] },
+                            { n: "AM", v: [92, 97] },
+                            { n: "RR", v: [95] },
+                            { n: "AP", v: [96] },
+                            { n: "TO", v: [63] },
+                            { n: "RO", v: [69] },
+                            { n: "AC", v: [68] },
+                          ],
+                        },
+                      ].map((r, i) => (
+                        <optgroup label={r.l} key={`region_${i}`}>
+                          {r.st.map((s, j) => (
+                            <Fragment key={`state_${j}`}>
+                              {s.v.map((v, k) => (
+                                <option value={v} key={`state_${j}_value_${k}`}>
+                                  {s.n}
+                                </option>
+                              ))}
+                            </Fragment>
+                          ))}
+                        </optgroup>
+                      ))}
                     </datalist>
                     <input
                       type='tel'
@@ -712,7 +720,7 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
                       list='listTelPacCons'
                       maxLength={10}
                       pattern='^\d{4,5}-?\d{4}$'
-                      className='form-control d_ibl noInvert ssPersist'
+                      className='form-control d-ibl noInvert ssPersist'
                       placeholder='Preencha com o Telefone (sem código nacional e DDD) de Contato'
                       autoComplete='tel-local'
                       data-title='Tel Paciente'
@@ -769,16 +777,22 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
                   data-title='Status Paciente'
                   data-aloc='status-pac'
                   required>
-                  <option value='avaliacao'>Em Avaliação Inicial</option>
-                  <option value='tratamento'>Em Tratamento Geral</option>
-                  <option value='emergência'>Em emergência</option>
-                  <option value='altaOdontologia'>Alta — Odontologia</option>
-                  <option value='altaEducacaoFisica'>Alta — Educação Física</option>
-                  <option value='altaNutricao'>Alta — Nutrição</option>
-                  <option value='altaOdontologiaEducaoFisica'>Alta — Odontologia — Educação Física</option>
-                  <option value='altaOdontologiaNutricao'>Alta — Odontologia — Nutrição</option>
-                  <option value='altaEducaoFisicaNutricao'>Alta — Educação Física — Nutrição</option>
-                  <option value='altaOdontologiaEducacaoFisicaNutricao'>Alta Geral</option>
+                  {[
+                    { v: "avaliacao", l: "Em Avaliação Inicial" },
+                    { v: "tratamento", l: "Em Tratamento Geral" },
+                    { v: "emergência", l: "Em emergência" },
+                    { v: "altaOdontologia", l: "Alta — Odontologia" },
+                    { v: "altaEducacaoFisica", l: "Alta — Educação Física" },
+                    { v: "altaNutricao", l: "Alta — Nutrição" },
+                    { v: "altaOdontologiaEducaoFisica", l: "Alta — Odontologia — Educação Física" },
+                    { v: "altaOdontologiaNutricao", l: "Alta — Odontologia — Nutrição" },
+                    { v: "altaEducaoFisicaNutricao", l: "Alta — Educação Física — Nutrição" },
+                    { v: "altaOdontologiaEducacaoFisicaNutricao", l: "Alta Geral" },
+                  ].map((o, i) => (
+                    <option key={`option_${i}`} value={o.v}>
+                      {o.l}
+                    </option>
+                  ))}
                 </select>
               </div>
               <div role='group' className='flexWR noInvert' id='consDiv'>
@@ -791,25 +805,49 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
                   className='form-select ssPersist'
                   data-title='Tipo da Consulta'
                   required>
-                  <optgroup label='Geral'>
-                    <option value='anamnese'>Anamnese e Exame Clínico</option>
-                    <option value='retorno'>Retorno e Reavaliação</option>
-                  </optgroup>
-                  <optgroup label='Odontologia'>
-                    <option value='exodontia'>Exodontia</option>
-                    <option value='profilaxia'>Profilaxia e Orientação</option>
-                    <option value='raspagem'>Raspagem</option>
-                    <option value='rcarie'>Remoção de Cárie</option>
-                  </optgroup>
-                  <optgroup label='Educação Física & Nutrição'>
-                    <option value='acompanhamento'>Acompanhamento Geral</option>
-                    <option value='analise'>Análise de Exames Bioquímico</option>
-                    <option value='diagnostico'>Diagnóstico Nutricional</option>
-                    <option value='avaliacao'>Avaliação Antropométrica</option>
-                    <option value='recordatorio'>Recordatório Alimentar</option>
-                    <option value='suplementacao'>Suplementação e Plano Alimentar</option>
-                  </optgroup>
-                  <optgroup label='Psicanálise'></optgroup>
+                  {[
+                    {
+                      l: "Geral",
+                      ops: [
+                        { v: "anamnese", l: "Anamnese e Exame Clínico" },
+                        { v: "retorno", l: "Retorno e Reavaliação" },
+                      ],
+                    },
+                    {
+                      l: "Odontologia",
+                      ops: [
+                        { v: "exodontia", l: "Exodontia" },
+                        { v: "profilaxia", l: "Profilaxia e Orientação" },
+                        { v: "raspagem", l: "Raspagem" },
+                        { v: "rcarie", l: "Remoção de Cárie" },
+                      ],
+                    },
+                    {
+                      l: "Educação Física & Nutrição",
+                      ops: [
+                        { v: "acompanhamento", l: "Acompanhamento Geral" },
+                        { v: "analise", l: "Análise de Exames Bioquímico" },
+                        { v: "diagnostico", l: "Diagnóstico Nutricional" },
+                        { v: "avaliacao", l: "Avaliação Antropométrica" },
+                        { v: "recordatorio", l: "Recordatório Alimentar" },
+                        { v: "suplementacao", l: "Suplementação e Plano Alimentar" },
+                      ],
+                    },
+                    {
+                      l: "Psicanálise",
+                      ops: [],
+                    },
+                  ].map((group, i) => (
+                    <optgroup key={`optgroup_cons__${i}`} label={group.l}>
+                      {group.ops.length > 0
+                        ? group.ops.map((o, j) => (
+                            <option key={`option_cons__${i}_${j}`} value={o.v}>
+                              {o.l}
+                            </option>
+                          ))
+                        : null}
+                    </optgroup>
+                  ))}
                 </select>
               </div>
               <div role='group' className='flexWR' id='relStudDiv'>
@@ -838,13 +876,12 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
                     />
                     <datalist id='avStuds'>
                       <span>Registro de Estudantes</span>
-                      <OptGrpUsers grp='studs' area='Odontologia' />
-                      <OptGrpUsers grp='studs' area='Educação Física' />
-                      <OptGrpUsers grp='studs' area='Nutrição' />
-                      <OptGrpUsers grp='studs' area='Medicina' />
-                      <OptGrpUsers grp='studs' area='Psicologia' />
+                      {["Odontologia", "Educação Física", "Nutrição", "Medicina", "Psicologia"].map((a, i) => (
+                        <OptGrpUsers key={`opt_grp_stud__${i}`} grp='studs' area={a as validAreas} />
+                      ))}
                     </datalist>
                     <button
+                      ref={afd}
                       type='button'
                       formMethod='get'
                       formAction='#'
@@ -862,6 +899,7 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
                   </label>
                   <div role='group' className='flexNoWRSwitch cGap5' id='respBodyDiv'>
                     <input
+                      ref={rlp}
                       type='text'
                       id='relProfName'
                       name='relProf-in'
@@ -881,11 +919,9 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
                     />
                     <datalist id='avProfs'>
                       <span>Registro de Profissionais</span>
-                      <OptGrpUsers grp='profs' area='Odontologia' />
-                      <OptGrpUsers grp='profs' area='Educação Física' />
-                      <OptGrpUsers grp='profs' area='Nutrição' />
-                      <OptGrpUsers grp='profs' area='Medicina' />
-                      <OptGrpUsers grp='profs' area='Psicologia' />
+                      {["Odontologia", "Educação Física", "Nutrição", "Medicina", "Psicologia"].map((a, i) => (
+                        <OptGrpUsers key={`opt_grp_prof__${i}`} grp='studs' area={a as validAreas} />
+                      ))}
                     </datalist>
                     <button
                       type='button'
@@ -906,7 +942,7 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
                   />
                 )}
               </div>
-              <div role='group' className='flexWR gap1v flexAlItCt noInvert' id='confirmPacDiv'>
+              <div role='group' className='flexWR gapped1v flexAlItCt noInvert' id='confirmPacDiv'>
                 <label className='stLab checkGreen mdGreen' id='hConfirmPac' htmlFor='confirmPac'>
                   Paciente Confirmado:
                 </label>
@@ -914,14 +950,14 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
                   type='checkbox'
                   id='confirmPac'
                   name='check-in'
-                  className='form-check-input mg__09t mg__1_3b'
+                  className='form-check-input mg-09t mg-1-3b'
                   data-title='Confirmação do Paciente'
                 />
               </div>
-              <div role='group' id='consTimeDiv'>
+              <div role='group' id='consTimeDiv' ref={ct}>
                 <div id='consDayDiv' ref={dayRef}></div>
                 <div role='group' className='widQ460MinFull alSfSt widHalf900Q rGapQ900null' id='hourDayDiv'>
-                  <label className='boldLabel mg__09t' id='labHourDay' htmlFor='consHourDayInp'>
+                  <label className='boldLabel mg-09t' id='labHourDay' htmlFor='consHourDayInp'>
                     Horário:
                   </label>
                   <input
@@ -940,7 +976,7 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
                           ev.currentTarget.style.color = `#c10f0fd8`;
                           ev.currentTarget.style.borderColor = `#c10f0fd8`;
                           setTimeout(() => {
-                            const hourInp = document.getElementById("consHourDayInp");
+                            const hourInp = hourRef.current ?? document.getElementById("consHourDayInp");
                             if (hourInp instanceof HTMLInputElement || hourInp instanceof HTMLSelectElement) {
                               hourInp.style.borderColor = `rgb(179, 205, 242)`;
                               const absHours = hours.map(hour => hour.slice(0, 2));
@@ -981,7 +1017,7 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
                           ev.currentTarget.style.color = `#c10f0fd8`;
                           ev.currentTarget.style.borderColor = `#c10f0fd8`;
                           setTimeout(() => {
-                            const hourInp = document.getElementById("consHourDayInp");
+                            const hourInp = hourRef.current ?? document.getElementById("consHourDayInp");
                             if (hourInp instanceof HTMLInputElement || hourInp instanceof HTMLSelectElement) {
                               hourInp.style.borderColor = `rgb(179, 205, 242)`;
                               const absHours = hours.map(hour => hour.slice(0, 2));
@@ -1016,7 +1052,7 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
                   />
                 </div>
               </div>
-              <div role='group' className='flexWR gap1v flexAlItCt noInvert'>
+              <div role='group' className='flexWR gapped1v flexAlItCt noInvert'>
                 <label htmlFor='notesCons' className='bolded'>
                   Notas:
                 </label>
@@ -1079,7 +1115,6 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
                   className='btn btn-primary widFull'
                   data-active='false'
                   ref={exportRef}
-                  style={{ cursor: "alias" }}
                   title='Gere um .xlsx com os dados preenchidos'
                   onClick={ev => {
                     if (!exporters.formDlgExporter) exporters.formDlgExporter = new ExportHandler();

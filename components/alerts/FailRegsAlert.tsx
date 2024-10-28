@@ -32,7 +32,7 @@ export default function FailRegstAlert({
         <dialog
           role='alertdialog'
           ref={FailRegstDlgRef}
-          className='modal-content modalContent__fit wid80'
+          className='modal-content modal-content-fit wid80'
           id='alert-dlg'
           onClick={ev => {
             if (isClickOutside(ev, ev.currentTarget).some(coord => coord === true)) {

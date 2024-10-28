@@ -6,10 +6,9 @@ import { ErrorBoundary } from "react-error-boundary";
 import { MainPanelProps } from "@/lib/global/declarations/interfacesCons";
 import { providers } from "@/vars";
 import { camelToKebab, kebabToCamel } from "@/lib/global/gModel";
-import { createRoot } from "react-dom/client";
 import { handleLinkChanges } from "@/lib/global/handlers/gRoutingHandlers";
 import { nlDiv, panelOpts } from "@/lib/global/declarations/types";
-import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
+import { registerRoot, syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useState, useRef, useEffect, useContext } from "react";
 import DefaultForm from "../DefaultForm";
 import ErrorMainDiv from "../../../error/ErrorMainDiv";
@@ -25,11 +24,11 @@ import { defUser } from "@/redux/slices/userSlice";
 import ScheduleLoader from "../../schedule/ScheduleLoader";
 import { PanelCtx } from "./SelectLoader";
 import { panelRoots } from "@/vars";
-import useMount from "@/lib/hooks/useMount";
+import Spinner from "../../../icons/Spinner";
 export default function SelectPanel({ defOp = "agenda" }: MainPanelProps): JSX.Element {
   const { userClass, setUserClass: setPrivilege } = useContext(PanelCtx),
     [selectedOption, setSelectedOption] = useState<string>(defOp),
-    [mounted] = useMount(),
+    [mounted, setMounted] = useState<boolean>(false),
     formRootRef = useRef<nlDiv>(null),
     context = useContext<RootCtxType>(RootCtx),
     renderSelectPanel = (opt: panelOpts): void => {
@@ -37,7 +36,8 @@ export default function SelectPanel({ defOp = "agenda" }: MainPanelProps): JSX.E
         const formRoot = document.getElementById("formRoot");
         if (!(formRoot instanceof HTMLElement))
           throw elementNotFound(formRoot, `Validation of Form Roots Element in Schedule`, extLine(new Error()));
-        if (!context.roots.formRoot) context.roots.formRoot = createRoot(formRoot);
+        context.roots.formRoot = registerRoot(context.roots.formRoot, `#formRoot`, undefined, true);
+        if (!context.roots.formRoot) throw new Error(`Failed to validate Form root`);
         context.roots.formRoot.render(
           ((opt: panelOpts): JSX.Element => {
             switch (opt) {
@@ -60,7 +60,7 @@ export default function SelectPanel({ defOp = "agenda" }: MainPanelProps): JSX.E
           })(opt),
         );
       } catch (e) {
-        console.error(`Error executing procedure fro rendering on formRoot:\n${(e as Error).message}`);
+        console.error(`Error executing procedure for rendering on formRoot:\n${(e as Error).message}`);
       }
     },
     handlePanelPath = (change: React.ChangeEvent<HTMLSelectElement> | string): void => {
@@ -86,6 +86,7 @@ export default function SelectPanel({ defOp = "agenda" }: MainPanelProps): JSX.E
     if (privilege === "coordinator") translatedPrivilege = "coordenador";
     else translatedPrivilege = privilege;
     setPrivilege(translatedPrivilege);
+    setMounted(true);
   }, [setPrivilege]);
   useEffect(() => {
     providers.globalDataProvider = new DataProvider(sessionStorage);
@@ -101,7 +102,7 @@ export default function SelectPanel({ defOp = "agenda" }: MainPanelProps): JSX.E
           throw elementNotFound(formRoot, `Validation of Option Selection Element`, extLine(new Error()));
         if (!(panelSelect instanceof HTMLSelectElement || panelSelect instanceof HTMLInputElement))
           throw inputNotFound(panelSelect, `Validation of Select for panel instance`, extLine(new Error()));
-        if (!context.roots.formRoot) context.roots.formRoot = createRoot(formRoot);
+        context.roots.formRoot = registerRoot(context.roots.formRoot, `#formRoot`, undefined, true);
         const camel = kebabToCamel(location.search);
         formRoot.style.transition = "";
         formRoot.style.opacity = "0";
@@ -112,8 +113,9 @@ export default function SelectPanel({ defOp = "agenda" }: MainPanelProps): JSX.E
             formRoot.style.opacity = "1";
           }
         }, 300);
+        if (!context.roots.formRoot) throw new Error(`Failed to validate Form root`);
         if (/registStud/gi.test(camel)) {
-          context.roots.formRoot.render(
+          context.roots.formRoot?.render(
             userClass === "coordenador" || userClass === "supervisor" ? <StudentForm /> : <Unauthorized />,
           );
           panelSelect.value = "registStud";
@@ -150,7 +152,8 @@ export default function SelectPanel({ defOp = "agenda" }: MainPanelProps): JSX.E
       const selDiv = document.getElementById("formSelDiv");
       if (mounted && selDiv instanceof HTMLElement && !document.querySelector("select")) {
         selDiv.innerHTML = ``;
-        if (!context.roots.rootSel) context.roots.rootSel = createRoot(selDiv);
+        context.roots.rootSel = registerRoot(context.roots.rootSel, `#formSelDiv`, undefined, true);
+        if (!context.roots.rootSel) throw new Error(`Failed to validate Select root`);
         context.roots.rootSel.render(<ErrorMainDiv />);
       } else
         setTimeout(() => {
@@ -159,7 +162,8 @@ export default function SelectPanel({ defOp = "agenda" }: MainPanelProps): JSX.E
             elementNotFound(selDiv, "selDiv during DOM initialization", extLine(new Error()));
             if (selDiv instanceof HTMLElement) {
               selDiv.innerHTML = ``;
-              if (!context.roots.rootSel) context.roots.rootSel = createRoot(selDiv);
+              context.roots.rootSel = registerRoot(context.roots.rootSel, `#formSelDiv`, undefined, true);
+              if (!context.roots.rootSel) throw new Error(`Failed to validate Select root`);
               context.roots.rootSel.render(<ErrorMainDiv />);
             }
           }
@@ -172,16 +176,16 @@ export default function SelectPanel({ defOp = "agenda" }: MainPanelProps): JSX.E
         ...((document.getElementById("formPanelDiv") ?? document)?.querySelectorAll("*") ?? null),
         document.getElementById("formPanelDiv")!,
       ]);
-      if (!panelRoots.mainRoot) panelRoots.mainRoot = createRoot(formRootRef.current);
+      panelRoots.mainRoot = registerRoot(panelRoots.mainRoot, `#${formRootRef.current.id}`, formRootRef);
     }
   }, [mounted]);
   //Snippet para repassar para CSR totalmente (erro ainda não investigado)
   return !mounted ? (
-    <></>
+    <Spinner spinnerClass='spinner-grow' />
   ) : (
     <ErrorBoundary
       FallbackComponent={() => <GenericErrorComponent message='Error loading Selector for Working Panel' />}>
-      <div role='group' className='flexWR mg__3b pdL1v900Q pdR1v900Q pdL2v460Q pdR2v460Q noInvert'>
+      <div role='group' className='flexWR mg-3b pdL1v900Q pdR1v900Q pdL2v460Q pdR2v460Q noInvert'>
         <strong id='titlePanelSelect' title='Selecione aqui o painel em tela'>
           Escolha o Painel de Trabalho
         </strong>

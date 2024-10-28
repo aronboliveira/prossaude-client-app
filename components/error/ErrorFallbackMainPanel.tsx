@@ -53,17 +53,17 @@ export default function ErrorFallbackMainPanel(props: ErrorFallbackMainPanelProp
           <option value='agenda'>Agendamento</option>
         </optgroup>
       </select>
-      <h2 className='mg__2bv widHalf'>
+      <h2 className='mg-2bv widHalf'>
         <strong>Oops, algo deu errado! 😨</strong>
       </h2>
       <h4>{props.renderError.message}</h4>
       <small>
-        Clique em <kbd className='kbd kbdPrimary vtAltxTop'>Tentar Novamente</kbd>
+        Clique em <kbd className='kbd kbd-primary vtAltxTop'>Tentar Novamente</kbd>
         &nbsp;uma vez e tente trocar de opção ou clique <em>três vezes</em> para recarregar a página!
       </small>
       <br />
       <button
-        className='btn btn-info bolded widHalf mg__1t'
+        className='btn btn-info bolded widHalf mg-1t'
         id='retryRenderBtn'
         onClick={() => {
           props.resetErrorBoundary(props.mainRoot, "student", mainPanelVariables.tryAcc);

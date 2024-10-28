@@ -2,7 +2,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import { ReseterBtnProps } from "@/lib/global/declarations/interfacesCons";
 import { nlBtn } from "@/lib/global/declarations/types";
 import { panelRoots } from "@/vars";
-import { scheduleReset } from "../panelFormsData";
+import { scheduleReset } from "@/vars";
 import { checkForReset, syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useEffect, useRef, useState } from "react";
 import GenericErrorComponent from "../../error/GenericErrorComponent";

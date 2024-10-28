@@ -1,9 +1,8 @@
 import { ErrorBoundary } from "react-error-boundary";
 import { ResetDlgProps } from "@/lib/global/declarations/interfacesCons";
-import { createRoot } from "react-dom/client";
 import { nlDlg } from "@/lib/global/declarations/types";
 import { panelRoots } from "@/vars";
-import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
+import { registerRoot, syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useEffect, useRef } from "react";
 import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
 import MainFormPanel from "../mainPanel/MainFormPanel";
@@ -13,13 +12,10 @@ export default function ResetDlg({
   setDisplayResetDlg,
   shouldDisplayResetDlg = true,
 }: ResetDlgProps): JSX.Element {
-  if (!panelRoots.mainRoot) {
-    panelRoots.mainRoot = createRoot(document.getElementById("formRoot")!);
-    root = panelRoots.mainRoot;
-  }
+  root = registerRoot(panelRoots.mainRoot, "#formRoot");
   const ResetDlgRef = useRef<nlDlg>(null),
     resetForm = (): void => {
-      document.querySelector("form")!.reset();
+      document.querySelector("form")?.reset();
       root?.render(<MainFormPanel />);
     },
     handleClose = (): void => {
@@ -45,7 +41,7 @@ export default function ResetDlg({
         <dialog
           role='alertdialog'
           ref={ResetDlgRef}
-          className='modal-content modalContent__fit'
+          className='modal-content modal-content-fit'
           id='reset-dlg'
           onClick={ev => {
             if (isClickOutside(ev, ev.currentTarget).some(coord => coord === true)) {
