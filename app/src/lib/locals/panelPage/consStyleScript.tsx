@@ -165,7 +165,10 @@ export function setListenersForDates(
                 "Main container for columns for appointment days",
                 extLine(new Error()),
               );
-          }
+          } else
+            console.error(
+              `Error checking similarity of length between available month days relative to nth weekdays. Aborting Proccess.`,
+            );
           correlateAptMonthDays(
             document.querySelector("#changeDaySel"),
             Array.from(document.querySelectorAll(".dayTabRef")),

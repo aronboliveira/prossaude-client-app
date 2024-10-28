@@ -1,15 +1,22 @@
-//nesse arquivo estarão as funções de gerenciamento de usuário
 import { entryEl, targEl } from "../../../global/declarations/types";
-import { elementNotPopulated, extLine } from "../../../global/handlers/errorHandler";
+//nesse arquivo estarão as funções de gerenciamento de usuário
+
+import { elementNotPopulated, extLine, typeError } from "../../../global/handlers/errorHandler";
 export function handleClientPermissions(
   userClass: string = "estudante",
   allowedClasses: string[] = ["coordenador"],
   ...elements: targEl[]
 ): void {
   try {
-    if (!(typeof userClass === "string")) return;
+    if (!(typeof userClass === "string"))
+      throw typeError(
+        "validating type of userClass in handleClientPermissions",
+        userClass,
+        "string",
+        extLine(new Error()),
+      );
     if (!(Array.isArray(allowedClasses) && allowedClasses.every(userClass => typeof userClass === "string")))
-      return;
+      throw elementNotPopulated(`${JSON.stringify(allowedClasses)}`, "allowedClasses", extLine(new Error()));
     if (Array.isArray(elements) && elements.every(el => el instanceof Element)) {
       let message = `Permissõnes não concedidas. 
       Campos afetados:\n`;

@@ -5,7 +5,7 @@ import {
   replaceBtnSlot,
   verifyAptCheck,
 } from "../../locals/panelPage/handlers/consHandlerCmn";
-import { panelFormsVariables } from "../../../../components/panelForms/panelFormsData";
+import { panelFormsVariables } from "@/vars";
 import { defUser } from "@/redux/slices/userSlice";
 import { privilege } from "@/lib/locals/basePage/declarations/serverInterfaces";
 import { providers } from "@/vars";

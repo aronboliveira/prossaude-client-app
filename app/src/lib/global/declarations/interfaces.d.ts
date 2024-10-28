@@ -284,3 +284,8 @@ export interface SpinnerComponentProps {
   message?: string;
   fs?: boolean;
 }
+export interface AptBtnProps extends GlobalFormProps {
+  formData: { [k: string]: string };
+  providerFormData: { [k: string]: string };
+  onAptClick: (ev: rMouseEvent) => void;
+}

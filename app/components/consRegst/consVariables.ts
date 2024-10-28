@@ -1,7 +1,7 @@
-import { Root } from "react-dom/client";
+import { vRoot } from "@/lib/global/declarations/types";
 export const providerFormData: Array<object> = [];
 export const consVariablesData: {
-  rootDlg: Root | undefined;
+  rootDlg: vRoot;
 } = {
   rootDlg: undefined,
 };

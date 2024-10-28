@@ -2,11 +2,11 @@ import { ErrorBoundary } from "react-error-boundary";
 import GenericErrorComponent from "../../components/error/GenericErrorComponent";
 import MainFormPanel from "../../components/mainPanel/MainFormPanel";
 import TipsBtnWrapper from "../../components/interactive/panel/TipsBtnWrapper";
-import UserProfilePanelWrapper from "../../components/interactive/panel/UserProfilePanelWrapper";
 import Guard from "../../components/interactive/def/Guard";
 import { Toaster } from "react-hot-toast";
 import { pageProps } from "@/vars";
 import Head from "next/head";
+import EnhancedUserProfilePanel from "../../components/user/EnhancedUserProfilePanel";
 const { base, name } = pageProps;
 const title = `Painel de Trabalho — ${name}`,
   metaTags = [
@@ -80,7 +80,7 @@ export default function PanelPage(): JSX.Element {
               className='form-control noMargin widThird flexNoW rGap2v flexBasis25 mg__0bQ460 widMinFit mg__0b600Q noInvert'
               id='sectUserInfo'>
               <div role='group' className='widFull flexNoW cGap2v rGap1v flexQ460NoWC wsNoW' id='rootUserInfo'>
-                <UserProfilePanelWrapper />
+                <EnhancedUserProfilePanel />
               </div>
             </section>
           </div>

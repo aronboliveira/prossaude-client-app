@@ -45,7 +45,7 @@ export default function AvStudListDlg({ forwardedRef, dispatch, state = false }:
     <>
       {state && (
         <dialog
-          className='modalContent__stk2'
+          className='modal-content-stk2'
           id='avStudListDlg'
           ref={dialogRef}
           onClick={ev => {
@@ -59,12 +59,12 @@ export default function AvStudListDlg({ forwardedRef, dispatch, state = false }:
               />
             )}>
             <section className='flexRNoWBetCt' id='headStudList'>
-              <h2 className='mg__1b noInvert'>
+              <h2 className='mg-1b noInvert'>
                 <strong>Estudantes Cadastrados</strong>
               </h2>
               <button className='btn btn-close forceInvert' onClick={() => dispatch(!state)}></button>
             </section>
-            <section className='formPadded' id='sectStudsTab' ref={sectTabRef}>
+            <section className='form-padded' id='sectStudsTab' ref={sectTabRef}>
               <StudList mainDlgRef={forwardedRef} state={state} dispatch={dispatch} />
             </section>
           </ErrorBoundary>

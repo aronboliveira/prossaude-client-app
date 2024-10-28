@@ -9,7 +9,9 @@ import {
   elementNotFound,
   stringError,
 } from "../../../global/handlers/errorHandler";
-import { toast } from "react-hot-toast";
+import { registerRoot } from "@/lib/global/handlers/gHandlers";
+import { panelRoots } from "@/vars";
+import GenericErrorComponent from "../../../../../components/error/GenericErrorComponent";
 
 //nesse arquivo estão as funções para handling de casos dos modais de listas tabeladas
 
@@ -292,7 +294,7 @@ export function addListenerAlocation(
                 state = transferDataAloc(btn, parentRef, forwardedRef, context.toLowerCase() as personAbrvClasses);
                 if (typeof state === "boolean" && dispatch) dispatch(!state);
                 else {
-                  toast.error(`Erro obtendo dados para alocação selecionada. Feche manualmente.`);
+                  alert(`Erro obtendo dados para alocação selecionada. Feche manualmente.`);
                 }
               });
           });
@@ -520,4 +522,10 @@ export function fillTabAttr(tab: targEl, context: string = "pac"): void {
         stringError("Reading context for fillTabAttr()", context, extLine(new Error()));
     }
   } else elementNotFound(tab, "Table called in fillTabAttr()", extLine(new Error()));
+}
+export function renderTable(): void {
+  const firstTable = document.querySelector("table");
+  if (!firstTable) return;
+  registerRoot(panelRoots[firstTable.id], `#${firstTable.id}`);
+  panelRoots[firstTable.id]?.render(<GenericErrorComponent message='Failed to render table' />);
 }
