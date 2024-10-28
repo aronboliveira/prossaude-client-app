@@ -21,7 +21,7 @@ export default function Td({ nRow, nCol, ctx, lab }: TdProps): JSX.Element {
         td.current ??= document.getElementById(`tabCelRow${ctx}${nRow}_${nCol}`) as HTMLTableCellElement | null;
         if (!(td.current instanceof HTMLElement)) return;
         field.current ??= Array.from(td.current.children).find(
-          c => c instanceof HTMLFieldSetElement ?? c instanceof HTMLLabelElement,
+          c => c instanceof HTMLFieldSetElement || c instanceof HTMLLabelElement,
         ) as nlFs | HTMLLabelElement | undefined;
         if (ctx === "IndPerc" || (ctx === "DCut" && lab === "Soma")) btn.current ??= td.current.querySelector("button");
         if (ctx === "IndPerc") lock.current ??= td.current.querySelector(".lockEl");

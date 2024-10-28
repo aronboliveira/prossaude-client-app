@@ -772,7 +772,7 @@ export function defineAxes(tab: targEl): number {
     if (!cols[tab.id]) cols[tab.id] = tab.getElementsByTagName("col");
     nCols = cols[tab.id];
     if (nCols.length === 0) throw new Error(`No col was found for table`);
-    return (tab.rows.length - 1) * (nCols.length - 1) ?? 0;
+    return (tab.rows.length - 1) * (nCols.length - 1);
   } catch (e) {
     return 0;
   }
