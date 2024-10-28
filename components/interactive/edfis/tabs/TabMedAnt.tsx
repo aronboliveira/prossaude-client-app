@@ -8,14 +8,11 @@ import { NlMRef, nlTab } from "@/lib/global/declarations/types";
 import { useContext } from "react";
 import { FspCtxProps } from "@/lib/global/declarations/interfaces";
 import { FspCtx } from "../client/FsProgCons";
-import { checkContext } from "@/lib/global/gModel";
 export default function TabMedAnt({ children = <></> }: { children: JSX.Element }): JSX.Element {
   let tma: NlMRef<nlTab> = null;
   const columns = [1, 2, 3, 4],
     ctx1 = useContext<FspCtxProps>(FspCtx);
   if (ctx1?.refs) ({ tma } = ctx1.refs);
-  //TODO REMOVER APÓS TESTE
-  checkContext(ctx1, "FspCtx", TabMedAnt);
   return (
     <ErrorBoundary FallbackComponent={() => <GenericErrorComponent message='Error rendering Table for Measures' />}>
       <div role='group' className={`divTab ${s.divTabEn}`} id='divTabMedAnt'>

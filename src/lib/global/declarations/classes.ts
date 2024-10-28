@@ -631,7 +631,7 @@ export class ExportHandler {
               const rd = new FileReader();
               rd.onload = (): string | ArrayBuffer | null => (v = rd.result);
               rd.onerror = (): string => {
-                toast.error(
+                toast?.error(
                   navigatorVars.pt
                     ? `Erro carregando arquivos para a planilha`
                     : `Error loading files to the spreadsheet`,
@@ -641,7 +641,7 @@ export class ExportHandler {
                 }`);
               };
               rd.onloadend = () => {
-                toast.success(
+                toast?.success(
                   navigatorVars.pt
                     ? `Sucesso carregando arquivos: ${file.name}`
                     : `Success loading files: ${file.name}`,

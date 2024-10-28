@@ -7,14 +7,10 @@ import GenericErrorComponent from "../../error/GenericErrorComponent";
 import { RootCtxType } from "@/lib/global/declarations/interfaces";
 import { registerRoot } from "@/lib/global/handlers/gHandlers";
 import EnhancedUserProfilePanel from "../../user/EnhancedUserProfilePanel";
-import { checkContext } from "@/lib/global/gModel";
 export default function UserProfilePanelWrapper(): JSX.Element {
   const router = useRouter(),
     context = useContext<RootCtxType>(RootCtx),
     hasInitializedRoot = useRef<boolean>(false);
-  //TODO REMOVER APÓS TESTE
-  const ctx = useContext(RootCtx);
-  checkContext(ctx, "RootCtx", UserProfilePanelWrapper);
   useEffect(() => {
     const profileSpan = document.getElementById("rootUserInfo");
     if (profileSpan instanceof HTMLElement) {

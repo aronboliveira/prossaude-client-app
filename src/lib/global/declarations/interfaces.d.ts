@@ -79,11 +79,6 @@ export interface FspCtxProps {
     tma: NlMRef<nlTab>;
     tip: NlMRef<nlTab>;
   };
-  targs: TargInps;
-  dc: {
-    rows: { [k: string]: NlMRef<nlHtEl> };
-    inputs: { [k: string]: NlMRef<nlHtEl> };
-  };
 }
 export interface UserPanelCtxProps {
   setDropdown: NlrDispatch<boolean>;

@@ -8,7 +8,6 @@ import { NlMRef, nlTab } from "@/lib/global/declarations/types";
 import { useContext } from "react";
 import { FspCtxProps } from "@/lib/global/declarations/interfaces";
 import { FspCtx } from "../client/FsProgCons";
-import { checkContext } from "@/lib/global/gModel";
 export default function TabIndPerc({
   children = <></>,
   columns,
@@ -19,8 +18,6 @@ export default function TabIndPerc({
   let tip: NlMRef<nlTab> = null;
   const ctx1 = useContext<FspCtxProps>(FspCtx);
   if (ctx1?.refs) ({ tip } = ctx1.refs);
-  //TODO REMOVER APÓS TESTE
-  checkContext(ctx1, "FspCtx", TabIndPerc);
   return (
     <ErrorBoundary FallbackComponent={() => <GenericErrorComponent message='Error rendering Table for Indexes' />}>
       <div role='group' className={`divTab ${s.divTabEn}`} id='divTabInd'>

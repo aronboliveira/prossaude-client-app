@@ -7,7 +7,7 @@ import { useContext, useEffect, useState } from "react";
 import { addExportFlags, getGlobalEls, watchLabels } from "@/lib/global/gController";
 import { clearPhDates, dinamicGridAdjust, equalizeFlexSibilings } from "@/lib/global/gStyleScript";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
-import { assignFormAttrs, checkContext, modelScripts } from "@/lib/global/gModel";
+import { assignFormAttrs, modelScripts } from "@/lib/global/gModel";
 import useMount from "@/lib/hooks/useMount";
 import { RootCtxType } from "@/lib/global/declarations/interfaces";
 import { RootCtx } from "@/pages/_app";
@@ -17,9 +17,6 @@ export default function Watcher({ routeCase }: { routeCase?: pageCases }): JSX.E
     [isMounted] = useMount(),
     [isExportListening, setExport] = useState<boolean>(false),
     { divModal, divModalSec, divModalTerc } = useContext<RootCtxType>(RootCtx);
-  //TODO REMOVER APÓS TESTE
-  const ctx = useContext(RootCtx);
-  checkContext(ctx, "RootCtx", Watcher);
   useEffect(() => {
     if (!isMounted) return;
     const handleResize = (): void =>

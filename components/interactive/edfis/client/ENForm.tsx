@@ -34,7 +34,6 @@ import sEn from "@/styles//modules/enStyles.module.scss";
 import { BodyType } from "@/lib/global/declarations/testVars";
 import { applyConstraintsTitle } from "@/lib/global/gModel";
 import { toast } from "react-hot-toast";
-import { timers } from "@/vars";
 const FsProgCons = lazy(() => import("./FsProgCons")),
   TbodyComorb = lazy(() => import("../tabs/TbodyComorb")),
   TbodyAtFisRot = lazy(() => import("./tabs/TbodyAtFisRot")),
@@ -130,42 +129,6 @@ export default function ENForm(): JSX.Element {
       syncAriaStates(document.querySelectorAll("*"));
       watchLabels();
     }, 500);
-  }, [mounted]);
-  //teste de pré-preenchimento
-  useEffect(() => {
-    if (!mounted) return;
-    setTimeout(() => {
-      const inp2_2 = document.getElementById("tabInpRowMedAnt2_2");
-      if (inp2_2 instanceof HTMLInputElement) inp2_2.value = "70";
-      const inp2_3 = document.getElementById("tabInpRowMedAnt2_3");
-      if (inp2_3 instanceof HTMLInputElement) inp2_3.value = "30";
-      const inp2_4 = document.getElementById("tabInpRowMedAnt2_4");
-      if (inp2_4 instanceof HTMLInputElement) inp2_4.value = "200";
-      const inp3_2 = document.getElementById("tabInpRowMedAnt3_2");
-      if (inp3_2 instanceof HTMLInputElement) inp3_2.value = "200";
-      const inp3_3 = document.getElementById("tabInpRowMedAnt3_3");
-      if (inp3_3 instanceof HTMLInputElement) inp3_3.value = "1";
-      const inp3_4 = document.getElementById("tabInpRowMedAnt3_4");
-      if (inp3_4 instanceof HTMLInputElement) inp3_4.value = "1.8";
-      const inp4_2 = document.getElementById("tabInpRowDCut4_2");
-      if (inp4_2 instanceof HTMLInputElement) inp4_2.value = "18";
-      const inp7_2 = document.getElementById("tabInpRowDCut7_2");
-      if (inp7_2 instanceof HTMLInputElement) inp7_2.value = "18";
-      const inp8_2 = document.getElementById("tabInpRowDCut8_2");
-      if (inp8_2 instanceof HTMLInputElement) inp8_2.value = "18";
-      const inp4_3 = document.getElementById("tabInpRowDCut4_3");
-      if (inp4_3 instanceof HTMLInputElement) inp4_3.value = "10";
-      const inp7_3 = document.getElementById("tabInpRowDCut7_3");
-      if (inp7_3 instanceof HTMLInputElement) inp7_3.value = "10";
-      const inp8_3 = document.getElementById("tabInpRowDCut8_3");
-      if (inp8_3 instanceof HTMLInputElement) inp8_3.value = "10";
-      const inp4_4 = document.getElementById("tabInpRowDCut4_4");
-      if (inp4_4 instanceof HTMLInputElement) inp4_4.value = "40";
-      const inp7_4 = document.getElementById("tabInpRowDCut7_4");
-      if (inp7_4 instanceof HTMLInputElement) inp7_4.value = "40";
-      const inp8_4 = document.getElementById("tabInpRowDCut8_4");
-      if (inp8_4 instanceof HTMLInputElement) inp8_4.value = "40";
-    }, timers.personENTimer);
   }, [mounted]);
   useEffect(() => {
     if (!mounted) return;

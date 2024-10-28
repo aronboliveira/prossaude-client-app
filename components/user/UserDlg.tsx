@@ -10,16 +10,12 @@ import { RootCtxType, UserPanelCtxProps } from "@/lib/global/declarations/interf
 import { RootCtx } from "@/pages/_app";
 import { UserPanelCtx } from "./UserProfilePanel";
 import UserList from "./UserList";
-import { checkContext } from "@/lib/global/gModel";
 import sAg from "@/styles/modules/userContStyles.module.scss";
 export default function UserDlg({ setUserDlg, shouldDisplayUserDlg }: UserDlgProps): JSX.Element {
   //REPLICA DO USERDROPDOWN PARA CASOS DE ERRO EM STACKING CONTEXT
   const userDlgRef = useRef<nlDlg>(null),
     divModal = useContext<RootCtxType>(RootCtx)?.divModal,
     { setDropdown, shouldShowDropdown } = useContext<UserPanelCtxProps>(UserPanelCtx);
-  //TODO REMOVER APÓS TESTE
-  const ctx = useContext(RootCtx);
-  checkContext(ctx, "RootCtx", UserDlg);
   useEffect(() => {
     if (userDlgRef.current instanceof HTMLDialogElement) {
       userDlgRef.current.showModal();

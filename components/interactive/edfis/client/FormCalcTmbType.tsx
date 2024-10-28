@@ -3,7 +3,6 @@ import { ENCtxProps } from "@/lib/global/declarations/interfaces";
 import { useContext, useEffect, useRef } from "react";
 import { ENCtx } from "./ENForm";
 import { TMBFormula } from "@/lib/global/declarations/testVars";
-import { checkContext } from "@/lib/global/gModel";
 import { tabProps } from "@/vars";
 import { callbackAtvLvlElementNaf, exeAutoFill } from "@/lib/locals/edFisNutPage/edFisNutHandler";
 import sEn from "@/styles//modules/enStyles.module.scss";
@@ -21,8 +20,6 @@ export default function FormCalcTmbType(): JSX.Element {
   useEffect(() => {
     tabProps.fct = fct?.current ?? document.getElementById(idf);
   }, [fct]);
-  //TODO REMOVER APÓS TESTE
-  checkContext(ctx1, "ENCtx", FormCalcTmbType);
   return (
     <select
       ref={fct}

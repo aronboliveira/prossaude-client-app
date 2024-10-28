@@ -1,22 +1,20 @@
 "use client";
-import { ENCtxProps, FspCtxProps, TargInps, TdProps } from "@/lib/global/declarations/interfaces";
+import { ENCtxProps, TargInps, TdProps } from "@/lib/global/declarations/interfaces";
 import { handleCallbackWHS } from "@/lib/locals/edFisNutPage/edFisNutHandler";
 import { handleIndEv } from "@/lib/locals/edFisNutPage/edFisNutHandler";
-import { applyFieldConstraints, checkContext, textTransformPascal } from "@/lib/global/gModel";
+import { applyFieldConstraints, textTransformPascal } from "@/lib/global/gModel";
 import { handleCondtReq, handleEventReq } from "@/lib/global/handlers/gHandlers";
 import { useRef, useContext } from "react";
 import { NlMRef, nlFs, nlSel } from "@/lib/global/declarations/types";
 import { MAX_SMALLINT, maxProps, tabProps } from "@/vars";
 import { ENCtx } from "../ENForm";
 import sEn from "@/styles//modules/enStyles.module.scss";
-import { FspCtx } from "../FsProgCons";
 export default function TabInpProg({ nRow, nCol, ctx, lab }: TdProps): JSX.Element {
   let gl: NlMRef<nlSel> = null,
     fspr: NlMRef<nlFs> = null,
     fct: NlMRef<nlSel> = null,
     targs: TargInps | null = null;
   const ctx1 = useContext<ENCtxProps>(ENCtx),
-    ctx2 = useContext<FspCtxProps>(FspCtx),
     trusted = useRef<boolean>(false),
     pascalLab = textTransformPascal(lab),
     fullName = ((): string => {
@@ -80,11 +78,7 @@ export default function TabInpProg({ nRow, nCol, ctx, lab }: TdProps): JSX.Eleme
       }
     })();
   if (ctx1?.refs) ({ gl, fspr, fct } = ctx1.refs);
-  if (ctx2?.targs) ({ targs } = ctx2);
   let medAntCase = "";
-  //TODO REMOVER APÓS TESTE
-  checkContext(ctx1, "ENCtx", TabInpProg);
-  checkContext(ctx2, "FspCtx", TabInpProg);
   if (ctx === "MedAnt") {
     medAntCase = ((): string => {
       switch (lab) {

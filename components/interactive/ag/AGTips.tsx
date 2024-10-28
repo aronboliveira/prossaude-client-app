@@ -1,7 +1,6 @@
 "use client";
 import { DlgProps, RootCtxType } from "@/lib/global/declarations/interfaces";
 import { NlMRef, nlSpan } from "@/lib/global/declarations/types";
-import { checkContext } from "@/lib/global/gModel";
 import { isClickOutside } from "@/lib/global/gStyleScript";
 import useDialog from "@/lib/hooks/useDialog";
 import { RootCtx } from "@/pages/_app";
@@ -13,8 +12,6 @@ const AGTips = memo(({ state, dispatch }: DlgProps): JSX.Element => {
   const { mainRef } = useDialog({ state, dispatch, param: "tips" }),
     ctx = useContext<RootCtxType>(RootCtx);
   if (ctx) divModal = ctx.divModal;
-  //TODO REMOVER APÓS TESTE
-  checkContext(ctx, "RootCtx", AGTips);
   return createPortal(
     !state ? (
       <></>

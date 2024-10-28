@@ -3,7 +3,7 @@ import { useContext, useEffect, useRef } from "react";
 import { ENCtx } from "./ENForm";
 import { ENCtxProps } from "@/lib/global/declarations/interfaces";
 import { Intensity } from "@/lib/global/declarations/testVars";
-import { camelToRegular, checkContext } from "@/lib/global/gModel";
+import { camelToRegular } from "@/lib/global/gModel";
 import { person, tabProps, timers } from "@/vars";
 import { callbackAtvLvlElementNaf, exeAutoFill } from "@/lib/locals/edFisNutPage/edFisNutHandler";
 import sEn from "@/styles//modules/enStyles.module.scss";
@@ -36,8 +36,6 @@ export default function SelectLvlAtFis(): JSX.Element {
       }
     }, timers.personENTimer * 0.75);
   }, [sar]);
-  //TODO REMOVER APÓS TESTE
-  checkContext(ctx1, "ENCtx", SelectLvlAtFis);
   return (
     <select
       ref={sar}

@@ -32,7 +32,6 @@ import {
   addEmailExtension,
   assignFormAttrs,
   autoCapitalizeInputs,
-  checkContext,
   formatCPF,
   formatTel,
 } from "@/lib/global/gModel";
@@ -53,9 +52,6 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
   const userClass = useContext(PanelCtx).userClass,
     dlgRef = useRef<nlDlg>(null),
     pacBtnRef = useRef<nlBtn>(null);
-  //TODO REMOVER APÓS TESTE
-  const ctx = useContext(PanelCtx);
-  checkContext(ctx, "PanelCtx", FormDlg);
   //autocompleção
   const CPFPacInpRef = useRef<nlInp>(null),
     CPFPacBtnRef = useRef<nlBtn>(null),

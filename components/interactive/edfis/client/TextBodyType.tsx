@@ -3,7 +3,6 @@ import { callbackTextBodyEl } from "@/lib/locals/edFisNutPage/edFisNutHandler";
 import { useContext, useEffect, useRef } from "react";
 import { ENCtx } from "./ENForm";
 import { ENCtxProps, FspCtxProps } from "@/lib/global/declarations/interfaces";
-import { checkContext } from "@/lib/global/gModel";
 import { AlignTypeLab, BodyType } from "@/lib/global/declarations/testVars";
 import { FspCtx } from "./FsProgCons";
 import sEn from "@/styles//modules/enStyles.module.scss";
@@ -34,9 +33,6 @@ export default function TextBodyType(): JSX.Element {
     }
   }
   if (ctx2?.refs) ({ td, prt } = ctx2.refs);
-  //TODO REMOVER APÓS TESTE
-  checkContext(ctx1, "ENCtx", TextBodyType);
-  checkContext(ctx2, "FspCtx", TextBodyType);
   useEffect(() => {
     try {
       if (!trusted.current) return;
@@ -48,7 +44,7 @@ export default function TextBodyType(): JSX.Element {
     } catch (e) {
       return;
     }
-  }, [bodyType, onSetBodyType, trusted, gar, gbr, prt, td, txbr]);
+  }, [bodyType, onSetBodyType, trusted, gar, gbr, prt, td, txbr, gr]);
   return (
     <select
       ref={txbr}

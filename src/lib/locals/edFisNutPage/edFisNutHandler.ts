@@ -177,7 +177,7 @@ export function switchAutoFill(autoFillBtn: targEl): void {
       autoFillBtn.textContent = "Desativar Cálculo Automático";
     const filteredLocks = Array.from(locks.current).filter(lockTabInd => lockTabInd instanceof HTMLElement);
     if (filteredLocks.length === 0) return;
-    filteredLocks.forEach((lock) => {
+    filteredLocks.forEach(lock => {
       try {
         if (!(lock instanceof Element)) return;
         const td = lock.closest("td") || lock.closest("th");
@@ -526,10 +526,6 @@ export function defineTargInps({
             .every(colEval => colEval)
         ) {
           switch (num) {
-            case 1:
-              return Object.fromEntries(
-                Object.entries(refs.firstCol).map(([k, v]) => [k.replace(/[0-9]/g, ""), v?.current]),
-              ) as any;
             case 2:
               return Object.fromEntries(
                 Object.entries(refs.secondCol).map(([k, v]) => [k.replace(/[0-9]/g, ""), v?.current]),
@@ -544,8 +540,6 @@ export function defineTargInps({
               ) as any;
           }
         } else {
-          //TODO REMOVER APÓS TESTE
-          console.log("Nem toda referência foi validada");
           const relNum = num + 1;
           for (const [k, v] of [
             ["tiw", `#tabInpRowMedAnt2_${relNum}`],
@@ -613,8 +607,6 @@ export function defineTargInps({
               ) as any;
           }
         } else {
-          //TODO REMOVER APÓS TESTE
-          console.log("Nem toda referência foi validada");
           const relNum = num - 1;
           for (const [k, v] of [
             ["tiw", `#tabInpRowMedAnt2_${num}`],
@@ -1015,7 +1007,6 @@ export function createArraysRels({
       )
     )
       throw new Error(`Error finding input for sum of skin folds.`);
-    //TODO REMOVER APÓS TESTE
     sumInp.value = colAcc.toString();
     return colAcc;
   } catch (e) {
@@ -1024,7 +1015,7 @@ export function createArraysRels({
 }
 export function handleIndEv(
   ctx: IndCases,
-  ctxEls: { el: targEl; fsp: targEl; gl: targEl; fct: targEl; refs: TargInps | null },
+  ctxEls: { el: targEl; fsp: targEl; gl: targEl; fct: targEl; refs?: TargInps | null },
 ): void {
   let { el, fsp, fct, refs } = ctxEls;
   try {
@@ -1047,15 +1038,6 @@ export function handleIndEv(
         refs: refs ?? undefined,
         ctx,
       });
-      //todo remover após teste
-      if ([tiw, tih, tidc, tiimc, timlg, titmb, tiget, tipgc].some(v => !v)) {
-        console.log("Failed to fetch some ref...");
-        const invalids = [tiw, tih, tidc, tiimc, timlg, titmb, tiget, tipgc].filter(v => !v);
-        console.log(invalids.map((_, i) => `Ref ${i} is invalid`));
-      } else {
-        console.log("Targs validated");
-        console.log([tiw, tih, tidc, tiimc, timlg, titmb, tiget, tipgc]);
-      }
       Object.assign(tabProps, {
         ...(tiw && { tiw }),
         ...(tih && { tih }),
@@ -1125,7 +1107,7 @@ export function handleIndEv(
     return;
   }
 }
-export function exeAutoFill(el: targEl, context: string = "cons"): autofillResult {
+export function exeAutoFill(el: targEl, context: string = "cons", refs?: TargInps): autofillResult {
   let numRef = 1;
   const iniResult = {
     ncl: numRef || 1,
@@ -1161,7 +1143,7 @@ export function exeAutoFill(el: targEl, context: string = "cons"): autofillResul
       getNumCol(el);
       numRef = Number.isFinite(tabProps.numCol) ? tabProps.numCol || 2 : 2;
     }
-    return runAutoFill(el, context);
+    return runAutoFill(el, context, refs);
   } catch (e) {
     return iniResult;
   }
@@ -1196,12 +1178,6 @@ export function runAutoFill(el: targEl, ctx: string = "cons", refs?: TargInps): 
     ...(tiget && { tiget }),
     ...(tipgc && { tipgc }),
   });
-  //TODO REMOVER APÓS TESTE
-  if ([tiw, tih, tidc, tiimc, timlg, titmb, tiget, tipgc].some(v => !v)) {
-    console.log("Failed to fetch some ref...");
-    const invalids = [tiw, tih, tidc, tiimc, timlg, titmb, tiget, tipgc].filter(v => !v);
-    console.log(invalids.map((_, i) => `Ref ${i} is invalid`));
-  }
   [
     tabProps.tiw,
     tabProps.tih,

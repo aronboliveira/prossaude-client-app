@@ -1,7 +1,7 @@
 "use client";
 import { highlightChange } from "@/lib/global/gStyleScript";
 import { nlInp, nlLab } from "@/lib/global/declarations/types";
-import { applyFieldConstraints, checkContext, parseNotNaN } from "@/lib/global/gModel";
+import { applyFieldConstraints, parseNotNaN } from "@/lib/global/gModel";
 import { switchNumConsTitles } from "@/lib/locals/edFisNutPage/edFisNutHandler";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
@@ -44,9 +44,6 @@ export default function TrioReadNumCons(): JSX.Element {
       }
     }, [v, r, fspr, trusted]),
     mounted = useMount();
-  //TODO REMOVER APÓS TESTE
-  const ctx = useContext(ENCtx);
-  checkContext(ctx, "ENCtx", TrioReadNumCons);
   useEffect(() => {
     try {
       if (!trusted.current || !(mainRef.current instanceof HTMLElement)) return;
