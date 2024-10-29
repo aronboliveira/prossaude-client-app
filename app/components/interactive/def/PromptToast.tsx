@@ -1,14 +1,16 @@
+import { nlInp } from "@/lib/global/declarations/types";
 import { navigatorVars } from "@/vars";
 import { toast } from "react-hot-toast";
 export default function promptToast(message: string, ph: string): Promise<string> {
   return new Promise(resolve => {
     toast(
       t => (
-        <fieldset>
+        <fieldset className='toastFs'>
           <p>{message}</p>
           <input
             type='text'
             className='form-control'
+            id='pwInpSs'
             placeholder={ph}
             onKeyDown={e => {
               if (e.key !== "Enter") return;
@@ -29,9 +31,12 @@ export default function promptToast(message: string, ph: string): Promise<string
             <button
               className='btn btn-info'
               onClick={e => {
-                const input = (e.target as HTMLElement).parentNode?.querySelector("input");
+                const input =
+                  (e.target as HTMLElement).closest(".toastFs")?.querySelector("input") ??
+                  (e.target as HTMLElement).closest("fieldset")?.querySelector("input") ??
+                  (document.getElementById("pwInpSs") as nlInp);
                 resolve(input?.value ?? "");
-                toast.dismiss(t.id);
+                setTimeout(() => toast.dismiss(t.id), 200);
               }}
               style={{ marginLeft: "10px" }}>
               {navigatorVars.pt ? "Confirmar" : "Submit"}
