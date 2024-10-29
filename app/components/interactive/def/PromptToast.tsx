@@ -3,34 +3,33 @@ import { navigatorVars } from "@/vars";
 import { toast } from "react-hot-toast";
 export default function promptToast(message: string, ph: string): Promise<string> {
   setTimeout(() => {
-    const handleInput = (): void => {
-      if (!window) return;
-      const pw = document.querySelector("#pwInpSs");
-      if (!(pw instanceof HTMLInputElement)) return;
-      pw.value = "";
-      pw.addEventListener("input", ev => {
-        if (!ev.isTrusted) {
-          const errId = toast.error(navigatorVars.pt ? `Evento não validado!` : `Event not validated!`);
-          setTimeout(() => toast.dismiss(errId), 1000);
-          return;
-        }
-        const t = ev.currentTarget;
-        if (!(t instanceof HTMLInputElement)) return;
-        if ((ev as InputEvent).inputType === "insertFromPaste") {
-          const errId = toast.error(
-            navigatorVars.pt ? `Ops! Você não pode colar aqui!` : `Ops! You cannot paste here!`,
-          );
-          setTimeout(() => toast.dismiss(errId), 1000);
-          const dt = (ev as InputEvent).data;
-          if (dt) {
-            const exec = new RegExp(dt).exec(dt);
-            if (exec?.length === 1) t.value = t.value.replace(exec[0], "");
-            else t.value = "";
-          } else t.value = "";
-        }
-      });
-    };
-    window ? handleInput() : setTimeout(handleInput, 1000);
+    try {
+      const handleInput = (): void => {
+        if (!window) return;
+        const pw = document.querySelector("#pwInpSs");
+        if (!(pw instanceof HTMLInputElement)) return;
+        pw.value = "";
+        pw.addEventListener("input", ev => {
+          if (!ev.isTrusted) {
+            const errId = toast.error(navigatorVars.pt ? `Evento não validado!` : `Event not validated!`);
+            setTimeout(() => toast.dismiss(errId), 1000);
+            return;
+          }
+          const t = ev.currentTarget;
+          if (!(t instanceof HTMLInputElement)) return;
+          if ((ev as InputEvent).inputType === "insertFromPaste") {
+            const errId = toast.error(
+              navigatorVars.pt ? `Ops! Você não pode colar aqui!` : `Ops! You cannot paste here!`,
+            );
+            setTimeout(() => toast.dismiss(errId), 1000);
+            t.value = "";
+          }
+        });
+      };
+      window ? handleInput() : setTimeout(handleInput, 1000);
+    } catch (e) {
+      return;
+    }
   }, 300);
   return new Promise(resolve => {
     toast(
