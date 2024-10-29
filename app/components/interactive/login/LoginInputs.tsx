@@ -247,6 +247,41 @@ export default function LoginInputs(): JSX.Element {
       setTimeout(() => (testToasted.current = false), 1000);
     }
   }, []);
+  useEffect(() => {
+    if (!mounted) return;
+    try {
+      setTimeout(() => {
+        const handleInput = (): void => {
+          if (!window) return;
+          const pw = document.getElementById("pw");
+          if (!(pw instanceof HTMLInputElement)) return;
+          pw.value = "";
+          if (pw.dataset.nopaste !== "true") {
+            pw.addEventListener("input", ev => {
+              if (!ev.isTrusted) {
+                const errId = toast.error(navigatorVars.pt ? `Evento não validado!` : `Event not validated!`);
+                setTimeout(() => toast.dismiss(errId), 1000);
+                return;
+              }
+              const t = ev.currentTarget;
+              if (!(t instanceof HTMLInputElement)) return;
+              if ((ev as InputEvent).inputType === "insertFromPaste") {
+                const errId = toast.error(
+                  navigatorVars.pt ? `Ops! Você não pode colar aqui!` : `Ops! You cannot paste here!`,
+                );
+                setTimeout(() => toast.dismiss(errId), 1000);
+                t.value = "";
+              }
+            });
+            pw.dataset.nopaste = "true";
+          }
+        };
+        window ? handleInput() : setTimeout(handleInput, 1000);
+      }, 300);
+    } catch (e) {
+      return;
+    }
+  }, [mounted]);
   return (
     <form
       ref={formRef}
