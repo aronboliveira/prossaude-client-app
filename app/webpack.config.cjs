@@ -13,6 +13,9 @@ module.exports = {
   devtool: "inline-source-map",
   resolve: {
     extensions: [".tsx", ".ts", ".js", ".scss", ".css"],
+    alias: {
+      "@": path.resolve(__dirname, "src"),
+    },
   },
   output: {
     filename: `prossaude_bundle.${packageJson.version}.[contenthash].min.js`,
