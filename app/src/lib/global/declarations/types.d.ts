@@ -178,4 +178,4 @@ export type validAreas =
   | "Psicologia"
   | "Medicina"
   | "Tecnologia";
-export type panelOpts = "registStud" | "registProf" | "removeStud" | "removeProf" | "pacList" | "agenda";
+export type panelOpts = "registStud" | "registProf" | "removeStud" | "removeProf" | "pacList" | "agenda" | "dashboard";
