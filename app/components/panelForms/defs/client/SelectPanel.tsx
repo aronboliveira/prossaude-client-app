@@ -26,7 +26,7 @@ import ScheduleLoader from "../../schedule/ScheduleLoader";
 import { PanelCtx } from "./SelectLoader";
 import { panelRoots } from "@/vars";
 import useMount from "@/lib/hooks/useMount";
-import DashBoard from "../../dashboard/Dashboard";
+import DashBoard from "../../Dashboard";
 export default function SelectPanel({ defOp = "agenda" }: MainPanelProps): JSX.Element {
   const { userClass, setUserClass: setPrivilege } = useContext(PanelCtx),
     [selectedOption, setSelectedOption] = useState<string>(defOp),
