@@ -584,7 +584,7 @@ legend,
   pointer-events: none;
   color: #000000;
   @include minSizeB(1.75rem, 1.25rem);
-  &:not([class$="lock"]):not([class*="exclamation"]) {
+  &:not([class$="lock"]):not([class*="exclamation"]):not([class*="check"]) {
     height: 100%;
   }
   &.bi-question-circle-fill {
@@ -1270,7 +1270,7 @@ legend,
   width: 100vw;
 }
 .widFull,
-.bi:not([class$="lock"]):not([class*="exclamation"]),
+.bi:not([class$="lock"]):not([class*="exclamation"]):not([class*="check"]) ,
 .form-select.inpIdentif {
   width: 100%;
 }
@@ -1649,7 +1649,7 @@ legend,
     width: 42vw;
   }
   .htFull900Q,
-  .bi:not([class*="exclamation"]) {
+  .bi:not([class*="exclamation"]):not([class*="check"])  {
     height: 100%;
   }
   .alItSt900Q,
