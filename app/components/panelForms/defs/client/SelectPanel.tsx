@@ -26,6 +26,7 @@ import ScheduleLoader from "../../schedule/ScheduleLoader";
 import { PanelCtx } from "./SelectLoader";
 import { panelRoots } from "@/vars";
 import useMount from "@/lib/hooks/useMount";
+import DashBoard from "../../dashboard/Dashboard";
 export default function SelectPanel({ defOp = "agenda" }: MainPanelProps): JSX.Element {
   const { userClass, setUserClass: setPrivilege } = useContext(PanelCtx),
     [selectedOption, setSelectedOption] = useState<string>(defOp),
@@ -53,6 +54,8 @@ export default function SelectPanel({ defOp = "agenda" }: MainPanelProps): JSX.E
                 return <PacTabForm />;
               case "agenda":
                 return <ScheduleLoader />;
+              case "dashboard":
+                return <DashBoard />;
               default:
                 stringError(opt, "opt in renderSelectedForm()", extLine(new Error()));
                 return <DefaultForm />;
@@ -225,6 +228,7 @@ export default function SelectPanel({ defOp = "agenda" }: MainPanelProps): JSX.E
           </optgroup>
           <optgroup id='grpDates' label='Datas'>
             <option value='agenda'>Agendamento</option>
+            <option value='dashboard'>Estatística</option>
           </optgroup>
         </select>
       </div>
