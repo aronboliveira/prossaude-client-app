@@ -2,17 +2,17 @@ import { ErrorBoundary } from "react-error-boundary";
 import { AptDataListProps } from "@/lib/global/declarations/interfacesCons";
 import { addExportFlags } from "@/lib/global/gController";
 import { consVariablesData } from "../consRegst/consVariables";
+import { createRoot } from "react-dom/client";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { isClickOutside } from "@/lib/global/gStyleScript";
 import { nlDlg } from "@/lib/global/declarations/types";
-import { registerRoot, syncAriaStates } from "@/lib/global/handlers/gHandlers";
+import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useContext, useEffect, useRef } from "react";
 import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
 import { PanelCtx } from "../panelForms/defs/client/SelectLoader";
 import { ExportHandler } from "@/lib/global/declarations/classes";
 import { exporters } from "@/vars";
 import useExportHandler from "@/lib/hooks/useExportHandler";
-import Link from "next/link";
 export default function AptDataList({
   setDisplayAptList,
   data,
@@ -42,12 +42,7 @@ export default function AptDataList({
           const fallbackRootDlg = document.getElementById("rootDlgList");
           if (!(fallbackRootDlg instanceof HTMLElement))
             throw elementNotFound(fallbackRootDlg, `attemp to recreate rootDlg`, extLine(new Error()));
-          registerRoot(
-            undefined,
-            `${fallbackRootDlg.id || fallbackRootDlg.className.replace(/\s/g, "__") || fallbackRootDlg.tagName}`,
-            undefined,
-            true,
-          )?.unmount();
+          createRoot(fallbackRootDlg).unmount();
         } catch (e2) {
           console.error(`Error rendering AptDataList:
         ${(e2 as Error).message};
@@ -75,12 +70,7 @@ export default function AptDataList({
           const fallbackRootDlg = document.getElementById("rootDlgList");
           if (!(fallbackRootDlg instanceof HTMLElement))
             throw elementNotFound(fallbackRootDlg, `attemp to recreate rootDlg`, extLine(new Error()));
-          registerRoot(
-            undefined,
-            `${fallbackRootDlg.id || fallbackRootDlg.className.replace(/\s/g, "__") || fallbackRootDlg.tagName}`,
-            undefined,
-            true,
-          )?.unmount();
+          createRoot(fallbackRootDlg).unmount();
         } catch (e2) {
           console.error(`Error rendering AptDataList:
           ${(e2 as Error).message};
@@ -126,7 +116,7 @@ export default function AptDataList({
     <div role='group' className='aptDiv'>
       {shouldDisplayAptList && (
         <dialog
-          className='modal-content-stk2'
+          className='modalContent__stk2'
           id={`dlg-${btnId}`}
           ref={aptDlgRef}
           onClick={ev => {
@@ -143,7 +133,7 @@ export default function AptDataList({
               />
             )}>
             <div role='group' className='flexRNoWBetCt cGap2v widQ460_120v' id='headRegstPac'>
-              <h2 className='mg-1b'>
+              <h2 className='mg__1b'>
                 <strong>Registro de Consulta</strong>
               </h2>
               <button
@@ -153,18 +143,13 @@ export default function AptDataList({
                 }}></button>
             </div>
             <table className='table table-striped table-responsive table-hover tabApt'>
-              <caption className='caption-t'>
+              <caption className='caption_t'>
                 <strong>
                   <small role='textbox'>
                     <em className='noInvert'>
                       Lista Recuperada da Ficha de Consultas registradas. Acesse
                       <samp>
-                        <Link
-                          href={`${location.origin}/panel?panel=agenda&new-cons=open`}
-                          style={{ display: "inline" }}
-                          id='addAppointmentLink'>
-                          Adicionar Consulta
-                        </Link>
+                        <a> ROTA_PLACEHOLDER </a>
                       </samp>
                       para cadastrar
                     </em>

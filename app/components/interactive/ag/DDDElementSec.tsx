@@ -6,7 +6,7 @@ export default function DDDElementSec(): JSX.Element {
       type='number'
       name='ddd_sec'
       id='tel2AreaCodeId'
-      className='form-control inpIdentif noInvert inpDDD'
+      className='form-control inpIdentif noInvert inpDDD minText maxText patternText'
       min='11'
       max='99'
       autoComplete='tel-area-code'
@@ -17,7 +17,7 @@ export default function DDDElementSec(): JSX.Element {
           min: 2,
           max: 4,
           minNum: 11,
-          maxNum: 11,
+          maxNum: 99,
           pattern: ["[0-9]{2,}", "g"],
         })
       }

@@ -8,6 +8,7 @@ import { Protocol } from "@/lib/global/declarations/testVars";
 import { FspCtx } from "./FsProgCons";
 import sEn from "@/styles//modules/enStyles.module.scss";
 import { NlMRef, nlSel, nlTab } from "@/lib/global/declarations/types";
+import useMount from "@/lib/hooks/useMount";
 export default function Protocolo(): JSX.Element {
   let txbr: NlMRef<nlSel> = null,
     td: NlMRef<nlTab> = null,
@@ -16,6 +17,7 @@ export default function Protocolo(): JSX.Element {
     ctx2 = useContext<FspCtxProps>(FspCtx),
     trusted = useRef<boolean>(false),
     [v, setValue] = useState<Protocol>("pollock3"),
+    mounted = useMount(),
     protocols: Protocol[] = ["pollock3", "pollock7"];
   if (ctx1?.refs) ({ txbr } = ctx1.refs);
   if (ctx2?.refs) ({ td, prt } = ctx2.refs);
@@ -44,10 +46,32 @@ export default function Protocolo(): JSX.Element {
           }
         }
       });
+      inps.forEach(inp => {
+        if (!(inp instanceof HTMLElement)) return;
+        if (
+          (getComputedStyle(inp).display === "none" || getComputedStyle(inp).opacity === "0" || inp.hidden) &&
+          (inp instanceof HTMLInputElement || inp instanceof HTMLSelectElement || inp instanceof HTMLTextAreaElement)
+        )
+          inp.required = false;
+      });
     } catch (e) {
       return;
     }
   }, [prt, td, txbr, v, trusted]);
+  useEffect(() => {
+    if (!mounted) return;
+    setTimeout(() => {
+      if (!td?.current) return;
+      document.querySelectorAll(".tabInpProgDCut").forEach(inp => {
+        if (!(inp instanceof HTMLElement)) return;
+        if (
+          (getComputedStyle(inp).display === "none" || getComputedStyle(inp).opacity === "0" || inp.hidden) &&
+          (inp instanceof HTMLInputElement || inp instanceof HTMLSelectElement || inp instanceof HTMLTextAreaElement)
+        )
+          inp.required = false;
+      });
+    }, 500);
+  }, [td, mounted]);
   return (
     <select
       ref={prt}

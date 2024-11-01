@@ -34,8 +34,7 @@ export interface MainPanelProps {
   defOp: panelOpts;
 }
 export interface ScheduleFormProps extends GlobalFormProps {
-  context?: boolean;
-  children?: React.Element;
+  context: boolean;
 }
 export interface HrRowProps extends GlobalFormProps {
   nHr: 18 | 19 | 20 | 21;
@@ -44,10 +43,6 @@ export interface HrRowProps extends GlobalFormProps {
 }
 export interface HrCelProps extends HrRowProps {
   nCol: number;
-}
-export interface HrInpProps extends Omit<HrCelProps, "last"> {
-  hourOrder: string;
-  dayOrder: string;
 }
 export interface DataContextType {
   formData: FormData;

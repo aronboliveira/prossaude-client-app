@@ -109,7 +109,8 @@ input {
   &[id*="midName"],
   &[id*="middleName"],
   &[id*="lastName"],
-  &[id*="socialName"] {
+  &[id*="socialName"],
+  &[id*="inpName"] {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='rgba(23, 23, 23, 0.7)' class='bi bi-file-earmark-person-fill' viewBox='0 0 16 18' transform='translate(0, 1)'%3E%3Cpath d='M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1M11 8a3 3 0 1 1-6 0 3 3 0 0 1 6 0m2 5.755V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-.245S4 12 8 12s5 1.755 5 1.755'%3E%3C/path%3E%3C/svg%3E");
     @include bgFit;
   }
@@ -117,7 +118,8 @@ input {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='rgba(23, 23, 23, 0.7)' class='bi bi-person-arms-up' viewBox='0 0 16 18' transform='translate(0, 1)'%3E%3Cpath d='M8 3a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3'%3E%3C/path%3E%3Cpath d='m5.93 6.704-.846 8.451a.768.768 0 0 0 1.523.203l.81-4.865a.59.59 0 0 1 1.165 0l.81 4.865a.768.768 0 0 0 1.523-.203l-.845-8.451A1.5 1.5 0 0 1 10.5 5.5L13 2.284a.796.796 0 0 0-1.239-.998L9.634 3.84a.7.7 0 0 1-.33.235c-.23.074-.665.176-1.304.176-.64 0-1.074-.102-1.305-.176a.7.7 0 0 1-.329-.235L4.239 1.286a.796.796 0 0 0-1.24.998l2.5 3.216c.317.316.475.758.43 1.204Z'%3E%3C/path%3E%3C/svg%3E");
     @include bgFit;
   }
-  &[id*="cep"] {
+  &[id*="cep"],
+  &[id*="CEP"] {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 24' fill='rgba(23, 23, 23, 0.7)'%3E%3Cg transform='translate(0, 5)'%3E%3Cpath fill-rule='evenodd' d='M3.1 11.2a.5.5 0 0 1 .4-.2H6a.5.5 0 0 1 0 1H3.75L1.5 15h13l-2.25-3H10a.5.5 0 0 1 0-1h2.5a.5.5 0 0 1 .4.2l3 4a.5.5 0 0 1-.4.8H.5a.5.5 0 0 1-.4-.8z'/%3E%3Cpath fill-rule='evenodd' d='M4 4a4 4 0 1 1 4.5 3.969V13.5a.5.5 0 0 1-1 0V7.97A4 4 0 0 1 4 3.999z'/%3E%3C/g%3E%3C/svg%3E");
     @include bgFit;
   }
@@ -148,7 +150,9 @@ input {
     @include bgFit;
   }
   &[id*="cpf"],
-  &[id*="CPF"] {
+  &[id*="CPF"],
+  &[id*="DRE"],
+  &[id*="dre"] {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='rgba(23, 23, 23, 0.7)' class='bi bi-person-vcard-fill' viewBox='0 0 20 20' transform='translate(0, 2)'%3E%3Cpath d='M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm9 1.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 0-1h-4a.5.5 0 0 0-.5.5M9 8a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 0-1h-4A.5.5 0 0 0 9 8m1 2.5a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 0-1h-3a.5.5 0 0 0-.5.5m-1 2C9 10.567 7.21 9 5 9c-2.086 0-3.8 1.398-3.984 3.181A1 1 0 0 0 2 13h6.96q.04-.245.04-.5M7 6a2 2 0 1 0-4 0 2 2 0 0 0 4 0'%3E%3C/path%3E%3C/svg%3E");
     @include bgFit;
   }
@@ -169,8 +173,19 @@ input {
       margin-bottom: 0.6rem;
     }
   }
+  &[id*="inpCourse"],
+  &[id*="inpPeriod"],
+  &[id*="inpEntr"] {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='rgba(23, 23, 23, 0.7)' class='bi bi-book-half' viewBox='0 0 16 16'%3E %3Cpath d='M8.5 2.687c.654-.689 1.782-.886 3.112-.752 1.234.124 2.503.523 3.388.893v9.923c-.918-.35-2.107-.692-3.287-.81-1.094-.111-2.278-.039-3.213.492zM8 1.783C7.015.936 5.587.81 4.287.94c-1.514.153-3.042.672-3.994 1.105A.5.5 0 0 0 0 2.5v11a.5.5 0 0 0 .707.455c.882-.4 2.303-.881 3.68-1.02 1.409-.142 2.59.087 3.223.877a.5.5 0 0 0 .78 0c.633-.79 1.814-1.019 3.222-.877 1.378.139 2.8.62 3.681 1.02A.5.5 0 0 0 16 13.5v-11a.5.5 0 0 0-.293-.455c-.952-.433-2.48-.952-3.994-1.105C10.413.809 8.985.936 8 1.783'/%3E %3C/svg%3E");
+    @include bgFit;
+  }
   &[id*="munId"] {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 24' fill='rgba(23, 23, 23, 0.7)'%3E%3Cg transform='translate(0, 5)'%3E%3Cpath d='M7.207 1a1 1 0 0 0-1.414 0L.146 6.646a.5.5 0 0 0 .708.708L1 7.207V12.5A1.5 1.5 0 0 0 2.5 14h.55a2.5 2.5 0 0 1-.05-.5V9.415a1.5 1.5 0 0 1-.56-2.475l5.353-5.354z'/%3E%3Cpath d='M8.793 2a1 1 0 0 1 1.414 0L12 3.793V2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v3.293l1.854 1.853a.5.5 0 0 1-.708.708L15 8.207V13.5a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 4 13.5V8.207l-.146.147a.5.5 0 1 1-.708-.708z'/%3E%3C/g%3E%3C/svg%3E");
+    @include bgFit;
+  }
+  &[id*="relProf"],
+  &[id*="relStud"] {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='rgba(23, 23, 23, 0.7)' class='bi bi-person-bounding-box' viewBox='0 0 16 16'%3E %3Cpath d='M1.5 1a.5.5 0 0 0-.5.5v3a.5.5 0 0 1-1 0v-3A1.5 1.5 0 0 1 1.5 0h3a.5.5 0 0 1 0 1zM11 .5a.5.5 0 0 1 .5-.5h3A1.5 1.5 0 0 1 16 1.5v3a.5.5 0 0 1-1 0v-3a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 1-.5-.5M.5 11a.5.5 0 0 1 .5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 1 0 1h-3A1.5 1.5 0 0 1 0 14.5v-3a.5.5 0 0 1 .5-.5m15 0a.5.5 0 0 1 .5.5v3a1.5 1.5 0 0 1-1.5 1.5h-3a.5.5 0 0 1 0-1h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 1 .5-.5'/%3E %3Cpath d='M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm8-9a3 3 0 1 1-6 0 3 3 0 0 1 6 0'/%3E %3C/svg%3E");
     @include bgFit;
   }
   &[type="search"] {
@@ -569,7 +584,7 @@ legend,
   pointer-events: none;
   color: #000000;
   @include minSizeB(1.75rem, 1.25rem);
-  &:not([class$="lock"]):not([class*="exclamation"]) {
+  &:not([class$="lock"]):not([class*="exclamation"]):not([class*="check"]) {
     height: 100%;
   }
   &.bi-question-circle-fill {
@@ -1255,7 +1270,7 @@ legend,
   width: 100vw;
 }
 .widFull,
-.bi:not([class$="lock"]):not([class*="exclamation"]),
+.bi:not([class$="lock"]):not([class*="exclamation"]):not([class*="check"]) ,
 .form-select.inpIdentif {
   width: 100%;
 }
@@ -1634,7 +1649,7 @@ legend,
     width: 42vw;
   }
   .htFull900Q,
-  .bi:not([class*="exclamation"]) {
+  .bi:not([class*="exclamation"]):not([class*="check"])  {
     height: 100%;
   }
   .alItSt900Q,

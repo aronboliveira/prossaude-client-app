@@ -1,12 +1,13 @@
 import { ErrorBoundary } from "react-error-boundary";
 import { addExportFlags } from "@/lib/global/gController";
+import { createRoot } from "react-dom/client";
 import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { equalizeTabCells, normalizeSizeSb } from "@/lib/global/gStyleScript";
-import { fillTabAttr, renderTable } from "@/lib/locals/panelPage/handlers/consHandlerList";
+import { fillTabAttr } from "@/lib/locals/panelPage/handlers/consHandlerList";
 import { handleClientPermissions } from "@/lib/locals/panelPage/handlers/consHandlerUsers";
 import { handleFetch } from "@/lib/global/data-service";
 import { exporters, panelRoots } from "@/vars";
-import { registerRoot, syncAriaStates } from "@/lib/global/handlers/gHandlers";
+import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useEffect, useRef, useCallback, useContext, useMemo } from "react";
 import GenericErrorComponent from "../../error/GenericErrorComponent";
 import ProfRow from "./ProfRow";
@@ -18,8 +19,7 @@ import { assignFormAttrs } from "@/lib/global/gModel";
 import { PanelCtx } from "../defs/client/SelectLoader";
 import { ExportHandler } from "@/lib/global/declarations/classes";
 import useExportHandler from "@/lib/hooks/useExportHandler";
-import Link from "next/link";
-export default function TabProfForm(): JSX.Element {
+export default function TableProfForm(): JSX.Element {
   const userClass = useContext(PanelCtx).userClass,
     profs: ProfInfo[] = useMemo(() => [], []),
     formRef = useRef<nlFm>(null),
@@ -29,7 +29,7 @@ export default function TabProfForm(): JSX.Element {
     callbackNormalizeSizesSb = useCallback(() => {
       normalizeSizeSb(
         [
-          ...document.querySelectorAll(".form-padded"),
+          ...document.querySelectorAll(".formPadded"),
           ...document.querySelectorAll(".ovFlAut"),
           ...document.querySelectorAll("[scrollbar-width=none]"),
         ],
@@ -68,7 +68,10 @@ export default function TabProfForm(): JSX.Element {
                 throw elementNotFound(tabRef.current, `Validation of Table reference`, extLine(new Error()));
               if (!(tbodyRef.current instanceof HTMLElement))
                 throw elementNotFound(tbodyRef.current, `Validation of Table Body Reference`, extLine(new Error()));
-              if (panelRoots[tbodyRef.current.id] && !(panelRoots[tbodyRef.current.id] as any)["_internalRoot"]) {
+              if (
+                panelRoots[`${tbodyRef.current.id}`] &&
+                !(panelRoots[`${tbodyRef.current.id}`] as any)["_internalRoot"]
+              ) {
                 setTimeout(() => {
                   try {
                     if (!(tabRef.current instanceof HTMLElement))
@@ -80,31 +83,23 @@ export default function TabProfForm(): JSX.Element {
                         extLine(new Error()),
                       );
                     if (tbodyRef.current.querySelector("tr")) return;
-                    panelRoots[tbodyRef.current.id]?.unmount();
-                    delete panelRoots[tbodyRef.current.id];
+                    panelRoots[`${tbodyRef.current.id}`]?.unmount();
+                    delete panelRoots[`${tbodyRef.current.id}`];
                     tbodyRef.current.remove() as void;
-                    panelRoots[tabRef.current.id] = registerRoot(
-                      panelRoots[tabRef.current.id],
-                      `#${tabRef.current.id}`,
-                      tabRef,
-                    );
-                    panelRoots[tabRef.current.id]?.render(
+                    if (!panelRoots[`${tabRef.current.id}`])
+                      panelRoots[`${tabRef.current.id}`] = createRoot(tabRef.current);
+                    panelRoots[`${tabRef.current.id}`]?.render(
                       <ErrorBoundary
                         FallbackComponent={() => (
                           <GenericErrorComponent message='Error reloading replacement for table body' />
                         )}>
-                        <caption className='caption-t'>
+                        <caption className='caption_t'>
                           <strong>
                             <small role='textbox'>
                               <em>
                                 Lista Recuperada da Ficha de Profissionais registrados. Acesse
                                 <samp>
-                                  <Link
-                                    href={`${location.origin}/panel?panel=regist-prof`}
-                                    id='registProfLink'
-                                    style={{ display: "inline" }}>
-                                    &nbsp;Cadastrar Membro Profissional&nbsp;
-                                  </Link>
+                                  <a> ROTA_PLACEHOLDER </a>
                                 </samp>
                                 para cadastrar
                               </em>
@@ -112,33 +107,25 @@ export default function TabProfForm(): JSX.Element {
                           </strong>
                         </caption>
                         <colgroup>
-                          {Array.from({ length: 5 }, (_, i) => (
-                            <col key={`prof_col__${i}`} data-col={i + 1}></col>
-                          ))}
-                          {userClass === "coordenador" &&
-                            Array.from({ length: 3 }, (_, i) => (
-                              <col key={`prof_col__${i + 5}`} data-col={i + 6}></col>
-                            ))}
+                          {userClass === "coordenador" && <col></col>}
+                          <col></col>
+                          <col></col>
+                          <col></col>
+                          <col></col>
+                          <col></col>
+                          {userClass === "coordenador" && <col></col>}
+                          {userClass === "coordenador" && <col></col>}
                         </colgroup>
                         <thead className='thead-dark'>
                           <tr id='avPacs-row1'>
                             {userClass === "coordenador" && <th scope='col'>CPF</th>}
-                            {[
-                              "Nome",
-                              "Externo",
-                              "E-mail",
-                              "Telefone",
-                              "Área de Atuação",
-                              "Dia de Trabalho",
-                              "Período de Participação",
-                            ].map((l, i) => (
-                              <th
-                                key={`prof_th__${i}`}
-                                scope='col'
-                                data-col={userClass === "coordenador" ? i + 2 : i + 1}>
-                                {l}
-                              </th>
-                            ))}
+                            <th scope='col'>Nome</th>
+                            <th scope='col'>Externo</th>
+                            <th scope='col'>E-mail</th>
+                            <th scope='col'>Telefone</th>
+                            <th scope='col'>Área de Atuação</th>
+                            <th scope='col'>Dia de Trablho</th>
+                            <th scope='col'>Período de Participação</th>
                             {userClass === "coordenador" && <th scope='col'>Alteração</th>}
                             {userClass === "coordenador" && <th scope='col'>Exclusão</th>}
                           </tr>
@@ -157,13 +144,10 @@ export default function TabProfForm(): JSX.Element {
                     tbodyRef.current = document.getElementById("profsTbody") as nlTabSect;
                     if (!(tbodyRef.current instanceof HTMLElement))
                       throw elementNotFound(tbodyRef.current, `Validation of replaced tbody`, extLine(new Error()));
-                    panelRoots[tbodyRef.current.id] = registerRoot(
-                      panelRoots[tbodyRef.current.id],
-                      `#${tbodyRef.current.id}`,
-                      tbodyRef,
-                    );
+                    if (!panelRoots[`${tbodyRef.current.id}`])
+                      panelRoots[`${tbodyRef.current.id}`] = createRoot(tbodyRef.current);
                     if (!tbodyRef.current.querySelector("tr"))
-                      panelRoots[tbodyRef.current.id]?.render(
+                      panelRoots[`${tbodyRef.current.id}`]?.render(
                         profs.map((prof, i) => (
                           <ProfRow nRow={i + 2} prof={prof} tabRef={tabRef} key={`prof_row__${i + 2}`} />
                         )),
@@ -185,14 +169,9 @@ export default function TabProfForm(): JSX.Element {
                     );
                   }
                 }, 1000);
-              } else
-                panelRoots[tbodyRef.current.id] = registerRoot(
-                  panelRoots[tbodyRef.current.id],
-                  `#${tbodyRef.current.id}`,
-                  tbodyRef,
-                );
+              } else panelRoots[`${tbodyRef.current.id}`] = createRoot(tbodyRef.current);
               if (!tbodyRef.current.querySelector("tr"))
-                panelRoots[tbodyRef.current.id]?.render(
+                panelRoots[`${tbodyRef.current.id}`]?.render(
                   profs.map((prof, i) => {
                     return Array.from(tbodyRef.current?.querySelectorAll("output") ?? []).some(
                       outp => outp.innerText === (prof as ProfInfo)["idf"],
@@ -218,7 +197,13 @@ export default function TabProfForm(): JSX.Element {
                   );
               }, 300);
               setTimeout(() => {
-                if (!document.querySelector("tr") && document.querySelector("table")) renderTable();
+                if (!document.querySelector("tr") && document.querySelector("table")) {
+                  if (!panelRoots[`${document.querySelector("table")!.id}`])
+                    panelRoots[`${document.querySelector("table")!.id}`] = createRoot(document.querySelector("table")!);
+                  panelRoots[`${document.querySelector("table")!.id}`]?.render(
+                    <GenericErrorComponent message='Failed to render table' />,
+                  );
+                }
               }, 5000);
             } catch (e) {
               console.error(`Error executing rendering of Table Body Content:\n${(e as Error).message}`);
@@ -284,7 +269,7 @@ export default function TabProfForm(): JSX.Element {
     <form
       id='formRemoveProf'
       name='form_profs_table'
-      className='form-padded-nosb wid101'
+      className='formPadded__nosb wid101'
       action='profs_table'
       encType='multipart/form-data'
       method='get'
@@ -292,7 +277,7 @@ export default function TabProfForm(): JSX.Element {
       autoComplete='on'
       ref={formRef}>
       <div role='group' className='wsBs flexNoWC cGap1v'>
-        <h1 className='mg-3b bolded'>
+        <h1 className='mg__3b bolded'>
           <strong id='titleTabProfs'>Tabela de Profissionais Registrados</strong>
         </h1>
         <em>
@@ -302,20 +287,15 @@ export default function TabProfForm(): JSX.Element {
         </em>
         <hr />
       </div>
-      <section className='form-padded pdL0' id='sectProfsTab'>
+      <section className='formPadded pdL0' id='sectProfsTab'>
         <table className='table table-striped table-responsive table-hover tabPacs' id='avPacsTab' ref={tabRef}>
-          <caption className='caption-t'>
+          <caption className='caption_t'>
             <strong>
               <small role='textbox'>
                 <em>
                   Lista Recuperada da Ficha de Profissionais registrados. Acesse
                   <samp>
-                    <Link
-                      href={`${location.origin}/panel?panel=regist-prof`}
-                      id='registProfLink'
-                      style={{ display: "inline" }}>
-                      &nbsp;Cadastrar Membro Profissional&nbsp;
-                    </Link>
+                    <a> ROTA_PLACEHOLDER </a>
                   </samp>
                   para cadastrar
                 </em>
@@ -323,28 +303,25 @@ export default function TabProfForm(): JSX.Element {
             </strong>
           </caption>
           <colgroup>
-            {Array.from({ length: 5 }, (_, i) => (
-              <col key={`prof_col__${i}`} data-col={i + 1}></col>
-            ))}
-            {userClass === "coordenador" &&
-              Array.from({ length: 3 }, (_, i) => <col key={`prof_col__${i + 5}`} data-col={i + 6}></col>)}
+            {userClass === "coordenador" && <col></col>}
+            <col></col>
+            <col></col>
+            <col></col>
+            <col></col>
+            <col></col>
+            {userClass === "coordenador" && <col></col>}
+            {userClass === "coordenador" && <col></col>}
           </colgroup>
           <thead className='thead-dark'>
             <tr id='avPacs-row1'>
               {userClass === "coordenador" && <th scope='col'>CPF</th>}
-              {[
-                "Nome",
-                "Externo",
-                "E-mail",
-                "Telefone",
-                "Área de Atuação",
-                "Dia de Trabalho",
-                "Período de Participação",
-              ].map((l, i) => (
-                <th key={`prof___th__${i}`} scope='col' data-col={userClass === "coordenador" ? i + 2 : i + 1}>
-                  {l}
-                </th>
-              ))}
+              <th scope='col'>Nome</th>
+              <th scope='col'>Externo</th>
+              <th scope='col'>E-mail</th>
+              <th scope='col'>Telefone</th>
+              <th scope='col'>Área de Atuação</th>
+              <th scope='col'>Dia de Trablho</th>
+              <th scope='col'>Período de Participação</th>
               {userClass === "coordenador" && <th scope='col'>Alteração</th>}
               {userClass === "coordenador" && <th scope='col'>Exclusão</th>}
             </tr>

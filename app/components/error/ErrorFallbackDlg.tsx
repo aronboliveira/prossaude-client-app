@@ -5,13 +5,13 @@ export default function ErrorFallbackDlg({ renderError, onClick }: ErrorDlgProps
   const mainArticleRef = useRef<nlHtEl>(null);
   return (
     <article role='alert' id='errorDlgDiv' ref={mainArticleRef}>
-      <h2 className='mg-2bv widHalf'>
+      <h2 className='mg__2bv widHalf'>
         <strong>Oops, algo deu errado! 😨</strong>
       </h2>
       <h4>{renderError.message}</h4>
       <small>Feche a janela e tente novamente ou recarregue a página!</small>
       <br />
-      <button className='btn btn-warning bolded widFull mg-1t' id='retryRenderBtn' onClick={onClick}>
+      <button className='btn btn-warning bolded widFull mg__1t' id='retryRenderBtn' onClick={onClick}>
         Fechar
       </button>
     </article>

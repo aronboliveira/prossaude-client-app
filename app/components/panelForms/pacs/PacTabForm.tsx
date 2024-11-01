@@ -16,7 +16,7 @@ export default function PacTabForm(): JSX.Element {
     callbackNormalizeSizesSb = useCallback(() => {
       normalizeSizeSb(
         [
-          ...document.querySelectorAll(".form-padded"),
+          ...document.querySelectorAll(".formPadded"),
           ...document.querySelectorAll(".ovFlAut"),
           ...document.querySelectorAll("[scrollbar-width=none]"),
         ],
@@ -48,13 +48,13 @@ export default function PacTabForm(): JSX.Element {
     <form
       id='formRemovePac'
       name='form_pacs_table'
-      className='form-padded-nosb wid101'
+      className='formPadded__nosb wid101'
       action='patients_table'
       method='get'
       target='_top'
       ref={formRef}>
       <div role='group' className='wsBs flexNoWC cGap1v'>
-        <h1 className='mg-3b bolded'>
+        <h1 className='mg__3b bolded'>
           <strong id='titleTabPacs'>Tabela de Pacientes Registrados</strong>
         </h1>
         <em>
@@ -64,13 +64,13 @@ export default function PacTabForm(): JSX.Element {
         </em>
         <hr />
       </div>
-      <section className='form-padded pdL0' id='sectPacsTab'>
+      <section className='formPadded pdL0' id='sectPacsTab'>
         <PacList
           setDisplayRowData={setDisplayRowData}
           shouldDisplayRowData={shouldDisplayRowData}
           shouldShowAlocBtn={false}
         />
-        <div role='group' className='form-padded pdL0 widQ460FullW '></div>
+        <div role='group' className='formPadded pdL0 widQ460FullW '></div>
       </section>
       <button
         type='button'

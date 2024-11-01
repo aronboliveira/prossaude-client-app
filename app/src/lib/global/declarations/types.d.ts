@@ -6,6 +6,7 @@ export type primitiveType = looseNum | boolean | voidVal;
 export type textEl = HTMLInputElement | HTMLTextAreaElement;
 export type entryEl = textEl | HTMLSelectElement;
 export type elCollection = Element[] | NodeListOf<Element> | HTMLCollectionOf<Element>;
+//targets
 export type targNum = number | voidVal;
 export type targStr = string | voidVal;
 export type targLooseNum = looseNum | voidVal;
@@ -56,6 +57,7 @@ export type autofillResult = {
 };
 export type btnFillResult = [number[], number[], targEl[]];
 export type btnContext = [[number, string, fiveNums], contextAutofill];
+//errors
 export type errorHandleElType = Element | EventTarget | string | voidVal;
 export type errorHandleArrayType = (Element | primitiveType)[] | NodeList | HTMLCollection | string | voidVal;
 export type errorHandleSpreadType = (Element | EventTarget | primitiveType | voidVal)[];
@@ -176,6 +178,4 @@ export type validAreas =
   | "Psicologia"
   | "Medicina"
   | "Tecnologia";
-export type panelOpts = "registStud" | "registProf" | "removeStud" | "removeProf" | "pacList" | "agenda";
-export type validSchedCols = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
-export type thunkReqStatus = "idle" | "loading" | "submitting" | "fulfilled" | "rejected";
+export type panelOpts = "registStud" | "registProf" | "removeStud" | "removeProf" | "pacList" | "agenda" | "dashboard";

@@ -19,7 +19,7 @@ export default function ProtUrLvl(): JSX.Element {
         maxNum: 9999,
         min: 1,
         max: 6,
-        pattern: ["^d+$", ""],
+        pattern: ["^[0-9]+$", ""],
       });
     } catch (e) {
       return;

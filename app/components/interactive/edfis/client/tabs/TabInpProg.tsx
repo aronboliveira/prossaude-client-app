@@ -211,7 +211,18 @@ export default function TabInpProg({ nRow, nCol, ctx, lab }: TdProps): JSX.Eleme
             data-title={`${ctx === "DCut" ? "Dobras Cutâneas" : "Sinais Vitais"} ${fullName} (Consulta ${nCol - 1})`}
             data-row={nRow}
             data-col={nCol}
-            required={nCol - 1 === tabProps.numCons ? true : false}
+            required={
+              nCol - 1 === tabProps.numCons &&
+              (lab === "Coxa" ||
+                lab === "Peitoral" ||
+                lab === "Abdominal" ||
+                lab === "Soma" ||
+                ((document.getElementById("tabSelectDCutId") instanceof HTMLSelectElement ||
+                  document.getElementById("tabSelectDCutId") instanceof HTMLInputElement) &&
+                  (document.getElementById("tabSelectDCutId") as HTMLSelectElement).value === "pollock7"))
+                ? true
+                : false
+            }
             style={{ transition: "height .5s ease-in-out" }}
             onInput={ev => {
               try {

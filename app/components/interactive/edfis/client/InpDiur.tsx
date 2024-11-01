@@ -5,7 +5,7 @@ import { applyFieldConstraints } from "@/lib/global/gModel";
 import { handleCondtReq } from "@/lib/global/handlers/gHandlers";
 import { tabProps } from "@/vars";
 import { useRef, useEffect, useState } from "react";
-import sEn from "@/styles//modules/enStyles.module.scss";
+import sEn from "@/styles/modules/enStyles.module.scss";
 export default function InpDiur(): JSX.Element {
   const r = useRef<nlInp>(null),
     [v, setValue] = useState<PseudoNum>("" as any);
@@ -17,7 +17,7 @@ export default function InpDiur(): JSX.Element {
         maxNum: 9999,
         min: 1,
         max: 6,
-        pattern: ["^d+$", ""],
+        pattern: ["^[0-9]+$", ""],
       });
     } catch (e) {
       return;

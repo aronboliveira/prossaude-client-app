@@ -13,7 +13,6 @@ import FamPulm from "./FamPulm";
 import RadioPairDoces from "./RadioPairDoces";
 import AntMedFs from "./AntMedFs";
 import { registerPersistInputs, validateForm } from "@/lib/global/handlers/gHandlers";
-import { handleSubmit } from "@/lib/global/data-service";
 import Name from "../def/Name";
 import SocialName from "../def/SocialName";
 import CPFElement from "./CPFElement";
@@ -44,7 +43,7 @@ import FamDislip from "./FamDislip";
 import { useRef, useEffect } from "react";
 import { nlFm, nlInp, nlSel, nlSpan } from "@/lib/global/declarations/types";
 import useDataProvider from "@/lib/hooks/useDataProvider";
-import { agProps } from "@/vars";
+import { agProps, navigatorVars } from "@/vars";
 import { toast } from "react-hot-toast";
 import sAg from "@/styles//modules/agStyles.module.scss";
 export default function AgForm(): JSX.Element {
@@ -174,8 +173,14 @@ export default function AgForm(): JSX.Element {
       encType='multipart/form-data'
       autoComplete='on'
       onSubmit={ev =>
-        validateForm(ev).then(validation =>
-          validation[0] ? handleSubmit("ag", validation[2], true) : ev.preventDefault(),
+        validateForm(ev).then((validation): any =>
+          validation[0]
+            ? toast.success(navigatorVars.pt ? `Formulário enviado!` : `Form submited!`)
+            : toast.error(
+                navigatorVars.pt
+                  ? `Formulário inválido! Cheque os campos enviados`
+                  : `Invalid form! Check the submited fields`,
+              ),
         )
       }>
       <fieldset name='fsAnamGName' id='fsAnamGIdId' className='fsMain'>

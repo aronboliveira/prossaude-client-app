@@ -19,7 +19,6 @@ import { createRoot } from "react-dom/client";
 import { toast } from "react-hot-toast";
 import { navigatorVars } from "@/vars";
 import Spinner from "../../../../components/icons/Spinner";
-import { elementNotFound, extLine } from "./errorHandler";
 //function for facilitating conversion of types when passing properties to DOM elements
 export function updateSimpleProperty(el: targEl): primitiveType {
   if (el instanceof HTMLInputElement) {
@@ -749,7 +748,8 @@ export function resetForm(form: nlFm): void {
     return;
   }
 }
-const borderColors: { [k: string]: string } = {};
+const borderColors: Map<string, string> = new Map(),
+  placeholders: Map<string, string> = new Map();
 export async function validateForm(
   ev: FormEvent | SubmitEvent | rMouseEvent | HTMLFormElement,
   scope: queryableNode = document,
@@ -766,9 +766,9 @@ export async function validateForm(
     ev.preventDefault();
     targ = ev.currentTarget;
   }
-  const arrValidity: boolean[] = [];
-  const invalidEntries: string[] = [];
-  const validEntries: Array<[string, string | File]> = [];
+  const arrValidity: boolean[] = [],
+    invalidEntries: string[] = [],
+    validEntries: Array<[string, string | File]> = [];
   let form;
   (() => {
     try {
@@ -784,28 +784,42 @@ export async function validateForm(
       else form = targ.closest("form");
       if (!(form instanceof HTMLFormElement)) scope?.querySelector("form");
       if (!(form instanceof HTMLFormElement)) return;
+      let scrolled = false;
       [
         ...form.querySelectorAll("input"),
         ...form.querySelectorAll("textarea"),
         ...form.querySelectorAll("select"),
         ...form.querySelectorAll("canvas"),
       ].forEach(entry => {
+        if (
+          !(entry instanceof HTMLElement) ||
+          (entry instanceof HTMLElement &&
+            (getComputedStyle(entry).display === "none" || getComputedStyle(entry).opacity === "0")) ||
+          entry.hidden
+        )
+          return;
         const displayInvalidity = (valid: boolean = true): void => {
           if (!valid && !(entry instanceof HTMLCanvasElement)) {
-            entry.scrollIntoView({ behavior: "smooth" });
+            console.log(entry.id);
+            if (!scrolled) {
+              entry.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
+              scrolled = true;
+              setTimeout(() => {
+                scrolled = false;
+              }, 2000);
+            }
+            const idf = entry.id || entry.name || entry.classList.toString().replaceAll(" ", "_");
             if (!/border-color/g.test(getComputedStyle(entry).transition))
               entry.style.transition = (getComputedStyle(entry).transition || "") + "border-color ease-in-out 1s";
-            if (!borderColors[entry.id || entry.name || entry.classList.toString().replaceAll(" ", "_")])
-              borderColors[entry.id || entry.name || entry.classList.toString().replaceAll(" ", "_")] =
-                getComputedStyle(entry).borderColor || getComputedStyle(entry).borderBottomColor;
+            const bColor = borderColors.get(idf);
+            if (!bColor)
+              borderColors.set(idf, getComputedStyle(entry).borderColor || getComputedStyle(entry).borderBottomColor);
             entry.style.borderColor = "red";
-            setTimeout(
-              () =>
-                (entry.style.borderColor =
-                  borderColors[entry.id || entry.name || entry.classList.toString().replaceAll(" ", "_")] ||
-                  "rgb(222, 226, 230)"),
-              1000,
-            );
+            setTimeout(() => {
+              const bColor = borderColors.get(idf);
+              if (!bColor) return;
+              entry.style.borderColor = bColor || "rgb(222, 226, 230)";
+            }, 1000);
             if (
               (entry instanceof HTMLInputElement &&
                 !(
@@ -814,14 +828,19 @@ export async function validateForm(
                   entry.type === "file" ||
                   entry.type === "submit" ||
                   entry.type === "button" ||
-                  entry.type === "reset"
+                  entry.type === "reset" ||
+                  entry.type === "color" ||
+                  entry.type === "hidden"
                 )) ||
               entry instanceof HTMLTextAreaElement
             ) {
-              const prevPlaceholder = entry.placeholder;
+              const ph = placeholders.get(idf);
+              if (!ph) placeholders.set(idf, entry.placeholder);
               entry.placeholder = `Entrada inválida`;
               setTimeout(() => {
-                entry.placeholder = prevPlaceholder;
+                const ph = placeholders.get(idf);
+                if (!ph) return;
+                entry.placeholder = ph;
               }, 2000);
             }
           }
@@ -1084,7 +1103,19 @@ export async function validateForm(
       form.noValidate = false;
       submit &&
         submitForm(form, (form.dataset.ep || form.action.replace("submit_", "").replace("_form", "")) as formCases);
-    } else form.noValidate = true;
+    } else {
+      form.noValidate = true;
+      const t = form;
+      setTimeout(() => {
+        if (!t) return;
+        t.noValidate = false;
+        if (t instanceof HTMLFormElement)
+          t.querySelectorAll("input").forEach(inp => {
+            if (!(inp instanceof HTMLInputElement)) return;
+            inp.formNoValidate = false;
+          });
+      }, 2000);
+    }
   }
   return [formValidated, invalidEntries.map(invalidIdf => `${invalidIdf} \n`), validEntries];
 }
@@ -1616,50 +1647,27 @@ export function registerPersistInputs({
     return;
   }
 }
-const loops: { [k: string]: boolean } = {};
-export function registerRoot(
-  root: vRoot,
-  selector: string,
-  selectorRef?: MutableRefObject<nlHtEl>,
-  renderFollows: boolean = true,
-): vRoot {
+export function registerRoot(root: vRoot, selector: string, selectorRef?: MutableRefObject<nlHtEl>): vRoot {
   try {
     const rootEl =
       typeof selectorRef === "object" && "current" in selectorRef
         ? selectorRef.current ?? document.querySelector(selector) ?? document.getElementById(selector)
         : document.querySelector(selector) ?? document.getElementById(selector);
-    if (!(rootEl instanceof HTMLElement))
-      throw elementNotFound(rootEl, `Finding element with ${selector} for rooting`, extLine(new Error()));
+    if (!(rootEl instanceof HTMLElement)) return;
     if (!root && rootEl) {
       if (rootEl.dataset.rooted === "true") {
         if (!rootEl.hasChildNodes()) {
-          console.log(`Root Element ${selector} has no children `);
           rootEl.dataset.rooted = "false";
           root = createRoot(rootEl);
-        } else {
-          console.log(`Root Element ${selector} has children`);
-          if (renderFollows) {
-            root = createRoot(rootEl);
-            loops[selector] = false;
-            const lto = setTimeout(() => (loops[selector] = true), 3000);
-            while (rootEl?.firstChild) {
-              if (loops[selector]) return root;
-              rootEl?.removeChild(rootEl.firstChild);
-            }
-            clearTimeout(lto);
-            loops[selector] = false;
-          }
-        }
+        } else root = createRoot(rootEl);
       } else root = createRoot(rootEl);
     } else if (root && !(root as any)["_internalRoot"]) {
-      console.log(`Root ${selector} invalid`);
       root = undefined;
       rootEl.dataset.rooted = "false";
       root = createRoot(rootEl);
     }
     rootEl.dataset.rooted = "true";
   } catch (e) {
-    console.error(`Error executing registerRoot:\n${(e as Error).message}`);
     return root;
   }
   return root;

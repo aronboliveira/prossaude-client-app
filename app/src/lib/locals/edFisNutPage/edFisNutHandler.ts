@@ -756,7 +756,11 @@ export function switchRequiredCols({
       throw new Error(`Failed to validate number of required inputs for tables`);
     for (const i of flatRequiredCells) {
       highlightChange(i, "red", "both");
-      if (i instanceof HTMLInputElement || i instanceof HTMLTextAreaElement || i instanceof HTMLSelectElement)
+      if (
+        i instanceof HTMLInputElement ||
+        i instanceof HTMLTextAreaElement ||
+        (i instanceof HTMLSelectElement && !(i.hidden || i.style.display === "none" || i.style.opacity === "0"))
+      )
         i.required = true;
     }
   } catch (e) {

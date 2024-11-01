@@ -2,9 +2,10 @@
 import { ExportHandler } from "@/lib/global/declarations/classes";
 import { nlBtn } from "@/lib/global/declarations/types";
 import { addExportFlags } from "@/lib/global/gController";
-import { checkForReset } from "@/lib/global/handlers/gHandlers";
-import { exporters } from "@/vars";
+import { checkForReset, validateForm } from "@/lib/global/handlers/gHandlers";
+import { exporters, navigatorVars } from "@/vars";
 import { useEffect, useRef } from "react";
+import { toast } from "react-hot-toast";
 let exporter: ExportHandler | undefined;
 export default function SectConfirmBtns(): JSX.Element {
   const btnRef = useRef<nlBtn>(null);
@@ -59,7 +60,18 @@ export default function SectConfirmBtns(): JSX.Element {
         className='confirmBut btn btn-success forceInvert'
         formAction='_self'
         formMethod='POST'
-        accessKey='enter'>
+        accessKey='enter'
+        onClick={ev =>
+          validateForm(ev).then((validation): any =>
+            validation[0]
+              ? toast.success(navigatorVars.pt ? `Formulário enviado!` : `Form submited!`)
+              : toast.error(
+                  navigatorVars.pt
+                    ? `Formulário inválido! Cheque os campos enviados`
+                    : `Invalid form! Check the submited fields`,
+                ),
+          )
+        }>
         Submeter
       </button>
       <button

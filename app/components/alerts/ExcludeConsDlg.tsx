@@ -63,7 +63,7 @@ export default function ExcludeConsDlg({
         <dialog
           role='alertdialog'
           ref={excludeDlgRef}
-          className='modal-content modal-content-fit'
+          className='modal-content modalContent__fit'
           id='exclude-cons-dlg'
           onClick={ev => {
             if (isClickOutside(ev, ev.currentTarget).some(coord => coord === true)) {

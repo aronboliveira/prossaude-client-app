@@ -58,8 +58,7 @@ export default function AlterFieldList({
       };
       addEventListener("keydown", handleKeyDown);
       return (): void => removeEventListener("keydown", handleKeyDown);
-    } else
-      elementNotFound(alterFieldRef.current, "Reference for Previous appointments list dialog", extLine(new Error()));
+    }
   }, [alterFieldRef, dispatch, toggleDisplayRowData]);
   //push em history
   useEffect(() => {
@@ -136,9 +135,6 @@ export default function AlterFieldList({
           optsRef.current?.appendChild(newOpt);
         });
       if (optsRef.current.childElementCount < headers.length || optsRef.current.childElementCount === 0) {
-        console.error(
-          `Error generating options for <select> reflecting headers. Abort process and replacing by <input>`,
-        );
         const replaceInp = document.createElement("input") as HTMLInputElement;
         Object.assign(replaceInp, optsRef.current);
         Object.assign(replaceInp.style, optsRef.current);
@@ -156,7 +152,7 @@ export default function AlterFieldList({
   return (
     <ErrorBoundary FallbackComponent={() => <GenericErrorComponent message='Erro carregando modal de alteração' />}>
       <dialog
-        className='modal-content-stk2'
+        className='modalContent__stk2'
         ref={alterFieldRef}
         id='alterFieldDlg'
         onClick={ev => {
@@ -174,7 +170,7 @@ export default function AlterFieldList({
           )}>
           <fieldset id='fsAlterFieldStud' className='flexNoWC flexJSt flexAlItSt noInvert'>
             <section className='flexRNoWBetCt widFull' id='headFieldsHead'>
-              <h2 className='mg-1b'>
+              <h2 className='mg__1b'>
                 <strong>Campos Disponíveis</strong>
               </h2>
               <button className='btn btn-close forceInvert' onClick={() => toggleDisplayRowData(state)}></button>

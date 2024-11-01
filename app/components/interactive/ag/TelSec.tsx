@@ -7,16 +7,16 @@ export default function TelSec(): JSX.Element {
       type='tel'
       name='tel_sec'
       id='tel2Id'
-      className='form-control inpIdentif noInvert inpTel'
+      className='form-control inpIdentif noInvert inpTel minText maxText patternText'
       inputMode='tel'
       data-xls='Telefone Secundário'
       data-title='tel_sec'
       onInput={ev => {
         formatTel(ev.currentTarget, false);
         handleCondtReq(ev.currentTarget, {
-          min: 3,
+          min: 8,
           max: 10,
-          pattern: ["9?d{4}-d{4}", "g"],
+          pattern: ["9?[0-9]{4,}-[0-9]{4,}", "g"],
         });
       }}
     />
