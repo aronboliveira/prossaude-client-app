@@ -97,7 +97,7 @@ export function useDataFetch(
     setData(prev => {
       prev.splice(0, prev.length);
       return filtered.length === 0
-        ? [<GenericErrorComponent message='❌ Não foi possível carregar os dados!' />]
+        ? [<GenericErrorComponent key={crypto.randomUUID()} message='❌ Não foi possível carregar os dados!' />]
         : filtered.map((p, i) => dataParser(p, i));
     });
     setTimeout(
