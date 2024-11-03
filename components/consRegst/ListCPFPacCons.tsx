@@ -16,7 +16,7 @@ export default function ListCPFPacCons(): JSX.Element {
       if (!(dlRef.current instanceof HTMLDataListElement)) return;
       handleFetch("patients", "_table", true)
         .then(res => {
-          res.forEach(pac => {
+          res?.forEach(pac => {
             !pacs.includes(pac as PacInfo) &&
               pacs.push({
                 name: pac.name,

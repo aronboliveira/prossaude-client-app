@@ -24,9 +24,7 @@ export default function AvPacListDlg({ dispatch, state, shouldShowAlocBtn }: AvP
         "",
         `${location.origin}${location.pathname}${location.search}`.replaceAll("&av-pac=open", ""),
       );
-      setTimeout(() => {
-        history.pushState({}, "", `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#"));
-      }, 300);
+      setTimeout(() => history.pushState({}, "", `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#")), 300);
     };
   }, []);
   //listeners para dlg

@@ -16,7 +16,7 @@ export default function ListEmailPacCons(): JSX.Element {
       if (!(dlRef.current instanceof HTMLDataListElement)) return;
       handleFetch("patients", "_table", true)
         .then(res => {
-          res.forEach(pac => {
+          res?.forEach(pac => {
             !pacs.includes(pac as PersonProps) &&
               pacs.push({
                 name: pac.name,

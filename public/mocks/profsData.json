@@ -1,0 +1,57 @@
+[
+  {
+    "idf": "156.789.99-00",
+    "name": "João Almeida dos Santos",
+    "area": "Odontologia & Coordenação",
+    "email": "almeida.joao@gmail.com",
+    "tel": "+55 21 99988-7766",
+    "start_day": "2020-01-08",
+    "end_day": "Presente",
+    "day": "Quarta-feira & Sexta-Feira",
+    "external": false
+  },
+  {
+    "idf": "156.789.99-00",
+    "name": "Jéssica Bonifácio Barbosa",
+    "area": "Educação Física",
+    "email": "jess.barb@gmail.com",
+    "tel": "+55 21 91516-7788",
+    "start_day": "2020-01-08",
+    "end_day": "Presente",
+    "day": "Inativa",
+    "external": false
+  },
+  {
+    "idf": "129.222.333-11",
+    "name": "Gislayne Duarte Tavares",
+    "area": "Nutrição & Supervisão",
+    "email": "gislayne1994@gmail.com",
+    "tel": "+55 11 91010-6689",
+    "start_day": "2020-01-08",
+    "end_day": "Presente",
+    "day": "Sexta-Feira",
+    "external": true
+  },
+  {
+    "idf": "158.354.458-12",
+    "name": "André Alfredo Gusmão",
+    "area": "Educação Física",
+    "email": "andregus@gmail.com",
+    "tel": "+55 31 92015-6678",
+    "start_day": "2020-01-08",
+    "end_day": "Presente",
+    "day": "Quarta-Feira",
+    "external": false
+  },
+  {
+    "idf": "158.555.459-19",
+    "name": "Aline dos Santos Wanderhaus",
+    "area": "Odontologia",
+    "email": "aliwander@outlook.com",
+    "tel": "+55 11 92299-6779",
+    "start_day": "2020-01-08",
+    "end_day": "2021-01-08",
+    "day": "Inativo",
+    "external": true
+  }
+]

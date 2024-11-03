@@ -49,7 +49,7 @@ export default function TableProfForm(): JSX.Element {
         if (profs.length > 0) return;
         handleFetch("profs", "_table", true)
           .then(res => {
-            res.forEach(prof => {
+            res?.forEach(prof => {
               !profs.includes(prof as ProfInfo) &&
                 profs.push({
                   name: prof.name,
@@ -60,6 +60,7 @@ export default function TableProfForm(): JSX.Element {
                   end_day: (prof as ProfInfo)["end_day"],
                   day: (prof as ProfInfo)["day"],
                   idf: (prof as ProfInfo)["idf"],
+                  external: (prof as ProfInfo).external,
                 });
             });
             try {
@@ -146,17 +147,10 @@ export default function TableProfForm(): JSX.Element {
                       if (tabRef?.current instanceof HTMLTableElement) {
                         equalizeTabCells(tabRef.current);
                         fillTabAttr(tabRef.current);
-                      } else
-                        elementNotFound(
-                          tabRef.current,
-                          `tabRef id ${(tabRef?.current as any)?.id || "UNIDENTIFIED"} in useEffect() for tableRef`,
-                          extLine(new Error()),
-                        );
+                      }
                     }, 300);
                   } catch (e) {
-                    console.error(
-                      `Error executing scheduled rendering of Table Body Content Replacement:\n${(e as Error).message}`,
-                    );
+                    return;
                   }
                 }, 1000);
               } else panelRoots[`${tbodyRef.current.id}`] = createRoot(tbodyRef.current);
@@ -179,12 +173,7 @@ export default function TableProfForm(): JSX.Element {
                 if (tabRef?.current instanceof HTMLTableElement) {
                   equalizeTabCells(tabRef.current);
                   fillTabAttr(tabRef.current);
-                } else
-                  elementNotFound(
-                    tabRef.current,
-                    `tabRef id ${(tabRef?.current as any)?.id || "UNIDENTIFIED"} in useEffect() for tableRef`,
-                    extLine(new Error()),
-                  );
+                }
               }, 300);
               setTimeout(() => {
                 if (!document.querySelector("tr") && document.querySelector("table")) {
@@ -225,7 +214,7 @@ export default function TableProfForm(): JSX.Element {
           });
       }, 300);
     } catch (e) {
-      console.error(`Error executing useEffect for Table Body Reference:\n${(e as Error).message}`);
+      return;
     }
   }, [userClass]);
   useEffect(() => {
@@ -240,7 +229,7 @@ export default function TableProfForm(): JSX.Element {
           );
       callbackNormalizeSizesSb();
       syncAriaStates([...formRef.current!.querySelectorAll("*"), formRef.current]);
-    } else elementNotFound(formRef?.current, "formRef.current in useEffect() for TableProfForm", extLine(new Error()));
+    }
   }, [formRef, callbackNormalizeSizesSb]);
   useEffect(() => {
     if (tabRef.current instanceof HTMLElement) {

@@ -9,6 +9,8 @@ import { assignFormAttrs } from "@/lib/global/gModel";
 import { ExportHandler } from "@/lib/global/declarations/classes";
 import { exporters } from "@/vars";
 import useExportHandler from "@/lib/hooks/useExportHandler";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+const queryClient = new QueryClient();
 export default function PacTabForm(): JSX.Element {
   const [shouldDisplayRowData, setDisplayRowData] = useState<boolean>(false),
     formRef = useRef<nlFm>(null),
@@ -45,53 +47,55 @@ export default function PacTabForm(): JSX.Element {
   useExportHandler("pacExporter", formRef.current);
   useEffect(() => assignFormAttrs(formRef.current));
   return (
-    <form
-      id='formRemovePac'
-      name='form_pacs_table'
-      className='formPadded__nosb wid101'
-      action='patients_table'
-      method='get'
-      target='_top'
-      ref={formRef}>
-      <div role='group' className='wsBs flexNoWC cGap1v'>
-        <h1 className='mg__3b bolded'>
-          <strong id='titleTabPacs'>Tabela de Pacientes Registrados</strong>
-        </h1>
-        <em>
-          <small role='textbox'>
-            Verifique aqui as informações para leitura, alteração e remoção de pacientes no projeto.
-          </small>
-        </em>
-        <hr />
-      </div>
-      <section className='formPadded pdL0' id='sectPacsTab'>
-        <PacList
-          setDisplayRowData={setDisplayRowData}
-          shouldDisplayRowData={shouldDisplayRowData}
-          shouldShowAlocBtn={false}
-        />
-        <div role='group' className='formPadded pdL0 widQ460FullW '></div>
-      </section>
-      <button
-        type='button'
-        id='btnExport'
-        className='btn btn-success flexAlItCt flexJC flexBasis50 bolded widQ460FullW'
-        name='btnExportPacsTab'
-        ref={btnExportPacsTabRef}
-        data-active='false'
-        title='Gere um .xlsx com os dados preenchidos'
-        onClick={ev => {
-          if (!exporters.pacExporter) exporters.pacExporter = new ExportHandler();
-          exporters.pacExporter.handleExportClick(
-            ev,
-            `tabelaDePacientes__d${new Date().getDay()}_m${new Date().getMonth() + 1}_y${new Date().getFullYear()}`,
-            formRef.current,
-            document.getElementById("titleTabPacs") || formRef.current,
-          ),
-            { signal: new AbortController().signal };
-        }}>
-        Gerar Planilha
-      </button>
-    </form>
+    <QueryClientProvider client={queryClient}>
+      <form
+        id='formRemovePac'
+        name='form_pacs_table'
+        className='formPadded__nosb wid101'
+        action='patients_table'
+        method='get'
+        target='_top'
+        ref={formRef}>
+        <div role='group' className='wsBs flexNoWC cGap1v'>
+          <h1 className='mg__3b bolded'>
+            <strong id='titleTabPacs'>Tabela de Pacientes Registrados</strong>
+          </h1>
+          <em>
+            <small role='textbox'>
+              Verifique aqui as informações para leitura, alteração e remoção de pacientes no projeto.
+            </small>
+          </em>
+          <hr />
+        </div>
+        <section className='formPadded pdL0' id='sectPacsTab'>
+          <PacList
+            setDisplayRowData={setDisplayRowData}
+            shouldDisplayRowData={shouldDisplayRowData}
+            shouldShowAlocBtn={false}
+          />
+          <div role='group' className='formPadded pdL0 widQ460FullW '></div>
+        </section>
+        <button
+          type='button'
+          id='btnExport'
+          className='btn btn-success flexAlItCt flexJC flexBasis50 bolded widQ460FullW'
+          name='btnExportPacsTab'
+          ref={btnExportPacsTabRef}
+          data-active='false'
+          title='Gere um .xlsx com os dados preenchidos'
+          onClick={ev => {
+            if (!exporters.pacExporter) exporters.pacExporter = new ExportHandler();
+            exporters.pacExporter.handleExportClick(
+              ev,
+              `tabelaDePacientes__d${new Date().getDay()}_m${new Date().getMonth() + 1}_y${new Date().getFullYear()}`,
+              formRef.current,
+              document.getElementById("titleTabPacs") || formRef.current,
+            ),
+              { signal: new AbortController().signal };
+          }}>
+          Gerar Planilha
+        </button>
+      </form>
+    </QueryClientProvider>
   );
 }

@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, MutableRefObject, useRef } from "react";
+import { useState, useEffect, useMemo, MutableRefObject, useRef, Dispatch, SetStateAction } from "react";
 import { handleFetch } from "../global/data-service";
 import { formCases, nlHtEl } from "../global/declarations/types";
 import { PacInfo, ProfInfo, StudInfo } from "../global/declarations/interfacesCons";
@@ -20,8 +20,10 @@ export function useDataFetch(
   dataParser: (p: PacInfo | ProfInfo | StudInfo, i: number) => JSX.Element,
 ): {
   data: JSX.Element[];
+  setData: Dispatch<SetStateAction<JSX.Element[]>>;
   grp: (PacInfo | ProfInfo | StudInfo)[];
   loaded: boolean;
+  validator: (data: Partial<ProfInfo | StudInfo | PacInfo>) => boolean;
 } {
   let grp: (PacInfo | ProfInfo | StudInfo)[] = useMemo<any[]>((): any[] => [], []);
   const [data, setData] = useState<JSX.Element[]>([
@@ -105,5 +107,5 @@ export function useDataFetch(
       500,
     );
   }, [loaded, ref, validator]);
-  return { data, grp, loaded };
+  return { data, setData, grp, loaded, validator };
 }

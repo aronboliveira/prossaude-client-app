@@ -4,13 +4,13 @@ import { createContext, useEffect } from "react";
 import ReactSpinner from "../../../icons/ReactSpinner";
 import useBsLink from "@/lib/hooks/useBsLink";
 export const PanelCtx = createContext<{
-  userClass: string;
-  setUserClass: Dispatch<SetStateAction<string>>;
-}>({
-  userClass: "coordenador",
-  setUserClass: () => {},
-});
-const SelectPanel = lazy(() => import("./SelectPanel"));
+    userClass: string;
+    setUserClass: Dispatch<SetStateAction<string>>;
+  }>({
+    userClass: "coordenador",
+    setUserClass: () => {},
+  }),
+  SelectPanel = lazy(() => import("./SelectPanel"));
 export default function SelectPanelLoader(): JSX.Element {
   const [userClass, setUserClass] = useState<string>("estudante");
   useEffect(() => {

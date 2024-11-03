@@ -17,7 +17,7 @@ export default function OptGrpUsers({ grp, area }: { grp: formCases; area: valid
       if (!(optGrpRef.current instanceof HTMLOptGroupElement)) return;
       handleFetch(grp, "_table", true)
         .then(res => {
-          res.forEach(user => {
+          res?.forEach(user => {
             !users.includes(user as UserProps) &&
               users.push({
                 name: user.name,

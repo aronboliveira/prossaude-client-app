@@ -33,7 +33,7 @@ export default function StudList({ mainDlgRef, dispatch, state = true }: StudLis
         if (studs.length > 0) return;
         handleFetch("studs", "_table", true)
           .then(res => {
-            res.forEach(stud => {
+            res?.forEach(stud => {
               !studs.includes(stud as StudInfo) &&
                 studs.push({
                   name: stud.name,

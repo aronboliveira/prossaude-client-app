@@ -8,7 +8,6 @@ export default function ProfRow({
   tabRef,
   nRow,
   inDlg = false,
-  external = false,
   prof = {
     name: "Anônimo",
     email: "Não fornecido",
@@ -56,7 +55,7 @@ export default function ProfRow({
             data-row={nRow}
             data-col={userClass === "coordenador" ? "3" : "2"}
             data-aloc='external-prof'>
-            {external ? "Externo" : "Interno"}
+            {prof.external ? "Externo" : "Interno"}
           </output>
         </td>
       )}

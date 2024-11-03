@@ -78,7 +78,8 @@ export default function PanelPage(): JSX.Element {
             id='wrapperUserInfo'>
             <section
               className='form-control noMargin widThird flexNoW rGap2v flexBasis25 mg__0bQ460 widMinFit mg__0b600Q noInvert'
-              id='sectUserInfo'>
+              id='sectUserInfo'
+              style={{ marginBlock: "0" }}>
               <div role='group' className='widFull flexNoW cGap2v rGap1v flexQ460NoWC wsNoW' id='rootUserInfo'>
                 <UserProfilePanelWrapper />
               </div>

@@ -34,18 +34,14 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
   useEffect(() => {
     !/av-prof=open/gi.test(location.search) &&
       history.pushState({}, "", `${location.origin}${location.pathname}${location.search}&av-prof=open`);
-    setTimeout(() => {
-      history.pushState({}, "", `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#"));
-    }, 300);
+    setTimeout(() => history.pushState({}, "", `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#")), 300);
     return (): void => {
       history.pushState(
         {},
         "",
         `${location.origin}${location.pathname}${location.search}`.replaceAll("&av-prof=open", ""),
       );
-      setTimeout(() => {
-        history.pushState({}, "", `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#"));
-      }, 300);
+      setTimeout(() => history.pushState({}, "", `${location.href}`.replaceAll("/?", "?").replaceAll("/#", "#")), 300);
     };
   }, []);
   //listeners para dialog
@@ -74,7 +70,7 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
         if (internalProfs.length > 0 || externalProfs.length > 0) return;
         handleFetch("profs", "_table", true)
           .then(res => {
-            res.forEach(prof => {
+            res?.forEach(prof => {
               if ((prof as ProfInfo).external) {
                 !externalProfs.includes(prof as ProfInfo) &&
                   externalProfs.push({

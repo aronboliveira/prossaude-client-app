@@ -108,7 +108,6 @@ export default function SelectPanel({ defOp = "agenda" }: MainPanelProps): JSX.E
             formRoot.style.opacity = "1";
           }
         }, 300);
-        console.log(camel);
         if (/registStud/gi.test(camel)) {
           context.roots.formRoot.render(
             userClass === "coordenador" || userClass === "supervisor" ? <StudentForm /> : <Unauthorized />,
