@@ -59,7 +59,7 @@ export default function PacTabForm(): JSX.Element {
         </h1>
         <em>
           <small role='textbox'>
-            Verifique aqui as informações para leitura, alteração e remoção de pacissionais no projeto.
+            Verifique aqui as informações para leitura, alteração e remoção de pacientes no projeto.
           </small>
         </em>
         <hr />

@@ -17,6 +17,7 @@ import {
   typeError,
 } from "../../../global/handlers/errorHandler";
 import { providerFormData, consVariablesData } from "../../../../../components/consRegst/consVariables";
+import { toast } from "react-hot-toast";
 
 //nesse arquivo estão as funções para handling de casos comuns entre os components
 
@@ -80,7 +81,7 @@ export function correlateAptMonthDays(
         dayInp.classList.toggle("form-control");
         dayInp.classList.toggle("form-select");
         document.getElementById("changeDayDiv")!.replaceChild(dayInp, daySel);
-        console.error(`Error creating options list for First day of work. Replacing for input. Enter day manually.`);
+        toast.error(`Error creating options list for First day of work. Replacing for input. Enter day manually.`);
       }
     };
     if (Array.isArray(dayRefs) && dayRefs.length > 0) {
@@ -284,13 +285,8 @@ export function correlateWorkingDays(
             : (lab.textContent = lab.textContent.replace("Primeiro", "Primeira"));
         }
       }
-    } else
-      elementNotPopulated(
-        labConsWeekdays,
-        `Labels for appointments working days when comparing to the number of columns ${numColumnsRef} and working days ${workingDayNames.length} references`,
-        extLine(new Error()),
-      );
-  } else elementNotPopulated(workingDayNames, `arguments for ${arguments.callee.name}`, extLine(new Error()));
+    }
+  }
 }
 export function removeRepeateadWorkingDays(workingDays: [number, number]): [number, number] {
   if (
@@ -320,35 +316,19 @@ export function removeRepeateadWorkingDays(workingDays: [number, number]): [numb
         if (firstRepOp instanceof HTMLElement) {
           firstOrderWorkDay.querySelectorAll("option").forEach(option => (option.hidden = false));
           firstRepOp.hidden = true;
-          if (firstOrderWorkDay.querySelectorAll('option[hidden="true"]').length > 2) {
-            console.error(`Error: more than one option was hidden. Reverting process.`);
+          if (firstOrderWorkDay.querySelectorAll('option[hidden="true"]').length > 2)
             firstOrderWorkDay.querySelectorAll("option").forEach(option => (option.hidden = false));
-          }
         } else elementNotFound(firstRepOp, "Repeated option in the second working day", extLine(new Error()));
         if (secondRepOp instanceof HTMLElement) {
           secondOrderWorkDay.querySelectorAll("option").forEach(option => (option.hidden = false));
           secondRepOp.hidden = true;
-          if (secondOrderWorkDay.querySelectorAll('option[hidden="true"]').length > 2) {
-            console.error(`Error: more than one option was hidden. Reverting process.`);
+          if (secondOrderWorkDay.querySelectorAll('option[hidden="true"]').length > 2)
             secondOrderWorkDay.querySelectorAll("option").forEach(option => (option.hidden = false));
-          }
-        } else elementNotFound(secondRepOp, "Repeated option in the first working day", extLine(new Error()));
+        }
         return workingDays;
-      } else
-        multipleElementsNotFound(
-          extLine(new Error()),
-          "selected options for reflecting select values for working weekdays",
-          selectedFirstOpWeekday,
-          selectedSecondOpWeekday,
-        );
-    } else
-      multipleElementsNotFound(
-        extLine(new Error()),
-        "Entry elements for defining working weekdays",
-        firstOrderWorkDay,
-        secondOrderWorkDay,
-      );
-  } else elementNotPopulated(workingDays, `argument for ${arguments.callee.name}`, extLine(new Error()));
+      }
+    }
+  }
   return workingDays;
 }
 export function generateSchedPacData(scope: targEl): { [k: string]: string } {
@@ -441,7 +421,7 @@ export function handleRenderRefLost(id: string, prevRef: HTMLElement, userClass:
       }
     }, timer);
   } catch (e) {
-    console.error(`Error executing handleRenderRefLost:\n${(e as Error).message}`);
+    return;
   }
 }
 export function handleAptBtnClick(ev: MouseEvent, userClass: string): void {
@@ -526,11 +506,7 @@ export function handleAptBtnClick(ev: MouseEvent, userClass: string): void {
       handleRenderRefLost("rootDlgList", ev.currentTarget, userClass);
     }
   } catch (e) {
-    console.error(
-      `Error executing callback for ${
-        (ev.currentTarget instanceof HTMLElement && ev.currentTarget.tagName) || "unidentified Node"
-      } type ${ev.type}:\n${(e as Error).message}`,
-    );
+    return;
   }
 }
 export function createAptBtn(
@@ -673,14 +649,13 @@ export function handleDragAptBtn(newAppointmentBtn: targEl, userClass: string = 
               //atualização no drop (associada com replaceregstslot)
               sessionScheduleState[monthSelector.value] = tbody.innerHTML;
             } catch (e) {
-              console.error(`Error updation session schedule state after dragend:
-              ${(e as Error).message}`);
+              return;
             }
             break;
           }
         }
       } catch (e) {
-        console.error(`Error executing dragEnd callback:${(e as Error).message}`);
+        return;
       }
     });
     newAppointmentBtn.addEventListener("touchstart", ev => {
@@ -761,14 +736,13 @@ export function handleDragAptBtn(newAppointmentBtn: targEl, userClass: string = 
                     );
                   sessionScheduleState[monthSelector.value] = tbody.innerHTML;
                 } catch (e) {
-                  console.error(`Error updation session schedule state after dragend:
-                ${(e as Error).message}`);
+                  return;
                 }
                 break;
               }
             }
           } catch (e) {
-            console.error(`Error executing handleToucEnd:\n${(e as Error).message}`);
+            return;
           }
           isDragging = false;
         }
@@ -822,7 +796,7 @@ export function replaceRegstSlot(
           //atualização de state no drop
           fillSchedStateValues(monthSelector.value);
         } catch (e) {
-          console.error(`Error executing procedure for updating state of month:\n${(e as Error).message}`);
+          return;
         }
       }, 200);
       const transfArea = document.getElementById("transfArea");
@@ -929,13 +903,13 @@ export function replaceRegstSlot(
               }, 200);
             }
           } catch (e) {
-            console.error(`Error adding interval to new aptBtn:\n${(e as Error).message}`);
+            return;
           }
         }
       }
-    } else elementNotFound(matchedSlot, "Undefined Slot por dragend", extLine(new Error()));
+    }
   } catch (e) {
-    console.error(`Error executing replaceRegstSlot:\n${(e as Error).message}`);
+    return;
   }
 }
 export function checkRegstBtn(
@@ -1165,12 +1139,10 @@ export function handleScheduleChange(
         }
       }
     } catch (e) {
-      console.error(`Error filling entry Elements on handleScheduleChange():
-      ${(e as Error).message}`);
+      return;
     }
   } catch (err) {
-    console.error(`Error on the execution of handleScheduleChange():
-    ${(err as Error).message}`);
+    return;
   }
 }
 export function verifyAptCheck(dayCheck: targEl): void {
@@ -1199,11 +1171,11 @@ export function verifyAptCheck(dayCheck: targEl): void {
         if (relBtn.classList.contains("btn-info")) relBtn.classList.remove("btn-info");
         relBtn.classList.add("btn-success");
       } catch (e) {
-        console.error(`Error executing procedure for painting Appointment Button:\n${(e as Error).message}`);
+        return;
       }
     }
   } catch (e) {
-    console.error(`Error executing verifyAptCheck:\n${(e as Error).message}`);
+    return;
   }
 }
 export function addListenersForSchedTab(
@@ -1303,7 +1275,7 @@ export function addListenersForSchedTab(
         rootDlgContext.addedDayListeners = true;
         clearInterval(interv);
       } catch (e) {
-        console.error(`Error executing interval for applying listeners to Day Checks:\n${(e as Error).message}`);
+        return;
       }
     }, 200);
     setTimeout(() => {
@@ -1312,13 +1284,12 @@ export function addListenersForSchedTab(
         if (dayChecks.length < 0)
           throw elementNotPopulated(dayChecks, "Checkboxes for day checks", extLine(new Error()));
       } catch (e) {
-        console.error(`Error executing procedure for readding listeners to Day Checks:\n${(e as Error).message}`);
+        return;
       }
       clearInterval(checkInterv);
     }, 5000);
   } catch (err) {
-    console.error(`Error executing addListenersForSchedTab():
-    ${(err as Error).message}`);
+return;
   }
 }
 export function applyStylesForSchedTab(scope: HTMLElement | Document = document): void {
@@ -1327,8 +1298,7 @@ export function applyStylesForSchedTab(scope: HTMLElement | Document = document)
       throw elementNotFound(scope, `Scope for Table Schedule Root when applying styles`, extLine(new Error()));
     clearPhDates(Array.from(scope.querySelectorAll('input[type="date"]')));
   } catch (err) {
-    console.error(`Error executing applyStylesForSchedTab:
-    ${(err as Error).message}`);
+return;
   }
 }
 export function addListenerForSchedUpdates(monthSelector: targEl): void {
@@ -1422,8 +1392,7 @@ export function addListenerForSchedUpdates(monthSelector: targEl): void {
       }
     }, 500);
   } catch (err) {
-    console.error(`Error adding listeners to updates in Schedule Table Section:
-    ${(err as Error).message}`);
+return;
   }
 }
 export function fillSchedStateValues(month: string): void {

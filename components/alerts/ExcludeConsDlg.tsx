@@ -1,6 +1,5 @@
 import { nlBtn, nlDlg } from "@/lib/global/declarations/types";
 import { isClickOutside } from "@/lib/global/gStyleScript";
-import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { ExcludeConsDlgProps } from "@/lib/global/declarations/interfacesCons";
 import { addEraseEvent } from "@/lib/locals/panelPage/handlers/consHandlerCmn";
@@ -46,12 +45,7 @@ export default function ExcludeConsDlg({
   }, [excludeDlgRef, setDisplayExcludeDlg]);
   useEffect(() => {
     try {
-      if (!(confirmRef.current instanceof HTMLButtonElement))
-        throw elementNotFound(
-          confirmRef.current,
-          `Button for confirming exclusion related to ${btn?.id ?? "UNIDENTIFIED"}`,
-          extLine(new Error()),
-        );
+      if (!(confirmRef.current instanceof HTMLButtonElement)) return;
       (userClass === "coordenador" || userClass === "supervisor") && addEraseEvent(btn!, userClass);
     } catch (err) {
       return;

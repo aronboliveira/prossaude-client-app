@@ -8,8 +8,7 @@ export function handleClientPermissions(
 ): void {
   try {
     if (!(typeof userClass === "string")) return;
-    if (!(Array.isArray(allowedClasses) && allowedClasses.every(userClass => typeof userClass === "string")))
-      return;
+    if (!(Array.isArray(allowedClasses) && allowedClasses.every(userClass => typeof userClass === "string"))) return;
     if (Array.isArray(elements) && elements.every(el => el instanceof Element)) {
       let message = `Permissõnes não concedidas. 
       Campos afetados:\n`;
@@ -40,7 +39,6 @@ export function handleClientPermissions(
       }
     } else throw elementNotPopulated(elements, "Elements for handleSupervisionCredential", extLine(new Error()));
   } catch (err) {
-    console.error(`ERROR:
-		${(err as Error).message}.`);
+    return;
   }
 }

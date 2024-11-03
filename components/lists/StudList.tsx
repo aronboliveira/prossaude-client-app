@@ -1,7 +1,6 @@
 "use client";
 import { ErrorBoundary } from "react-error-boundary";
 import { createRoot } from "react-dom/client";
-import { elementNotFound, extLine, inputNotFound } from "@/lib/global/handlers/errorHandler";
 import { equalizeTabCells } from "@/lib/global/gStyleScript";
 import {
   addListenerAlocation,
@@ -28,8 +27,7 @@ export default function StudList({ mainDlgRef, dispatch, state = true }: StudLis
     userClass = useContext(PanelCtx).userClass;
   useEffect(() => {
     try {
-      if (!(tbodyRef.current instanceof HTMLTableSectionElement))
-        throw elementNotFound(tbodyRef.current, `Validation of Table Body instance`, extLine(new Error()));
+      if (!(tbodyRef.current instanceof HTMLTableSectionElement)) return;
       if (studs.length > 0 && tbodyRef.current.querySelector("tr")) return;
       setTimeout(() => {
         if (studs.length > 0) return;
@@ -50,24 +48,16 @@ export default function StudList({ mainDlgRef, dispatch, state = true }: StudLis
                 });
             });
             try {
-              if (!(tabRef.current instanceof HTMLElement))
-                throw elementNotFound(tabRef.current, `Validation of Table reference`, extLine(new Error()));
-              if (!(tbodyRef.current instanceof HTMLElement))
-                throw elementNotFound(tbodyRef.current, `Validation of Table Body Reference`, extLine(new Error()));
+              if (!(tabRef.current instanceof HTMLElement)) return;
+              if (!(tbodyRef.current instanceof HTMLElement)) return;
               if (
                 panelRoots[`${tbodyRef.current.id}`] &&
                 !(panelRoots[`${tbodyRef.current.id}`] as any)["_internalRoot"]
               ) {
                 setTimeout(() => {
                   try {
-                    if (!(tabRef.current instanceof HTMLElement))
-                      throw elementNotFound(tabRef.current, `Validation of Table reference`, extLine(new Error()));
-                    if (!(tbodyRef.current instanceof HTMLElement))
-                      throw elementNotFound(
-                        tbodyRef.current,
-                        `Validation of Table Body Reference`,
-                        extLine(new Error()),
-                      );
+                    if (!(tabRef.current instanceof HTMLElement)) return;
+                    if (!(tbodyRef.current instanceof HTMLElement)) return;
                     if (tbodyRef.current.querySelector("tr")) return;
                     panelRoots[`${tbodyRef.current.id}`]?.unmount();
                     delete panelRoots[`${tbodyRef.current.id}`];
@@ -152,8 +142,7 @@ export default function StudList({ mainDlgRef, dispatch, state = true }: StudLis
                       </ErrorBoundary>,
                     );
                     tbodyRef.current = document.getElementById("avStudsTbody") as nlTabSect;
-                    if (!(tbodyRef.current instanceof HTMLElement))
-                      throw elementNotFound(tbodyRef.current, `Validation of replaced tbody`, extLine(new Error()));
+                    if (!(tbodyRef.current instanceof HTMLElement)) return;
                     if (!panelRoots[`${tbodyRef.current.id}`])
                       panelRoots[`${tbodyRef.current.id}`] = createRoot(tbodyRef.current);
                     if (!tbodyRef.current.querySelector("tr"))
@@ -166,17 +155,10 @@ export default function StudList({ mainDlgRef, dispatch, state = true }: StudLis
                       if (tabRef?.current instanceof HTMLTableElement) {
                         equalizeTabCells(tabRef.current);
                         fillTabAttr(tabRef.current);
-                      } else
-                        elementNotFound(
-                          tabRef.current,
-                          `tabRef id ${(tabRef?.current as any)?.id || "UNIDENTIFIED"} in useEffect() for tableRef`,
-                          extLine(new Error()),
-                        );
+                      }
                     }, 300);
                   } catch (e) {
-                    console.error(
-                      `Error executing scheduled rendering of Table Body Content Replacement:\n${(e as Error).message}`,
-                    );
+                    return;
                   }
                 }, 1000);
               } else panelRoots[`${tbodyRef.current.id}`] = createRoot(tbodyRef.current);
@@ -199,12 +181,7 @@ export default function StudList({ mainDlgRef, dispatch, state = true }: StudLis
                 if (tabRef?.current instanceof HTMLTableElement) {
                   equalizeTabCells(tabRef.current);
                   fillTabAttr(tabRef.current);
-                } else
-                  elementNotFound(
-                    tabRef.current,
-                    `tabRef id ${(tabRef?.current as any)?.id || "UNIDENTIFIED"} in useEffect() for tableRef`,
-                    extLine(new Error()),
-                  );
+                }
               }, 300);
               setTimeout(() => {
                 if (!document.querySelector("tr") && document.querySelector("table")) {
@@ -216,14 +193,13 @@ export default function StudList({ mainDlgRef, dispatch, state = true }: StudLis
                 }
               }, 5000);
             } catch (e) {
-              console.error(`Error executing rendering of Table Body Content:\n${(e as Error).message}`);
+              return;
             }
             const handleAttempt = (): void => {
               try {
-                if (!(tabRef.current instanceof HTMLElement))
-                  throw elementNotFound(tabRef.current, `Validation of Students Table`, extLine(new Error()));
+                if (!(tabRef.current instanceof HTMLElement)) return;
                 dispatch &&
-                  tabRef.current.querySelectorAll(".btnAloc").forEach((btn, i) => {
+                  tabRef.current.querySelectorAll(".btnAloc").forEach(btn => {
                     try {
                       addListenerAlocation(
                         btn,
@@ -235,9 +211,7 @@ export default function StudList({ mainDlgRef, dispatch, state = true }: StudLis
                         userClass,
                       );
                     } catch (e) {
-                      console.error(
-                        `Error executing iteration ${i} for adding listener for alocation:\n${(e as Error).message}`,
-                      );
+                      return;
                     }
                   });
                 equalizeTabCells(tabRef.current);
@@ -251,26 +225,14 @@ export default function StudList({ mainDlgRef, dispatch, state = true }: StudLis
                     document.getElementById("btnExport"),
                   );
                 const typeConsSel = mainDlgRef.current?.querySelector("#typeConsSel");
-                if (!(typeConsSel instanceof HTMLSelectElement))
-                  throw inputNotFound(
-                    typeConsSel,
-                    `<select> for getting type of appointment for ${tabRef.current?.id || "UNIDENTIFIED"}`,
-                    extLine(new Error()),
-                  );
+                if (!(typeConsSel instanceof HTMLSelectElement)) return;
                 const [selectedOp] = Array.from(typeConsSel.querySelectorAll("option"));
-                if (!(selectedOp instanceof HTMLOptionElement))
-                  throw elementNotFound(
-                    selectedOp,
-                    `<option> for getting type of appointment for ${tabRef.current?.id || "UNIDENTIFIED"}`,
-                    extLine(new Error()),
-                  );
+                if (!(selectedOp instanceof HTMLOptionElement)) return;
                 const relOptgrp = selectedOp.closest("optgroup");
                 if (relOptgrp instanceof HTMLOptGroupElement && relOptgrp.label !== "")
                   filterTabMembers(tabRef.current, relOptgrp.label.toLowerCase().trim());
               } catch (e) {
-                console.error(
-                  `Error executing handleAttempt for filtering of Students Table:\n${(e as Error).message}`,
-                );
+                return;
               }
             };
             setTimeout(() => {
@@ -284,7 +246,7 @@ export default function StudList({ mainDlgRef, dispatch, state = true }: StudLis
           });
       }, 300);
     } catch (e) {
-      console.error(`Error executing useEffect for Table Body Reference:\n${(e as Error).message}`);
+      return;
     }
   }, [dispatch, state, mainDlgRef, userClass]);
   return (

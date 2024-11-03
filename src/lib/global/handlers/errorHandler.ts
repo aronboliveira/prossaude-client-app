@@ -269,3 +269,11 @@ export function objectError(
   console.error(errorMessage);
   return Error(errorMessage);
 }
+export function codifyError(err: Error) {
+  if (err instanceof EvalError || err instanceof SyntaxError || err instanceof URIError) return 400;
+  else if (err instanceof RangeError) return 416;
+  else if (err instanceof TypeError) return 422;
+  else if (err instanceof AggregateError) return 207;
+  else if (err.constructor.name === "InternalError") return 500;
+  else return 404;
+}

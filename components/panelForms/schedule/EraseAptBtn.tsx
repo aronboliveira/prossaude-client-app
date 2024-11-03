@@ -1,5 +1,4 @@
 import { ErrorBoundary } from "react-error-boundary";
-import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { nlBtn } from "@/lib/global/declarations/types";
 import { useContext, useEffect, useRef, useState } from "react";
 import ExcludeConsDlg from "../../alerts/ExcludeConsDlg";
@@ -11,11 +10,9 @@ export default function EraseAptBtn(): JSX.Element {
     userClass = useContext(PanelCtx).userClass;
   useEffect(() => {
     try {
-      if (!(btnRef.current instanceof HTMLButtonElement))
-        throw elementNotFound(btnRef.current, `${(btnRef.current as any)?.id ?? "UNIDENTIFIED"}`, extLine(new Error()));
+      if (!(btnRef.current instanceof HTMLButtonElement)) return;
       const relSlot = btnRef.current.closest("slot");
-      if (!(relSlot instanceof HTMLElement))
-        throw elementNotFound(relSlot, "slot for erase appointment btn", extLine(new Error()));
+      if (!(relSlot instanceof HTMLElement)) return;
       btnRef.current.id = btnRef.current.id.replace("unfilled", relSlot.id.replace("slot_", ""));
     } catch (err) {
       return;

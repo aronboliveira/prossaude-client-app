@@ -43,8 +43,7 @@ export default function TableProfForm(): JSX.Element {
     }, []);
   useEffect(() => {
     try {
-      if (!(tbodyRef.current instanceof HTMLTableSectionElement))
-        throw elementNotFound(tbodyRef.current, `Validation of Table Body instance`, extLine(new Error()));
+      if (!(tbodyRef.current instanceof HTMLTableSectionElement)) return;
       if (profs.length > 0 && tbodyRef.current.querySelector("tr")) return;
       setTimeout(() => {
         if (profs.length > 0) return;
@@ -64,24 +63,16 @@ export default function TableProfForm(): JSX.Element {
                 });
             });
             try {
-              if (!(tabRef.current instanceof HTMLElement))
-                throw elementNotFound(tabRef.current, `Validation of Table reference`, extLine(new Error()));
-              if (!(tbodyRef.current instanceof HTMLElement))
-                throw elementNotFound(tbodyRef.current, `Validation of Table Body Reference`, extLine(new Error()));
+              if (!(tabRef.current instanceof HTMLElement)) return;
+              if (!(tbodyRef.current instanceof HTMLElement)) return;
               if (
                 panelRoots[`${tbodyRef.current.id}`] &&
                 !(panelRoots[`${tbodyRef.current.id}`] as any)["_internalRoot"]
               ) {
                 setTimeout(() => {
                   try {
-                    if (!(tabRef.current instanceof HTMLElement))
-                      throw elementNotFound(tabRef.current, `Validation of Table reference`, extLine(new Error()));
-                    if (!(tbodyRef.current instanceof HTMLElement))
-                      throw elementNotFound(
-                        tbodyRef.current,
-                        `Validation of Table Body Reference`,
-                        extLine(new Error()),
-                      );
+                    if (!(tabRef.current instanceof HTMLElement)) return;
+                    if (!(tbodyRef.current instanceof HTMLElement)) return;
                     if (tbodyRef.current.querySelector("tr")) return;
                     panelRoots[`${tbodyRef.current.id}`]?.unmount();
                     delete panelRoots[`${tbodyRef.current.id}`];
@@ -142,8 +133,7 @@ export default function TableProfForm(): JSX.Element {
                       </ErrorBoundary>,
                     );
                     tbodyRef.current = document.getElementById("profsTbody") as nlTabSect;
-                    if (!(tbodyRef.current instanceof HTMLElement))
-                      throw elementNotFound(tbodyRef.current, `Validation of replaced tbody`, extLine(new Error()));
+                    if (!(tbodyRef.current instanceof HTMLElement)) return;
                     if (!panelRoots[`${tbodyRef.current.id}`])
                       panelRoots[`${tbodyRef.current.id}`] = createRoot(tbodyRef.current);
                     if (!tbodyRef.current.querySelector("tr"))
@@ -210,8 +200,7 @@ export default function TableProfForm(): JSX.Element {
             }
             const handleAttempt = (): void => {
               try {
-                if (!(tabRef.current instanceof HTMLElement))
-                  throw elementNotFound(tabRef.current, `Validation of Table instance`, extLine(new Error()));
+                if (!(tabRef.current instanceof HTMLElement)) return;
                 equalizeTabCells(tabRef.current);
                 strikeEntries(tabRef.current);
                 document.getElementById("btnExport") &&

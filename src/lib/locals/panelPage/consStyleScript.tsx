@@ -25,9 +25,7 @@ export function strikeEntries(mainRef: HTMLElement): void {
     ...mainRef.querySelectorAll("select"),
     ...mainRef.querySelectorAll("textarea"),
   ];
-  inAndOutEls.length > 0
-    ? strikeNulls(inAndOutEls)
-    : elementNotPopulated(inAndOutEls, "inAndOutEls in useEffect() for sectTabRef", extLine(new Error()));
+  inAndOutEls.length > 0 && strikeNulls(inAndOutEls);
 }
 export function setListenersForDates(
   dateInps: Array<targEl>,
@@ -91,8 +89,7 @@ export function setListenersForDates(
               (dateInps[d] as HTMLInputElement).pattern = `/^${year}-${month}-[0-9]{2}$/`;
               (dateInps[d] as HTMLInputElement).style.color = "initial";
               highlightChange(dateInps[d] as HTMLInputElement, "skyblue");
-            } else
-              inputNotFound(dateInps[d], `date input id ${dateInps[d]?.id || "UNIDENTIFIED"}`, extLine(new Error()));
+            } else continue;
           }
           const monthdates = convertWeekdaysToMonthdays(
             workingDays,
@@ -142,7 +139,6 @@ export function setListenersForDates(
                     8,
                   )}${monthdates[w].toString().padStart(2, "0")}`;
                 } else {
-                  inputNotFound(dateInps[w], "dateInps in the conversion from monthdates", extLine(new Error()));
                   break;
                 }
               }
@@ -177,10 +173,7 @@ export function setListenersForDates(
             workingDays,
           );
           correlateWorkingDays(weekDayNames, dateInps.length);
-        } else
-          console.error(
-            `Undefined match between de month <select> value and the map for available months. Aborting routine.`,
-          );
+        }
       };
       if (isInitialSet === true) {
         monthStateSelector.value = `${revMonthMap.get(`${new Date().getMonth()}`)}`;

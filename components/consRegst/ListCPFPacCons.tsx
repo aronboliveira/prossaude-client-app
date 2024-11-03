@@ -1,6 +1,5 @@
 "use client";
 import { nullishDl } from "@/lib/global/declarations/types";
-import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { PacInfo } from "@/lib/global/declarations/interfacesCons";
 import { handleFetch } from "@/lib/global/data-service";
@@ -32,13 +31,11 @@ export default function ListCPFPacCons(): JSX.Element {
                 idf: (pac as PacInfo)["idf"],
               });
           });
-          if (!(dlRef.current instanceof HTMLDataListElement))
-            throw elementNotFound(dlRef.current, `Validation of Datalist instance`, extLine(new Error()));
+          if (!(dlRef.current instanceof HTMLDataListElement)) return;
           if (panelRoots[`${dlRef.current.id}`] && !(panelRoots[`${dlRef.current.id}`] as any)["_internalRoot"]) {
             setTimeout(() => {
               try {
-                if (!(dlRef.current instanceof HTMLElement))
-                  throw elementNotFound(dlRef.current, `Validation of Datalist Reference`, extLine(new Error()));
+                if (!(dlRef.current instanceof HTMLElement)) return;
                 if (dlRef.current.querySelector("option")) return;
                 panelRoots[`${dlRef.current.id}`]?.unmount();
                 delete panelRoots[`${dlRef.current.id}`];
@@ -53,8 +50,7 @@ export default function ListCPFPacCons(): JSX.Element {
                   </ErrorBoundary>,
                 );
                 dlRef.current = document.getElementById("listCPFPacCons") as nullishDl;
-                if (!(dlRef.current instanceof HTMLElement))
-                  throw elementNotFound(dlRef.current, `Validation of replaced dl`, extLine(new Error()));
+                if (!(dlRef.current instanceof HTMLElement)) return;
                 if (!panelRoots[`${dlRef.current.id}`]) panelRoots[`${dlRef.current.id}`] = createRoot(dlRef.current);
                 if (!dlRef.current.querySelector("option"))
                   panelRoots[`${dlRef.current.id}`]?.render(
@@ -65,9 +61,7 @@ export default function ListCPFPacCons(): JSX.Element {
                     )),
                   );
               } catch (e) {
-                console.error(
-                  `Error executing scheduled rendering of Data List Content Replacement:\n${(e as Error).message}`,
-                );
+                return;
               }
             }, 1000);
           } else panelRoots[`${dlRef.current.id}`] = createRoot(dlRef.current);

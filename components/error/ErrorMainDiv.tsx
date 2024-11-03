@@ -1,5 +1,4 @@
 import { ErrorBoundary } from "react-error-boundary";
-import { elementNotFound, extLine } from "@/lib/global/handlers/errorHandler";
 import { nullishArtc } from "@/lib/global/declarations/types";
 import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useRef, useEffect } from "react";
@@ -8,11 +7,10 @@ export default function ErrorMainDiv(): JSX.Element {
   const mainRef = useRef<nullishArtc>(null);
   useEffect(() => {
     try {
-      if (!(mainRef.current instanceof HTMLElement))
-        throw elementNotFound(mainRef.current, `Main Reference for ErrorMainDiv`, extLine(new Error()));
+      if (!(mainRef.current instanceof HTMLElement)) return;
       syncAriaStates([mainRef.current, ...mainRef.current.querySelectorAll("*")]);
     } catch (e) {
-      console.error(`Error executing useEffect for ErrorMainDiv:\n${(e as Error).message}`);
+      return;
     }
   }, [mainRef]);
   return (

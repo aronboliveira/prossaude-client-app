@@ -1,7 +1,6 @@
 "use client";
 import { ErrorBoundary } from "react-error-boundary";
 import { createRoot } from "react-dom/client";
-import { elementNotFound, extLine, inputNotFound } from "@/lib/global/handlers/errorHandler";
 import { equalizeTabCells, isClickOutside } from "@/lib/global/gStyleScript";
 import { handleFetch } from "@/lib/global/data-service";
 import { panelRoots } from "@/vars";
@@ -58,14 +57,12 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
       };
       addEventListener("keydown", handleKeyDown);
       return (): void => removeEventListener("keydown", handleKeyDown);
-    } else elementNotFound(dialogRef.current, "dialogElement in AvStudListDlg", extLine(new Error()));
+    }
   }, [props.mainDlgRef]);
   useEffect(() => {
     try {
-      if (!(tbodyExtRef.current instanceof HTMLTableSectionElement))
-        throw elementNotFound(tbodyExtRef.current, `Validation of Table Body instance`, extLine(new Error()));
-      if (!(tbodyIntRef.current instanceof HTMLTableSectionElement))
-        throw elementNotFound(tbodyExtRef.current, `Validation of Table Body instance`, extLine(new Error()));
+      if (!(tbodyExtRef.current instanceof HTMLTableSectionElement)) return;
+      if (!(tbodyIntRef.current instanceof HTMLTableSectionElement)) return;
       if (
         internalProfs.length > 0 &&
         externalProfs.length > 0 &&
@@ -108,32 +105,18 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
             });
             //renderização
             try {
-              if (!(tabProfIntRef.current instanceof HTMLElement))
-                throw elementNotFound(tabProfIntRef.current, `Validation of Table reference`, extLine(new Error()));
-              if (!(tabProfIntRef.current instanceof HTMLElement))
-                throw elementNotFound(tabProfExtRef.current, `Validation of Table reference`, extLine(new Error()));
-              if (!(tbodyExtRef.current instanceof HTMLTableSectionElement))
-                throw elementNotFound(tbodyExtRef.current, `Validation of Table Body instance`, extLine(new Error()));
-              if (!(tbodyIntRef.current instanceof HTMLTableSectionElement))
-                throw elementNotFound(tbodyExtRef.current, `Validation of Table Body instance`, extLine(new Error()));
+              if (!(tabProfIntRef.current instanceof HTMLElement)) return;
+              if (!(tabProfIntRef.current instanceof HTMLElement)) return;
+              if (!(tbodyExtRef.current instanceof HTMLTableSectionElement)) return;
+              if (!(tbodyIntRef.current instanceof HTMLTableSectionElement)) return;
               if (
                 panelRoots[`${tbodyIntRef.current.id}`] &&
                 !(panelRoots[`${tbodyIntRef.current.id}`] as any)["_internalRoot"]
               ) {
                 setTimeout(() => {
                   try {
-                    if (!(tabProfIntRef.current instanceof HTMLElement))
-                      throw elementNotFound(
-                        tabProfIntRef.current,
-                        `Validation of Table reference`,
-                        extLine(new Error()),
-                      );
-                    if (!(tbodyIntRef.current instanceof HTMLElement))
-                      throw elementNotFound(
-                        tbodyIntRef.current,
-                        `Validation of Table Body Reference`,
-                        extLine(new Error()),
-                      );
+                    if (!(tabProfIntRef.current instanceof HTMLElement)) return;
+                    if (!(tbodyIntRef.current instanceof HTMLElement)) return;
                     if (tbodyIntRef.current.querySelector("tr")) return;
                     panelRoots[`${tbodyIntRef.current.id}`]?.unmount();
                     delete panelRoots[`${tbodyIntRef.current.id}`];
@@ -218,8 +201,7 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                       </ErrorBoundary>,
                     );
                     tbodyIntRef.current = document.getElementById("profsIntTbody") as nlTabSect;
-                    if (!(tbodyIntRef.current instanceof HTMLElement))
-                      throw elementNotFound(tbodyIntRef.current, `Validation of replaced tbody`, extLine(new Error()));
+                    if (!(tbodyIntRef.current instanceof HTMLElement)) return;
                     if (!panelRoots[`${tbodyIntRef.current.id}`])
                       panelRoots[`${tbodyIntRef.current.id}`] = createRoot(tbodyIntRef.current);
                     if (!tbodyIntRef.current.querySelector("tr"))
@@ -238,19 +220,10 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                       if (tabProfIntRef?.current instanceof HTMLTableElement) {
                         equalizeTabCells(tabProfIntRef.current);
                         fillTabAttr(tabProfIntRef.current);
-                      } else
-                        elementNotFound(
-                          tabProfIntRef.current,
-                          `tabProfIntRef id ${
-                            (tabProfIntRef?.current as any)?.id || "UNIDENTIFIED"
-                          } in useEffect() for tableRef`,
-                          extLine(new Error()),
-                        );
+                      }
                     }, 300);
                   } catch (e) {
-                    console.error(
-                      `Error executing scheduled rendering of Table Body Content Replacement:\n${(e as Error).message}`,
-                    );
+                    return;
                   }
                 }, 1000);
               } else panelRoots[`${tbodyIntRef.current.id}`] = createRoot(tbodyIntRef.current);
@@ -279,14 +252,7 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                 if (tabProfIntRef?.current instanceof HTMLTableElement) {
                   equalizeTabCells(tabProfIntRef.current);
                   fillTabAttr(tabProfIntRef.current);
-                } else
-                  elementNotFound(
-                    tabProfIntRef.current,
-                    `tabProfIntRef id ${
-                      (tabProfIntRef?.current as any)?.id || "UNIDENTIFIED"
-                    } in useEffect() for tableRef`,
-                    extLine(new Error()),
-                  );
+                }
               }, 300);
               setTimeout(() => {
                 if (!document.querySelector("tr") && document.querySelector("table")) {
@@ -305,18 +271,8 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
               ) {
                 setTimeout(() => {
                   try {
-                    if (!(tabProfIntRef.current instanceof HTMLElement))
-                      throw elementNotFound(
-                        tabProfIntRef.current,
-                        `Validation of Table reference`,
-                        extLine(new Error()),
-                      );
-                    if (!(tbodyExtRef.current instanceof HTMLElement))
-                      throw elementNotFound(
-                        tbodyExtRef.current,
-                        `Validation of Table Body Reference`,
-                        extLine(new Error()),
-                      );
+                    if (!(tabProfIntRef.current instanceof HTMLElement)) return;
+                    if (!(tbodyExtRef.current instanceof HTMLElement)) return;
                     if (tbodyExtRef.current.querySelector("tr")) return;
                     panelRoots[`${tbodyExtRef.current.id}`]?.unmount();
                     delete panelRoots[`${tbodyExtRef.current.id}`];
@@ -401,8 +357,7 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                       </ErrorBoundary>,
                     );
                     tbodyExtRef.current = document.getElementById("profsExtTbody") as nlTabSect;
-                    if (!(tbodyExtRef.current instanceof HTMLElement))
-                      throw elementNotFound(tbodyExtRef.current, `Validation of replaced tbody`, extLine(new Error()));
+                    if (!(tbodyExtRef.current instanceof HTMLElement)) return;
                     if (!panelRoots[`${tbodyExtRef.current.id}`])
                       panelRoots[`${tbodyExtRef.current.id}`] = createRoot(tbodyExtRef.current);
                     if (!tbodyExtRef.current.querySelector("tr"))
@@ -421,19 +376,10 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                       if (tabProfIntRef?.current instanceof HTMLTableElement) {
                         equalizeTabCells(tabProfIntRef.current);
                         fillTabAttr(tabProfIntRef.current);
-                      } else
-                        elementNotFound(
-                          tabProfIntRef.current,
-                          `tabProfIntRef id ${
-                            (tabProfIntRef?.current as any)?.id || "UNIDENTIFIED"
-                          } in useEffect() for tableRef`,
-                          extLine(new Error()),
-                        );
+                      }
                     }, 300);
                   } catch (e) {
-                    console.error(
-                      `Error executing scheduled rendering of Table Body Content Replacement:\n${(e as Error).message}`,
-                    );
+                    return;
                   }
                 }, 1000);
               } else panelRoots[`${tbodyExtRef.current.id}`] = createRoot(tbodyExtRef.current);
@@ -462,14 +408,7 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                 if (tabProfIntRef?.current instanceof HTMLTableElement) {
                   equalizeTabCells(tabProfIntRef.current);
                   fillTabAttr(tabProfIntRef.current);
-                } else
-                  elementNotFound(
-                    tabProfIntRef.current,
-                    `tabProfIntRef id ${
-                      (tabProfIntRef?.current as any)?.id || "UNIDENTIFIED"
-                    } in useEffect() for tableRef`,
-                    extLine(new Error()),
-                  );
+                }
               }, 300);
               setTimeout(() => {
                 if (!document.querySelector("tr") && document.querySelector("table")) {
@@ -481,23 +420,16 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                 }
               }, 5000);
             } catch (e) {
-              console.error(`Error executing rendering of Table Body Content:\n${(e as Error).message}`);
+              return;
             }
             //ajustes em tabela de externos
             const handleInternalAttempt = (): void => {
               try {
-                if (!(tabProfExtRef?.current instanceof HTMLTableElement))
-                  throw elementNotFound(
-                    tabProfExtRef.current,
-                    `tabProfExtRef id ${
-                      (tabProfExtRef?.current as any)?.id || "UNIDENTIFIED"
-                    } in useEffect() for tableRef`,
-                    extLine(new Error()),
-                  );
+                if (!(tabProfExtRef?.current instanceof HTMLTableElement)) return;
                 fillTabAttr(tabProfExtRef.current);
                 equalizeTabCells(tabProfExtRef.current);
                 props.dispatch &&
-                  tabProfExtRef.current.querySelectorAll(".btnAloc").forEach((btn, i) => {
+                  tabProfExtRef.current.querySelectorAll(".btnAloc").forEach(btn => {
                     try {
                       addListenerAlocation(
                         btn,
@@ -509,49 +441,30 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                         userClass,
                       );
                     } catch (e) {
-                      console.error(
-                        `Error executing iteration ${i} for adding alocation listener to external professionals table:\n${
-                          (e as Error).message
-                        }`,
-                      );
+                      return;
                     }
                   });
                 const typeConsSel = props.mainDlgRef.current?.querySelector("#typeConsSel");
-                if (!(typeConsSel instanceof HTMLSelectElement))
-                  throw inputNotFound(
-                    typeConsSel,
-                    `<select> for getting type of appointment for ${tabProfExtRef.current?.id || "UNIDENTIFIED"}`,
-                    extLine(new Error()),
-                  );
+                if (!(typeConsSel instanceof HTMLSelectElement)) return;
                 const [selectedOp] = Array.from(typeConsSel.querySelectorAll("option")).filter(
                   opt => opt.selected === true,
                 );
-                if (!(selectedOp instanceof HTMLOptionElement))
-                  throw elementNotFound(
-                    selectedOp,
-                    `<option> for getting type of appointment for ${tabProfExtRef.current?.id || "UNIDENTIFIED"}`,
-                    extLine(new Error()),
-                  );
+                if (!(selectedOp instanceof HTMLOptionElement)) return;
                 const relOptgrp = selectedOp.closest("optgroup");
                 if (relOptgrp instanceof HTMLOptGroupElement && relOptgrp.label !== "")
                   filterTabMembers(tabProfExtRef.current, relOptgrp.label.toLowerCase().trim());
               } catch (e) {
-                console.error(`Error executing styling for External Professionals Tables:\n${(e as Error).message}`);
+                return;
               }
             };
             //ajustes em tabela de internos
             const handleExternalAttempt = (): void => {
               try {
-                if (!(tabProfIntRef?.current instanceof HTMLTableElement))
-                  throw elementNotFound(
-                    tabProfIntRef.current,
-                    `Table id ${(tabProfIntRef?.current as any)?.id || "UNIDENTIFIED"}`,
-                    extLine(new Error()),
-                  );
+                if (!(tabProfIntRef?.current instanceof HTMLTableElement)) return;
                 fillTabAttr(tabProfIntRef.current);
                 equalizeTabCells(tabProfIntRef.current);
                 props.dispatch &&
-                  tabProfIntRef.current.querySelectorAll(".btnAloc").forEach((btn, i) => {
+                  tabProfIntRef.current.querySelectorAll(".btnAloc").forEach(btn => {
                     try {
                       addListenerAlocation(
                         btn,
@@ -563,42 +476,23 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
                         userClass,
                       );
                     } catch (e) {
-                      console.error(
-                        `Error executing iteration ${i} for adding alocation listener to external professionals table:\n${
-                          (e as Error).message
-                        }`,
-                      );
+                      return;
                     }
                   });
                 const typeConsSel = props.mainDlgRef.current?.querySelector("#typeConsSel");
-                if (!(typeConsSel instanceof HTMLSelectElement))
-                  throw inputNotFound(
-                    typeConsSel,
-                    `<select> for getting type of appointment for ${tabProfIntRef.current?.id || "UNIDENTIFIED"}`,
-                    extLine(new Error()),
-                  );
+                if (!(typeConsSel instanceof HTMLSelectElement)) return;
                 const [selectedOp] = Array.from(typeConsSel.querySelectorAll("option")).filter(
                   opt => opt.selected === true,
                 );
-                if (!(selectedOp instanceof HTMLOptionElement))
-                  throw elementNotFound(
-                    selectedOp,
-                    `<option> for getting type of appointment for ${tabProfIntRef.current?.id || "UNIDENTIFIED"}`,
-                    extLine(new Error()),
-                  );
+                if (!(selectedOp instanceof HTMLOptionElement)) return;
                 const relOptgrp = selectedOp.closest("optgroup");
                 if (relOptgrp instanceof HTMLOptGroupElement && relOptgrp.label !== "")
                   filterTabMembers(tabProfIntRef.current, relOptgrp.label.toLowerCase().trim());
-                if (!(secttabProfIntRef?.current instanceof HTMLElement))
-                  throw elementNotFound(
-                    secttabProfIntRef.current,
-                    "secttabProfIntRef in useEffect()",
-                    extLine(new Error()),
-                  );
+                if (!(secttabProfIntRef?.current instanceof HTMLElement)) return;
                 checkLocalIntervs(secttabProfIntRef.current);
                 strikeEntries(secttabProfIntRef.current);
               } catch (e) {
-                console.error(`Error executing styling for Internal Professionals Tables:\n${(e as Error).message}`);
+                return;
               }
             };
             setTimeout(() => {
@@ -623,7 +517,7 @@ export default function AvProfListDlg(props: AvProfListDlgProps): JSX.Element {
           });
       }, 300);
     } catch (e) {
-      console.error(`Error executing useEffect for Table Body Reference:\n${(e as Error).message}`);
+      return;
     }
   }, [props.dispatch, props.mainDlgRef, props.state, userClass]);
   return (

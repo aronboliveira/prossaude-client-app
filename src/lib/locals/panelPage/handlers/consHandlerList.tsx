@@ -1,18 +1,13 @@
 import { MutableRefObject } from "react";
 import { nlDlg, nlHtEl, personAbrvClasses, personAbrvUpperClasses, targEl } from "../../../global/declarations/types";
 import { parseNotNaN } from "../../../global/gModel";
-import { switchBtnBS } from "../../../global/gStyleScript";
-import {
-  multipleElementsNotFound,
-  extLine,
-  elementNotPopulated,
-  elementNotFound,
-  stringError,
-} from "../../../global/handlers/errorHandler";
+import { equalizeTabCells, switchBtnBS } from "../../../global/gStyleScript";
 import { toast } from "react-hot-toast";
-
+import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
+import { strikeEntries } from "../consStyleScript";
+import { handleClientPermissions } from "./consHandlerUsers";
+import { privilege } from "../../basePage/declarations/serverInterfaces";
 //nesse arquivo estão as funções para handling de casos dos modais de listas tabeladas
-
 export function checkIntervDate(arrEls: Array<targEl>): void {
   if (Array.isArray(arrEls) && arrEls.length > 0 && arrEls.every(el => el instanceof Element)) {
     arrEls.forEach(el => {
@@ -32,15 +27,13 @@ export function checkIntervDate(arrEls: Array<targEl>): void {
         }
       }
     });
-  } else elementNotPopulated(arrEls, "arrEls in checkIntervDate()", extLine(new Error()));
+  }
 }
 export function checkLocalIntervs(mainRef: HTMLElement): void {
   const btnsAloc = Array.from(mainRef.querySelectorAll("[id*='btnAloc']")).filter(
     btn => btn instanceof HTMLButtonElement,
   );
-  btnsAloc.length > 0
-    ? checkIntervDate(btnsAloc)
-    : elementNotPopulated(btnsAloc, "btnsAloc in useEffect() for sectTabRef", extLine(new Error()));
+  if (btnsAloc.length > 0) checkIntervDate(btnsAloc);
 }
 export function transferDataAloc(
   btn: targEl,
@@ -259,12 +252,9 @@ export function transferDataAloc(
           } else matches.push(false);
         });
       });
-      if (matches.length === 0) console.error(`Error finding matches for alocation in context of ${pattern}`);
       return matches.filter(matchbool => matchbool === true).length > 0 ? true : false;
-    } else
-      elementNotFound(relTr, `tr id ${relTr?.id || "UNIDENTIFIED"} for gathering student data`, extLine(new Error()));
-  } else
-    elementNotFound(btn, `btn id ${btn?.id || "UNIDENTIFIED"} for gathering student row data`, extLine(new Error()));
+    }
+  }
   return false;
 }
 export function addListenerAlocation(
@@ -283,23 +273,22 @@ export function addListenerAlocation(
     if (!(forwardedRef instanceof HTMLElement))
       throw new Error(`Failed to validate instance of Forwarded Reference to Ancestral Element`);
     const tabs = parentRef.querySelectorAll(`table[id*=av${context}]`);
-    tabs.length > 0
-      ? tabs.forEach(tab => {
-          const btnAloc = tab.querySelectorAll(`button[class*=btnAloc${context}]`) || `button[id*=btnAloc${context}]`;
-          btnAloc.forEach(btn => {
-            (userClass === "coordenador" || userClass === "supervisor") &&
-              btn.addEventListener("click", () => {
-                state = transferDataAloc(btn, parentRef, forwardedRef, context.toLowerCase() as personAbrvClasses);
-                if (typeof state === "boolean" && dispatch) dispatch(!state);
-                else {
-                  toast.error(`Erro obtendo dados para alocação selecionada. Feche manualmente.`);
-                }
-              });
-          });
-        })
-      : elementNotPopulated(tabs, `tabs in addListenerAlocation(), context ${context}`, extLine(new Error()));
+    if (tabs.length > 0)
+      tabs.forEach(tab => {
+        const btnAloc = tab.querySelectorAll(`button[class*=btnAloc${context}]`) || `button[id*=btnAloc${context}]`;
+        btnAloc.forEach(btn => {
+          (userClass === "coordenador" || userClass === "supervisor") &&
+            btn.addEventListener("click", () => {
+              state = transferDataAloc(btn, parentRef, forwardedRef, context.toLowerCase() as personAbrvClasses);
+              if (typeof state === "boolean" && dispatch) dispatch(!state);
+              else {
+                toast.error(`Erro obtendo dados para alocação selecionada. Feche manualmente.`);
+              }
+            });
+        });
+      });
   } catch (e) {
-    console.error(`Error executing addListenerAlocation:\n${(e as Error).message}`);
+    return;
   }
 }
 export function addListenerAvMembers(
@@ -319,10 +308,9 @@ export function addListenerAvMembers(
           filterAvMembers(gAvStudsOpGrps, gAvProfsOpGrps, gAvCPFStudsOpGrps, gAvDREStudsOpGrps);
         });
     } else {
-      console.error(`Error finding inputs with datalists for autofilling. Emptying lists`);
       dialogRef.current?.querySelectorAll("datalist").forEach((dl: HTMLDataListElement) => (dl.innerHTML = ``));
     }
-  } else elementNotFound(typeCons, "<select> for defining type of possible appointments", extLine(new Error()));
+  }
 }
 export function filterAvMembers(
   gAvStudsOpGrps: NodeListOf<HTMLOptGroupElement>,
@@ -384,18 +372,7 @@ export function filterAvMembers(
         });
       });
     }
-  } else
-    multipleElementsNotFound(
-      extLine(new Error()),
-      "Elements for filterAvMembers",
-      studName,
-      profName,
-      typeCons,
-      avStuds,
-      avStudsCPF,
-      avStudsDRE,
-      avProfs,
-    );
+  }
 }
 export function filterTabMembers(tab: targEl, area: string): void {
   if (tab instanceof HTMLTableElement) {
@@ -404,11 +381,8 @@ export function filterTabMembers(tab: targEl, area: string): void {
       allTrs.forEach(tr => {
         tr.hidden = true;
         const btnAloc = tr.querySelector('[id*="btnAloc"]');
-        btnAloc instanceof HTMLButtonElement
-          ? (btnAloc.disabled = true)
-          : elementNotFound(btnAloc, `btn for alocation in <tr> ${tr?.id || "UNIDENTIFIED"}`, extLine(new Error()));
+        if (btnAloc instanceof HTMLButtonElement) btnAloc.disabled = true;
         const outpArea = tr.querySelector('[class*="celArea"]')?.querySelector('output[data-title*="area"]');
-
         if (outpArea instanceof HTMLOutputElement) {
           if (/educação física(?: & nutrição)|nutrição|educação física/gi.test(area)) {
             ["educação", "nutrição"].forEach(areaFrag => {
@@ -417,27 +391,14 @@ export function filterTabMembers(tab: targEl, area: string): void {
                 new RegExp(areaFrag, "gi").test(area)
               ) {
                 tr.hidden = false;
-                btnAloc instanceof HTMLButtonElement
-                  ? (btnAloc.disabled = false)
-                  : elementNotFound(
-                      btnAloc,
-                      `btn for alocation in <tr> ${tr?.id || "UNIDENTIFIED"}`,
-                      extLine(new Error()),
-                    );
+                if (btnAloc instanceof HTMLButtonElement) btnAloc.disabled = false;
               }
             });
           } else if (/odontologia/gi.test(area) && /odontologia/gi.test(outpArea.innerText.toLowerCase())) {
             tr.hidden = false;
-            btnAloc instanceof HTMLButtonElement
-              ? (btnAloc.disabled = false)
-              : elementNotFound(btnAloc, `btn for alocation in <tr> ${tr?.id || "UNIDENTIFIED"}`, extLine(new Error()));
+            if (btnAloc instanceof HTMLButtonElement) btnAloc.disabled = false;
           }
-        } else
-          elementNotFound(
-            outpArea,
-            `<output> for defining working field in <tr> id ${tr?.id || "UNIDENTIFIED"}`,
-            extLine(new Error()),
-          );
+        }
       });
     } else {
       allTrs.forEach(tr => {
@@ -447,7 +408,7 @@ export function filterTabMembers(tab: targEl, area: string): void {
         });
       });
     }
-  } else elementNotFound(tab, `table id ${tab?.id || "UNIDENTIFIED"}`, extLine(new Error()));
+  }
 }
 export function fillTabAttr(tab: targEl, context: string = "pac"): void {
   if (tab instanceof HTMLTableElement) {
@@ -517,7 +478,26 @@ export function fillTabAttr(tab: targEl, context: string = "pac"): void {
       case "prof":
         break;
       default:
-        stringError("Reading context for fillTabAttr()", context, extLine(new Error()));
+        break;
     }
-  } else elementNotFound(tab, "Table called in fillTabAttr()", extLine(new Error()));
+  }
+}
+export function initLoadedTab(ref: nlHtEl, userClass: privilege): void {
+  try {
+    setTimeout(() => {
+      if (!(ref instanceof HTMLElement)) return;
+      let tabRef = !(ref instanceof HTMLTableElement) ? ref : ref.querySelector("table");
+      if (!(tabRef instanceof HTMLTableElement)) return;
+      equalizeTabCells(tabRef);
+      fillTabAttr(ref);
+    }, 300);
+    if (!(ref instanceof HTMLElement)) return;
+    syncAriaStates([...ref.querySelectorAll("*"), ref]);
+    checkLocalIntervs(ref);
+    strikeEntries(ref);
+    document.getElementById("btnExport") &&
+      handleClientPermissions(userClass, ["coordenador"], ref, document.getElementById("btnExport"));
+  } catch (e) {
+    return;
+  }
 }

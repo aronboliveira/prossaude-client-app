@@ -20,7 +20,6 @@ import TableProfForm from "../../profs/TabProfForm";
 import TabStudForm from "../../studs/TabStudForm";
 import StudentForm from "../../studs/StudentForm";
 import Unauthorized from "../Unauthorized";
-import { elementNotFound, extLine, inputNotFound, stringError } from "@/lib/global/handlers/errorHandler";
 import { defUser } from "@/redux/slices/userSlice";
 import ScheduleLoader from "../../schedule/ScheduleLoader";
 import { PanelCtx } from "./SelectLoader";
@@ -36,8 +35,7 @@ export default function SelectPanel({ defOp = "agenda" }: MainPanelProps): JSX.E
     renderSelectPanel = (opt: panelOpts): void => {
       try {
         const formRoot = document.getElementById("formRoot");
-        if (!(formRoot instanceof HTMLElement))
-          throw elementNotFound(formRoot, `Validation of Form Roots Element in Schedule`, extLine(new Error()));
+        if (!(formRoot instanceof HTMLElement)) return;
         if (!context.roots.formRoot) context.roots.formRoot = createRoot(formRoot);
         context.roots.formRoot.render(
           ((opt: panelOpts): JSX.Element => {
@@ -57,13 +55,12 @@ export default function SelectPanel({ defOp = "agenda" }: MainPanelProps): JSX.E
               case "dashboard":
                 return <DashBoard />;
               default:
-                stringError(opt, "opt in renderSelectedForm()", extLine(new Error()));
                 return <DefaultForm />;
             }
           })(opt),
         );
       } catch (e) {
-        console.error(`Error executing procedure fro rendering on formRoot:\n${(e as Error).message}`);
+        return;
       }
     },
     handlePanelPath = (change: React.ChangeEvent<HTMLSelectElement> | string): void => {
@@ -77,9 +74,7 @@ export default function SelectPanel({ defOp = "agenda" }: MainPanelProps): JSX.E
           .replace("/?", "?")
           .replace("/#", "#"),
       );
-      setTimeout(() => {
-        history.pushState({}, "", `${location.href}`.replace("/?", "?").replace("/#", "#"));
-      }, 300);
+      setTimeout(() => history.pushState({}, "", `${location.href}`.replace("/?", "?").replace("/#", "#")), 300);
     };
   useEffect(() => {
     const privilege = localStorage.getItem("activeUser")
@@ -93,17 +88,15 @@ export default function SelectPanel({ defOp = "agenda" }: MainPanelProps): JSX.E
   useEffect(() => {
     providers.globalDataProvider = new DataProvider(sessionStorage);
     handleLinkChanges("panel", "Panel Page Style");
-    handlePanelPath(defOp);
+    handlePanelPath(new URLSearchParams(location.search).get("panel") || defOp);
   }, [userClass, defOp]);
   useEffect(() => {
     setTimeout(() => {
       try {
         const formRoot = document.getElementById("formRoot"),
           panelSelect = document.getElementById("coordPanelSelect");
-        if (!(formRoot instanceof HTMLElement))
-          throw elementNotFound(formRoot, `Validation of Option Selection Element`, extLine(new Error()));
-        if (!(panelSelect instanceof HTMLSelectElement || panelSelect instanceof HTMLInputElement))
-          throw inputNotFound(panelSelect, `Validation of Select for panel instance`, extLine(new Error()));
+        if (!(formRoot instanceof HTMLElement)) return;
+        if (!(panelSelect instanceof HTMLSelectElement || panelSelect instanceof HTMLInputElement)) return;
         if (!context.roots.formRoot) context.roots.formRoot = createRoot(formRoot);
         const camel = kebabToCamel(location.search);
         formRoot.style.transition = "";
@@ -115,6 +108,7 @@ export default function SelectPanel({ defOp = "agenda" }: MainPanelProps): JSX.E
             formRoot.style.opacity = "1";
           }
         }, 300);
+        console.log(camel);
         if (/registStud/gi.test(camel)) {
           context.roots.formRoot.render(
             userClass === "coordenador" || userClass === "supervisor" ? <StudentForm /> : <Unauthorized />,
@@ -141,9 +135,7 @@ export default function SelectPanel({ defOp = "agenda" }: MainPanelProps): JSX.E
           panelSelect.value = "pacList";
         } else history.pushState({}, "", `${location.origin}${location.pathname}?panel=${defOp}`);
       } catch (e) {
-        console.error(
-          `Error executing procedure for adjusting selected panel option based on route:\n${(e as Error).message}`,
-        );
+        return;
       }
     }, 500);
   }, [userClass, context.roots, defOp]);
@@ -159,7 +151,6 @@ export default function SelectPanel({ defOp = "agenda" }: MainPanelProps): JSX.E
         setTimeout(() => {
           const selDiv = document.getElementById("formSelDiv");
           if (!document.getElementById("formSelDiv")?.querySelector("select")) {
-            elementNotFound(selDiv, "selDiv during DOM initialization", extLine(new Error()));
             if (selDiv instanceof HTMLElement) {
               selDiv.innerHTML = ``;
               if (!context.roots.rootSel) context.roots.rootSel = createRoot(selDiv);
@@ -178,7 +169,6 @@ export default function SelectPanel({ defOp = "agenda" }: MainPanelProps): JSX.E
       if (!panelRoots.mainRoot) panelRoots.mainRoot = createRoot(formRootRef.current);
     }
   }, [mounted]);
-  //Snippet para repassar para CSR totalmente (erro ainda não investigado)
   return !mounted ? (
     <></>
   ) : (

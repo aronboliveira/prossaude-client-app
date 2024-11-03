@@ -40,13 +40,10 @@ export default function AptDataList({
       } catch (e) {
         try {
           const fallbackRootDlg = document.getElementById("rootDlgList");
-          if (!(fallbackRootDlg instanceof HTMLElement))
-            throw elementNotFound(fallbackRootDlg, `attemp to recreate rootDlg`, extLine(new Error()));
+          if (!(fallbackRootDlg instanceof HTMLElement)) return;
           createRoot(fallbackRootDlg).unmount();
         } catch (e2) {
-          console.error(`Error rendering AptDataList:
-        ${(e2 as Error).message};
-        Failed to salvage rootDlg.`);
+          return;
         }
       }
     };
@@ -68,13 +65,10 @@ export default function AptDataList({
       } catch (e) {
         try {
           const fallbackRootDlg = document.getElementById("rootDlgList");
-          if (!(fallbackRootDlg instanceof HTMLElement))
-            throw elementNotFound(fallbackRootDlg, `attemp to recreate rootDlg`, extLine(new Error()));
+          if (!(fallbackRootDlg instanceof HTMLElement)) return;
           createRoot(fallbackRootDlg).unmount();
         } catch (e2) {
-          console.error(`Error rendering AptDataList:
-          ${(e2 as Error).message};
-          Failed to salvage rootDlg.`);
+          return;
         }
       }
     };

@@ -41,8 +41,7 @@ export default function TabStudForm(): JSX.Element {
     }, []);
   useEffect(() => {
     try {
-      if (!(tbodyRef.current instanceof HTMLTableSectionElement))
-        throw elementNotFound(tbodyRef.current, `Validation of Table Body instance`, extLine(new Error()));
+      if (!(tbodyRef.current instanceof HTMLTableSectionElement)) return;
       if (studs.length > 0 && tbodyRef.current.querySelector("tr")) return;
       setTimeout(() => {
         if (studs.length > 0) return;
@@ -63,24 +62,16 @@ export default function TabStudForm(): JSX.Element {
                 });
             });
             try {
-              if (!(tabRef.current instanceof HTMLElement))
-                throw elementNotFound(tabRef.current, `Validation of Table reference`, extLine(new Error()));
-              if (!(tbodyRef.current instanceof HTMLElement))
-                throw elementNotFound(tbodyRef.current, `Validation of Table Body Reference`, extLine(new Error()));
+              if (!(tabRef.current instanceof HTMLElement)) return;
+              if (!(tbodyRef.current instanceof HTMLElement)) return;
               if (
                 panelRoots[`${tbodyRef.current.id}`] &&
                 !(panelRoots[`${tbodyRef.current.id}`] as any)["_internalRoot"]
               ) {
                 setTimeout(() => {
                   try {
-                    if (!(tabRef.current instanceof HTMLElement))
-                      throw elementNotFound(tabRef.current, `Validation of Table reference`, extLine(new Error()));
-                    if (!(tbodyRef.current instanceof HTMLElement))
-                      throw elementNotFound(
-                        tbodyRef.current,
-                        `Validation of Table Body Reference`,
-                        extLine(new Error()),
-                      );
+                    if (!(tabRef.current instanceof HTMLElement)) return;
+                    if (!(tbodyRef.current instanceof HTMLElement)) return;
                     if (tbodyRef.current.querySelector("tr")) return;
                     panelRoots[`${tbodyRef.current.id}`]?.unmount();
                     delete panelRoots[`${tbodyRef.current.id}`];
@@ -142,8 +133,7 @@ export default function TabStudForm(): JSX.Element {
                       </ErrorBoundary>,
                     );
                     tbodyRef.current = document.getElementById("studsTbody") as nlTabSect;
-                    if (!(tbodyRef.current instanceof HTMLElement))
-                      throw elementNotFound(tbodyRef.current, `Validation of replaced tbody`, extLine(new Error()));
+                    if (!(tbodyRef.current instanceof HTMLElement)) return;
                     if (!panelRoots[`${tbodyRef.current.id}`])
                       panelRoots[`${tbodyRef.current.id}`] = createRoot(tbodyRef.current);
                     if (!tbodyRef.current.querySelector("tr"))
@@ -156,12 +146,7 @@ export default function TabStudForm(): JSX.Element {
                       if (tabRef?.current instanceof HTMLTableElement) {
                         equalizeTabCells(tabRef.current);
                         fillTabAttr(tabRef.current);
-                      } else
-                        elementNotFound(
-                          tabRef.current,
-                          `tabRef id ${(tabRef?.current as any)?.id || "UNIDENTIFIED"} in useEffect() for tableRef`,
-                          extLine(new Error()),
-                        );
+                      }
                     }, 300);
                   } catch (e) {
                     console.error(
@@ -210,8 +195,7 @@ export default function TabStudForm(): JSX.Element {
             }
             const handleAttempt = (): void => {
               try {
-                if (!(tabRef.current instanceof HTMLElement))
-                  throw elementNotFound(tabRef.current, `Validation of Table instance`, extLine(new Error()));
+                if (!(tabRef.current instanceof HTMLElement)) return;
                 equalizeTabCells(tabRef.current);
                 strikeEntries(tabRef.current);
                 document.getElementById("btnExport") &&

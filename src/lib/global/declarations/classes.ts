@@ -1,4 +1,4 @@
-import { looseNum, nlDsb, queryableNode, rMouseEvent, voidVal } from "./types";
+import { aptTypes, looseNum, nlDsb, queryableNode, rMouseEvent, voidVal } from "./types";
 import { WorkBook, utils, writeFile } from "xlsx";
 import { textTransformPascal } from "../gModel";
 import { exportSignaler } from "../gController";
@@ -14,6 +14,7 @@ import {
 } from "@/lib/locals/edFisNutPage/edFisNutModel";
 import { toast } from "react-hot-toast";
 import promptToast from "../../../../components/interactive/def/PromptToast";
+import { HistoricInfo, PacInfo, PersonProps, ProfInfo, StudInfo, UserProps } from "./interfacesCons";
 export interface UndefinedPerson {
   gen: string;
   age: number;
@@ -871,5 +872,80 @@ export class ExportHandler {
     } catch (e) {
       return;
     }
+  }
+}
+abstract class TypeValidator<T> {
+  public abstract validate(data: Partial<T>): boolean;
+}
+export class PersonValidator extends TypeValidator<PersonProps> {
+  public validate(data: Partial<PersonProps>): boolean {
+    return typeof data.name === "string" && typeof data.email === "string" && typeof data.tel === "string";
+  }
+}
+export class UserValidator extends PersonValidator {
+  public validate(data: Partial<UserProps>): boolean {
+    return (
+      super.validate(data) &&
+      typeof data.area === "string" &&
+      typeof data.day === "string" &&
+      typeof data.start_day === "string" &&
+      typeof data.end_day === "string"
+    );
+  }
+}
+export class ProfInfoValidator extends UserValidator {
+  public validate(data: Partial<ProfInfo>): boolean {
+    return (
+      super.validate(data) &&
+      (data.idf === undefined || typeof data.idf === "string") &&
+      (data.external === undefined || typeof data.external === "boolean")
+    );
+  }
+}
+export class StudInfoValidator extends UserValidator {
+  public validate(data: Partial<StudInfo>): boolean {
+    return (
+      super.validate(data) &&
+      (data.dre === undefined || typeof data.dre === "string") &&
+      (data.cpf === undefined || typeof data.cpf === "string")
+    );
+  }
+}
+export class PacInfoValidator extends PersonValidator {
+  public validate(data: Partial<PacInfo>): boolean {
+    return (
+      super.validate(data) &&
+      typeof data.next_appointed_day === "string" &&
+      typeof data.treatment_beg === "string" &&
+      typeof data.treatment_end === "string" &&
+      typeof data.current_status === "string" &&
+      (data.signature instanceof File || !data.signature) &&
+      (typeof data.idf === "string" || !data.idf) &&
+      Array.isArray(data.historic) &&
+      data.historic.every(item => PacInfoValidator.validateHistoric(item))
+    );
+  }
+  public static validateHistoric(historic: HistoricInfo): boolean {
+    const validTypes: aptTypes[] = [
+      "anamnese",
+      "retorno",
+      "exodontia",
+      "profilaxia",
+      "raspagem",
+      "rcarie",
+      "acompanhamento",
+      "analise",
+      "diagnostico",
+      "avaliacao",
+      "recordatorio",
+      "suplementacao",
+    ];
+    return (
+      (historic.type.toLowerCase() === "indefinido" || validTypes.includes(historic.type.toLowerCase() as aptTypes)) &&
+      typeof historic.day === "string" &&
+      typeof historic.prof === "string" &&
+      (typeof historic.stud === "string" || !historic.stud) &&
+      (typeof historic.notes === "string" || !historic.notes)
+    );
   }
 }

@@ -60,93 +60,97 @@ export default function ScheduleForm({ mainRoot }: ScheduleFormProps): JSX.Eleme
         );
       }
     };
-  const [showForm] = useState(true);
-  const formRef = useRef<nlFm>(null);
-  const workingDefinitionsRef = useRef<HTMLDivElement | null>(null);
-  const monthRef = useRef<nlSel>(null);
-  const btnExportSchedRef = useRef<nlBtn>(null);
-  const [pressState, setTogglePress] = useState<boolean>(false);
-  const toggleForm = (): void => setTogglePress(() => !pressState);
-  const formCallback = useCallback(
-    (form: nlFm) => {
-      if (form instanceof HTMLFormElement) {
-        //adição de listeners para confirmação de agendamentos
-        const registDayBtn = form.querySelector("#regstDayBtn");
-        if (registDayBtn instanceof HTMLButtonElement) {
-          registDayBtn.disabled = true;
-        } else
-          elementNotFound(
-            registDayBtn,
-            "Button for completing day of appointment in schedule form",
-            extLine(new Error()),
-          );
-        //adição de listeners para drag events
-        const dayChecks = form.querySelectorAll('input[class*="apptCheck"]');
-        if (dayChecks.length > 0) {
-          dayChecks.forEach(dayCheck => {
-            (userClass === "coordenador" || userClass === "supervisor") &&
-              dayCheck.addEventListener("change", () => {
-                dayCheck instanceof HTMLInputElement && (dayCheck.type === "checkbox" || dayCheck.type === "radio")
-                  ? checkConfirmApt(dayCheck)
-                  : inputNotFound(dayCheck, `dayCheck id ${dayCheck?.id || "UNIDENTIFIED"}`, extLine(new Error()));
-              });
-          });
-        } else elementNotPopulated(dayChecks, "Checkboxes for day checks", extLine(new Error()));
-        //adição de listeners para exportação de excel
-        const btnExportSched = btnExportSchedRef.current || form.querySelector("#btnExport");
-        btnExportSched instanceof HTMLButtonElement
-          ? addExportFlags(form)
-          : elementNotFound(btnExportSched, "Button for generating spreadsheet in schedule form", extLine(new Error()));
-        //ajustes de estilo
-        clearPhDates(Array.from(form.querySelectorAll('input[type="date"]')));
-        equalizeWidWithPhs([
-          ...Array.from(form.querySelectorAll("input")).filter(
-            inp =>
-              inp.type === "text" ||
-              inp.type === "number" ||
-              inp.type === "date" ||
-              inp.type === "search" ||
-              inp.type === "hour",
-          ),
-          ...form.querySelectorAll("select"),
-          ...form.querySelectorAll("textarea"),
-        ]);
-        setTimeout(() => {
-          const ancestorForTwins = form.querySelectorAll('[class*="ancestorTwins"]');
-          if (ancestorForTwins.length > 0) {
-            ancestorForTwins.forEach(ancestor => {
-              equalizeFlexSibilings(ancestor.querySelectorAll('[class*="flexTwin"]'), [["height", "px"]]);
+  const [showForm] = useState<boolean>(true),
+    formRef = useRef<nlFm>(null),
+    workingDefinitionsRef = useRef<HTMLDivElement | null>(null),
+    monthRef = useRef<nlSel>(null),
+    btnExportSchedRef = useRef<nlBtn>(null),
+    [pressState, setTogglePress] = useState<boolean>(false),
+    toggleForm = (): void => setTogglePress(() => !pressState),
+    formCallback = useCallback(
+      (form: nlFm) => {
+        if (form instanceof HTMLFormElement) {
+          //adição de listeners para confirmação de agendamentos
+          const registDayBtn = form.querySelector("#regstDayBtn");
+          if (registDayBtn instanceof HTMLButtonElement) {
+            registDayBtn.disabled = true;
+          } else
+            elementNotFound(
+              registDayBtn,
+              "Button for completing day of appointment in schedule form",
+              extLine(new Error()),
+            );
+          //adição de listeners para drag events
+          const dayChecks = form.querySelectorAll('input[class*="apptCheck"]');
+          if (dayChecks.length > 0) {
+            dayChecks.forEach(dayCheck => {
+              (userClass === "coordenador" || userClass === "supervisor") &&
+                dayCheck.addEventListener("change", () => {
+                  dayCheck instanceof HTMLInputElement && (dayCheck.type === "checkbox" || dayCheck.type === "radio")
+                    ? checkConfirmApt(dayCheck)
+                    : inputNotFound(dayCheck, `dayCheck id ${dayCheck?.id || "UNIDENTIFIED"}`, extLine(new Error()));
+                });
             });
-          }
-        }, 300);
-        const hourInp = form.querySelector("#hourDayInp") ?? form.querySelector('input[type="hour"]');
-        hourInp instanceof HTMLInputElement && hourInp.type === "time"
-          ? (hourInp.value = "18:00")
-          : inputNotFound(hourInp, "hourInp in form for schedule", extLine(new Error()));
-      } else elementNotFound(form, "formRef for callbackFormSchedule()", extLine(new Error()));
-      normalizeSizeSb(
-        [
-          ...document.querySelectorAll(".formPadded"),
-          ...document.querySelectorAll(".ovFlAut"),
-          ...document.querySelectorAll("[scrollbar-width=none]"),
-          ...document.querySelectorAll("table"),
-        ],
-        [true, 1],
-        true,
-        [document.getElementById("formBodySchedSect")],
-      );
-      const daysCont = document.getElementById("mainConsDaysCont");
-      if (daysCont instanceof HTMLElement) scheduleReset[`outerHTML`] = daysCont.outerHTML;
-      else
-        setTimeout(() => {
-          const daysCont = document.getElementById("mainConsDaysCont");
-          if (daysCont instanceof HTMLElement) scheduleReset[`outerHTML`] = daysCont.outerHTML;
-        }, 200);
-      addEventListener("resize", handleResize);
-      return (): void => removeEventListener("resize", handleResize);
-    },
-    [userClass],
-  );
+          } else elementNotPopulated(dayChecks, "Checkboxes for day checks", extLine(new Error()));
+          //adição de listeners para exportação de excel
+          const btnExportSched = btnExportSchedRef.current || form.querySelector("#btnExport");
+          btnExportSched instanceof HTMLButtonElement
+            ? addExportFlags(form)
+            : elementNotFound(
+                btnExportSched,
+                "Button for generating spreadsheet in schedule form",
+                extLine(new Error()),
+              );
+          //ajustes de estilo
+          clearPhDates(Array.from(form.querySelectorAll('input[type="date"]')));
+          equalizeWidWithPhs([
+            ...Array.from(form.querySelectorAll("input")).filter(
+              inp =>
+                inp.type === "text" ||
+                inp.type === "number" ||
+                inp.type === "date" ||
+                inp.type === "search" ||
+                inp.type === "hour",
+            ),
+            ...form.querySelectorAll("select"),
+            ...form.querySelectorAll("textarea"),
+          ]);
+          setTimeout(() => {
+            const ancestorForTwins = form.querySelectorAll('[class*="ancestorTwins"]');
+            if (ancestorForTwins.length > 0) {
+              ancestorForTwins.forEach(ancestor => {
+                equalizeFlexSibilings(ancestor.querySelectorAll('[class*="flexTwin"]'), [["height", "px"]]);
+              });
+            }
+          }, 300);
+          const hourInp = form.querySelector("#hourDayInp") ?? form.querySelector('input[type="hour"]');
+          hourInp instanceof HTMLInputElement && hourInp.type === "time"
+            ? (hourInp.value = "18:00")
+            : inputNotFound(hourInp, "hourInp in form for schedule", extLine(new Error()));
+        } else elementNotFound(form, "formRef for callbackFormSchedule()", extLine(new Error()));
+        normalizeSizeSb(
+          [
+            ...document.querySelectorAll(".formPadded"),
+            ...document.querySelectorAll(".ovFlAut"),
+            ...document.querySelectorAll("[scrollbar-width=none]"),
+            ...document.querySelectorAll("table"),
+          ],
+          [true, 1],
+          true,
+          [document.getElementById("formBodySchedSect")],
+        );
+        const daysCont = document.getElementById("mainConsDaysCont");
+        if (daysCont instanceof HTMLElement) scheduleReset[`outerHTML`] = daysCont.outerHTML;
+        else
+          setTimeout(() => {
+            const daysCont = document.getElementById("mainConsDaysCont");
+            if (daysCont instanceof HTMLElement) scheduleReset[`outerHTML`] = daysCont.outerHTML;
+          }, 200);
+        addEventListener("resize", handleResize);
+        return (): void => removeEventListener("resize", handleResize);
+      },
+      [userClass],
+    );
   useEffect(() => {
     /new-cons=open/gi.test(location.search) && setTogglePress(true);
   }, []);
@@ -166,15 +170,12 @@ export default function ScheduleForm({ mainRoot }: ScheduleFormProps): JSX.Eleme
         );
       const saveInterv = setInterval(() => {
         try {
-          if (!(formRef.current instanceof HTMLFormElement))
-            throw elementNotFound(formRef.current, `Validation of Form instance`, extLine(new Error()));
+          if (!(formRef.current instanceof HTMLFormElement)) return;
           validateForm(formRef.current, formRef.current).then(validation =>
             handleSubmit("schedule", validation[2], true),
           );
         } catch (e) {
-          console.error(
-            `Error executing interval for saving schedule at ${new Date().getMinutes()}:\n${(e as Error).message}`,
-          );
+          return;
         }
       }, 60000);
       return (): void => clearInterval(saveInterv);
@@ -320,8 +321,7 @@ export default function ScheduleForm({ mainRoot }: ScheduleFormProps): JSX.Eleme
     });
     try {
       const transfArea = document.getElementById("transfArea");
-      if (!(transfArea instanceof HTMLElement))
-        throw elementNotFound(transfArea, `Transference Element`, extLine(new Error()));
+      if (!(transfArea instanceof HTMLElement)) return;
       transfInterv = setInterval(() => {
         if (!transfArea.querySelector(".appointmentBtn")) {
           const slot = transfArea.querySelector("slot");
@@ -337,7 +337,7 @@ export default function ScheduleForm({ mainRoot }: ScheduleFormProps): JSX.Eleme
         }
       }, 200);
     } catch (e) {
-      console.error(`Error executing procedure for adding interval to Transference Area:\n${(e as Error).message}`);
+      return;
     }
     return (): void => {
       try {
@@ -347,7 +347,7 @@ export default function ScheduleForm({ mainRoot }: ScheduleFormProps): JSX.Eleme
         for (const slotInterv of slotsIntervs) clearInterval(slotInterv);
         document.getElementById("transfArea") && transfInterv && clearInterval(transfInterv);
       } catch (e) {
-        console.error(`Error clearing intervals for Schedule:\n${(e as Error).message}`);
+        return;
       }
     };
   }, [userClass]);
@@ -457,7 +457,7 @@ export default function ScheduleForm({ mainRoot }: ScheduleFormProps): JSX.Eleme
                               ev.currentTarget.style.borderColor = `rgb(179, 205, 242)`;
                             }
                           } catch (e) {
-                            console.error(`Error executing ${ev.type} callback:\n${(e as Error).message}`);
+                            return;
                           }
                         }}
                         onChange={ev => {
@@ -498,7 +498,7 @@ export default function ScheduleForm({ mainRoot }: ScheduleFormProps): JSX.Eleme
                               ev.currentTarget.style.borderColor = `rgb(179, 205, 242)`;
                             }
                           } catch (e) {
-                            console.error(`Error executing ${ev.type} callback:\n${(e as Error).message}`);
+                            return;
                           }
                         }}
                       />
@@ -535,11 +535,7 @@ export default function ScheduleForm({ mainRoot }: ScheduleFormProps): JSX.Eleme
                                           (confirmRegst.type === "checkbox" || confirmRegst.type === "radio")
                                         )
                                       )
-                                        throw elementNotFound(
-                                          confirmRegst,
-                                          `Validation of confirmRegst instance`,
-                                          extLine(new Error()),
-                                        );
+                                        return;
                                       if (!(relAptBtn instanceof HTMLElement)) return;
                                       if (confirmRegst.checked) {
                                         relAptBtn.classList.remove("btn-info");
@@ -549,7 +545,7 @@ export default function ScheduleForm({ mainRoot }: ScheduleFormProps): JSX.Eleme
                                         relAptBtn.classList.add("btn-info");
                                       }
                                     } catch (e) {
-                                      console.error(`Error:${(e as Error).message}`);
+                                      return;
                                     }
                                   }
                                 : (): void => {}
@@ -742,27 +738,16 @@ export default function ScheduleForm({ mainRoot }: ScheduleFormProps): JSX.Eleme
                             if (
                               !(monthSelector instanceof HTMLSelectElement || monthSelector instanceof HTMLInputElement)
                             )
-                              throw inputNotFound(
-                                monthSelector,
-                                "Month Selector when handling Month state change",
-                                extLine(new Error()),
-                              );
+                              return;
                             const tabRoot = document.getElementById("tbSchedule");
-                            if (!(tabRoot instanceof HTMLElement))
-                              throw elementNotFound(
-                                tabRoot,
-                                `Table Schedule Root when handling Month state change`,
-                                extLine(new Error()),
-                              );
+                            if (!(tabRoot instanceof HTMLElement)) return;
                             if (
                               !(
                                 sessionScheduleState instanceof Object &&
                                 sessionScheduleState.hasOwnProperty(monthSelector.value)
                               )
                             )
-                              throw new Error(
-                                `Error validating sessionScheduleState using the monthSelector value reference`,
-                              );
+                              return;
                             rootDlgContext.addedAptListeners = false;
                             rootDlgContext.addedDayListeners = false;
                             handleScheduleChange(
@@ -773,62 +758,44 @@ export default function ScheduleForm({ mainRoot }: ScheduleFormProps): JSX.Eleme
                             );
                             try {
                               const lastConsDayCont = document.querySelector(".lastConsDayCont");
-                              if (!(lastConsDayCont instanceof HTMLElement))
-                                throw elementNotFound(lastConsDayCont, `Last Table Head Cel`, extLine(new Error()));
+                              if (!(lastConsDayCont instanceof HTMLElement)) return;
                               if (
                                 getComputedStyle(lastConsDayCont).display === "none" ||
                                 lastConsDayCont.hidden === true
                               ) {
                                 const tbSchedule = document.getElementById("tbSchedule");
-                                if (!(tbSchedule instanceof HTMLElement))
-                                  throw elementNotFound(tbSchedule, `Table Body`, extLine(new Error()));
-                                tbSchedule.querySelectorAll("tr").forEach((row, j) => {
+                                if (!(tbSchedule instanceof HTMLElement)) return;
+                                tbSchedule.querySelectorAll("tr").forEach(row => {
                                   try {
                                     const lastCel = Array.from(row.querySelectorAll("td"))
                                       .map(td => td)
                                       .at(-1);
-                                    if (!(lastCel instanceof HTMLElement))
-                                      throw elementNotFound(lastCel, `Last Row Cel`, extLine(new Error()));
+                                    if (!(lastCel instanceof HTMLElement)) return;
                                     lastCel.style.display = "none";
                                   } catch (e) {
-                                    console.error(
-                                      `Error executing iteration ${j} of cicles for checking Last Row Cells:${
-                                        (e as Error).message
-                                      }`,
-                                    );
+                                    return;
                                   }
                                 });
                               } else {
                                 const tbSchedule = document.getElementById("tbSchedule");
-                                if (!(tbSchedule instanceof HTMLElement))
-                                  throw elementNotFound(tbSchedule, `Table Body`, extLine(new Error()));
-                                tbSchedule.querySelectorAll("tr").forEach((row, j) => {
+                                if (!(tbSchedule instanceof HTMLElement)) return;
+                                tbSchedule.querySelectorAll("tr").forEach(row => {
                                   try {
                                     const lastCel = Array.from(row.querySelectorAll("td"))
                                       .map(td => td)
                                       .at(-1);
-                                    if (!(lastCel instanceof HTMLElement))
-                                      throw elementNotFound(lastCel, `Last Row Cel`, extLine(new Error()));
+                                    if (!(lastCel instanceof HTMLElement)) return;
                                     lastCel.style.display = "table-cell";
                                   } catch (e) {
-                                    console.error(
-                                      `Error executing iteration ${j} of cicles for checking Last Row Cells:${
-                                        (e as Error).message
-                                      }`,
-                                    );
+                                    return;
                                   }
                                 });
                               }
                             } catch (e) {
-                              console.error(
-                                `Error executing procedure for checking Last Schedule Column display:\n${
-                                  (e as Error).message
-                                }`,
-                              );
+                              return;
                             }
                           } catch (err) {
-                            console.error(`Error handling change on Month Selector:
-                            ${(err as Error).message}`);
+                            return;
                           }
                         }}>
                         <option value='jan'>Janeiro</option>

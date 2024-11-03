@@ -28,13 +28,7 @@ import {
   multipleElementsNotFound,
 } from "@/lib/global/handlers/errorHandler";
 import { nlBtn, nlDiv, nlDlg, nlFm, nlInp } from "@/lib/global/declarations/types";
-import {
-  addEmailExtension,
-  assignFormAttrs,
-  autoCapitalizeInputs,
-  formatCPF,
-  formatTel,
-} from "@/lib/global/gModel";
+import { addEmailExtension, assignFormAttrs, autoCapitalizeInputs, formatCPF, formatTel } from "@/lib/global/gModel";
 import { enableCPFBtn, handleCondtReq, validateForm, syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import ListFirstNameCons from "./ListFirstNameCons";
 import ListCPFPacCons from "./ListCPFPacCons";
@@ -296,17 +290,11 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
     ) {
       switchACConsRef.current.checked = true;
       toggleACCons(isAutocorrectConsOn);
-    } else
-      inputNotFound(
-        switchACConsRef.current,
-        "Switch for toggling autocorrect in new appointment form",
-        extLine(new Error()),
-      );
+    }
   }, [switchACConsRef]);
   useEffect(() => {
     try {
-      if (!(hourRef.current instanceof HTMLInputElement))
-        throw inputNotFound(hourRef.current, `Validation of Appointment Hour Ref`, extLine(new Error()));
+      if (!(hourRef.current instanceof HTMLInputElement)) return;
       hourRef.current.value = "18:00";
     } catch (e) {
       return;
@@ -314,12 +302,9 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
   }, [hourRef]);
   useEffect(() => {
     try {
-      if (!(dayRef.current instanceof HTMLElement)) {
-        throw elementNotFound(dayRef.current, `Validation of Day Reference`, extLine(new Error()));
-      }
+      if (!(dayRef.current instanceof HTMLElement)) return;
       const changeDaySel = document.getElementById("changeDaySel");
-      if (!(changeDaySel instanceof HTMLElement))
-        throw elementNotFound(changeDaySel, `Validation of Change Day Reference`, extLine(new Error()));
+      if (!(changeDaySel instanceof HTMLElement)) return;
       dayRef.current.innerHTML = changeDaySel
         .parentElement!.innerHTML.replaceAll("Dia de Inclusão", "Dia")
         .replaceAll("changeDaySel", "consChangeDaySel");
@@ -479,9 +464,7 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
                             inpTelPac.required = true;
                           }
                           const relProfName = document.getElementById("relProfName");
-                          if (!(relProfName instanceof HTMLInputElement))
-                            throw inputNotFound(relProfName, `Validation of relProfName`, extLine(new Error()));
-                          if (!relProfName.required) {
+                          if (relProfName instanceof HTMLInputElement && !relProfName.required) {
                             relProfName.minLength = 3;
                             relProfName.dataset.min = "3";
                             relProfName.dataset.max = "99";
@@ -490,10 +473,9 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
                             relProfName.required = true;
                           }
                         } else {
-                          try {
+                          (() => {
                             const familyNamePac = document.getElementById("familyNamePac");
-                            if (!(familyNamePac instanceof HTMLInputElement))
-                              throw inputNotFound(familyNamePac, `Validation of familyNamePac`, extLine(new Error()));
+                            if (!(familyNamePac instanceof HTMLInputElement)) return;
                             if (familyNamePac.required) {
                               familyNamePac.minLength = 0;
                               delete familyNamePac.dataset.min;
@@ -502,13 +484,10 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
                               delete familyNamePac.dataset.flags;
                               familyNamePac.required = false;
                             }
-                          } catch (e) {
-                            console.error(`Error executing procedure for familyNamePac:\n${(e as Error).message}`);
-                          }
-                          try {
+                          })();
+                          (() => {
                             const inpTelPac = document.getElementById("inpTelPac");
-                            if (!(inpTelPac instanceof HTMLInputElement))
-                              throw inputNotFound(inpTelPac, `Validation of inpTelPac`, extLine(new Error()));
+                            if (!(inpTelPac instanceof HTMLInputElement)) return;
                             if (inpTelPac.required) {
                               inpTelPac.minLength = 0;
                               delete inpTelPac.dataset.min;
@@ -517,13 +496,10 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
                               delete inpTelPac.dataset.flags;
                               inpTelPac.required = false;
                             }
-                          } catch (e) {
-                            console.error(`Error executing procedure for inpTelPac:\n${(e as Error).message}`);
-                          }
-                          try {
+                          })();
+                          (() => {
                             const relProfName = document.getElementById("relProfName");
-                            if (!(relProfName instanceof HTMLInputElement))
-                              throw inputNotFound(relProfName, `Validation of relProfName`, extLine(new Error()));
+                            if (!(relProfName instanceof HTMLInputElement)) return;
                             if (relProfName.required) {
                               relProfName.minLength = 0;
                               delete relProfName.dataset.min;
@@ -532,9 +508,7 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
                               delete relProfName.dataset.flags;
                               relProfName.required = false;
                             }
-                          } catch (e) {
-                            console.error(`Error executing procedure for relProfName:\n${(e as Error).message}`);
-                          }
+                          })();
                         }
                       }}
                     />
@@ -969,7 +943,7 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
                           ev.currentTarget.style.borderColor = `rgb(179, 205, 242)`;
                         }
                       } catch (e) {
-                        console.error(`Error executing ${ev.type} callback:\n${(e as Error).message}`);
+                        return;
                       }
                     }}
                     onChange={ev => {
@@ -1010,7 +984,7 @@ export default function FormDlg({ onClose }: ConsDlgProps): JSX.Element {
                           ev.currentTarget.style.borderColor = `rgb(179, 205, 242)`;
                         }
                       } catch (e) {
-                        console.error(`Error executing ${ev.type} callback:\n${(e as Error).message}`);
+                        return;
                       }
                     }}
                   />
