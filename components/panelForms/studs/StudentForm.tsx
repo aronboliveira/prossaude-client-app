@@ -157,7 +157,11 @@ export default function StudentForm(): JSX.Element {
             </small>
           </div>
           <div role='group' className='flexNoWR flexQ460NoWC'>
-            <span role='group' className='form-switch spanRight' id='autocorrectDivStud'>
+            <fieldset
+              role='group'
+              className='form-switch spanRight'
+              id='autocorrectDivStud'
+              style={{ marginBottom: "0", display: "inline-flex" }}>
               <input
                 type='checkbox'
                 className='deActBtn form-check-input'
@@ -167,8 +171,12 @@ export default function StudentForm(): JSX.Element {
                 data-title='Autocorreção(Estudante)'
               />
               <strong>Autocorreção</strong>
-            </span>
-            <span role='group' className='form-switch spanRight' id='autofillDivStud'>
+            </fieldset>
+            <fieldset
+              role='group'
+              className='form-switch spanRight'
+              id='autofillDivStud'
+              style={{ display: "inline-flex" }}>
               <input
                 type='checkbox'
                 className='deActBtn form-check-input'
@@ -178,7 +186,7 @@ export default function StudentForm(): JSX.Element {
                 data-title='Autopreenchimento(Estudante)'
               />
               <strong>Autopreenchimento</strong>
-            </span>
+            </fieldset>
           </div>
           <hr className='rdc05rHr460Q' />
           <fieldset className='flexColumn' id='formAddStudBodyFs'>

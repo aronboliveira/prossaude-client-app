@@ -154,7 +154,11 @@ export default function ProfForm({ mainRoot }: GlobalFormProps): JSX.Element {
             </small>
           </div>
           <div role='group' className='flexNoWR flexQ460NoWC'>
-            <span role='group' className='form-switch spanRight' id='autocorrectDivprof'>
+            <fieldset
+              role='group'
+              className='form-switch spanRight'
+              id='autocorrectDivprof'
+              style={{ marginBottom: "0", display: "inline-flex" }}>
               <input
                 type='checkbox'
                 className='deActBtn form-check-input'
@@ -164,8 +168,12 @@ export default function ProfForm({ mainRoot }: GlobalFormProps): JSX.Element {
                 data-title='Autocorreção(Profissional)'
               />
               <strong>Autocorreção</strong>
-            </span>
-            <span role='group' className='form-switch spanRight' id='autofillDivprof'>
+            </fieldset>
+            <fieldset
+              role='group'
+              className='form-switch spanRight'
+              id='autofillDivprof'
+              style={{ display: "inline-flex" }}>
               <input
                 type='checkbox'
                 className='deActBtn form-check-input'
@@ -175,7 +183,7 @@ export default function ProfForm({ mainRoot }: GlobalFormProps): JSX.Element {
                 data-title='Autopreenchimento(Profissional)'
               />
               <strong>Autopreenchimento</strong>
-            </span>
+            </fieldset>
           </div>
           <hr className='rdc05rHr460Q' />
           <fieldset className='flexColumn' id='formAddProfBodyFs'>
