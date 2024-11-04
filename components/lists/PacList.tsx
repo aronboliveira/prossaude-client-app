@@ -1,20 +1,16 @@
 "use client";
 import { ErrorBoundary } from "react-error-boundary";
-import { useContext, useEffect, useReducer, useRef } from "react";
+import { useContext, useEffect, useRef } from "react";
 import GenericErrorComponent from "../error/GenericErrorComponent";
 import PacRow from "../panelForms/pacs/PacRow";
-import { nlHtEl, nlTab, nlTabSect } from "@/lib/global/declarations/types";
+import { formCases, nlHtEl, nlTab, nlTabSect } from "@/lib/global/declarations/types";
 import { PacInfo, PacListProps } from "@/lib/global/declarations/interfacesCons";
 import { addListenerAlocation, initLoadedTab } from "@/lib/locals/panelPage/handlers/consHandlerList";
 import { PanelCtx } from "../panelForms/defs/client/SelectLoader";
 import Link from "next/link";
 import { useDataFetch } from "@/lib/hooks/useDataFetch";
 import { privilege } from "@/lib/locals/basePage/declarations/serverInterfaces";
-import { useQuery } from "@tanstack/react-query";
-import { handleFetch } from "@/lib/global/data-service";
-import { navigatorVars } from "@/vars";
-import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
-import Spinner from "../icons/Spinner";
+import useRevalidate from "@/lib/hooks/useRevalidate";
 export default function PacList({
   shouldDisplayRowData,
   setDisplayRowData,
@@ -44,54 +40,47 @@ export default function PacList({
         />
       </ErrorBoundary>
     )),
-    [caption, setCaption] = useReducer<(state: JSX.Element, action: "success" | "error" | "pending") => JSX.Element>(
-      (state: JSX.Element, action: "success" | "error" | "pending") => {
-        switch (action) {
-          case "success":
-            return (
-              <strong>
-                <small role='textbox' className='noInvert'>
-                  <em className='noInvert'>
-                    Lista Recuperada da Ficha de Pacientes registrados. Acesse
-                    <samp>
-                      <Link href={`${location.origin}/ag`} id='idLink' style={{ display: "inline" }}>
-                        &nbsp;Anamnese Geral&nbsp;
-                      </Link>
-                    </samp>
-                    para cadastrar
-                  </em>
-                </small>
-              </strong>
-            );
-          case "error":
-            return (
-              <strong>
-                <small role='textbox' className='noInvert'>
-                  Erro obtendo dados de pacientes. Aguarde revalidação ou recarregue a página.
-                </small>
-              </strong>
-            );
-          case "pending":
-            return <Spinner />;
-          default:
-            return state;
-        }
-      },
-      <strong>
-        <small role='textbox' className='noInvert'>
-          <em className='noInvert'>
-            Lista Recuperada da Ficha de Pacientes registrados. Acesse
-            <samp>
-              <Link href={`${location.origin}/ag`} id='idLink' style={{ display: "inline" }}>
-                &nbsp;Anamnese Geral&nbsp;
-              </Link>
-            </samp>
-            para cadastrar
-          </em>
-        </small>
-      </strong>,
-    ),
-    validated = useRef<"pending" | boolean>(true);
+    { caption } = useRevalidate({
+      apiRoute: "patients",
+      onSuccess: (
+        <strong>
+          <small role='textbox' className='noInvert'>
+            <em className='noInvert'>
+              Lista Recuperada da Ficha de Pacientes registrados. Acesse
+              <samp>
+                <Link href={`${location.origin}/ag`} id='idLink' style={{ display: "inline" }}>
+                  &nbsp;Anamnese Geral&nbsp;
+                </Link>
+              </samp>
+              para cadastrar
+            </em>
+          </small>
+        </strong>
+      ),
+      onError: (
+        <strong>
+          <small role='textbox' className='noInvert'>
+            Erro obtendo dados de pacientes. Aguarde revalidação ou recarregue a página.
+          </small>
+        </strong>
+      ),
+      rowFn: (p: { desc: formCases; ind: PacInfo }, i: number) => (
+        <ErrorBoundary
+          key={`${p.desc}_row_err__${i + 2}`}
+          FallbackComponent={() => <GenericErrorComponent message={`Error carregando linha ${i + 1}`} />}>
+          <PacRow
+            nRow={i + 2}
+            pac={p.ind}
+            shouldShowAlocBtn={shouldShowAlocBtn}
+            tabRef={tabPacRef}
+            key={`${p.desc}_row__${i + 2}`}
+          />
+        </ErrorBoundary>
+      ),
+      validator,
+      dispatch: setData,
+      ref: sectTabRef,
+    });
   useEffect(() => {
     if (!(sectTabRef.current instanceof HTMLElement)) return;
     const handleKeyDown = (press: KeyboardEvent): boolean | void =>
@@ -104,11 +93,13 @@ export default function PacList({
       if (!loaded) return;
       initLoadedTab(sectTabRef.current, userClass as privilege);
       try {
+        setTimeout(() => {
+          document.querySelectorAll(".outpPacStatus").forEach(status => {
+            if (!(status instanceof HTMLElement)) return;
+            if (status.innerText.toLowerCase().trim() === "em emergência") status.style.color = `red`;
+          });
+        }, 500);
         if (!(sectTabRef?.current instanceof HTMLElement)) return;
-        document.querySelectorAll(".outpPacStatus").forEach(status => {
-          if (!(status instanceof HTMLElement)) return;
-          if (status.innerText.toLowerCase().trim() === "em emergência") status.style.color = `red`;
-        });
         const ancestral = document.getElementById("regstPacDlg");
         ancestral &&
           dispatch &&
@@ -122,60 +113,6 @@ export default function PacList({
       return;
     }
   }, [loaded, sectTabRef, dispatch, tabPacRef, userClass]);
-  useQuery({
-    queryKey: [`req_patients_tab`],
-    queryFn: async () => {
-      setCaption("pending");
-      validated.current = "pending";
-      const res = await handleFetch("patients", "_table", true);
-      if (!res)
-        throw new Error(
-          navigatorVars.pt ? `Houve algum erro validando a página` : "There was some error validating the page",
-        );
-      if (!Array.isArray(res))
-        throw new Error(
-          navigatorVars.pt ? `A lista de dados não pôde ser criada` : "The data list could not be created",
-        );
-      const filtered = res.filter(p => validator(p));
-      validated.current = filtered.length > 0 ? true : false;
-      setData(prev => {
-        prev.splice(0, prev.length);
-        return filtered.length === 0
-          ? [<GenericErrorComponent key={crypto.randomUUID()} message='❌ Não foi possível carregar os dados!' />]
-          : filtered.map((pac, i) => (
-              <ErrorBoundary
-                key={`pac_row_err__${i + 2}`}
-                FallbackComponent={() => <GenericErrorComponent message={`Error carregando linha ${i + 1}`} />}>
-                <PacRow
-                  nRow={i + 2}
-                  pac={pac as PacInfo}
-                  shouldShowAlocBtn={shouldShowAlocBtn}
-                  tabRef={tabPacRef}
-                  key={`pac_row__${i + 2}`}
-                />
-              </ErrorBoundary>
-            ));
-      });
-      setTimeout(
-        () =>
-          syncAriaStates([...(sectTabRef.current?.querySelectorAll("*") ?? []), sectTabRef.current ?? document.body]),
-        500,
-      );
-      return [...new Set(res)];
-    },
-    networkMode: "online",
-    staleTime: 60000 * 5,
-    refetchInterval: 60000 * 10,
-    refetchOnMount: true,
-    refetchIntervalInBackground: true,
-    refetchOnReconnect: true,
-    refetchOnWindowFocus: false,
-  });
-  useEffect(() => {
-    setTimeout(() => {
-      validated.current ? setCaption("success") : setCaption("error");
-    }, 1000);
-  }, [validated.current]);
   return (
     <section className='form-padded' id='sectPacsTab' ref={sectTabRef}>
       <table className='table table-striped table-responsive table-hover tabPacs' id='avPacsTab' ref={tabPacRef}>

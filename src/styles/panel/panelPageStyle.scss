@@ -44,6 +44,18 @@ body {
     }
   }
 
+  table {
+    th {
+      width: max-content;
+      white-space: nowrap;
+    }
+    td {
+      width: min-content;
+      overflow: auto;
+      white-space: nowrap;
+    }
+  }
+
   td {
     font-weight: initial;
   }

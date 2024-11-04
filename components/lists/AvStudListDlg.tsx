@@ -8,6 +8,8 @@ import { syncAriaStates } from "@/lib/global/handlers/gHandlers";
 import { useEffect, useRef } from "react";
 import ErrorFallbackDlg from "../error/ErrorFallbackDlg";
 import StudList from "./StudList";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+const queryClient = new QueryClient();
 export default function AvStudListDlg({ forwardedRef, dispatch, state = false }: AvStudListDlgProps): JSX.Element {
   const dialogRef = useRef<nlDlg>(null),
     sectTabRef = useRef<HTMLElement | null>(null);
@@ -44,31 +46,33 @@ export default function AvStudListDlg({ forwardedRef, dispatch, state = false }:
   return (
     <>
       {state && (
-        <dialog
-          className='modalContent__stk2'
-          id='avStudListDlg'
-          ref={dialogRef}
-          onClick={ev => {
-            isClickOutside(ev, ev.currentTarget).some(coord => coord === true) && dispatch(!state);
-          }}>
-          <ErrorBoundary
-            FallbackComponent={() => (
-              <ErrorFallbackDlg
-                renderError={new Error(`Erro carregando a janela modal!`)}
-                onClick={() => dispatch(!state)}
-              />
-            )}>
-            <section className='flexRNoWBetCt' id='headStudList'>
-              <h2 className='mg__1b noInvert'>
-                <strong>Estudantes Cadastrados</strong>
-              </h2>
-              <button className='btn btn-close forceInvert' onClick={() => dispatch(!state)}></button>
-            </section>
-            <section className='formPadded' id='sectStudsTab' ref={sectTabRef}>
-              <StudList mainDlgRef={forwardedRef} state={state} dispatch={dispatch} />
-            </section>
-          </ErrorBoundary>
-        </dialog>
+        <QueryClientProvider client={queryClient}>
+          <dialog
+            className='modalContent__stk2'
+            id='avStudListDlg'
+            ref={dialogRef}
+            onClick={ev => {
+              isClickOutside(ev, ev.currentTarget).some(coord => coord === true) && dispatch(!state);
+            }}>
+            <ErrorBoundary
+              FallbackComponent={() => (
+                <ErrorFallbackDlg
+                  renderError={new Error(`Erro carregando a janela modal!`)}
+                  onClick={() => dispatch(!state)}
+                />
+              )}>
+              <section className='flexRNoWBetCt' id='headStudList'>
+                <h2 className='mg__1b noInvert'>
+                  <strong>Estudantes Cadastrados</strong>
+                </h2>
+                <button className='btn btn-close forceInvert' onClick={() => dispatch(!state)}></button>
+              </section>
+              <section className='formPadded' id='sectStudsTab' ref={sectTabRef}>
+                <StudList mainDlgRef={forwardedRef} state={state} dispatch={dispatch} />
+              </section>
+            </ErrorBoundary>
+          </dialog>
+        </QueryClientProvider>
       )}
     </>
   );

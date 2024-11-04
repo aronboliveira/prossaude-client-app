@@ -17,7 +17,6 @@ import GenericErrorComponent from "../../../error/GenericErrorComponent";
 import PacTabForm from "../../pacs/PacTabForm";
 import ProfForm from "../../profs/ProfForm";
 import TableProfForm from "../../profs/TabProfForm";
-import TabStudForm from "../../studs/TabStudForm";
 import StudentForm from "../../studs/StudentForm";
 import Unauthorized from "../Unauthorized";
 import { defUser } from "@/redux/slices/userSlice";
@@ -26,6 +25,7 @@ import { PanelCtx } from "./SelectLoader";
 import { panelRoots } from "@/vars";
 import useMount from "@/lib/hooks/useMount";
 import DashBoard from "../../Dashboard";
+import TabStudWrapper from "../../studs/TabStudWrapper";
 export default function SelectPanel({ defOp = "agenda" }: MainPanelProps): JSX.Element {
   const { userClass, setUserClass: setPrivilege } = useContext(PanelCtx),
     [selectedOption, setSelectedOption] = useState<string>(defOp),
@@ -45,7 +45,11 @@ export default function SelectPanel({ defOp = "agenda" }: MainPanelProps): JSX.E
               case "registProf":
                 return userClass === "coordenador" ? <ProfForm /> : <Unauthorized />;
               case "removeStud":
-                return userClass === "coordenador" || userClass === "supervisor" ? <TabStudForm /> : <Unauthorized />;
+                return userClass === "coordenador" || userClass === "supervisor" ? (
+                  <TabStudWrapper />
+                ) : (
+                  <Unauthorized />
+                );
               case "removeProf":
                 return userClass === "coordenador" || userClass === "supervisor" ? <TableProfForm /> : <Unauthorized />;
               case "pacList":
@@ -123,7 +127,7 @@ export default function SelectPanel({ defOp = "agenda" }: MainPanelProps): JSX.E
           );
         } else if (/removeStud/gi.test(camel)) {
           context.roots.formRoot.render(
-            userClass === "coordenador" || userClass === "supervisor" ? <TabStudForm /> : <Unauthorized />,
+            userClass === "coordenador" || userClass === "supervisor" ? <TabStudWrapper /> : <Unauthorized />,
           );
           panelSelect.value = "removeStud";
         } else if (/agenda/gi.test(camel)) {
