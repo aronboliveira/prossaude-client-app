@@ -126,8 +126,7 @@ export async function handleLogin(
   }
 }
 export function execLogout(router: NextRouter): void {
-  localStorage.removeItem("authorized");
-  localStorage.removeItem("user");
-  localStorage.removeItem("pw");
+  for (const item of ["authorized", "user", "pw", "timer", "loginTime"])
+    localStorage.getItem(item) && localStorage.removeItem(item);
   router.push("/login");
 }

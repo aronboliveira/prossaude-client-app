@@ -103,6 +103,8 @@ export default function LoginInputs(): JSX.Element {
                 () => {
                   localStorage.removeItem("pw");
                   localStorage.setItem("authorized", "true");
+                  localStorage.setItem("timer", "6000");
+                  localStorage.setItem("loginTime", `${new Date().toISOString()}`);
                   router.push("/base");
                 },
                 Number.isFinite(spinTime) ? spinTime * 1.5 : 2000,
@@ -190,6 +192,9 @@ export default function LoginInputs(): JSX.Element {
     (): void => removeEventListener("keyup", handleEnter);
   }, [anchorRef]);
   useEffect(() => {
+    alert(`Para esta versão de teste, digite qualquer informação aleatória de login. Não é necessário cadastro real.`);
+    for (const item of ["authorized", "user", "pw", "timer", "loginTime"])
+      localStorage.getItem(item) && localStorage.removeItem(item);
     localStorage.setItem("authorized", "false");
     localStorage.setItem("activeUser", "");
   }, []);
@@ -238,9 +243,9 @@ export default function LoginInputs(): JSX.Element {
   useEffect(() => {
     if (!testToasted.current) {
       toast(
-        navigatorVars.pt
-          ? "Para esta versão de teste, digite qualquer login que não seja vazio!"
-          : "For this test version, type any entry that is not empty!",
+        navigator.language.startsWith("en")
+          ? "For this test version, type any entry that is not empty!"
+          : "Para esta versão de teste, digite qualquer login que não seja vazio!",
         { icon: "🛠" },
       );
       testToasted.current = true;
