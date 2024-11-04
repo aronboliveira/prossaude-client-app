@@ -164,13 +164,17 @@ export default function PacList({
       return [...new Set(res)];
     },
     networkMode: "online",
-    staleTime: 1000,
+    staleTime: 60000 * 5,
+    refetchInterval: 60000 * 10,
     refetchOnMount: true,
-    refetchInterval: 1000,
     refetchIntervalInBackground: true,
+    refetchOnReconnect: true,
+    refetchOnWindowFocus: false,
   });
   useEffect(() => {
-    validated.current ? setCaption("success") : setCaption("error");
+    setTimeout(() => {
+      validated.current ? setCaption("success") : setCaption("error");
+    }, 1000);
   }, [validated.current]);
   return (
     <section className='form-padded' id='sectPacsTab' ref={sectTabRef}>
