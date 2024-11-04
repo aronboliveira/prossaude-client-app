@@ -29,7 +29,7 @@ export default function TabInpSvi({ nRow, nCol, ctx, lab }: TdProps): JSX.Elemen
       inpRef.current.pattern = "^[0-9]+$";
       if (inpRef.current.type === "number") {
         inpRef.current.dataset.minNum = "0";
-        inpRef.current.dataset.maxNum = "999999";
+        inpRef.current.dataset.maxNum = "32767";
       }
     }
   }, [inpRef]);
@@ -38,7 +38,7 @@ export default function TabInpSvi({ nRow, nCol, ctx, lab }: TdProps): JSX.Elemen
     inpRef.current.type === "number"
       ? handleCondtReq(inpRef.current, {
           minNum: 0,
-          maxNum: 999999,
+          maxNum: 32767,
           min: 1,
           max: 99,
           pattern: [pattern, ""],
@@ -58,7 +58,7 @@ export default function TabInpSvi({ nRow, nCol, ctx, lab }: TdProps): JSX.Elemen
       className={`form-control tabInpProg tabInpProg${ctx} tabInpProg${lab}${ctx} tabInpRow${ctx}${nRow} float sevenCharLongNum ${sEn.tabInpProg}`}
       id={`tabInpRow${ctx}${nRow}_${nCol}`}
       min='0'
-      max='65535'
+      max='32767'
       data-title={`${"Sinais Vitais"} ${fullName} (Consulta ${nCol - 1})`}
       data-row={nRow}
       data-col={nCol}

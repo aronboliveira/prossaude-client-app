@@ -78,13 +78,13 @@ export default function AgeElement({
       id='ageId'
       className='form-control noInvert inpIdentif minText maxText minNum maxNum patternText'
       min='0'
-      max='255'
+      max='127'
       required
       data-title='Idade'
       data-reqlength='1'
       data-maxlength='4'
       data-minnum='0'
-      data-maxnum='255'
+      data-maxnum='127'
       data-pattern='^[\d,.]+$'
       onInput={ev => {
         if (ev.isTrusted) trusted.current = true;

@@ -91,7 +91,7 @@ export default function FsProgCons(): JSX.Element {
           inp.classList.add("minText", "maxText", "pattern");
           if (inp.type === "number") {
             if (inp.min === "") inp.min = "0";
-            if (inp.max === "") inp.max = "999999";
+            if (inp.max === "") inp.max = "32767";
             inp.classList.add("minNum", "maxNum");
           }
         } else {
@@ -99,7 +99,7 @@ export default function FsProgCons(): JSX.Element {
             ? inp.addEventListener("input", ev =>
                 handleCondtReq(ev.currentTarget as HTMLInputElement, {
                   minNum: 0,
-                  maxNum: 999999,
+                  maxNum: 32767,
                   min: 1,
                   max: 99,
                   pattern: ["^[\\d,.]+$", ""],

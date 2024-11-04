@@ -74,12 +74,12 @@ export default function TrioReadNumCons(): JSX.Element {
         id='trioReadNumCons'
         name='trio_read_num_cons'
         min='1'
-        max='255'
+        max='127'
         data-title='Numero_Inicial_Consulta'
         data-reqlength='1'
         data-maxlength='5'
         data-minnum='1'
-        data-maxnum='255'
+        data-maxnum='127'
         data-pattern='^\d+$'
         onInput={ev => {
           if (ev.isTrusted) trusted.current = true;

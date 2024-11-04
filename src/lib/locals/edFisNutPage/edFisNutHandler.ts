@@ -58,22 +58,22 @@ export function addRowAtivFis(count: number = 3, context: string = "Rot"): void 
     <td class="tabCelAtFis tabCelAtFis${context} tabCelLeft" id="tabCelRowAtFis${context}${count}_3">
       <input type="number" 
       placeholder='Preencha aqui o Número de Semanas para a Atividade Física ${title} ${count - 1}'
-      min-length="1" max-length"5" min="0" max="255" class="inpAtivFis tabInpAtFis${context} tabInpRowAtFis${context}2 form-control minText maxText minNum maxNum patternText" id="tabInpRowAtFis${context}${count}_2"Número de Semanas para a Atividade Física Proposta ${
+      min-length="1" max-length"5" min="0" max="127" class="inpAtivFis tabInpAtFis${context} tabInpRowAtFis${context}2 form-control minText maxText minNum maxNum patternText" id="tabInpRowAtFis${context}${count}_2"Número de Semanas para a Atividade Física Proposta ${
       count - 1
     }" data-title="Atividade_Fisica_${title}_NSemana_${
       count - 1
-    }" data-reqlength="1" data-maxlength='3' data-minnum="0" data-maxnum="255" 
+    }" data-reqlength="1" data-maxlength='3' data-minnum="0" data-maxnum="127" 
     data-xls='Número de Semanas para a Atividade Física ${title} ${count - 1}'
     required />
     </td>
     <td class="tabCelAtFis tabCelAtFis${context}" id="tabCelRowAtFis${context}${count}_4">
       <input type="number" 
       placeholder='Preencha aqui o Tempo de Sessão da Atividade Física ${title} ${count - 1}'
-      min-length="1" max-length="7" min="0" max="255" class="tabInpAtFis${context} tabInpRowAtFis${context}2 form-control minText maxText minNum maxNum patternText" id="tabInpRowAtFis${context}${count}_3"Tempo de Sessão Mínimo para Atividade Física ${title} ${
+      min-length="1" max-length="7" min="0" max="127" class="tabInpAtFis${context} tabInpRowAtFis${context}2 form-control minText maxText minNum maxNum patternText" id="tabInpRowAtFis${context}${count}_3"Tempo de Sessão Mínimo para Atividade Física ${title} ${
       count - 1
     }' data-title="Atividade_Fisica_${title}_SessãoMin_${
       count - 1
-    }" data-reqlength="1" data-maxlength="3" data-minnum="0" data-maxnum="65535"
+    }" data-reqlength="1" data-maxlength="3" data-minnum="0" data-maxnum="32767"
     data-xls='Tempo de Sessão Mínimo para Atividade Física ${title} ${count - 1}'
     required />
     </td>
@@ -82,11 +82,11 @@ export function addRowAtivFis(count: number = 3, context: string = "Rot"): void 
       placeholder='Preencha aqui o Número de Meses para a Atividade Física ${title} ${count - 1}'
       min-length="1" 
       data-xls='Número de Meses para a Atividade Física ${title} ${count - 1}'
-      max-length="7" min="0" max="255" class="tabInpAtFis${context} tabInpRowAtFis${context}2 form-control minText maxText minNum maxNum patternText" id="tabInpRowAtFis${context}${count}_4"Número de Meses para a Atividade Física ${title} ${
+      max-length="7" min="0" max="127" class="tabInpAtFis${context} tabInpRowAtFis${context}2 form-control minText maxText minNum maxNum patternText" id="tabInpRowAtFis${context}${count}_4"Número de Meses para a Atividade Física ${title} ${
       count - 1
     }" data-title="Atividade_Fisica_${title}_Meses_${
       count - 1
-    }" data-reqlength="1" data-maxlength="3" data-minnum="0" data-maxnum="65535" required />
+    }" data-reqlength="1" data-maxlength="3" data-minnum="0" data-maxnum="32767" required />
     </td>
       `;
     tBodyContainer.appendChild(newRow);

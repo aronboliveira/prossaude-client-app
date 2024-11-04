@@ -62,7 +62,7 @@ export default function TbodyAtFisProps(): JSX.Element {
             minLength={1}
             maxLength={7}
             min='0'
-            max='65535'
+            max='32767'
             className='tabInpAtFisProp tabInpRowAtFisProp2 form-control noInvert'
             id='tabInpRowAtFisProp2_3 sevenCharLongNum'
             data-xls='Tempo de Sessão Mínimo para Atividade Física Proposta 1'
@@ -70,7 +70,7 @@ export default function TbodyAtFisProps(): JSX.Element {
             data-reqlength='1'
             data-maxlength='3'
             data-minnum='0'
-            data-maxnum='65535'
+            data-maxnum='32767'
             required
             onInput={ev => handleEventReq(ev.currentTarget)}
           />
@@ -82,7 +82,7 @@ export default function TbodyAtFisProps(): JSX.Element {
             minLength={1}
             maxLength={7}
             min='0'
-            max='65535'
+            max='32767'
             className='tabInpAtFisProp tabInpRowAtFisProp2 form-control noInvert'
             id='tabInpRowAtFisProp2_4 sevenCharLongNum'
             data-xls='Número de Meses para a Atividade Física Proposta 1'
@@ -90,7 +90,7 @@ export default function TbodyAtFisProps(): JSX.Element {
             data-reqlength='1'
             data-maxlength='3'
             data-minnum='0'
-            data-maxnum='65535'
+            data-maxnum='32767'
             required
             onInput={ev => handleEventReq(ev.currentTarget)}
           />

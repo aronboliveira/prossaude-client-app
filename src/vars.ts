@@ -72,9 +72,10 @@ export let person: Person = {} as any;
 import("./lib/global/declarations/classes").then(({ Person }) => {
   person = new Person("masculino", 0, 0, 0, 0, "leve");
 });
-export const MAX_SMALLINT = 65535;
+export const MAX_TINYINT = 127;
+export const MAX_SMALLINT = 32767;
 export const maxProps = {
-  age: 255,
+  age: MAX_TINYINT,
   weight: 635,
   height: 300,
   imc: 99,

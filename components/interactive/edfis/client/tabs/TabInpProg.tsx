@@ -133,7 +133,7 @@ export default function TabInpProg({ nRow, nCol, ctx, lab }: TdProps): JSX.Eleme
           else
             handleCondtReq(ev.currentTarget, {
               minNum: 0,
-              maxNum: 999999,
+              maxNum: 32767,
               min: 1,
               max: 99,
               pattern: ["^[\\d,.]+$", ""],
@@ -182,7 +182,7 @@ export default function TabInpProg({ nRow, nCol, ctx, lab }: TdProps): JSX.Eleme
                 else
                   handleCondtReq(ev.currentTarget, {
                     minNum: 0,
-                    maxNum: 999999,
+                    maxNum: 32767,
                     min: 1,
                     max: 99,
                     pattern: ["^[\\d,.]+$", ""],
@@ -233,7 +233,7 @@ export default function TabInpProg({ nRow, nCol, ctx, lab }: TdProps): JSX.Eleme
                 else
                   handleCondtReq(ev.currentTarget, {
                     minNum: 0,
-                    maxNum: 999999,
+                    maxNum: 32767,
                     min: 1,
                     max: 99,
                     pattern: ["^[\\d,.]+$", ""],
