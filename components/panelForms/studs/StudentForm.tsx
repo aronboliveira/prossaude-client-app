@@ -161,7 +161,7 @@ export default function StudentForm(): JSX.Element {
               role='group'
               className='form-switch spanRight'
               id='autocorrectDivStud'
-              style={{ marginBottom: "0", display: "inline-flex" }}>
+              style={{ marginBottom: "0", marginRight: "0.75rem", display: "inline-flex" }}>
               <input
                 type='checkbox'
                 className='deActBtn form-check-input'
