@@ -104,7 +104,7 @@ export default function LoginInputs(): JSX.Element {
                 () => {
                   localStorage.removeItem("pw");
                   localStorage.setItem("authorized", "true");
-                  localStorage.setItem("timer", "6000");
+                  // localStorage.setItem("timer", "6000");
                   localStorage.setItem("loginTime", `${new Date().toISOString()}`);
                   router.push("/base");
                 },

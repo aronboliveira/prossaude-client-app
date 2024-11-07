@@ -46,6 +46,7 @@ import useDataProvider from "@/lib/hooks/useDataProvider";
 import { agProps, navigatorVars } from "@/vars";
 import { toast } from "react-hot-toast";
 import sAg from "@/styles//modules/agStyles.module.scss";
+import Notes from "../def/Notes";
 export default function AgForm(): JSX.Element {
   const f = useRef<nlFm>(null),
     dnr = useRef<nlInp>(null),
@@ -1070,6 +1071,7 @@ export default function AgForm(): JSX.Element {
           </div>
           <hr />
         </section>
+        <Notes />
         <SectConfirmBtns />
         <hr />
       </fieldset>

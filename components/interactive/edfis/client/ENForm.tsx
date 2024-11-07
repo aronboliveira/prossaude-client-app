@@ -34,6 +34,7 @@ import sEn from "@/styles//modules/enStyles.module.scss";
 import { BodyType } from "@/lib/global/declarations/testVars";
 import { applyConstraintsTitle } from "@/lib/global/gModel";
 import { toast } from "react-hot-toast";
+import Notes from "../../def/Notes";
 const FsProgCons = lazy(() => import("./FsProgCons")),
   TbodyComorb = lazy(() => import("../tabs/TbodyComorb")),
   TbodyAtFisRot = lazy(() => import("./tabs/TbodyAtFisRot")),
@@ -392,6 +393,7 @@ export default function ENForm(): JSX.Element {
               </div>
               <hr style={{ minWidth: "93vw" }} />
             </section>
+            <Notes />
             <br role='presentation' />
             <SectConfirmBtns />
             <hr />

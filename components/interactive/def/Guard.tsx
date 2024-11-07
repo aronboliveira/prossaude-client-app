@@ -9,37 +9,37 @@ export default function Guard(): JSX.Element {
     toastTimer = 500,
     authorizationToasted = useRef<boolean>(false),
     errorToasted = useRef<boolean>(false),
-    timerToasted = useRef<boolean>(false),
-    timerSet = useRef<boolean>(false),
+    // timerToasted = useRef<boolean>(false),
+    // timerSet = useRef<boolean>(false),
     testToasted = useRef<boolean>(false);
   useEffect(() => {
-    let timerCounter: NodeJS.Timeout | null = null;
-    if (!timerSet.current) {
-      timerCounter = setInterval(() => {
-        const timer = localStorage.getItem("timer"),
-          timerOut = (): void => {
-            if (!timerToasted.current) {
-              toast("Timeout alcançado. Deslogando do sistema.", { icon: "⚠" });
-              timerToasted.current = true;
-              setTimeout(() => (timerToasted.current = false), toastTimer * 2);
-            }
-            execLogout(router);
-            timerCounter && clearInterval(timerCounter);
-          };
-        if (timer) {
-          const newTimer = parseInt(timer) - 1;
-          localStorage.setItem("timer", newTimer.toString());
-          if (newTimer <= 0) {
-            timerOut();
-            return;
-          }
-        } else {
-          timerOut();
-          return;
-        }
-      }, 1000);
-      timerSet.current = true;
-    }
+    // let timerCounter: NodeJS.Timeout | null = null;
+    // if (!timerSet.current) {
+    // timerCounter = setInterval(() => {
+    //   const timer = localStorage.getItem("timer"),
+    //     timerOut = (): void => {
+    //       if (!timerToasted.current) {
+    //         toast("Timeout alcançado. Deslogando do sistema.", { icon: "⚠" });
+    //         timerToasted.current = true;
+    //         setTimeout(() => (timerToasted.current = false), toastTimer * 2);
+    //       }
+    //       execLogout(router);
+    //       timerCounter && clearInterval(timerCounter);
+    //     };
+    //   if (timer) {
+    //     const newTimer = parseInt(timer) - 1;
+    //     localStorage.setItem("timer", newTimer.toString());
+    //     if (newTimer <= 0) {
+    //       timerOut();
+    //       return;
+    //     }
+    //   } else {
+    //     timerOut();
+    //     return;
+    //   }
+    // }, 1000);
+    // timerSet.current = true;
+    // }
     if (!localStorage.getItem("user")) {
       if (!errorToasted.current) {
         setTimeout(() => {
@@ -63,7 +63,7 @@ export default function Guard(): JSX.Element {
         setTimeout(() => (testToasted.current = false), toastTimer * 2);
       }
       execLogout(router);
-      timerCounter && clearInterval(timerCounter);
+      // timerCounter && clearInterval(timerCounter);
       return;
     }
     if (!localStorage.getItem("timer")) localStorage.setItem("timer", "6000");
@@ -92,7 +92,7 @@ export default function Guard(): JSX.Element {
         setTimeout(() => (testToasted.current = false), toastTimer * 2);
       }
       execLogout(router);
-      timerCounter && clearInterval(timerCounter);
+      // timerCounter && clearInterval(timerCounter);
     }
   }, [router]);
   return <></>;

@@ -17,6 +17,7 @@ import { useRef, useEffect } from "react";
 import useDataProvider from "@/lib/hooks/useDataProvider";
 import { odProps } from "@/vars";
 import { toast } from "react-hot-toast";
+import Notes from "../def/Notes";
 export default function OdForm(): JSX.Element {
   const f = useRef<nlFm>(null),
     toasted = useRef<boolean>(false);
@@ -153,6 +154,7 @@ export default function OdForm(): JSX.Element {
           <hr />
         </section>
         <br role='presentation' />
+        <Notes />
         <SectConfirmBtns />
         <hr />
       </fieldset>
