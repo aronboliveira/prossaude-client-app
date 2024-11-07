@@ -6,6 +6,10 @@ export default function Notes(): JSX.Element {
     b = useRef<nlHtEl>(null),
     it = useRef<nlHtEl>(null),
     ul = useRef<nlHtEl>(null),
+    arrUp = useRef<nlHtEl>(null),
+    arrDown = useRef<nlHtEl>(null),
+    arrEq = useRef<nlHtEl>(null),
+    kbdStyle = { maxHeight: "min-content", transition: "transform 0.2s ease-in-out" },
     [t, setT] = useState(""),
     [w, setW] = useState<number>(400),
     [i, setI] = useState<boolean>(false),
@@ -30,20 +34,15 @@ export default function Notes(): JSX.Element {
       },
       [setW, setI, setU, setS],
     ),
-    applyMatrixTransform = useCallback((element: HTMLElement, incrementY: number) => {
+    applyMatrixTransform = useCallback((element: HTMLElement, incrementY: number = 1) => {
       const style = getComputedStyle(element);
       let transform = style.transform;
       console.log(transform);
       if (transform === "none" || transform === "") transform = "matrix(1, 0, 0, 1, 0, 0)";
-      const match = transform.split(", ").map(parseFloat);
-      console.log(match);
-      match[5] += incrementY;
-      element.style.transform = `matrix(${match.join(", ")})`;
+      element.style.transform = `matrix(1, 0, 0, 1, 0, ${incrementY})`;
       setTimeout(() => {
-        if (!match) return;
-        match[5] = 0;
-        element.style.transform = `matrix(${match.join(", ")})`;
-      }, 1000);
+        element.style.transform = "matrix(1, 0, 0, 1, 0, 0)";
+      }, 200);
     }, []);
   useEffect(() => {
     if (!(r.current instanceof HTMLTextAreaElement)) return;
@@ -109,30 +108,63 @@ export default function Notes(): JSX.Element {
         Prontuário
         <kbd
           ref={b}
-          style={{ maxHeight: "min-content" }}
+          title='Pressione Crtl + B para aumentar o peso da fonte enquanto escreve (ou Crtl + Alt + B para resetar o peso)'
+          style={kbdStyle}
           onClick={ev => {
-            applyMatrixTransform(ev.currentTarget, 1);
+            applyMatrixTransform(ev.currentTarget);
             setBolded(cur => (cur = !cur));
           }}>
           B
         </kbd>
         <kbd
           ref={it}
-          style={{ maxHeight: "min-content" }}
+          title='Pressione Ctrl + I para tornar o texto itálico enquanto escreve'
+          style={kbdStyle}
           onClick={ev => {
-            applyMatrixTransform(ev.currentTarget, 1);
+            applyMatrixTransform(ev.currentTarget);
             setI(i => (i = !i));
           }}>
           I
         </kbd>
         <kbd
           ref={ul}
-          style={{ maxHeight: "min-content" }}
+          title='Pressione Ctrl + U para sublinhar enquanto escreve'
+          style={kbdStyle}
           onClick={ev => {
-            applyMatrixTransform(ev.currentTarget, 1);
+            applyMatrixTransform(ev.currentTarget);
             setU(i => (i = !i));
           }}>
           <span style={{ textDecoration: "underline" }}>U</span>
+        </kbd>
+        <kbd
+          ref={arrUp}
+          title='Pressione Alt com + para aumentar o tamanho da fonte'
+          style={kbdStyle}
+          onClick={ev => {
+            applyMatrixTransform(ev.currentTarget);
+            setS(cur => (cur + 0.1 <= 2 ? cur + 0.1 : 1));
+          }}>
+          <span>+</span>
+        </kbd>
+        <kbd
+          ref={arrDown}
+          title='Pressione Alt com - para diminuir o tamanho da fonte'
+          style={kbdStyle}
+          onClick={ev => {
+            applyMatrixTransform(ev.currentTarget);
+            setS(cur => (cur - 0.1 >= 0.1 ? cur - 0.1 : 1));
+          }}>
+          <span>-</span>
+        </kbd>
+        <kbd
+          ref={arrEq}
+          title='Pressione = com Shift para resetar o tamanho da fonte'
+          style={kbdStyle}
+          onClick={ev => {
+            applyMatrixTransform(ev.currentTarget);
+            setS(cur => (cur = cur * 0 + 1));
+          }}>
+          <span>=</span>
         </kbd>
       </label>
       <textarea
