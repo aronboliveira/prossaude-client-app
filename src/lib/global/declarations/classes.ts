@@ -654,6 +654,7 @@ export class ExportHandler {
             } else v = "Não preenchido";
           } else if (el.type === "date") type = "d";
           else type = "s";
+          v = el.value;
         } else if (el instanceof HTMLCanvasElement) {
           type = "i";
           v = el.toDataURL("image/png");
@@ -707,13 +708,6 @@ export class ExportHandler {
       worksheet["!cols"] = Object.keys(maxLengths).map(i => {
         return { width: maxLengths[i] + 50 };
       });
-      for (let i = 0; i < Object.values(elsDefs).length; i++) {
-        const cellAddress = utils.encode_cell({ r: 0, c: i });
-        if (worksheet[cellAddress]?.s)
-          worksheet[cellAddress].s = {
-            font: { bold: true },
-          };
-      }
       utils.book_append_sheet(wb, worksheet, "Formulário Exportado", true);
       const date = new Date(),
         fullDate = `d${date.getDate()}m${date.getMonth() + 1}y${date.getFullYear()}`,

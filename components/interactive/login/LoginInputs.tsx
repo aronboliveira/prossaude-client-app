@@ -24,6 +24,7 @@ export default function LoginInputs(): JSX.Element {
     formToasted = useRef<boolean>(false),
     handlerToasted = useRef<boolean>(false),
     serverToasted = useRef<boolean>(false),
+    alerted = useRef<boolean>(false),
     mounted = useMount(),
     exeLogin = useCallback(
       (resSpan: nlHtEl): void => {
@@ -192,7 +193,13 @@ export default function LoginInputs(): JSX.Element {
     (): void => removeEventListener("keyup", handleEnter);
   }, [anchorRef]);
   useEffect(() => {
-    alert(`Para esta versão de teste, digite qualquer informação aleatória de login. Não é necessário cadastro real.`);
+    if (!alerted.current) {
+      alert(
+        `Para esta versão de teste, digite qualquer informação aleatória de login. Não é necessário cadastro real.`,
+      );
+      alerted.current = true;
+      setTimeout(() => (alerted.current = false), 1000);
+    }
     for (const item of ["authorized", "user", "pw", "timer", "loginTime"])
       localStorage.getItem(item) && localStorage.removeItem(item);
     localStorage.setItem("authorized", "false");
