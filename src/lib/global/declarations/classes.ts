@@ -652,9 +652,13 @@ export class ExportHandler {
               rd.readAsDataURL(file);
               imageEls.push(el);
             } else v = "Não preenchido";
-          } else if (el.type === "date") type = "d";
-          else type = "s";
-          v = el.value;
+          } else if (el.type === "date") {
+            type = "d";
+            v = el.value;
+          } else {
+            type = "s";
+            v = el.value;
+          }
         } else if (el instanceof HTMLCanvasElement) {
           type = "i";
           v = el.toDataURL("image/png");
