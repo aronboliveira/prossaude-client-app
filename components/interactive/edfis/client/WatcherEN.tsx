@@ -77,5 +77,22 @@ export default function WatcherEN(): JSX.Element {
       }
     }, timers.personENTimer + 200);
   }, []);
+  useEffect(() => {
+    if (!mounted) return;
+    setTimeout(() => {
+      document.querySelectorAll("*").forEach(e => {
+        if (/[ !"#$%&'()*+,/:;<=>?@[\\\]^`{|}~\s]|\b[0-9]/g.test(e.id))
+          e.id = e.id.replace(/[ !"#$%&'()*+,/:;<=>?@[\\\]^`{|}~\s]|\b[0-9]/g, "__");
+        e.classList.forEach(c => {
+          if (/[ !"#$%&'()*+,/:;<=>?@[\\\]^`{|}~\s]|\b[0-9]/g.test(c)) {
+            e.classList.add(c.replace(/[ !"#$%&'()*+,/:;<=>?@[\\\]^`{|}~\s]|\b[0-9]/g, "__"));
+            e.classList.remove(c);
+          }
+        });
+        if ("name" in e && /[ !"#$%&'()*+,/:;<=>?@[\\\]^`{|}~\s]|\b[0-9]/g.test((e as HTMLInputElement).name))
+          e.name = (e as HTMLInputElement).name.replace(/[ !"#$%&'()*+,/:;<=>?@[\\\]^`{|}~\s]|\b[0-9]/g, "__");
+      });
+    }, timers.personENTimer);
+  }, [mounted]);
   return <div className='watcher' id='watcher-en' style={{ display: "none" }}></div>;
 }

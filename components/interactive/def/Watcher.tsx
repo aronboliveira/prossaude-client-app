@@ -91,6 +91,23 @@ export default function Watcher({ routeCase }: { routeCase?: pageCases }): JSX.E
     if (navigator.language.startsWith("pt-")) navigatorVars.pt = true;
     else navigatorVars.pt = false;
   }, []);
+  useEffect(() => {
+    if (!isMounted) return;
+    setTimeout(() => {
+      document.querySelectorAll("*").forEach(e => {
+        if (/[ !"#$%&'()*+,/:;<=>?@[\\\]^`{|}~\s]|\b[0-9]/g.test(e.id))
+          e.id = e.id.replace(/[ !"#$%&'()*+,/:;<=>?@[\\\]^`{|}~\s]|\b[0-9]/g, "__");
+        e.classList.forEach(c => {
+          if (/[ !"#$%&'()*+,/:;<=>?@[\\\]^`{|}~\s]|\b[0-9]/g.test(c)) {
+            e.classList.add(c.replace(/[ !"#$%&'()*+,/:;<=>?@[\\\]^`{|}~\s]|\b[0-9]/g, "__"));
+            e.classList.remove(c);
+          }
+        });
+        if ("name" in e && /[ !"#$%&'()*+,/:;<=>?@[\\\]^`{|}~\s]|\b[0-9]/g.test((e as HTMLInputElement).name))
+          e.name = (e as HTMLInputElement).name.replace(/[ !"#$%&'()*+,/:;<=>?@[\\\]^`{|}~\s]|\b[0-9]/g, "__");
+      });
+    }, 300);
+  }, [isMounted]);
   useBsLink();
   return <div className='watcher' id={`watcher-${routeCase}`} style={{ display: "none" }}></div>;
 }

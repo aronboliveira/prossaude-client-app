@@ -2,7 +2,7 @@
 import { ENCtxProps, TargInps, TdProps } from "@/lib/global/declarations/interfaces";
 import { handleCallbackWHS } from "@/lib/locals/edFisNutPage/edFisNutHandler";
 import { handleIndEv } from "@/lib/locals/edFisNutPage/edFisNutHandler";
-import { applyFieldConstraints, textTransformPascal } from "@/lib/global/gModel";
+import { applyFieldConstraints, parseNotNaN, textTransformPascal } from "@/lib/global/gModel";
 import { handleCondtReq, handleEventReq } from "@/lib/global/handlers/gHandlers";
 import { useRef, useContext } from "react";
 import { NlMRef, nlFs, nlSel } from "@/lib/global/declarations/types";
@@ -188,6 +188,75 @@ export default function TabInpProg({ nRow, nCol, ctx, lab }: TdProps): JSX.Eleme
                     pattern: ["^[\\d,.]+$", ""],
                   });
                 handleCallbackWHS(ev.currentTarget);
+                if (!tabProps.edIsAutoCorrectOn) return;
+                const tb = ev.currentTarget.closest("tbody");
+                if (!tb) return;
+                if (
+                  (ev.currentTarget.name.startsWith("cintura") || ev.currentTarget.name.startsWith("waist")) &&
+                  !ev.currentTarget.name.includes("quadril") &&
+                  !ev.currentTarget.name.includes("hips")
+                ) {
+                  let waist = parseNotNaN(ev.currentTarget.value.replace("px", "").trim()),
+                    hipsInp = Array.from(tb.querySelectorAll(".inpHips")).find(
+                      inp => "value" in inp && (inp as HTMLInputElement).dataset.col === ev.currentTarget.dataset.col,
+                    );
+                  if (!hipsInp) return;
+                  let hips = parseNotNaN((hipsInp as HTMLInputElement).value.replace("px", "").trim()),
+                    hipsToWaistInp = Array.from(tb.querySelectorAll(".inpWaistToHips")).find(
+                      inp => "value" in inp && (inp as HTMLInputElement).dataset.col === ev.currentTarget.dataset.col,
+                    );
+                  if (!hipsToWaistInp) return;
+                  if ((ev.currentTarget as HTMLInputElement).value === "" && (hipsInp as HTMLInputElement).value !== "")
+                    waist = 0;
+                  if ((hipsInp as HTMLInputElement).value === "" && (ev.currentTarget as HTMLInputElement).value !== "")
+                    hips = 1;
+                  const relation = waist / hips;
+                  if (!Number.isFinite(relation)) return;
+                  (hipsToWaistInp as HTMLInputElement).value = `${(relation * 1000) / 1000}`;
+                } else if (
+                  (ev.currentTarget.name.startsWith("quadril") || ev.currentTarget.name.startsWith("hips")) &&
+                  !ev.currentTarget.name.includes("cintura") &&
+                  !ev.currentTarget.name.includes("waist")
+                ) {
+                  let hips = parseNotNaN(ev.currentTarget.value.replace("px", "").trim()),
+                    waistInp = Array.from(tb.querySelectorAll(".inpWaist")).find(
+                      inp => "value" in inp && (inp as HTMLInputElement).dataset.col === ev.currentTarget.dataset.col,
+                    );
+                  if (!waistInp) return;
+                  let waist = parseNotNaN((waistInp as HTMLInputElement).value.replace("px", "").trim()),
+                    hipsToWaistInp = Array.from(tb.querySelectorAll(".inpWaistToHips")).find(
+                      inp => "value" in inp && (inp as HTMLInputElement).dataset.col === ev.currentTarget.dataset.col,
+                    );
+                  if (!hipsToWaistInp) return;
+                  if ((waistInp as HTMLInputElement).value === "" && ev.currentTarget.value !== "") waist = 0;
+                  if (ev.currentTarget.value === "" && (waistInp as HTMLInputElement).value !== "") hips = 1;
+                  const relation = waist / hips;
+                  if (!Number.isFinite(relation)) return;
+                  (hipsToWaistInp as HTMLInputElement).value = `${(relation * 1000) / 1000}`;
+                } else if (
+                  (ev.currentTarget.name.includes("cintura") || ev.currentTarget.name.includes("waist")) &&
+                  (ev.currentTarget.name.includes("quadril") || ev.currentTarget.name.includes("hips"))
+                ) {
+                  const waistInp = Array.from(tb.querySelectorAll(".inpWaist")).find(
+                    inp => "value" in inp && (inp as HTMLInputElement).dataset.col === ev.currentTarget.dataset.col,
+                  );
+                  if (!waistInp) return;
+                  const hipsInp = Array.from(tb.querySelectorAll(".inpHips")).find(
+                    inp => "value" in inp && (inp as HTMLInputElement).dataset.col === ev.currentTarget.dataset.col,
+                  );
+                  if (!hipsInp) return;
+                  let hips = parseNotNaN((hipsInp as HTMLInputElement).value.replace("px", "").trim()),
+                    waist = parseNotNaN((waistInp as HTMLInputElement).value.replace("px", "").trim());
+                  const hipsToWaistInp = ev.currentTarget;
+                  if (!hipsToWaistInp) return;
+                  if ((waistInp as HTMLInputElement).value === "" && (hipsInp as HTMLInputElement).value !== "")
+                    waist = 0;
+                  if ((hipsInp as HTMLInputElement).value === "" && (waistInp as HTMLInputElement).value !== "")
+                    hips = 1;
+                  const relation = waist / hips;
+                  if (!Number.isFinite(relation)) return;
+                  (hipsToWaistInp as HTMLInputElement).value = `${(relation * 1000) / 1000}`;
+                }
               } catch (e) {
                 return;
               }

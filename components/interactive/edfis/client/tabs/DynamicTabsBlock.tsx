@@ -71,7 +71,7 @@ export default function DynamicTabsBlock(): JSX.Element {
     rowsm = [
       [2, "Peso"],
       [3, "Altura"],
-      [4, "Tórax"],
+      [4, "Abdomên"],
       [5, "Cintura"],
       [6, "Quadril"],
       [7, "Cintura / Quadril"],
