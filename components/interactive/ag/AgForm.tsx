@@ -1072,6 +1072,7 @@ export default function AgForm(): JSX.Element {
           <hr />
         </section>
         <Notes />
+        <hr />
         <SectConfirmBtns />
         <hr />
       </fieldset>

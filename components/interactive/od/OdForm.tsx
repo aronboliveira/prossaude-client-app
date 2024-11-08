@@ -155,6 +155,7 @@ export default function OdForm(): JSX.Element {
         </section>
         <br role='presentation' />
         <Notes />
+        <hr />
         <SectConfirmBtns />
         <hr />
       </fieldset>
