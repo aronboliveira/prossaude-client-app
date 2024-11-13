@@ -1,13 +1,14 @@
 "use client";
-import { Suspense, lazy, useContext } from "react";
+import { lazy, useContext } from "react";
 import { PanelCtx } from "../defs/client/SelectLoader";
-import ReactSpinner from "../../icons/ReactSpinner";
+import { Provider } from "react-redux";
+import panelStore from "@/redux/panelStore";
 const Form = lazy(() => import("./ScheduleForm"));
 export default function ScheduleLoader(): JSX.Element {
   const privilege = useContext(PanelCtx).userClass;
   return (
-    <Suspense fallback={<ReactSpinner scale={0.5} />}>
+    <Provider store={panelStore}>
       <Form context={false} userClass={privilege} />
-    </Suspense>
+    </Provider>
   );
 }

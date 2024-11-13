@@ -155,6 +155,7 @@ export type pageStyleCases =
   | "Panel Page Style"
   | "Recover Page Style";
 export type validSchedHours = 18 | 19 | 20 | 21;
+export type validSchedCols = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 export type userClasses = "coordenador" | "supervisor" | "estudante";
 export type personAbrvClasses = "stud" | "prof" | "pac";
 export type personAbrvUpperClasses = "Stud" | "Prof" | "Pac";
@@ -180,3 +181,4 @@ export type validAreas =
   | "Medicina"
   | "Tecnologia";
 export type panelOpts = "registStud" | "registProf" | "removeStud" | "removeProf" | "pacList" | "agenda" | "dashboard";
+export type thunkReqStatus = "idle" | "loading" | "submitting" | "fulfilled" | "rejected";

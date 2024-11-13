@@ -41,6 +41,9 @@ import { PanelCtx } from "../defs/client/SelectLoader";
 import { ExportHandler } from "@/lib/global/declarations/classes";
 import useExportHandler from "@/lib/hooks/useExportHandler";
 import { privilege } from "@/lib/locals/basePage/declarations/serverInterfaces";
+import { useDispatch } from "react-redux";
+import { fetchSchedHours } from "@/redux/slices/schedHoursSlice";
+import { fetchSchedCols } from "@/redux/slices/schedColsSlice";
 export default function ScheduleForm({ mainRoot }: ScheduleFormProps): JSX.Element {
   const cols = [1, 2, 3, 4, 5, 6, 7, 8, 9],
     hours: validSchedHours[] = [18, 19, 20, 21],
@@ -150,7 +153,22 @@ export default function ScheduleForm({ mainRoot }: ScheduleFormProps): JSX.Eleme
         return (): void => removeEventListener("resize", handleResize);
       },
       [userClass],
-    );
+    ),
+    dispatch = useDispatch() as any;
+  useEffect(() => {
+    const revalidateData = (): void => {
+      dispatch(fetchSchedHours());
+      dispatch(fetchSchedCols());
+    };
+    revalidateData();
+    const intervalId = setInterval(revalidateData, 300000),
+      handleFocus = (): void => revalidateData();
+    addEventListener("focus", handleFocus);
+    return (): void => {
+      clearInterval(intervalId);
+      removeEventListener("focus", handleFocus);
+    };
+  }, [dispatch]);
   useEffect(() => {
     /new-cons=open/gi.test(location.search) && setTogglePress(true);
   }, []);
@@ -159,9 +177,6 @@ export default function ScheduleForm({ mainRoot }: ScheduleFormProps): JSX.Eleme
       //chamada de callback principal do form de agenda e inclusão de aria
       formCallback(formRef.current);
       syncAriaStates([...formRef.current!.querySelectorAll("*"), formRef.current]);
-      // const scheduleDataProvider = new DataProvider(
-      //   DataProvider.persistSessionEntries(formRef.current)
-      // );
       providers.globalDataProvider &&
         providers.globalDataProvider.initPersist(
           formRef.current,
